@@ -51,6 +51,39 @@ class ShowRouteIpv4Schema(MetaParser):
         },
     }
 
+    """
+     Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+    """
+    source_protocol_dict = {
+        'ospf' : ['O','IA','N1','N2','E1','E2'],
+        'odr' : ['o'],
+        'isis' : ['i','su','L1','L2','ia'],
+        'eigrp' : ['D','EX'],
+        'static' : ['S'],
+        'egp' : ['E'],
+        'dagr' : ['G'],
+        'rpl' : ['r'],
+        'mobile router' : ['M'],
+        'lisp' : ['I', 'l'],
+        'nhrp' : ['H'],
+        'local' : ['L'],
+        'connected' : ['C'],
+        'bgp' : ['B'],
+        'rip' : ['R'], 
+        'per-user static route' : ['U'],
+        'rip' : ['R'],
+        'access/subscriber' : ['A'],
+        'traffic engineering' : ['t'],
+    }
+
 
 # ====================================================
 #  parser for show ip route
@@ -76,28 +109,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
         af = 'ipv4'
         route = ""
-        source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
-        source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i','su','L1','L2','ia']
-        source_protocol_dict['eigrp'] = ['D','EX']
-        source_protocol_dict['static'] = ['S']
-        source_protocol_dict['egp'] = ['E']
-        source_protocol_dict['dagr'] = ['G']
-        source_protocol_dict['rpl'] = ['r']
-        source_protocol_dict['mobile router'] = ['M']
-        source_protocol_dict['lisp'] = ['I']
-        source_protocol_dict['nhrp'] = ['H']
-        source_protocol_dict['local'] = ['L']
-        source_protocol_dict['connected'] = ['C']
-        source_protocol_dict['bgp'] = ['B']
 
         result_dict = {}
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
             next_hop = interface = updated = metrics = route_preference = ""
 
             # VRF: VRF501
@@ -111,39 +126,47 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
             # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
             # i L1 10.76.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
-            p3 = re.compile(r'^\s*(?P<code1>[\w]+) +(?P<code2>[\w]+)? +(?P<network>[\d\/\.]+)'
+            # S*   192.168.4.4/10 [111/10] via 172.16.84.11, 1w0d
+            # L    ::ffff:192.168.13.12/19 
+            # O E1 2001:db8::/39
+            # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
+            p3 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>[\w\*\(\>\)\!]+)? +(?P<network>[\w\/\:\.]+)'
                             '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
-                            '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                            '( +via )?(?P<next_hop>[\w\/\:\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             m = p3.match(line)
             if m:
+                group = m.groupdict()
+                if line == cmd:
+                    continue
                 active = True
                 updated = ""
-                if m.groupdict()['code1']:
-                    source_protocol_codes = m.groupdict()['code1'].strip()
-                    for key,val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
+                if group['code1']:
+                    source_protocol_codes = group['code1'].strip()
+                    for key,val in super().source_protocol_dict.items():
+                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
+                        if source_protocol_replaced in val:
                             source_protocol = key
 
-                if m.groupdict()['code2']:
+                if group['code2']:
                     source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code2'])
 
-                if m.groupdict()['network']:
+                if group['network']:
                     route = m.groupdict()['network']
 
-                if m.groupdict()['route_preference']:
+                if group['route_preference']:
                     routepreference = m.groupdict()['route_preference']
                     if '/' in routepreference:
                         route_preference = int(routepreference.split('/')[0])
                         metrics = routepreference.split('/')[1]
 
                 index = 1
-                if m.groupdict()['next_hop']:
-                    next_hop = m.groupdict()['next_hop']
-                if m.groupdict()['interface']:
-                    interface = m.groupdict()['interface']
+                if group['next_hop']:
+                    next_hop = group['next_hop']
+                if group['interface']:
+                    interface = group['interface']
 
-                if m.groupdict()['date']:
-                    updated = m.groupdict()['date']
+                if group['date']:
+                    updated = group['date']
 
                 if vrf:
                     if 'vrf' not in result_dict:
@@ -375,29 +398,10 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         af = 'ipv6'
         route = ""
-        next_hop = interface = metrics = route_preference = ""
-        source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O', 'IA', 'N1', 'N2', 'E1', 'E2']
-        source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i', 'su', 'L1', 'L2', 'ia']
-        source_protocol_dict['eigrp'] = ['D', 'EX']
-        source_protocol_dict['static'] = ['S']
-        source_protocol_dict['egp'] = ['E']
-        source_protocol_dict['dagr'] = ['G']
-        source_protocol_dict['rpl'] = ['r']
-        source_protocol_dict['mobile router'] = ['M']
-        source_protocol_dict['lisp'] = ['I']
-        source_protocol_dict['nhrp'] = ['H']
-        source_protocol_dict['local'] = ['L']
-        source_protocol_dict['connected'] = ['C']
-        source_protocol_dict['bgp'] = ['B']
 
         result_dict = {}
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
 
             # VRF: VRF501
             p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
@@ -409,23 +413,29 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             # S    2001:1:1:1::1/128
             # L    2001:2:2:2::2/128 is directly connected,
             #i L1 2001:23:23:23::23/128
-            p2 = re.compile(r'^\s*(?P<code1>[\w]+)( +(?P<code2>[\w]+))? +(?P<route>[\w\/\:]+)'
-                            '( +is +directly +connected,)?$')
+            # R*   ::/128 
+            # L    ::ffff:192.168.1.1/10
+            p2 = re.compile(r'^(?P<code1>[\w\*\(\>\)\!]+)( +'
+                '(?P<code2>[\w\*\(\>\)\!]+))? +(?P<route>[\w\/\:\.]+)'
+                '( +is +directly +connected,)?$')
             m = p2.match(line)
             if m:
+                group = m.groupdict()
                 active = True
-                if m.groupdict()['code1']:
-                    source_protocol_codes = m.groupdict()['code1'].strip()
-                    for key, val in source_protocol_dict.items():
-                        if source_protocol_codes in val:
+                if line == cmd:
+                    continue
+                if group['code1']:
+                    source_protocol_codes = group['code1'].strip()
+                    for key, val in super().source_protocol_dict.items():
+                        source_protocol_replaced = re.split('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
+                        if source_protocol_replaced in val:
                             source_protocol = key
 
-                if m.groupdict()['code2']:
-                    source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code2'])
+                if group['code2']:
+                    source_protocol_codes = '{} {}'.format(source_protocol_codes, group['code2'])
 
-
-                if m.groupdict()['route']:
-                    route = m.groupdict()['route']
+                if group['route']:
+                    route = group['route']
 
                 index = 1
 
@@ -462,7 +472,9 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             #   [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
             #   [200/0] via ::ffff:10.229.11.11 (nexthop in vrf default), 00:55:12
             p3 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
-                            ' +via +(?P<next_hop>[\w\:\.)]+)?( \(nexthop in vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +(?P<interface>[\S]+))?$')
+                            ' +via +(?P<next_hop>[\w\:\.)]+)?( \(nexthop in '
+                            'vrf default\))?,? +(?P<date>[0-9][\w\:]+)?,?( +'
+                            '(?P<interface>[\S]+))?$')
             m = p3.match(line)
             if m:
                 updated = interface = ""

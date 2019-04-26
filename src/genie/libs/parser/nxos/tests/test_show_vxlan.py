@@ -25,7 +25,8 @@ from genie.libs.parser.nxos.show_vxlan import ShowNvePeers, \
                                               ShowFabricMulticastGlobals,\
                                               ShowFabricMulticastIpSaAdRoute, \
                                               ShowFabricMulticastIpL2Mroute, \
-                                              ShowL2routeEvpnMacIpEvi
+                                              ShowL2routeEvpnMacIpEvi, \
+                                              ShowL2routeEvpnMacIpAll
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -2170,14 +2171,14 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
         (Ps):Peer Sync (Ro):Re-Originated 
         Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops      
         ----------- -------------- ------ ---------- --------------- ---------------
-        101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local          
-        101         fa16.3ed4.83e4 HMM    --            0          100.101.2.3    Local          
-        101         fa16.3e68.b933 HMM    --            0          100.101.3.3    Local          
-        101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66    
-        101         fa16.3ec5.fcab HMM    --            0          100.101.1.4    Local          
-        101         fa16.3e79.6bfe HMM    --            0          100.101.2.4    Local          
-        101         fa16.3e2f.654d HMM    --            0          100.101.3.4    Local          
-        101         fa16.3e9a.e558 BGP    --            0          100.101.8.4    66.66.66.66    
+        101         fa16.3ed1.37b5 HMM    --            0          10.111.1.3    Local          
+        101         fa16.3ed4.83e4 HMM    --            0          10.111.2.3    Local          
+        101         fa16.3e68.b933 HMM    --            0          10.111.3.3    Local          
+        101         fa16.3e04.e54a BGP    --            0          10.111.8.3    10.84.66.66    
+        101         fa16.3ec5.fcab HMM    --            0          10.111.1.4    Local          
+        101         fa16.3e79.6bfe HMM    --            0          10.111.2.4    Local          
+        101         fa16.3e2f.654d HMM    --            0          10.111.3.4    Local          
+        101         fa16.3e9a.e558 BGP    --            0          10.111.8.4    10.84.66.66    
 
     '''}
 
@@ -2191,7 +2192,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3ed1.37b5',
-                            'host_ip': '100.101.1.3',
+                            'host_ip': '10.111.1.3',
                             'next_hop1': 'local',
                             },
                         'fa16.3ed4.83e4': {
@@ -2199,7 +2200,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3ed4.83e4',
-                            'host_ip': '100.101.2.3',
+                            'host_ip': '10.111.2.3',
                             'next_hop1': 'local',
                             },
                         'fa16.3e68.b933': {
@@ -2207,7 +2208,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3e68.b933',
-                            'host_ip': '100.101.3.3',
+                            'host_ip': '10.111.3.3',
                             'next_hop1': 'local',
                             },
                         'fa16.3e04.e54a': {
@@ -2215,15 +2216,15 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3e04.e54a',
-                            'host_ip': '100.101.8.3',
-                            'next_hop1': '66.66.66.66',
+                            'host_ip': '10.111.8.3',
+                            'next_hop1': '10.84.66.66',
                             },
                         'fa16.3ec5.fcab': {
                             'mac_ip_flags': '--',
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3ec5.fcab',
-                            'host_ip': '100.101.1.4',
+                            'host_ip': '10.111.1.4',
                             'next_hop1': 'local',
                             },
                         'fa16.3e79.6bfe': {
@@ -2231,7 +2232,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3e79.6bfe',
-                            'host_ip': '100.101.2.4',
+                            'host_ip': '10.111.2.4',
                             'next_hop1': 'local',
                             },
                         'fa16.3e2f.654d': {
@@ -2239,7 +2240,7 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'hmm',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3e2f.654d',
-                            'host_ip': '100.101.3.4',
+                            'host_ip': '10.111.3.4',
                             'next_hop1': 'local',
                             },
                         'fa16.3e9a.e558': {
@@ -2247,8 +2248,8 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
                             'mac_ip_prod_type': 'bgp',
                             'seq_num': 0,
                             'mac_addr': 'fa16.3e9a.e558',
-                            'host_ip': '100.101.8.4',
-                            'next_hop1': '66.66.66.66',
+                            'host_ip': '10.111.8.4',
+                            'next_hop1': '10.84.66.66',
                             },
                         },
                     },
@@ -2268,6 +2269,182 @@ class test_show_l2route_evpn_mac_ip_evi(unittest.TestCase):
         obj = ShowL2routeEvpnMacIpEvi(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(evi=101)
+
+# ========================================
+#  show l2route evpn mac-ip all
+# ========================================
+class test_show_l2route_evpn_mac_ip_all(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output = {'execute.return_value': '''
+        R2# show l2route evpn mac-ip all
+        Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link 
+        (Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+        (Ps):Peer Sync (Ro):Re-Originated 
+        Topology    Mac Address    Prod   Flags         Seq No     Host IP         Next-Hops      
+        ----------- -------------- ------ ---------- --------------- ---------------
+        101         fa16.3ed1.37b5 HMM    --            0          10.111.1.3    Local          
+        101         fa16.3ed4.83e4 HMM    --            0          10.111.2.3    Local          
+        101         fa16.3e68.b933 HMM    --            0          10.111.3.3    Local          
+        101         fa16.3e04.e54a BGP    --            0          10.111.8.3    10.84.66.66    
+        101         fa16.3ec5.fcab HMM    --            0          10.111.1.4    Local          
+        101         fa16.3e79.6bfe HMM    --            0          10.111.2.4    Local          
+        101         fa16.3e2f.654d HMM    --            0          10.111.3.4    Local          
+        101         fa16.3e9a.e558 BGP    --            0          10.111.8.4    10.84.66.66    
+        202         fa16.3e79.6bfe HMM    --            0          192.168.16.4    Local          
+        202         fa16.3e9a.e558 BGP    --            0          192.168.55.4    10.84.66.66     
+
+    '''}
+
+    golden_parsed_output = {
+        'topology': {
+            'topo_id': {
+                101: {
+                    'mac_ip': {
+                        'fa16.3ed1.37b5': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3ed1.37b5',
+                            'host_ip': '10.111.1.3',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3ed4.83e4': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3ed4.83e4',
+                            'host_ip': '10.111.2.3',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e68.b933': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e68.b933',
+                            'host_ip': '10.111.3.3',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e04.e54a': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'bgp',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e04.e54a',
+                            'host_ip': '10.111.8.3',
+                            'next_hop1': '10.84.66.66',
+                            },
+                        'fa16.3ec5.fcab': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3ec5.fcab',
+                            'host_ip': '10.111.1.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e79.6bfe': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e79.6bfe',
+                            'host_ip': '10.111.2.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e2f.654d': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e2f.654d',
+                            'host_ip': '10.111.3.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e9a.e558': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'bgp',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e9a.e558',
+                            'host_ip': '10.111.8.4',
+                            'next_hop1': '10.84.66.66',
+                            },
+                        },
+                    },
+                202: {
+                    'mac_ip': {
+                        'fa16.3e79.6bfe': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'hmm',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e79.6bfe',
+                            'host_ip': '192.168.16.4',
+                            'next_hop1': 'local',
+                            },
+                        'fa16.3e9a.e558': {
+                            'mac_ip_flags': '--',
+                            'mac_ip_prod_type': 'bgp',
+                            'seq_num': 0,
+                            'mac_addr': 'fa16.3e9a.e558',
+                            'host_ip': '192.168.55.4',
+                            'next_hop1': '10.84.66.66',
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output_2 = {'execute.return_value': '''
+    leaf3# show l2route evpn mac-ip all
+    Topology ID Mac Address    Prod Host IP                 Next Hop (s)
+    ----------- -------------- ---- ------------------------------------------------------
+    101         0011.0000.0034 BGP  10.36.3.2                      10.70.0.2
+    102         0011.0000.0034 BGP  10.36.3.2                      10.70.0.2
+    '''}
+
+    golden_parsed_output_2 = {
+        'topology': {
+            'topo_id': {
+                101: {
+                    'mac_ip': {
+                        '0011.0000.0034': {
+                            'mac_ip_prod_type': 'bgp',
+                            'mac_addr': '0011.0000.0034',
+                            'host_ip': '10.36.3.2',
+                            'next_hop1': '10.70.0.2',
+                            },
+                        },
+                    },
+                102: {
+                    'mac_ip': {
+                        '0011.0000.0034': {
+                            'mac_ip_prod_type': 'bgp',
+                            'mac_addr': '0011.0000.0034',
+                            'host_ip': '10.36.3.2',
+                            'next_hop1': '10.70.0.2',
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_golden_output_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowL2routeEvpnMacIpAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_output_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowL2routeEvpnMacIpAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2routeEvpnMacIpAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()

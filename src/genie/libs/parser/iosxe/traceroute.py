@@ -85,7 +85,7 @@ class Traceroute(TracerouteSchema):
                            ' +(?P<traceroute>\S+), +timeout +is'
                            ' +(?P<timeout>(\d+)) +seconds$')
 
-        # Tracing the route to www.kddi.com (3.3.3.3)
+        # Tracing the route to www.kddi.com (10.36.3.3)
         p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
                            ' \(+(?P<traceroute>\S+)\)$')
 
@@ -97,8 +97,8 @@ class Traceroute(TracerouteSchema):
                          ' +\((?P<vrf_in_name>(\S+))\/(?P<vrf_in_id>(\d+)),'
                          ' +(?P<vrf_out_name>(\S+))\/(?P<vrf_out_id>(\d+))\)$')
 
-        # L 1 106.162.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
-        # ! 2 106.162.197.102 1 ms
+        # L 1 10.169.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
+        # ! 2 10.169.197.102 1 ms
         p3_1 = re.compile(r'^(?P<code>(!|Q|.|L|D|M|P|R|I|X)) +(?P<hop>(\d+))'
                            ' +(?P<address>([a-zA-Z0-9\.\:]+))'
                            '(?: +MRU +(?P<mru>(\d+)))?'
@@ -117,12 +117,12 @@ class Traceroute(TracerouteSchema):
         # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
         # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
         # 7 172.31.166.10 92 msec 51 msec 148 msec
-        # 8 106.162.197.101 1 msec 1 msec *
+        # 8 10.169.197.101 1 msec 1 msec *
         p4 = re.compile(r'^(?P<hop>(\d+)) +(?P<address>([a-zA-Z0-9\.\:]+))'
                          '(?: +\[(?P<label_name>(MPLS)): +Label (?P<label>(\d+))'
                          ' +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(.*))$')
 
-        # 1 p5DC5A26A.dip0.t-ipconnect.de (106.162.197.93) 0 msec *  1 msec *  0 msec
+        # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
         p5 = re.compile(r'^(?P<hop>(\d+)) +(?P<name>[\S]+)'
                          ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
 
@@ -157,7 +157,7 @@ class Traceroute(TracerouteSchema):
 
                 continue
 
-            # Tracing the route to www.kddi.com (3.3.3.3)
+            # Tracing the route to www.kddi.com (10.36.3.3)
             m = p1_3.match(line)
             if m:
                 group = m.groupdict()
@@ -183,8 +183,8 @@ class Traceroute(TracerouteSchema):
                 hops_dict['vrf_out_id'] = group['vrf_out_id']
                 continue
 
-            # L 1 106.162.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
-            # ! 2 106.162.197.102 1 ms
+            # L 1 10.169.197.93 MRU 1552 [Labels: implicit-null Exp: 0] 1 ms
+            # ! 2 10.169.197.102 1 ms
             m = p3_1.match(line)
             if m:
                 group = m.groupdict()
@@ -228,7 +228,7 @@ class Traceroute(TracerouteSchema):
             # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec 
             # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
             # 7 172.31.166.10 92 msec 51 msec 148 msec
-            # 8 106.162.197.101 1 msec 1 msec *
+            # 8 10.169.197.101 1 msec 1 msec *
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -246,7 +246,7 @@ class Traceroute(TracerouteSchema):
                     label_dict['exp'] = int(group['exp'])
                 continue
 
-            # 1 p5DC5A26A.dip0.t-ipconnect.de (106.162.197.93) 0 msec *  1 msec *  0 msec
+            # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
             m = p5.match(line)
             if m:
                 group = m.groupdict()

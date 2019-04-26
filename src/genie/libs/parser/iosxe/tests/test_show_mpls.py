@@ -2697,7 +2697,7 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
                   'Ethernet': 'up',
                   },
               'destination_address': {
-                  '1.1.1.1': {
+                  '10.4.1.1': {
                       'vc_id': {
                           '888': {
                               'vc_status': 'up',
@@ -2715,10 +2715,10 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
               'last_label_fsm_state_change_time': '00:00:10',
               'signaling_protocol': {
                   'LDP': {
-                      'peer_id': '1.1.1.1:0',
+                      'peer_id': '10.4.1.1:0',
                       'peer_state': 'up',
-                      'targeted_hello_ip': '2.2.2.2',
-                      'id': '1.1.1.1',
+                      'targeted_hello_ip': '10.16.2.2',
+                      'id': '10.4.1.1',
                       'status': 'UP',
                       'mpls_vc_labels': {
                           'local': '17',
@@ -2791,15 +2791,15 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
 
     golden_output_3 = {'execute.return_value': '''\
       Local interface: Gi3 up, line protocol up, Ethernet up
-        Destination address: 1.1.1.1, VC ID: 888, VC status: up
+        Destination address: 10.4.1.1, VC ID: 888, VC status: up
           Output interface: Gi2, imposed label stack {32}
           Preferred path: not configured  
           Default path: active
           Next hop: 10.1.2.1
         Create time: 00:00:22, last status change time: 00:00:10
           Last label FSM state change time: 00:00:10
-        Signaling protocol: LDP, peer 1.1.1.1:0 up
-          Targeted Hello: 2.2.2.2(LDP Id) -> 1.1.1.1, LDP is UP
+        Signaling protocol: LDP, peer 10.4.1.1:0 up
+          Targeted Hello: 10.16.2.2(LDP Id) -> 10.4.1.1, LDP is UP
           Graceful restart: not configured and not enabled
           Non stop routing: not configured and not enabled
           Status TLV support (local/remote)   : enabled/supported
@@ -2820,7 +2820,7 @@ class test_show_mpls_l2transport_vc_detail(unittest.TestCase):
           Remote interface description: 
         Sequencing: receive disabled, send disabled
         Control Word: On (configured: autosense)
-        SSO Descriptor: 1.1.1.1/888, local label: 17
+        SSO Descriptor: 10.4.1.1/888, local label: 17
         Dataplane:
           SSM segment/switch IDs: 8195/4097 (used), PWID: 1
         VC statistics:

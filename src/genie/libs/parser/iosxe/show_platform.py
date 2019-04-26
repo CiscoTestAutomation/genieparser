@@ -1213,7 +1213,8 @@ class ShowPlatformSchema(MetaParser):
                 Optional('main'): {
                     Optional('switch_mac_address'): str,
                     Optional('mac_persistency_wait_time'): str,
-                    Optional('chassis'): str
+                    Optional('chassis'): str,
+                    Optional('swstack'): bool
                 },
                 'slot': {
                     Any(): {
@@ -1356,6 +1357,7 @@ class ShowPlatform(ShowPlatformSchema):
                 if 'main' not in platform_dict:
                     platform_dict['main'] = {}
                 platform_dict['main']['switch_mac_address'] = m.groupdict()['switch_mac_address']
+                platform_dict['main']['swstack'] = True
                 continue
 
 
@@ -1374,7 +1376,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if 'WS-C' in model:
+                if ('WS-C' in model) or ('C9500' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -1402,8 +1404,8 @@ class ShowPlatform(ShowPlatformSchema):
 
                 for key, value in platform_dict['slot'][slot].items():
                     for key, last in value.items():
-                        last['priority'] = m.groupdict()['priority']
-                        last['role'] = m.groupdict()['role']
+                        last['swstack_priority'] = m.groupdict()['priority']
+                        last['swstack_role'] = m.groupdict()['role']
                         last['state'] = m.groupdict()['state']
                 continue
 

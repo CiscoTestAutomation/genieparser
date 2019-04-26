@@ -550,7 +550,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
                         ' +(?P<state>\w+) +(?P<holdtime>\d+) +(?P<type>\w+) +(?P<protocol>[\w\-]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
-        #   IP Address(es):  20.2.7.7*
+        #   IP Address(es):  10.229.7.7*
         p4 = re.compile(r'^IP +Address\(es\): +(?P<ip_address>\S+)$')
         #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
         p5 = re.compile(r'^IPv6 +Address\(es\): +(?P<ipv6_address>\S+)$')
@@ -597,7 +597,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
                 type_dict.update({'area_address': group['area_address'].split()})
                 continue
 
-            #   IP Address(es):  20.2.7.7*
+            #   IP Address(es):  10.229.7.7*
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -692,7 +692,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
                         ' +(?P<type>\w+) +(?P<priority>\d+) +(?P<circuit_id>[\w\.]+) +(?P<format>[\S\s]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
-        #   IP Address(es):  20.2.7.7*
+        #   IP Address(es):  10.229.7.7*
         p4 = re.compile(r'^IP +Address\(es\): +(?P<ip_address>\S+)$')
         #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
         p5 = re.compile(r'^IPv6 +Address\(es\): +(?P<ipv6_address>\S+)$')
@@ -741,7 +741,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
                 type_dict.update({'area_address': group['area_address'].split()})
                 continue
 
-            # IP Address(es):  20.2.7.7*
+            # IP Address(es):  10.229.7.7*
             m = p4.match(line)
             if m:
                 group = m.groupdict()

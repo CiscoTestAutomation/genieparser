@@ -227,7 +227,7 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
                                 'holdtime': 26,
                                 'protocol': 'M-ISIS',
                                 'area_address': ['49.0002'],
-                                'ip_address': ['20.2.7.7*'],
+                                'ip_address': ['10.229.7.7*'],
                                 'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
                                 'uptime': '00:23:58',
                                 'nsf': 'capable',
@@ -247,7 +247,7 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
     System Id       Interface     SNPA                State  Holdtime  Type Protocol
     R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
       Area Address(es): 49.0002
-      IP Address(es):  20.2.7.7*
+      IP Address(es):  10.229.7.7*
       IPv6 Address(es): FE80::5C00:C0FF:FE06:7
       Uptime: 00:23:58
       NSF capable
@@ -289,7 +289,7 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
                                 'circuit_id': 'R2.01',
                                 'format': 'Phase V',
                                 'area_address': ['49.0002'],
-                                'ip_address': ['20.2.7.7*'],
+                                'ip_address': ['10.229.7.7*'],
                                 'ipv6_address': ['FE80::5C00:C0FF:FE06:7'],
                                 'uptime': '00:24:24',
                                 'nsf': 'capable',
@@ -309,7 +309,7 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
     System Id       Interface     State  Type Priority  Circuit Id         Format
     R7              Gi4           Up     L2   64        R2.01              Phase V
       Area Address(es): 49.0002
-      IP Address(es):  20.2.7.7*
+      IP Address(es):  10.229.7.7*
       IPv6 Address(es): FE80::5C00:C0FF:FE06:7
       Uptime: 00:24:24
       NSF capable
