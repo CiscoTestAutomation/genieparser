@@ -7,6 +7,16 @@
 
 
 --------------------------------------------------------------------------------
+                                   MSDP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowIpMsdpPeer for:
+    show ip msdp peer
+    show ip msdp vrf <vrf> peer
+  * Add ShowIpMsdpSaCache for:
+    show ip msdp sa-cache
+    show ip msdb vrf <vrf> sa-cache
+--------------------------------------------------------------------------------
                                    POLICY-MAP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -112,6 +122,11 @@
       * Add ShowIpEigrpNeighborsDetail for:
             show ip eigrp neighbors detail
             show ip eigrp vrf <vrf> neighbors detail
+
+      * Add ShowIpv6EigrpNeighborsDetail for:
+            show ipv6 eigrp neighbors detail
+            show ipv6 eigrp vrf <vrf> neighbors detail
+
 * IOSXR
     * Add ShowEigrpIpv4Neighbors for:
             show eigrp ipv4 neighbors
@@ -517,7 +532,8 @@
   * Add ShowIpv6ProtocolsSectionRip for:
       show ipv6 protocols | sec rip
       show ipv6 protocols vrf {vrf} | sec rip
-
+* IOSXR
+  * Fixed ShowProtocolsAfiAllAll for bgp and ospf
 
 ----------------------------------------------------------------------------------
                                  ACL
@@ -580,6 +596,9 @@
     * Add ShowRipStatistics for:
         show rip statistics
         show rip vrf {vrf} statistics
+    * Add ShowRipDatabase for:
+        show rip database
+        show rip vrf <vrf> database
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
