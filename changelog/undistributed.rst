@@ -634,5 +634,4 @@
                                 VRF
 --------------------------------------------------------------------------------
 * IOSXE
-    * Add ShowVrfDetail for:
-        show vrf detail
+    * Updated ShowVrfDetail to support more varied output
