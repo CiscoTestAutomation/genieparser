@@ -1519,14 +1519,12 @@ class test_show_ip_route(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="vni_10100")
-        print(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_show_ip_route_vrf_all(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse(vrf="all")
-        print(parsed_output)
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 # ============================================
@@ -1539,212 +1537,279 @@ class test_show_ipv6_route(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_output_1 = {'execute.return_value': '''
-    R3_nxosv# show ipv6 route vrf all
-    IPv6 Routing Table for VRF "default"
-    '*' denotes best ucast next-hop
-    '**' denotes best mcast next-hop
-    '[x/y]' denotes [preference/metric]
+    R3_nx# show ipv6 route vrf all
+IPv6 Routing Table for VRF "default"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
 
-    2001:1:1:1::1/128, ubest/mbest: 2/0
-        *via 2001:10:1:3::1, Eth1/2, [1/0], 01:02:00, static
-        *via 2001:20:1:3::1, Eth1/3, [1/0], 01:02:00, static
-    2001:10:1:2::/64, ubest/mbest: 4/0
-        *via fe80::5054:ff:fe64:bd2e, Eth1/3, [110/41], 01:01:10, ospfv3-1, intra
-        *via fe80::5054:ff:fea5:6e95, Eth1/2, [110/41], 01:01:10, ospfv3-1, intra
-        *via fe80::5054:ff:fea7:1341, Eth1/4, [110/41], 01:01:10, ospfv3-1, intra
-        *via fe80::5054:ff:feb3:b312, Eth1/1, [110/41], 01:01:10, ospfv3-1, intra
+2001:1:1:1::1/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/2848], 03:55:29, eigrp-test, internal
+2001:2:2:2::2/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/2842], 03:51:46, eigrp-test, internal
+2001:3:3:3::3/128, ubest/mbest: 2/0, attached
+    *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, direct, 
+    *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, local
+2001:10:12:90::/64, ubest/mbest: 2/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/3072], 03:51:46, eigrp-test, internal
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:55:29, eigrp-test, internal
+2001:10:12:120::/64, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:39:27, eigrp-test, internal
+2001:10:13:90::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, direct, 
+2001:10:13:90::3/128, ubest/mbest: 1/0, attached
+    *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, local
+2001:10:23:120::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, direct, 
+2001:10:23:120::3/128, ubest/mbest: 1/0, attached
+    *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, local
 
-    2001:31:31:31::31/128, ubest/mbest: 1/0
-        *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
-    tag 100
-    2001:32:32:32::32/128, ubest/mbest: 2/0
-        *via fe80::5054:ff:fea7:1341, Eth1/4, [200/0], 01:01:24, bgp-100, internal,
-    tag 100
-        *via fe80::5054:ff:feb3:b312, Eth1/1, [200/0], 01:01:24, bgp-100, internal,
-    tag 100
-    2001:33:33:33::33/128, ubest/mbest: 2/0, attached
-        *via 2001:33:33:33::33, Lo3, [0/0], 01:02:01, direct,
-        *via 2001:33:33:33::33, Lo3, [0/0], 01:02:01, local
+IPv6 Routing Table for VRF "VRF1"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
 
-    IPv6 Routing Table for VRF "VRF1"
-    '*' denotes best ucast next-hop
-    '**' denotes best mcast next-hop
-    '[x/y]' denotes [preference/metric]
-
-    2001:1:1:1::1/128, ubest/mbest: 2/0, attached
-        *via 2001:1:1:1::1, Lo4, [0/0], 00:00:35, direct,
-        *via 2001:1:1:1::1, Lo4, [0/0], 00:00:35, local
-
-    IPv6 Routing Table for VRF "management"
-    '*' denotes best ucast next-hop
-    '**' denotes best mcast next-hop
-    '[x/y]' denotes [preference/metric]
+2001:1:1:1::1/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/2848], 03:55:29, eigrp-test, internal
+2001:2:2:2::2/128, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/2842], 03:51:47, eigrp-test, internal
+2001:3:3:3::3/128, ubest/mbest: 2/0, attached
+    *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, direct, 
+    *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, local
+2001:10:12:90::/64, ubest/mbest: 2/0
+    *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/3072], 03:51:47, eigrp-test, internal
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:55:29, eigrp-test, internal
+2001:10:12:120::/64, ubest/mbest: 1/0
+    *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:25:35, eigrp-test, internal
+2001:10:13:90::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:13:90::3, Eth1/2.390, [0/0], 03:55:44, direct, 
+2001:10:13:110::3/128, ubest/mbest: 1/0, attached
+    *via 2001:10:13:110::3, Eth1/2.410, [0/0], 03:55:43, local
+2001:10:13:115::/64, ubest/mbest: 1/0, attached
+    *via 2001:10:13:115::3, Eth1/2.415, [0/0], 03:55:43, direct, 
+2001:10:13:120::3/128, ubest/mbest: 1/0, attached
 
     '''
 }
     golden_parsed_output_1 = {
-        'vrf':{
-            'default':{
+        'vrf': {
+            'default': {
                 'address_family': {
                     'ipv6': {
                         'routes': {
                             '2001:1:1:1::1/128': {
                                 'route': '2001:1:1:1::1/128',
                                 'active': True,
-                                'ubest':2,
-                                'mbest':0,
-                                'route_preference': 1,
-                                'metric': 0,
-                                'source_protocol':'static',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'index': 1,
-                                            'next_hop': '2001:10:1:3::1',
-                                            'outgoing_interface': 'Ethernet1/2',
-                                            'best_ucast_nexthop': True,
-                                            'updated': '01:02:00',
-                                        },
-                                        2: {
-                                            'index': 2,
-                                            'next_hop': '2001:20:1:3::1',
-                                            'best_ucast_nexthop': True,
-                                            'outgoing_interface': 'Ethernet1/3',
-                                            'updated': '01:02:00',
-                                        },
-                                    },
-                                },
-                            },
-                            '2001:10:1:2::/64': {
-                                'route': '2001:10:1:2::/64',
-                                'active': True,
-                                'ubest': 4,
+                                'ubest': 1,
                                 'mbest': 0,
-                                'route_preference': 110,
-                                'metric': 41,
-                                'source_protocol': 'ospfv3',
-                                'process_id': '1',
-                                'source_protocol_status': 'intra',
+                                'metric': 2848,
+                                'route_preference': 90,
+                                'process_id': 'test',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': 'fe80::5054:ff:fe64:bd2e',
+                                            'next_hop': 'fe80::f816:3eff:fef8:e824',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
                                             'best_ucast_nexthop': True,
-                                            'outgoing_interface': 'Ethernet1/3',
-                                            'updated': '01:01:10',
-                                        },
-                                        2: {
-                                            'index': 2,
-                                            'next_hop': 'fe80::5054:ff:fea5:6e95',
-                                            'best_ucast_nexthop': True,
-                                            'outgoing_interface': 'Ethernet1/2',
-                                            'updated': '01:01:10',
-                                        },
-                                        3: {
-                                            'index': 3,
-                                            'next_hop': 'fe80::5054:ff:fea7:1341',
-                                            'best_ucast_nexthop': True,
-                                            'outgoing_interface': 'Ethernet1/4',
-                                            'updated': '01:01:10',
-                                        },
-                                        4: {
-                                            'index': 4,
-                                            'next_hop': 'fe80::5054:ff:feb3:b312',
-                                            'best_ucast_nexthop': True,
-                                            'outgoing_interface': 'Ethernet1/1',
-                                            'updated': '01:01:10',
-                                        },
-                                    },
-                                },
+                                            'updated': '03:55:29',
+                                            'outgoing_interface': 'Ethernet1/2.90'
+                                        }
+                                    }
+                                }
                             },
-                            '2001:31:31:31::31/128': {
-                                'route': '2001:31:31:31::31/128',
+                            '2001:2:2:2::2/128': {
+                                'route': '2001:2:2:2::2/128',
                                 'active': True,
                                 'ubest': 1,
                                 'mbest': 0,
-                                'route_preference': 200,
-                                'source_protocol': 'bgp',
-                                'source_protocol_status': 'internal',
-                                'process_id': '100',
-                                'tag': 100,
-                                'metric': 0,
+                                'metric': 2842,
+                                'route_preference': 90,
+                                'process_id': 'test',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '::ffff:10.229.11.11',
-                                            'next_hop_vrf': 'default',
-                                            'next_hop_af': 'ipv4',
+                                            'next_hop': 'fe80::f816:3eff:fe80:67f4',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
                                             'best_ucast_nexthop': True,
-                                            'updated': '01:01:43',
-                                        },
-
-                                    },
-                                },
+                                            'updated': '03:51:46',
+                                            'outgoing_interface': 'Ethernet1/1.90'
+                                        }
+                                    }
+                                }
                             },
-                            '2001:32:32:32::32/128': {
-                                'route': '2001:32:32:32::32/128',
+                            '2001:3:3:3::3/128': {
+                                'route': '2001:3:3:3::3/128',
                                 'active': True,
                                 'ubest': 2,
                                 'mbest': 0,
-                                'route_preference': 200,
-                                'source_protocol': 'bgp',
-                                'source_protocol_status': 'internal',
-                                'process_id': '100',
-                                'tag': 100,
-                                'metric': 0,
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'index': 1,
-                                            'next_hop': 'fe80::5054:ff:fea7:1341',
-                                            'outgoing_interface': 'Ethernet1/4',
-                                            'best_ucast_nexthop': True,
-                                            'updated': '01:01:24',
-                                        },
-                                        2: {
-                                            'index': 2,
-                                            'next_hop': 'fe80::5054:ff:feb3:b312',
-                                            'outgoing_interface': 'Ethernet1/1',
-                                            'best_ucast_nexthop': True,
-                                            'updated': '01:01:24',
-                                        },
-                                    },
-                                },
-                            },
-                            '2001:33:33:33::33/128': {
-                                'route': '2001:33:33:33::33/128',
-                                'active': True,
                                 'attached': True,
-                                'ubest': 2,
-                                'mbest': 0,
-                                'route_preference': 0,
-                                'source_protocol': 'local',
                                 'metric': 0,
+                                'route_preference': 0,
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '2001:33:33:33::33',
-                                            'outgoing_interface': 'Loopback3',
+                                            'next_hop': '2001:3:3:3::3',
+                                            'source_protocol': 'direct',
                                             'best_ucast_nexthop': True,
-                                            'updated': '01:02:01',
+                                            'updated': '03:55:33',
+                                            'outgoing_interface': 'Loopback0'
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '2001:33:33:33::33',
-                                            'outgoing_interface': 'Loopback3',
+                                            'next_hop': '2001:3:3:3::3',
+                                            'source_protocol': 'local',
                                             'best_ucast_nexthop': True,
-                                            'updated': '01:02:01',
-                                        },
-                                    },
-                                },
+                                            'updated': '03:55:33',
+                                            'outgoing_interface': 'Loopback0'
+                                        }
+                                    }
+                                }
                             },
-
-                        },
-                    },
-                },
+                            '2001:10:12:90::/64': {
+                                'route': '2001:10:12:90::/64',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 3072,
+                                'route_preference': 90,
+                                'process_id': 'test',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::f816:3eff:fe80:67f4',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:51:46',
+                                            'outgoing_interface': 'Ethernet1/1.90'
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': 'fe80::f816:3eff:fef8:e824',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:29',
+                                            'outgoing_interface': 'Ethernet1/2.90'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:12:120::/64': {
+                                'route': '2001:10:12:120::/64',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'metric': 3072,
+                                'route_preference': 90,
+                                'process_id': 'test',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::f816:3eff:fef8:e824',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:39:27',
+                                            'outgoing_interface': 'Ethernet1/2.90'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:13:90::/64': {
+                                'route': '2001:10:13:90::/64',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:13:90::3',
+                                            'source_protocol': 'direct',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:45',
+                                            'outgoing_interface': 'Ethernet1/2.90'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:13:90::3/128': {
+                                'route': '2001:10:13:90::3/128',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:13:90::3',
+                                            'source_protocol': 'local',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:45',
+                                            'outgoing_interface': 'Ethernet1/2.90'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:23:120::/64': {
+                                'route': '2001:10:23:120::/64',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:23:120::3',
+                                            'source_protocol': 'direct',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '02:50:42',
+                                            'outgoing_interface': 'Ethernet1/1.120'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:23:120::3/128': {
+                                'route': '2001:10:23:120::3/128',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:23:120::3',
+                                            'source_protocol': 'local',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '02:50:42',
+                                            'outgoing_interface': 'Ethernet1/1.120'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
             'VRF1': {
                 'address_family': {
@@ -1752,37 +1817,205 @@ class test_show_ipv6_route(unittest.TestCase):
                         'routes': {
                             '2001:1:1:1::1/128': {
                                 'route': '2001:1:1:1::1/128',
-                                'attached': True,
                                 'active': True,
-                                'ubest': 2,
+                                'ubest': 1,
                                 'mbest': 0,
-                                'route_preference': 0,
-                                'metric': 0,
-                                'source_protocol': 'local',
+                                'metric': 2848,
+                                'route_preference': 90,
+                                'process_id': 'test',
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '2001:1:1:1::1',
-                                            'outgoing_interface': 'Loopback4',
+                                            'next_hop': 'fe80::f816:3eff:fef8:e824',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
                                             'best_ucast_nexthop': True,
-                                            'updated': '00:00:35',
+                                            'updated': '03:55:29',
+                                            'outgoing_interface': 'Ethernet1/2.390'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:2:2:2::2/128': {
+                                'route': '2001:2:2:2::2/128',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'metric': 2842,
+                                'route_preference': 90,
+                                'process_id': 'test',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::f816:3eff:fe80:67f4',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:51:47',
+                                            'outgoing_interface': 'Ethernet1/1.390'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:3:3:3::3/128': {
+                                'route': '2001:3:3:3::3/128',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:3:3:3::3',
+                                            'source_protocol': 'direct',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:33',
+                                            'outgoing_interface': 'Loopback300'
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '2001:1:1:1::1',
-                                            'outgoing_interface': 'Loopback4',
+                                            'next_hop': '2001:3:3:3::3',
+                                            'source_protocol': 'local',
                                             'best_ucast_nexthop': True,
-                                            'updated': '00:00:35',
-                                        },
-                                    },
-                                },
+                                            'updated': '03:55:33',
+                                            'outgoing_interface': 'Loopback300'
+                                        }
+                                    }
+                                }
                             },
-                        },
-                    },
-                },
-            },
-        },
+                            '2001:10:12:90::/64': {
+                                'route': '2001:10:12:90::/64',
+                                'active': True,
+                                'ubest': 2,
+                                'mbest': 0,
+                                'metric': 3072,
+                                'route_preference': 90,
+                                'process_id': 'test',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::f816:3eff:fe80:67f4',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:51:47',
+                                            'outgoing_interface': 'Ethernet1/1.390'
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': 'fe80::f816:3eff:fef8:e824',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:29',
+                                            'outgoing_interface': 'Ethernet1/2.390'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:12:120::/64': {
+                                'route': '2001:10:12:120::/64',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'metric': 3072,
+                                'route_preference': 90,
+                                'process_id': 'test',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': 'fe80::f816:3eff:fef8:e824',
+                                            'source_protocol': 'eigrp',
+                                            'source_protocol_status': 'internal',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:25:35',
+                                            'outgoing_interface': 'Ethernet1/2.390'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:13:90::/64': {
+                                'route': '2001:10:13:90::/64',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:13:90::3',
+                                            'source_protocol': 'direct',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:44',
+                                            'outgoing_interface': 'Ethernet1/2.390'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:13:110::3/128': {
+                                'route': '2001:10:13:110::3/128',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:13:110::3',
+                                            'source_protocol': 'local',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:43',
+                                            'outgoing_interface': 'Ethernet1/2.410'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:13:115::/64': {
+                                'route': '2001:10:13:115::/64',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True,
+                                'metric': 0,
+                                'route_preference': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'index': 1,
+                                            'next_hop': '2001:10:13:115::3',
+                                            'source_protocol': 'direct',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '03:55:43',
+                                            'outgoing_interface': 'Ethernet1/2.415'
+                                        }
+                                    }
+                                }
+                            },
+                            '2001:10:13:120::3/128': {
+                                'route': '2001:10:13:120::3/128',
+                                'active': True,
+                                'ubest': 1,
+                                'mbest': 0,
+                                'attached': True
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -1806,12 +2039,10 @@ class test_show_ipv6_route(unittest.TestCase):
             parsed_output = obj.parse(vrf='VRF3')
 
     def test_show_ipv6_route_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowIpv6Route(device=self.device)
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
-
 
 
 if __name__ == '__main__':

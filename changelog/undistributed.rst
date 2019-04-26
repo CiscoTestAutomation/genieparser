@@ -369,10 +369,15 @@
         show ipv6 route <Hostname or A.B.C.D>
         show ipv6 route vrf <vrf> <Hostname or A.B.C.D>
 * NXOS
+    * Updated ShowRoutingIpv6VrfAll to support different vrf
     * Updated ShowIpRoute for:
         show ip route
         show ip route vrf {vrf}
         show ip route vrf all
+    * Updated ShowIpv6Route for:
+        show ipv6 route
+        show ipv6 route vrf {vrf}
+        show ipv6 route vrf all
 
 --------------------------------------------------------------------------------
                                    ISSU
@@ -491,12 +496,6 @@
             show ipv6 cef vrf <vrf>
             show ipv6 cef <prefix>
             show ipv6 cef vrf <vrf> <prefix>
-
-----------------------------------------------------------------------------------
-                                 ROUTING
-----------------------------------------------------------------------------------
-* NXOS
-  * Updated ShowRoutingIpv6VrfAll to support different vrf
 
 ----------------------------------------------------------------------------------
                                  OSPF
