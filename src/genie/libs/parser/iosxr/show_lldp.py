@@ -418,6 +418,8 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            if not line:
+                continue
             # GigabitEthernet1/0/15
             m = p1.match(line)
             if m:
