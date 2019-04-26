@@ -338,7 +338,13 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
 class ShowLldpNeighborsDetail(ShowLldpEntry):
     '''Parser for show lldp neighbors detail'''
-    CMD = 'show lldp neighbors detail'
+    cli_command = 'show lldp neighbors detail'
+    def cli(self,output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+        return super().cli(output=show_output)
 
 
 class ShowLldpTrafficSchema(MetaParser):
