@@ -1,4 +1,4 @@
-"""show_spanning_tree.py
+"""show_lldp.py
    supported commands:
      *  show lldp
      *  show lldp entry [<WORD>|*]
@@ -86,27 +86,31 @@ class ShowLldpEntrySchema(MetaParser):
         Optional('interfaces'): {
             Any(): {
                 'if_name': str,
-                'neighbors': {
-                    Any(): {                        
-                        'chassis_id': str,
-                        'port_id': str,
-                        'neighbor_id': str,
-                        Optional('port_description'): str,
-                        Optional('system_description'): str,
-                        Optional('system_name'): str,
-                        'time_remaining': int,
-                        Optional('capabilities'): {
-                            Any():{
-                                Optional('system'): bool,
-                                Optional('enabled'): bool,
-                                'name': str,
+                'port_id': {
+                    Any(): {
+                        'neighbors': {
+                            Any(): {                        
+                                'chassis_id': str,
+                                'port_id': str,
+                                'neighbor_id': str,
+                                Optional('port_description'): str,
+                                Optional('system_description'): str,
+                                Optional('system_name'): str,
+                                'time_remaining': int,
+                                Optional('capabilities'): {
+                                    Any():{
+                                        Optional('system'): bool,
+                                        Optional('enabled'): bool,
+                                        'name': str,
+                                    }
+                                },
+                                Optional('management_address'): str,
+                                Optional('auto_negotiation'): str,
+                                Optional('physical_media_capabilities'): list,
+                                Optional('unit_type'): int,
+                                Optional('vlan_id'): int
                             }
-                        },
-                        Optional('management_address'): str,
-                        Optional('auto_negotiation'): str,
-                        Optional('physical_media_capabilities'): list,
-                        Optional('unit_type'): int,
-                        Optional('vlan_id'): int
+                        }
                     }
                 }
             }
@@ -148,7 +152,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\-]+)$')
 
-        p4 = re.compile(r'^System +Name: +(?P<name>\w+)$')
+        p4 = re.compile(r'^System +Name: +(?P<name>\S+)$')
 
         p5 = re.compile(r'^System +Description:$')
         p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
@@ -198,8 +202,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Port id: Gi1/0/4
             m = p1_1.match(line)
             if m:
-                sub_dict.setdefault('port_id',
-                    Common.convert_intf_name(m.groupdict()['port_id']))
+                port_id = Common.convert_intf_name(m.groupdict()['port_id'])
+                port_dict = intf_dict.setdefault('port_id', {}). \
+                    setdefault(port_id, {})
+                sub_dict.setdefault('port_id', port_id)
                 continue
 
             # Port Description: GigabitEthernet1/0/4
@@ -212,7 +218,10 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p4.match(line)
             if m:
                 name = m.groupdict()['name']
+                nei_dict = port_dict.setdefault('neighbors', {}).setdefault(name, {})
                 sub_dict['system_name'] = name
+                nei_dict['neighbor_id'] = name
+                nei_dict.update(sub_dict)
                 continue
 
 
@@ -253,12 +262,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Time remaining: 112 seconds
             m = p6.match(line)
             if m:
-                nei = sub_dict.get('system_name', '') if sub_dict.get('system_name', '') else \
-                    sub_dict.get('chassis_id', '')
-                nei_dict = intf_dict.setdefault('neighbors', {}).setdefault(nei, {})
-                nei_dict.update(sub_dict)
                 nei_dict['time_remaining'] = int(m.groupdict()['time_remaining'])
-                nei_dict['neighbor_id'] = nei
                 continue
 
             # System Capabilities: B,R
@@ -334,7 +338,13 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
 class ShowLldpNeighborsDetail(ShowLldpEntry):
     '''Parser for show lldp neighbors detail'''
-    CMD = 'show lldp neighbors detail'
+    cli_command = 'show lldp neighbors detail'
+    def cli(self,output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+        return super().cli(output=show_output)
 
 
 class ShowLldpTrafficSchema(MetaParser):

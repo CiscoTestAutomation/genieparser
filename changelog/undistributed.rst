@@ -7,6 +7,16 @@
 
 
 --------------------------------------------------------------------------------
+                                   MSDP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Add ShowIpMsdpPeer for:
+    show ip msdp peer
+    show ip msdp vrf <vrf> peer
+  * Add ShowIpMsdpSaCache for:
+    show ip msdp sa-cache
+    show ip msdb vrf <vrf> sa-cache
+--------------------------------------------------------------------------------
                                    POLICY-MAP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -72,10 +82,24 @@
                                    PLATFORM
 --------------------------------------------------------------------------------
 * IOSXR
-  * Add ShowInstallInactiveSummary for:
+    * Add ShowInstallInactiveSummary for:
         show install inactive summary
-  * Add ShowInstallCommitSummary for:
+    * Add ShowInstallCommitSummary for:
         show install commit summary
+* IOSXE
+    * ShowInventory enhanced to support ASR901 platform
+    * Updated ShowPlatform to support different models
+* IOS
+    * Add ShowEnvironment for:
+        show environment
+    * Add ShowEnvironmentAll for:
+        show environment all
+    * Add ShowModule for:
+        show module
+    * Add ShowSwitch for:
+        show switch
+    * Add ShowSwitchDetail for:
+        show switch detail
 
 --------------------------------------------------------------------------------
                                    RUN
@@ -92,6 +116,9 @@
 * IOSXE
   * ShowBgpNeighborSuperParser enhanced to support 'Multisession Capability'
   * Updated ShowBgpAllNeighbors to support different session states
+* NXOS
+  * Add ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes for:
+    show bgp l2vpn evpn neighbors {neighbor} advertised-routes
 
 * NXOS
   * Add ShowBgpVrfIpv4Unicast for:
@@ -112,6 +139,11 @@
       * Add ShowIpEigrpNeighborsDetail for:
             show ip eigrp neighbors detail
             show ip eigrp vrf <vrf> neighbors detail
+
+      * Add ShowIpv6EigrpNeighborsDetail for:
+            show ipv6 eigrp neighbors detail
+            show ipv6 eigrp vrf <vrf> neighbors detail
+
 * IOSXR
     * Add ShowEigrpIpv4Neighbors for:
             show eigrp ipv4 neighbors
@@ -154,12 +186,6 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * Enhanced Traceroute to parse URL along with the Ip Address
-
---------------------------------------------------------------------------------
-                                   PLATFORM
---------------------------------------------------------------------------------
-* IOSXE
-  * ShowInventory enhanced to support ASR901 platform
 
 --------------------------------------------------------------------------------
                                    LAG
@@ -336,21 +362,6 @@
         'show snmp mib'
 
 --------------------------------------------------------------------------------
-                                   PLATFORM
---------------------------------------------------------------------------------
-* IOS
-    * Add ShowEnvironment for:
-        show environment
-    * Add ShowEnvironmentAll for:
-        show environment all
-    * Add ShowModule for:
-        show module
-    * Add ShowSwitch for:
-        show switch
-    * Add ShowSwitchDetail for:
-        show switch detail
-
---------------------------------------------------------------------------------
                                    RPF
 --------------------------------------------------------------------------------
 * IOS
@@ -373,6 +384,13 @@
         show ip route
         show ip route vrf {vrf}
         show ip route vrf all
+* IOSXR
+    * Add ShowRouteIpv4 for:
+        show route ipv4
+        show route vrf <vrf> ipv4
+    * Add ShowRouteIpv6 for:
+        show route ipv6
+        show route vrf <vrf> ipv6
 
 --------------------------------------------------------------------------------
                                    ISSU
@@ -444,6 +462,11 @@
         show arp summary
     * Add ShowArp
         show arp
+* NXOS
+    * Updated ShowIpArp for:
+        show ip arp
+        show ip arp {vrf}
+        show ip arp all
 
 --------------------------------------------------------------------------------
                                    L2VPN
@@ -517,7 +540,8 @@
   * Add ShowIpv6ProtocolsSectionRip for:
       show ipv6 protocols | sec rip
       show ipv6 protocols vrf {vrf} | sec rip
-
+* IOSXR
+  * Fixed ShowProtocolsAfiAllAll for bgp and ospf
 
 ----------------------------------------------------------------------------------
                                  ACL
@@ -551,7 +575,9 @@
         show lldp traffic
     * Add ShowLldpInterface for:
         show lldp interface
-
+* IOSXE
+    * Add ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
 ----------------------------------------------------------------------------------
                                    IGMP
 ----------------------------------------------------------------------------------
@@ -580,6 +606,12 @@
     * Add ShowRipStatistics for:
         show rip statistics
         show rip vrf {vrf} statistics
+    * Add ShowRipDatabase for:
+        show rip database
+        show rip vrf <vrf> database
+    * Add ShowRipInterface for:
+        show rip interface
+        show rip vrf {vrf} interface
 
 --------------------------------------------------------------------------------
                                 PREFIX_LIST
@@ -600,6 +632,8 @@
                                 VXLAN
 --------------------------------------------------------------------------------
 * NXOS
+    * Add ShowL2routeEvpnMacIpAll for:
+        show l2route evpn mac-ip all
     * Add ShowL2routeEvpnMacIpEvi for:
         show l2route evpn mac-ip evi <evi>
         
@@ -617,4 +651,10 @@
         show spanning-tree pvrstag <pvrstag_domain>
     * Add ShowSpanningTreePvsTag for:
         show spanning-tree pvstag <pvstag_domain>
-        
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowVrfDetail to support more varied output
+

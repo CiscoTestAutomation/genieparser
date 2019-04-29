@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.nxos.show_arp import ShowIpArpDetailVrfAll, \
 											ShowIpArpSummaryVrfAll, \
-											ShowIpArpstatisticsVrfAll
+											ShowIpArpstatisticsVrfAll, \
+											ShowIpArp
 
 
 #=========================================================
@@ -285,7 +286,6 @@ class test_show_ip_arp_summary_vrf_all(unittest.TestCase):
 # Unit test for show ip arp statistics vrf all
 #=========================================================
 class test_show_ip_arp_statistics_vrf_all(unittest.TestCase):
-
 	device = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
 
@@ -604,6 +604,291 @@ class test_show_ip_arp_statistics_vrf_all(unittest.TestCase):
 		obj = ShowIpArpstatisticsVrfAll(device=self.device)
 		parsed_output = obj.parse()
 		self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+# =============================
+# Unit tests for:
+# 	show ip arp
+# 	show ip arp vrf {vrf}
+# 	show ip arp vrf all
+# =============================
+class test_show_ip_arp(unittest.TestCase):
+	device = Device(name='aDevice')
+	empty_output = {'execute.return_value': ''}
+
+	golden_output = {'execute.return_value': ''' \
+		R2# show ip arp
+
+		Flags: * - Adjacencies learnt on non-active FHRP router
+			+ - Adjacencies synced via CFSoE
+			# - Adjacencies Throttled for Glean
+			CP - Added via L2RIB, Control plane Adjacencies
+			PS - Added via L2RIB, Peer Sync
+			RO - Re-Originated Peer Sync Entry
+			D - Static Adjacencies attached to down interface
+
+		IP ARP Table for context default
+		Total number of entries: 2
+		Address         Age       MAC Address     Interface       Flags
+		10.2.4.4        00:13:42  5e00.0003.0007  Ethernet1/1
+        10.2.4.5           -      aaaa.bbbb.cccc  Ethernet1/1      
+		10.2.5.5        00:00:04  5e00.0004.0007  Ethernet1/2
+	'''}
+
+	golden_parsed_output = {
+		'interfaces':{  
+			'Ethernet1/1':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.4.4':{  
+							'ip':'10.2.4.4',
+							'link_layer_address':'5e00.0003.0007',
+							'physical_interface':'Ethernet1/1',
+							'origin':'dynamic',
+							'age':'00:13:42'
+						},
+						'10.2.4.5': {
+							'ip':'10.2.4.5',
+							'link_layer_address':'aaaa.bbbb.cccc',
+							'physical_interface':'Ethernet1/1',
+							'origin':'static',
+							'age':'-'
+						}
+					}
+				}
+			},
+			'Ethernet1/2':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.5.5':{  
+							'ip':'10.2.5.5',
+							'link_layer_address':'5e00.0004.0007',
+							'physical_interface':'Ethernet1/2',
+							'origin':'dynamic',
+							'age':'00:00:04'
+						}
+					}
+				}
+			}
+		},
+		'statistics':{  
+			'entries_total':2
+		}
+	}
+
+	golden_output_2 = {'execute.return_value': '''
+		R2# show ip arp vrf vni_10100
+
+		Flags: * - Adjacencies learnt on non-active FHRP router
+			+ - Adjacencies synced via CFSoE
+			# - Adjacencies Throttled for Glean
+			CP - Added via L2RIB, Control plane Adjacencies
+			PS - Added via L2RIB, Peer Sync
+			RO - Re-Originated Peer Sync Entry
+			D - Static Adjacencies attached to down interface
+
+		IP ARP Table for context vni_10100
+		Total number of entries: 6
+		Address         Age       MAC Address     Interface       Flags
+		100.101.1.3     00:10:42  fa16.3ed1.37b5  Vlan101         + 
+	'''}
+
+	golden_parsed_output_2 = {
+		'statistics': {
+			'entries_total': 6
+		},
+		'interfaces': {
+			'Vlan101': {
+				'ipv4': {
+					'neighbors': {
+						'100.101.1.3': {
+							'ip': '100.101.1.3',
+							'link_layer_address': 'fa16.3ed1.37b5',
+							'age': '00:10:42',
+							'origin': 'dynamic',
+							'physical_interface': 'Vlan101',
+							'flags': '+'
+						}
+					}
+				}
+			}
+		}
+	}
+
+	golden_output_3 = {'execute.return_value': '''
+		R2# show ip arp vrf all
+
+		Flags: * - Adjacencies learnt on non-active FHRP router
+			+ - Adjacencies synced via CFSoE
+			# - Adjacencies Throttled for Glean
+			CP - Added via L2RIB, Control plane Adjacencies
+			PS - Added via L2RIB, Peer Sync
+			RO - Re-Originated Peer Sync Entry
+			D - Static Adjacencies attached to down interface
+
+		IP ARP Table for all contexts
+		Total number of entries: 11
+		Address         Age       MAC Address     Interface       Flags
+		10.255.8.99     00:00:22  5e00.0009.0000  mgmt0           
+		10.2.4.4        00:13:47  5e00.0003.0007  Ethernet1/1     
+		10.2.5.5        00:00:09  5e00.0004.0007  Ethernet1/2     
+		99.2.3.3        00:00:09  5e00.0002.0007  Ethernet1/6     
+		100.101.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         + 
+		100.101.1.4     00:01:53  fa16.3ec5.fcab  Vlan101         
+		100.101.2.3     00:09:20  fa16.3ed4.83e4  Vlan101         
+		100.101.2.4     00:17:48  fa16.3e79.6bfe  Vlan101         
+		100.101.3.3     00:18:09  fa16.3e68.b933  Vlan101         + 
+		100.101.3.4     00:00:37  fa16.3e2f.654d  Vlan101         + 
+		200.202.2.4     00:17:48  fa16.3e79.6bfe  Vlan202         
+	'''}
+
+	golden_parsed_output_3 = {
+		'interfaces':{  
+    		'mgmt0':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.255.8.99':{  
+							'ip':'10.255.8.99',
+							'link_layer_address':'5e00.0009.0000',
+							'physical_interface':'mgmt0',
+							'origin':'dynamic',
+							'age':'00:00:22'
+						}
+					}
+				}
+			},
+			'Ethernet1/1':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.4.4':{  
+							'ip':'10.2.4.4',
+							'link_layer_address':'5e00.0003.0007',
+							'physical_interface':'Ethernet1/1',
+							'origin':'dynamic',
+							'age':'00:13:47'
+						}
+					}
+				}
+			},
+			'Ethernet1/2':{  
+				'ipv4':{  
+					'neighbors':{  
+						'10.2.5.5':{  
+							'ip':'10.2.5.5',
+							'link_layer_address':'5e00.0004.0007',
+							'physical_interface':'Ethernet1/2',
+							'origin':'dynamic',
+							'age':'00:00:09'
+						}
+					}
+				}
+			},
+			'Ethernet1/6':{  
+				'ipv4':{  
+					'neighbors':{  
+						'99.2.3.3':{  
+							'ip':'99.2.3.3',
+							'link_layer_address':'5e00.0002.0007',
+							'physical_interface':'Ethernet1/6',
+							'origin':'dynamic',
+							'age':'00:00:09'
+						}
+					}
+				}
+			},
+			'Vlan101':{  
+				'ipv4':{  
+					'neighbors':{  
+						'100.101.1.3':{  
+							'ip':'100.101.1.3',
+							'link_layer_address':'fa16.3ed1.37b5',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:09:20',
+							'flags':'+'
+						},
+						'100.101.1.4':{  
+							'ip':'100.101.1.4',
+							'link_layer_address':'fa16.3ec5.fcab',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:01:53'
+						},
+						'100.101.2.3':{  
+							'ip':'100.101.2.3',
+							'link_layer_address':'fa16.3ed4.83e4',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:09:20'
+						},
+						'100.101.2.4':{  
+							'ip':'100.101.2.4',
+							'link_layer_address':'fa16.3e79.6bfe',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:17:48'
+						},
+						'100.101.3.3':{  
+							'ip':'100.101.3.3',
+							'link_layer_address':'fa16.3e68.b933',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:18:09',
+							'flags':'+'
+						},
+						'100.101.3.4':{  
+							'ip':'100.101.3.4',
+							'link_layer_address':'fa16.3e2f.654d',
+							'physical_interface':'Vlan101',
+							'origin':'dynamic',
+							'age':'00:00:37',
+							'flags':'+'
+						}
+					}
+				}
+			},
+			'Vlan202':{  
+				'ipv4':{  
+					'neighbors':{  
+						'200.202.2.4':{  
+							'ip':'200.202.2.4',
+							'link_layer_address':'fa16.3e79.6bfe',
+							'physical_interface':'Vlan202',
+							'origin':'dynamic',
+							'age':'00:17:48'
+						}
+					}
+				}
+			}
+		},
+		'statistics':{  
+			'entries_total':11
+		}
+	}
+
+	def test_empty(self):
+		self.device = Mock(**self.empty_output)
+		obj = ShowIpArp(device=self.device)
+		with self.assertRaises(SchemaEmptyParserError):
+			parsed_output = obj.parse()
+
+	def test_golden(self):
+		self.device = Mock(**self.golden_output)
+		obj = ShowIpArp(device=self.device)
+		parsed_output = obj.parse()
+		self.assertEqual(parsed_output, self.golden_parsed_output)
+
+	def test_golden_vrf(self):
+		self.device = Mock(**self.golden_output_2)
+		obj = ShowIpArp(device=self.device)
+		parsed_output = obj.parse(vrf='vni_10100')
+		self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+	def test_golden_all(self):
+		self.device = Mock(**self.golden_output_3)
+		obj = ShowIpArp(device=self.device)
+		parsed_output = obj.parse(vrf='all')
+		self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 if __name__ == '__main__':
