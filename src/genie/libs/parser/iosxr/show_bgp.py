@@ -1041,7 +1041,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         continue
 
             # VRF: VRF1
-            p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9]+)$')
+            p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p1_1.match(line)
             if m:
                 vrf = str(m.groupdict()['vrf'])
@@ -3704,7 +3704,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                     continue
 
             # VRF: VRF2
-            p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -4036,7 +4036,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                         continue
 
             # VRF: VRF1
-            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -4418,7 +4418,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                         continue
 
             # VRF: VRF1
-            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
