@@ -41,11 +41,11 @@ class test_show_ipv6_routers_vrf_all(unittest.TestCase):
                     'reachable_time_msec': 0,
                     'retransmission_time': 0,
                     'prefix': {
-                        'prefix': '2010:2:3::/64',
-                        'onlink_flag': 1,
-                        'autonomous_flag': 1,
-                        'valid_lifetime': 2592000,
-                        'preferred_lifetime': 604800}}},
+                        '2010:2:3::/64': {
+                            'autonomous_flag': 1,
+                            'onlink_flag': 1,
+                            'preferred_lifetime': 604800,
+                            'valid_lifetime': 2592000}}}},
             'Ethernet1/2': {
                 'interface': 'Ethernet1/2',
                 'router_advertisement': {
@@ -61,11 +61,11 @@ class test_show_ipv6_routers_vrf_all(unittest.TestCase):
                     'reachable_time_msec': 0,
                     'retransmission_time': 0,
                     'prefix': {
-                        'prefix': '2020:2:3::/64',
-                        'onlink_flag': 1,
-                        'autonomous_flag': 1,
-                        'valid_lifetime': 2592000,
-                        'preferred_lifetime': 604800}}},
+                        '2020:2:3::/64': {
+                            'autonomous_flag': 1,
+                            'onlink_flag': 1,
+                            'preferred_lifetime': 604800,
+                            'valid_lifetime': 2592000}}}},
             'Ethernet1/3': {
                 'interface': 'Ethernet1/3',
                 'router_advertisement': {
@@ -81,11 +81,11 @@ class test_show_ipv6_routers_vrf_all(unittest.TestCase):
                     'reachable_time_msec': 0,
                     'retransmission_time': 0,
                     'prefix': {
-                        'prefix': '2010:1:3::/64',
-                        'onlink_flag': 1,
-                        'autonomous_flag': 1,
-                        'valid_lifetime': 2592000,
-                        'preferred_lifetime': 604800}}},
+                        '2010:1:3::/64': {
+                            'autonomous_flag': 1,
+                            'onlink_flag': 1,
+                            'preferred_lifetime': 604800,
+                            'valid_lifetime': 2592000}}}},
             'Ethernet1/4': {
                 'interface': 'Ethernet1/4',
                 'router_advertisement': {
@@ -101,11 +101,11 @@ class test_show_ipv6_routers_vrf_all(unittest.TestCase):
                     'reachable_time_msec': 0,
                     'retransmission_time': 0,
                     'prefix': {
-                        'prefix': '2020:1:3::/64',
-                        'onlink_flag': 1,
-                        'autonomous_flag': 1,
-                        'valid_lifetime': 2592000,
-                        'preferred_lifetime': 604800}}}}}
+                        '2020:1:3::/64': {
+                            'autonomous_flag': 1,
+                            'onlink_flag': 1,
+                            'preferred_lifetime': 604800,
+                            'valid_lifetime': 2592000}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         n9kv-3# show ipv6 routers vrf all
@@ -166,7 +166,7 @@ class test_show_ipv6_icmp_neighbor_detail_vrf_all(unittest.TestCase):
 
     golden_parsed_output = {
         'interfaces': {
-            'Eth1/1': {
+            'Ethernet1/1': {
                 'interface': 'Eth1/1',
                 'phy_interface': 'Eth1/1',
                 'neighbors': {
@@ -180,7 +180,7 @@ class test_show_ipv6_icmp_neighbor_detail_vrf_all(unittest.TestCase):
                         'age': '00:18:33',
                         'mac_address': 'fa16.3e82.6320',
                         'state': 'STALE'}}},
-            'Eth1/2': {
+            'Ethernet1/2': {
                 'interface': 'Eth1/2',
                 'phy_interface': 'Eth1/2',
                 'neighbors': {
@@ -194,7 +194,7 @@ class test_show_ipv6_icmp_neighbor_detail_vrf_all(unittest.TestCase):
                         'age': '00:14:19',
                         'mac_address': 'fa16.3e8b.59c9',
                         'state': 'STALE'}}},
-            'Eth1/3': {
+            'Ethernet1/3': {
                 'interface': 'Eth1/3',
                 'phy_interface': 'Eth1/3',
                 'neighbors': {
@@ -203,7 +203,7 @@ class test_show_ipv6_icmp_neighbor_detail_vrf_all(unittest.TestCase):
                         'age': '00:15:31',
                         'mac_address': 'fa16.3e19.8682',
                         'state': 'STALE'}}},
-            'Eth1/4': {
+            'Ethernet1/4': {
                 'interface': 'Eth1/4',
                 'phy_interface': 'Eth1/4',
                 'neighbors': {
@@ -266,15 +266,16 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
         'vrf': {
             'default': {
                 'vrf': 'default',
-                'nd_interface': 'ICMPv6 ND',
                 'interfaces': {
                     'Ethernet1/1': {
                         'interface': 'Ethernet1/1',
                         'interface_status': 'protocol-up/link-up/admin-up',
-                        'ipv6': {
-                            'ipv6_address': '2010:2:3::3/64',
-                            'ipv6_status': 'VALID'},
-                        'ipv6_link_local_address': 'fe80::5c01:c0ff:fe02:7',
+                        'ipv6_address': {
+                            '2010:2:3::3/64': {
+                                'status': 'VALID'}},
+                        'ipv6_link_local_address': {
+                            'fe80::5c01:c0ff:fe02:7': {
+                                'status': 'VALID'}},
                         'nd_mac_extract': 'Disabled',
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': '00:06:16',
@@ -283,14 +284,14 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'next_router_advertisement_sent': '0.000000'},
                         'router_advertisement': {
                             'periodic_interval_seconds': '200-201',
-                            'managed_address_configuration_flag': 'false',
-                            'other_stateful_configuration_flag': 'false',
-                            'default_router_preference_value': 'Medium',
-                            'current_hop_limit': 64,
-                            'mtu': 1500,
-                            'router_lifetime_secs': 1801,
-                            'reachable_time_ms': 0,
-                            'retrans_timer_ms': 0,
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1801,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
                             'suppress_ra': 'Enabled',
                             'suppress_mtu_ra': 'Disabled',
                             'suppress_route_information_option_ra': 'Disabled'},
@@ -300,7 +301,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'nd_nud_retry_interval': 1000,
                             'nd_nud_retry_attempts': 3},
                         'icmpv6_error_message': {
-                            'send_redirects': 'true',
+                            'send_redirects_num': 0,
                             'send_unreachables': 'false'},
                         'icmpv6_dad': {
                             'maximum_dad_attempts': 1,
@@ -308,10 +309,12 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                     'Ethernet1/3': {
                         'interface': 'Ethernet1/3',
                         'interface_status': 'protocol-up/link-up/admin-up',
-                        'ipv6': {
-                            'ipv6_address': '2010:1:3::3/64',
-                            'ipv6_status': 'VALID'},
-                        'ipv6_link_local_address': 'fe80::5c01:c0ff:fe02:7',
+                        'ipv6_address': {
+                            '2010:1:3::3/64': {
+                                'status': 'VALID'}},
+                        'ipv6_link_local_address': {
+                            'fe80::5c01:c0ff:fe02:7': {
+                                'status': 'VALID'}},
                         'nd_mac_extract': 'Disabled',
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': '00:07:39',
@@ -320,14 +323,14 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'next_router_advertisement_sent': '00:03:50'},
                         'router_advertisement': {
                             'periodic_interval_seconds': '200-600',
-                            'managed_address_configuration_flag': 'false',
-                            'other_stateful_configuration_flag': 'false',
-                            'default_router_preference_value': 'Medium',
-                            'current_hop_limit': 64,
-                            'mtu': 1500,
-                            'router_lifetime_secs': 1800,
-                            'reachable_time_ms': 0,
-                            'retrans_timer_ms': 0,
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
                             'suppress_ra': 'Disabled',
                             'suppress_mtu_ra': 'Disabled',
                             'suppress_route_information_option_ra': 'Disabled'},
@@ -337,7 +340,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'nd_nud_retry_interval': 1000,
                             'nd_nud_retry_attempts': 3},
                         'icmpv6_error_message': {
-                            'send_redirects': 'true',
+                            'send_redirects_num': 0,
                             'send_unreachables': 'false'},
                         'icmpv6_dad': {
                             'maximum_dad_attempts': 1,
@@ -345,10 +348,12 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                     'loopback0': {
                         'interface': 'loopback0',
                         'interface_status': 'protocol-up/link-up/admin-up',
-                        'ipv6': {
-                            'ipv6_address': '2001:3:3::3/128',
-                            'ipv6_status': 'VALID'},
-                        'ipv6_link_local_address': 'fe80::5c01:c0ff:fe02:0',
+                        'ipv6_address': {
+                            '2001:3:3::3/128': {
+                                'status': 'VALID'}},
+                        'ipv6_link_local_address': {
+                            'fe80::5c01:c0ff:fe02:0': {
+                                'status': 'VALID'}},
                         'nd_mac_extract': 'Disabled',
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': 'never',
@@ -357,14 +362,14 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'next_router_advertisement_sent': 'never'},
                         'router_advertisement': {
                             'periodic_interval_seconds': '200-600',
-                            'managed_address_configuration_flag': 'false',
-                            'other_stateful_configuration_flag': 'false',
-                            'default_router_preference_value': 'Medium',
-                            'current_hop_limit': 64,
-                            'mtu': 1500,
-                            'router_lifetime_secs': 1800,
-                            'reachable_time_ms': 0,
-                            'retrans_timer_ms': 0,
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
                             'suppress_ra': 'Disabled',
                             'suppress_mtu_ra': 'Disabled',
                             'suppress_route_information_option_ra': 'Disabled'},
@@ -374,7 +379,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'nd_nud_retry_interval': 1000,
                             'nd_nud_retry_attempts': 3},
                         'icmpv6_error_message': {
-                            'send_redirects': 'true',
+                            'send_redirects_num': 0,
                             'send_unreachables': 'false'},
                         'icmpv6_dad': {
                             'maximum_dad_attempts': 1,
@@ -382,10 +387,12 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                     'loopback1': {
                         'interface': 'loopback1',
                         'interface_status': 'protocol-up/link-up/admin-up',
-                        'ipv6': {
-                            'ipv6_address': '2001:33:33::33/128',
-                            'ipv6_status': 'VALID'},
-                        'ipv6_link_local_address': 'fe80::5c01:c0ff:fe02:0',
+                        'ipv6_address': {
+                            '2001:33:33::33/128': {
+                                'status': 'VALID'}},
+                        'ipv6_link_local_address': {
+                            'fe80::5c01:c0ff:fe02:0': {
+                                'status': 'VALID'}},
                         'nd_mac_extract': 'Disabled',
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': 'never',
@@ -394,14 +401,14 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'next_router_advertisement_sent': 'never'},
                         'router_advertisement': {
                             'periodic_interval_seconds': '200-600',
-                            'managed_address_configuration_flag': 'false',
-                            'other_stateful_configuration_flag': 'false',
-                            'default_router_preference_value': 'Medium',
-                            'current_hop_limit': 64,
-                            'mtu': 1500,
-                            'router_lifetime_secs': 1800,
-                            'reachable_time_ms': 0,
-                            'retrans_timer_ms': 0,
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
                             'suppress_ra': 'Disabled',
                             'suppress_mtu_ra': 'Disabled',
                             'suppress_route_information_option_ra': 'Disabled'},
@@ -411,25 +418,25 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'nd_nud_retry_interval': 1000,
                             'nd_nud_retry_attempts': 3},
                         'icmpv6_error_message': {
-                            'send_redirects': 'true',
+                            'send_redirects_num': 0,
                             'send_unreachables': 'false'},
                         'icmpv6_dad': {
                             'maximum_dad_attempts': 1,
                             'current_dad_attempt': 0}}}},
             'management': {
-                'vrf': 'management',
-                'nd_interface': 'ICMPv6 ND'},
+                'vrf': 'management'},
             'vrf1': {
                 'vrf': 'vrf1',
-                'nd_interface': 'ICMPv6 ND',
                 'interfaces': {
                     'Ethernet1/2': {
                         'interface': 'Ethernet1/2',
                         'interface_status': 'protocol-up/link-up/admin-up',
-                        'ipv6': {
-                            'ipv6_address': '2020:2:3::3/64',
-                            'ipv6_status': 'VALID'},
-                        'ipv6_link_local_address': 'fe80::5c01:c0ff:fe02:7',
+                        'ipv6_address': {
+                            '2020:2:3::3/64': {
+                                'status': 'VALID'}},
+                        'ipv6_link_local_address': {
+                            'fe80::5c01:c0ff:fe02:7': {
+                                'status': 'VALID'}},
                         'nd_mac_extract': 'Disabled',
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': '00:09:34',
@@ -438,14 +445,14 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'next_router_advertisement_sent': '00:01:46'},
                         'router_advertisement': {
                             'periodic_interval_seconds': '200-600',
-                            'managed_address_configuration_flag': 'false',
-                            'other_stateful_configuration_flag': 'false',
-                            'default_router_preference_value': 'Medium',
-                            'current_hop_limit': 64,
-                            'mtu': 1500,
-                            'router_lifetime_secs': 1800,
-                            'reachable_time_ms': 0,
-                            'retrans_timer_ms': 0,
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
                             'suppress_ra': 'Disabled',
                             'suppress_mtu_ra': 'Disabled',
                             'suppress_route_information_option_ra': 'Disabled'},
@@ -455,7 +462,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'nd_nud_retry_interval': 1000,
                             'nd_nud_retry_attempts': 3},
                         'icmpv6_error_message': {
-                            'send_redirects': 'true',
+                            'send_redirects_num': 0,
                             'send_unreachables': 'false'},
                         'icmpv6_dad': {
                             'maximum_dad_attempts': 1,
@@ -463,10 +470,12 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                     'Ethernet1/4': {
                         'interface': 'Ethernet1/4',
                         'interface_status': 'protocol-up/link-up/admin-up',
-                        'ipv6': {
-                            'ipv6_address': '2020:1:3::3/64',
-                            'ipv6_status': 'VALID'},
-                        'ipv6_link_local_address': 'fe80::5c01:c0ff:fe02:7',
+                        'ipv6_address': {
+                            '2020:1:3::3/64': {
+                                'status': 'VALID'}},
+                        'ipv6_link_local_address': {
+                            'fe80::5c01:c0ff:fe02:7': {
+                                'status': 'VALID'}},
                         'nd_mac_extract': 'Disabled',
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': '00:03:31',
@@ -475,14 +484,14 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'next_router_advertisement_sent': '00:01:36'},
                         'router_advertisement': {
                             'periodic_interval_seconds': '200-600',
-                            'managed_address_configuration_flag': 'false',
-                            'other_stateful_configuration_flag': 'false',
-                            'default_router_preference_value': 'Medium',
-                            'current_hop_limit': 64,
-                            'mtu': 1500,
-                            'router_lifetime_secs': 1800,
-                            'reachable_time_ms': 0,
-                            'retrans_timer_ms': 0,
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
                             'suppress_ra': 'Disabled',
                             'suppress_mtu_ra': 'Disabled',
                             'suppress_route_information_option_ra': 'Disabled'},
@@ -492,7 +501,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                             'nd_nud_retry_interval': 1000,
                             'nd_nud_retry_attempts': 3},
                         'icmpv6_error_message': {
-                            'send_redirects': 'true',
+                            'send_redirects_num': 0,
                             'send_unreachables': 'false'},
                         'icmpv6_dad': {
                             'maximum_dad_attempts': 1,
@@ -733,7 +742,7 @@ class test_show_ipv6_neighbor_detail_vrf_all(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'adjacency_hit': {
             'GLEAN': {
                 'byte_count': 0,
@@ -890,7 +899,7 @@ class test_show_ipv6_neighbor_detail_vrf_all(unittest.TestCase):
                         'throttled': 'No'}}}},
         'total_number_of_entries': 11}
 
-    golden_output = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         n9kv-3# show ipv6 neighbor detail vrf all
         No. of Adjacency hit with type INVALID: Packet count 0, Byte count 0
         No. of Adjacency hit with type GLOBAL DROP: Packet count 0, Byte count 0
@@ -1036,17 +1045,374 @@ class test_show_ipv6_neighbor_detail_vrf_all(unittest.TestCase):
         Best :               Yes
         Throttled :          No'''}
 
+    golden_parsed_output2 = {
+        'adjacency_hit': {
+            'GLEAN': {
+                'byte_count': 0,
+                'packet_count': 0},
+            'GLOBAL DROP': {
+                'byte_count': 0,
+                'packet_count': 0},
+            'GLOBAL GLEAN': {
+                'byte_count': 0,
+                'packet_count': 0},
+            'GLOBAL PUNT': {
+                'byte_count': 0,
+                'packet_count': 0},
+            'INVALID': {
+                'byte_count': 0,
+                'packet_count': 0},
+            'NORMAL': {
+                'byte_count': 0,
+                'packet_count': 0}},
+        'adjacency_statistics_last_updated_before': 'never',
+        'interfaces': {
+            'Ethernet1/1.110': {
+                'interface': 'Ethernet1/1.110',
+                'neighbors': {
+                    'fe80::f816:3eff:fe5a:9eb3': {
+                        'age': '00:02:23',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe5a:9eb3',
+                        'mac_addr': 'fa16.3e5a.9eb3',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/1.110',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/1.115': {
+                'interface': 'Ethernet1/1.115',
+                'neighbors': {
+                    'fe80::f816:3eff:fe5a:9eb3': {
+                        'age': '00:04:11',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe5a:9eb3',
+                        'mac_addr': 'fa16.3e5a.9eb3',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/1.115',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/1.390': {
+                'interface': 'Ethernet1/1.390',
+                'neighbors': {
+                    'fe80::f816:3eff:fe5a:9eb3': {
+                        'age': '00:22:28',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe5a:9eb3',
+                        'mac_addr': 'fa16.3e5a.9eb3',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/1.390',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/1.410': {
+                'interface': 'Ethernet1/1.410',
+                'neighbors': {
+                    'fe80::f816:3eff:fe5a:9eb3': {
+                        'age': '00:02:30',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe5a:9eb3',
+                        'mac_addr': 'fa16.3e5a.9eb3',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/1.410',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/1.90': {
+                'interface': 'Ethernet1/1.90',
+                'neighbors': {
+                    'fe80::f816:3eff:fe5a:9eb3': {
+                        'age': '00:08:01',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe5a:9eb3',
+                        'mac_addr': 'fa16.3e5a.9eb3',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/1.90',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.110': {
+                'interface': 'Ethernet1/2.110',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.110',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.115': {
+                'interface': 'Ethernet1/2.115',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.115',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.120': {
+                'interface': 'Ethernet1/2.120',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.120',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.390': {
+                'interface': 'Ethernet1/2.390',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.390',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.415': {
+                'interface': 'Ethernet1/2.415',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.415',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.420': {
+                'interface': 'Ethernet1/2.420',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.420',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}},
+            'Ethernet1/2.90': {
+                'interface': 'Ethernet1/2.90',
+                'neighbors': {
+                    'fe80::f816:3eff:fe55:9514': {
+                        'age': '1d15h',
+                        'best': 'Yes',
+                        'byte_count': 0,
+                        'ip': 'fe80::f816:3eff:fe55:9514',
+                        'mac_addr': 'fa16.3e55.9514',
+                        'packet_count': 0,
+                        'physical_interface': 'Ethernet1/2.90',
+                        'preference': '50',
+                        'source': 'icmpv6',
+                        'throttled': 'No'}}}},
+        'total_number_of_entries': 12}
+
+    golden_output2 = {'execute.return_value': '''
+        show ipv6 neighbor detail vrf all
+        No. of Adjacency hit with type INVALID: Packet count 0, Byte count 0
+        No. of Adjacency hit with type GLOBAL DROP: Packet count 0, Byte count 0
+        No. of Adjacency hit with type GLOBAL PUNT: Packet count 0, Byte count 0
+        No. of Adjacency hit with type GLOBAL GLEAN: Packet count 0, Byte count 0
+        No. of Adjacency hit with type GLEAN: Packet count 0, Byte count 0
+        No. of Adjacency hit with type NORMAL: Packet count 0, Byte count 0
+        
+        Adjacency statistics last updated before: never
+        
+        IPv6 Adjacency Table for all VRFs
+        Total number of entries: 12
+        
+        Address :            fe80::f816:3eff:fe5a:9eb3
+        Age :                00:08:01
+        MacAddr :            fa16.3e5a.9eb3
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/1.90
+        Physical Interface : Ethernet1/1.90
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe5a:9eb3
+        Age :                00:02:23
+        MacAddr :            fa16.3e5a.9eb3
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/1.110
+        Physical Interface : Ethernet1/1.110
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe5a:9eb3
+        Age :                00:04:11
+        MacAddr :            fa16.3e5a.9eb3
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/1.115
+        Physical Interface : Ethernet1/1.115
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe5a:9eb3
+        Age :                00:22:28
+        MacAddr :            fa16.3e5a.9eb3
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/1.390
+        Physical Interface : Ethernet1/1.390
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe5a:9eb3
+        Age :                00:02:30
+        MacAddr :            fa16.3e5a.9eb3
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/1.410
+        Physical Interface : Ethernet1/1.410
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.90
+        Physical Interface : Ethernet1/2.90
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.110
+        Physical Interface : Ethernet1/2.110
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.115
+        Physical Interface : Ethernet1/2.115
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.120
+        Physical Interface : Ethernet1/2.120
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.390
+        Physical Interface : Ethernet1/2.390
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.415
+        Physical Interface : Ethernet1/2.415
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+        
+        Address :            fe80::f816:3eff:fe55:9514
+        Age :                   1d15h
+        MacAddr :            fa16.3e55.9514
+        Preference :         50
+        Source :             icmpv6
+        Interface :          Ethernet1/2.420
+        Physical Interface : Ethernet1/2.420
+        Packet Count :       0
+        Byte Count :         0
+        Best :               Yes
+        Throttled :           No
+    '''}
+
     def test_show_ipv6_neighbor_detail_vrf_all_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6NeighborsDetailVrfAll(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_show_ipv6_neighbor_detail_vrf_all_golden(self):
-        self.device = Mock(**self.golden_output)
+    def test_show_ipv6_neighbor_detail_vrf_all_golden1(self):
+        self.device = Mock(**self.golden_output1)
         obj = ShowIpv6NeighborsDetailVrfAll(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ipv6_neighbor_detail_vrf_all_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpv6NeighborsDetailVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':

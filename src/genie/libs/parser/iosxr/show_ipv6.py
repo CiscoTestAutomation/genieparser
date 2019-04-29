@@ -14,6 +14,9 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 
+
+from genie.libs.parser.utils.common import Common
+
 # ======================================================
 # Parser for 'show ipv6 neighbors detail '
 # ======================================================
@@ -22,7 +25,7 @@ class ShowIpv6NeighborsDetailSchema(MetaParser):
     """Schema for show ipv6 neighbors detail"""
 
     schema = {
-        'interface': {
+        'interfaces': {
             Any(): {
                 'interface': str,
                 'neighbors': {
@@ -73,6 +76,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 age = m.groupdict()['age']
                 link_layer_address = m.groupdict()['link_layer_address']
                 neighbor_state = m.groupdict()['neighbor_state']
+                interfaces = Common.convert_intf_name(m.groupdict()['interface'])
                 interface = m.groupdict()['interface']
                 location = m.groupdict()['location']
                 static = m.groupdict()['static']
@@ -80,7 +84,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 sync = m.groupdict()['sync']
                 serg_flags = m.groupdict()['serg_flags']
 
-                interface_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
                 interface_dict['interface'] = interface
 
                 neighbor_dict = interface_dict.setdefault('neighbors', {}).setdefault(ip, {})
@@ -103,6 +107,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 age = m.groupdict()['age']
                 link_layer_address = m.groupdict()['link_layer_address']
                 neighbor_state = m.groupdict()['neighbor_state']
+                interfaces = Common.convert_intf_name(m.groupdict()['interface'])
                 interface = m.groupdict()['interface']
                 location = m.groupdict()['location']
                 static = m.groupdict()['static']
@@ -110,7 +115,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 sync = m.groupdict()['sync']
                 serg_flags = m.groupdict()['serg_flags']
 
-                interface_dict = ret_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
                 interface_dict['interface'] = interface
 
                 neighbor_dict = interface_dict.setdefault('neighbors', {}).setdefault(ip, {})

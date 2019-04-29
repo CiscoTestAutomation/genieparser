@@ -17,6 +17,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
+from genie.libs.parser.utils.common import Common
 
 # ======================================================
 # Parser for 'show ipv6 neighbor detail vrf all'
@@ -90,26 +91,26 @@ class ShowIpv6NeighborsDetailVrfAll(ShowIpv6NeighborsDetailVrfAllSchema):
         # Total number of entries: 11
         p3 = re.compile(r'^Total +number +of +entries: +(?P<total_number_of_entries>(\d+))$')
 
-        #Address :            2010:2:3::2     
-        p4_1 = re.compile(r'Address : +(?P<ip>([\w\:]+))$')
+        #Address :   2010:2:3::2
+        p4_1 = re.compile(r'Address : +(?P<ip>\S+)$')
 
         #Age :                00:09:27
-        p4_2 =re.compile(r'Age : +(?P<age>([\w\:]+))$')
+        p4_2 =re.compile(r'Age : +(?P<age>\S+)$')
 
         #MacAddr :            fa16.3e82.6320
-        p4_3 = re.compile(r'MacAddr : +(?P<mac_addr>([\w\.]+))$')
+        p4_3 = re.compile(r'MacAddr : +(?P<mac_addr>\S+)$')
 
         #Preference :         50  
-        p4_4 = re.compile(r'Preference : +(?P<preference>(\w+))$')
+        p4_4 = re.compile(r'Preference : +(?P<preference>\S+)$')
 
         #Source :             icmpv6         
         p4_5 = re.compile(r'Source : +(?P<source>(\w+))$')
 
         # Interface :          Ethernet1/1    
-        p4_6 = re.compile(r'^Interface : +(?P<interface>([\w\/]+))$')
+        p4_6 = re.compile(r'^Interface : +(?P<interface>\S+)$')
 
         #Physical Interface : Ethernet1/1      
-        p4_7 = re.compile(r'Physical Interface : +(?P<physical_interface>([\w\/]+))$')
+        p4_7 = re.compile(r'Physical Interface : +(?P<physical_interface>(\S+))$')
 
         #Packet Count :       0   
         p4_8 = re.compile(r'Packet Count : +(?P<packet_count>(\d+))$')
@@ -256,16 +257,20 @@ class ShowIpv6NdInterfaceVrfAllSchema(MetaParser):
         'vrf': {
             Any(): {
                 'vrf': str,
-                Optional('nd_interface'): str,
                 Optional('interfaces'): {
                     Any(): {
                         'interface': str,
                         'interface_status': str,
-                        'ipv6': {
-                            'ipv6_address': str,
-                            'ipv6_status': str,
+                        'ipv6_address': {
+                            Any(): {
+                                'status': str,
+                            },
                         },
-                        'ipv6_link_local_address': str,
+                        'ipv6_link_local_address': {
+                            Any(): {
+                                'status': str,
+                            },
+                        },
                         'nd_mac_extract': str,
                         'icmpv6_active_timers': {
                             'last_neighbor_solicitation_sent': str,
@@ -274,14 +279,14 @@ class ShowIpv6NdInterfaceVrfAllSchema(MetaParser):
                             'next_router_advertisement_sent': str},
                         'router_advertisement': {
                             'periodic_interval_seconds': str,
-                            'managed_address_configuration_flag': str,
-                            'other_stateful_configuration_flag': str,
-                            'default_router_preference_value': str,
-                            'current_hop_limit': int,
-                            'mtu': int,
-                            'router_lifetime_secs': int,
-                            'reachable_time_ms': int,
-                            'retrans_timer_ms': int,
+                            'send_managed_address_configuration_flag': str,
+                            'send_other_stateful_configuration_flag': str,
+                            'send_default_router_preference_value': str,
+                            'send_current_hop_limit': int,
+                            'send_mtu': int,
+                            'send_router_lifetime_secs': int,
+                            'send_reachable_time_ms': int,
+                            'send_retrans_timer_ms': int,
                             'suppress_ra': str,
                             'suppress_mtu_ra': str,
                             'suppress_route_information_option_ra': str,
@@ -293,7 +298,7 @@ class ShowIpv6NdInterfaceVrfAllSchema(MetaParser):
                             'nd_nud_retry_attempts': int,
                         },
                         'icmpv6_error_message': {
-                            'send_redirects': str,
+                            'send_redirects_num': int,
                             'send_unreachables': str,
                         },
                         'icmpv6_dad': {
@@ -327,17 +332,17 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
         p1 = re.compile(r'^(?P<nd_interface>([\w\s]+)) +Interfaces +for +VRF +"(?P<vrf>(\w+))"$')
 
         # Ethernet1/1, Interface status: protocol-up/link-up/admin-up
-        p2 = re.compile(r'^(?P<interface>([\w\/]+)), +Interface +status: +(?P<interface_status>([\w\-\/]+))$')
+        p2 = re.compile(r'^(?P<interface>\S+), +Interface +status: +(?P<interface_status>([\w\-\/]+))$')
 
         # IPv6 address:
         p3 = re.compile(r'IPv6 +address:$')
 
         # 2010:2:3::3/64 [VALID]
-        p3_1 = re.compile(r'^(?P<ipv6_address>([\w\/\:]+)) +\[(?P<ipv6_status>(\w+))\]$')
+        p3_1 = re.compile(r'^(?P<ipv6_address>([\w\/\:]+)) +\[(?P<status>(\w+))\]$')
 
         # IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
         p4 = re.compile(r'^IPv6 +link-local +address: +(?P<ipv6_link_local_address>([\w\:]+)) +'
-                         '\[(?P<ipv6_link_local_address_status>(\w+))\]$')
+                         '\[(?P<status>(\w+))\]$')
         # ND mac-extract : Disabled
         p5 = re.compile(r'^ND +mac-extract : +(?P<nd_mac_extract>(\w+))$')
 
@@ -414,7 +419,7 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
         p9 = re.compile(r'^ICMPv6 +error +message +parameters:$')
 
         # Send redirects: true (0)
-        p9_1 = re.compile(r'^Send +redirects: +(?P<send_redirects>(\w+))')
+        p9_1 = re.compile(r'^Send +redirects: +(?P<send_redirects>(\w+))\s+\((?P<send_redirects_num>(\d+))\)$')
 
         # Send unreachables: false
         p9_2 = re.compile(r'^Send unreachables: +(?P<send_unreachables>(\w+))$')
@@ -435,12 +440,10 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
             # ICMPv6 ND Interfaces for VRF "default"
             m = p1.match(line)
             if m:
-                nd_interface = m.groupdict()['nd_interface']
                 vrf = m.groupdict()['vrf']
 
                 vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
                 vrf_dict['vrf'] = vrf
-                vrf_dict['nd_interface'] = nd_interface
                 continue
 
             # Ethernet1/1, Interface status: protocol-up/link-up/admin-up
@@ -457,20 +460,25 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
             # IPv6 address:
             m = p3.match(line)
             if m:
-                ipv6_dict = interface_dict.setdefault('ipv6', {})
+                ipv6_address_dict = interface_dict.setdefault('ipv6_address', {})
                 continue
 
             # 2010:2:3::3/64 [VALID]
             m = p3_1.match(line)
             if m:
-                ipv6_dict['ipv6_address'] = m.groupdict()['ipv6_address']
-                ipv6_dict['ipv6_status'] = m.groupdict()['ipv6_status']
+                ipv6_address= m.groupdict()['ipv6_address']
+                status = m.groupdict()['status']
+                ipv6_dict = ipv6_address_dict.setdefault(ipv6_address, {})
+                ipv6_dict['status'] = status
                 continue
 
             # IPv6 link-local address: fe80::5c01:c0ff:fe02:7 [VALID]
             m = p4.match(line)
             if m:
-                interface_dict['ipv6_link_local_address'] = m.groupdict()['ipv6_link_local_address']
+                ipv6_link_local_address = m.groupdict()['ipv6_link_local_address']
+                status = m.groupdict()['status']
+                ipv6_link_local_address_dict = interface_dict.setdefault('ipv6_link_local_address', {}).setdefault(ipv6_link_local_address, {})
+                ipv6_link_local_address_dict['status'] = status
                 continue
 
             # ND mac-extract : Disabled
@@ -526,49 +534,49 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
             # Send "Managed Address Configuration" flag: false
             m = p7_2.match(line)
             if m:
-                router_dict['managed_address_configuration_flag'] = m.groupdict()['managed_address_configuration_flag']
+                router_dict['send_managed_address_configuration_flag'] = m.groupdict()['managed_address_configuration_flag']
                 continue
 
             # Send "Other Stateful Configuration" flag: false
             m = p7_3.match(line)
             if m:
-                router_dict['other_stateful_configuration_flag'] = m.groupdict()['other_stateful_configuration_flag']
+                router_dict['send_other_stateful_configuration_flag'] = m.groupdict()['other_stateful_configuration_flag']
                 continue
 
             # Send "Default Router Preference" value: Medium
             m = p7_4.match(line)
             if m:
-                router_dict['default_router_preference_value'] = m.groupdict()['default_router_preference_value']
+                router_dict['send_default_router_preference_value'] = m.groupdict()['default_router_preference_value']
                 continue
 
             # Send "Current Hop Limit" field: 64
             m = p7_5.match(line)
             if m:
-                router_dict['current_hop_limit'] = int(m.groupdict()['current_hop_limit'])
+                router_dict['send_current_hop_limit'] = int(m.groupdict()['current_hop_limit'])
                 continue
 
             # Send "MTU" option value: 1500
             m = p7_6.match(line)
             if m:
-                router_dict['mtu'] = int(m.groupdict()['mtu'])
+                router_dict['send_mtu'] = int(m.groupdict()['mtu'])
                 continue
 
             # Send "Router Lifetime" field: 1801 secs
             m = p7_7.match(line)
             if m:
-                router_dict['router_lifetime_secs'] = int(m.groupdict()['router_lifetime_secs'])
+                router_dict['send_router_lifetime_secs'] = int(m.groupdict()['router_lifetime_secs'])
                 continue
 
             # Send "Reachable Time" field: 0 ms
             m = p7_8.match(line)
             if m:
-                router_dict['reachable_time_ms'] = int(m.groupdict()['reachable_time_ms'])
+                router_dict['send_reachable_time_ms'] = int(m.groupdict()['reachable_time_ms'])
                 continue
 
             # Send "Retrans Timer" field: 0 ms
             m = p7_9.match(line)
             if m:
-                router_dict['retrans_timer_ms'] = int(m.groupdict()['retrans_timer_ms'])
+                router_dict['send_retrans_timer_ms'] = int(m.groupdict()['retrans_timer_ms'])
                 continue
 
             # Suppress RA: Enabled
@@ -628,7 +636,7 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
             # Send redirects: true (0)
             m = p9_1.match(line)
             if m:
-                icmp_error_dict['send_redirects'] = m.groupdict()['send_redirects']
+                icmp_error_dict['send_redirects_num'] = int(m.groupdict()['send_redirects_num'])
                 continue
 
             # Send unreachables: false
@@ -669,7 +677,7 @@ class ShowIpv6IcmpNeighborDetailVrfAllSchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                'interface':str,
+                'interface': str,
                 'phy_interface': str,
                 'neighbors': {
                     Any(): {
@@ -705,14 +713,14 @@ class ShowIpv6IcmpNeighborDetailVrfAll(ShowIpv6IcmpNeighborDetailVrfAllSchema):
         # Address         Age       MAC Address     State      Interface  Phy-Interface
         # 2010:2:3::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1    
         p1 = re.compile(r'^(?P<ip>([\w\:]+)) +(?P<age>([\w\:]+)) +(?P<mac_address>([\w\.]+)) +(?P<state>(\w+)) +'
-                         '(?P<interface>([\w\/]+)) +(?P<phy_interface>([\w\/]+))$')
+                         '(?P<interface>\S+) +(?P<phy_interface>(\S+))$')
 
         # fe80::f816:3eff:fe82:6320
         p2 = re.compile(r'^(?P<ip>([\w\:]+))$')
 
         #                 00:18:33  fa16.3e82.6320  STALE       Eth1/1      Eth1/1    
-        p3 = re.compile(r'^(?P<age>([\w\:]+)) +(?P<mac_address>([\w\.]+)) +(?P<state>(\w+)) +(?P<interface>([\w\/]+)) +'
-                         '(?P<phy_interface>([\w\/]+))$')
+        p3 = re.compile(r'^(?P<age>([\w\:]+)) +(?P<mac_address>([\w\.]+)) +(?P<state>(\w+)) +(?P<interface>(\S+)) +'
+                         '(?P<phy_interface>(\S+))$')
 
         for line in out.splitlines():
 
@@ -726,6 +734,7 @@ class ShowIpv6IcmpNeighborDetailVrfAll(ShowIpv6IcmpNeighborDetailVrfAllSchema):
             # 2010:2:3::2     00:15:02  fa16.3e82.6320  STALE       Eth1/1      Eth1/1    
             m = p1.match(line)
             if m:
+                interfaces = Common.convert_intf_name(m.groupdict()['interface'])
                 interface = m.groupdict()['interface']
                 ip = m.groupdict()['ip']
                 age = m.groupdict()['age']
@@ -733,7 +742,7 @@ class ShowIpv6IcmpNeighborDetailVrfAll(ShowIpv6IcmpNeighborDetailVrfAllSchema):
                 state = m.groupdict()['state']
                 phy_interface = m.groupdict()['phy_interface']
 
-                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
                 interface_dict['interface'] = interface
                 interface_dict['phy_interface'] = phy_interface
 
@@ -754,13 +763,14 @@ class ShowIpv6IcmpNeighborDetailVrfAll(ShowIpv6IcmpNeighborDetailVrfAllSchema):
             #                 00:18:33  fa16.3e82.6320  STALE       Eth1/1      Eth1/1    
             m = p3.match(line)
             if m:
+                interfaces = Common.convert_intf_name(m.groupdict()['interface'])
                 interface = m.groupdict()['interface']
                 age = m.groupdict()['age']
                 mac_address = m.groupdict()['mac_address']
                 state = m.groupdict()['state']
                 phy_interface = m.groupdict()['phy_interface']
 
-                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
                 interface_dict['interface'] = interface
                 interface_dict['phy_interface'] = phy_interface
 
@@ -801,11 +811,12 @@ class ShowIpv6RoutersVrfAllSchema(MetaParser):
                     'reachable_time_msec': int,
                     'retransmission_time': int,
                     'prefix': {
-                        'prefix': str,
-                        'onlink_flag': int,
-                        'autonomous_flag': int,
-                        'valid_lifetime': int,
-                        'preferred_lifetime': int
+                        Any(): {
+                            'onlink_flag': int,
+                            'autonomous_flag': int,
+                            'valid_lifetime': int,
+                            'preferred_lifetime': int
+                        },
                     },
                 },
             }
@@ -895,8 +906,8 @@ class ShowIpv6RoutersVrfAll(ShowIpv6RoutersVrfAllSchema):
             #   Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
             m = p5.match(line)
             if m:
-                prefix_dict = router_dict.setdefault('prefix', {})
-                prefix_dict['prefix'] = m.groupdict()['prefix']
+                prefix = m.groupdict()['prefix']
+                prefix_dict = router_dict.setdefault('prefix', {}).setdefault(prefix, {})
                 prefix_dict['onlink_flag'] = int(m.groupdict()['onlink_flag'])
                 prefix_dict['autonomous_flag'] = int(m.groupdict()['autonomous_flag'])
                 continue
