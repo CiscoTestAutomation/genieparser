@@ -109,6 +109,43 @@ class show_spanning_tree_mst(unittest.TestCase):
 	Te0/0/0/17   128.2   2000      ALT  BLK   32768 0021.1bfd.1007 128.2  
 	'''}
 
+	golden_parsed_output_2 = {
+		'mstp': {
+		    'blocked-ports': {
+		        'mst_instances': {
+		            '0': {
+		                'mst_id': '0',
+		                'interfaces': {
+		                    'GigabitEthernet0/0/4/4': {
+		                        'name': 'GigabitEthernet0/0/4/4',
+		                        'cost': 200000,
+		                        'role': 'ALT',
+		                        'port_priority': 128,
+		                        'port_num': 196,
+		                        'port_state': 'BLK',
+		                        'designated_bridge_priority': 4097,
+		                        'designated_bridge_address': '0004.9b78.0800',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 195,
+		                        },
+		                    },
+		                },
+		            },
+		        },
+		    },
+		}
+
+	golden_output_2 = {'execute.return_value' : '''
+	RP/0/RSP0/CPU0:router# show spanning-tree mst blocked-ports
+	MSTI 0 (CIST):
+
+	Interface                Port ID                     Designated               Port ID
+	Name                     Prio.Nbr Cost   Role State  Cost Bridge ID           Prio.Nbr
+	----------------------   -------- ------ ---------   ------------------------ --------
+	GigabitEthernet0/0/4/4      128.196  200000 ALT  BLK    0    4097 0004.9b78.0800 128.195
+
+	'''}
+
 	def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowSpanningTreeMst(device=self.dev)
@@ -120,6 +157,12 @@ class show_spanning_tree_mst(unittest.TestCase):
 	    obj = ShowSpanningTreeMst(device=self.dev)
 	    parsed_output = obj.parse(mst_id='test')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
+
+	def test_golden_mst_2(self):
+	    self.dev = Mock(**self.golden_output_2)
+	    obj = ShowSpanningTreeMst(device=self.dev)
+	    parsed_output = obj.parse(mst_id='blocked-ports')
+	    self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 """
 Unit test for 'show spanning-tree mstag <mag_domain>'
@@ -212,6 +255,113 @@ class show_spanning_tree_mstag(unittest.TestCase):
 
 	'''}
 
+	golden_output_2 = {'execute.return_value' : '''
+	RP/0/RSP0/CPU0:router# show spanning-tree mstag A
+	GigabitEthernet0/0/0/1
+	  Preempt delay is disabled.
+	  Name:            6161:6161:6161
+	  Revision:        0
+	  Max Age:         20
+	  Provider Bridge: no
+	  Bridge ID:       6161.6161.6161
+	  Port ID:         1
+	  External Cost:   0
+	  Hello Time:      2
+	  Active:          no
+	  BPDUs sent:      0
+	    MSTI 0 (CIST):
+	    VLAN IDs:         1-9,32-39,41-4094
+	    Role:             Designated
+	    Bridge Priority:  32768
+	    Port Priority:    128
+	    Cost:             0
+	    Root Bridge:      6161.6161.6161
+	    Root Priority:    32768
+	    Topology Changes: 123
+	  MSTI 2
+	    VLAN IDs:         10-31
+	    Role:             Designated
+	    Bridge Priority:  32768
+	    Port Priority:    128
+	    Cost:             0
+	    Root Bridge:      6161.6161.6161
+	    Root Priority:    32768
+	    Topology Changes: 123
+	  MSTI 10
+	VLAN IDs:         40
+	    Role:             Root (Edge mode)
+	    Bridge Priority:  32768
+		Port Priority:    128
+	    Cost:             200000000
+	    Root Bridge:      6161.6161.6161
+	    Root Priority:    61440
+	    Topology Changes: 0
+	'''}
+
+	golden_parsed_output_2 = {
+		'mstag': {
+		    'A': {
+		        'domain': 'A',
+		        'interfaces': {
+		            'GigabitEthernet0/0/0/1': {
+		                'interface': 'GigabitEthernet0/0/0/1',
+		                'preempt_delay': False,
+		                'name': '6161:6161:6161',
+		                'revision': 0,
+		                'max_age': 20,
+		                'provider_bridge': False,
+		                'bridge_id': '6161.6161.6161',
+		                'port_id': 1,
+		                'external_cost': 0,
+		                'hello_time': 2,
+		                'active': False,
+		                'counters': {
+		                    'bdpu_sent': 0,
+		                    },
+		                },
+		            'instances': {
+		                '0': {
+		                    'instance': 0,
+		                    'vlans': '1-9,32-39,41-4094',
+		                    'priority': 32768,
+		                    'port_priority': 128,
+		                    'cost': 0,
+		                    'root_bridge': '6161.6161.6161',
+		                    'root_priority': 32768,
+		                    'counters': {
+		                        'topology_changes': 123,
+		                        },
+		                    },
+		                '2': {
+		                    'instance': 2,
+		                    'vlans': '10-31',
+		                    'priority': 32768,
+		                    'port_priority': 128,
+		                    'cost': 0,
+		                    'root_bridge': '6161.6161.6161',
+		                    'root_priority': 32768,
+		                    'counters': {
+		                        'topology_changes': 123,
+		                        },
+		                    },
+		                '10': {
+		                    'instance': 10,
+		                    'vlans': '40',
+		                    'priority': 32768,
+		                    'port_priority': 128,
+		                    'cost': 200000000,
+		                    'root_bridge': '6161.6161.6161',
+		                    'root_priority': 61440,
+		                    'counters': {
+		                        'topology_changes': 0,
+		                        },
+		                    },
+		                },
+		            },
+		        },
+		    },
+		}
+
 	def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowSpanningTreeMstag(device=self.dev)
@@ -223,6 +373,12 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	    obj = ShowSpanningTreeMstag(device=self.dev)
 	    parsed_output = obj.parse(mag_domain='risc')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
+
+	def test_golden_mst_2(self):
+	    self.dev = Mock(**self.golden_output_2)
+	    obj = ShowSpanningTreeMstag(device=self.dev)
+	    parsed_output = obj.parse(mag_domain='A')
+	    self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 """
 Unit test for 'show spanning-tree pvrst <pvst_id>'
@@ -500,6 +656,275 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 
 	'''}
 
+	golden_output_2 = {'execute.return_value' : '''
+	RP/0/RSP0/CPU0:router# show spanning-tree pvrst MSTP
+	Role: ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup
+	State: FWD=Forwarding, LRN=Learning, BLK=Blocked
+
+
+	VLAN 10:
+
+	Root ID Priority 4096
+	Address 8cb6.4fe9.7b9e
+	This bridge is the root
+	Max Age 20 sec, Forward Delay 15 sec
+
+
+	Bridge ID Priority 4096 (priority 4096 sys-id-ext 0)
+	Address 8cb6.4fe9.7b9e
+	Max Age 20 sec, Forward Delay 15 sec
+	Transmit Hold count 6
+
+
+	Interface Port ID Role State Designated Port ID
+	Pri.Nbr Cost Bridge ID Pri.Nbr
+	------------ ------- --------- ---- ----- -------------------- -------
+	Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.1
+	Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.2
+
+	VLAN 20:
+
+	Root ID Priority 8192
+	Address c062.6bac.a07e
+	Max Age 20 sec, Forward Delay 15 sec
+
+
+	Bridge ID Priority 16384 (priority 16384 sys-id-ext 0)
+	Address 8cb6.4fe9.7b9e
+	Max Age 20 sec, Forward Delay 15 sec
+	Transmit Hold count 6
+
+
+	Interface Port ID Role State Designated Port ID
+	Pri.Nbr Cost Bridge ID Pri.Nbr
+	------------ ------- --------- ---- ----- -------------------- -------
+	Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bac.a07e 128.1
+	Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bac.a07e 128.2
+	'''}
+
+	golden_parsed_output_2 = {
+		'pvst': {
+		    'MSTP': {
+		        'pvst_id': 'MSTP',
+		        'vlans': {
+		            10: {
+		                'vlan_id': 10,
+		                'designated_root_priority': 4096,
+		                'designated_root_address': '8cb6.4fe9.7b9e',
+		                'designated_root_max_age': 20,
+		                'designated_root_forward_delay': 15,
+		                'bridge_priority': 4096,
+		                'sys_id_ext': 0,
+		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_max_age': 20,
+		                'bridge_forward_delay': 15,
+		                'bridge_transmit_hold_count': 6,
+		                'interface': {
+		                    'GigabitEthernet0/5/0/0': {
+		                        'name': 'GigabitEthernet0/5/0/0',
+		                        'cost': 20000,
+		                        'role': 'DSGN',
+		                        'port_priority': 128,
+		                        'port_num': 1,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 4096,
+		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 1,
+		                        },
+		                    'GigabitEthernet0/5/0/2': {
+		                        'name': 'GigabitEthernet0/5/0/2',
+		                        'cost': 20000,
+		                        'role': 'DSGN',
+		                        'port_priority': 128,
+		                        'port_num': 2,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 4096,
+		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 2,
+		                        },
+		                    },
+		                },
+		            20: {
+		                'vlan_id': 20,
+		                'designated_root_priority': 8192,
+		                'designated_root_address': 'c062.6bac.a07e',
+		                'designated_root_max_age': 20,
+		                'designated_root_forward_delay': 15,
+		                'bridge_priority': 16384,
+		                'sys_id_ext': 0,
+		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_max_age': 20,
+		                'bridge_forward_delay': 15,
+		                'bridge_transmit_hold_count': 6,
+		                'interface': {
+		                    'GigabitEthernet0/5/0/0': {
+		                        'name': 'GigabitEthernet0/5/0/0',
+		                        'cost': 20000,
+		                        'role': 'ROOT',
+		                        'port_priority': 128,
+		                        'port_num': 1,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 8192,
+		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 1,
+		                        },
+		                    'GigabitEthernet0/5/0/2': {
+		                        'name': 'GigabitEthernet0/5/0/2',
+		                        'cost': 20000,
+		                        'role': 'ALT',
+		                        'port_priority': 128,
+		                        'port_num': 2,
+		                        'port_state': 'BLK',
+		                        'designated_bridge_priority': 8192,
+		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 2,
+		                        },
+		                    },
+		                },
+		            },
+		        },
+		    },
+		}
+
+	golden_output_3 = {'execute.return_value' : '''
+	RP/0/RSP0/CPU0:router# show spanning-tree pvrst MSTP
+	Role: ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup
+	State: FWD=Forwarding, LRN=Learning, BLK=Blocked
+
+
+	VLAN 10:
+
+
+	Root ID Priority 4096
+	Address 8cb6.4fe9.7b9e
+	This bridge is the root
+	Max Age 20 sec, Forward Delay 15 sec
+
+
+	Bridge ID Priority 4096 (priority 4096 sys-id-ext 0)
+	Address 8cb6.4fe9.7b9e
+	Max Age 20 sec, Forward Delay 15 sec
+	Transmit Hold count 6
+
+
+	Interface Port ID Role State Designated Port ID
+	Pri.Nbr Cost Bridge ID Pri.Nbr
+	------------ ------- --------- ---- ----- -------------------- -------
+	Gi0/5/0/0 128.1 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.1
+	Gi0/5/0/2 128.2 20000 DSGN FWD 4096 8cb6.4fe9.7b9e 128.2
+
+	VLAN 20:
+
+	Root ID Priority 8192
+	Address c062.6bac.a07e
+	Max Age 20 sec, Forward Delay 15 sec
+
+
+	Bridge ID Priority 16384 (priority 16384 sys-id-ext 0)
+	Address 8cb6.4fe9.7b9e
+	Max Age 20 sec, Forward Delay 15 sec
+	Transmit Hold count 6
+
+
+	Interface Port ID Role State Designated Port ID
+	Pri.Nbr Cost Bridge ID Pri.Nbr
+	------------ ------- --------- ---- ----- -------------------- -------
+	Gi0/5/0/0 128.1 20000 ROOT FWD 8192 c062.6bac.a07e 128.1
+	Gi0/5/0/2 128.2 20000 ALT BLK 8192 c062.6bac.a07e 128.2
+	'''}
+
+	golden_parsed_output_3 = {
+		'pvst': {
+		    'MSTP': {
+		        'pvst_id': 'MSTP',
+		        'vlans': {
+		            10: {
+		                'vlan_id': 10,
+		                'designated_root_priority': 4096,
+		                'designated_root_address': '8cb6.4fe9.7b9e',
+		                'designated_root_max_age': 20,
+		                'designated_root_forward_delay': 15,
+		                'bridge_priority': 4096,
+		                'sys_id_ext': 0,
+		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_max_age': 20,
+		                'bridge_forward_delay': 15,
+		                'bridge_transmit_hold_count': 6,
+		                'interface': {
+		                    'GigabitEthernet0/5/0/0': {
+		                        'name': 'GigabitEthernet0/5/0/0',
+		                        'cost': 20000,
+		                        'role': 'DSGN',
+		                        'port_priority': 128,
+		                        'port_num': 1,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 4096,
+		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 1,
+		                        },
+		                    'GigabitEthernet0/5/0/2': {
+		                        'name': 'GigabitEthernet0/5/0/2',
+		                        'cost': 20000,
+		                        'role': 'DSGN',
+		                        'port_priority': 128,
+		                        'port_num': 2,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 4096,
+		                        'designated_bridge_address': '8cb6.4fe9.7b9e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 2,
+		                        },
+		                    },
+		                },
+		            20: {
+		                'vlan_id': 20,
+		                'designated_root_priority': 8192,
+		                'designated_root_address': 'c062.6bac.a07e',
+		                'designated_root_max_age': 20,
+		                'designated_root_forward_delay': 15,
+		                'bridge_priority': 16384,
+		                'sys_id_ext': 0,
+		                'bridge_address': '8cb6.4fe9.7b9e',
+		                'bridge_max_age': 20,
+		                'bridge_forward_delay': 15,
+		                'bridge_transmit_hold_count': 6,
+		                'interface': {
+		                    'GigabitEthernet0/5/0/0': {
+		                        'name': 'GigabitEthernet0/5/0/0',
+		                        'cost': 20000,
+		                        'role': 'ROOT',
+		                        'port_priority': 128,
+		                        'port_num': 1,
+		                        'port_state': 'FWD',
+		                        'designated_bridge_priority': 8192,
+		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 1,
+		                        },
+		                    'GigabitEthernet0/5/0/2': {
+		                        'name': 'GigabitEthernet0/5/0/2',
+		                        'cost': 20000,
+		                        'role': 'ALT',
+		                        'port_priority': 128,
+		                        'port_num': 2,
+		                        'port_state': 'BLK',
+		                        'designated_bridge_priority': 8192,
+		                        'designated_bridge_address': 'c062.6bac.a07e',
+		                        'designated_port_priority': 128,
+		                        'designated_port_num': 2,
+		                        },
+		                    },
+		                },
+		            },
+		        },
+		    },
+		}
+
 	def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowSpanningTreePvrst(device=self.dev)
@@ -511,6 +936,18 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 	    obj = ShowSpanningTreePvrst(device=self.dev)
 	    parsed_output = obj.parse(pvst_id='a')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
+
+	def test_golden_mst_2(self):
+	    self.dev = Mock(**self.golden_output_2)
+	    obj = ShowSpanningTreePvrst(device=self.dev)
+	    parsed_output = obj.parse(pvst_id='MSTP')
+	    self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+	def test_golden_mst_3(self):
+	    self.dev = Mock(**self.golden_output_3)
+	    obj = ShowSpanningTreePvrst(device=self.dev)
+	    parsed_output = obj.parse(pvst_id='MSTP')
+	    self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 """
 Unit test for 'show spanning-tree pvrstag <pvrstag_domain>'

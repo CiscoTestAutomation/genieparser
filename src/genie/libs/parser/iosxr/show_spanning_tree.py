@@ -30,23 +30,23 @@ class ShowSpanningTreeMstSchema(MetaParser):
 				'mst_instances': {
 					Any(): {
 						'mst_id': str,
-						'vlan': str,
+						Optional('vlan'): str,
 						Optional('this_bridge_is'): str,
-		                'bridge_priority': int,
-		                'bridge_address': str,
-		                'bridge_max_age': int,
-		                'bridge_forward_delay': int,
-		                'bridge_max_hops': int,
-		                'bridge_transmit_hold_count': int, 
-		                'designated_root_priority': int,
-		                'designated_root_address': str,
-		                'root_cost': int,
-		                'root_max_age': int,
-		                'root_forward_delay': int,
-		                'cist_root_priority': int,
-		                'cist_root_address': str,
-		                'cist_root_cost': int,
-		                'sys_id_ext': int,
+		                Optional('bridge_priority'): int,
+		                Optional('bridge_address'): str,
+		                Optional('bridge_max_age'): int,
+		                Optional('bridge_forward_delay'): int,
+		                Optional('bridge_max_hops'): int,
+		                Optional('bridge_transmit_hold_count'): int, 
+		                Optional('designated_root_priority'): int,
+		                Optional('designated_root_address'): str,
+		                Optional('root_cost'): int,
+		                Optional('root_max_age'): int,
+		                Optional('root_forward_delay'): int,
+		                Optional('cist_root_priority'): int,
+		                Optional('cist_root_address'): str,
+		                Optional('cist_root_cost'): int,
+		                Optional('sys_id_ext'): int,
 		                'interfaces': {
 			                Any(): {
 					            'name':str,
@@ -276,7 +276,8 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		# Bundle-Ether10.0
 		p1 = re.compile(r'^(?P<mag_interface>\S+)$')
 		# Pre-empt delay is disabled
-		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)\.?( +)?(?P<preempt_delay_state>Sending +(startup|standard) +BPDU( +until \S+)?)?')
+		# Preempt delay is disabled.
+		p2 = re.compile(r'^Pre(\-)?empt +delay +is +(?P<preempt_delay>\w+)\.?( +)?(?P<preempt_delay_state>Sending +(startup|standard) +BPDU( +until \S+)?)?')
 		# Name:            risc
 		p3 = re.compile(r'^Name:\s+(?P<name>\S+)$')
 		# Revision: 1
@@ -476,7 +477,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 				continue
 		return ret_dict
 
-"""Parser for 'show spanning-tree pvrst <pvst_id>'"""
+"""Schema for 'show spanning-tree pvrst <pvst_id>'"""
 class ShowSpanningTreePvrstSchema(MetaParser):
 	schema = {
 		'pvst': {
