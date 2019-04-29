@@ -117,10 +117,10 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
 
         # 10 permit tcp any any eq www
         # 30 permit tcp any any eq 443
-        # 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
-        # 20 permit tcp host 2.2.2.2 eq www any precedence network ttl eq 255
+        # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+        # 20 permit tcp host 10.16.2.2 eq www any precedence network ttl eq 255
         # 30 deny ipv4 any any
-        # 10 permit ipv4 65.21.21.0 0.0.0.255 65.6.6.0 0.0.0.255
+        # 10 permit ipv4 10.1.21.0 0.0.0.255 10.196.6.0 0.0.0.255
         p2 = re.compile(r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +'
             '(?P<protocol>tcp|ipv4|ipv6) +(?P<src>(([\d\.]+ +[\d\.]+)|any|'
             '(host +[\d\.:]+))|([\d\.]+ +[\d\.]+))( ?(?P<src_operator>eq) +'

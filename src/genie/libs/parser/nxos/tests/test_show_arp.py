@@ -690,7 +690,7 @@ class test_show_ip_arp(unittest.TestCase):
 		IP ARP Table for context vni_10100
 		Total number of entries: 6
 		Address         Age       MAC Address     Interface       Flags
-		100.101.1.3     00:10:42  fa16.3ed1.37b5  Vlan101         + 
+		10.111.1.3     00:10:42  fa16.3ed1.37b5  Vlan101         + 
 	'''}
 
 	golden_parsed_output_2 = {
@@ -701,8 +701,8 @@ class test_show_ip_arp(unittest.TestCase):
 			'Vlan101': {
 				'ipv4': {
 					'neighbors': {
-						'100.101.1.3': {
-							'ip': '100.101.1.3',
+						'10.111.1.3': {
+							'ip': '10.111.1.3',
 							'link_layer_address': 'fa16.3ed1.37b5',
 							'age': '00:10:42',
 							'origin': 'dynamic',
@@ -732,14 +732,14 @@ class test_show_ip_arp(unittest.TestCase):
 		10.255.8.99     00:00:22  5e00.0009.0000  mgmt0           
 		10.2.4.4        00:13:47  5e00.0003.0007  Ethernet1/1     
 		10.2.5.5        00:00:09  5e00.0004.0007  Ethernet1/2     
-		99.2.3.3        00:00:09  5e00.0002.0007  Ethernet1/6     
-		100.101.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         + 
-		100.101.1.4     00:01:53  fa16.3ec5.fcab  Vlan101         
-		100.101.2.3     00:09:20  fa16.3ed4.83e4  Vlan101         
-		100.101.2.4     00:17:48  fa16.3e79.6bfe  Vlan101         
-		100.101.3.3     00:18:09  fa16.3e68.b933  Vlan101         + 
-		100.101.3.4     00:00:37  fa16.3e2f.654d  Vlan101         + 
-		200.202.2.4     00:17:48  fa16.3e79.6bfe  Vlan202         
+		10.1.3.3        00:00:09  5e00.0002.0007  Ethernet1/6     
+		10.111.1.3     00:09:20  fa16.3ed1.37b5  Vlan101         + 
+		10.111.1.4     00:01:53  fa16.3ec5.fcab  Vlan101         
+		10.111.2.3     00:09:20  fa16.3ed4.83e4  Vlan101         
+		10.111.2.4     00:17:48  fa16.3e79.6bfe  Vlan101         
+		10.111.3.3     00:18:09  fa16.3e68.b933  Vlan101         + 
+		10.111.3.4     00:00:37  fa16.3e2f.654d  Vlan101         + 
+		192.168.16.4     00:17:48  fa16.3e79.6bfe  Vlan202         
 	'''}
 
 	golden_parsed_output_3 = {
@@ -786,8 +786,8 @@ class test_show_ip_arp(unittest.TestCase):
 			'Ethernet1/6':{  
 				'ipv4':{  
 					'neighbors':{  
-						'99.2.3.3':{  
-							'ip':'99.2.3.3',
+						'10.1.3.3':{  
+							'ip':'10.1.3.3',
 							'link_layer_address':'5e00.0002.0007',
 							'physical_interface':'Ethernet1/6',
 							'origin':'dynamic',
@@ -799,45 +799,45 @@ class test_show_ip_arp(unittest.TestCase):
 			'Vlan101':{  
 				'ipv4':{  
 					'neighbors':{  
-						'100.101.1.3':{  
-							'ip':'100.101.1.3',
+						'10.111.1.3':{  
+							'ip':'10.111.1.3',
 							'link_layer_address':'fa16.3ed1.37b5',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:09:20',
 							'flags':'+'
 						},
-						'100.101.1.4':{  
-							'ip':'100.101.1.4',
+						'10.111.1.4':{  
+							'ip':'10.111.1.4',
 							'link_layer_address':'fa16.3ec5.fcab',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:01:53'
 						},
-						'100.101.2.3':{  
-							'ip':'100.101.2.3',
+						'10.111.2.3':{  
+							'ip':'10.111.2.3',
 							'link_layer_address':'fa16.3ed4.83e4',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:09:20'
 						},
-						'100.101.2.4':{  
-							'ip':'100.101.2.4',
+						'10.111.2.4':{  
+							'ip':'10.111.2.4',
 							'link_layer_address':'fa16.3e79.6bfe',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:17:48'
 						},
-						'100.101.3.3':{  
-							'ip':'100.101.3.3',
+						'10.111.3.3':{  
+							'ip':'10.111.3.3',
 							'link_layer_address':'fa16.3e68.b933',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
 							'age':'00:18:09',
 							'flags':'+'
 						},
-						'100.101.3.4':{  
-							'ip':'100.101.3.4',
+						'10.111.3.4':{  
+							'ip':'10.111.3.4',
 							'link_layer_address':'fa16.3e2f.654d',
 							'physical_interface':'Vlan101',
 							'origin':'dynamic',
@@ -850,8 +850,8 @@ class test_show_ip_arp(unittest.TestCase):
 			'Vlan202':{  
 				'ipv4':{  
 					'neighbors':{  
-						'200.202.2.4':{  
-							'ip':'200.202.2.4',
+						'192.168.16.4':{  
+							'ip':'192.168.16.4',
 							'link_layer_address':'fa16.3e79.6bfe',
 							'physical_interface':'Vlan202',
 							'origin':'dynamic',

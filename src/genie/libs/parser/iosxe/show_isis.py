@@ -321,16 +321,16 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         #   Hostname: R2
         p7 = re.compile(r'^Hostname: +(?P<hostname>\w+)$')
-        #   IP Address:   66.66.66.66
+        #   IP Address:   10.84.66.66
         p8 = re.compile(r'^IP +Address: +(?P<ip_address>[\d\.]+)$')
 
-        #   Metric: 10         IP 20.2.7.0/24
+        #   Metric: 10         IP 10.229.7.0/24
         p9 = re.compile(r'^Metric: +(?P<metric>\d+) +(?P<metric_topology>[\w\-]+)( +\((?P<mt_ipv6>[\w\-]+)\))? +(?P<ip>\S+)$')
 
         #   IPv6 Address: 2001:DB8:66:66:66::66
         p10 = re.compile(r'^IPv6 +Address: +(?P<ip_address>[\w\:]+)$')
 
-        # Router ID:    77.77.77.77
+        # Router ID:    10.1.77.77
         p11 = re.compile(r'^Router +ID: +(?P<router_id>\S+)$')
 
         for line in out.splitlines():
@@ -401,14 +401,14 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict.update({'hostname': group['hostname']})
                 continue
 
-            #   IP Address:   66.66.66.66
+            #   IP Address:   10.84.66.66
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 lsp_dict.update({'ip_address': group['ip_address']})
                 continue
 
-            #  Metric: 10         IP 20.2.7.0/24
+            #  Metric: 10         IP 10.229.7.0/24
             #  Metric: 40         IS (MT-IPv6) R2.01
             #  Metric: 40         IS-Extended R2.01
             m = p9.match(line)
@@ -428,7 +428,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 lsp_dict.update({'ipv6_address': group['ip_address']})
                 continue
 
-            #  Router ID:    77.77.77.77
+            #  Router ID:    10.1.77.77
             m = p11.match(line)
             if m:
                 group = m.groupdict()

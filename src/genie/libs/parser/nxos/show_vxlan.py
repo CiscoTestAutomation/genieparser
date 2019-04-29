@@ -1318,9 +1318,9 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         #            Sent To: BGP
         #            SOO: 774975538
         #            L3-Info: 10001
-        # 101         fa16.3ed1.37b5 HMM    --            0          100.101.1.3    Local
-        # 101         fa16.3e04.e54a BGP    --            0          100.101.8.3    66.66.66.66 
-        # 101         0011.0000.0034 BGP  5.1.3.2                      40.0.0.2
+        # 101         fa16.3ed1.37b5 HMM    --            0          10.111.1.3    Local
+        # 101         fa16.3e04.e54a BGP    --            0          10.111.8.3    10.84.66.66 
+        # 101         0011.0000.0034 BGP  10.36.3.2                      10.70.0.2
         p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<mac_ip_prod_type>[\w\,]+)'
                         '( +(?P<mac_ip_flags>[\w\,\-]+))?( +(?P<seq_num>[\d]+))? +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<next_hop1>[\w\/\.]+)$')

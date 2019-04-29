@@ -40,6 +40,7 @@ BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 
 # Development pkg requirements
+RELATED_PKGS = genie.libs.parser
 DEPENDENCIES  = restview psutil Sphinx wheel asynctest
 DEPENDENCIES += setproctitle sphinxcontrib-napoleon sphinx-rtd-theme httplib2
 DEPENDENCIES += pip-tools Cython requests
@@ -111,6 +112,7 @@ develop:
 	@echo "Building and installing $(PKG_NAME) development distributable: $@"
 	@echo ""
 
+	@pip uninstall -y $(RELATED_PKGS)
 	@pip install $(DEPENDENCIES)
 
 	@$(PYTHON) setup.py develop --no-deps

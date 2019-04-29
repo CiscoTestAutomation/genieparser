@@ -1785,8 +1785,8 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
                              '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                              '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
             m = p3_1.match(line)
-            # *>i100.101.8.3/32     66.66.66.66           2000        100          0 200 i
-            # *>i100.101.8.4/32     66.66.66.66           2000        100          0 200 i
+            # *>i10.111.8.3/32     10.84.66.66           2000        100          0 200 i
+            # *>i10.111.8.4/32     10.84.66.66           2000        100          0 200 i
             p3_1_2 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
               '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) +(?P<next_hop>[\w\.\/]+) +'
               '(?P<metric>\d+) +(?P<localprf>\d+) +(?P<weight>\d+) +(?P<path>[\d ]+) +'
@@ -4578,8 +4578,8 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRou
         # Network            Next Hop            Metric     LocPrf     Weight Path
         # Route Distinguisher: 100:100     (VRF VRF1)
         # Route Distinguisher: 2:100    (VRF vpn2)
-        # Route Distinguisher: 2.2.2.2:4    (L3VNI 10200)
-        # Route Distinguisher: 2.2.2.2:2    (L2VNI 10400)
+        # Route Distinguisher: 10.16.2.2:4    (L3VNI 10200)
+        # Route Distinguisher: 10.16.2.2:2    (L2VNI 10400)
         p14 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>'
                         r'(\S+))(?: +\((?:VRF +(?P<default_vrf>\w+)|L2VNI +'
                         r'(?P<rd_l2vni>\d+)|L3VNI +(?P<rd_l3vni>\d+))\))?$')

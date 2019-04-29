@@ -25,21 +25,21 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
 
     golden_parsed_output1 = {
         'peer': {
-            '2.2.2.2:0': {
+            '10.16.2.2:0': {
                 'addresses': {
                     'address': 5},
                 'discovery': {
                         'discovery': 2},
                 'gr': 'N',
                 'up_time': '00:01:02'},
-            '3.3.3.3:0': {
+            '10.36.3.3:0': {
                 'addresses': {
                     'address': 8},
                 'discovery': {
                     'discovery': 3},
                 'gr': 'Y',
                 'up_time': '00:01:04'},
-            '4.4.4.4:0': {
+            '10.64.4.4:0': {
                 'addresses': {
                     'ipv4': 3,
                     'ipv6': 0},
@@ -52,7 +52,7 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
                     'ipv6': 0},
                 'nsr': 'N',
                 'up_time': '1d00h'},
-            '46.46.46.2:0': {
+            '10.49.46.2:0': {
                 'addresses': {
                     'ipv4': 3,
                     'ipv6': 3},
@@ -65,7 +65,7 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
                     'ipv6': 5},
                 'nsr': 'N',
                 'up_time': '1d00h'},
-            '46.46.46.46:0': {
+            '10.49.46.46:0': {
                 'addresses': {
                     'ipv4': 4,
                     'ipv6': 4},
@@ -78,7 +78,7 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
                     'ipv6': 5},
                 'nsr': 'N',
                 'up_time': '1d00h'},
-            '6.6.6.1:0': {
+            '10.144.6.1:0': {
                 'addresses': {
                     'ipv4': 0,
                     'ipv6': 2},
@@ -97,29 +97,29 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
 
             Peer              GR Up Time         Discovery Address
             ----------------- -- --------------- --------- -------
-            3.3.3.3:0         Y  00:01:04                3       8
-            2.2.2.2:0         N  00:01:02                2       5
+            10.36.3.3:0         Y  00:01:04                3       8
+            10.16.2.2:0         N  00:01:02                2       5
 
 
             Peer               GR  NSR  Up Time     Discovery   Addresses     Labels
                                                     ipv4  ipv6  ipv4  ipv6  ipv4   ipv6
             -----------------  --  ---  ----------  ----------  ----------  ------------
-            4.4.4.4:0          Y   N    1d00h       1     0     3     0     5      0
-            46.46.46.2:0       N   N    1d00h       1     1     3     3     5      5
-            46.46.46.46:0      Y   N    1d00h       2     2     4     4     5      5
-            6.6.6.1:0          Y   N    23:25:50    0     1     0     2     0      5
+            10.64.4.4:0          Y   N    1d00h       1     0     3     0     5      0
+            10.49.46.2:0       N   N    1d00h       1     1     3     3     5      5
+            10.49.46.46:0      Y   N    1d00h       2     2     4     4     5      5
+            10.144.6.1:0          Y   N    23:25:50    0     1     0     2     0      5
         '''}
 
     golden_parsed_output2 = {
         'peer': {
-            '3.3.3.3:0': {
+            '10.36.3.3:0': {
                 'gr': 'Y',
                 'up_time': '00:01:04',
                 'discovery': {
                     'discovery': 3},
                 'addresses': {
                     'address': 8}},
-            '2.2.2.2:0': {
+            '10.16.2.2:0': {
                 'gr': 'N',
                 'up_time': '00:01:02',
                 'discovery': {'discovery': 2},
@@ -130,13 +130,13 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
   
         Peer              GR Up Time         Discovery Address
         ----------------- -- --------------- --------- -------
-        3.3.3.3:0         Y  00:01:04                3       8
-        2.2.2.2:0         N  00:01:02                2       5
+        10.36.3.3:0         Y  00:01:04                3       8
+        10.16.2.2:0         N  00:01:02                2       5
     '''}
 
     golden_parsed_output3 = {
         'peer': {
-            '1.1.1.1:0': {
+            '10.4.1.1:0': {
                 'addresses': {
                     'ipv4': 9,
                     'ipv6': 0},
@@ -158,7 +158,7 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
          Peer               GR  NSR  Up Time     Discovery   Addresses     Labels
                                                  ipv4  ipv6  ipv4  ipv6  ipv4   ipv6
          -----------------  --  ---  ----------  ----------  ----------  ------------
-         1.1.1.1:0          N   N    00:08:57    1     0     9     0     15     0
+         10.4.1.1:0          N   N    00:08:57    1     0     9     0     15     0
     '''}
 
     def test_show_mpls_ldp_neighbor_brief_empty(self):

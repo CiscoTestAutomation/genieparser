@@ -1167,9 +1167,9 @@ class test_show_ip_cef(unittest.TestCase):
                 "address_family": {
                     "ipv4": {
                         "prefix": {
-                            "106.162.197.104/30": {
+                            "10.169.197.104/30": {
                                 "nexthop": {
-                                    "106.162.197.93": {
+                                    "10.169.197.93": {
                                         "outgoing_interface": {
                                             "TenGigabitEthernet0/2/0": {
                                                 "local_label": 2043,
@@ -1187,11 +1187,11 @@ class test_show_ip_cef(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''\
-    PE1#show ip cef 106.162.197.104
+    PE1#show ip cef 10.169.197.104
     Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
-    Time source is NTP, 17:33:18.269 JST Fri Apr 5 2019
-    106.162.197.104/30
-             nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+    Time source is NTP, 17:33:18.269 EST Fri Apr 5 2019
+    10.169.197.104/30
+             nexthop 10.169.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
 
           '''}
     golden_parsed_output_3 = {
@@ -1200,7 +1200,7 @@ class test_show_ip_cef(unittest.TestCase):
                 "address_family": {
                     "ipv4": {
                         "prefix": {
-                            "200.1.1.1/32": {
+                            "192.168.4.1/32": {
                                 "nexthop": {
                                     "attached": {
                                         "outgoing_interface": {
@@ -1217,8 +1217,8 @@ class test_show_ip_cef(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value': '''\
-    R1#sh ip cef 200.1.1.1
-    200.1.1.1/32
+    R1#sh ip cef 192.168.4.1
+    192.168.4.1/32
         attached to GigabitEthernet3.100
           '''}
     golden_parsed_output_4 = {
@@ -1354,14 +1354,14 @@ class test_show_ip_cef(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpCef(device=self.device)
-        parsed_output = obj.parse(prefix='106.162.197.104')
+        parsed_output = obj.parse(prefix='10.169.197.104')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_golden_3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_3)
         obj = ShowIpCef(device=self.device)
-        parsed_output = obj.parse(prefix='200.1.1.1')
+        parsed_output = obj.parse(prefix='192.168.4.1')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_golden_4(self):
