@@ -2,10 +2,10 @@
 
 IOSXR parser for the following show commands:
 	* show spanning-tree mst <mst_id>
-	* 'show spanning-tree mstag <mag_domain>'
-	* 'show spanning-tree pvrst <pvst_id>'
-	* 'show spanning-tree pvrstag <pvrstag_domain>'
-	* 'show spanning-tree pvstag <pvstag_domain>'
+	* show spanning-tree mstag <mag_domain>
+	* show spanning-tree pvrst <pvst_id>
+	* show spanning-tree pvrstag <pvrstag_domain>
+	* show spanning-tree pvstag <pvstag_domain>
 """
 
 import re
@@ -55,6 +55,7 @@ class ShowSpanningTreeMstSchema(MetaParser):
 					            'port_num': int, 
 					            'role': str, 
 					            'port_state': str,
+					            Optional('designated_cost'): int,
 					            'designated_bridge_priority': int,
 					            'designated_bridge_address': str,
 					            'designated_port_priority': int,
@@ -101,7 +102,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		# Bridge ID Priority 32768 (priority 32768 sys-id-ext 0)
 		p10 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bfd.1007 128.1  
-		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>\w+)\s+(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>[\w\.]+)\s+(?P<designated_port_priority>\d+)\.(?P<designated_port_num>\d+)$')
+		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>[\w\.]+)\s+(?P<designated_port_priority>\d+)\.(?P<designated_port_num>\d+)$')
 		# This bridge is the root
 		p12 = re.compile(r'This +bridge +is +(?P<this_bridge_is>[\w ]+)$')
 		
