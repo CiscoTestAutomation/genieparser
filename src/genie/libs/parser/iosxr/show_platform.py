@@ -757,7 +757,7 @@ class ShowInventory(ShowInventorySchema):
             # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
             # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
             p2 = re.compile(r'\s*PID: +(?P<pid>[a-zA-Z0-9\/\-\s]+),'
-                             ' +VID: +(?P<vid>[a-zA-Z0-9\.\/\s]),'
+                             ' +VID: +(?P<vid>[a-zA-Z0-9\.\/\s]+),'
                              ' +SN: +(?P<sn>[a-zA-Z0-9\/\s]+)$')
             m = p2.match(line)
             if m:
