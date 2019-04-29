@@ -1014,6 +1014,7 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 		        },
 		    },
 		}
+		
 	golden_output = {'execute.return_value': '''\
 	RP/0/0/CPU0:ios#show spanning-tree pvrstag foo
 	Wed Mar 29 12:38:05.528 UTC
