@@ -134,55 +134,55 @@ class ShowRunRouterIsisSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
-                Optional('segment_routing'): {
-                    Optional(Any()): str,
-                },
-                Optional('lsp_gen_interval'): {
+                Optional('segment_routing'): OrderedDict({
                     Optional(Any()): Any(),
-                },
+                }),
+                Optional('lsp_gen_interval'): OrderedDict({
+                    Optional(Any()): Any(),
+                }),
                 Optional('address_family'): {
                     Optional(Any()): OrderedDict({
-                        Optional('fast_reroute'): {
-                            Optional('per_prefix'): {
-                                Optional('tiebreaker'):{
+                        Optional('fast_reroute'): OrderedDict({
+                            Optional('per_prefix'): OrderedDict({
+                                Optional('tiebreaker'): OrderedDict({
                                     Optional(Any()): Any(),
-                                },
-                            },
-                        },
-                        Optional('mpls'): {
+                                }),
+                            }),
+                        }),
+                        Optional('mpls'):  OrderedDict({
                             Optional('traffic_eng'): Any(),
-                        },
-                        Optional('spf_interval'): {
+                        }),
+                        Optional('spf_interval'): OrderedDict({
                             Optional(Any()): Any(),
-                        },
-                        Optional('spf_prefix_priority'): {
+                        }),
+                        Optional('spf_prefix_priority'): OrderedDict({
                             Optional(Any()): Any(),
-                        },
-                        Optional('segment_routing'): {
-                            Optional(Any()): str,
-                        },
-                        Optional(Any()): str,
+                        }),
+                        Optional('segment_routing'): OrderedDict({
+                            Optional(Any()): Any(),
+                        }),
+                        Optional(Any()): Any(),
                     })
                 },
                 Optional('interfaces'): {
                     Optional(Any()): OrderedDict({
-                        Optional('bfd'): {
+                        Optional('bfd'): OrderedDict({
                             Optional(Any()): Any(),
-                        },
-                        Optional('address_family'): {
-                            Optional(Any()): {
+                        }),
+                        Optional('address_family'): OrderedDict({
+                            Optional(Any()): OrderedDict({
                                 Optional(Any()): Any(),
-                                Optional(Any()): {
+                                Optional(Any()): OrderedDict({
                                     Optional(Any()): Any(),
-                                },
-                            },
-                        },
+                                }),
+                            }),
+                        }),
                         Optional(Any()): Any(),
                     })
                 },
                 Optional(Any()): Any(),
-            }
-        }
+            },
+        },
     }
 
 
