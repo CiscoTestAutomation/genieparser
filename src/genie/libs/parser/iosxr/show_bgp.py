@@ -1017,10 +1017,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         flag = None
         
         # Init vars
-        if vrf_type == 'vrf':
-            vrf = None
-        else:
-            vrf = 'default'
+        vrf = 'default'
         
         for line in out.splitlines():
             line = line.strip()
