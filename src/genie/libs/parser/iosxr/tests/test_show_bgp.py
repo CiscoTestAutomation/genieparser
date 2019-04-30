@@ -3543,11 +3543,2533 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         % None of the requested address families are configured for instance 'test2'(29193)
         '''}
 
+    golden_output_10 = {'execute.return_value' : '''
+    ++ LAB-9010: executing command 'show bgp instance all all all  process detail' +++
+show bgp instance all all all  process detail
+
+Mon Apr 29 16:17:25.091 CDT
+
+BGP instance 0: 'default'
+=========================
+
+BGP Process Information: 
+BGP is operating in STANDALONE mode
+Autonomous System number format: ASPLAIN
+Autonomous System: 19108
+Router ID: 172.25.12.3 (manually configured)
+Default Cluster ID: 1910825 (manually configured)
+Active Cluster IDs:  1910825
+Fast external fallover enabled
+Platform RLIMIT max: 2281701376 bytes
+Maximum limit for BMP buffer size: 435 MB
+Default value for BMP buffer size: 326 MB
+Current limit for BMP buffer size: 326 MB
+Current utilization of BMP buffer limit: 0 B
+Neighbor logging is enabled
+Enforce first AS enabled
+Default local preference: 100
+Default keepalive: 60
+Graceful restart enabled
+Restart time: 120
+Stale path timeout time: 360
+RIB purge timeout time: 600
+Non-stop routing is enabled
+Update delay: 120
+Generic scan interval: 60
+
+BGP Speaker process: 0, Node: node0_RSP0_CPU0
+Restart count: 1
+                           Total           Nbrs Estab/Cfg
+Default VRFs:              1               7/9
+Non-Default VRFs:          4               0/0
+
+                           Sent            Received
+Updates:                   242845          114             
+Notifications:             1               0               
+
+                           Number          Memory Used
+Attributes:                31              4960            
+AS Paths:                  3               240             
+Communities:               12              960             
+Extended communities:      6               480             
+PMSI Tunnel attr:          0               0               
+RIBRNH Tunnel attr:        0               0               
+PPMP attr:                 0               0               
+Tunnel Encap attr:         0               0               
+PE distinguisher labels:   0               0               
+Route Reflector Entries:   9               720             
+Nexthop Entries:           92              36808           
+
+                           Alloc           Free          
+Pool 200:                  0               0             
+Pool 300:                  128418          128417        
+Pool 400:                  58              58            
+Pool 500:                  242831          242831        
+Pool 600:                  19              19            
+Pool 700:                  0               0             
+Pool 800:                  0               0             
+Pool 900:                  0               0             
+Pool 1200:                 0               0             
+Pool 2200:                 15              15            
+Pool 3300:                 0               0             
+Pool 4000:                 0               0             
+Pool 4500:                 0               0             
+Pool 5000:                 0               0             
+Pool 20000:                0               0             
+
+Message logging pool summary:
+                           Alloc           Free          
+Pool 100:                  208193          208164        
+Pool 200:                  34813           34805         
+Pool 500:                  0               0             
+Pool 2200:                 0               0             
+Pool 4500:                 0               0             
+
+BMP pool summary:
+                           Alloc           Free          
+Pool 100:                  0               0             
+Pool 200:                  0               0             
+Pool 300:                  0               0             
+Pool 400:                  0               0             
+Pool 500:                  0               0             
+Pool 600:                  0               0             
+Pool 700:                  0               0             
+Pool 800:                  0               0             
+Pool 900:                  0               0             
+Pool 1200:                 0               0             
+Pool 2200:                 0               0             
+Pool 3300:                 0               0             
+Pool 4000:                 0               0             
+Pool 4500:                 0               0             
+Pool 5500:                 0               0             
+Pool 6500:                 0               0             
+Pool 7500:                 0               0             
+Pool 8500:                 0               0             
+Pool 10000:                0               0             
+Pool 20000:                0               0             
+
+Address family: VPNv4 Unicast
+Dampening is not enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 13
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 35
+Table version synced to RIB: 35
+Table version acked by RIB: 0
+RIB has not converged: version 0
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 35
+Attribute download: Disabled
+Router Reflector functionality enabled
+Label retention timer value 5 mins
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Apr 24 12:35:30.807   35          35          4         
+                   Apr 24 12:34:58.751   35          35          4         
+                   Apr 24 12:34:58.751   35          35          4         
+                   Apr 24 12:33:41.779   35          35          4         
+                   Apr 24 12:33:22.495   35          35          3         
+                   Apr 24 12:32:52.000   35          35          3         
+                   Apr 24 12:32:51.988   35          35          4         
+                   Apr 24 12:32:01.599   35          35          3         
+                   Total triggers: 76
+
+Import Thread      Apr 24 12:33:22.495   35          35          3         
+                   Apr 24 12:32:52.000   35          35          3         
+                   Apr 24 12:32:01.599   35          35          3         
+                   Apr 24 12:31:30.902   35          35          3         
+                   Apr 24 12:28:49.086   35          35          3         
+                   Apr 24 12:28:41.220   35          35          3         
+                   Apr 24 12:28:41.210   35          35          3         
+                   Apr 24 12:28:41.209   35          35          3         
+                   Total triggers: 47
+
+RIB Thread         Apr 24 12:28:41.199   34          35          4         
+                   Apr 24 12:28:41.199   31          35          8         
+                   Apr 24 12:28:41.198   31          35          4         
+                   Apr 24 12:28:41.198   31          34          8         
+                   Apr 24 12:28:18.672   28          31          4         
+                   Apr 24 12:28:18.672   28          31          8         
+                   Apr 17 15:20:06.471   27          28          4         
+                   Apr 17 15:20:06.471   24          28          8         
+                   Total triggers: 29
+
+Update Thread      Apr 24 12:35:30.807   35          35          8         
+                   Apr 24 12:34:58.751   35          35          8         
+                   Apr 24 12:34:58.751   35          35          8         
+                   Apr 24 12:33:41.779   35          35          8         
+                   Apr 24 12:33:22.495   35          35          8         
+                   Apr 24 12:32:52.000   35          35          8         
+                   Apr 24 12:32:51.989   35          35          8         
+                   Apr 24 12:32:01.599   35          35          8         
+                   Total triggers: 90
+
+                      Allocated       Freed         
+Remote Prefixes:      6               0             
+Remote Paths:         19              8             
+Remote Path-elems:    6               0             
+
+Local Prefixes:       71              64            
+Local Paths:          11              3             
+
+                      Number          Mem Used      
+Remote Prefixes:      6               552           
+Remote Paths:         11              968           
+Remote Path-elems:    6               378           
+Remote RDs:           3               240           
+
+Local Prefixes:       7               665           
+Local Paths:          8               704           
+Local RDs:            2               160           
+
+Total Prefixes:       13              1235          
+Total Paths:          19              1672          
+Total Path-elems:     13              1672          
+Imported Paths:       6               528           
+Total RDs:            5               400           
+
+
+Address family: IPv6 Labeled-unicast
+Dampening is not enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 1
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 9
+Table version synced to RIB: 9
+Table version acked by RIB: 9
+RIB has converged: version 6
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 9
+Attribute download: Disabled
+Label retention timer value 5 mins
+Number of iBGP sessions that have nexthop-self enabled = 3
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Apr 24 12:33:22.495   9           9           3         
+                   Apr 24 12:32:52.000   9           9           3         
+                   Apr 24 12:32:01.599   9           9           3         
+                   Apr 24 12:31:30.902   9           9           3         
+                   Apr 24 12:28:49.086   9           9           3         
+                   Apr 24 12:28:41.220   9           9           3         
+                   Apr 24 12:28:41.210   9           9           3         
+                   Apr 24 12:28:41.209   9           9           3         
+                   Total triggers: 29
+
+Import Thread      Apr 24 12:33:22.495   9           9           3         
+                   Apr 24 12:32:52.000   9           9           3         
+                   Apr 24 12:32:01.599   9           9           3         
+                   Apr 24 12:31:30.902   9           9           3         
+                   Apr 24 12:28:49.086   9           9           3         
+                   Apr 24 12:28:41.220   9           9           3         
+                   Apr 24 12:28:41.210   9           9           3         
+                   Apr 24 12:28:41.209   9           9           3         
+                   Total triggers: 25
+
+RIB Thread         Apr 17 15:20:06.682   8           9           8         
+                   Apr 17 15:20:06.674   8           8           8         
+                   Apr 17 15:20:06.674   1           8           8         
+                   Apr 17 15:20:06.673   1           8           6         
+                   Total triggers: 4
+
+Update Thread      Apr 24 12:33:22.495   9           9           8         
+                   Apr 24 12:32:52.000   9           9           8         
+                   Apr 24 12:32:01.599   9           9           8         
+                   Apr 24 12:31:30.902   9           9           8         
+                   Apr 24 12:28:49.086   9           9           8         
+                   Apr 24 12:28:41.220   9           9           8         
+                   Apr 24 12:28:41.210   9           9           8         
+                   Apr 24 12:28:41.209   9           9           8         
+                   Total triggers: 31
+
+                           Allocated       Freed         
+Prefixes:                  1               0             
+Paths:                     1               0             
+Path-elems:                1               0             
+
+                           Number          Mem Used      
+Prefixes:                  1               104           
+Paths:                     1               64            
+Path-elems:                1               63            
+BMP Prefixes:              0               0             
+BMP Paths:                 0               0             
+
+
+Address family: IPv4 Unicast
+Dampening is enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 55
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 106
+Table version synced to RIB: 106
+Table version acked by RIB: 106
+IGP notification: IGPs notified
+RIB has converged: version 4
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 106
+Attribute download: Enabled
+Router Reflector functionality enabled
+Label retention timer value 5 mins
+Number of iBGP sessions that have nexthop-self enabled = 1
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Apr 24 12:35:30.807   105         106         18        
+                   Apr 24 12:34:58.751   104         105         18        
+                   Apr 24 12:34:58.751   103         104         18        
+                   Apr 24 12:33:41.779   102         103         18        
+                   Apr 24 12:33:22.495   102         102         3         
+                   Apr 24 12:32:52.000   102         102         3         
+                   Apr 24 12:32:51.988   101         102         18        
+                   Apr 24 12:32:01.599   101         101         3         
+                   Total triggers: 80
+
+Import Thread      Apr 24 12:35:30.807   105         106         18        
+                   Apr 24 12:34:58.751   104         105         18        
+                   Apr 24 12:34:58.751   103         104         18        
+                   Apr 24 12:33:41.779   102         103         18        
+                   Apr 24 12:33:22.495   102         102         3         
+                   Apr 24 12:32:52.000   102         102         3         
+                   Apr 24 12:32:51.988   101         102         18        
+                   Apr 24 12:32:01.599   101         101         3         
+                   Total triggers: 61
+
+RIB Thread         Apr 24 12:35:30.807   105         106         4         
+                   Apr 24 12:35:30.807   105         106         8         
+                   Apr 24 12:34:58.751   103         105         8         
+                   Apr 24 12:34:58.751   103         104         4         
+                   Apr 24 12:34:58.751   103         104         8         
+                   Apr 24 12:33:41.779   102         103         4         
+                   Apr 24 12:33:41.779   102         103         8         
+                   Apr 24 12:32:51.989   102         102         8         
+                   Total triggers: 53
+
+Update Thread      Apr 24 12:35:30.807   106         106         18        
+                   Apr 24 12:35:30.807   105         106         8         
+                   Apr 24 12:34:58.751   105         105         18        
+                   Apr 24 12:34:58.751   104         105         18        
+                   Apr 24 12:34:58.751   103         105         8         
+                   Apr 24 12:34:58.751   103         104         8         
+                   Apr 24 12:33:41.779   103         103         18        
+                   Apr 24 12:33:41.779   102         103         8         
+                   Total triggers: 105
+
+                           Allocated       Freed         
+Prefixes:                  56              1             
+Paths:                     91              20            
+Path-elems:                56              1             
+
+                           Number          Mem Used      
+Prefixes:                  55              5060          
+Paths:                     71              4544          
+Path-elems:                55              3465          
+BMP Prefixes:              0               0             
+BMP Paths:                 0               0             
+
+
+Address family: IPv4 MDT
+Dampening is not enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 0
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 1
+Table version synced to RIB: 1
+Table version acked by RIB: 0
+RIB has not converged: version 0
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 1
+Attribute download: Disabled
+Label retention timer value 5 mins
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Total triggers: 0
+
+Import Thread      Total triggers: 0
+
+RIB Thread         Total triggers: 0
+
+Update Thread      Apr 24 12:33:22.495   1           1           3         
+                   Apr 24 12:32:52.000   1           1           3         
+                   Apr 24 12:32:01.599   1           1           3         
+                   Apr 24 12:31:30.902   1           1           3         
+                   Apr 24 12:28:49.086   1           1           6         
+                   Apr 24 12:28:49.086   1           1           3         
+                   Apr 24 12:28:41.220   1           1           6         
+                   Apr 24 12:28:41.220   1           1           3         
+                   Total triggers: 64
+
+                           Allocated       Freed         
+Prefixes:                  0               0             
+Paths:                     0               0             
+Path-elems:                0               0             
+
+                           Number          Mem Used      
+Prefixes:                  0               0             
+Paths:                     0               0             
+Path-elems:                0               0             
+BMP Prefixes:              0               0             
+BMP Paths:                 0               0             
+
+
+Address family: IPv6 Unicast
+Dampening is not enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 1
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 9
+Table version synced to RIB: 9
+Table version acked by RIB: 9
+RIB has converged: version 6
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 9
+Attribute download: Disabled
+Label retention timer value 5 mins
+Number of iBGP sessions that have nexthop-self enabled = 3
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Apr 24 12:33:22.495   9           9           3         
+                   Apr 24 12:32:52.000   9           9           3         
+                   Apr 24 12:32:01.599   9           9           3         
+                   Apr 24 12:31:30.902   9           9           3         
+                   Apr 24 12:28:49.086   9           9           3         
+                   Apr 24 12:28:41.220   9           9           3         
+                   Apr 24 12:28:41.210   9           9           3         
+                   Apr 24 12:28:41.209   9           9           3         
+                   Total triggers: 29
+
+Import Thread      Apr 24 12:33:22.495   9           9           3         
+                   Apr 24 12:32:52.000   9           9           3         
+                   Apr 24 12:32:01.599   9           9           3         
+                   Apr 24 12:31:30.902   9           9           3         
+                   Apr 24 12:28:49.086   9           9           3         
+                   Apr 24 12:28:41.220   9           9           3         
+                   Apr 24 12:28:41.210   9           9           3         
+                   Apr 24 12:28:41.209   9           9           3         
+                   Total triggers: 25
+
+RIB Thread         Apr 17 15:20:06.682   8           9           8         
+                   Apr 17 15:20:06.674   8           8           8         
+                   Apr 17 15:20:06.674   1           8           8         
+                   Apr 17 15:20:06.673   1           8           6         
+                   Total triggers: 4
+
+Update Thread      Apr 24 12:33:22.495   9           9           8         
+                   Apr 24 12:32:52.000   9           9           8         
+                   Apr 24 12:32:01.599   9           9           8         
+                   Apr 24 12:31:30.902   9           9           8         
+                   Apr 24 12:28:49.086   9           9           8         
+                   Apr 24 12:28:41.220   9           9           8         
+                   Apr 24 12:28:41.210   9           9           8         
+                   Apr 24 12:28:41.209   9           9           8         
+                   Total triggers: 31
+
+                           Allocated       Freed         
+Prefixes:                  1               0             
+Paths:                     1               0             
+Path-elems:                1               0             
+
+                           Number          Mem Used      
+Prefixes:                  1               104           
+Paths:                     1               64            
+Path-elems:                1               63            
+BMP Prefixes:              0               0             
+BMP Paths:                 0               0             
+
+
+Address family: L2VPN VPLS
+Dampening is not enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 0
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 1
+Table version synced to RIB: 1
+Table version acked by RIB: 0
+RIB has not converged: version 0
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 1
+Attribute download: Disabled
+Label retention timer value 5 mins
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Total triggers: 0
+
+Import Thread      Apr 24 12:33:22.495   1           1           3         
+                   Apr 24 12:32:52.000   1           1           3         
+                   Apr 24 12:32:01.599   1           1           3         
+                   Apr 24 12:31:30.902   1           1           3         
+                   Apr 24 12:28:49.086   1           1           3         
+                   Apr 24 12:28:41.220   1           1           3         
+                   Apr 24 12:28:41.210   1           1           3         
+                   Apr 24 12:28:41.209   1           1           3         
+                   Total triggers: 24
+
+RIB Thread         Total triggers: 0
+
+Update Thread      Apr 24 12:33:22.495   1           1           3         
+                   Apr 24 12:32:52.000   1           1           6         
+                   Apr 24 12:32:52.000   1           1           3         
+                   Apr 24 12:32:01.599   1           1           3         
+                   Apr 24 12:31:30.902   1           1           3         
+                   Apr 24 12:28:49.086   1           1           3         
+                   Apr 24 12:28:41.220   1           1           3         
+                   Apr 24 12:28:41.210   1           1           6         
+                   Total triggers: 52
+
+                      Allocated       Freed         
+Remote Prefixes:      0               0             
+Remote Paths:         0               0             
+Remote Path-elems:    0               0             
+
+Local Prefixes:       0               0             
+Local Paths:          0               0             
+
+                      Number          Mem Used      
+Remote Prefixes:      0               0             
+Remote Paths:         0               0             
+Remote Path-elems:    0               0             
+Remote RDs:           0               0             
+
+Local Prefixes:       0               0             
+Local Paths:          0               0             
+Local RDs:            0               0             
+
+Total Prefixes:       0               0             
+Total Paths:          0               0             
+Total Path-elems:     0               0             
+Imported Paths:       0               0             
+Total RDs:            0               0             
+
+
+Address family: L2VPN EVPN
+Dampening is not enabled
+Client reflection is enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 3
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 8
+Table version synced to RIB: 1
+Table version acked by RIB: 0
+RIB has not converged: version 0
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 8
+Attribute download: Disabled
+Label retention timer value 5 mins
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Total triggers: 0
+
+Import Thread      Apr 24 12:33:22.495   8           8           3         
+                   Apr 24 12:32:52.000   8           8           3         
+                   Apr 24 12:32:01.599   8           8           3         
+                   Apr 24 12:31:30.902   8           8           3         
+                   Apr 24 12:28:49.086   8           8           3         
+                   Apr 24 12:28:41.220   8           8           3         
+                   Apr 24 12:28:41.210   8           8           3         
+                   Apr 24 12:28:41.209   8           8           3         
+                   Total triggers: 29
+
+RIB Thread         Total triggers: 0
+
+Update Thread      Apr 24 12:33:22.495   8           8           3         
+                   Apr 24 12:32:52.000   8           8           15        
+                   Apr 24 12:32:52.000   8           8           3         
+                   Apr 24 12:32:01.600   8           8           15        
+                   Apr 24 12:32:01.599   8           8           3         
+                   Apr 24 12:31:30.902   8           8           15        
+                   Apr 24 12:31:30.902   8           8           3         
+                   Apr 24 12:28:49.086   8           8           15        
+                   Total triggers: 69
+
+                      Allocated       Freed         
+Remote Prefixes:      2               1             
+Remote Paths:         2               1             
+Remote Path-elems:    2               1             
+
+Local Prefixes:       3               1             
+Local Paths:          3               1             
+
+                      Number          Mem Used      
+Remote Prefixes:      1               117           
+Remote Paths:         1               120           
+Remote Path-elems:    1               63            
+Remote RDs:           1               80            
+
+Local Prefixes:       2               240           
+Local Paths:          2               240           
+Local RDs:            2               160           
+
+Total Prefixes:       3               360           
+Total Paths:          3               360           
+Total Path-elems:     3               360           
+Imported Paths:       1               120           
+Total RDs:            3               240           
+
+
+RP/0/RSP0/CPU0:LAB-9010#
++++ LAB-9010: executing command 'show bgp instance all vrf all ipv4 unicast process detail' +++
+show bgp instance all vrf all ipv4 unicast process detail
+
+Mon Apr 29 16:17:26.025 CDT
+
+BGP instance 0: 'default'
+=========================
+
+VRF: SL_IT
+----------
+
+BGP Process Information: VRF SL_IT
+BGP Route Distinguisher: 19108:2500
+
+BGP is operating in STANDALONE mode
+Autonomous System number format: ASPLAIN
+Autonomous System: 19108
+Router ID: 172.25.12.3
+Default Cluster ID: 1910825 (manually configured)
+Active Cluster IDs:  1910825
+Fast external fallover enabled
+Platform RLIMIT max: 2281701376 bytes
+Maximum limit for BMP buffer size: 435 MB
+Default value for BMP buffer size: 326 MB
+Current limit for BMP buffer size: 326 MB
+Current utilization of BMP buffer limit: 0 B
+Neighbor logging is enabled
+Enforce first AS enabled
+iBGP to IGP redistribution enabled
+Default local preference: 100
+Default keepalive: 60
+Graceful restart enabled
+Restart time: 120
+Stale path timeout time: 360
+RIB purge timeout time: 600
+Non-stop routing is enabled
+Update delay: 120
+Generic scan interval: 60
+
+BGP Speaker process: 0, Node: node0_RSP0_CPU0
+Restart count: 1
+                           Total           Nbrs Estab/Cfg
+Default VRFs:              1               7/9
+Non-Default VRFs:          4               0/0
+This VRF:                                  0/0
+
+                           Sent            Received
+Updates:                   0               0               
+Notifications:             0               0               
+
+                           Number          Memory Used
+Attributes:                31              4960            
+AS Paths:                  3               240             
+Communities:               12              960             
+Extended communities:      6               480             
+PMSI Tunnel attr:          0               0               
+RIBRNH Tunnel attr:        0               0               
+PPMP attr:                 0               0               
+Tunnel Encap attr:         0               0               
+PE distinguisher labels:   0               0               
+Route Reflector Entries:   9               720             
+Nexthop Entries:           92              36808           
+
+                           Alloc           Free          
+Pool 200:                  0               0             
+Pool 300:                  128418          128417        
+Pool 400:                  58              58            
+Pool 500:                  242831          242831        
+Pool 600:                  19              19            
+Pool 700:                  0               0             
+Pool 800:                  0               0             
+Pool 900:                  0               0             
+Pool 1200:                 0               0             
+Pool 2200:                 15              15            
+Pool 3300:                 0               0             
+Pool 4000:                 0               0             
+Pool 4500:                 0               0             
+Pool 5000:                 0               0             
+Pool 20000:                0               0             
+
+Message logging pool summary:
+                           Alloc           Free          
+Pool 100:                  208193          208164        
+Pool 200:                  34813           34805         
+Pool 500:                  0               0             
+Pool 2200:                 0               0             
+Pool 4500:                 0               0             
+
+BMP pool summary:
+                           Alloc           Free          
+Pool 100:                  0               0             
+Pool 200:                  0               0             
+Pool 300:                  0               0             
+Pool 400:                  0               0             
+Pool 500:                  0               0             
+Pool 600:                  0               0             
+Pool 700:                  0               0             
+Pool 800:                  0               0             
+Pool 900:                  0               0             
+Pool 1200:                 0               0             
+Pool 2200:                 0               0             
+Pool 3300:                 0               0             
+Pool 4000:                 0               0             
+Pool 4500:                 0               0             
+Pool 5500:                 0               0             
+Pool 6500:                 0               0             
+Pool 7500:                 0               0             
+Pool 8500:                 0               0             
+Pool 10000:                0               0             
+Pool 20000:                0               0             
+
+VRF SL_IT Address family: IPv4 Unicast
+Dampening is not enabled
+Client reflection is not enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 13
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 35
+Table version synced to RIB: 35
+Table version acked by RIB: 35
+IGP notification: IGPs notified
+RIB has converged: version 1
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 35
+Attribute download: Disabled
+Router Reflector functionality enabled
+Label retention timer value 5 mins
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Apr 24 12:35:30.807   35          35          4         
+                   Apr 24 12:34:58.751   35          35          4         
+                   Apr 24 12:34:58.751   35          35          4         
+                   Apr 24 12:33:41.779   35          35          4         
+                   Apr 24 12:33:22.495   35          35          3         
+                   Apr 24 12:32:52.000   35          35          3         
+                   Apr 24 12:32:51.988   35          35          4         
+                   Apr 24 12:32:01.599   35          35          3         
+                   Total triggers: 76
+
+Import Thread      Apr 24 12:33:22.495   35          35          3         
+                   Apr 24 12:32:52.000   35          35          3         
+                   Apr 24 12:32:01.599   35          35          3         
+                   Apr 24 12:31:30.902   35          35          3         
+                   Apr 24 12:28:49.086   35          35          3         
+                   Apr 24 12:28:41.220   35          35          3         
+                   Apr 24 12:28:41.210   35          35          3         
+                   Apr 24 12:28:41.209   35          35          3         
+                   Total triggers: 47
+
+RIB Thread         Apr 24 12:28:41.199   34          35          4         
+                   Apr 24 12:28:41.199   31          35          8         
+                   Apr 24 12:28:41.198   31          35          4         
+                   Apr 24 12:28:41.198   31          34          8         
+                   Apr 24 12:28:18.672   28          31          4         
+                   Apr 24 12:28:18.672   28          31          8         
+                   Apr 17 15:20:06.471   27          28          4         
+                   Apr 17 15:20:06.471   24          28          8         
+                   Total triggers: 29
+
+Update Thread      Apr 24 12:35:30.807   35          35          8         
+                   Apr 24 12:34:58.751   35          35          8         
+                   Apr 24 12:34:58.751   35          35          8         
+                   Apr 24 12:33:41.779   35          35          8         
+                   Apr 24 12:33:22.495   35          35          8         
+                   Apr 24 12:32:52.000   35          35          8         
+                   Apr 24 12:32:51.989   35          35          8         
+                   Apr 24 12:32:01.599   35          35          8         
+                   Total triggers: 90
+
+                           Allocated       Freed         
+Prefixes:                  1               0             
+Paths:                     2               1             
+Path-elems:                1               0             
+
+                           Number          Mem Used      
+Prefixes:                  1               92            
+Paths:                     1               88            
+Path-elems:                1               63            
+BMP Prefixes:              0               0             
+BMP Paths:                 0               0             
+
+
+VRF: SL_NAT_INSIDE
+------------------
+
+BGP Process Information: VRF SL_NAT_INSIDE
+BGP Route Distinguisher: 19108:4646
+
+BGP is operating in STANDALONE mode
+Autonomous System number format: ASPLAIN
+Autonomous System: 19108
+Router ID: 172.25.12.3
+Default Cluster ID: 1910825 (manually configured)
+Active Cluster IDs:  1910825
+Fast external fallover enabled
+Platform RLIMIT max: 2281701376 bytes
+Maximum limit for BMP buffer size: 435 MB
+Default value for BMP buffer size: 326 MB
+Current limit for BMP buffer size: 326 MB
+Current utilization of BMP buffer limit: 0 B
+Neighbor logging is enabled
+Enforce first AS enabled
+iBGP to IGP redistribution enabled
+Default local preference: 100
+Default keepalive: 60
+Graceful restart enabled
+Restart time: 120
+Stale path timeout time: 360
+RIB purge timeout time: 600
+Non-stop routing is enabled
+Update delay: 120
+Generic scan interval: 60
+
+BGP Speaker process: 0, Node: node0_RSP0_CPU0
+Restart count: 1
+                           Total           Nbrs Estab/Cfg
+Default VRFs:              1               7/9
+Non-Default VRFs:          4               0/0
+This VRF:                                  0/0
+
+                           Sent            Received
+Updates:                   0               0               
+Notifications:             0               0               
+
+                           Number          Memory Used
+Attributes:                31              4960            
+AS Paths:                  3               240             
+Communities:               12              960             
+Extended communities:      6               480             
+PMSI Tunnel attr:          0               0               
+RIBRNH Tunnel attr:        0               0               
+PPMP attr:                 0               0               
+Tunnel Encap attr:         0               0               
+PE distinguisher labels:   0               0               
+Route Reflector Entries:   9               720             
+Nexthop Entries:           92              36808           
+
+                           Alloc           Free          
+Pool 200:                  0               0             
+Pool 300:                  128418          128417        
+Pool 400:                  58              58            
+Pool 500:                  242831          242831        
+Pool 600:                  19              19            
+Pool 700:                  0               0             
+Pool 800:                  0               0             
+Pool 900:                  0               0             
+Pool 1200:                 0               0             
+Pool 2200:                 15              15            
+Pool 3300:                 0               0             
+Pool 4000:                 0               0             
+Pool 4500:                 0               0             
+Pool 5000:                 0               0             
+Pool 20000:                0               0             
+
+Message logging pool summary:
+                           Alloc           Free          
+Pool 100:                  208193          208164        
+Pool 200:                  34813           34805         
+Pool 500:                  0               0             
+Pool 2200:                 0               0             
+Pool 4500:                 0               0             
+
+BMP pool summary:
+                           Alloc           Free          
+Pool 100:                  0               0             
+Pool 200:                  0               0             
+Pool 300:                  0               0             
+Pool 400:                  0               0             
+Pool 500:                  0               0             
+Pool 600:                  0               0             
+Pool 700:                  0               0             
+Pool 800:                  0               0             
+Pool 900:                  0               0             
+Pool 1200:                 0               0             
+Pool 2200:                 0               0             
+Pool 3300:                 0               0             
+Pool 4000:                 0               0             
+Pool 4500:                 0               0             
+Pool 5500:                 0               0             
+Pool 6500:                 0               0             
+Pool 7500:                 0               0             
+Pool 8500:                 0               0             
+Pool 10000:                0               0             
+Pool 20000:                0               0             
+
+VRF SL_NAT_INSIDE Address family: IPv4 Unicast
+Dampening is not enabled
+Client reflection is not enabled in global config
+Dynamic MED is Disabled
+Dynamic MED interval : 10 minutes
+Dynamic MED Timer : Not Running
+Dynamic MED Periodic Timer : Not Running
+Scan interval: 60
+Total prefixes scanned: 13
+Prefixes scanned per segment: 100000
+Number of scan segments: 1
+Nexthop resolution minimum prefix-length: 0 (not configured)
+Main Table Version: 35
+Table version synced to RIB: 35
+Table version acked by RIB: 35
+IGP notification: IGPs notified
+RIB has converged: version 1
+RIB table prefix-limit reached ?  [No], version 0
+Permanent Network Unconfigured
+
+State: Normal mode.
+BGP Table Version: 35
+Attribute download: Disabled
+Router Reflector functionality enabled
+Label retention timer value 5 mins
+Soft Reconfig Entries: 0
+Table bit-field size : 1 Chunk element size : 3
+
+                   Last 8 Triggers       Ver         Tbl Ver     Trig TID  
+
+Label Thread       Apr 24 12:35:30.807   35          35          4         
+                   Apr 24 12:34:58.751   35          35          4         
+                   Apr 24 12:34:58.751   35          35          4         
+                   Apr 24 12:33:41.779   35          35          4         
+                   Apr 24 12:33:22.495   35          35          3         
+                   Apr 24 12:32:52.000   35          35          3         
+                   Apr 24 12:32:51.988   35          35          4         
+                   Apr 24 12:32:01.599   35          35          3         
+                   Total triggers: 76
+
+Import Thread      Apr 24 12:33:22.495   35          35          3         
+                   Apr 24 12:32:52.000   35          35          3         
+                   Apr 24 12:32:01.599   35          35          3         
+                   Apr 24 12:31:30.902   35          35          3         
+                   Apr 24 12:28:49.086   35          35          3         
+                   Apr 24 12:28:41.220   35          35          3         
+                   Apr 24 12:28:41.210   35          35          3         
+                   Apr 24 12:28:41.209   35          35          3         
+                   Total triggers: 47
+
+RIB Thread         Apr 24 12:28:41.199   34          35          4         
+                   Apr 24 12:28:41.199   31          35          8         
+                   Apr 24 12:28:41.198   31          35          4         
+                   Apr 24 12:28:41.198   31          34          8         
+                   Apr 24 12:28:18.672   28          31          4         
+                   Apr 24 12:28:18.672   28          31          8         
+                   Apr 17 15:20:06.471   27          28          4         
+                   Apr 17 15:20:06.471   24          28          8         
+                   Total triggers: 29
+
+Update Thread      Apr 24 12:35:30.807   35          35          8         
+                   Apr 24 12:34:58.751   35          35          8         
+                   Apr 24 12:34:58.751   35          35          8         
+                   Apr 24 12:33:41.779   35          35          8         
+                   Apr 24 12:33:22.495   35          35          8         
+                   Apr 24 12:32:52.000   35          35          8         
+                   Apr 24 12:32:51.989   35          35          8         
+                   Apr 24 12:32:01.599   35          35          8         
+                   Total triggers: 90
+
+                           Allocated       Freed         
+Prefixes:                  70              64            
+Paths:                     9               2             
+Path-elems:                6               0             
+
+                           Number          Mem Used      
+Prefixes:                  6               552           
+Paths:                     7               616           
+Path-elems:                6               378           
+BMP Prefixes:              0               0             
+BMP Paths:                 0               0             
+
+
+    '''}
+
+    golden_parsed_output_10 = {
+'instance': {
+    'default': {
+        'vrf': {
+            'default': {
+                'operation_mode': 'standalone',
+                'as_system_number_format': 'ASPLAIN',
+                'as_number': 19108,
+                'router_id': '172.25.12.3',
+                'default_cluster_id': '1910825',
+                'active_cluster_id': '1910825',
+                'fast_external_fallover': True,
+                'platform_rlimit_max': 2281701376,
+                'max_limit_for_bmp_buffer_size': 435,
+                'default_value_for_bmp_buffer_size': 326,
+                'current_limit_for_bmp_buffer_size': 326,
+                'current_utilization_of_bmp_buffer_limit': 0,
+                'log_neighbor_changes': True,
+                'enforce_first_as': True,
+                'default_local_preference': 100,
+                'default_keepalive': 60,
+                'non_stop_routing': True,
+                'update_delay': 120,
+                'generic_scan_interval': 60,
+                'bgp_speaker_process': 0,
+                'node': 'node0_RSP0_CPU0',
+                'restart_count': 1,
+                'vrf_info': {
+                    'default': {
+                        'total': 1,
+                        'nbrs_estab': 7,
+                        'cfg': 9,
+                        },
+                    'non-default': {
+                        'total': 4,
+                        'nbrs_estab': 0,
+                        'cfg': 0,
+                        },
+                    },
+                'sent_updates': 242845,
+                'received_updates': 114,
+                'sent_notifications': 1,
+                'received_notifications': 0,
+                'att': {
+                    'attributes': {
+                        'number': 31,
+                        'memory_used': 4960,
+                        },
+                    'as_paths': {
+                        'number': 3,
+                        'memory_used': 240,
+                        },
+                    'communities': {
+                        'number': 12,
+                        'memory_used': 960,
+                        },
+                    'extended_communities': {
+                        'number': 6,
+                        'memory_used': 480,
+                        },
+                    'pmsi_tunnel_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'ribrnh_tunnel_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'ppmp_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'tunnel_encap_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'pe_distinguisher_labels': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'route_reflector_entries': {
+                        'number': 9,
+                        'memory_used': 720,
+                        },
+                    'nexthop_entries': {
+                        'number': 92,
+                        'memory_used': 36808,
+                        },
+                    'remote_paths': {
+                        'number': 1,
+                        'memory_used': 120,
+                        },
+                    'local_prefixes': {
+                        'number': 2,
+                        'memory_used': 240,
+                        },
+                    'local_paths': {
+                        'number': 2,
+                        'memory_used': 240,
+                        },
+                    'remote_rds': {
+                        'number': 1,
+                        'memory_used': 80,
+                        },
+                    'local_rds': {
+                        'number': 2,
+                        'memory_used': 160,
+                        },
+                    'total_prefixes': {
+                        'number': 3,
+                        'memory_used': 360,
+                        },
+                    'total_paths': {
+                        'number': 3,
+                        'memory_used': 360,
+                        },
+                    'imported_paths': {
+                        'number': 1,
+                        'memory_used': 120,
+                        },
+                    'total_rds': {
+                        'number': 3,
+                        'memory_used': 240,
+                        },
+                    'paths': {
+                        'number': 1,
+                        'memory_used': 64,
+                        },
+                    'bmp_prefixes': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'bmp_paths': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    },
+                'pool': {
+                    '200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '300': {
+                        'alloc': 128418,
+                        'free': 128417,
+                        },
+                    '400': {
+                        'alloc': 58,
+                        'free': 58,
+                        },
+                    '500': {
+                        'alloc': 242831,
+                        'free': 242831,
+                        },
+                    '600': {
+                        'alloc': 19,
+                        'free': 19,
+                        },
+                    '700': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '800': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '900': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '1200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 15,
+                        'free': 15,
+                        },
+                    '3300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '5000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '20000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'message_logging_pool_summary': {
+                    '100': {
+                        'alloc': 208193,
+                        'free': 208164,
+                        },
+                    '200': {
+                        'alloc': 34813,
+                        'free': 34805,
+                        },
+                    '500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'bmp_pool_summary': {
+                    '100': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '400': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '600': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '700': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '800': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '900': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '1200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '3300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '5500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '6500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '7500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '8500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '10000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '20000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'address_family': {
+                    'vpnv4 unicast': {
+                        'dampening': False,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': True,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '13',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '35',
+                        'table_version_synced_to_rib': '35',
+                        'table_version_acked_by_rib': '0',
+                        'rib_has_not_converged': 'version 0',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '35',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'label thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'rib thread': {
+                                'triggers': {
+                                    'Apr 24 12:28:41.199': {
+                                        'tbl_ver': 35,
+                                        'ver': 34,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'remote prefixes': {
+                                'allocated': 6,
+                                'freed': 0,
+                                },
+                            },
+                        'prefixes_path': {
+                            'remote prefixes': {
+                                'number': 6,
+                                'mem_used': 552,
+                                },
+                            },
+                        },
+                    'ipv6 labeled-unicast': {
+                        'dampening': False,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': False,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '1',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '9',
+                        'table_version_synced_to_rib': '9',
+                        'table_version_acked_by_rib': '9',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '9',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'label thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 9,
+                                        'ver': 9,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 9,
+                                        'ver': 9,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'rib thread': {
+                                'triggers': {
+                                    'Apr 17 15:20:06.682': {
+                                        'tbl_ver': 9,
+                                        'ver': 8,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 9,
+                                        'ver': 9,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'prefixes': {
+                                'allocated': 1,
+                                'freed': 0,
+                                },
+                            },
+                        'prefixes_path': {
+                            'prefixes': {
+                                'number': 1,
+                                'mem_used': 104,
+                                },
+                            },
+                        },
+                    'ipv4 unicast': {
+                        'dampening': True,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': False,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '55',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '106',
+                        'table_version_synced_to_rib': '106',
+                        'table_version_acked_by_rib': '106',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '106',
+                        'attribute_download': 'Enabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'label thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 106,
+                                        'ver': 105,
+                                        'trig_tid': 18,
+                                        },
+                                    },
+                                },
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 106,
+                                        'ver': 105,
+                                        'trig_tid': 18,
+                                        },
+                                    },
+                                },
+                            'rib thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 106,
+                                        'ver': 105,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 106,
+                                        'ver': 106,
+                                        'trig_tid': 18,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'prefixes': {
+                                'allocated': 56,
+                                'freed': 1,
+                                },
+                            },
+                        'prefixes_path': {
+                            'prefixes': {
+                                'number': 55,
+                                'mem_used': 5060,
+                                },
+                            },
+                        },
+                    'ipv4 mdt': {
+                        'dampening': False,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': False,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '0',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '1',
+                        'table_version_synced_to_rib': '1',
+                        'table_version_acked_by_rib': '0',
+                        'rib_has_not_converged': 'version 0',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '1',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 1,
+                                        'ver': 1,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'prefixes': {
+                                'allocated': 0,
+                                'freed': 0,
+                                },
+                            },
+                        'prefixes_path': {
+                            'prefixes': {
+                                'number': 0,
+                                'mem_used': 0,
+                                },
+                            },
+                        },
+                    'ipv6 unicast': {
+                        'dampening': False,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': False,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '1',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '9',
+                        'table_version_synced_to_rib': '9',
+                        'table_version_acked_by_rib': '9',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '9',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'label thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 9,
+                                        'ver': 9,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 9,
+                                        'ver': 9,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'rib thread': {
+                                'triggers': {
+                                    'Apr 17 15:20:06.682': {
+                                        'tbl_ver': 9,
+                                        'ver': 8,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 9,
+                                        'ver': 9,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'prefixes': {
+                                'allocated': 1,
+                                'freed': 0,
+                                },
+                            },
+                        'prefixes_path': {
+                            'prefixes': {
+                                'number': 1,
+                                'mem_used': 104,
+                                },
+                            },
+                        },
+                    'l2vpn vpls': {
+                        'dampening': False,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': False,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '0',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '1',
+                        'table_version_synced_to_rib': '1',
+                        'table_version_acked_by_rib': '0',
+                        'rib_has_not_converged': 'version 0',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '1',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 1,
+                                        'ver': 1,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 1,
+                                        'ver': 1,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'remote prefixes': {
+                                'allocated': 0,
+                                'freed': 0,
+                                },
+                            },
+                        'prefixes_path': {
+                            'remote prefixes': {
+                                'number': 0,
+                                'mem_used': 0,
+                                },
+                            },
+                        },
+                    'l2vpn evpn': {
+                        'dampening': False,
+                        'client_to_client_reflection': True,
+                        'dynamic_med': False,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '3',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '8',
+                        'table_version_synced_to_rib': '1',
+                        'table_version_acked_by_rib': '0',
+                        'rib_has_not_converged': 'version 0',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '8',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 8,
+                                        'ver': 8,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 8,
+                                        'ver': 8,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'remote prefixes': {
+                                'allocated': 2,
+                                'freed': 1,
+                                },
+                            },
+                        'prefixes_path': {
+                            'remote prefixes': {
+                                'number': 1,
+                                'mem_used': 117,
+                                },
+                            },
+                        },
+                    },
+                },
+            'SL_IT': {
+                'always_compare_med': False,
+                'bestpath_compare_routerid': False,
+                'bestpath_cost_community_ignore': False,
+                'bestpath_med_missing_at_worst': False,
+                'enforce_first_as': True,
+                'fast_external_fallover': True,
+                'route_distinguisher': '19108:2500',
+                'operation_mode': 'standalone',
+                'as_system_number_format': 'ASPLAIN',
+                'as_number': 19108,
+                'router_id': '172.25.12.3',
+                'default_cluster_id': '1910825',
+                'active_cluster_id': '1910825',
+                'platform_rlimit_max': 2281701376,
+                'max_limit_for_bmp_buffer_size': 435,
+                'default_value_for_bmp_buffer_size': 326,
+                'current_limit_for_bmp_buffer_size': 326,
+                'current_utilization_of_bmp_buffer_limit': 0,
+                'log_neighbor_changes': True,
+                'default_local_preference': 100,
+                'default_keepalive': 60,
+                'non_stop_routing': True,
+                'update_delay': 120,
+                'generic_scan_interval': 60,
+                'bgp_speaker_process': 0,
+                'node': 'node0_RSP0_CPU0',
+                'restart_count': 1,
+                'vrf_info': {
+                    'default': {
+                        'total': 1,
+                        'nbrs_estab': 7,
+                        'cfg': 9,
+                        },
+                    'non-default': {
+                        'total': 4,
+                        'nbrs_estab': 0,
+                        'cfg': 0,
+                        },
+                    },
+                'sent_updates': 0,
+                'received_updates': 0,
+                'sent_notifications': 0,
+                'received_notifications': 0,
+                'att': {
+                    'attributes': {
+                        'number': 31,
+                        'memory_used': 4960,
+                        },
+                    'as_paths': {
+                        'number': 3,
+                        'memory_used': 240,
+                        },
+                    'communities': {
+                        'number': 12,
+                        'memory_used': 960,
+                        },
+                    'extended_communities': {
+                        'number': 6,
+                        'memory_used': 480,
+                        },
+                    'pmsi_tunnel_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'ribrnh_tunnel_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'ppmp_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'tunnel_encap_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'pe_distinguisher_labels': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'route_reflector_entries': {
+                        'number': 9,
+                        'memory_used': 720,
+                        },
+                    'nexthop_entries': {
+                        'number': 92,
+                        'memory_used': 36808,
+                        },
+                    'paths': {
+                        'number': 1,
+                        'memory_used': 88,
+                        },
+                    'bmp_prefixes': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'bmp_paths': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    },
+                'pool': {
+                    '200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '300': {
+                        'alloc': 128418,
+                        'free': 128417,
+                        },
+                    '400': {
+                        'alloc': 58,
+                        'free': 58,
+                        },
+                    '500': {
+                        'alloc': 242831,
+                        'free': 242831,
+                        },
+                    '600': {
+                        'alloc': 19,
+                        'free': 19,
+                        },
+                    '700': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '800': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '900': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '1200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 15,
+                        'free': 15,
+                        },
+                    '3300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '5000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '20000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'message_logging_pool_summary': {
+                    '100': {
+                        'alloc': 208193,
+                        'free': 208164,
+                        },
+                    '200': {
+                        'alloc': 34813,
+                        'free': 34805,
+                        },
+                    '500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'bmp_pool_summary': {
+                    '100': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '400': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '600': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '700': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '800': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '900': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '1200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '3300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '5500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '6500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '7500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '8500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '10000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '20000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'address_family': {
+                    'ipv4 unicast': {
+                        'current_vrf': 'sl_it',
+                        'table_state': 'None',
+                        'dampening': False,
+                        'client_to_client_reflection': False,
+                        'dynamic_med': True,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '13',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '35',
+                        'table_version_synced_to_rib': '35',
+                        'table_version_acked_by_rib': '35',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '35',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'label thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'rib thread': {
+                                'triggers': {
+                                    'Apr 24 12:28:41.199': {
+                                        'tbl_ver': 35,
+                                        'ver': 34,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'prefixes': {
+                                'allocated': 1,
+                                'freed': 0,
+                                },
+                            },
+                        'prefixes_path': {
+                            'prefixes': {
+                                'number': 1,
+                                'mem_used': 92,
+                                },
+                            },
+                        },
+                    },
+                },
+            'SL_NAT_INSIDE': {
+                'always_compare_med': False,
+                'bestpath_compare_routerid': False,
+                'bestpath_cost_community_ignore': False,
+                'bestpath_med_missing_at_worst': False,
+                'enforce_first_as': True,
+                'fast_external_fallover': True,
+                'route_distinguisher': '19108:4646',
+                'operation_mode': 'standalone',
+                'as_system_number_format': 'ASPLAIN',
+                'as_number': 19108,
+                'router_id': '172.25.12.3',
+                'default_cluster_id': '1910825',
+                'active_cluster_id': '1910825',
+                'platform_rlimit_max': 2281701376,
+                'max_limit_for_bmp_buffer_size': 435,
+                'default_value_for_bmp_buffer_size': 326,
+                'current_limit_for_bmp_buffer_size': 326,
+                'current_utilization_of_bmp_buffer_limit': 0,
+                'log_neighbor_changes': True,
+                'default_local_preference': 100,
+                'default_keepalive': 60,
+                'non_stop_routing': True,
+                'update_delay': 120,
+                'generic_scan_interval': 60,
+                'bgp_speaker_process': 0,
+                'node': 'node0_RSP0_CPU0',
+                'restart_count': 1,
+                'vrf_info': {
+                    'default': {
+                        'total': 1,
+                        'nbrs_estab': 7,
+                        'cfg': 9,
+                        },
+                    'non-default': {
+                        'total': 4,
+                        'nbrs_estab': 0,
+                        'cfg': 0,
+                        },
+                    },
+                'sent_updates': 0,
+                'received_updates': 0,
+                'sent_notifications': 0,
+                'received_notifications': 0,
+                'att': {
+                    'attributes': {
+                        'number': 31,
+                        'memory_used': 4960,
+                        },
+                    'as_paths': {
+                        'number': 3,
+                        'memory_used': 240,
+                        },
+                    'communities': {
+                        'number': 12,
+                        'memory_used': 960,
+                        },
+                    'extended_communities': {
+                        'number': 6,
+                        'memory_used': 480,
+                        },
+                    'pmsi_tunnel_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'ribrnh_tunnel_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'ppmp_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'tunnel_encap_attr': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'pe_distinguisher_labels': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'route_reflector_entries': {
+                        'number': 9,
+                        'memory_used': 720,
+                        },
+                    'nexthop_entries': {
+                        'number': 92,
+                        'memory_used': 36808,
+                        },
+                    'paths': {
+                        'number': 7,
+                        'memory_used': 616,
+                        },
+                    'bmp_prefixes': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    'bmp_paths': {
+                        'number': 0,
+                        'memory_used': 0,
+                        },
+                    },
+                'pool': {
+                    '200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '300': {
+                        'alloc': 128418,
+                        'free': 128417,
+                        },
+                    '400': {
+                        'alloc': 58,
+                        'free': 58,
+                        },
+                    '500': {
+                        'alloc': 242831,
+                        'free': 242831,
+                        },
+                    '600': {
+                        'alloc': 19,
+                        'free': 19,
+                        },
+                    '700': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '800': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '900': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '1200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 15,
+                        'free': 15,
+                        },
+                    '3300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '5000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '20000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'message_logging_pool_summary': {
+                    '100': {
+                        'alloc': 208193,
+                        'free': 208164,
+                        },
+                    '200': {
+                        'alloc': 34813,
+                        'free': 34805,
+                        },
+                    '500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'bmp_pool_summary': {
+                    '100': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '400': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '600': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '700': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '800': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '900': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '1200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '2200': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '3300': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '4500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '5500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '6500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '7500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '8500': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '10000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    '20000': {
+                        'alloc': 0,
+                        'free': 0,
+                        },
+                    },
+                'address_family': {
+                    'ipv4 unicast': {
+                        'current_vrf': 'sl_nat_inside',
+                        'table_state': 'None',
+                        'dampening': False,
+                        'client_to_client_reflection': False,
+                        'dynamic_med': True,
+                        'dynamic_med_int': '10 minutes',
+                        'dynamic_med_timer': 'Not Running',
+                        'dynamic_med_periodic_timer': 'Not Running',
+                        'scan_interval': '60',
+                        'total_prefixes_scanned': '13',
+                        'prefix_scanned_per_segment': '100000',
+                        'num_of_scan_segments': '1',
+                        'nexthop_resolution_minimum_prefix_length': '0 (not configured)',
+                        'main_table_version': '35',
+                        'table_version_synced_to_rib': '35',
+                        'table_version_acked_by_rib': '35',
+                        'rib_table_prefix_limit_reached': 'no',
+                        'rib_table_prefix_limit_ver': '0',
+                        'permanent_network': 'unconfigured',
+                        'state': 'normal mode',
+                        'bgp_table_version': '35',
+                        'attribute_download': 'Disabled',
+                        'label_retention_timer_value': '5 mins',
+                        'soft_reconfig_entries': '0',
+                        'table_bit_field_size': '1 ',
+                        'chunk_elememt_size': '3',
+                        'thread': {
+                            'label thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'import thread': {
+                                'triggers': {
+                                    'Apr 24 12:33:22.495': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 3,
+                                        },
+                                    },
+                                },
+                            'rib thread': {
+                                'triggers': {
+                                    'Apr 24 12:28:41.199': {
+                                        'tbl_ver': 35,
+                                        'ver': 34,
+                                        'trig_tid': 4,
+                                        },
+                                    },
+                                },
+                            'update thread': {
+                                'triggers': {
+                                    'Apr 24 12:35:30.807': {
+                                        'tbl_ver': 35,
+                                        'ver': 35,
+                                        'trig_tid': 8,
+                                        },
+                                    },
+                                },
+                            },
+                        'remote_local': {
+                            'prefixes': {
+                                'allocated': 70,
+                                'freed': 64,
+                                },
+                            },
+                        'prefixes_path': {
+                            'prefixes': {
+                                'number': 6,
+                                'mem_used': 552,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf_type='all')
+    
+    def test_golden_10(self):
+        self.device = Mock(**self.golden_output_10)
+        obj = ShowBgpInstanceProcessDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='all')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_10)
 
     def test_golden1(self):
         self.device = Mock(**self.golden_output1)
