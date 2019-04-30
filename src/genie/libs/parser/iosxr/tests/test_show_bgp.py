@@ -4193,6 +4193,10 @@ Imported Paths:       1               120
 Total RDs:            3               240           
 
 
+    '''}
+    golden_output_11 = {'execute.return_value' : '''
+
+
 RP/0/RSP0/CPU0:LAB-9010#
 +++ LAB-9010: executing command 'show bgp instance all vrf all ipv4 unicast process detail' +++
 show bgp instance all vrf all ipv4 unicast process detail
@@ -4572,10 +4576,7 @@ Paths:                     7               616
 Path-elems:                6               378           
 BMP Prefixes:              0               0             
 BMP Paths:                 0               0             
-
-
     '''}
-
     golden_parsed_output_10 = {
 'instance': {
     'default': {
@@ -5355,6 +5356,14 @@ BMP Paths:                 0               0
                         },
                     },
                 },
+            },
+        },
+    },
+}
+    golden_parsed_output_11 = {
+'instance': {
+    'default': {
+        'vrf': {
             'SL_IT': {
                 'always_compare_med': False,
                 'bestpath_compare_routerid': False,
@@ -6071,6 +6080,12 @@ BMP Paths:                 0               0
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_10)
 
+    def test_golden_11(self):
+        self.device = Mock(**self.golden_output_11)
+        obj = ShowBgpInstanceProcessDetail(device=self.device)
+        parsed_output = obj.parse(vrf_type='vrf')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_11)
     def test_golden1(self):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
