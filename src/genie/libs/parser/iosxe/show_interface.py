@@ -55,18 +55,18 @@ class ShowInterfacesSchema(MetaParser):
 
     schema = {
             Any(): {
-                'oper_status': str,
+                Optional('oper_status'): str,
                 Optional('line_protocol'): str,
-                'enabled': bool,
+                Optional('enabled'): bool,
                 Optional('connected'): bool,
                 Optional('description'): str,
-                'type': str,
+                Optional('type'): str,
                 Optional('link_state'): str,
                 Optional('port_speed'): str,
                 Optional('duplex_mode'): str,
                 Optional('link_type'): str,
                 Optional('media_type'): str,
-                'mtu': int,
+                Optional('mtu'): int,
                 Optional('medium'): str,
                 Optional('reliability'): str,
                 Optional('txload'): str,
@@ -103,7 +103,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('port_channel_int'): str,
                     Optional('port_channel_member_intfs'): list,
                 },
-                'bandwidth': int,
+                Optional('bandwidth'): int,
                 Optional('counters'):
                     {Optional('rate'):
                        {Optional('load_interval'): int,
@@ -315,7 +315,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
             # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
             p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                             ' +(?P<bandwidth>[0-9]+) +Kbit(/sec)?, +DLY'
+                             ' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
                              ' +(?P<delay>[0-9]+) +usec,$')
             m = p6.match(line)
             if m:
