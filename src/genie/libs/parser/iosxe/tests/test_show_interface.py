@@ -4753,7 +4753,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 17868,
     'last_output': '00:00:02',
     },
-'HundredGigabitEthernet1/0/35.9': {
+'HundredGigE1/0/35.9': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -4783,7 +4783,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/43': {
+'HundredGigE1/0/43': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -4870,7 +4870,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.12': {
+'HundredGigE1/0/35.12': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -5220,7 +5220,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/34': {
+'HundredGigE1/0/34': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -5467,7 +5467,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:24',
     },
-'HundredGigabitEthernet1/0/35.5': {
+'HundredGigE1/0/35.5': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -5584,7 +5584,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/48.3': {
+'HundredGigE1/0/48.3': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -5749,7 +5749,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 17868,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/35.106': {
+'HundredGigE1/0/35.106': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -5852,7 +5852,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:32',
     },
-'HundredGigabitEthernet1/0/48.6': {
+'HundredGigE1/0/48.6': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -5882,7 +5882,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/48.7': {
+'HundredGigE1/0/48.7': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -5912,7 +5912,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/36': {
+'HundredGigE1/0/36': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -6479,7 +6479,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/45': {
+'HundredGigE1/0/45': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -6566,7 +6566,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.15': {
+'HundredGigE1/0/35.15': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -7060,7 +7060,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 1514,
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/38': {
+'HundredGigE1/0/38': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -7147,7 +7147,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/47': {
+'HundredGigE1/0/47': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -7394,7 +7394,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.105': {
+'HundredGigE1/0/35.105': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -7507,7 +7507,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:04:37',
     },
-'HundredGigabitEthernet1/0/35.104': {
+'HundredGigE1/0/35.104': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -7711,7 +7711,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.102': {
+'HundredGigE1/0/35.102': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -7828,7 +7828,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.7': {
+'HundredGigE1/0/35.7': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -8092,7 +8092,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/35.17': {
+'HundredGigE1/0/35.17': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -8122,7 +8122,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35.1': {
+'HundredGigE1/0/35.1': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -8852,7 +8852,7 @@ Tunnel10 is up, line protocol is up
     'enabled': False,
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/48.5': {
+'HundredGigE1/0/48.5': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -9171,7 +9171,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 17868,
     'last_output': '00:00:02',
     },
-'HundredGigabitEthernet1/0/33': {
+'HundredGigE1/0/33': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -9329,7 +9329,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 1514,
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/48.2': {
+'HundredGigE1/0/48.2': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -9424,7 +9424,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 1514,
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/40': {
+'HundredGigE1/0/40': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -9511,7 +9511,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.110': {
+'HundredGigE1/0/35.110': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -9701,7 +9701,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/46': {
+'HundredGigE1/0/46': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -9928,7 +9928,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 17868,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/35.19': {
+'HundredGigE1/0/35.19': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10045,7 +10045,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.10': {
+'HundredGigE1/0/35.10': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10148,7 +10148,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:20',
     },
-'HundredGigabitEthernet1/0/44': {
+'HundredGigE1/0/44': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -10308,7 +10308,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:28',
     },
-'HundredGigabitEthernet1/0/42': {
+'HundredGigE1/0/42': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -10482,7 +10482,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.101': {
+'HundredGigE1/0/35.101': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10585,7 +10585,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:24',
     },
-'HundredGigabitEthernet1/0/35.6': {
+'HundredGigE1/0/35.6': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10789,7 +10789,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.103': {
+'HundredGigE1/0/35.103': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10819,7 +10819,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35.4': {
+'HundredGigE1/0/35.4': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10919,7 +10919,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 17868,
     'last_output': '00:00:01',
     },
-'HundredGigabitEthernet1/0/48.9': {
+'HundredGigE1/0/48.9': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -10949,7 +10949,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35.13': {
+'HundredGigE1/0/35.13': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -11206,7 +11206,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:03',
     },
-'HundredGigabitEthernet1/0/35.109': {
+'HundredGigE1/0/35.109': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -11556,7 +11556,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.2': {
+'HundredGigE1/0/35.2': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -11659,7 +11659,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:37',
     },
-'HundredGigabitEthernet1/0/48.4': {
+'HundredGigE1/0/48.4': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -11689,7 +11689,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35.18': {
+'HundredGigE1/0/35.18': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -11792,7 +11792,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/48': {
+'HundredGigE1/0/48': {
     'output_hang': 'never',
     'last_input': '00:00:00',
     'flow_control': {
@@ -12027,7 +12027,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:32',
     },
-'HundredGigabitEthernet1/0/35.20': {
+'HundredGigE1/0/35.20': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -12200,7 +12200,7 @@ Tunnel10 is up, line protocol is up
     'mtu': 17868,
     'last_output': '00:00:02',
     },
-'HundredGigabitEthernet1/0/48.1': {
+'HundredGigE1/0/48.1': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -12471,7 +12471,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.108': {
+'HundredGigE1/0/35.108': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -12588,7 +12588,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.3': {
+'HundredGigE1/0/35.3': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -12618,7 +12618,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/39': {
+'HundredGigE1/0/39': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -12792,7 +12792,7 @@ Tunnel10 is up, line protocol is up
     'link_type': 'auto',
     'last_output': 'never',
     },
-'HundredGigabitEthernet1/0/35.14': {
+'HundredGigE1/0/35.14': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -12968,7 +12968,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/37': {
+'HundredGigE1/0/37': {
     'media_type': 'unknown',
     'output_hang': 'never',
     'last_input': 'never',
@@ -13138,7 +13138,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:03',
     },
-'HundredGigabitEthernet1/0/48.8': {
+'HundredGigE1/0/48.8': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -13168,7 +13168,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35': {
+'HundredGigE1/0/35': {
     'output_hang': 'never',
     'last_input': '00:00:18',
     'flow_control': {
@@ -13325,7 +13325,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/35.8': {
+'HundredGigE1/0/35.8': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -13568,7 +13568,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/48.10': {
+'HundredGigE1/0/48.10': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -13598,7 +13598,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35.107': {
+'HundredGigE1/0/35.107': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -13948,7 +13948,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '06:39:28',
     },
-'HundredGigabitEthernet1/0/41': {
+'HundredGigE1/0/41': {
     'output_hang': 'never',
     'last_input': '00:00:01',
     'flow_control': {
@@ -14036,7 +14036,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'last_output': '00:00:00',
     },
-'HundredGigabitEthernet1/0/35.11': {
+'HundredGigE1/0/35.11': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -14066,7 +14066,7 @@ Tunnel10 is up, line protocol is up
     'enabled': True,
     'line_protocol': 'up',
     },
-'HundredGigabitEthernet1/0/35.16': {
+'HundredGigE1/0/35.16': {
     'bandwidth': 100000000,
     'port_channel': {
         'port_channel_member': False,
@@ -28286,7 +28286,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/33': {
+'HundredGigE1/0/33': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28373,7 +28373,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/34': {
+'HundredGigE1/0/34': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28460,7 +28460,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/35': {
+'HundredGigE1/0/35': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28544,7 +28544,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/35.1': {
+'HundredGigE1/0/35.1': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28574,7 +28574,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.2': {
+'HundredGigE1/0/35.2': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28604,7 +28604,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.3': {
+'HundredGigE1/0/35.3': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28634,7 +28634,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.4': {
+'HundredGigE1/0/35.4': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28664,7 +28664,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.5': {
+'HundredGigE1/0/35.5': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28694,7 +28694,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.6': {
+'HundredGigE1/0/35.6': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28724,7 +28724,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.7': {
+'HundredGigE1/0/35.7': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28754,7 +28754,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.8': {
+'HundredGigE1/0/35.8': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28784,7 +28784,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.9': {
+'HundredGigE1/0/35.9': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28814,7 +28814,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.10': {
+'HundredGigE1/0/35.10': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28844,7 +28844,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.11': {
+'HundredGigE1/0/35.11': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28874,7 +28874,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.12': {
+'HundredGigE1/0/35.12': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28904,7 +28904,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.13': {
+'HundredGigE1/0/35.13': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28934,7 +28934,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.14': {
+'HundredGigE1/0/35.14': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28964,7 +28964,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.15': {
+'HundredGigE1/0/35.15': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -28994,7 +28994,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.16': {
+'HundredGigE1/0/35.16': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29024,7 +29024,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.17': {
+'HundredGigE1/0/35.17': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29054,7 +29054,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.18': {
+'HundredGigE1/0/35.18': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29084,7 +29084,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.19': {
+'HundredGigE1/0/35.19': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29114,7 +29114,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.20': {
+'HundredGigE1/0/35.20': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29144,7 +29144,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.101': {
+'HundredGigE1/0/35.101': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29174,7 +29174,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.102': {
+'HundredGigE1/0/35.102': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29204,7 +29204,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.103': {
+'HundredGigE1/0/35.103': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29234,7 +29234,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.104': {
+'HundredGigE1/0/35.104': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29264,7 +29264,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.105': {
+'HundredGigE1/0/35.105': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29294,7 +29294,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.106': {
+'HundredGigE1/0/35.106': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29324,7 +29324,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.107': {
+'HundredGigE1/0/35.107': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29354,7 +29354,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.108': {
+'HundredGigE1/0/35.108': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29384,7 +29384,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.109': {
+'HundredGigE1/0/35.109': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29414,7 +29414,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.110': {
+'HundredGigE1/0/35.110': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29444,7 +29444,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/35.111': {
+'HundredGigE1/0/35.111': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29474,7 +29474,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/36': {
+'HundredGigE1/0/36': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29561,7 +29561,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/37': {
+'HundredGigE1/0/37': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29648,7 +29648,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/38': {
+'HundredGigE1/0/38': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29735,7 +29735,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/39': {
+'HundredGigE1/0/39': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29817,7 +29817,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/40': {
+'HundredGigE1/0/40': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29904,7 +29904,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/41': {
+'HundredGigE1/0/41': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -29992,7 +29992,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/42': {
+'HundredGigE1/0/42': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30079,7 +30079,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/43': {
+'HundredGigE1/0/43': {
     'port_channel': {
         'port_channel_member': True,
         'port_channel_int': 'Port-channel101',
@@ -30162,7 +30162,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/44': {
+'HundredGigE1/0/44': {
     'port_channel': {
         'port_channel_member': True,
         'port_channel_int': 'Port-channel101',
@@ -30245,7 +30245,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/45': {
+'HundredGigE1/0/45': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30332,7 +30332,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/46': {
+'HundredGigE1/0/46': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30420,7 +30420,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/47': {
+'HundredGigE1/0/47': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30502,7 +30502,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/48': {
+'HundredGigE1/0/48': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30590,7 +30590,7 @@ Tunnel17 is up, line protocol is up
         'out_buffers_swapped': 0,
         },
     },
-'HundredGigabitEthernet1/0/48.1': {
+'HundredGigE1/0/48.1': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30620,7 +30620,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.2': {
+'HundredGigE1/0/48.2': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30650,7 +30650,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.3': {
+'HundredGigE1/0/48.3': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30680,7 +30680,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.4': {
+'HundredGigE1/0/48.4': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30710,7 +30710,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.5': {
+'HundredGigE1/0/48.5': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30740,7 +30740,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.6': {
+'HundredGigE1/0/48.6': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30770,7 +30770,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.7': {
+'HundredGigE1/0/48.7': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30800,7 +30800,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.8': {
+'HundredGigE1/0/48.8': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30830,7 +30830,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.9': {
+'HundredGigE1/0/48.9': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -30860,7 +30860,7 @@ Tunnel17 is up, line protocol is up
     'arp_timeout': '04:00:00',
     'keepalive': 10,
     },
-'HundredGigabitEthernet1/0/48.10': {
+'HundredGigE1/0/48.10': {
     'port_channel': {
         'port_channel_member': False,
         },
@@ -31056,7 +31056,7 @@ Tunnel17 is up, line protocol is up
 'Port-channel101': {
     'port_channel': {
         'port_channel_member': True,
-        'port_channel_member_intfs': ['HundredGigabitEthernet1/0/43', 'HundredGigabitEthernet1/0/44'],
+        'port_channel_member_intfs': ['HundredGigE1/0/43', 'HundredGigE1/0/44'],
         },
     'enabled': True,
     'line_protocol': 'up',

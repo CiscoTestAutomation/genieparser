@@ -209,7 +209,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             m1 = p1_1.match(line)
             m = m if m else m1
             if m:
-                interface = Common.convert_intf_name(m.groupdict()['interface'])
+                interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 connected = m.groupdict()['attribute']
