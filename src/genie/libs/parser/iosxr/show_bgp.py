@@ -1003,7 +1003,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            if vrf_type and af_type:
+            if af_type:
                 out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
             else:
                 out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
