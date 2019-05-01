@@ -10,3 +10,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+
+--------------------------------------------------------------------------------
+                                   INTERFACE
+--------------------------------------------------------------------------------
+* IOSXE
+  * Added interface value under convert_intf_name method of common file
