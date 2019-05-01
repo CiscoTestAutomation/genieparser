@@ -5,7 +5,6 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
-
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
@@ -13,7 +12,8 @@
   * Added interface value under convert_intf_name method of common file
 
 --------------------------------------------------------------------------------
-                                   BGP
+                                BGP
 --------------------------------------------------------------------------------
 * IOSXE
-  * vrf default value handled
+    * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+    * vrf default value handled
