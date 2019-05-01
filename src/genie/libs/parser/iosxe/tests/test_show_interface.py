@@ -14664,7 +14664,6 @@ Tunnel10 is up, line protocol is up
     csr1000v-1#
     '''}
 
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowInterfaces(device=self.device)
