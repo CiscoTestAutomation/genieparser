@@ -55,18 +55,18 @@ class ShowInterfacesSchema(MetaParser):
 
     schema = {
             Any(): {
-                Optional('oper_status'): str,
+                'oper_status': str,
                 Optional('line_protocol'): str,
-                Optional('enabled'): bool,
+                'enabled': bool,
                 Optional('connected'): bool,
                 Optional('description'): str,
-                Optional('type'): str,
+                'type': str,
                 Optional('link_state'): str,
                 Optional('port_speed'): str,
                 Optional('duplex_mode'): str,
                 Optional('link_type'): str,
                 Optional('media_type'): str,
-                Optional('mtu'): int,
+                'mtu': int,
                 Optional('medium'): str,
                 Optional('reliability'): str,
                 Optional('txload'): str,
@@ -103,7 +103,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('port_channel_int'): str,
                     Optional('port_channel_member_intfs'): list,
                 },
-                Optional('bandwidth'): int,
+                'bandwidth': int,
                 Optional('counters'):
                     {Optional('rate'):
                        {Optional('load_interval'): int,
@@ -209,7 +209,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             m1 = p1_1.match(line)
             m = m if m else m1
             if m:
-                interface = m.groupdict()['interface']
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 connected = m.groupdict()['attribute']
