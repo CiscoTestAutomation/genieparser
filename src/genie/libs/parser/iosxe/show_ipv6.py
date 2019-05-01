@@ -52,6 +52,8 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
     """
 
     cli_command = ['show ipv6 neighbors detail',
+                   'show ipv6 neighbors vrf {vrf} detail',
+                   'show ipv6 neighbors',
                    'show ipv6 neighbors vrf {vrf}']
 
     def cli(self, vrf ="", output=None):
@@ -88,7 +90,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
                 link_layer_address = m.groupdict()['link_layer_address']
                 neighbor_state = m.groupdict()['neighbor_state']
                 interfaces = Common.convert_intf_name(m.groupdict()['interface'])
-                interface = m.groupdict()['interface']
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
 
                 interface_dict = ret_dict.setdefault('interface', {}).setdefault(interfaces, {})
                 interface_dict['interface'] = interface
@@ -111,7 +113,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
                 link_layer_address = m.groupdict()['link_layer_address']
                 neighbor_state = m.groupdict()['neighbor_state']
                 interfaces = Common.convert_intf_name(m.groupdict()['interface'])
-                interface = m.groupdict()['interface']
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
 
                 interface_dict = ret_dict.setdefault('interface', {}).setdefault(interfaces, {})
                 interface_dict['interface'] = interface

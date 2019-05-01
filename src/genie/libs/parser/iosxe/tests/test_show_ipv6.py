@@ -25,7 +25,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
     golden_parsed_output1 = {
         'interface': {
             'GigabitEthernet2': {
-                'interface': 'Gi2',
+                'interface': 'GigabitEthernet2',
                 'neighbors': {
                     '2010:1:2::2': {
                         'age': '0',
@@ -43,7 +43,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                         'link_layer_address': 'fa16.3eca.3efd',
                         'neighbor_state': 'STALE'}}},
             'GigabitEthernet4': {
-                'interface': 'Gi4',
+                'interface': 'GigabitEthernet4',
                 'neighbors': {
                     '2010:1:3::3': {
                         'age': '0',
@@ -69,7 +69,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
     golden_parsed_output2 = {
         'interface': {
             'GigabitEthernet3': {
-                'interface': 'Gi3',
+                'interface': 'GigabitEthernet3',
                 'neighbors': {
                     '2020:1:2::2': {
                         'age': '0',
@@ -87,7 +87,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                         'link_layer_address': 'fa16.3e20.fa5b',
                         'neighbor_state': 'REACH'}}},
             'GigabitEthernet5': {
-                'interface': 'Gi5',
+                'interface': 'GigabitEthernet5',
                 'neighbors': {
                     '2020:1:3::3': {
                         'age': '0',
@@ -113,7 +113,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
     golden_parsed_output3 = {
         'interface': {
             'GigabitEthernet2.110': {
-                'interface': 'Gi2.110',
+                'interface': 'GigabitEthernet2.110',
                 'neighbors': {
                     'FE80::F816:3EFF:FEBF:341D': {
                         'age': '0',
@@ -122,7 +122,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                         'neighbor_state': 'REACH',
                         'trlv': '0'}}},
             'GigabitEthernet2.115': {
-                'interface': 'Gi2.115',
+                'interface': 'GigabitEthernet2.115',
                     'neighbors': {
                         'FE80::F816:3EFF:FEBF:341D': {
                             'age': '2',
@@ -131,7 +131,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                             'neighbor_state': 'STALE',
                             'trlv': '0'}}},
             'GigabitEthernet2.90': {
-                'interface': 'Gi2.90',
+                'interface': 'GigabitEthernet2.90',
                     'neighbors': {
                         'FE80::F816:3EFF:FEBF:341D': {
                             'age': '0',
@@ -140,7 +140,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                             'neighbor_state': 'REACH',
                             'trlv': '0'}}},
             'GigabitEthernet3.110': {
-                'interface': 'Gi3.110',
+                'interface': 'GigabitEthernet3.110',
                     'neighbors': {
                         'FE80::5C00:C0FF:FE02:7': {
                             'age': '4',
@@ -149,7 +149,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                             'neighbor_state': 'STALE',
                             'trlv': '0'}}},
             'GigabitEthernet3.115': {
-                'interface': 'Gi3.115',
+                'interface': 'GigabitEthernet3.115',
                     'neighbors': {
                         'FE80::5C00:C0FF:FE02:7': {
                             'age': '20',
@@ -158,7 +158,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                             'neighbor_state': 'STALE',
                             'trlv': '0'}}},
             'GigabitEthernet3.120': {
-                'interface': 'Gi3.120',
+                'interface': 'GigabitEthernet3.120',
                     'neighbors': {
                         'FE80::5C00:C0FF:FE02:7': {
                             'age': '5',
@@ -167,7 +167,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                             'neighbor_state': 'STALE',
                             'trlv': '0'}}},
             'GigabitEthernet3.90': {
-                'interface': 'Gi3.90',
+                'interface': 'GigabitEthernet3.90',
                     'neighbors': {
                         'FE80::5C00:C0FF:FE02:7': {
                             'age': '0',

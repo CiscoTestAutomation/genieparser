@@ -720,6 +720,1526 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
               Current DAD attempt : 1
          '''}
 
+    golden_parsed_output_2 = {
+        'vrf': {
+            'VRF1': {
+                'vrf': 'VRF1',
+                'interfaces': {
+                    'Ethernet1/1.390': {
+                        'interface': 'Ethernet1/1.390',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:90::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:22:04',
+                            'last_neighbor_advertisement_sent': '00:00:39',
+                            'last_router_advertisement_sent': '00:05:46',
+                            'next_router_advertisement_sent': '00:03:54'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/1.410': {
+                        'interface': 'Ethernet1/1.410',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:110::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:21:53',
+                            'last_neighbor_advertisement_sent': '00:01:19',
+                            'last_router_advertisement_sent': '00:04:54',
+                            'next_router_advertisement_sent': '00:00:20'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/1.415': {
+                        'interface': 'Ethernet1/1.415',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:115::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '1d14h',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:01:22',
+                            'next_router_advertisement_sent': '00:08:35'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/1.420': {
+                        'interface': 'Ethernet1/1.420',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:120::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '1d14h',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:03:45',
+                            'next_router_advertisement_sent': '00:05:09'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.390': {
+                        'interface': 'Ethernet1/2.390',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:90::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:22:20',
+                            'last_neighbor_advertisement_sent': '03:25:16',
+                            'last_router_advertisement_sent': '00:05:51',
+                            'next_router_advertisement_sent': '00:01:37'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.410': {
+                        'interface': 'Ethernet1/2.410',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:110::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '1d14h',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:03:48',
+                            'next_router_advertisement_sent': '00:03:33'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.415': {
+                        'interface': 'Ethernet1/2.415',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:115::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:23:24',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:02:47',
+                            'next_router_advertisement_sent': '00:05:52'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.420': {
+                        'interface': 'Ethernet1/2.420',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:120::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:18:48',
+                            'last_neighbor_advertisement_sent': '00:18:43',
+                            'last_router_advertisement_sent': '00:01:56',
+                            'next_router_advertisement_sent': '00:07:53'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'loopback300': {
+                        'interface': 'loopback300',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:3:3:3::3/128': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:0': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': 'never',
+                            'last_neighbor_advertisement_sent': 'never',
+                            'last_router_advertisement_sent': 'never',
+                            'next_router_advertisement_sent': 'never'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 0
+                        }
+                    }
+                }
+            },
+            'default': {
+                'vrf': 'default',
+                'interfaces': {
+                    'Ethernet1/1.90': {
+                        'interface': 'Ethernet1/1.90',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:90::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:05:07',
+                            'last_neighbor_advertisement_sent': '00:00:47',
+                            'last_router_advertisement_sent': '00:07:57',
+                            'next_router_advertisement_sent': '00:01:02'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/1.110': {
+                        'interface': 'Ethernet1/1.110',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:110::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:24:10',
+                            'last_neighbor_advertisement_sent': '00:01:15',
+                            'last_router_advertisement_sent': '00:03:02',
+                            'next_router_advertisement_sent': '00:05:17'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/1.115': {
+                        'interface': 'Ethernet1/1.115',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:115::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:01:25',
+                            'last_neighbor_advertisement_sent': '00:02:46',
+                            'last_router_advertisement_sent': '00:02:50',
+                            'next_router_advertisement_sent': '00:04:39'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/1.120': {
+                        'interface': 'Ethernet1/1.120',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:23:120::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '1d14h',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:05:39',
+                            'next_router_advertisement_sent': '00:00:57'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.90': {
+                        'interface': 'Ethernet1/2.90',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:90::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:10:03',
+                            'last_neighbor_advertisement_sent': '05:59:34',
+                            'last_router_advertisement_sent': '00:07:11',
+                            'next_router_advertisement_sent': '00:00:28'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.110': {
+                        'interface': 'Ethernet1/2.110',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:110::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:20:07',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:01:37',
+                            'next_router_advertisement_sent': '00:03:52'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.115': {
+                        'interface': 'Ethernet1/2.115',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:115::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:08:55',
+                            'last_neighbor_advertisement_sent': '1d14h',
+                            'last_router_advertisement_sent': '00:01:11',
+                            'next_router_advertisement_sent': '00:05:33'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'Ethernet1/2.120': {
+                        'interface': 'Ethernet1/2.120',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:10:13:120::3/64': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:7': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': '00:20:07',
+                            'last_neighbor_advertisement_sent': '00:20:02',
+                            'last_router_advertisement_sent': '00:01:48',
+                            'next_router_advertisement_sent': '00:02:21'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 1
+                        }
+                    },
+                    'loopback0': {
+                        'interface': 'loopback0',
+                        'interface_status': 'protocol-up/link-up/admin-up',
+                        'ipv6_address': {
+                            '2001:3:3:3::3/128': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'ipv6_link_local_address': {
+                            'fe80::5c00:c0ff:fe02:0': {
+                                'status': 'VALID'
+                            }
+                        },
+                        'nd_mac_extract': 'Disabled',
+                        'icmpv6_active_timers': {
+                            'last_neighbor_solicitation_sent': 'never',
+                            'last_neighbor_advertisement_sent': 'never',
+                            'last_router_advertisement_sent': 'never',
+                            'next_router_advertisement_sent': 'never'
+                        },
+                        'router_advertisement': {
+                            'periodic_interval_seconds': '200-600',
+                            'send_managed_address_configuration_flag': 'false',
+                            'send_other_stateful_configuration_flag': 'false',
+                            'send_default_router_preference_value': 'Medium',
+                            'send_current_hop_limit': 64,
+                            'send_mtu': 1500,
+                            'send_router_lifetime_secs': 1800,
+                            'send_reachable_time_ms': 0,
+                            'send_retrans_timer_ms': 0,
+                            'suppress_ra': 'Disabled',
+                            'suppress_mtu_ra': 'Disabled',
+                            'suppress_route_information_option_ra': 'Disabled'
+                        },
+                        'neighbor_solicitation': {
+                            'ns_retransmit_interval_ms': 1000,
+                            'nd_nud_retry_base': 1,
+                            'nd_nud_retry_interval': 1000,
+                            'nd_nud_retry_attempts': 3
+                        },
+                        'icmpv6_error_message': {
+                            'send_redirects_num': 0,
+                            'send_unreachables': 'false'
+                        },
+                        'icmpv6_dad': {
+                            'maximum_dad_attempts': 1,
+                            'current_dad_attempt': 0
+                        }
+                    }
+                }
+            },
+            'management': {
+                'vrf': 'management'
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        # show ipv6 nd interface vrf all
+        ICMPv6 ND Interfaces for VRF "VRF1"
+        Ethernet1/1.390, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:90::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:22:04
+              Last Neighbor-Advertisement sent: 00:00:39
+              Last Router-Advertisement sent: 00:05:46
+              Next Router-Advertisement sent in: 00:03:54
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/1.410, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:110::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:21:53
+              Last Neighbor-Advertisement sent: 00:01:19
+              Last Router-Advertisement sent: 00:04:54
+              Next Router-Advertisement sent in: 00:00:20
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/1.415, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:115::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 1d14h
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:01:22
+              Next Router-Advertisement sent in: 00:08:35
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/1.420, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:120::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 1d14h
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:03:45
+              Next Router-Advertisement sent in: 00:05:09
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.390, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:90::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:22:20
+              Last Neighbor-Advertisement sent: 03:25:16
+              Last Router-Advertisement sent: 00:05:51
+              Next Router-Advertisement sent in: 00:01:37
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.410, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:110::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 1d14h
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:03:48
+              Next Router-Advertisement sent in: 00:03:33
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.415, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:115::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:23:24
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:02:47
+              Next Router-Advertisement sent in: 00:05:52
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.420, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:120::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:18:48
+              Last Neighbor-Advertisement sent: 00:18:43
+              Last Router-Advertisement sent: 00:01:56
+              Next Router-Advertisement sent in: 00:07:53
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        loopback300, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:3:3:3::3/128 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:0 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: never
+              Last Neighbor-Advertisement sent: never
+              Last Router-Advertisement sent: never
+              Next Router-Advertisement sent in: never
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 0
+
+        ICMPv6 ND Interfaces for VRF "default"
+        Ethernet1/1.90, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:90::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:05:07
+              Last Neighbor-Advertisement sent: 00:00:47
+              Last Router-Advertisement sent: 00:07:57
+              Next Router-Advertisement sent in: 00:01:02
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/1.110, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:110::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:24:10
+              Last Neighbor-Advertisement sent: 00:01:15
+              Last Router-Advertisement sent: 00:03:02
+              Next Router-Advertisement sent in: 00:05:17
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/1.115, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:115::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:01:25
+              Last Neighbor-Advertisement sent: 00:02:46
+              Last Router-Advertisement sent: 00:02:50
+              Next Router-Advertisement sent in: 00:04:39
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/1.120, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:23:120::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 1d14h
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:05:39
+              Next Router-Advertisement sent in: 00:00:57
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.90, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:90::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:10:03
+              Last Neighbor-Advertisement sent: 05:59:34
+              Last Router-Advertisement sent: 00:07:11
+              Next Router-Advertisement sent in: 00:00:28
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.110, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:110::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:20:07
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:01:37
+              Next Router-Advertisement sent in: 00:03:52
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.115, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:115::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:08:55
+              Last Neighbor-Advertisement sent: 1d14h
+              Last Router-Advertisement sent: 00:01:11
+              Next Router-Advertisement sent in: 00:05:33
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        Ethernet1/2.120, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:10:13:120::3/64 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:7 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: 00:20:07
+              Last Neighbor-Advertisement sent: 00:20:02
+              Last Router-Advertisement sent: 00:01:48
+              Next Router-Advertisement sent in: 00:02:21
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 1
+        loopback0, Interface status: protocol-up/link-up/admin-up
+          IPv6 address:
+            2001:3:3:3::3/128 [VALID]
+          IPv6 link-local address: fe80::5c00:c0ff:fe02:0 [VALID]
+          ND mac-extract : Disabled
+          ICMPv6 active timers:
+              Last Neighbor-Solicitation sent: never
+              Last Neighbor-Advertisement sent: never
+              Last Router-Advertisement sent: never
+              Next Router-Advertisement sent in: never
+          Router-Advertisement parameters:
+              Periodic interval: 200 to 600 seconds
+              Send "Managed Address Configuration" flag: false
+              Send "Other Stateful Configuration" flag: false
+              Send "Default Router Preference" value: Medium
+              Send "Current Hop Limit" field: 64
+              Send "MTU" option value: 1500
+              Send "Router Lifetime" field: 1800 secs
+              Send "Reachable Time" field: 0 ms
+              Send "Retrans Timer" field: 0 ms
+              Suppress RA: Disabled
+              Suppress MTU in RA: Disabled
+              Suppress Route Information Option in RA: Disabled
+          Neighbor-Solicitation parameters:
+              NS retransmit interval: 1000 ms
+              ND NUD retry base: 1
+              ND NUD retry interval: 1000
+              ND NUD retry attempts: 3
+          ICMPv6 error message parameters:
+              Send redirects: true (0)
+              Send unreachables: false
+          ICMPv6 DAD parameters:
+              Maximum DAD attempts: 1
+              Current DAD attempt : 0
+
+        ICMPv6 ND Interfaces for VRF "management"
+    '''}
     def test_show_ipv6_nd_interface_vrf_all_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6NdInterfaceVrfAll(device=self.device)
@@ -731,6 +2251,12 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
         obj = ShowIpv6NdInterfaceVrfAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ipv6_nd_interface_vrf_all_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpv6NdInterfaceVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 #############################################################################
