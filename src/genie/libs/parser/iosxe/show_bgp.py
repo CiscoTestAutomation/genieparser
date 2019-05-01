@@ -2315,7 +2315,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             {
                             Optional('remote_restart_timer'): int,
                             Optional('graceful_restart_af_advertised_by_peer'): list,
-                            Optional(Any()): str,
+                            Any(): str,
                             },
                             Optional('bgp_neighbor_session'): {
                              Optional('sessions'): int,
