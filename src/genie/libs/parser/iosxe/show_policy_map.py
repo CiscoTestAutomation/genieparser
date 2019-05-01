@@ -315,7 +315,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # drop
         # transmit
         # start
-        p12 = re.compile(r'^(?P<action>(drop|transmit|start))$')
+        # filter 'Queueing' and 'random-detect'
+        p12 = re.compile(r'^(?![Qr])(?P<action>[\w\-]+)$')
 
         # QoS Set
         p13 = re.compile(r'^QoS +Set+$')
@@ -668,13 +669,16 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # start
             m = p12.match(line)
             if m:
-                if conformed_line:
-                    conformed_dict['actions'] = m.groupdict()['action']
-                elif exceeded_line:
-                    exceeded_dict['actions'] = m.groupdict()['action']
-                elif violated_line:
-                    violated_dict['actions'] = m.groupdict()['action']
-                continue
+                try:
+                    if conformed_line:
+                        conformed_dict['actions'] = m.groupdict()['action']
+                    elif exceeded_line:
+                        exceeded_dict['actions'] = m.groupdict()['action']
+                    elif violated_line:
+                        violated_dict['actions'] = m.groupdict()['action']
+                    continue
+                except Exception as e:
+                    pass
 
             # QoS Set
             m = p13.match(line)
