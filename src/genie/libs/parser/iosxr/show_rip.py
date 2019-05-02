@@ -721,7 +721,9 @@ class ShowRipInterface(ShowRipInterfaceSchema):
         ret_dict = {}
 
         # GigabitEthernet0/0/0/0.100
-        p1 = re.compile(r'^(?P<interface>\w+[\d/]+\.\d+)$')
+        # GigabitEthernet0/0/0/1.420 (Forward Reference)
+        # Loopback300
+        p1 = re.compile(r'^(?P<interface>\w+[\d\/]+\.?\d+)(?: +\([\w ]+\))?$')
 
         # Rip enabled?:               Passive
         p2 = re.compile(r'^Rip +enabled\?:\s+(?P<passive>\w+)$')
