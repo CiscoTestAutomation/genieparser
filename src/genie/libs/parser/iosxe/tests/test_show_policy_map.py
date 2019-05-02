@@ -48,85 +48,6 @@ class test_show_policy_map_type(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
-    golden_output_custom = {'execute.return_value': '''
-    P1#sh policy-map interface 
-    Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-    Time source is NTP, 22:43:45.378 JST Thu May 2 2019
-
-     GigabitEthernet3 
-
-      Service-policy input: GENIE_TEST_1
-
-        Class-map: class-default (match-any)  
-          6186 packets, 710976 bytes
-          5 minute offered rate 0000 bps, drop rate 0000 bps
-          Match: any 
-          police:
-              cir 15000000 bps, bc 468750 bytes
-              pir 16000000 bps, be 500000 bytes
-            conformed 6186 packets, 710976 bytes; actions:
-              set-qos-transmit 7
-              set-mpls-exp-imposition-transmit 7
-            exceeded 0 packets, 0 bytes; actions:
-              set-qos-transmit 1
-            violated 0 packets, 0 bytes; actions:
-              drop 
-            conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
-        '''}
-    golden_parsed_output_custom = {
-        "GigabitEthernet3": {
-            "service_policy": {
-                "input": {
-                    "policy_name": {
-                        "GENIE_TEST_1": {
-                            "class_map": {
-                                "class-default": {
-                                    "match_evaluation": "match-any",
-                                    "packets": 6186,
-                                    "bytes": 710976,
-                                    "rate": {
-                                        "interval": 300,
-                                        "offered_rate_bps": 0,
-                                        "drop_rate_bps": 0
-                                    },
-                                    "match": [
-                                        "any"
-                                    ],
-                                    "police": {
-                                        "cir_bps": 15000000,
-                                        "bc_bytes": 468750,
-                                        "conformed": {
-                                            "packets": 6186,
-                                            "bytes": 710976,
-                                            "actions": {
-                                                "set_qos_transmit": "7",
-                                                "set_mpls_exp_imposition_transmit": "7"
-                                            },
-                                            "bps": 0
-                                        },
-                                        "exceeded": {
-                                            "packets": 0,
-                                            "bytes": 0,
-                                            "actions": {
-                                                "set_qos_transmit": "1"
-                                            },
-                                            "bps": 0
-                                        },
-                                        "violated": {
-                                            "packets": 0,
-                                            "bytes": 0,
-                                            "actions": {"drop": True},
-                                            "bps": 0
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     golden_parsed_output1 = {
         'Control Plane': {
@@ -2096,13 +2017,6 @@ class test_show_policy_map_type(unittest.TestCase):
         parsed_output = obj.parse(num='1')
         #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output17)
-
-    def test_show_policy_map_interface_custom(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_custom)
-        obj = ShowPolicyMapInterface(device=self.device)
-        parsed_output = obj.parse(interface='GigabitEthernet3')
-        self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
 
 # =============================================

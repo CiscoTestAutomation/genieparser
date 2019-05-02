@@ -16,3 +16,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * Added interface value under convert_intf_name method of common file
+
+--------------------------------------------------------------------------------
+                                  POLICY-MAP
+--------------------------------------------------------------------------------
+* IOSXE
+  * Updated ShowPolicyMapInterface to support more policy action type
