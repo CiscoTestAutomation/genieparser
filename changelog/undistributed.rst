@@ -19,3 +19,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * Added interface value under convert_intf_name method of common file
+
+--------------------------------------------------------------------------------
+                                   RIP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRipInterface for more varied interface name and status
