@@ -16,20 +16,20 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.iosxe.show_ip_parser import ShowIPAlias
  
 # =================================
-# Unit test for 'show ip alias', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
+# Unit test for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
 # =================================
 class test_show_ip_alias(unittest.TestCase):
     ''' 
 	Unit test for:
-	show ip alias 
+	show ip aliases 
 	show ip aliases default-vrf
-	sshow ip aliases vrf {vrf}
+	show ip aliases vrf {vrf}
 	'''
 
     device = Device(name = 'aDevice')
     empty_output = { 'execute.return_value' : '' }
 
-    # show ip alias
+    # show ip aliases
     golden_parsed_output1 = {
         'vrf': {
             '1': {
@@ -166,6 +166,12 @@ class test_show_ip_alias(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIPAlias(device = self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+    
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowIPAlias(device = self.device)
