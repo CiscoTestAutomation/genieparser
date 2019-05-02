@@ -156,24 +156,24 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             'packets': int,
                                             'bytes': int,
                                             'bps': int,
-                                            'actions': {
-                                                Optional(Any()): Any(),
+                                            Optional('actions'): {
+                                                Any(): Or(bool, str),
                                             }
                                         },
                                         Optional('exceeded'): {
                                             'packets': int,
                                             'bytes': int,
                                             'bps': int,
-                                            'actions': {
-                                                Optional(Any()): Any(),
+                                            Optional('actions'): {
+                                                Any(): Or(bool, str),
                                             }
                                         },
                                         Optional('violated'): {
                                             'packets': int,
                                             'bytes': int,
                                             'bps': int,
-                                            'actions': {
-                                                Optional(Any()): Any(),
+                                            Optional('actions'): {
+                                                Any(): Or(bool, str),
                                             }
                                         },
                                     },
