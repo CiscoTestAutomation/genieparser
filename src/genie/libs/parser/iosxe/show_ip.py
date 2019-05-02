@@ -2,7 +2,7 @@
 show_ip.py
 
 IOSXE parsers for the following show commands:
-    * show ip alias
+    * show ip aliases
 	* show ip aliases default-vrf
 	* show ip aliases vrf {vrf}
 '''
@@ -18,14 +18,14 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
 # ==============================
-# Schema for 'show ip alias', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
+# Schema for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
 # ==============================
 class ShowIPAliasSchema(MetaParser):
     ''' 
 	Schema for:
-	show ip alias 
+	show ip aliases
 	show ip aliases default-vrf
-	sshow ip aliases vrf {vrf}
+	show ip aliases vrf {vrf}
 	'''
     schema = {
         'vrf': {
@@ -42,16 +42,16 @@ class ShowIPAliasSchema(MetaParser):
     }
 
 # ==============================
-# Parser for 'show ip alias', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
+# Parser for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
 # ==============================
 class ShowIPAlias(ShowIPAliasSchema):
 	''' 
 	Parser for:
-	show ip alias 
+	show ip aliases 
 	show ip aliases default-vrf
 	show ip aliases vrf {vrf}
 	'''
-	cli_command = ['show ip alias', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}']
+	cli_command = ['show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}']
 
 	def cli(self, vrf = '', output = None):
 		if output is None:
