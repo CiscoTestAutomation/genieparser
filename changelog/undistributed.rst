@@ -11,6 +11,9 @@
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
 
+* IOSXR
+    * Updated ShowBgpAllAll for more variations of parameters
+
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
