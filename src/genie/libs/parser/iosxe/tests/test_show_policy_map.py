@@ -48,6 +48,87 @@ class test_show_policy_map_type(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
+    golden_output_custom = {'execute.return_value': '''
+    P1#sh policy-map interface 
+    Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+    Time source is NTP, 22:43:45.378 JST Thu May 2 2019
+
+     GigabitEthernet3 
+
+      Service-policy input: PMAP_MGMT_I
+
+        Class-map: class-default (match-any)  
+          6186 packets, 710976 bytes
+          5 minute offered rate 0000 bps, drop rate 0000 bps
+          Match: any 
+          police:
+              cir 15000000 bps, bc 468750 bytes
+              pir 16000000 bps, be 500000 bytes
+            conformed 6186 packets, 710976 bytes; actions:
+              set-qos-transmit 7
+              set-mpls-exp-imposition-transmit 7
+            exceeded 0 packets, 0 bytes; actions:
+              set-qos-transmit 1
+            violated 0 packets, 0 bytes; actions:
+              drop 
+            conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+        '''}
+    golden_parsed_output_custom = {
+        "GigabitEthernet3": {
+            "service_policy": {
+                "input": {
+                    "policy_name": {
+                        "PMAP_MGMT_I": {
+                            "class_map": {
+                                "class-default": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 6186,
+                                    "bytes": 710976,
+                                    "rate": {
+                                        "interval": 300,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "any"
+                                    ],
+                                    "police": {
+                                        "cir_bps": 15000000,
+                                        "bc_bytes": 468750,
+                                        "conformed": {
+                                            "packets": 6186,
+                                            "bytes": 710976,
+                                            "actions": [
+                                                "set-qos-transmit 7",
+                                                "set-mpls-exp-imposition-transmit 7"
+                                            ],
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": [
+                                                "set-qos-transmit 1"
+                                            ],
+                                            "bps": 0
+                                        },
+                                        "violated": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": [
+                                                "drop"
+                                            ],
+                                            "bps": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     golden_parsed_output1 = {
         'Control Plane': {
@@ -71,12 +152,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'TELNET_Class': {
                                     'match_evaluation': 'match-all',
@@ -93,12 +174,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'TACACS_Class': {
                                     'match_evaluation': 'match-all',
@@ -115,12 +196,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'SNMP_Class': {
                                     'match_evaluation': 'match-all',
@@ -137,12 +218,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'FTP_Class': {
                                     'match_evaluation': 'match-all',
@@ -159,12 +240,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'BGP_Class': {
                                     'match_evaluation': 'match-all',
@@ -220,12 +301,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'ICMP_Class2': {
                                     'match_evaluation': 'match-all',
@@ -242,12 +323,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 4,
                                             'bytes': 482,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'NTP_Class': {
                                     'match_evaluation': 'match-all',
@@ -264,12 +345,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 3,
                                             'bytes': 330,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'ALL_Class': {
                                     'match_evaluation': 'match-all',
@@ -286,12 +367,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 23,
                                             'bytes': 1548,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -473,17 +554,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 15,
                                             'bytes': 6210,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 5,
                                             'bytes': 5070,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -538,12 +619,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 2000},
                                         'exceeded': {
                                             'packets': 9091,
                                             'bytes': 581824,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 15000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -598,12 +679,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 2234,
                                             'bytes': 223400,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -631,12 +712,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 2000},
                                         'exceeded': {
                                             'packets': 9091,
                                             'bytes': 581824,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 15000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1465,17 +1546,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1549,12 +1630,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'bc_bytes': 83619,
                                         'cir_bps': 445500,
                                         'conformed': {
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0,
                                             'bytes': 0,
                                             'packets': 0},
                                         'exceeded': {
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0,
                                             'bytes': 0,
                                             'packets': 0}},
@@ -1689,17 +1770,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}}}}}}}}}
 
     golden_output15 = {'execute.return_value': '''
@@ -1761,12 +1842,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 22,
                                             'bytes': 1494,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 8,
                                             'bytes': 12144,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 1000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1827,12 +1908,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': ['transmit'],
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': ['drop'],
                                             'bps': 0}}}}}}},
                 'output': {
                     'policy_name': {
@@ -2017,6 +2098,14 @@ class test_show_policy_map_type(unittest.TestCase):
         parsed_output = obj.parse(num='1')
         #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output17)
+
+    def test_show_policy_map_interface_custom(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_custom)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet3')
+        self.assertEqual(parsed_output, self.golden_parsed_output_custom)
+
 
 # =============================================
 # Unit test for :
