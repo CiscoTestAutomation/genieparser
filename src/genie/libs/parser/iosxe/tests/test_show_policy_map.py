@@ -55,7 +55,7 @@ class test_show_policy_map_type(unittest.TestCase):
 
      GigabitEthernet3 
 
-      Service-policy input: PMAP_MGMT_I
+      Service-policy input: GENIE_TEST_1
 
         Class-map: class-default (match-any)  
           6186 packets, 710976 bytes
@@ -78,7 +78,7 @@ class test_show_policy_map_type(unittest.TestCase):
             "service_policy": {
                 "input": {
                     "policy_name": {
-                        "PMAP_MGMT_I": {
+                        "GENIE_TEST_1": {
                             "class_map": {
                                 "class-default": {
                                     "match_evaluation": "match-any",
