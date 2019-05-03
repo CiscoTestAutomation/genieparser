@@ -6,14 +6,6 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                BGP
---------------------------------------------------------------------------------
-* IOSXE
-	* Updated ShowBgpAllNeighbors for more varied neighbor capabilities
-		* vrf default value handled
-	* Updated ShowIpBgpNeighbors to support different Address familiy
-
---------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
 * IOSXE
@@ -21,6 +13,13 @@
 
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+	* Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+		* vrf default value handled
 
 --------------------------------------------------------------------------------
                                   POLICY-MAP
