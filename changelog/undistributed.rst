@@ -20,6 +20,7 @@
 * IOSXE
 	* Updated ShowBgpAllNeighbors for more varied neighbor capabilities
 		* vrf default value handled
+	* Updated ShowIpBgpNeighbors to support different Address familiy
 
 --------------------------------------------------------------------------------
                                   POLICY-MAP
