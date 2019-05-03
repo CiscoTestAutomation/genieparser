@@ -723,7 +723,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
         # GigabitEthernet0/0/0/0.100
         # GigabitEthernet0/0/0/1.420 (Forward Reference)
         # Loopback300
-        p1 = re.compile(r'^(?P<interface>\w+[\d\/]+\.?\d+)(?: +\([\w ]+\))?$')
+        p1 = re.compile(r'^(?P<interface>\w+[\d\/]+\.?\d+)(?: +\([\S\s]+)?$')
 
         # Rip enabled?:               Passive
         p2 = re.compile(r'^Rip +enabled\?:\s+(?P<passive>\w+)$')
@@ -859,7 +859,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
             if m:
                 groups = m.groupdict()
                 state = groups['state']
-                if state.lower() not in 'up':
+                if 'up' not in state.lower():
                     state = 'down'
                 interface_dict.update({'oper_status': state})
                 continue
