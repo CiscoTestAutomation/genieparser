@@ -11,21 +11,23 @@
 * IOSXE
 	* Added interface value under convert_intf_name method of common file
 
-* IOSXR
-    * Updated ShowBgpAllAll for more variations of parameters
-
 --------------------------------------------------------------------------------
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXE
 	* Updated ShowBgpAllNeighbors for more varied neighbor capabilities
 		* vrf default value handled
+* IOSXR
+    * Updated ShowBgpAllAll for more variations of parameters
 
 --------------------------------------------------------------------------------
                                   POLICY-MAP
 --------------------------------------------------------------------------------
 * IOSXE
-	* Updated ShowPolicyMapInterface to support more policy action type
-
+    * Updated ShowPolicyMapInterface to support more policy action type
     
-
+--------------------------------------------------------------------------------
+                                   RIP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRipInterface for more varied interface name and status
