@@ -2578,7 +2578,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # Address family VPNv4 Unicast: advertised and received
         # Address family VPNv6 Unicast: advertised and received
-        p12 = re.compile(r'^Address +family +(?P<af_type>([a-zA-Z0-9\s]+)) *:'
+        # Address family link-state link-state: advertised
+        p12 = re.compile(r'^Address +family +(?P<af_type>([a-zA-Z0-9\s\-]+)) *:'
                           ' +(?P<val>(.*))$')
 
         #  Graceful Restart Capability: received
@@ -2859,7 +2860,6 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # No active TCP connection
         p72 = re.compile(r'^No +active +TCP +connection$')
 
-
         for line in output.splitlines():
 
             line = line.strip()
@@ -3063,6 +3063,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
             # Address family VPNv6 Unicast: advertised and received
             # Address family IPv4 Unicast: advertised and received
             # Address family IPv6 Unicast: advertised and received
+            # Address family link-state link-state: advertised
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -3878,7 +3879,7 @@ class ShowIpBgpNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema):
     def cli(self, neighbor='', address_family='', vrf='', output=None):
 
         # Restricted address families
-        restricted_list = ['ipv4 unicast', 'ipv6 unicast']
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast', 'link-state link-state']
 
         # Init vars
         ret_dict = {}
