@@ -71,12 +71,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'TELNET_Class': {
                                     'match_evaluation': 'match-all',
@@ -93,12 +93,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'TACACS_Class': {
                                     'match_evaluation': 'match-all',
@@ -115,12 +115,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'SNMP_Class': {
                                     'match_evaluation': 'match-all',
@@ -137,12 +137,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'FTP_Class': {
                                     'match_evaluation': 'match-all',
@@ -159,12 +159,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'BGP_Class': {
                                     'match_evaluation': 'match-all',
@@ -220,12 +220,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'ICMP_Class2': {
                                     'match_evaluation': 'match-all',
@@ -242,12 +242,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 4,
                                             'bytes': 482,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'NTP_Class': {
                                     'match_evaluation': 'match-all',
@@ -264,12 +264,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 3,
                                             'bytes': 330,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'ALL_Class': {
                                     'match_evaluation': 'match-all',
@@ -286,12 +286,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 23,
                                             'bytes': 1548,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -473,17 +473,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 15,
                                             'bytes': 6210,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 5,
                                             'bytes': 5070,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -538,12 +538,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 2000},
                                         'exceeded': {
                                             'packets': 9091,
                                             'bytes': 581824,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 15000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -598,12 +598,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 2234,
                                             'bytes': 223400,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -631,12 +631,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 2000},
                                         'exceeded': {
                                             'packets': 9091,
                                             'bytes': 581824,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 15000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1465,17 +1465,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1549,12 +1549,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'bc_bytes': 83619,
                                         'cir_bps': 445500,
                                         'conformed': {
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0,
                                             'bytes': 0,
                                             'packets': 0},
                                         'exceeded': {
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0,
                                             'bytes': 0,
                                             'packets': 0}},
@@ -1689,17 +1689,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}}}}}}}}}
 
     golden_output15 = {'execute.return_value': '''
@@ -1761,12 +1761,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 22,
                                             'bytes': 1494,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 8,
                                             'bytes': 12144,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 1000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1827,12 +1827,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}}}}}},
                 'output': {
                     'policy_name': {
@@ -2017,6 +2017,7 @@ class test_show_policy_map_type(unittest.TestCase):
         parsed_output = obj.parse(num='1')
         #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output17)
+
 
 # =============================================
 # Unit test for :
