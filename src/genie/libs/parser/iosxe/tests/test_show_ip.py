@@ -13,7 +13,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # from genie.libs.parser.iosxe.show_lisp import ShowLispSession
 
 # iosxe show_ip_parser
-from genie.libs.parser.iosxe.show_ip_parser import ShowIPAlias
+from genie.libs.parser.iosxe.show_ip import ShowIPAlias
  
 # =================================
 # Unit test for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
@@ -170,16 +170,23 @@ class test_show_ip_alias(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowIPAlias(device = self.device)
         parsed_output = obj.parse()
+        import pdb ; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowIPAlias(device = self.device)
         parsed_output = obj.parse()
+        import pdb ; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden3(self):
         self.device = Mock(**self.golden_output3)
         obj = ShowIPAlias(device = self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='L3VPN-1538')
+        import pdb ; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+
+if __name__ == '__main__':
+    unittest.main()
