@@ -15,8 +15,10 @@
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXE
-	* Updated ShowBgpAllNeighbors for more varied neighbor capabilities
-		* vrf default value handled
+    * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+		    * vrf default value handled
+	  * Updated ShowIpBgpNeighbors to support different Address familiy
+
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
 

@@ -13556,6 +13556,432 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         PE1#
         '''}
 
+    golden_parsed_output3 = {
+        'list_of_neighbors': [
+            '202.239.165.120'
+        ],
+        'vrf': {
+            'default': {
+                'neighbor': {
+                    '202.239.165.120': {
+                        'remote_as': 9996,
+                        'link': 'internal',
+                        'shutdown': False,
+                        'bgp_version': 4,
+                        'router_id': '202.239.165.120',
+                        'session_state': 'Idle',
+                        'bgp_negotiated_keepalive_timers': {
+                            'hold_time': 90,
+                            'keepalive_interval': 30,
+                            'min_holdtime': 15
+                        },
+                        'bgp_neighbor_session': {
+                            'sessions': 1
+                        },
+                        'bgp_negotiated_capabilities': {
+                            'route_refresh': 'advertised and received(new)',
+                            'four_octets_asn': 'advertised and received',
+                            'vpnv4_unicast': 'advertised and received',
+                            'l2vpn_vpls': 'advertised and received',
+                            'link-state_link-state': 'advertised',
+                            'graceful_restart': 'advertised and received',
+                            'remote_restart_timer': 120,
+                            'graceful_restart_af_advertised_by_peer': [
+                                'vpnv4 unicast',
+                                'l2vpn vpls'
+                            ],
+                            'enhanced_refresh': 'advertised and received',
+                            'stateful_switchover': 'NO for session 1'
+                        },
+                        'bgp_neighbor_counters': {
+                            'messages': {
+                                'sent': {
+                                    'opens': 1,
+                                    'notifications': 0,
+                                    'updates': 405,
+                                    'keepalives': 4,
+                                    'route_refresh': 0,
+                                    'total': 414
+                                },
+                                'received': {
+                                    'opens': 1,
+                                    'notifications': 0,
+                                    'updates': 1504,
+                                    'keepalives': 4,
+                                    'route_refresh': 0,
+                                    'total': 1513
+                                },
+                                'in_queue_depth': 0,
+                                'out_queue_depth': 0
+                            }
+                        },
+                        'bgp_session_transport': {
+                            'min_time_between_advertisement_runs': 0,
+                            'address_tracking_status': 'enabled',
+                            'rib_route_ip': '202.239.165.120',
+                            'connection': {
+                                'established': 2,
+                                'dropped': 1,
+                                'last_reset': '00:01:26',
+                                'reset_reason': 'Capability changed of session 1'
+                            },
+                            'tcp_path_mtu_discovery': 'enabled',
+                            'graceful_restart': 'enabled',
+                            'gr_restart_time': 120,
+                            'gr_stalepath_time': 360,
+                            'sso': False,
+                            'tcp_connection': False
+                        },
+                        'address_family': {
+                            'vpnv4 unicast': {
+                                'bgp_table_version': 1266,
+                                'neighbor_version': '1266/0',
+                                'output_queue_size': 0,
+                                'index': 1,
+                                'advertise_bit': 0,
+                                'update_group_member': 1,
+                                'extended_community_attribute_sent': True,
+                                'slow_peer_detection': False,
+                                'slow_peer_split_update_group_dynamic': False,
+                                'prefix_activity_counters': {
+                                    'sent': {
+                                        'prefixes_total': 402,
+                                        'implicit_withdraw': 201,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 'n/a',
+                                        'used_as_multipath': 'n/a',
+                                        'used_as_secondary': 'n/a'
+                                    },
+                                    'received': {
+                                        'prefixes_total': 497,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 0,
+                                        'used_as_multipath': 0,
+                                        'used_as_secondary': 0
+                                    }
+                                },
+                                'local_policy_denied_prefixes_counters': {
+                                    'outbound': {
+                                        'originator_loop': 'n/a',
+                                        'bestpath_from_this_peer': 994,
+                                        'af_permit_check': 497,
+                                        'total': 1491
+                                    },
+                                    'inbound': {
+                                        'originator_loop': 201,
+                                        'bestpath_from_this_peer': 'n/a',
+                                        'af_permit_check': 'n/a',
+                                        'total': 201
+                                    }
+                                },
+                                'max_nlri': 1,
+                                'min_nlri': 0,
+                                'last_detected_dynamic_slow_peer': 'never',
+                                'dynamic_slow_peer_recovered': 'never',
+                                'refresh_epoch': 2,
+                                'last_sent_refresh_start_of_rib': '00:01:25',
+                                'last_sent_refresh_end_of_rib': '00:01:22',
+                                'refresh_out': 3,
+                                'last_received_refresh_start_of_rib': '00:01:24',
+                                'last_received_refresh_end_of_rib': '00:01:16',
+                                'refresh_in': 8,
+                                'refresh_activity_counters': {
+                                    'sent': {
+                                        'refresh_start_of_rib': 1,
+                                        'refresh_end_of_rib': 1
+                                    },
+                                    'received': {
+                                        'refresh_start_of_rib': 1,
+                                        'refresh_end_of_rib': 1
+                                    }
+                                }
+                            },
+                            'l2vpn vpls': {
+                                'bgp_table_version': 621,
+                                'neighbor_version': '621/0',
+                                'output_queue_size': 0,
+                                'index': 1,
+                                'advertise_bit': 0,
+                                'update_group_member': 1,
+                                'extended_community_attribute_sent': True,
+                                'suppress_ldp_signaling': True,
+                                'slow_peer_detection': False,
+                                'slow_peer_split_update_group_dynamic': False,
+                                'prefix_activity_counters': {
+                                    'sent': {
+                                        'prefixes_total': 404,
+                                        'implicit_withdraw': 202,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 'n/a',
+                                        'used_as_multipath': 'n/a',
+                                        'used_as_secondary': 'n/a'
+                                    },
+                                    'received': {
+                                        'prefixes_total': 101,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 0,
+                                        'used_as_multipath': 0,
+                                        'used_as_secondary': 0
+                                    }
+                                },
+                                'local_policy_denied_prefixes_counters': {
+                                    'outbound': {
+                                        'originator_loop': 'n/a',
+                                        'bestpath_from_this_peer': 477,
+                                        'total': 477
+                                    },
+                                    'inbound': {
+                                        'originator_loop': 202,
+                                        'bestpath_from_this_peer': 'n/a',
+                                        'total': 202
+                                    }
+                                },
+                                'max_nlri': 1,
+                                'min_nlri': 0,
+                                'last_detected_dynamic_slow_peer': 'never',
+                                'dynamic_slow_peer_recovered': 'never',
+                                'refresh_epoch': 2,
+                                'last_sent_refresh_start_of_rib': '00:01:25',
+                                'last_sent_refresh_end_of_rib': '00:01:25',
+                                'refresh_out': 0,
+                                'last_received_refresh_start_of_rib': '00:01:24',
+                                'last_received_refresh_end_of_rib': '00:01:22',
+                                'refresh_in': 2,
+                                'refresh_activity_counters': {
+                                    'sent': {
+                                        'refresh_start_of_rib': 1,
+                                        'refresh_end_of_rib': 1
+                                    },
+                                    'received': {
+                                        'refresh_start_of_rib': 1,
+                                        'refresh_end_of_rib': 1
+                                    }
+                                }
+                            },
+                            'linkstate linkstate': {
+                                'bgp_table_version': 1,
+                                'neighbor_version': '1/0',
+                                'output_queue_size': 0,
+                                'index': 0,
+                                'advertise_bit': 0,
+                                'slow_peer_detection': False,
+                                'slow_peer_split_update_group_dynamic': False,
+                                'prefix_activity_counters': {
+                                    'sent': {
+                                        'prefixes_current': 0,
+                                        'prefixes_total': 0,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 'n/a',
+                                        'used_as_multipath': 'n/a',
+                                        'used_as_secondary': 'n/a'
+                                    },
+                                    'received': {
+                                        'prefixes_current': 0,
+                                        'prefixes_total': 0,
+                                        'implicit_withdraw': 0,
+                                        'explicit_withdraw': 0,
+                                        'used_as_bestpath': 0,
+                                        'used_as_multipath': 0,
+                                        'used_as_secondary': 0
+                                    }
+                                },
+                                'local_policy_denied_prefixes_counters': {
+                                    'outbound': {
+                                        'total': 0
+                                    },
+                                    'inbound': {
+                                        'total': 0
+                                    }
+                                },
+                                'max_nlri': 0,
+                                'min_nlri': 0,
+                                'last_detected_dynamic_slow_peer': 'never',
+                                'dynamic_slow_peer_recovered': 'never',
+                                'refresh_epoch': 1,
+                                'last_sent_refresh_start_of_rib': 'never',
+                                'last_sent_refresh_end_of_rib': 'never',
+                                'last_received_refresh_start_of_rib': 'never',
+                                'last_received_refresh_end_of_rib': 'never',
+                                'refresh_activity_counters': {
+                                    'sent': {
+                                        'refresh_start_of_rib': 0,
+                                        'refresh_end_of_rib': 0
+                                    },
+                                    'received': {
+                                        'refresh_start_of_rib': 0,
+                                        'refresh_end_of_rib': 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output3 = {'execute.return_value': '''
+        #show ip bgp link-state link-state neighbors
+        BGP neighbor is 202.239.165.120,  remote AS 9996, internal link
+        BGP version 4, remote router ID 202.239.165.120
+        BGP state = Idle, down for never
+        Configured hold time is 90, keepalive interval is 30 seconds
+        Minimum holdtime from neighbor is 15 seconds
+        Neighbor sessions:
+        1 active, is not multisession capable (disabled)
+        Neighbor capabilities:
+        Route refresh: advertised and received(new)
+        Four-octets ASN Capability: advertised and received
+        Address family VPNv4 Unicast: advertised and received
+        Address family L2VPN Vpls: advertised and received
+        Address family link-state link-state: advertised
+        Graceful Restart Capability: advertised and received
+          Remote Restart timer is 120 seconds
+          Address families advertised by peer:
+            VPNv4 Unicast (was not preserved, L2VPN Vpls (was not preserved
+        Enhanced Refresh Capability: advertised and received
+        Multisession Capability:
+        Stateful switchover support enabled: NO for session 1
+        Message statistics:
+        InQ depth is 0
+        OutQ depth is 0
+
+                             Sent       Rcvd
+        Opens:                  1          1
+        Notifications:          0          0
+        Updates:              405       1504
+        Keepalives:             4          4
+        Route Refresh:          0          0
+        Total:                414       1513
+        Do log neighbor state changes (via global configuration)
+        Default minimum time between advertisement runs is 0 seconds
+
+        For address family: VPNv4 Unicast
+        Session: 202.239.165.120
+        BGP table version 1266, neighbor version 1266/0
+        Output queue size : 0
+        Index 1, Advertise bit 0
+        1 update-group member
+        Extended-community attribute sent to this neighbor
+        Slow-peer detection is disabled
+        Slow-peer split-update-group dynamic is disabled
+                                     Sent       Rcvd
+        Prefix activity:               ----       ----
+        Prefixes Current:             201        497 (Consumes 67592 bytes)
+        Prefixes Total:               402        497
+        Implicit Withdraw:            201          0
+        Explicit Withdraw:              0          0
+        Used as bestpath:             n/a          0
+        Used as multipath:            n/a          0
+        Used as secondary:            n/a          0
+
+                                       Outbound    Inbound
+        Local Policy Denied Prefixes:    --------    -------
+        ORIGINATOR loop:                    n/a        201
+        Bestpath from this peer:            994        n/a
+        AF Permit Check:                    497        n/a
+        Total:                             1491        201
+        Number of NLRIs in the update sent: max 1, min 0
+        Last detected as dynamic slow peer: never
+        Dynamic slow peer recovered: never
+        Refresh Epoch: 2
+        Last Sent Refresh Start-of-rib: 00:01:25
+        Last Sent Refresh End-of-rib: 00:01:22
+        Refresh-Out took 3 seconds
+        Last Received Refresh Start-of-rib: 00:01:24
+        Last Received Refresh End-of-rib: 00:01:16
+        Refresh-In took 8 seconds
+                                           Sent       Rcvd
+            Refresh activity:              ----       ----
+              Refresh Start-of-RIB          1          1
+              Refresh End-of-RIB            1          1
+
+        For address family: L2VPN Vpls
+        Session: 202.239.165.120
+        BGP table version 621, neighbor version 621/0
+        Output queue size : 0
+        Index 1, Advertise bit 0
+        1 update-group member
+        Extended-community attribute sent to this neighbor
+        Suppress LDP signaling protocol
+        Slow-peer detection is disabled
+        Slow-peer split-update-group dynamic is disabled
+                                     Sent       Rcvd
+        Prefix activity:               ----       ----
+        Prefixes Current:             202        101 (Consumes 14544 bytes)
+        Prefixes Total:               404        101
+        Implicit Withdraw:            202          0
+        Explicit Withdraw:              0          0
+        Used as bestpath:             n/a          0
+        Used as multipath:            n/a          0
+        Used as secondary:            n/a          0
+
+                                       Outbound    Inbound
+        Local Policy Denied Prefixes:    --------    -------
+        ORIGINATOR loop:                    n/a        202
+        Bestpath from this peer:            477        n/a
+        Total:                              477        202
+        Number of NLRIs in the update sent: max 1, min 0
+        Last detected as dynamic slow peer: never
+        Dynamic slow peer recovered: never
+        Refresh Epoch: 2
+        Last Sent Refresh Start-of-rib: 00:01:25
+        Last Sent Refresh End-of-rib: 00:01:25
+        Refresh-Out took 0 seconds
+        Last Received Refresh Start-of-rib: 00:01:24
+        Last Received Refresh End-of-rib: 00:01:22
+        Refresh-In took 2 seconds
+                                           Sent       Rcvd
+            Refresh activity:              ----       ----
+              Refresh Start-of-RIB          1          1
+              Refresh End-of-RIB            1          1
+
+        For address family: link-state link-state
+        BGP table version 1, neighbor version 1/0
+        Output queue size : 0
+        Index 0, Advertise bit 0
+        Slow-peer detection is disabled
+        Slow-peer split-update-group dynamic is disabled
+                                     Sent       Rcvd
+        Prefix activity:               ----       ----
+        Prefixes Current:               0          0
+        Prefixes Total:                 0          0
+        Implicit Withdraw:              0          0
+        Explicit Withdraw:              0          0
+        Used as bestpath:             n/a          0
+        Used as multipath:            n/a          0
+        Used as secondary:            n/a          0
+
+                                       Outbound    Inbound
+        Local Policy Denied Prefixes:    --------    -------
+        Total:                                0          0
+        Number of NLRIs in the update sent: max 0, min 0
+        Last detected as dynamic slow peer: never
+        Dynamic slow peer recovered: never
+        Refresh Epoch: 1
+        Last Sent Refresh Start-of-rib: never
+        Last Sent Refresh End-of-rib: never
+        Last Received Refresh Start-of-rib: never
+        Last Received Refresh End-of-rib: never
+                                           Sent       Rcvd
+            Refresh activity:              ----       ----
+              Refresh Start-of-RIB          0          0
+              Refresh End-of-RIB            0          0
+
+        Address tracking is enabled, the RIB does have a route to 202.239.165.120
+        Route to peer address reachability Up: 1; Down: 0
+        Last notification 1d21h
+        Connections established 2; dropped 1
+        Last reset 00:01:26, due to Capability changed of session 1
+        Interface associated: (none) (peering address NOT in same link)
+        Transport(tcp) path-mtu-discovery is enabled
+        Graceful-Restart is enabled, restart-time 120 seconds, stalepath-time 360 seconds
+        SSO is disabled
+        No active TCP connection
+    '''}
     def test_show_ip_bgp_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpNeighbors(device=self.device)
@@ -13575,6 +14001,13 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         obj = ShowIpBgpNeighbors(device=self.device)
         parsed_output = obj.parse(address_family='ipv4 unicast')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_ip_bgp_neighbors_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpBgpNeighbors(device=self.device)
+        parsed_output = obj.parse(address_family='link-state link-state')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 # ===========================================
