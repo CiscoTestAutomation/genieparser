@@ -31,4 +31,4 @@
                                    PLATFORM
 --------------------------------------------------------------------------------
 * IOSXE
-  * Show platform optional output issue
+  * Updated ShowPlatform to support optional output
