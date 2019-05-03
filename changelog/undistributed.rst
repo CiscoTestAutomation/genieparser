@@ -10,6 +10,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+    * Updated ShowIpBgpNeighbors to support different Address familiy
 
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
