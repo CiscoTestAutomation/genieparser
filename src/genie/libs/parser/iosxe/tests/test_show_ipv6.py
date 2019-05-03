@@ -7,17 +7,19 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.show_ipv6 import ShowIpv6NeighborsDetail
+from genie.libs.parser.iosxe.show_ipv6 import ShowIpv6Neighbors,\
+                                              ShowIpv6NeighborsDetail
 
 
 #############################################################################
 # Unittest For:
-#         'show ipv6 neighbors vrf <vrf>'
-#         'show ipv6 neighbors detail'
+#          'show ipv6 neighbors'
+#          'show ipv6 neighbors vrf {vrf}'
+#          'show ipv6 neighbors detail'
+#          'show ipv6 neighbors vrf {vrf} detail'
 #############################################################################
 
-class test_show_ipv6_neighbors_detail(unittest.TestCase):
-
+class test_show_ipv6_neighborrs(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -110,7 +112,32 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
         FE80::5C01:C0FF:FE02:7                      1 5e01.c002.0007  STALE Gi5
     '''}
 
-    golden_parsed_output3 = {
+    def test_show_ipv6_neighbors_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6Neighbors(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ipv6_neighbors_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpv6Neighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ipv6_neighbors_vrf_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpv6Neighbors(device=self.device)
+        parsed_output = obj.parse(vrf='vrf1')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+
+class test_show_ipv6_neighbors_detail(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}    
+
+    golden_parsed_output1 = {
         'interface': {
             'GigabitEthernet2.110': {
                 'interface': 'GigabitEthernet2.110',
@@ -176,7 +203,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                             'neighbor_state': 'STALE',
                             'trlv': '0'}}}}}
 
-    golden_output3 = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
         show ipv6 neighbors detail
         IPv6 Address                              TRLV Age Link-layer Addr State Interface
         FE80::F816:3EFF:FEBF:341D                   0    0 fa16.3ebf.341d  REACH Gi2.90
@@ -199,18 +226,6 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
         obj = ShowIpv6NeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-    def test_show_ipv6_neighbors_vrf_golden2(self):
-        self.device = Mock(**self.golden_output2)
-        obj = ShowIpv6NeighborsDetail(device=self.device)
-        parsed_output = obj.parse(vrf='vrf1')
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
-
-    def test_show_ipv6_neighbors_detail_golden3(self):
-        self.device = Mock(**self.golden_output3)
-        obj = ShowIpv6NeighborsDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 if __name__ == '__main__':
