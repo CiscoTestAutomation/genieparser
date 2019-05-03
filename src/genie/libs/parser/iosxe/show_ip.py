@@ -18,13 +18,12 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
 # ==============================
-# Schema for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
+# Schema for 'show ip aliases', 'show ip aliases vrf {vrf}'
 # ==============================
 class ShowIPAliasSchema(MetaParser):
     ''' 
 	Schema for:
 	show ip aliases
-	show ip aliases default-vrf
 	show ip aliases vrf {vrf}
 	'''
     schema = {
@@ -42,7 +41,7 @@ class ShowIPAliasSchema(MetaParser):
     }
 
 # ==============================
-# Parser for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
+# Parser for 'show ip aliases', 'show ip aliases vrf {vrf}'
 # ==============================
 class ShowIPAlias(ShowIPAliasSchema):
     ''' 
@@ -55,17 +54,20 @@ class ShowIPAlias(ShowIPAliasSchema):
 
     def cli(self, vrf = '', output = None):
         if output is None:
+            if vrf:
+                out = self.device.execute(self.cli_command[1].format(vrf = vrf))
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
         # Init vars
         parsed_dict = {}
-        index = 1
+        index = 1   # set a counter for the index
 
         # Address Type             IP Address      Port
         # Interface                106.162.197.94
         p1 = re.compile(r'(?P<address_type>(\S+)) +(?P<ip_address>(\S+))(?: +(?P<port>(\d+)))?$')
+        # "?:" (for port) means optional
 
         for line in out.splitlines():
             line = line.strip()
@@ -86,7 +88,27 @@ class ShowIPAlias(ShowIPAliasSchema):
                 vrf_dict['ip_address'] = group['ip_address']
                 if group['port']:
                     vrf_dict['port'] = int(group['port'])
+                
                 index += 1
                 continue
 
         return parsed_dict
+
+# ==============================
+# Parser for show ip aliases default-vrf'
+# ==============================
+class ShowIPAliasDefaultVrf(ShowIPAlias):
+    ''' 
+    Parser for:
+	show ip aliases default-vrf
+	'''
+    cli_command = 'show ip aliases default-vrf'
+
+    def cli(self, output = None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+    
+        return super().cli(output = show_output)
+
