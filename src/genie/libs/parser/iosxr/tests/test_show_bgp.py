@@ -3548,7 +3548,7 @@ class test_show_bgp_instance_all_all_all_process_detail(unittest.TestCase):
         obj = ShowBgpInstanceProcessDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf_type='all')
-
+    
     def test_golden1(self):
         self.device = Mock(**self.golden_output1)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
