@@ -13824,6 +13824,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
     }
 
     golden_output3 = {'execute.return_value': '''
+        #show ip bgp link-state link-state neighbors
         BGP neighbor is 202.239.165.120,  remote AS 9996, internal link
         BGP version 4, remote router ID 202.239.165.120
         BGP state = Idle, down for never
