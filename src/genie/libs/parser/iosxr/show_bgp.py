@@ -97,8 +97,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            if line == self.cli_command:
-                continue
+
             # ID  Placed-Grp  Name              AS        VRFs    Address Families
             # --------------------------------------------------------------------------------
             # 0   v4_routing  test              333       0       none
@@ -146,8 +145,8 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
 
             # ID  Placed-Grp  Name              AS        VRFs    Address Families
             # --------------------------------------------------------------------------------
-            p2_1 = re.compile(r'(ID +Placed-Grp +Name +AS +VRFs +Address +Families)|(\-)+')
-            m = p2_1.match(line)
+            p1_1 = re.compile(r'(ID +Placed-Grp +Name +AS +VRFs +Address +Families)|(\-)+')
+            m = p1_1.match(line)
             if m:
                 continue
             #                                                     IPv6 Unicast, VPNv6 Unicast
