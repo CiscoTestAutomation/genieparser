@@ -4,6 +4,8 @@
 
     * show ipv6 neighbors
     * show ipv6 neighbors vrf <vrf>
+    * show ipv6 neighbors detail
+    * show ipv6 neighbors vrf <vrf> detail
     * show ipv6 interface (from show_interface.py)
 """
 
@@ -18,13 +20,16 @@ from genie.libs.parser.utils.common import Common
 
 
 # ======================================================
-# Parser for :'show ipv6 neighbors vrf <vrf>'
-#             'show ipv6 neighbors detail '
+# Parser for:
+#          'show ipv6 neighbors'
+#          'show ipv6 neighbors vrf <vrf>'
+#          'show ipv6 neighbors detail'
+#          'show ipv6 neighbors vrf <vrf> detail'
 # ======================================================
 class ShowIpv6NeighborsSchema(MetaParser):
     """Schema for :
-                  "show ipv6 neighbors detail"
-                  "show ipv6 neighbors vrf <vrf>"
+                  'show ipv6 neighbors detail'
+                  'show ipv6 neighbors vrf <vrf>'
     """
 
     schema = {
@@ -47,8 +52,8 @@ class ShowIpv6NeighborsSchema(MetaParser):
 
 class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
     """
-       Parser for "show ipv6 neighbors"
-                  "show ipv6 neighbors vrf {vrf}"
+       Parser for 'show ipv6 neighbors'
+                  'show ipv6 neighbors vrf <vrf>'
     """
 
     cli_command = ['show ipv6 neighbors vrf {vrf}',
@@ -104,8 +109,8 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
 
 class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
     """
-       Parser for "show ipv6 neighbors detail"
-                  "show ipv6 neighbors vrf {vrf} detail"
+       Parser for 'show ipv6 neighbors detail'
+                  'show ipv6 neighbors vrf <vrf> detail'
     """
 
     cli_command = ['show ipv6 neighbors vrf {vrf} detail',
