@@ -2346,7 +2346,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         Optional('bgp_session_transport'):
                             {'min_time_between_advertisement_runs': int,
                             'address_tracking_status': str,
-                            'rib_route_ip': str,
+                            Optional('rib_route_ip'): str,
                             'tcp_path_mtu_discovery': str,
                             'connection':
                                 {'established': int,
@@ -2644,8 +2644,9 @@ class ShowBgpNeighborSuperParser(MetaParser):
                           ' +runs +is +(?P<time>(\d+)) +seconds$')
 
         # Address tracking is enabled, the RIB does have a route to 10.16.2.2
+        # Address tracking is enabled, the RIB does not have a route to 10.16.2.2
         p24 = re.compile(r'^Address +tracking +is +(?P<status>(\S+)), +the +RIB'
-                          ' +does +have +a +route +to +(?P<route>(\S+))$')
+                          ' +does( +(?P<rip_has_route>(not)+))? +have +a +route +to +(?P<route>(\S+))$')
 
         # Connections established 1; dropped 0
         p25 = re.compile(r'^Connections +established +(?P<established>(\d+));'
@@ -3224,11 +3225,13 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             # Address tracking is enabled, the RIB does have a route to 10.16.2.2
+            # Address tracking is enabled, the RIB does not have a route to 10.16.2.2
             m = p24.match(line)
             if m:
                 group = m.groupdict()
                 session_transport_dict['address_tracking_status'] = group['status']
-                session_transport_dict['rib_route_ip'] = group['route']
+                if not group['rip_has_route']:
+                    session_transport_dict['rib_route_ip'] = group['route']
                 continue
 
             # Connections established 1; dropped 0
