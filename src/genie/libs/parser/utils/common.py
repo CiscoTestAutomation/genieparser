@@ -176,6 +176,7 @@ class Common():
                    'BD': 'BridgeDomain',
                    'Se': 'Serial',
                    'Fo': 'FortyGigabitEthernet',
+                   'Hu': 'HundredGigE'
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)
@@ -383,3 +384,52 @@ class Common():
                 for d in v:
                     for result in self.find_keys(key, d):
                         yield result
+
+
+    @classmethod
+    def combine_units_of_time(self, hours=None, minutes=None, seconds=None):
+        '''Combine seperate units of time to 'normal time': HH:MM:SS
+
+            Args (All are optional. Nothing returns 00:00:00):
+                hours (`int`): number of hours
+                minutes (`int`): number of minutes
+                seconds (`int`): number of seconds
+
+            Returns:
+                Standard time string
+
+            Raises:
+                None
+
+            example:
+
+                >>> convert_xml_time(minutes=500)
+                >>> "08:20:00"
+        '''
+        total_combined_seconds = 0
+
+        if hours:
+            total_combined_seconds += hours * 60 * 60
+
+        if minutes:
+            total_combined_seconds += minutes * 60
+
+        if seconds:
+            total_combined_seconds += seconds
+
+        final_seconds = total_combined_seconds % 60
+        if final_seconds <= 9:
+            final_seconds = "0{}".format(final_seconds)
+
+        final_minutes = (total_combined_seconds // 60) % 60
+        if final_minutes <= 9:
+            final_minutes = "0{}".format(final_minutes)
+
+        final_hours = (total_combined_seconds // 60) // 60
+        if final_hours <= 9:
+            final_hours = "0{}".format(final_hours)
+
+        normal_time = "{}:{}:{}".format(final_hours, final_minutes,
+                                        final_seconds)
+
+        return normal_time

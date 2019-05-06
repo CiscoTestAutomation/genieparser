@@ -459,7 +459,7 @@ class test_show_bundle(unittest.TestCase):
                     "GigabitEthernet0/0/0/0": {
                         "interface": "GigabitEthernet0/0/0/0",
                         "bw_kbps": 1000000,
-                        "device": "5.4.3.2",
+                        "device": "10.81.3.2",
                         "state": "Standby",
                         "port_id": "0x8002, 0xa001",
                         "link_state": "marked as Standby by mLACP peer"
@@ -495,7 +495,7 @@ class test_show_bundle(unittest.TestCase):
         -------------------- --------------- ----------- -------------- ----------
         Gi0/0/0/0 Local Active 0x8001, 0x9001 1000000
         Link is Active
-        Gi0/0/0/0 5.4.3.2 Standby 0x8002, 0xa001 1000000
+        Gi0/0/0/0 10.81.3.2 Standby 0x8002, 0xa001 1000000
         Link is marked as Standby by mLACP peer
     '''}
 
@@ -540,7 +540,7 @@ class test_show_bundle(unittest.TestCase):
                     "GigabitEthernet0/0/0/0": {
                         "interface": "GigabitEthernet0/0/0/0",
                         "bw_kbps": 1000000,
-                        "device": "5.4.3.2",
+                        "device": "10.81.3.2",
                         "state": "Active",
                         "port_id": "0x8002, 0xa001",
                         "link_state": "Active"
@@ -577,7 +577,7 @@ class test_show_bundle(unittest.TestCase):
         -------------------- --------------- ----------- -------------- ----------
         Gi0/0/0/0 Local Standby 0x8003, 0x9001 1000000
         mLACP peer is active
-        Gi0/0/0/0 5.4.3.2 Active 0x8002, 0xa001 1000000
+        Gi0/0/0/0 10.81.3.2 Active 0x8002, 0xa001 1000000
         Link is Active
         RP/0/0/CPU0:router#
     '''}

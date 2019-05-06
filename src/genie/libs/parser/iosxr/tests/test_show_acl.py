@@ -164,7 +164,7 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                            },
 		                        'destination_ipv4_network': {
 		                            '192.168.1.0 0.0.0.255': {
-		                                'destination_ipv4_network': 'host 1.1.1.1',
+		                                'destination_ipv4_network': 'host 10.4.1.1',
 		                                },
 		                            },
 		                        },
@@ -186,12 +186,12 @@ class test_show_acl_afi_all(unittest.TestCase):
 		                'l3': {
 		                    'ipv4': {
 		                        'source_ipv4_network': {
-		                            'host 2.2.2.2': {
-		                                'source_ipv4_network': 'host 2.2.2.2',
+		                            'host 10.16.2.2': {
+		                                'source_ipv4_network': 'host 10.16.2.2',
 		                                },
 		                            },
 		                        'destination_ipv4_network': {
-		                            'host 2.2.2.2': {
+		                            'host 10.16.2.2': {
 		                                'destination_ipv4_network': 'any',
 		                                },
 		                            },
@@ -338,8 +338,8 @@ class test_show_acl_afi_all(unittest.TestCase):
 	 20 permit tcp any any eq ssh
 	 30 permit tcp any any eq 443
 	ipv4 access-list test22
-	 10 permit tcp 192.168.1.0 0.0.0.255 host 1.1.1.1 established log
-	 20 permit tcp host 2.2.2.2 eq www any precedence network ttl eq 255
+	 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+	 20 permit tcp host 10.16.2.2 eq www any precedence network ttl eq 255
 	 30 deny ipv4 any any
 	ipv6 access-list ipv6_acl
 	 10 permit ipv6 any any log

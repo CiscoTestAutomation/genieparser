@@ -72,15 +72,15 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         # Peer              GR Up Time         Discovery Address
         # ----------------- -- --------------- --------- -------
-        # 3.3.3.3:0         Y  00:01:04                3       8
-        # 2.2.2.2:0         N  00:01:02                2       5
+        # 10.36.3.3:0         Y  00:01:04                3       8
+        # 10.16.2.2:0         N  00:01:02                2       5
         p2 = re.compile(r'^(?P<peer>[\d\.:]+) +(?P<gr>[\w]+) +(?P<up_time>[\d\:]+) +'
                          '(?P<discovery>(\d+)) +(?P<address>(\d+))$')
 
         # Peer               GR  NSR  Up Time     Discovery  Address  IPv4 Label
         # -----------------  --  ---  ----------  ---------  -------  ----------
-        # 2.2.2.2:0          N   Y    01:39:50            1        4          19
-        # 3.3.3.3:0          N   N    01:38:04            1        3           5
+        # 10.16.2.2:0          N   Y    01:39:50            1        4          19
+        # 10.36.3.3:0          N   N    01:38:04            1        3           5
         p3 = re.compile(r'^(?P<peer>[\d\.:]+) +(?P<gr>(\w+)) +(?P<nsr>(\w+)) +(?P<up_time>[\d\:]+) +'
                          '(?P<discovery>(\d+)) +(?P<address>(\d+)) +(?P<labels_ipv4>(\d+))$')
 
@@ -114,8 +114,8 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
             # Peer              GR Up Time         Discovery Address
             # ----------------- -- --------------- --------- -------
-            # 3.3.3.3:0         Y  00:01:04                3       8
-            # 2.2.2.2:0         N  00:01:02                2       5
+            # 10.36.3.3:0         Y  00:01:04                3       8
+            # 10.16.2.2:0         N  00:01:02                2       5
             m = p2.match(line)
             if m:
                 peer = m.groupdict()['peer']
@@ -138,8 +138,8 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
             # Peer               GR  NSR  Up Time     Discovery  Address  IPv4 Label
             # -----------------  --  ---  ----------  ---------  -------  ----------
-            # 2.2.2.2:0          N   Y    01:39:50            1        4          19
-            # 3.3.3.3:0          N   N    01:38:04            1        3           5
+            # 10.16.2.2:0          N   Y    01:39:50            1        4          19
+            # 10.36.3.3:0          N   N    01:38:04            1        3           5
             m = p3.match(line)
             if m:
                 peer = m.groupdict()['peer']

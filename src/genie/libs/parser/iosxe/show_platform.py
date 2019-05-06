@@ -527,9 +527,7 @@ class ShowVersion(ShowVersionSchema):
                                               device_output=out,
                                               device_os='iosxe')
 
-        if tmp2.entries:
-            res2 = tmp2
-            # switch_number
+        # switch_number
         # license table for Cat3850
         tmp = genie.parsergen.oper_fill_tabular(right_justified=True,
                                           header_fields=
@@ -549,30 +547,32 @@ class ShowVersion(ShowVersionSchema):
             for key in res.entries.keys():
                 for k, v in res.entries[key].items():
                     version_dict['version'][k] = v
-            for key in res2.entries.keys():
-                if 'switch_num' not in version_dict['version']:
-                    version_dict['version']['switch_num'] = {}
-                if '*' in key:
-                    p = re.compile(r'\**\ *(?P<new_key>\d)')
-                    m = p.match(key)
-                    switch_no = m.groupdict()['new_key']
-                    if m:
-                        if switch_no not in version_dict['version']['switch_num']:
-                            version_dict['version']['switch_num'][switch_no] = {}
+            if tmp2.entries:
+                res2 = tmp2
+                for key in res2.entries.keys():
+                    if 'switch_num' not in version_dict['version']:
+                        version_dict['version']['switch_num'] = {}
+                    if '*' in key:
+                        p = re.compile(r'\**\ *(?P<new_key>\d)')
+                        m = p.match(key)
+                        switch_no = m.groupdict()['new_key']
+                        if m:
+                            if switch_no not in version_dict['version']['switch_num']:
+                                version_dict['version']['switch_num'][switch_no] = {}
+                            for k, v in res2.entries[key].items():
+                                if 'switch_num' != k:
+                                    version_dict['version']['switch_num'][switch_no][k] = v
+                            version_dict['version']['switch_num'][switch_no]['uptime'] = uptime_this_cp
+                            version_dict['version']['switch_num'][switch_no]['active'] = True
+                            version_dict['version']['switch_num'][switch_no].\
+                                update(active_dict) if active_dict else None
+                    else:
                         for k, v in res2.entries[key].items():
+                            if key not in version_dict['version']['switch_num']:
+                                version_dict['version']['switch_num'][key] = {}
                             if 'switch_num' != k:
-                                version_dict['version']['switch_num'][switch_no][k] = v
-                        version_dict['version']['switch_num'][switch_no]['uptime'] = uptime_this_cp
-                        version_dict['version']['switch_num'][switch_no]['active'] = True
-                        version_dict['version']['switch_num'][switch_no].\
-                            update(active_dict) if active_dict else None
-                else:
-                    for k, v in res2.entries[key].items():
-                        if key not in version_dict['version']['switch_num']:
-                            version_dict['version']['switch_num'][key] = {}
-                        if 'switch_num' != k:
-                            version_dict['version']['switch_num'][key][k] = v
-                    version_dict['version']['switch_num'][key]['active'] = False 
+                                version_dict['version']['switch_num'][key][k] = v
+                        version_dict['version']['switch_num'][key]['active'] = False 
 
         return version_dict
 
@@ -1213,7 +1213,8 @@ class ShowPlatformSchema(MetaParser):
                 Optional('main'): {
                     Optional('switch_mac_address'): str,
                     Optional('mac_persistency_wait_time'): str,
-                    Optional('chassis'): str
+                    Optional('chassis'): str,
+                    Optional('swstack'): bool
                 },
                 'slot': {
                     Any(): {
@@ -1356,6 +1357,7 @@ class ShowPlatform(ShowPlatformSchema):
                 if 'main' not in platform_dict:
                     platform_dict['main'] = {}
                 platform_dict['main']['switch_mac_address'] = m.groupdict()['switch_mac_address']
+                platform_dict['main']['swstack'] = True
                 continue
 
 
@@ -1374,7 +1376,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if 'WS-C' in model:
+                if ('WS-C' in model) or ('C9500' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -1402,8 +1404,8 @@ class ShowPlatform(ShowPlatformSchema):
 
                 for key, value in platform_dict['slot'][slot].items():
                     for key, last in value.items():
-                        last['priority'] = m.groupdict()['priority']
-                        last['role'] = m.groupdict()['role']
+                        last['swstack_priority'] = m.groupdict()['priority']
+                        last['swstack_role'] = m.groupdict()['role']
                         last['state'] = m.groupdict()['state']
                 continue
 

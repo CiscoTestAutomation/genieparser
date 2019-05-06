@@ -74,6 +74,9 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('mac_address'): str,
                 Optional('phys_address'): str,
                 Optional('delay'): int,
+                Optional('carrier_delay'): int,
+                Optional('carrier_delay_up'): int,
+                Optional('carrier_delay_down'): int,
                 Optional('keepalive'): int,
                 Optional('auto_negotiate'): bool,
                 Optional('arp_type'): str,
@@ -312,7 +315,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
             # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
             p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                             ' +(?P<bandwidth>[0-9]+) +Kbit(/sec)?, +DLY'
+                             ' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
                              ' +(?P<delay>[0-9]+) +usec,$')
             m = p6.match(line)
             if m:
@@ -461,6 +464,28 @@ class ShowInterfaces(ShowInterfacesSchema):
                 elif 'off' in send or 'unsupported' in send:
                     interface_dict[interface]['flow_control']['send'] = False
                 continue
+
+            # Carrier delay is 10 sec
+            p_cd = re.compile(r'^Carrier +delay +is +(?P<carrier_delay>\d+).*$')
+            m = p_cd.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict = interface_dict.setdefault(interface, {})
+                sub_dict['carrier_delay'] = int(group['carrier_delay'])
+
+            # Asymmetric Carrier-Delay Up Timer is 2 sec
+            # Asymmetric Carrier-Delay Down Timer is 10 sec
+            p_cd_2 = re.compile(r'^Asymmetric +Carrier-Delay +(?P<type>Down|Up)'
+                                 ' +Timer +is +(?P<carrier_delay>\d+).*$')
+            m = p_cd_2.match(line)
+            if m:
+                group = m.groupdict()
+                tp = group['type'].lower()
+                sub_dict = interface_dict.setdefault(interface, {})
+                if tp == 'up':
+                    sub_dict['carrier_delay_up'] = int(group['carrier_delay'])
+                else:
+                    sub_dict['carrier_delay_down'] = int(group['carrier_delay'])
 
             # ARP type: ARPA, ARP Timeout 04:00:00
             p13 = re.compile(r'^ARP +type: +(?P<arp_type>\w+), +'

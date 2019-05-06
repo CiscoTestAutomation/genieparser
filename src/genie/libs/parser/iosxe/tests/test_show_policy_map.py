@@ -71,12 +71,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'TELNET_Class': {
                                     'match_evaluation': 'match-all',
@@ -93,12 +93,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'TACACS_Class': {
                                     'match_evaluation': 'match-all',
@@ -115,12 +115,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'SNMP_Class': {
                                     'match_evaluation': 'match-all',
@@ -137,12 +137,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'FTP_Class': {
                                     'match_evaluation': 'match-all',
@@ -159,12 +159,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'BGP_Class': {
                                     'match_evaluation': 'match-all',
@@ -220,12 +220,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'ICMP_Class2': {
                                     'match_evaluation': 'match-all',
@@ -242,12 +242,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 4,
                                             'bytes': 482,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'NTP_Class': {
                                     'match_evaluation': 'match-all',
@@ -264,12 +264,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 3,
                                             'bytes': 330,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'ALL_Class': {
                                     'match_evaluation': 'match-all',
@@ -286,12 +286,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 23,
                                             'bytes': 1548,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -473,17 +473,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 15,
                                             'bytes': 6210,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 5,
                                             'bytes': 5070,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -538,12 +538,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 2000},
                                         'exceeded': {
                                             'packets': 9091,
                                             'bytes': 581824,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 15000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -598,12 +598,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 2234,
                                             'bytes': 223400,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -631,12 +631,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 2000},
                                         'exceeded': {
                                             'packets': 9091,
                                             'bytes': 581824,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 15000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -774,7 +774,7 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output5 = {'execute.return_value': '''
         Router#show policy-map interface gigabitEthernet 0/0/0
         Load for five secs: 1%/0%; one minute: 4%; five minutes: 5%
-        Time source is NTP, 14:58:52.473 JST Fri Oct 28 2016
+        Time source is NTP, 14:58:52.473 EST Fri Oct 28 2016
 
         GigabitEthernet0/0/0 
 
@@ -1365,7 +1365,7 @@ class test_show_policy_map_type(unittest.TestCase):
             PE1#show policy-map interface GigabitEthernet0/0/1
 
             Load for five secs: 3%/0%; one minute: 3%; five minutes: 2%
-            Time source is NTP, 17:47:15.313 JST Tue Apr 9 2019
+            Time source is NTP, 17:47:15.313 EST Tue Apr 9 2019
 
             GigabitEthernet0/0/1
 
@@ -1415,7 +1415,7 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output10 = {'execute.return_value': '''
         Router#show policy-map interface gigabitEthernet 0/1/1 output class class-default
         Load for five secs: 11%/0%; one minute: 5%; five minutes: 5%
-        Time source is NTP, 22:21:45.748 JST Fri Nov 4 2016
+        Time source is NTP, 22:21:45.748 EST Fri Nov 4 2016
 
         GigabitEthernet0/1/1 
 
@@ -1465,17 +1465,17 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1497,7 +1497,7 @@ class test_show_policy_map_type(unittest.TestCase):
         PE1#show policy-map interface TenGigabitEthernet 0/3/0.41 output
 
         Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
-        Time source is NTP, 17:42:14.490 JST Tue Apr 9 2019
+        Time source is NTP, 17:42:14.490 EST Tue Apr 9 2019
         
         TenGigabitEthernet0/3/0.41
 
@@ -1549,12 +1549,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'bc_bytes': 83619,
                                         'cir_bps': 445500,
                                         'conformed': {
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0,
                                             'bytes': 0,
                                             'packets': 0},
                                         'exceeded': {
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0,
                                             'bytes': 0,
                                             'packets': 0}},
@@ -1566,7 +1566,7 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output12 = {'execute.return_value': '''
             show policy-map interface gigabitEthernet 0/1/4 input class class-default
             Load for five secs: 1%/0%; one minute: 3%; five minutes: 3%
-            Time source is NTP, 12:22:26.378 JST Wed Oct 26 2016
+            Time source is NTP, 12:22:26.378 EST Wed Oct 26 2016
 
             GigabitEthernet0/1/4 
 
@@ -1606,7 +1606,7 @@ class test_show_policy_map_type(unittest.TestCase):
             PE1#show policy-map interface GigabitEthernet 0/0/1 input
 
             Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
-            Time source is NTP, 17:41:12.649 JST Tue Apr 9 2019
+            Time source is NTP, 17:41:12.649 EST Tue Apr 9 2019
 
             GigabitEthernet0/0/1
 
@@ -1637,7 +1637,7 @@ class test_show_policy_map_type(unittest.TestCase):
         PE1#show policy-map interface class TEST2
 
         Load for five secs: 4%/0%; one minute: 2%; five minutes: 2%
-        Time source is NTP, 18:05:19.663 JST Tue Apr 9 2019
+        Time source is NTP, 18:05:19.663 EST Tue Apr 9 2019
 
         GigabitEthernet0/0/1
 
@@ -1689,24 +1689,24 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'violated': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}}}}}}}}}
 
     golden_output15 = {'execute.return_value': '''
         PE1#show policy-map interface class VLAN51_QoS
 
         Load for five secs: 4%/0%; one minute: 3%; five minutes: 2%
-        Time source is NTP, 18:05:52.025 JST Tue Apr 9 2019
+        Time source is NTP, 18:05:52.025 EST Tue Apr 9 2019
 
         GigabitEthernet0/0/1
 
@@ -1761,12 +1761,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 22,
                                             'bytes': 1494,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 8,
                                             'bytes': 12144,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 1000}}},
                                 'class-default': {
                                     'match_evaluation': 'match-any',
@@ -1781,7 +1781,7 @@ class test_show_policy_map_type(unittest.TestCase):
     golden_output16 = {'execute.return_value': '''
             Router#show policy-map target service-group 1
             Load for five secs: 98%/0%; one minute: 98%; five minutes: 96%
-            Time source is NTP, 18:59:17.791 JST Wed Nov 9 2016
+            Time source is NTP, 18:59:17.791 EST Wed Nov 9 2016
 
                 Port-channel1: Service Group 1
 
@@ -1827,12 +1827,12 @@ class test_show_policy_map_type(unittest.TestCase):
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'transmit',
+                                            'actions': {"transmit": True},
                                             'bps': 0},
                                         'exceeded': {
                                             'packets': 0,
                                             'bytes': 0,
-                                            'actions': 'drop',
+                                            'actions': {"drop": True},
                                             'bps': 0}}}}}}},
                 'output': {
                     'policy_name': {
@@ -2018,6 +2018,7 @@ class test_show_policy_map_type(unittest.TestCase):
         #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output17)
 
+
 # =============================================
 # Unit test for :
 #    *'show policy map'
@@ -2044,7 +2045,7 @@ class test_show_policy_map(unittest.TestCase):
     golden_output1 = {'execute.return_value':'''
         Router#show policy-map shape-out
         Load for five secs: 1%/0%; one minute: 4%; five minutes: 4%
-        Time source is NTP, 22:28:37.624 JST Fri Nov 4 2016
+        Time source is NTP, 22:28:37.624 EST Fri Nov 4 2016
 
             Policy Map shape-out
                 Class class-default
@@ -2068,7 +2069,7 @@ class test_show_policy_map(unittest.TestCase):
 
         Router#show policy-map police-in
         Load for five secs: 11%/0%; one minute: 4%; five minutes: 4%
-        Time source is NTP, 07:03:58.319 JST Wed Oct 26 2016
+        Time source is NTP, 07:03:58.319 EST Wed Oct 26 2016
 
             Policy Map police-in
                 Class class-default

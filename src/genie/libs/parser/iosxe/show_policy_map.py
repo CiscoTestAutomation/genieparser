@@ -156,19 +156,25 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             'packets': int,
                                             'bytes': int,
                                             'bps': int,
-                                            'actions': str,
+                                            Optional('actions'): {
+                                                Any(): Or(bool, str),
+                                            }
                                         },
                                         Optional('exceeded'): {
                                             'packets': int,
                                             'bytes': int,
                                             'bps': int,
-                                            'actions': str,
+                                            Optional('actions'): {
+                                                Any(): Or(bool, str),
+                                            }
                                         },
                                         Optional('violated'): {
                                             'packets': int,
                                             'bytes': int,
                                             'bps': int,
-                                            'actions': str,
+                                            Optional('actions'): {
+                                                Any(): Or(bool, str),
+                                            }
                                         },
                                     },
                                 },
@@ -193,6 +199,8 @@ class ShowPolicyMapTypeSchema(MetaParser):
             },
         },
     }
+
+    BOOL_ACTION_LIST = ['drop', 'transmit', 'set_clp_transmit']
 
 
 # =====================================================================
@@ -315,7 +323,11 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # drop
         # transmit
         # start
-        p12 = re.compile(r'^(?P<action>(drop|transmit|start))$')
+        # set-qos-transmit 7
+        # set-mpls-exp-imposition-transmit 7
+        # set-dscp-transmit ef
+        # filter 'Queueing' and 'random-detect'
+        p12 = re.compile(r'^(?![Qr])(?P<action>[\w\-]+)( +(?P<value>[\w]+))?$')
 
         # QoS Set
         p13 = re.compile(r'^QoS +Set+$')
@@ -597,6 +609,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 conformed_dict = police_dict.setdefault('conformed', {})
                 conformed_dict['packets'] = int(m.groupdict()['packets'])
                 conformed_dict['bytes'] = int(m.groupdict()['bytes'])
+                conf_action_dict = conformed_dict.setdefault('actions', {})
                 continue
 
             # conformed 15 packets, 6210 bytes; action:transmit
@@ -605,7 +618,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 conformed_dict = police_dict.setdefault('conformed', {})
                 conformed_dict['packets'] = int(m.groupdict()['packets'])
                 conformed_dict['bytes'] = int(m.groupdict()['bytes'])
-                conformed_dict['actions'] = m.groupdict()['action']
+                conf_action_dict = conformed_dict.setdefault('actions', {})
+                action = m.groupdict()['action']
+                conf_action_dict.update({action: True})
                 continue
 
             # exceeded 0 packets, 0 bytes; actions:
@@ -617,6 +632,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['packets'] = int(m.groupdict()['packets'])
                 exceeded_dict['bytes'] = int(m.groupdict()['bytes'])
+                exc_action_dict = exceeded_dict.setdefault('actions', {})
                 continue
 
             # exceeded 5 packets, 5070 bytes; action:drop
@@ -625,7 +641,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['packets'] = int(m.groupdict()['packets'])
                 exceeded_dict['bytes'] = int(m.groupdict()['bytes'])
-                exceeded_dict['actions'] = m.groupdict()['action']
+                exc_action_dict = exceeded_dict.setdefault('actions', {})
+                action = m.groupdict()['action']
+                exc_action_dict.update({action: True})
                 continue
 
             # violated 0 packets, 0 bytes; action:drop
@@ -634,10 +652,12 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 violated_dict = police_dict.setdefault('violated', {})
                 violated_dict['packets'] = int(m.groupdict()['packets'])
                 violated_dict['bytes'] = int(m.groupdict()['bytes'])
-                violated_dict['actions'] = m.groupdict()['action']
+                viol_action_dict = violated_dict.setdefault('actions', {})
+                action = m.groupdict()['action']
+                viol_action_dict.update({action: True})
                 continue
 
-            # violated 0 packets, 0 bytes; action:
+            # violated 0 packets, 0 bytes; actions:
             m = p10_1.match(line)
             if m:
                 conformed_line = False
@@ -646,6 +666,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 violated_dict = police_dict.setdefault('violated', {})
                 violated_dict['packets'] = int(m.groupdict()['packets'])
                 violated_dict['bytes'] = int(m.groupdict()['bytes'])
+                viol_action_dict = violated_dict.setdefault('actions', {})
                 continue
 
             # conformed 0000 bps, exceeded 0000 bps
@@ -666,15 +687,25 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # drop
             # transmit
             # start
+            # set-qos-transmit 7
+            # set-mpls-exp-imposition-transmit 7
             m = p12.match(line)
             if m:
-                if conformed_line:
-                    conformed_dict['actions'] = m.groupdict()['action']
-                elif exceeded_line:
-                    exceeded_dict['actions'] = m.groupdict()['action']
-                elif violated_line:
-                    violated_dict['actions'] = m.groupdict()['action']
-                continue
+                action = m.groupdict()['action'].replace('-', '_')
+                if action in self.BOOL_ACTION_LIST:
+                    value = True
+                else:
+                    value = m.groupdict()['value']
+                try:
+                    if conformed_line:
+                        conf_action_dict.update({action: value})
+                    elif exceeded_line:
+                        exc_action_dict.update({action: value})
+                    elif violated_line:
+                        viol_action_dict.update({action: value})
+                    continue
+                except Exception as e:
+                    pass
 
             # QoS Set
             m = p13.match(line)

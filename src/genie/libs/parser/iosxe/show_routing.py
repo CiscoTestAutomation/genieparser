@@ -1227,10 +1227,10 @@ class ShowIpCef(ShowIpCefSchema):
         # initial return dictionary
         result_dict = {}
 
-        # 106.162.197.104/30
+        # 10.169.197.104/30
         # 2001:DB8:1:3::/64
         p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)$')
-        #     nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+        #     nexthop 10.169.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
         #     nexthop 10.1.2.2 GigabitEthernet2.100
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
@@ -1251,7 +1251,7 @@ class ShowIpCef(ShowIpCefSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 106.162.197.104/30
+            # 10.169.197.104/30
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1267,7 +1267,7 @@ class ShowIpCef(ShowIpCefSchema):
                                           setdefault(group['prefix'], {})
                 continue
 
-            #   nexthop 106.162.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
+            #   nexthop 10.169.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
             #   nexthop 10.1.2.2 GigabitEthernet2.100
             m = p2.match(line)
             if m:

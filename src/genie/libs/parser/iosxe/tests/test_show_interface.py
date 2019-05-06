@@ -1038,6 +1038,7 @@ class test_show_interfaces(unittest.TestCase):
        }
 
     }
+
     golden_output = {'execute.return_value': '''
         GigabitEthernet1/0/1 is administratively down, line protocol is down (disabled) 
           Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
@@ -1230,7 +1231,7 @@ class test_show_interfaces(unittest.TestCase):
 
     golden_interface_output = {'execute.return_value': '''
     CE1#show interfaces GigabitEthernet1
-GigabitEthernet1 is up, line protocol is up
+  GigabitEthernet1 is up, line protocol is up
   Hardware is CSR vNIC, address is 5e00.0001.0000 (bia 5e00.0001.0000)
   Internet address is 172.16.1.243/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
@@ -1259,8 +1260,8 @@ GigabitEthernet1 is up, line protocol is up
      0 lost carrier, 0 no carrier, 0 pause output
      0 output buffer failures, 0 output buffers swapped out
 
-    '''
-}
+    '''}
+
     golden_parsed_interface_output={
             "GigabitEthernet1": {
                 "rxload": "1/255",
@@ -1403,7 +1404,7 @@ Vlan15 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan101 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.101.1/24
+  Internet address is 172.16.205.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1426,7 +1427,7 @@ Vlan101 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan102 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.102.1/24
+  Internet address is 172.16.106.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1449,7 +1450,7 @@ Vlan102 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan103 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.103.1/24
+  Internet address is 172.16.9.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1472,7 +1473,7 @@ Vlan103 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan104 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.104.1/24
+  Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1495,7 +1496,7 @@ Vlan104 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan105 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.105.1/24
+  Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1518,7 +1519,7 @@ Vlan105 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan106 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.106.1/24
+  Internet address is 172.16.240.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1541,7 +1542,7 @@ Vlan106 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan107 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.107.1/24
+  Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1564,7 +1565,7 @@ Vlan107 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan108 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.108.1/24
+  Internet address is 172.16.64.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1587,7 +1588,7 @@ Vlan108 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan109 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.109.1/24
+  Internet address is 172.16.234.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1610,7 +1611,7 @@ Vlan109 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan110 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.110.1/24
+  Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1633,7 +1634,7 @@ Vlan110 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan111 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.111.1/24
+  Internet address is 172.16.70.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1656,7 +1657,7 @@ Vlan111 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan112 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.112.1/24
+  Internet address is 172.16.246.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1679,7 +1680,7 @@ Vlan112 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan113 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.113.1/24
+  Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1702,7 +1703,7 @@ Vlan113 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan114 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.114.1/24
+  Internet address is 172.16.94.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1725,7 +1726,7 @@ Vlan114 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan115 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.115.1/24
+  Internet address is 172.16.21.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1748,7 +1749,7 @@ Last clearing of "show interface" counters never
      0 output buffer failures, 0 output buffers swapped out
 Vlan116 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.116.1/24
+  Internet address is 172.16.205.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1771,7 +1772,7 @@ Vlan116 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan117 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.117.1/24
+  Internet address is 172.16.136.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1794,7 +1795,7 @@ Vlan117 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan118 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.118.1/24
+  Internet address is 172.16.69.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1817,7 +1818,7 @@ Vlan118 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan119 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.119.1/24
+  Internet address is 172.16.4.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1840,7 +1841,7 @@ Vlan119 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan120 is up, line protocol is up , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.120.1/24
+  Internet address is 172.16.196.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1863,7 +1864,7 @@ Vlan120 is up, line protocol is up , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan121 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.121.1/24
+  Internet address is 172.16.135.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1886,7 +1887,7 @@ Vlan121 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan122 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.122.1/24
+  Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1909,7 +1910,7 @@ Vlan122 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan123 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.123.1/24
+  Internet address is 172.16.19.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1932,7 +1933,7 @@ Vlan123 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan124 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.124.1/24
+  Internet address is 172.16.219.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1955,7 +1956,7 @@ Vlan124 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan125 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.125.1/24
+  Internet address is 172.16.166.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -1978,7 +1979,7 @@ Vlan125 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan126 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.126.1/24
+  Internet address is 172.16.115.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2001,7 +2002,7 @@ Vlan126 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan127 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.127.1/24
+  Internet address is 172.16.66.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2024,7 +2025,7 @@ Vlan127 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan128 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.128.1/24
+  Internet address is 172.16.19.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2047,7 +2048,7 @@ Vlan128 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan129 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.129.1/24
+  Internet address is 172.16.229.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2070,7 +2071,7 @@ Vlan129 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan130 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.130.1/24
+  Internet address is 172.16.186.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2093,7 +2094,7 @@ Vlan130 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan131 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.131.1/24
+  Internet address is 172.16.145.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2116,7 +2117,7 @@ Vlan131 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan132 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.132.1/24
+  Internet address is 172.16.106.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2139,7 +2140,7 @@ Vlan132 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan133 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.133.1/24
+  Internet address is 172.16.69.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2162,7 +2163,7 @@ Vlan133 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan134 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.134.1/24
+  Internet address is 172.16.34.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2185,7 +2186,7 @@ Vlan134 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan135 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.135.1/24
+  Internet address is 172.16.1.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2208,7 +2209,7 @@ Vlan135 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan136 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.136.1/24
+  Internet address is 172.16.225.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2231,7 +2232,7 @@ Vlan136 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan137 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.137.1/24
+  Internet address is 172.16.196.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2254,7 +2255,7 @@ Vlan137 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan138 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.138.1/24
+  Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2277,7 +2278,7 @@ Vlan138 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan139 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.139.1/24
+  Internet address is 172.16.144.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2300,7 +2301,7 @@ Vlan139 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 Vlan140 is up, line protocol is down , Autostate Enabled
   Hardware is Ethernet SVI, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 191.168.140.1/24
+  Internet address is 172.16.121.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -2323,7 +2324,7 @@ Vlan140 is up, line protocol is down , Autostate Enabled
      0 output buffer failures, 0 output buffers swapped out
 GigabitEthernet0/0 is up, line protocol is up 
   Hardware is RP management port, address is 70b3.1760.0500 (bia 70b3.1760.0500)
-  Internet address is 1.2.1.20/16
+  Internet address is 10.9.1.20/16
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -3335,7 +3336,7 @@ HundredGigE1/0/35 is up, line protocol is up (connected)
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/35.1 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.101.1/24
+  Internet address is 172.16.19.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  501.
@@ -3346,7 +3347,7 @@ HundredGigE1/0/35.1 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.2 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.102.1/24
+  Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  502.
@@ -3357,7 +3358,7 @@ HundredGigE1/0/35.2 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.3 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.103.1/24
+  Internet address is 172.16.135.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  503.
@@ -3368,7 +3369,7 @@ HundredGigE1/0/35.3 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.4 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.104.1/24
+  Internet address is 172.16.196.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  504.
@@ -3379,7 +3380,7 @@ HundredGigE1/0/35.4 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.5 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.105.1/24
+  Internet address is 172.16.4.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  505.
@@ -3390,7 +3391,7 @@ HundredGigE1/0/35.5 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.6 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.106.1/24
+  Internet address is 172.16.69.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  506.
@@ -3401,7 +3402,7 @@ HundredGigE1/0/35.6 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.7 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.107.1/24
+  Internet address is 172.16.136.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  507.
@@ -3412,7 +3413,7 @@ HundredGigE1/0/35.7 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.8 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.108.1/24
+  Internet address is 172.16.205.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  508.
@@ -3423,7 +3424,7 @@ HundredGigE1/0/35.8 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.9 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.109.1/24
+  Internet address is 172.16.21.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  509.
@@ -3434,7 +3435,7 @@ HundredGigE1/0/35.9 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.10 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.110.1/24
+  Internet address is 172.16.94.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  510.
@@ -3445,7 +3446,7 @@ HundredGigE1/0/35.10 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.11 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.111.1/24
+  Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  511.
@@ -3456,7 +3457,7 @@ HundredGigE1/0/35.11 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.12 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.112.1/24
+  Internet address is 172.16.246.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  512.
@@ -3467,7 +3468,7 @@ HundredGigE1/0/35.12 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.13 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.113.1/24
+  Internet address is 172.16.70.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  513.
@@ -3478,7 +3479,7 @@ HundredGigE1/0/35.13 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.14 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.114.1/24
+  Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  514.
@@ -3489,7 +3490,7 @@ HundredGigE1/0/35.14 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.15 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.115.1/24
+  Internet address is 172.16.234.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  515.
@@ -3500,7 +3501,7 @@ HundredGigE1/0/35.15 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.16 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.116.1/24
+  Internet address is 172.16.64.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  516.
@@ -3511,7 +3512,7 @@ HundredGigE1/0/35.16 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.17 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.117.1/24
+  Internet address is 172.16.151.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  517.
@@ -3522,7 +3523,7 @@ HundredGigE1/0/35.17 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.18 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.118.1/24
+  Internet address is 172.16.240.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  518.
@@ -3533,7 +3534,7 @@ HundredGigE1/0/35.18 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.19 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.119.1/24
+  Internet address is 172.16.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  519.
@@ -3544,7 +3545,7 @@ HundredGigE1/0/35.19 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.20 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 181.1.120.1/24
+  Internet address is 172.16.169.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  520.
@@ -3555,7 +3556,7 @@ HundredGigE1/0/35.20 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.101 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.1.1/24
+  Internet address is 192.168.9.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  101.
@@ -3566,7 +3567,7 @@ HundredGigE1/0/35.101 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.102 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.2.1/24
+  Internet address is 192.168.106.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  102.
@@ -3577,7 +3578,7 @@ HundredGigE1/0/35.102 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.103 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.3.1/24
+  Internet address is 192.168.205.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  103.
@@ -3588,7 +3589,7 @@ HundredGigE1/0/35.103 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.104 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.4.1/24
+  Internet address is 192.168.51.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  104.
@@ -3599,7 +3600,7 @@ HundredGigE1/0/35.104 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.105 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.5.1/24
+  Internet address is 192.168.154.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
@@ -3610,7 +3611,7 @@ HundredGigE1/0/35.105 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.106 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.6.1/24
+  Internet address is 192.168.4.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  106.
@@ -3621,7 +3622,7 @@ HundredGigE1/0/35.106 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.107 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.7.1/24
+  Internet address is 192.168.111.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  107.
@@ -3632,7 +3633,7 @@ HundredGigE1/0/35.107 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.108 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.8.1/24
+  Internet address is 192.168.220.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  108.
@@ -3643,7 +3644,7 @@ HundredGigE1/0/35.108 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.109 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.9.1/24
+  Internet address is 192.168.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  109.
@@ -3654,7 +3655,7 @@ HundredGigE1/0/35.109 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/35.110 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.101.10.1/24
+  Internet address is 192.168.189.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  110.
@@ -3810,7 +3811,7 @@ HundredGigE1/0/40 is down, line protocol is down (notconnect)
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/41 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 170.1.1.2/24
+  Internet address is 172.16.4.2/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
@@ -4014,7 +4015,7 @@ HundredGigE1/0/47 is down, line protocol is down (notconnect)
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/48 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 171.1.1.2/24
+  Internet address is 172.16.94.2/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
@@ -4044,7 +4045,7 @@ HundredGigE1/0/48 is up, line protocol is up (connected)
      0 output buffer failures, 0 output buffers swapped out
 HundredGigE1/0/48.1 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.2.1.1/24
+  Internet address is 192.168.51.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  201.
@@ -4055,7 +4056,7 @@ HundredGigE1/0/48.1 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.2 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.3.1.1/24
+  Internet address is 192.168.205.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  202.
@@ -4066,7 +4067,7 @@ HundredGigE1/0/48.2 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.3 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.4.1.1/24
+  Internet address is 192.168.106.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  203.
@@ -4077,7 +4078,7 @@ HundredGigE1/0/48.3 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.4 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.5.1.1/24
+  Internet address is 192.168.9.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  204.
@@ -4088,7 +4089,7 @@ HundredGigE1/0/48.4 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.5 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.6.1.1/24
+  Internet address is 192.168.169.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  205.
@@ -4099,7 +4100,7 @@ HundredGigE1/0/48.5 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.6 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.7.1.1/24
+  Internet address is 192.168.76.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  206.
@@ -4110,7 +4111,7 @@ HundredGigE1/0/48.6 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.7 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.8.1.1/24
+  Internet address is 192.168.240.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  207.
@@ -4121,7 +4122,7 @@ HundredGigE1/0/48.7 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.8 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.9.1.1/24
+  Internet address is 192.168.151.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  208.
@@ -4132,7 +4133,7 @@ HundredGigE1/0/48.8 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.9 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.10.1.1/24
+  Internet address is 192.168.64.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  209.
@@ -4143,7 +4144,7 @@ HundredGigE1/0/48.9 is up, line protocol is up (connected)
   Last clearing of "show interface" counters never
 HundredGigE1/0/48.10 is up, line protocol is up (connected) 
   Hardware is Hundred Gigabit Ethernet, address is 70b3.1760.059f (bia 70b3.1760.059f)
-  Internet address is 201.11.1.1/24
+  Internet address is 192.168.234.1/24
   MTU 1500 bytes, BW 100000000 Kbit/sec, DLY 10 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation 802.1Q Virtual LAN, Vlan ID  210.
@@ -4210,7 +4211,7 @@ Port-channel2 is up, line protocol is up (connected)
      0 output buffer failures, 0 output buffers swapped out
 Loopback1 is up, line protocol is up 
   Hardware is Loopback
-  Internet address is 201.1.1.1/32
+  Internet address is 192.168.154.1/32
   MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation LOOPBACK, loopback not set
@@ -4253,7 +4254,7 @@ Loopback10 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Loopback101 is up, line protocol is up 
   Hardware is Loopback
-  Internet address is 101.1.1.2/32
+  Internet address is 10.204.1.2/32
   MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation LOOPBACK, loopback not set
@@ -4275,7 +4276,7 @@ Loopback101 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Loopback102 is up, line protocol is up 
   Hardware is Loopback
-  Internet address is 101.2.1.2/32
+  Internet address is 10.154.1.2/32
   MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation LOOPBACK, loopback not set
@@ -4331,13 +4332,13 @@ Tunnel0 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel1 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.3.1.1/24
+  Internet address is 172.16.25.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel1 source tracking subblock associated with Loopback102
@@ -4366,13 +4367,13 @@ Tunnel1 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel2 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.4.1.1/24
+  Internet address is 172.16.121.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel2 source tracking subblock associated with Loopback102
@@ -4401,13 +4402,13 @@ Tunnel2 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel3 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.5.1.1/24
+  Internet address is 172.16.219.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel3 source tracking subblock associated with Loopback102
@@ -4436,13 +4437,13 @@ Tunnel3 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel4 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.6.1.1/24
+  Internet address is 172.16.64.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel4 source tracking subblock associated with Loopback102
@@ -4471,13 +4472,13 @@ Tunnel4 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel5 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.7.1.1/24
+  Internet address is 172.16.166.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel5 source tracking subblock associated with Loopback102
@@ -4506,13 +4507,13 @@ Tunnel5 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel6 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.8.1.1/24
+  Internet address is 172.16.15.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel6 source tracking subblock associated with Loopback102
@@ -4541,13 +4542,13 @@ Tunnel6 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel7 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.9.1.1/24
+  Internet address is 172.16.121.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel7 source tracking subblock associated with Loopback102
@@ -4576,13 +4577,13 @@ Tunnel7 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel8 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.10.1.1/24
+  Internet address is 172.16.229.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel8 source tracking subblock associated with Loopback102
@@ -4611,13 +4612,13 @@ Tunnel8 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel9 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.11.1.1/24
+  Internet address is 172.16.84.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel9 source tracking subblock associated with Loopback102
@@ -4646,13 +4647,13 @@ Tunnel9 is up, line protocol is up
      0 output buffer failures, 0 output buffers swapped out
 Tunnel10 is up, line protocol is up 
   Hardware is Tunnel
-  Internet address is 171.2.1.1/24
+  Internet address is 172.16.186.1/24
   MTU 17868 bytes, BW 100 Kbit/sec, DLY 50000 usec, 
      reliability 255/255, txload 40/255, rxload 135/255
   Encapsulation TUNNEL, loopback not set
   Keepalive not set
   Tunnel linestate evaluation up
-  Tunnel source 101.2.1.2 (Loopback102), destination 101.2.1.1
+  Tunnel source 10.154.1.2 (Loopback102), destination 10.154.1.1
    Tunnel Subblocks:
       src-track:
          Tunnel10 source tracking subblock associated with Loopback102
@@ -4736,8 +4737,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.10.1.1/24': {
-            'ip': '171.10.1.1',
+        '172.16.229.1/24': {
+            'ip': '172.16.229.1',
             'prefix_length': '24',
             },
         },
@@ -4765,8 +4766,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.109.1/24': {
-            'ip': '181.1.109.1',
+        '172.16.21.1/24': {
+            'ip': '172.16.21.1',
             'prefix_length': '24',
             },
         },
@@ -4882,8 +4883,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.112.1/24': {
-            'ip': '181.1.112.1',
+        '172.16.246.1/24': {
+            'ip': '172.16.246.1',
             'prefix_length': '24',
             },
         },
@@ -4958,8 +4959,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.138.1/24': {
-            'ip': '191.168.138.1',
+        '172.16.169.1/24': {
+            'ip': '172.16.169.1',
             'prefix_length': '24',
             },
         },
@@ -5205,8 +5206,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.113.1/24': {
-            'ip': '191.168.113.1',
+        '172.16.169.1/24': {
+            'ip': '172.16.169.1',
             'prefix_length': '24',
             },
         },
@@ -5452,8 +5453,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.125.1/24': {
-            'ip': '191.168.125.1',
+        '172.16.166.1/24': {
+            'ip': '172.16.166.1',
             'prefix_length': '24',
             },
         },
@@ -5479,8 +5480,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.105.1/24': {
-            'ip': '181.1.105.1',
+        '172.16.4.1/24': {
+            'ip': '172.16.4.1',
             'prefix_length': '24',
             },
         },
@@ -5596,8 +5597,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.4.1.1/24': {
-            'ip': '201.4.1.1',
+        '192.168.106.1/24': {
+            'ip': '192.168.106.1',
             'prefix_length': '24',
             },
         },
@@ -5732,8 +5733,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.11.1.1/24': {
-            'ip': '171.11.1.1',
+        '172.16.84.1/24': {
+            'ip': '172.16.84.1',
             'prefix_length': '24',
             },
         },
@@ -5761,8 +5762,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.6.1/24': {
-            'ip': '201.101.6.1',
+        '192.168.4.1/24': {
+            'ip': '192.168.4.1',
             'prefix_length': '24',
             },
         },
@@ -5837,8 +5838,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.132.1/24': {
-            'ip': '191.168.132.1',
+        '172.16.106.1/24': {
+            'ip': '172.16.106.1',
             'prefix_length': '24',
             },
         },
@@ -5864,8 +5865,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.7.1.1/24': {
-            'ip': '201.7.1.1',
+        '192.168.76.1/24': {
+            'ip': '192.168.76.1',
             'prefix_length': '24',
             },
         },
@@ -5894,8 +5895,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.8.1.1/24': {
-            'ip': '201.8.1.1',
+        '192.168.240.1/24': {
+            'ip': '192.168.240.1',
             'prefix_length': '24',
             },
         },
@@ -6057,8 +6058,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.118.1/24': {
-            'ip': '191.168.118.1',
+        '172.16.69.1/24': {
+            'ip': '172.16.69.1',
             'prefix_length': '24',
             },
         },
@@ -6130,8 +6131,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.101.1/24': {
-            'ip': '191.168.101.1',
+        '172.16.205.1/24': {
+            'ip': '172.16.205.1',
             'prefix_length': '24',
             },
         },
@@ -6290,8 +6291,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.112.1/24': {
-            'ip': '191.168.112.1',
+        '172.16.246.1/24': {
+            'ip': '172.16.246.1',
             'prefix_length': '24',
             },
         },
@@ -6578,8 +6579,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.115.1/24': {
-            'ip': '181.1.115.1',
+        '172.16.234.1/24': {
+            'ip': '172.16.234.1',
             'prefix_length': '24',
             },
         },
@@ -6654,8 +6655,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.105.1/24': {
-            'ip': '191.168.105.1',
+        '172.16.76.1/24': {
+            'ip': '172.16.76.1',
             'prefix_length': '24',
             },
         },
@@ -6901,8 +6902,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.104.1/24': {
-            'ip': '191.168.104.1',
+        '172.16.169.1/24': {
+            'ip': '172.16.169.1',
             'prefix_length': '24',
             },
         },
@@ -6974,8 +6975,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.128.1/24': {
-            'ip': '191.168.128.1',
+        '172.16.19.1/24': {
+            'ip': '172.16.19.1',
             'prefix_length': '24',
             },
         },
@@ -7043,8 +7044,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '101.2.1.2/32': {
-            'ip': '101.2.1.2',
+        '10.154.1.2/32': {
+            'ip': '10.154.1.2',
             'prefix_length': '32',
             },
         },
@@ -7292,8 +7293,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.114.1/24': {
-            'ip': '191.168.114.1',
+        '172.16.94.1/24': {
+            'ip': '172.16.94.1',
             'prefix_length': '24',
             },
         },
@@ -7406,8 +7407,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.5.1/24': {
-            'ip': '201.101.5.1',
+        '192.168.154.1/24': {
+            'ip': '192.168.154.1',
             'prefix_length': '24',
             },
         },
@@ -7519,8 +7520,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.4.1/24': {
-            'ip': '201.101.4.1',
+        '192.168.51.1/24': {
+            'ip': '192.168.51.1',
             'prefix_length': '24',
             },
         },
@@ -7723,8 +7724,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.2.1/24': {
-            'ip': '201.101.2.1',
+        '192.168.106.1/24': {
+            'ip': '192.168.106.1',
             'prefix_length': '24',
             },
         },
@@ -7840,8 +7841,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.107.1/24': {
-            'ip': '181.1.107.1',
+        '172.16.136.1/24': {
+            'ip': '172.16.136.1',
             'prefix_length': '24',
             },
         },
@@ -7933,8 +7934,8 @@ Tunnel10 is up, line protocol is up
     'oper_status': 'up',
     'mac_address': '70b3.1760.0500',
     'ipv4': {
-        '1.2.1.20/16': {
-            'ip': '1.2.1.20',
+        '10.9.1.20/16': {
+            'ip': '10.9.1.20',
             'prefix_length': '16',
             },
         },
@@ -8002,8 +8003,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.5.1.1/24': {
-            'ip': '171.5.1.1',
+        '172.16.219.1/24': {
+            'ip': '172.16.219.1',
             'prefix_length': '24',
             },
         },
@@ -8077,8 +8078,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.108.1/24': {
-            'ip': '191.168.108.1',
+        '172.16.64.1/24': {
+            'ip': '172.16.64.1',
             'prefix_length': '24',
             },
         },
@@ -8104,8 +8105,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.117.1/24': {
-            'ip': '181.1.117.1',
+        '172.16.151.1/24': {
+            'ip': '172.16.151.1',
             'prefix_length': '24',
             },
         },
@@ -8134,8 +8135,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.101.1/24': {
-            'ip': '181.1.101.1',
+        '172.16.19.1/24': {
+            'ip': '172.16.19.1',
             'prefix_length': '24',
             },
         },
@@ -8205,8 +8206,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.7.1.1/24': {
-            'ip': '171.7.1.1',
+        '172.16.166.1/24': {
+            'ip': '172.16.166.1',
             'prefix_length': '24',
             },
         },
@@ -8541,8 +8542,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.111.1/24': {
-            'ip': '191.168.111.1',
+        '172.16.70.1/24': {
+            'ip': '172.16.70.1',
             'prefix_length': '24',
             },
         },
@@ -8609,8 +8610,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.4.1.1/24': {
-            'ip': '171.4.1.1',
+        '172.16.121.1/24': {
+            'ip': '172.16.121.1',
             'prefix_length': '24',
             },
         },
@@ -8684,8 +8685,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.103.1/24': {
-            'ip': '191.168.103.1',
+        '172.16.9.1/24': {
+            'ip': '172.16.9.1',
             'prefix_length': '24',
             },
         },
@@ -8757,8 +8758,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.135.1/24': {
-            'ip': '191.168.135.1',
+        '172.16.1.1/24': {
+            'ip': '172.16.1.1',
             'prefix_length': '24',
             },
         },
@@ -8864,8 +8865,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.6.1.1/24': {
-            'ip': '201.6.1.1',
+        '192.168.169.1/24': {
+            'ip': '192.168.169.1',
             'prefix_length': '24',
             },
         },
@@ -8940,8 +8941,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.140.1/24': {
-            'ip': '191.168.140.1',
+        '172.16.121.1/24': {
+            'ip': '172.16.121.1',
             'prefix_length': '24',
             },
         },
@@ -9013,8 +9014,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.106.1/24': {
-            'ip': '191.168.106.1',
+        '172.16.240.1/24': {
+            'ip': '172.16.240.1',
             'prefix_length': '24',
             },
         },
@@ -9086,8 +9087,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.102.1/24': {
-            'ip': '191.168.102.1',
+        '172.16.106.1/24': {
+            'ip': '172.16.106.1',
             'prefix_length': '24',
             },
         },
@@ -9154,8 +9155,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.9.1.1/24': {
-            'ip': '171.9.1.1',
+        '172.16.121.1/24': {
+            'ip': '172.16.121.1',
             'prefix_length': '24',
             },
         },
@@ -9312,8 +9313,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '101.1.1.2/32': {
-            'ip': '101.1.1.2',
+        '10.204.1.2/32': {
+            'ip': '10.204.1.2',
             'prefix_length': '32',
             },
         },
@@ -9341,8 +9342,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.3.1.1/24': {
-            'ip': '201.3.1.1',
+        '192.168.205.1/24': {
+            'ip': '192.168.205.1',
             'prefix_length': '24',
             },
         },
@@ -9523,8 +9524,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.10.1/24': {
-            'ip': '201.101.10.1',
+        '192.168.189.1/24': {
+            'ip': '192.168.189.1',
             'prefix_length': '24',
             },
         },
@@ -9599,8 +9600,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.136.1/24': {
-            'ip': '191.168.136.1',
+        '172.16.225.1/24': {
+            'ip': '172.16.225.1',
             'prefix_length': '24',
             },
         },
@@ -9841,8 +9842,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.3.1.1/24': {
-            'ip': '171.3.1.1',
+        '172.16.25.1/24': {
+            'ip': '172.16.25.1',
             'prefix_length': '24',
             },
         },
@@ -9911,8 +9912,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '135/255',
     'ipv4': {
-        '171.2.1.1/24': {
-            'ip': '171.2.1.1',
+        '172.16.186.1/24': {
+            'ip': '172.16.186.1',
             'prefix_length': '24',
             },
         },
@@ -9940,8 +9941,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.119.1/24': {
-            'ip': '181.1.119.1',
+        '172.16.76.1/24': {
+            'ip': '172.16.76.1',
             'prefix_length': '24',
             },
         },
@@ -10057,8 +10058,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.110.1/24': {
-            'ip': '181.1.110.1',
+        '172.16.94.1/24': {
+            'ip': '172.16.94.1',
             'prefix_length': '24',
             },
         },
@@ -10133,8 +10134,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.122.1/24': {
-            'ip': '191.168.122.1',
+        '172.16.76.1/24': {
+            'ip': '172.16.76.1',
             'prefix_length': '24',
             },
         },
@@ -10293,8 +10294,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.130.1/24': {
-            'ip': '191.168.130.1',
+        '172.16.186.1/24': {
+            'ip': '172.16.186.1',
             'prefix_length': '24',
             },
         },
@@ -10494,8 +10495,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.1.1/24': {
-            'ip': '201.101.1.1',
+        '192.168.9.1/24': {
+            'ip': '192.168.9.1',
             'prefix_length': '24',
             },
         },
@@ -10570,8 +10571,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.127.1/24': {
-            'ip': '191.168.127.1',
+        '172.16.66.1/24': {
+            'ip': '172.16.66.1',
             'prefix_length': '24',
             },
         },
@@ -10597,8 +10598,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.106.1/24': {
-            'ip': '181.1.106.1',
+        '172.16.69.1/24': {
+            'ip': '172.16.69.1',
             'prefix_length': '24',
             },
         },
@@ -10801,8 +10802,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.3.1/24': {
-            'ip': '201.101.3.1',
+        '192.168.205.1/24': {
+            'ip': '192.168.205.1',
             'prefix_length': '24',
             },
         },
@@ -10831,8 +10832,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.104.1/24': {
-            'ip': '181.1.104.1',
+        '172.16.196.1/24': {
+            'ip': '172.16.196.1',
             'prefix_length': '24',
             },
         },
@@ -10902,8 +10903,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.6.1.1/24': {
-            'ip': '171.6.1.1',
+        '172.16.64.1/24': {
+            'ip': '172.16.64.1',
             'prefix_length': '24',
             },
         },
@@ -10931,8 +10932,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.10.1.1/24': {
-            'ip': '201.10.1.1',
+        '192.168.64.1/24': {
+            'ip': '192.168.64.1',
             'prefix_length': '24',
             },
         },
@@ -10961,8 +10962,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.113.1/24': {
-            'ip': '181.1.113.1',
+        '172.16.70.1/24': {
+            'ip': '172.16.70.1',
             'prefix_length': '24',
             },
         },
@@ -11037,8 +11038,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.109.1/24': {
-            'ip': '191.168.109.1',
+        '172.16.234.1/24': {
+            'ip': '172.16.234.1',
             'prefix_length': '24',
             },
         },
@@ -11106,8 +11107,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.1.1.1/32': {
-            'ip': '201.1.1.1',
+        '192.168.154.1/32': {
+            'ip': '192.168.154.1',
             'prefix_length': '32',
             },
         },
@@ -11218,8 +11219,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.9.1/24': {
-            'ip': '201.101.9.1',
+        '192.168.76.1/24': {
+            'ip': '192.168.76.1',
             'prefix_length': '24',
             },
         },
@@ -11294,8 +11295,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.124.1/24': {
-            'ip': '191.168.124.1',
+        '172.16.219.1/24': {
+            'ip': '172.16.219.1',
             'prefix_length': '24',
             },
         },
@@ -11367,8 +11368,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.110.1/24': {
-            'ip': '191.168.110.1',
+        '172.16.151.1/24': {
+            'ip': '172.16.151.1',
             'prefix_length': '24',
             },
         },
@@ -11568,8 +11569,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.102.1/24': {
-            'ip': '181.1.102.1',
+        '172.16.76.1/24': {
+            'ip': '172.16.76.1',
             'prefix_length': '24',
             },
         },
@@ -11644,8 +11645,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.137.1/24': {
-            'ip': '191.168.137.1',
+        '172.16.196.1/24': {
+            'ip': '172.16.196.1',
             'prefix_length': '24',
             },
         },
@@ -11671,8 +11672,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.5.1.1/24': {
-            'ip': '201.5.1.1',
+        '192.168.9.1/24': {
+            'ip': '192.168.9.1',
             'prefix_length': '24',
             },
         },
@@ -11701,8 +11702,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.118.1/24': {
-            'ip': '181.1.118.1',
+        '172.16.240.1/24': {
+            'ip': '172.16.240.1',
             'prefix_length': '24',
             },
         },
@@ -11777,8 +11778,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.120.1/24': {
-            'ip': '191.168.120.1',
+        '172.16.196.1/24': {
+            'ip': '172.16.196.1',
             'prefix_length': '24',
             },
         },
@@ -11865,8 +11866,8 @@ Tunnel10 is up, line protocol is up
     'oper_status': 'up',
     'mac_address': '70b3.1760.059f',
     'ipv4': {
-        '171.1.1.2/24': {
-            'ip': '171.1.1.2',
+        '172.16.94.2/24': {
+            'ip': '172.16.94.2',
             'prefix_length': '24',
             },
         },
@@ -11939,8 +11940,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.134.1/24': {
-            'ip': '191.168.134.1',
+        '172.16.34.1/24': {
+            'ip': '172.16.34.1',
             'prefix_length': '24',
             },
         },
@@ -12012,8 +12013,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.133.1/24': {
-            'ip': '191.168.133.1',
+        '172.16.69.1/24': {
+            'ip': '172.16.69.1',
             'prefix_length': '24',
             },
         },
@@ -12039,8 +12040,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.120.1/24': {
-            'ip': '181.1.120.1',
+        '172.16.169.1/24': {
+            'ip': '172.16.169.1',
             'prefix_length': '24',
             },
         },
@@ -12115,8 +12116,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.121.1/24': {
-            'ip': '191.168.121.1',
+        '172.16.135.1/24': {
+            'ip': '172.16.135.1',
             'prefix_length': '24',
             },
         },
@@ -12183,8 +12184,8 @@ Tunnel10 is up, line protocol is up
         },
     'rxload': '1/255',
     'ipv4': {
-        '171.8.1.1/24': {
-            'ip': '171.8.1.1',
+        '172.16.15.1/24': {
+            'ip': '172.16.15.1',
             'prefix_length': '24',
             },
         },
@@ -12212,8 +12213,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.2.1.1/24': {
-            'ip': '201.2.1.1',
+        '192.168.51.1/24': {
+            'ip': '192.168.51.1',
             'prefix_length': '24',
             },
         },
@@ -12483,8 +12484,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.8.1/24': {
-            'ip': '201.101.8.1',
+        '192.168.220.1/24': {
+            'ip': '192.168.220.1',
             'prefix_length': '24',
             },
         },
@@ -12600,8 +12601,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.103.1/24': {
-            'ip': '181.1.103.1',
+        '172.16.135.1/24': {
+            'ip': '172.16.135.1',
             'prefix_length': '24',
             },
         },
@@ -12804,8 +12805,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.114.1/24': {
-            'ip': '181.1.114.1',
+        '172.16.151.1/24': {
+            'ip': '172.16.151.1',
             'prefix_length': '24',
             },
         },
@@ -12880,8 +12881,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.131.1/24': {
-            'ip': '191.168.131.1',
+        '172.16.145.1/24': {
+            'ip': '172.16.145.1',
             'prefix_length': '24',
             },
         },
@@ -12953,8 +12954,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.119.1/24': {
-            'ip': '191.168.119.1',
+        '172.16.4.1/24': {
+            'ip': '172.16.4.1',
             'prefix_length': '24',
             },
         },
@@ -13150,8 +13151,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.9.1.1/24': {
-            'ip': '201.9.1.1',
+        '192.168.151.1/24': {
+            'ip': '192.168.151.1',
             'prefix_length': '24',
             },
         },
@@ -13310,8 +13311,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.117.1/24': {
-            'ip': '191.168.117.1',
+        '172.16.136.1/24': {
+            'ip': '172.16.136.1',
             'prefix_length': '24',
             },
         },
@@ -13337,8 +13338,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.108.1/24': {
-            'ip': '181.1.108.1',
+        '172.16.205.1/24': {
+            'ip': '172.16.205.1',
             'prefix_length': '24',
             },
         },
@@ -13413,8 +13414,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.139.1/24': {
-            'ip': '191.168.139.1',
+        '172.16.144.1/24': {
+            'ip': '172.16.144.1',
             'prefix_length': '24',
             },
         },
@@ -13553,8 +13554,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.107.1/24': {
-            'ip': '191.168.107.1',
+        '172.16.151.1/24': {
+            'ip': '172.16.151.1',
             'prefix_length': '24',
             },
         },
@@ -13580,8 +13581,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.11.1.1/24': {
-            'ip': '201.11.1.1',
+        '192.168.234.1/24': {
+            'ip': '192.168.234.1',
             'prefix_length': '24',
             },
         },
@@ -13610,8 +13611,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '201.101.7.1/24': {
-            'ip': '201.101.7.1',
+        '192.168.111.1/24': {
+            'ip': '192.168.111.1',
             'prefix_length': '24',
             },
         },
@@ -13860,8 +13861,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.115.1/24': {
-            'ip': '191.168.115.1',
+        '172.16.21.1/24': {
+            'ip': '172.16.21.1',
             'prefix_length': '24',
             },
         },
@@ -13933,8 +13934,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.129.1/24': {
-            'ip': '191.168.129.1',
+        '172.16.229.1/24': {
+            'ip': '172.16.229.1',
             'prefix_length': '24',
             },
         },
@@ -14021,8 +14022,8 @@ Tunnel10 is up, line protocol is up
     'oper_status': 'up',
     'mac_address': '70b3.1760.059f',
     'ipv4': {
-        '170.1.1.2/24': {
-            'ip': '170.1.1.2',
+        '172.16.4.2/24': {
+            'ip': '172.16.4.2',
             'prefix_length': '24',
             },
         },
@@ -14048,8 +14049,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.111.1/24': {
-            'ip': '181.1.111.1',
+        '172.16.169.1/24': {
+            'ip': '172.16.169.1',
             'prefix_length': '24',
             },
         },
@@ -14078,8 +14079,8 @@ Tunnel10 is up, line protocol is up
     'rxload': '1/255',
     'keepalive': 10,
     'ipv4': {
-        '181.1.116.1/24': {
-            'ip': '181.1.116.1',
+        '172.16.64.1/24': {
+            'ip': '172.16.64.1',
             'prefix_length': '24',
             },
         },
@@ -14154,8 +14155,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'up',
     'ipv4': {
-        '191.168.116.1/24': {
-            'ip': '191.168.116.1',
+        '172.16.205.1/24': {
+            'ip': '172.16.205.1',
             'prefix_length': '24',
             },
         },
@@ -14227,8 +14228,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.123.1/24': {
-            'ip': '191.168.123.1',
+        '172.16.19.1/24': {
+            'ip': '172.16.19.1',
             'prefix_length': '24',
             },
         },
@@ -14387,8 +14388,8 @@ Tunnel10 is up, line protocol is up
         },
     'oper_status': 'down',
     'ipv4': {
-        '191.168.126.1/24': {
-            'ip': '191.168.126.1',
+        '172.16.115.1/24': {
+            'ip': '172.16.115.1',
             'prefix_length': '24',
             },
         },
@@ -14403,6 +14404,265 @@ Tunnel10 is up, line protocol is up
     },
 }
 
+    golden_parsed_interface_output_2 = {
+        "TenGigabitEthernet0/2/0": {
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "type": "SPA-1X10GE-L-V2",
+            "mac_address": "006b.f1d5.e820",
+            "phys_address": "006b.f1d5.e820",
+            "description": "toP",
+            "ipv4": {
+                "10.169.197.94/30": {
+                    "ip": "10.169.197.94",
+                    "prefix_length": "30"
+                }
+            },
+            "delay": 10,
+            "mtu": 1552,
+            "bandwidth": 10000000,
+            "reliability": "255/255",
+            "txload": "2/255",
+            "rxload": "2/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "flow_control": {
+                "receive": True,
+                "send": True
+            },
+            "carrier_delay_up": 2,
+            "carrier_delay_down": 10,
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "00:07:19",
+            "last_output": "03:51:33",
+            "output_hang": "never",
+            "queues": {
+                "input_queue_size": 0,
+                "input_queue_max": 375,
+                "input_queue_drops": 0,
+                "input_queue_flushes": 0,
+                "total_output_drop": 0,
+                "queue_strategy": "fifo",
+                "output_queue_size": 0,
+                "output_queue_max": 40
+            },
+            "counters": {
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 79676000,
+                    "in_rate_pkts": 9999,
+                    "out_rate": 79998000,
+                    "out_rate_pkts": 9999
+                },
+                "last_clear": "never",
+                "in_pkts": 1779405333,
+                "in_octets": 1772200805652,
+                "in_no_buffer": 0,
+                "in_multicast_pkts": 60322,
+                "in_broadcast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_watchdog": 0,
+                "in_mac_pause_frames": 0,
+                "out_pkts": 1791189623,
+                "out_octets": 1790956453417,
+                "out_underruns": 0,
+                "out_errors": 0,
+                "out_interface_resets": 2,
+                "out_collision": 0,
+                "out_unknown_protocl_drops": 291,
+                "out_babble": 0,
+                "out_late_collision": 0,
+                "out_deferred": 0,
+                "out_lost_carrier": 0,
+                "out_no_carrier": 0,
+                "out_mac_pause_frames": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0
+            }
+        }
+    }
+
+    golden_interface_output_2 = {'execute.return_value': '''
+    PE1>show interfaces TenGigabitEthernet 0/2/0  
+    Load for five secs: 3%/0%; one minute: 3%; five minutes: 3%
+    Time source is NTP, 17:32:09.532 EST Tue Apr 23 2019
+
+    TenGigabitEthernet0/2/0 is up, line protocol is up 
+      Hardware is SPA-1X10GE-L-V2, address is 006b.f1d5.e820 (bia 006b.f1d5.e820)
+      Description: toP
+      Internet address is 10.169.197.94/30
+      MTU 1552 bytes, BW 10000000 Kbit/sec, DLY 10 usec, 
+         reliability 255/255, txload 2/255, rxload 2/255
+      Encapsulation ARPA, loopback not set
+      Keepalive not supported 
+      Full Duplex, 10000Mbps, link type is force-up, media type is 10GBase-SR/SW
+      output flow-control is on, input flow-control is on
+      Asymmetric Carrier-Delay Up Timer is 2 sec
+      Asymmetric Carrier-Delay Down Timer is 10 sec
+      ARP type: ARPA, ARP Timeout 04:00:00
+      Last input 00:07:19, output 03:51:33, output hang never
+      Last clearing of "show interface" counters never
+      Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+      Queueing strategy: fifo
+      Output queue: 0/40 (size/max)
+      5 minute input rate 79676000 bits/sec, 9999 packets/sec
+      5 minute output rate 79998000 bits/sec, 9999 packets/sec
+         1779405333 packets input, 1772200805652 bytes, 0 no buffer
+         Received 3 broadcasts (0 IP multicasts)
+         0 runts, 0 giants, 0 throttles 
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+         0 watchdog, 60322 multicast, 0 pause input
+         1791189623 packets output, 1790956453417 bytes, 0 underruns
+         0 output errors, 0 collisions, 2 interface resets
+         291 unknown protocol drops
+         0 babbles, 0 late collision, 0 deferred
+         0 lost carrier, 0 no carrier, 0 pause output
+         0 output buffer failures, 0 output buffers swapped out
+    PE1>
+    '''}
+
+    golden_parsed_interface_output_3 = {
+        "GigabitEthernet3": {
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "type": "CSR vNIC",
+            "mac_address": "fa16.3eda.af5b",
+            "phys_address": "fa16.3eda.af5b",
+            "ipv4": {
+                "10.0.2.1/24": {
+                    "ip": "10.0.2.1",
+                    "prefix_length": "24"
+                }
+            },
+            "delay": 600,
+            "mtu": 1500,
+            "bandwidth": 1000000,
+            "reliability": "255/255",
+            "txload": "1/255",
+            "rxload": "1/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "keepalive": 10,
+            "duplex_mode": "full",
+            "port_speed": "1000",
+            "link_type": "auto",
+            "auto_negotiate": True,
+            "media_type": "Virtual",
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay": 10,
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "output_hang": "never",
+            "queues": {
+                "input_queue_size": 0,
+                "input_queue_max": 375,
+                "input_queue_drops": 0,
+                "input_queue_flushes": 0,
+                "total_output_drop": 0,
+                "queue_strategy": "fifo",
+                "output_queue_size": 0,
+                "output_queue_max": 40
+            },
+            "counters": {
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "last_clear": "never",
+                "in_pkts": 101744,
+                "in_octets": 9327436,
+                "in_no_buffer": 0,
+                "in_multicast_pkts": 0,
+                "in_broadcast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_watchdog": 0,
+                "in_mac_pause_frames": 0,
+                "out_pkts": 65026,
+                "out_octets": 7387154,
+                "out_underruns": 0,
+                "out_errors": 0,
+                "out_interface_resets": 1,
+                "out_collision": 0,
+                "out_unknown_protocl_drops": 10110,
+                "out_babble": 0,
+                "out_late_collision": 0,
+                "out_deferred": 0,
+                "out_lost_carrier": 0,
+                "out_no_carrier": 0,
+                "out_mac_pause_frames": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0
+            }
+        }
+    }
+
+    golden_interface_output_3 = {'execute.return_value': '''
+    [2019-04-23 10:53:38,979] +++ csr1000v-1: executing command 'show interfaces GigabitEthernet3' +++
+    show interfaces GigabitEthernet3
+    GigabitEthernet3 is up, line protocol is up 
+      Hardware is CSR vNIC, address is fa16.3eda.af5b (bia fa16.3eda.af5b)
+      Internet address is 10.0.2.1/24
+      MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 600 usec, 
+         reliability 255/255, txload 1/255, rxload 1/255
+      Encapsulation ARPA, loopback not set
+      Keepalive set (10 sec)
+      Full Duplex, 1000Mbps, link type is auto, media type is Virtual
+      output flow-control is unsupported, input flow-control is unsupported
+      Carrier delay is 10 sec
+      ARP type: ARPA, ARP Timeout 04:00:00
+      Last input 00:00:00, output 00:00:00, output hang never
+      Last clearing of "show interface" counters never
+      Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+      Queueing strategy: fifo
+      Output queue: 0/40 (size/max)
+      5 minute input rate 0 bits/sec, 0 packets/sec
+      5 minute output rate 0 bits/sec, 0 packets/sec
+         101744 packets input, 9327436 bytes, 0 no buffer
+         Received 0 broadcasts (0 IP multicasts)
+         0 runts, 0 giants, 0 throttles 
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+         0 watchdog, 0 multicast, 0 pause input
+         65026 packets output, 7387154 bytes, 0 underruns
+         0 output errors, 0 collisions, 1 interface resets
+         10110 unknown protocol drops
+         0 babbles, 0 late collision, 0 deferred
+         0 lost carrier, 0 no carrier, 0 pause output
+         0 output buffer failures, 0 output buffers swapped out
+    csr1000v-1#
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -14423,6 +14683,20 @@ Tunnel10 is up, line protocol is up
         parsed_output = interface_obj.parse(interface='GigabitEthernet1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
+
+    def test_show_interfaces_2(self):
+        self.device = Mock(**self.golden_interface_output_2)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='TenGigabitEthernet0/2/0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_2)
+
+    def test_show_interfaces_3(self):
+        self.device = Mock(**self.golden_interface_output_3)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet3')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)

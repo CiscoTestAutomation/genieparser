@@ -8,7 +8,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.nxos.show_l2route import ShowL2routeEvpnMac,\
                                                 ShowL2routeEvpnMacEvi
-
+                                                
 # ==========================
 #  show l2route evpn mac all
 #  show l2route evpn mac evi <evi>
@@ -65,7 +65,7 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
                         'prod': 'BGP',
                         'flags': 'Spl',
                         'seq_no': '0',
-                        'next_hops': '66.66.66.66',
+                        'next_hops': '10.84.66.66',
                         },
                     'fa16.3e79.6bfe': {
                         'prod': 'Local',
@@ -77,7 +77,7 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
                         'prod': 'BGP',
                         'flags': 'Spl',
                         'seq_no': '0',
-                        'next_hops': '66.66.66.66',
+                        'next_hops': '10.84.66.66',
                         },
                     'fa16.3ec5.fcab': {
                         'prod': 'Local',
@@ -112,9 +112,9 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
 
         Topology    Mac Address    Prod   Flags         Seq No     Next-Hops      
         ----------- -------------- ------ ------------- ---------- ----------------
-        101         fa16.3e04.e54a BGP    Spl           0          66.66.66.66    
+        101         fa16.3e04.e54a BGP    Spl           0          10.84.66.66    
         101         fa16.3e79.6bfe Local  L,            0          Eth1/4         
-        101         fa16.3e9a.e558 BGP    Spl           0          66.66.66.66    
+        101         fa16.3e9a.e558 BGP    Spl           0          10.84.66.66    
         101         fa16.3ec5.fcab Local  L,            0          Po1            
         101         fa16.3ed1.37b5 Local  L,            0          Po1            
         101         fa16.3ed4.83e4 Local  L,            0          Eth1/3      
@@ -218,7 +218,6 @@ class test_show_l2route_evpn_mac_evi(unittest.TestCase):
         obj = ShowL2routeEvpnMacEvi(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(evi='1001', mac='0000.04b1.0000')
-
 
 if __name__ == '__main__':
     unittest.main()
