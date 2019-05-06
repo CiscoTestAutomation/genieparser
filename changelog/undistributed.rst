@@ -6,13 +6,36 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   INTERFACE
+--------------------------------------------------------------------------------
+* IOSXE
+	   * Added interface value under convert_intf_name method of common file
+
+--------------------------------------------------------------------------------
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+		    * vrf default value handled
+	  * Updated ShowIpBgpNeighbors to support different Address familiy
+* IOSXR
+    * Updated ShowBgpAllAll for more variations of parameters
 
 --------------------------------------------------------------------------------
-                                   INTERFACE
+                                  POLICY-MAP
 --------------------------------------------------------------------------------
 * IOSXE
-  * Added interface value under convert_intf_name method of common file
+    * Updated ShowPolicyMapInterface to support more policy action type
+    
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowPlatform to support optional output
+
+--------------------------------------------------------------------------------
+                                   RIP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRipInterface for more varied interface name and status
+
