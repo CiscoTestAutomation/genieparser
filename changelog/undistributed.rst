@@ -39,3 +39,16 @@
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
 
+--------------------------------------------------------------------------------
+                                FDB
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Added ShowMacAddressTable for:
+        show mac address-table
+    * Added ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Added ShowMacAddressTableLimit for:
+        show mac address-table limit
+    * Added ShowSystemInternalL2fwderMac for:
+      show system internal l2fwder mac
