@@ -20,6 +20,7 @@
 	  * Updated ShowIpBgpNeighbors to support different Address familiy
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
+    * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
 
 --------------------------------------------------------------------------------
                                   POLICY-MAP
