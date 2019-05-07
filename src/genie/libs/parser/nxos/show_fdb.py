@@ -5,7 +5,7 @@
      *  show mac address-table
      *  show mac address-table aging-time
      *  show mac address-table limit
-     *  show show system internal l2fwder mac
+     *  show system internal l2fwder mac
 
 """
 # Python
@@ -20,32 +20,123 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          And, \
                                          Default, \
                                          Use
-
+from genie.libs.parser.utils.common import Common
 
 class ShowMacAddressTableVniSchema(MetaParser):
     """Schema for show mac address-table vni <WORD> | grep <WORD>"""
     """Schema for show mac address-table local vni <WORD>"""
+    """Schema for show mac address-table"""
+    """Schema for show system internal l2fwder mac"""
 
-    schema = {'mac_address':
-                {Any():
-                    {'evi': str,
-                     'mac_type': str,
-                     'mac_aging_time': str,
-                     'entry': str,
-                     'secure': str,
-                     'ntfy': str,
-                     Optional('next_hop'): str,
-                     'ports': str,
+    schema = {'mac_table':
+                {'vlans':
+                    {Any():
+                         {'vlan': str,
+                          'mac_addresses':
+                            {Any():
+                                {'mac_address': str,
+                                    'entry': str,
+                                    'secure': str,
+                                    'ntfy': str,
+                                    Optional('drop'):{
+                                        'drop': bool,
+                                        'age': str,
+                                        'mac_type': str,
+                                    },
+                                    Optional('ports'): {
+                                        Any(): {
+                                            'port': str,
+                                            'age': str,
+                                            'mac_type': str,
+                                            }
+                                    },
+                                    Optional('next_hops'): {
+                                        Any():{
+                                            'next_hop': str,
+                                            'age': str,
+                                            'mac_type': str,
+                                            }
+                                        
+                                    },
+                                }
+                          }
+                         }
                     }
-                },
+                }
             }
 
-class ShowMacAddressTableVni(ShowMacAddressTableVniSchema):
+class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
+    """Base parser for show mac address-table vni <WORD> | grep <WORD>"""
+    """Base parser for show mac address-table local vni <WORD>"""
+    """Base parser for show mac address-table"""
+    """Base parser for show system internal l2fwder mac"""
+
+    def reghelper(self, out):
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # C 1001     0000.04b1.0000   dynamic  0     F      F nve1(10.9.0.101)
+        # * 1001     0000.0191.0000   dynamic  0     F      F    Eth1/11
+        p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)\~]+) +(?P<vlan>[0-9\-]+) '
+            '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
+            '+(?P<age>[0-9\-]+) '
+            '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
+            '+(?P<drop>(drop|Drop))?'
+            '([a-z0-9]+\((?P<next_hop>[0-9\.]+)\))?'
+            '(?P<ports>[a-zA-Z0-9\/\.\(\)\-]+)?$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan = str(group['vlan'])
+                vlan_dict = ret_dict.setdefault('mac_table', {})\
+                .setdefault('vlans', {}).setdefault(vlan, {})
+                vlan_dict['vlan'] = str(vlan)
+                mac_address = str(group['mac_address'])
+                mac_dict = vlan_dict.setdefault('mac_addresses', {})\
+                .setdefault(mac_address,{})
+                mac_dict['mac_address'] = mac_address
+                mac_dict['entry'] = str(group['entry'])
+
+                if not str(group['drop']) == 'None':
+                    intf_dict = mac_dict.setdefault('drop',{})
+                    intf_dict['drop'] = True
+
+                port = str(group['ports'])
+                if not port == 'None':
+                    converted_port = Common.convert_intf_name(group['ports'])
+                    intf_dict = mac_dict.setdefault('ports',{})\
+                    .setdefault(converted_port,{})
+                    intf_dict['port'] = converted_port
+                        
+
+                next_hop = str(group['next_hop'])
+                if not next_hop == 'None':
+                    intf_dict = mac_dict.setdefault('next_hops',{})\
+                    .setdefault(next_hop,{})
+                    intf_dict['next_hop'] = next_hop
+                
+                intf_dict['mac_type'] = str(group['mac_type'])
+                intf_dict['age'] = str(group['age'])
+                
+                mac_dict['secure'] = str(group['secure'])
+                mac_dict['ntfy'] = str(group['ntfy'])
+                
+        return ret_dict
+
+
+class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
     """Parser for show mac address-table vni <WORD> | grep <WORD>"""
     """Parser for show mac address-table local vni <WORD>"""
 
     cli_command = ['show mac address-table vni {vni} | grep {intf}', 
-    			   'show mac address-table local vni {vni}']
+                   'show mac address-table local vni {vni}']
+
 
     def cli(self, vni, intf=None, output=None):
 
@@ -59,55 +150,14 @@ class ShowMacAddressTableVni(ShowMacAddressTableVniSchema):
         else:
             out = output
 
-        # initial return dictionary
-        ret_dict = {}
-
-        # C 1001     0000.04b1.0000   dynamic  0     F      F nve1(10.9.0.101)
-        # * 1001     0000.0191.0000   dynamic  0     F      F    Eth1/11
-        p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)]+) +(?P<evi>[0-9]+) '
-            '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
-            '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
-            '+([a-z0-9]+\((?P<next_hop>[0-9\.]+)\))?'
-            '(?P<ports>[a-zA-Z0-9\/\.]+)?$')
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            m = p1.match(line)
-            if m:
-
-                mac_address = str(m.groupdict()['mac_address'])
-
-                if 'mac_address' not in ret_dict:
-                    ret_dict['mac_address'] = {}
-                if mac_address not in ret_dict['mac_address']:
-                    ret_dict['mac_address'][mac_address] = {}
-
-                ret_dict['mac_address'][mac_address]['evi'] = \
-                    str(m.groupdict()['evi'])
-                ret_dict['mac_address'][mac_address]['mac_type'] = \
-                    str(m.groupdict()['mac_type'])
-                ret_dict['mac_address'][mac_address]['mac_aging_time'] = \
-                    str(m.groupdict()['age'])
-                ret_dict['mac_address'][mac_address]['entry'] = \
-                    str(m.groupdict()['entry'])
-                ret_dict['mac_address'][mac_address]['secure'] = \
-                    str(m.groupdict()['secure'])
-                ret_dict['mac_address'][mac_address]['ntfy'] = \
-                    str(m.groupdict()['ntfy'])
-                ret_dict['mac_address'][mac_address]['next_hop'] = \
-                    str(m.groupdict()['next_hop'])
-                ret_dict['mac_address'][mac_address]['ports'] = \
-                    str(m.groupdict()['ports'])
-
-                continue
+        # get return dictionary
+        ret_dict = super().reghelper(out)
 
         return ret_dict
 
 
-class ShowMacAddressTable(ShowMacAddressTableVniSchema):
+class ShowMacAddressTable(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
     """Parser for show mac address-table"""
-    """leverage existing 'ShowMacAddressTableVniSchema' """
 
     cli_command = 'show mac address-table'
 
@@ -118,48 +168,8 @@ class ShowMacAddressTable(ShowMacAddressTableVniSchema):
         else:
             out = output
 
-        # initial return dictionary
-        ret_dict = {}
-
-        #   VLAN  MAC Address     Type     age   Secure NTFY  Ports
-        # -------+-------------+--------+-------+------+----+------
-        # * 30   aaaa.bbbb.cccc  static   -       F      F   Drop
-        # G -    0000.dead.beef  static   -       F      F   sup - eth1(R)
-        p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)\~]+) +(?P<evi>[0-9\-]+) '
-                        '+(?P<mac_address>[0-9a-z\.]+) +(?P<mac_type>[a-z]+) '
-                        '+(?P<age>[0-9\-\:]+) +(?P<secure>[A-Z]+) '
-                        '+(?P<ntfy>[A-Z]+) '
-                        '+(?P<ports>[a-zA-Z0-9\-\s\/\.\(\)]+)$')
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            m = p1.match(line)
-            if m:
-
-                mac_address = str(m.groupdict()['mac_address'])
-
-                if 'mac_address' not in ret_dict:
-                    ret_dict['mac_address'] = {}
-                if mac_address not in ret_dict['mac_address']:
-                    ret_dict['mac_address'][mac_address] = {}
-
-                ret_dict['mac_address'][mac_address]['entry'] = \
-                    str(m.groupdict()['entry'])
-                ret_dict['mac_address'][mac_address]['evi'] = \
-                    str(m.groupdict()['evi'])
-                ret_dict['mac_address'][mac_address]['mac_type'] = \
-                    str(m.groupdict()['mac_type'])
-                ret_dict['mac_address'][mac_address]['mac_aging_time'] = \
-                    str(m.groupdict()['age'])
-                ret_dict['mac_address'][mac_address]['secure'] = \
-                    str(m.groupdict()['secure'])
-                ret_dict['mac_address'][mac_address]['ntfy'] = \
-                    str(m.groupdict()['ntfy'])
-                ret_dict['mac_address'][mac_address]['ports'] = \
-                    str(m.groupdict()['ports'])
-
-                continue
+        # get return dictionary
+        ret_dict = super().reghelper(out)
 
         return ret_dict
 
@@ -303,27 +313,7 @@ class ShowMacAddressTableLimit(ShowMacAddressTableLimitSchema):
         return ret_dict
 
 
-class ShowSystemInternalL2fwderMacSchema(MetaParser):
-    """Schema for show system internal l2fwder mac"""
-
-    schema = {'mac_table':
-                {'vlans':
-                    {Any():
-                         {'entry': str,
-                          'vlan': str,
-                          'mac_address': str,
-                          'mac_type': str,
-                          'mac_aging_time': str,
-                          'secure': str,
-                          'ntfy': str,
-                          'ports': str,
-                         }
-                    }
-                }
-            }
-
-
-class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
+class ShowSystemInternalL2fwderMac(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
     """Parser for show system internal l2fwder mac"""
 
     cli_command = 'show system internal l2fwder mac'
@@ -335,36 +325,12 @@ class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
         else:
             out = output
 
-        # initial return dictionary
-        ret_dict = {}
-
         #     VLAN    MAC Address    Type     age     Secure  NTFY  Ports
         # ---------+---------------+--------+---------+------+----+---------
         # G     -  5e00:c000:0007   static   -          F     F   sup-eth1(R)
         # *     1  fa16.3eef.6e79   dynamic   00:01:02   F     F     Eth1/4
-        p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)\~]+) +(?P<vlan>[0-9\-]+) '
-                        '+(?P<mac_address>[0-9a-z\.\:]+) '
-                        '+(?P<mac_type>[a-z]+) '
-                        '+(?P<mac_aging_time>[0-9\-\:\.]+) '
-                        '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
-                        '+(?P<ports>[a-zA-Z0-9\-\s\/\.\(\)]+)$')
 
-        for line in out.splitlines():
-            line = line.strip()
-
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                vlan = str(group['vlan'])
-                vlan_dict = ret_dict.setdefault('mac_table', {})\
-                .setdefault('vlans', {}).setdefault(vlan, {})
-                vlan_dict['entry'] = str(group['entry'])
-                vlan_dict['vlan'] = str(vlan)
-                vlan_dict['mac_address'] = str(group['mac_address'])
-                vlan_dict['mac_type'] = str(group['mac_type'])
-                vlan_dict['mac_aging_time'] = str(group['mac_aging_time'])
-                vlan_dict['secure'] = str(group['secure'])
-                vlan_dict['ntfy'] = str(group['ntfy'])
-                vlan_dict['ports'] = str(group['ports'])
+        # get return dictionary
+        ret_dict = super().reghelper(out)
 
         return ret_dict
