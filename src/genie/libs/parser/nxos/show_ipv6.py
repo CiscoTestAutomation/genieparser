@@ -253,60 +253,56 @@ class ShowIpv6NdInterfaceVrfAllSchema(MetaParser):
        Schema for "show ipv6 nd interface vrf all"
     """
 
-    schema = {
-        'vrf': {
+    schema = {        
+        Optional('interfaces'): {
             Any(): {
                 'vrf': str,
-                Optional('interfaces'): {
+                'interface': str,
+                'interface_status': str,
+                'ipv6_address': {
                     Any(): {
-                        'interface': str,
-                        'interface_status': str,
-                        'ipv6_address': {
-                            Any(): {
-                                'status': str,
-                            },
-                        },
-                        'ipv6_link_local_address': {
-                            Any(): {
-                                'status': str,
-                            },
-                        },
-                        'nd_mac_extract': str,
-                        'icmpv6_active_timers': {
-                            'last_neighbor_solicitation_sent': str,
-                            'last_neighbor_advertisement_sent': str,
-                            'last_router_advertisement_sent': str,
-                            'next_router_advertisement_sent': str},
-                        'router_advertisement': {
-                            'periodic_interval_seconds': str,
-                            'send_managed_address_configuration_flag': str,
-                            'send_other_stateful_configuration_flag': str,
-                            'send_default_router_preference_value': str,
-                            'send_current_hop_limit': int,
-                            'send_mtu': int,
-                            'send_router_lifetime_secs': int,
-                            'send_reachable_time_ms': int,
-                            'send_retrans_timer_ms': int,
-                            'suppress_ra': str,
-                            'suppress_mtu_ra': str,
-                            'suppress_route_information_option_ra': str,
-                        },
-                        'neighbor_solicitation': {
-                            'ns_retransmit_interval_ms': int,
-                            'nd_nud_retry_base': int,
-                            'nd_nud_retry_interval': int,
-                            'nd_nud_retry_attempts': int,
-                        },
-                        'icmpv6_error_message': {
-                            'send_redirects_num': int,
-                            'send_unreachables': str,
-                        },
-                        'icmpv6_dad': {
-                            'maximum_dad_attempts': int,
-                            'current_dad_attempt': int,
-                        }
+                        'status': str,
                     },
                 },
+                'ipv6_link_local_address': {
+                    Any(): {
+                        'status': str,
+                    },
+                },
+                'nd_mac_extract': str,
+                'icmpv6_active_timers': {
+                    'last_neighbor_solicitation_sent': str,
+                    'last_neighbor_advertisement_sent': str,
+                    'last_router_advertisement_sent': str,
+                    'next_router_advertisement_sent': str},
+                'router_advertisement': {
+                    'periodic_interval_seconds': str,
+                    'send_managed_address_configuration_flag': str,
+                    'send_other_stateful_configuration_flag': str,
+                    'send_default_router_preference_value': str,
+                    'send_current_hop_limit': int,
+                    'send_mtu': int,
+                    'send_router_lifetime_secs': int,
+                    'send_reachable_time_ms': int,
+                    'send_retrans_timer_ms': int,
+                    'suppress_ra': str,
+                    'suppress_mtu_ra': str,
+                    'suppress_route_information_option_ra': str,
+                },
+                'neighbor_solicitation': {
+                    'ns_retransmit_interval_ms': int,
+                    'nd_nud_retry_base': int,
+                    'nd_nud_retry_interval': int,
+                    'nd_nud_retry_attempts': int,
+                },
+                'icmpv6_error_message': {
+                    'send_redirects_num': int,
+                    'send_unreachables': str,
+                },
+                'icmpv6_dad': {
+                    'maximum_dad_attempts': int,
+                    'current_dad_attempt': int,
+                }
             },
         },
     }
@@ -441,9 +437,6 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
-
-                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
-                vrf_dict['vrf'] = vrf
                 continue
 
             # Ethernet1/1, Interface status: protocol-up/link-up/admin-up
@@ -452,9 +445,10 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
                 interface = m.groupdict()['interface']
                 interface_status = m.groupdict()['interface_status']
 
-                interface_dict = vrf_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 interface_dict['interface'] = interface
                 interface_dict['interface_status'] = interface_status
+                interface_dict['vrf'] = vrf
                 continue
 
             # IPv6 address:
