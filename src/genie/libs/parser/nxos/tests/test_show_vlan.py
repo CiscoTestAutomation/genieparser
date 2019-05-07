@@ -144,106 +144,6 @@ Primary  Secondary  Type             Ports
         },
     }
 
-    golden_output_vlan_2 = {'execute.return_value': '''
-        # show vlan
-        27   0027_192.168.1.0/24              active    Po1, Po3, Po4, Po5, Po7, Po9
-                                                    Po11, Po12, Po13, Po15, Eth1/1
-                                                    Eth1/2, Eth1/3, Eth1/4, Eth1/6
-                                                    Eth1/7, Eth1/9, Eth1/10, Eth1/11
-                                                    Eth1/15, Eth1/41, Eth1/43
-                                                    Eth1/44, Eth1/45, Eth1/46
-                                                    Eth2/1, Eth2/2, Eth122/1/21
-                                                    Eth122/1/22
-        28   0028_192.168.5.0/24              active    Po1, Po3, Po4, Po5, Po7, Po9
-                                                    Po11, Po12, Po13, Po15, Eth1/1
-                                                    Eth1/2, Eth1/3, Eth1/4, Eth1/6
-                                                    Eth1/7, Eth1/9, Eth1/10, Eth1/11
-                                                    Eth1/15, Eth1/41, Eth1/43
-                                                    Eth1/44, Eth1/45, Eth1/46
-                                                    Eth2/1, Eth2/2, Eth122/1/21
-                                                    Eth122/1/22
-
-    '''}
-
-    golden_parsed_output_vlan_2 = {
-        'vlans': {
-            '27': {
-                'vlan_id': '27',
-                'name': '0027_192.168.1.0/24',
-                'shutdown': False,
-                'state': 'active',
-                'interfaces': [
-                    'Port-channel1',
-                    'Port-channel3',
-                    'Port-channel4',
-                    'Port-channel5',
-                    'Port-channel7',
-                    'Port-channel9',
-                    'Port-channel11',
-                    'Port-channel12',
-                    'Port-channel13',
-                    'Port-channel15',
-                    'Ethernet1/1',
-                    'Ethernet1/2',
-                    'Ethernet1/3',
-                    'Ethernet1/4',
-                    'Ethernet1/6',
-                    'Ethernet1/7',
-                    'Ethernet1/9',
-                    'Ethernet1/10',
-                    'Ethernet1/11',
-                    'Ethernet1/15',
-                    'Ethernet1/41',
-                    'Ethernet1/43',
-                    'Ethernet1/44',
-                    'Ethernet1/45',
-                    'Ethernet1/46',
-                    'Ethernet2/1',
-                    'Ethernet2/2',
-                    'Ethernet122/1/21',
-                    'Ethernet122/1/22'
-                ]
-            },
-            '28': {
-                'vlan_id': '28',
-                'name': '0028_192.168.5.0/24',
-                'shutdown': False,
-                'state': 'active',
-                'interfaces': [
-                    'Port-channel1',
-                    'Port-channel3',
-                    'Port-channel4',
-                    'Port-channel5',
-                    'Port-channel7',
-                    'Port-channel9',
-                    'Port-channel11',
-                    'Port-channel12',
-                    'Port-channel13',
-                    'Port-channel15',
-                    'Ethernet1/1',
-                    'Ethernet1/2',
-                    'Ethernet1/3',
-                    'Ethernet1/4',
-                    'Ethernet1/6',
-                    'Ethernet1/7',
-                    'Ethernet1/9',
-                    'Ethernet1/10',
-                    'Ethernet1/11',
-                    'Ethernet1/15',
-                    'Ethernet1/41',
-                    'Ethernet1/43',
-                    'Ethernet1/44',
-                    'Ethernet1/45',
-                    'Ethernet1/46',
-                    'Ethernet2/1',
-                    'Ethernet2/2',
-                    'Ethernet122/1/21',
-                    'Ethernet122/1/22'
-                ]
-            }
-        }
-    }
-
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVlan(device=self.device)
@@ -256,13 +156,6 @@ Primary  Secondary  Type             Ports
         obj = ShowVlan(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
-
-    def test_show_vlan_2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_vlan_2)
-        obj = ShowVlan(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_vlan_2)
 
 
 class test_show_vlan_id_segmant(unittest.TestCase):
