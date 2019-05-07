@@ -62,7 +62,7 @@ class ShowVlan(ShowVlanSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         vlan_dict = {}
         for line in out.splitlines():
             if line:
