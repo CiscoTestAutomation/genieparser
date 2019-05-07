@@ -75,7 +75,7 @@ class ShowVlan(ShowVlanSchema):
             # 105  VLAN0105                         act/lshut Po333
             # 1    default                          active
             # 1   1_192.168.0.0/1                   active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
-            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-\_\.\/]+)'
+            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>\S+)'
                             ' +(?P<status>[active|suspended|act/unsup|sus|(.*)/lshut]+)( *(?P<interfaces>[\w\s\/\,]+))?$')
             m = p1.match(line)
             if m:
