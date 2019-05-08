@@ -43,6 +43,10 @@
                                    IP
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowIpAlias to display the interface, IP address, and port
+    * Added ShowIpAlias for:
+       show ip aliases
+       show ip aliases vrf {vrf}
+    * Added ShowIPAliasDefaultVrf:
+       show ip aliases default-vrf
 
 
