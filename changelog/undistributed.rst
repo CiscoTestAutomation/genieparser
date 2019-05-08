@@ -39,3 +39,10 @@
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
 
+--------------------------------------------------------------------------------
+                                   IP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpAlias to display the interface, IP address, and port
+
+
