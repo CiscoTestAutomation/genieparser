@@ -508,7 +508,7 @@ class ShowIpOspf(ShowIpOspfSchema):
             # Condition: on start-up for 5 seconds, State: inactive
             # Condition: on startup for 300 seconds, State: inactive
             p14_2 = re.compile(r'^Condition:'
-                               ' +(?P<condition>(always|on start-up|on startup))'
+                               ' +(?P<condition>(always|on \S+))'
                                '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
                                ' +State: +(?P<state>(\S+))$')
             m = p14_2.match(line)
