@@ -2179,15 +2179,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors detail'
+    
+    cli_command = ['show bgp instance all {vrf_type} all neighbors detail',
+        'show bgp instance all {vrf_type} all {af_type} neighbors detail']
 
+        
     def cli(self, vrf_type, af_type='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+            if vrf_type and af_type:
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            else:
+                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
         else:
             out = output
         # Init variables

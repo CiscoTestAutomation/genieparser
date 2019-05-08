@@ -58,7 +58,6 @@ Primary  Secondary  Type             Ports
 -------  ---------  ---------------  -------------------------------------------
          303        community        Fa2/3, Fa3/5
 403      500        non-operational
-
   '''}
 
     golden_parsed_output_vlan_1 = {
@@ -144,6 +143,7 @@ Primary  Secondary  Type             Ports
 
         },
     }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVlan(device=self.device)

@@ -6,6 +6,11 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   VLAN
+--------------------------------------------------------------------------------
+* NXOS
+     * Updated ShowVlan to support different names
+--------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
 * IOSXE
@@ -21,6 +26,7 @@
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
+    * Update ShowBgpAllNeighbors to support device.parse
 
 --------------------------------------------------------------------------------
                                   POLICY-MAP
