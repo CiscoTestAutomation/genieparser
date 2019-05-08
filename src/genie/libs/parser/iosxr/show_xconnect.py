@@ -18,16 +18,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                Use
 
 from genie.libs.parser.base import *
-
-"""
-    TODO: bpetrovi - Aug 2, 2016
-        # XR command: "show l2vpn xconnect group xc1g"
-        # XR command: "show l2vpn xconnect interface <intf>"
-        # Yang section for all parsers
-        # XML section for all parsers
-
-"""
-
+from genie.libs.parser.utils.common import Common
 
 class ShowL2VpnXconnectSummary(MetaParser):
     """Parser for show l2vpn xconnect summary"""
@@ -280,13 +271,13 @@ class ShowL2VpnXconnectSchema(MetaParser):
         Any(): {
           'Name': {
             Any(): {
-              's0': str,
+              'status_group': str,
               'segment_1': {
                 Any(): {
-                  's1': str,
+                  'status_seg1': str,
                   'segment_2': {
                     Any(): {
-                      's2': str,
+                      'status_seg2': str,
                     },
                   },
                 },
@@ -320,11 +311,11 @@ class ShowL2VpnXconnect(ShowL2VpnXconnectSchema):
             p1 = re.compile(r'^(?P<group>[\w]+)$')
 
             p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
-                            '+(?P<s0>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                            '+(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
                             '+(?P<segment_1>.*?) ' 
-                            '+(?P<s1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                            '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
                             '+(?P<segment_2>.*?) ' 
-                            '+(?P<s2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+                            '+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
             m = p1.match(line)
             if m:
@@ -338,12 +329,12 @@ class ShowL2VpnXconnect(ShowL2VpnXconnectSchema):
                 group = m.groupdict()
                 name_dict = group_dict.setdefault('Name', {}) \
                     .setdefault(str(group['name']), {})
-                name_dict['s0'] = str(group['s0'])
+                name_dict['status_group'] = str(group['status_group'])
                 segment1_dict = name_dict.setdefault('segment_1',{}) \
-                    .setdefault(str(group['segment_1']), {})
-                segment1_dict['s1'] = str(group['s1'])
+                    .setdefault(Common.convert_intf_name(group['segment_1']), {})
+                segment1_dict['status_seg1'] = str(group['status_seg1'])
                 segment1_dict.setdefault('segment_2', {}) \
                     .setdefault( str(group['segment_2']), {}) \
-                    .setdefault('s2', str(group['s2']))
+                    .setdefault('status_seg2', str(group['status_seg2']))
 
         return ret_dict

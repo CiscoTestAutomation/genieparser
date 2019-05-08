@@ -21,13 +21,13 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
     golden_parsed_output = {'groups':
             {'Test_XCONN_Group2':
 				{'Name':
-					{'3000': {'s0': 'UR',
+					{'3000': {'status_group': 'UR',
 							  'segment_1':
-								{'Gi0/0/0/5.3000':
-							 		{'s1': 'UR',
+								{'GigabitEthernet0/0/0/5.3000':
+							 		{'status_seg1': 'UR',
 							 		 'segment_2':
 							 			{'1.1.1.206       3000':
-							 				{'s2': 'DN'}
+							 				{'status_seg2': 'DN'}
 							 			}
 							 		}
 							 	}
@@ -36,24 +36,24 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
 				},
 			'Test_XCONN_Group':
 				{'Name':
-					{'2000': {'s0': 'DN',
+					{'2000': {'status_group': 'DN',
 							  'segment_1':
-								{'Gi0/0/0/5.2000':
-					 				{'s1': 'UP',
+								{'GigabitEthernet0/0/0/5.2000':
+					 				{'status_seg1': 'UP',
 					 				 'segment_2':
 					 					{'1.1.1.206       2000':
-					 						{'s2': 'DN'}
+					 						{'status_seg2': 'DN'}
 					 					}
 					 				}
 					 			}
 						 	},
-				 	 '1000': {'s0': 'DN',
+				 	 '1000': {'status_group': 'DN',
 				 	 		  'segment_1':
-				 	 		    {'Gi0/0/0/5.1000':
-				 		 			{'s1': 'UP',
+				 	 		    {'GigabitEthernet0/0/0/5.1000':
+				 		 			{'status_seg1': 'UP',
 				 		 			 'segment_2':
 				 		 				{'1.1.1.206       1000':
-				 		 					{'s2': 'DN'}
+				 		 					{'status_seg2': 'DN'}
 				 		 				}
 				 		 			}
 				 		 		}
