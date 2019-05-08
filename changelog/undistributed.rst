@@ -66,3 +66,8 @@
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
 
+--------------------------------------------------------------------------------
+                                   OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfNeighbor for more varied states

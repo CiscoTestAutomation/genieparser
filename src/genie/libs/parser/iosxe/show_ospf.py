@@ -6050,9 +6050,10 @@ class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
 
         # Neighbor ID     Pri   State           Dead Time   Address         Interface
         # 172.16.197.253 128   FULL/DR         00:00:30    172.16.165.49  GigabitEthernet0/0/1
+        # 106.162.197.252   0   FULL/  -        00:00:36    106.162.197.93  GigabitEthernet2
         
-        p1=re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+) +(?P<dead_time>\S+)'
-                       ' +(?P<address>\S+) +(?P<interface>\S+)$')
+        p1=re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+(?:\s+\S+)?)'
+                      r' +(?P<dead_time>\S+) +(?P<address>\S+) +(?P<interface>\S+)$')
 
         for line in out.splitlines():
 
