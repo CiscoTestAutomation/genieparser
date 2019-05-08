@@ -50,13 +50,14 @@ class ShowIPAlias(ShowIPAliasSchema):
     show ip aliases vrf {vrf}
     '''
     cli_command = ['show ip aliases', 
-    'show ip aliases vrf {vrf}']
+        'show ip aliases vrf {vrf}']
 
     def cli(self, vrf = '', output = None):
         if output is None:
             if vrf:
                 out = self.device.execute(self.cli_command[1].format(vrf = vrf))
-            out = self.device.execute(self.cli_command)
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -111,4 +112,3 @@ class ShowIPAliasDefaultVrf(ShowIPAlias):
             show_output = output
     
         return super().cli(output = show_output)
-
