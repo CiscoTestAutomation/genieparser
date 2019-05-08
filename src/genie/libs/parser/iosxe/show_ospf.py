@@ -6053,7 +6053,7 @@ class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
         # 106.162.197.252   0   FULL/  -        00:00:36    106.162.197.93  GigabitEthernet2
         
         p1=re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+(?:\s+\S+)?)'
-                      r' +(?P<dead_time>\S+) +(?P<address>\S+) +(?P<interface>\S+)$')
+                       ' +(?P<dead_time>\S+) +(?P<address>\S+) +(?P<interface>\S+)$')
 
         for line in out.splitlines():
 
