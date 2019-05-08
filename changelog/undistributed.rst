@@ -6,6 +6,26 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   IPV6
+--------------------------------------------------------------------------------
+* NXOS
+     * Added ShowIpv6NeighborsDetailVrfAll for:
+        show ipv6 neighbor detail vrf all
+     * Added ShowIpv6NdInterfaceVrfAll for:
+        show ipv6 nd interface vrf all
+     * Added ShowIpv6RoutersVrfAll for:
+        show ipv6 routers vrf all
+* IOSXE
+     * Added ShowIpv6Neighbors for:
+        show ipv6 neighbors detail
+        show ipv6 neighbors vrf {vrf}
+     * Added ShowIpv6NeighborsDetail for:
+        show ipv6 neighbors detail
+        show ipv6 neighbors vrf {vrf} detail
+* IOSXR
+     * Added ShowIpv6NeighborsDetail for:
+        show ipv6 neighbors detail
+--------------------------------------------------------------------------------
                                    VLAN
 --------------------------------------------------------------------------------
 * NXOS
