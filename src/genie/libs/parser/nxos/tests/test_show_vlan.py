@@ -6,7 +6,7 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.nxos.show_vlan import ShowVlan, ShowVlanOld, ShowVlanIdVnSegment, \
+from genie.libs.parser.nxos.show_vlan import ShowVlan, ShowVlanIdVnSegment, \
                                              ShowVlanInternalInfo, \
                                              ShowVlanFilter, \
                                              ShowVlanAccessMap, \
@@ -144,6 +144,120 @@ Primary  Secondary  Type             Ports
         },
     }
 
+    golden_output_vlan_2= {'execute.return_value': '''    
+3122 3122_10.68.5.224                 active    Po1, Po3, Po4, Po5, Po7, Po9
+                                                Po11, Po12, Po13, Po15, Eth1/1
+                                                Eth1/2, Eth1/3, Eth1/4, Eth1/6
+                                                Eth1/7, Eth1/9, Eth1/10, Eth1/11
+                                                Eth1/15, Eth1/41, Eth1/43
+                                                Eth1/44, Eth1/45, Eth1/46
+                                                Eth2/1, Eth2/2, Eth122/1/21
+                                                Eth122/1/22
+3900 3900_10.124.0.0                  active    Po1, Po3, Po4, Po5, Po6, Po7
+                                                Po9, Po11, Po12, Po13, Po15
+                                                Po19, Po20, Eth1/1, Eth1/2
+                                                Eth1/3, Eth1/4, Eth1/6, Eth1/7
+                                                Eth1/9, Eth1/10, Eth1/11
+                                                Eth1/15, Eth1/17, Eth1/18
+                                                Eth1/41, Eth1/43, Eth1/44
+                                                Eth1/45, Eth1/46, Eth2/1, Eth2/2
+                                                Eth2/3, Eth122/1/21, Eth122/1/22
+    VLAN Type         Vlan-mode
+    ---- -----        ----------
+    3122 enet         CE     
+    3900 enet         CE 
+    '''}
+
+    golden_parsed_output_vlan_2 = {
+    'vlans': {
+        '3122': {
+            'vlan_id': '3122',
+            'name': '3122_10.68.5.224',
+            'shutdown': False,
+            'state': 'active',
+            'interfaces': [
+                'Port-channel1',
+                'Port-channel3',
+                'Port-channel4',
+                'Port-channel5',
+                'Port-channel7',
+                'Port-channel9',
+                'Port-channel11',
+                'Port-channel12',
+                'Port-channel13',
+                'Port-channel15',
+                'Ethernet1/1',
+                'Ethernet1/2',
+                'Ethernet1/3',
+                'Ethernet1/4',
+                'Ethernet1/6',
+                'Ethernet1/7',
+                'Ethernet1/9',
+                'Ethernet1/10',
+                'Ethernet1/11',
+                'Ethernet1/15',
+                'Ethernet1/41',
+                'Ethernet1/43',
+                'Ethernet1/44',
+                'Ethernet1/45',
+                'Ethernet1/46',
+                'Ethernet2/1',
+                'Ethernet2/2',
+                'Ethernet122/1/21',
+                'Ethernet122/1/22'
+            ],
+            'mode': 'ce',
+            'type': 'enet'
+        },
+        '3900': {
+            'vlan_id': '3900',
+            'name': '3900_10.124.0.0',
+            'shutdown': False,
+            'state': 'active',
+            'interfaces': [
+                'Port-channel1',
+                'Port-channel3',
+                'Port-channel4',
+                'Port-channel5',
+                'Port-channel6',
+                'Port-channel7',
+                'Port-channel9',
+                'Port-channel11',
+                'Port-channel12',
+                'Port-channel13',
+                'Port-channel15',
+                'Port-channel19',
+                'Port-channel20',
+                'Ethernet1/1',
+                'Ethernet1/2',
+                'Ethernet1/3',
+                'Ethernet1/4',
+                'Ethernet1/6',
+                'Ethernet1/7',
+                'Ethernet1/9',
+                'Ethernet1/10',
+                'Ethernet1/11',
+                'Ethernet1/15',
+                'Ethernet1/17',
+                'Ethernet1/18',
+                'Ethernet1/41',
+                'Ethernet1/43',
+                'Ethernet1/44',
+                'Ethernet1/45',
+                'Ethernet1/46',
+                'Ethernet2/1',
+                'Ethernet2/2',
+                'Ethernet2/3',
+                'Ethernet122/1/21',
+                'Ethernet122/1/22'
+            ],
+            'mode': 'ce',
+            'type': 'enet'
+        }
+    }
+}
+
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVlan(device=self.device)
@@ -156,6 +270,13 @@ Primary  Secondary  Type             Ports
         obj = ShowVlan(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
+
+    def test_show_vlan_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_vlan_2)
+        obj = ShowVlan(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_vlan_2)
 
 
 class test_show_vlan_id_segmant(unittest.TestCase):
@@ -222,113 +343,6 @@ class test_show_vlan_id_segmant(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_vlan_1)
 
-
-
-#################################################
-# Old unittests with old structure
-# may be in future need to be removed or improved
-###################################################
-class test_show_vlan(unittest.TestCase):
-    device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
-    empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'vlan_id': 
-                                {'108': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0108', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '105': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0105', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '110': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0110', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '100': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0100', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '101': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0101', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '1': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'default', 'ports': 'Eth3/1, Eth3/2, Eth3/3, Eth3/4, Eth3/5, Eth3/6, Eth3/7, Eth3/8, Eth3/9, Eth3/10, Eth3/11, Eth3/12, Eth3/13, Eth3/14, Eth3/15, Eth3/16, Eth3/17, Eth3/18, Eth3/19, Eth3/20, Eth3/21, Eth3/22, Eth3/23, Eth3/24, Eth3/25, Eth3/26, Eth3/27, Eth3/28, Eth3/29, Eth3/30, Eth3/31, Eth3/32, Eth3/33, Eth3/34, Eth3/35, Eth3/36, Eth3/37, Eth3/38, Eth3/39, Eth3/40, Eth3/41, Eth3/42, Eth3/43, Eth3/44, Eth3/45, Eth3/46, Eth3/47, Eth3/48', 'vlan_type': 'enet'}, 
-                                 '103': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0103', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '102': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0102', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '23': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0023', 'ports': 'Eth6/24', 'vlan_type': 'enet'}, 
-                                 '109': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0109', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '106': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0106', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '104': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0104', 'ports': None, 'vlan_type': 'enet'}, 
-                                 '107': 
-                                    {'vl_mode': 'CE', 'status': 'active', 'name': 'VLAN0107', 'ports': None, 'vlan_type': 'enet'}
-                                }
-                            }
-
-    golden_output = {'execute.return_value': '''
- VLAN Name                             Status    Ports
- ---- -------------------------------- --------- -------------------------------
- 1    default                          active    Eth3/1, Eth3/2, Eth3/3, Eth3/4
-                                                 Eth3/5, Eth3/6, Eth3/7, Eth3/8
-                                                 Eth3/9, Eth3/10, Eth3/11
-                                                 Eth3/12, Eth3/13, Eth3/14
-                                                 Eth3/15, Eth3/16, Eth3/17
-                                                 Eth3/18, Eth3/19, Eth3/20
-                                                 Eth3/21, Eth3/22, Eth3/23
-                                                 Eth3/24, Eth3/25, Eth3/26
-                                                 Eth3/27, Eth3/28, Eth3/29
-                                                 Eth3/30, Eth3/31, Eth3/32
-                                                 Eth3/33, Eth3/34, Eth3/35
-                                                 Eth3/36, Eth3/37, Eth3/38
-                                                 Eth3/39, Eth3/40, Eth3/41
-                                                 Eth3/42, Eth3/43, Eth3/44
-                                                 Eth3/45, Eth3/46, Eth3/47
-                                                 Eth3/48
- 23   VLAN0023                         active    Eth6/24
- 100  VLAN0100                         active    
- 101  VLAN0101                         active    
- 102  VLAN0102                         active    
- 103  VLAN0103                         active    
- 104  VLAN0104                         active    
- 105  VLAN0105                         active    
- 106  VLAN0106                         active    
- 107  VLAN0107                         active    
- 108  VLAN0108                         active    
- 109  VLAN0109                         active    
- 110  VLAN0110                         active    
-
- VLAN Type         Vlan-mode
- ---- -----        ----------
- 1    enet         CE     
- 23   enet         CE     
- 100  enet         CE     
- 101  enet         CE     
- 102  enet         CE     
- 103  enet         CE     
- 104  enet         CE     
- 105  enet         CE     
- 106  enet         CE     
- 107  enet         CE     
- 108  enet         CE     
- 109  enet         CE     
- 110  enet         CE     
-
- Remote SPAN VLANs
- -------------------------------------------------------------------------------
-
- Primary  Secondary  Type             Ports
- -------  ---------  ---------------  -------------------------------------------
-
-'''}
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        vlan_obj = ShowVlanOld(device=self.device)
-        parsed_output = vlan_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        vlan_obj = ShowVlanOld(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = vlan_obj.parse()
 
 class test_show_vlan_internal_info(unittest.TestCase):
     device = Device(name='aDevice')
