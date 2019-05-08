@@ -70,4 +70,5 @@
                                    OSPF
 --------------------------------------------------------------------------------
 * IOSXE
+    * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
