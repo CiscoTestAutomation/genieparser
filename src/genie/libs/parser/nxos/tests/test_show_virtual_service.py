@@ -9,7 +9,76 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # Parser
-from genie.libs.parser.nxos.show_virtual_service import ShowVirtualServiceList
+from genie.libs.parser.nxos.show_virtual_service import (
+    ShowVirtualServiceGlobal,
+    ShowVirtualServiceList,
+)
+
+# ===========================================
+# Unit test for "show virtual-service global"
+# ===========================================
+class test_show_virtual_service_global(unittest.TestCase):
+    """Unit test for "show virtual-service global"."""
+
+    golden_parsed_output = {
+        'version': '1.10',
+        'virtual_services': {
+            'installed': 1,
+            'activated': 1,
+        },
+        'machine_types': {
+            'supported': ['LXC'],
+            'disabled': ['KVM'],
+        },
+        'resource_limits': {
+            'cpus_per_service': 1,
+            'cpu': {
+                'quota': 20,
+                'committed': 1,
+                'available': 19,
+            },
+            'memory': {
+                'quota': 3840,
+                'committed': 500,
+                'available': 3340,
+            },
+            'bootflash': {
+                'quota': 8192,
+                'committed': 1000,
+                'available': 7192,
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': """
+
+        Virtual Service Global State and Virtualization Limits:
+
+        Infrastructure version : 1.10
+        Total virtual services installed : 1
+        Total virtual services activated : 1
+
+        Machine types supported   : LXC
+        Machine types disabled    : KVM
+
+        Maximum VCPUs per virtual service : 1
+
+        Resource virtualization limits:
+        Name                        Quota    Committed    Available
+        -----------------------------------------------------------------------
+        system CPU (%)                 20            1           19
+        memory (MB)                  3840          500         3340
+        bootflash (MB)               8192         1000         7192
+
+    """}
+
+    def test_show_virtual_service_global(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowVirtualServiceGlobal(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 # =========================================
 # Unit test for "show virtual-service list"
