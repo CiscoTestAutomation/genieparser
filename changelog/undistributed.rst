@@ -39,3 +39,10 @@
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
 
+--------------------------------------------------------------------------------
+                                xconnect
+--------------------------------------------------------------------------------
+
+* IOSXR
+    * Add ShowL2VpnXconnect for:
+        show l2vpn xconnect 

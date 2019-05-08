@@ -2,10 +2,20 @@
 
 show xsconnect parser class
 
+  supported commands:
+   *  show l2vpn xconnect
+   
 """
+import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Schema, \
+                                               Any, \
+                                               Optional, \
+                                               Or, \
+                                               And, \
+                                               Default, \
+                                               Use
 
 from genie.libs.parser.base import *
 
@@ -261,3 +271,79 @@ class ShowL2VpnXconnectMp2mpDetail(MetaParser):
         return kl
 
 # vim: ft=python ts=8 sw=4 et
+
+
+class ShowL2VpnXconnectSchema(MetaParser):
+    """Schema for show l2vpn xconnect"""
+    schema = {
+      'groups': {
+        Any(): {
+          'Name': {
+            Any(): {
+              's0': str,
+              'segment_1': {
+                Any(): {
+                  's1': str,
+                  'segment_2': {
+                    Any(): {
+                      's2': str,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+
+
+class ShowL2VpnXconnect(ShowL2VpnXconnectSchema):
+    """Parser for show l2vpn xconnect """
+
+    cli_command = 'show l2vpn xconnect'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+#    Test_XCONN_Group
+#               1000     DN   Gi0/0/0/5.1000    UP   1.1.1.206       1000   DN
+            p1 = re.compile(r'^(?P<group>[\w]+)$')
+
+            p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
+                            '+(?P<s0>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                            '+(?P<segment_1>.*?) ' 
+                            '+(?P<s1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                            '+(?P<segment_2>.*?) ' 
+                            '+(?P<s2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('groups', {}) \
+                    .setdefault(str(group['group']), {})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                name_dict = group_dict.setdefault('Name', {}) \
+                    .setdefault(str(group['name']), {})
+                name_dict['s0'] = str(group['s0'])
+                segment1_dict = name_dict.setdefault('segment_1',{}) \
+                    .setdefault(str(group['segment_1']), {})
+                segment1_dict['s1'] = str(group['s1'])
+                segment1_dict.setdefault('segment_2', {}) \
+                    .setdefault( str(group['segment_2']), {}) \
+                    .setdefault('s2', str(group['s2']))
+
+        return ret_dict
