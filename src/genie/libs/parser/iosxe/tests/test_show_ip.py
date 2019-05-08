@@ -14,8 +14,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 
 # iosxe show_ip_parser
 from genie.libs.parser.iosxe.show_ip import ShowIPAlias, \
-                                    ShowIPAliasDefaultVrf
- 
+                                            ShowIPAliasDefaultVrf
+
+# import pdb    # python debugger
+
 # =================================
 # Unit test for 'show ip aliases', 'show ip aliases default-vrf', 'show ip aliases vrf {vrf}'
 # =================================
@@ -188,6 +190,7 @@ class test_show_ip_alias(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowIPAlias(device = self.device)
         parsed_output = obj.parse()
+        # can do pdb.set_trace() here so you don't have to type the golden parsed outputs
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
     def test_golden2(self):
