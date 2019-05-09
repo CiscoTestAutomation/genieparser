@@ -67,8 +67,19 @@
     * Updated ShowRipInterface for more varied interface name and status
 
 --------------------------------------------------------------------------------
+                                   IP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpAlias for:
+       show ip aliases
+       show ip aliases vrf {vrf}
+    * Added ShowIPAliasDefaultVrf:
+       show ip aliases default-vrf
+
+
                                    OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
+
