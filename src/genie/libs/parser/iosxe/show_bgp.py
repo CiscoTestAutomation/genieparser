@@ -80,6 +80,7 @@ IOSXE parsers for the following show commands:
     * 'show ip bgp {address_family} all neighbors {neighbor} routes'
     * 'show ip bgp neighbors {neighbor} routes'
     * 'show ip bgp {address_family} neighbors {neighbor} routes'
+    * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} routes'
     ----------------------------------------------------------------------------
     * show bgp all cluster-ids
     ----------------------------------------------------------------------------
@@ -5776,19 +5777,25 @@ class ShowIpBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllN
         * 'show ip bgp {address_family} neighbors {neighbor} routes'
     '''
 
-    cli_command = ['show ip bgp {address_family} neighbors {neighbor} routes',
+    cli_command = ['show ip bgp {address_family} vrf {vrf} neighbors {neighbor} routes',
+                   'show ip bgp {address_family} neighbors {neighbor} routes',
                    'show ip bgp neighbors {neighbor} routes',
                    ]
 
-    def cli(self, neighbor, address_family='', output=None):
+    def cli(self, neighbor, address_family='', output=None, vrf=''):
 
         if output is None:
             # Build command
-            if address_family and neighbor:
+
+            if vrf:
                 cmd = self.cli_command[0].format(address_family=address_family,
-                                                 neighbor=neighbor)
-            elif neighbor:
-                cmd = self.cli_command[1].format(neighbor=neighbor)
+                                                 neighbor=neighbor,
+                                                 vrf=vrf)
+            elif address_family and neighbor:
+                cmd = self.cli_command[1].format(neighbor=neighbor,
+                                                 address_family=address_family)
+            else:
+                cmd = self.cli_command[2].format(neighbor=neighbor)
             # Execute command
             show_output = self.device.execute(cmd)
         else:
