@@ -85,3 +85,11 @@ Inventory
 * ASA
     * Added ShowInventory for:
         show inventory
+
+--------------------------------------------------------------------------------
+                              VIRTUAL-SERVICE
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowGuestshell for "show guestshell"
+    * Added ShowVirtualServiceGlobal for "show virtual-service global"
+    * Added ShowVirtualServiceList for "show virtual-service list"
