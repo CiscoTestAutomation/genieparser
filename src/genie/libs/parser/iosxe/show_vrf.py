@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
     * 'show vrf detail'
+    * 'show vrf detail <vrf>'
 """
 
 # Python
@@ -19,6 +20,9 @@ from genie.libs.parser.utils.common import Common
 
 class ShowVrfDetailSchema(MetaParser):
     """Schema for show vrf detail"""
+    """Schema for show vrf detail <vrf>"""
+    """Schema for show ip vrf detail """
+    """Schema for show ip vrf detail <vrf>"""
 
     schema = {
         Any(): {
@@ -71,12 +75,18 @@ class ShowVrfDetailSchema(MetaParser):
 
 
 class ShowVrfDetail(ShowVrfDetailSchema):
-    """Parser for show vrf detail"""
-    cli_command = 'show vrf detail'
+    """Paser for show vrf detail"""
+    """Paser for show vrf detail <vrf>"""
 
-    def cli(self, output=None):
+    cli_command = ['show vrf detail' , 'show vrf detail <vrf>']
+
+    def cli(self, vrf=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if not vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 

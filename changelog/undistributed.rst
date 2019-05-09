@@ -39,3 +39,19 @@
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
 
+--------------------------------------------------------------------------------
+                                   IP_VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpVrf for:
+      * show ip vrf
+      * show ip vrf <vrf>
+      * show ip vrf detail
+      * show ip vrf detial <vrf>
+
+--------------------------------------------------------------------------------
+                                   VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowVrf for:
+      * show vrf detail <vrf>
