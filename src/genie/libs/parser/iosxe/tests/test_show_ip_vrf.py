@@ -24,23 +24,30 @@ class test_show_ip_vrf(unittest.TestCase):
   empty_output = {'execute.return_value' : ''}
 
   golden_parsed_output = {
-  'vrf': {'Mgmt-intf': {'interfaces': ['GigabitEthernet1']},
-           'VRF1': {'default_route_distinguisher': '65000:1',
-                    'interfaces': ['Tunnel1',
-                                   'Loopback300',
-                                   'GigabitEthernet2.390',
-                                   'GigabitEthernet2.410',
-                                   'GigabitEthernet2.415',
-                                   'GigabitEthernet2.420',
-                                   'GigabitEthernet3.390',
-                                   'GigabitEthernet3.410',
-                                   'GigabitEthernet3.415',
-                                   'GigabitEthernet3.420',
-                                   'Tunnel3',
-                                   'Tunnel4',
-                                   'Tunnel6',
-                                   'Tunnel8']}}
-                          }
+'vrf': {
+    'Mgmt-intf': {
+        'interfaces': ['GigabitEthernet1'],
+        },
+    'VRF1': {
+        'default_route_distinguisher': '65000:1',
+        'interfaces': ['Tunnel1', 
+        'Loopback300', 
+        'GigabitEthernet2.390', 
+        'GigabitEthernet2.410', 
+        'GigabitEthernet2.415', 
+        'GigabitEthernet2.420', 
+        'GigabitEthernet3.390', 
+        'GigabitEthernet3.410', 
+        'GigabitEthernet3.415', 
+        'GigabitEthernet3.420', 
+        'Tunnel3', 
+        'Tunnel4', 
+        'Tunnel6', 
+        'Tunnel8'],
+        },
+    },
+}
+
 
   golden_output = {'execute.return_value': '''
     R1_xe#show ip vrf
@@ -62,8 +69,11 @@ class test_show_ip_vrf(unittest.TestCase):
                                                        Tu8 
   '''}
 
-  golden_parsed_output1 = {'vrf': 
-         {'VRF1': {'default_route_distinguisher': '65000:1',
+  golden_parsed_output1 = {
+'vrf': {
+    'VRF1': {
+        'default_route_distinguisher': '65000:1',
+
                    'interfaces': ['Tunnel1',
                                   'Loopback300',
                                   'GigabitEthernet2.390',
@@ -77,10 +87,11 @@ class test_show_ip_vrf(unittest.TestCase):
                                   'Tunnel3',
                                   'Tunnel4',
                                   'Tunnel6',
-                                  'Tunnel8']}}
-                          }
+                                  'Tunnel8'],
+        },
+    },
+}
 
-    
   golden_output1 = {'execute.return_value': '''
   R1_xe#show ip vrf VRF1
   Name                             Default RD          Interfaces
@@ -102,8 +113,13 @@ class test_show_ip_vrf(unittest.TestCase):
     }
 
   golden_parsed_output2 = {
-  'vrf': {'Mgmt-intf': {'interfaces': ['GigabitEthernet1']}}
-  }
+'vrf': {
+    'Mgmt-intf': {
+        'interfaces': ['GigabitEthernet1'],
+        },
+    },
+}
+
     
   golden_output2 = {'execute.return_value': '''
   R1_xe#show ip vrf Mgmt-intf
@@ -207,6 +223,99 @@ class test_show_ip_vrf_detail(unittest.TestCase):
                    'flags': '0x180C',
                    }
   }
+  golden_parsed_output = {
+'Mgmt-intf': {
+    'vrf_id': 1,
+    'flags': '0x1808',
+    'interface': {
+        'GigabitEthernet1': {
+            'vrf': 'Mgmt-intf',
+            },
+        },
+    'interfaces': ['GigabitEthernet1'],
+    'address_family': {
+        'ipv4 unicast': {
+            'flags': '0x0',
+            'table_id': '0x1',
+            'vrf_label': {
+                'allocation_mode': 'per-prefix',
+                },
+            },
+        },
+    },
+'VRF1': {
+    'vrf_id': 2,
+    'route_distinguisher': '65000:1',
+    'interface': {
+        'GigabitEthernet2.390': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet2.410': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet2.415': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet2.420': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet3.390': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet3.410': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet3.415': {
+            'vrf': 'VRF1',
+            },
+        'GigabitEthernet3.420': {
+            'vrf': 'VRF1',
+            },
+        'Loopback300': {
+            'vrf': 'VRF1',
+            },
+        'Tunnel1': {
+            'vrf': 'VRF1',
+            },
+        'Tunnel3': {
+            'vrf': 'VRF1',
+            },
+        'Tunnel4': {
+            'vrf': 'VRF1',
+            },
+        'Tunnel6': {
+            'vrf': 'VRF1',
+            },
+        'Tunnel8': {
+            'vrf': 'VRF1',
+            },
+        },
+    'interfaces': ['Tunnel1',
+                          'Loopback300',
+                          'GigabitEthernet2.390',
+                          'GigabitEthernet2.410',
+                          'GigabitEthernet2.415',
+                          'GigabitEthernet2.420',
+                          'GigabitEthernet3.390',
+                          'GigabitEthernet3.410',
+                          'GigabitEthernet3.415',
+                          'GigabitEthernet3.420',
+                          'Tunnel3',
+                          'Tunnel4',
+                          'Tunnel6',
+                          'Tunnel8'],
+      'address_family': {
+        'ipv4 unicast': {
+            'flags': '0x0',
+            'table_id': '0x2',
+            'vrf_label': {
+                'allocation_mode': 'per-prefix',
+                },
+            },
+        },
+    'flags': '0x180C',
+    },
+}
 
 
   golden_output = {'execute.return_value': '''
@@ -247,20 +356,28 @@ Address family ipv4 unicast (Table ID = 0x2):
   '''}
 
   golden_parsed_output1 = {
-  'Mgmt-intf': 
-    { 'flags': '0x1808',
-      'interface': {'GigabitEthernet1': {'vrf': 'Mgmt-intf'}},
-      'interfaces': ['GigabitEthernet1'],
-      'vrf_id': 1,
-      'address_family': 
-      {'ipv4 unicast': 
-        {'flags': '0x0',
-          'table_id': '0x1',
-          'vrf_label': {'allocation_mode': 'per-prefix'}}}
-    }
-  }
+'Mgmt-intf': {
+    'flags': '0x1808',
+    'interface': {
+        'GigabitEthernet1': {
+            'vrf': 'Mgmt-intf',
+            },
+        },
+    'interfaces': ['GigabitEthernet1'],
+    'vrf_id': 1,
+    'address_family': {
+        'ipv4 unicast': {
+            'flags': '0x0',
+            'table_id': '0x1',
+            'vrf_label': {
+                'allocation_mode': 'per-prefix',
+                },
+            },
+        },
+    },
+}
 
-    
+
   golden_output1 = {'execute.return_value': '''
 R1_xe#show ip vrf detail Mgmt-intf
 VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>

@@ -197,18 +197,28 @@ class test_show_vrf_detail(unittest.TestCase):
         Address family ipv6 multicast not active
         '''}
 
-    golden_parsed_output1 = {'Mgmt-intf': 
-        {'vrf_id': 1,
-        'flags': '0x1808',
-         'interface': {'GigabitEthernet1': {'vrf': 'Mgmt-intf'}},
-         'interfaces': ['GigabitEthernet1'],
-         'address_family': 
-          {'ipv4 unicast': {'flags': '0x0',
-                           'table_id': '0x1',
-                           'vrf_label': {'allocation_mode': 'per-prefix'}
-                           }}
-        }
-    }
+    golden_parsed_output1 = {
+      'Mgmt-intf': {
+          'vrf_id': 1,
+          'flags': '0x1808',
+          'interface': {
+              'GigabitEthernet1': {
+                  'vrf': 'Mgmt-intf',
+                  },
+              },
+          'interfaces': ['GigabitEthernet1'],
+          'address_family': {
+              'ipv4 unicast': {
+                  'flags': '0x0',
+                  'table_id': '0x1',
+                  'vrf_label': {
+                      'allocation_mode': 'per-prefix',
+                      },
+                  },
+              },
+          },
+      }
+
 
     golden_output1 = {'execute.return_value': '''
 R1_xe#show ip vrf detail Mgmt-intf
