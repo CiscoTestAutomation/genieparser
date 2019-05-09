@@ -11,7 +11,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
     SchemaMissingKeyError
 
 # iosxe show_lisp
-from genie.libs.parser.nxos.show_lldp import ShowLldpAll, ShowLldpTimers
+from genie.libs.parser.nxos.show_lldp import ShowLldpAll, ShowLldpTimers, \
+    ShowLldpTlvSelect
 
 
 # =================================
@@ -95,6 +96,46 @@ class test_show_lldp_timers(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+class test_show_lldp_tlv_select(unittest.TestCase):
+    '''unit test for show lldp tlv-select'''
+    empty_output = {'execute.return_value': ''}
+    golden_output = {'execute.return_value': '''
+           management-address-v4
+           management-address-v6
+           port-description
+           port-vlan
+           power-management
+           system-capabilities
+           system-description
+           system-name
+           dcbxp
+        '''}
+    golden_parsed_output = {'suppress_tlv_advertisement': {
+        'port_description': False,
+        'system_name': False,
+        'system_description': False,
+        'system_capabilities': False,
+        'management_address': False,
+        'port_vlan': False,
+        'dcbxp': False
+    }
+    }
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowLldpTlvSelect(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowLldpTlvSelect(device=self.device)
+        parsed_output = obj.parse()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

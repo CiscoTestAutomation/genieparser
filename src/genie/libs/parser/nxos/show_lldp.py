@@ -31,7 +31,7 @@ class ShowLldpAllSchema(MetaParser):
 
 
 class ShowLldpAll(ShowLldpAllSchema):
-    '''parser for "show lldp all"'''
+    """parser for show lldp all"""
     cli_command = 'show lldp all'
 
     def cli(self, output=None):
@@ -68,7 +68,7 @@ class ShowLldpAll(ShowLldpAllSchema):
                 sub_dict[interface]['rx'] = True if group[
                                                         'rx'] == 'Y' else False
                 sub_dict[interface]['dcbx'] = True if group[
-                                                          'dcbx'] == 'Y' else\
+                                                          'dcbx'] == 'Y' else \
                     False
 
                 continue
@@ -80,7 +80,7 @@ class ShowLldpAll(ShowLldpAllSchema):
 # Schema for 'show lldp timers'
 # ==============================
 class ShowLldpTimersSchema(MetaParser):
-    '''Schema for 'show lldp timers''''
+    """Schema for show lldp timers"""
     schema = {
         'hold_timer': int,
         'reinit_timer': int,
@@ -101,11 +101,13 @@ class ShowLldpTimers(ShowLldpTimersSchema):
         # init return dictionary
         parsed_dict = {}
 
-        # LLDP Timers:
-        #
-        #     Holdtime in seconds: 120
-        #     Reinit-time in seconds: 2
-        #     Transmit interval in seconds: 30
+        '''
+         LLDP Timers:
+        
+             Holdtime in seconds: 120
+             Reinit-time in seconds: 2
+             Transmit interval in seconds: 30
+         '''
         p1 = re.compile(r'^(?P<timer>[\w -]+) +in +seconds: +(?P<seconds>\d+)$')
         for line in out.splitlines():
             line = line.strip()
@@ -132,40 +134,64 @@ class ShowLldpTimers(ShowLldpTimersSchema):
 # =================================
 
 class ShowLldpTlvSelectSchema(MetaParser):
-    '''Schema for 'show lldp tlv-select''''
-    schema={
-
+    """Schema for show lldp tlv-select"""
+    schema = {'suppress_tlv_advertisement': {
+        'port_description': bool,
+        'system_name': bool,
+        'system_description': bool,
+        'system_capabilities': bool,
+        'management_address': bool,
+        'port_vlan': bool,
+        'dcbxp': bool,
+        # not sure about this one, what if there're more properties from output?
+        # Any(): bool
     }
-    pass
-class ShowLldpTlvSelect(ShowLldpTlvSelectSchema)
+    }
+
+
+class ShowLldpTlvSelect(ShowLldpTlvSelectSchema):
+    """parser for show lldp tlv-select"""
     cli_command = 'show lldp tlv-select'
 
-#    management-address-v4
-#    management-address-v6
-#    port-description
-#    port-vlan
-#    power-management
-#    system-capabilities
-#    system-description
-#    system-name
-#    dcbxp
-    pass
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # init return dictionary
+        parsed_dict = {}
+        mgmt_set = {'management_address_v4', 'management_address_v6'}
+
+        #    management-address-v4
+        #    management-address-v6
+        #    port-description
+        #    port-vlan
+        #    power-management
+        #    system-capabilities
+        #    system-description
+        #    system-name
+        #    dcbxp
+        for line in out.splitlines():
+            line = line.strip().replace('-', '_')
+            if not line:
+                continue
+            sub_dict = parsed_dict.setdefault('suppress_tlv_advertisement', {
+            'port_description': True,
+            'system_name': True,
+            'system_description': True,
+            'system_capabilities': True,
+            'management_address': True,
+            'port_vlan': True,
+            'dcbxp': True
+        })
+
+            if line in sub_dict.keys():
+                sub_dict[line] = False
+            elif line in mgmt_set:
+                sub_dict['management_address'] = False
+
+        return parsed_dict
 
 
-# =================================
-# schema for 'show lldp neighbors detail'
-# =================================
-class ShowLldpNeighborsDetailSchema(MetaParser):
-    pass
 
-class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
-    pass
-
-# =================================
-# schema for 'show lldp traffic'
-# =================================
-class ShowLldpTrafficSchema(MetaParser):
-    pass
-
-class ShowLldpTraffic(ShowLldpTrafficSchema):
-    pass
