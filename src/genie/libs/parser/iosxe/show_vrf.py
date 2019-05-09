@@ -77,6 +77,8 @@ class ShowVrfDetailSchema(MetaParser):
 class ShowVrfDetail(ShowVrfDetailSchema):
     """Paser for show vrf detail"""
     """Paser for show vrf detail <vrf>"""
+    """Super Paser for show ip vrf detail"""
+    """Super Paser for show ip vrf detail <vrf>"""
 
     cli_command = ['show vrf detail' , 'show vrf detail <vrf>']
 

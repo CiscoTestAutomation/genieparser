@@ -13,11 +13,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_ip_vrf import ShowIpVrf, ShowIpVrfDetail
 
 # ============================================
-# Parser for the following commands
-#   * 'show ip vrf '
-#   * 'show ip vrf <vrf> '
-#   * 'show ip vrf detail'
-#   * 'show ip vrf detail <vrf> '
+# Unit test for 'show ip vrf '
+# Unit test for 'show ip vrf <vrf> '
+# Unit test for 'show ip vrf detail'
+# Unit test for 'show ip vrf detail <vrf> '
 
 # ============================================
 class test_show_ip_vrf(unittest.TestCase):
