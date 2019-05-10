@@ -5782,17 +5782,17 @@ class ShowIpBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllN
                    'show ip bgp neighbors {neighbor} routes',
                    ]
 
-    def cli(self, neighbor, address_family='', output=None, vrf=''):
+    def cli(self, neighbor, address_family='', vrf='', output=None):
 
         if output is None:
             # Build command
 
-            if vrf:
-                cmd = self.cli_command[0].format(address_family=address_family,
-                                                 neighbor=neighbor,
+            if address_family and vrf:
+                cmd = self.cli_command[0].format(neighbor=neighbor, 
+                                                 address_family=address_family, 
                                                  vrf=vrf)
-            elif address_family and neighbor:
-                cmd = self.cli_command[1].format(neighbor=neighbor,
+            elif address_family:
+                cmd = self.cli_command[1].format(neighbor=neighbor, 
                                                  address_family=address_family)
             else:
                 cmd = self.cli_command[2].format(neighbor=neighbor)
