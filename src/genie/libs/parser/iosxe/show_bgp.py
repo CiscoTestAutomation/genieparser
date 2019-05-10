@@ -5769,12 +5769,14 @@ class ShowIpBgpAllNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpA
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} routes'
+#   * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} routes'
 # ==============================================================
 class ShowIpBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllNeighborsRoutesSchema):
 
     ''' Parser for:
         * 'show ip bgp neighbors {neighbor} routes'
         * 'show ip bgp {address_family} neighbors {neighbor} routes'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} routes'
     '''
 
     cli_command = ['show ip bgp {address_family} vrf {vrf} neighbors {neighbor} routes',
