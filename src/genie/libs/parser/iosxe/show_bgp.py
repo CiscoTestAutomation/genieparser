@@ -5251,11 +5251,10 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         * 'show ip bgp {address_family} neighbors {neighbor} routes'
     '''
 
-    def cli(self, neighbor, address_family='', output=None):
+    def cli(self, neighbor, address_family='', vrf='default', output=None):
 
         # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
         out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
-        vrf = 'default'
         for line in out_vrf.splitlines():
             line = line.strip()
             # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
@@ -5805,7 +5804,7 @@ class ShowIpBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllN
 
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
-                           address_family=address_family)
+                           address_family=address_family, vrf=vrf)
 
 
 #-------------------------------------------------------------------------------
