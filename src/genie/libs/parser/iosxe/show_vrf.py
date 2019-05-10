@@ -17,6 +17,101 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 from genie.libs.parser.utils.common import Common
 
 
+class ShowVrfSchema(MetaParser):
+    ''' Schema for:
+            show vrf
+            show vrf {vrf}
+    '''
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('route_distinguisher'): str,
+                'protocols': list,
+                Optional('interfaces'): list,
+                Optional('interface'): {
+                    Any(): {
+                        'vrf': str
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowVrf(ShowVrfSchema):
+    ''' Parser for:
+            show vrf
+            show vrf {vrf}
+    '''
+    cli_command = ['show vrf', 'show vrf {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        res_dict = {}
+
+        # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+        # VRF1                             65000:1               ipv4,ipv6   Tu1
+        p1 = re.compile(r'^(?P<vrf>\S+)\s+(?P<rd>\<not +set\>|[\d\:]+)\s+'
+                        r'(?P<protocols>[(?:ipv\d)\,]+)(?:\s+(?P<intf>[\S\s]+))?$')
+                                                                    
+        # Lo300
+        # Gi2.390
+        # Gi2.410
+        p2 = re.compile(r'^(?P<intf>[\w\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+            # VRF1                             65000:1               ipv4,ipv6   Tu1
+            # vpn2                           100:3          ipv4              Lo23  AT3/0/0.1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+
+                vrf = groups['vrf']
+                vrf_dict = res_dict.setdefault('vrf', {}).setdefault(vrf, {})
+
+                rd = groups['rd']
+                if 'not set' not in rd:
+                    vrf_dict.update({'route_distinguisher': rd})
+
+                protocols = groups['protocols'].split(',')
+                vrf_dict.update({'protocols': protocols})
+
+                if groups['intf']:
+                    intfs = groups['intf'].split()
+                    intf_list = [Common.convert_intf_name(item) for item in intfs]
+                    vrf_dict.update({'interfaces': intf_list})
+                    
+                    interfaces_dict = vrf_dict.setdefault('interface', {})
+                    [interfaces_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
+                # interface_dict.update({'vrf': vrf})
+                continue
+
+            # Lo300
+            # Gi2.390
+            # Gi2.410
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                intf = Common.convert_intf_name(groups['intf'])
+                vrf_dict.get('interfaces').append(intf)
+                interface_dict = interfaces_dict.setdefault(intf, {})
+                interface_dict.update({'vrf': vrf})
+
+        return res_dict
+
+
 class ShowVrfDetailSchema(MetaParser):
     """Schema for show vrf detail"""
 

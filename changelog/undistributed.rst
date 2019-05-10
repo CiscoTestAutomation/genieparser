@@ -76,10 +76,17 @@
     * Added ShowIPAliasDefaultVrf:
        show ip aliases default-vrf
 
-
+--------------------------------------------------------------------------------
                                    OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
 
+--------------------------------------------------------------------------------
+                                   VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowVrf for:
+        show vrf
+        show vrf {vrf}
