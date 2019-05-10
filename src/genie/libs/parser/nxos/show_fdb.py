@@ -71,7 +71,7 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
     """Base parser for show mac address-table"""
     """Base parser for show system internal l2fwder mac"""
 
-    def reghelper(self, out):
+    def cli(self, out):
 
         # initial return dictionary
         ret_dict = {}
@@ -151,7 +151,7 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSche
             out = output
 
         # get return dictionary
-        ret_dict = super().reghelper(out)
+        ret_dict = super().cli(out)
 
         return ret_dict
 
@@ -169,7 +169,7 @@ class ShowMacAddressTable(ShowMacAddressTableBase, ShowMacAddressTableVniSchema)
             out = output
 
         # get return dictionary
-        ret_dict = super().reghelper(out)
+        ret_dict = super().cli(out)
 
         return ret_dict
 
@@ -331,6 +331,6 @@ class ShowSystemInternalL2fwderMac(ShowMacAddressTableBase, ShowMacAddressTableV
         # *     1  fa16.3eef.6e79   dynamic   00:01:02   F     F     Eth1/4
 
         # get return dictionary
-        ret_dict = super().reghelper(out)
+        ret_dict = super().cli(out)
 
         return ret_dict

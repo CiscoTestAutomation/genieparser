@@ -9,27 +9,42 @@ from genie.libs.parser.nxos.show_fdb import ShowMacAddressTableVni, \
     ShowMacAddressTableLimit, ShowSystemInternalL2fwderMac
 
 
+# ==================================================
+#  Unit test for 'show mac address-table vni <WORD> | grep <WORD>''
+#  Unit test for 'show mac address-table local vni <WORD>''
+#  Unit test for 'show mac address-table'
+#  Unit test for 'show mac address-table aging-time'
+#  Unit test for 'show mac address-table limit'
+#  Unit test for 'show system internal l2fwder mac'
+# ==================================================
+
 class test_show_mac_address_table_vni(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output =  {'mac_table': 
-            {'vlans': 
-                {'1001': 
-                    {'mac_addresses': 
-                        {'0000.04b1.0000': 
-                           {'entry': 'C',
-                            'mac_address': '0000.04b1.0000',
-                            'next_hops': {'10.9.0.101': 
-                                        {'age': '0',
-                                         'mac_type': 'dynamic',
-                                         'next_hop': '10.9.0.101'}},
-                            'ntfy': 'F',
-                            'secure': 'F'}
+    golden_parsed_output = {
+    'mac_table': {
+        'vlans': {
+            '1001': {
+                'mac_addresses': {
+                    '0000.04b1.0000': {
+                        'entry': 'C',
+                        'mac_address': '0000.04b1.0000',
+                        'next_hops': {
+                            '10.9.0.101': {
+                                'age': '0',
+                                'mac_type': 'dynamic',
+                                'next_hop': '10.9.0.101',
+                                },
+                            },
+                        'ntfy': 'F',
+                        'secure': 'F',
                         },
-                        'vlan': '1001'}
-                }
-            }
+                    },
+                'vlan': '1001',
+                },
+            },
+        },
     }
 
     golden_output = {'execute.return_value': '''\
@@ -38,32 +53,56 @@ class test_show_mac_address_table_vni(unittest.TestCase):
     '''
                      }
 
-    golden_parsed_output_1 =  {'mac_table': {'vlans': {'1001': {'mac_addresses': 
-            {'0000.0191.0000': {'entry': '*',
-                                'mac_address': '0000.0191.0000',
-                                'ntfy': 'F',
-                                'ports': {'Ethernet1/11': 
-                                    {'age': '0',
-                                   'mac_type': 'dynamic',
-                                   'port': 'Ethernet1/11'}},
-                                'secure': 'F'},
-             '00f1.0000.0000': {'entry': '*',
-                                'mac_address': '00f1.0000.0000',
-                                'ntfy': 'F',
-                                'ports': {'Ethernet1/11': 
-                                    {'age': '0',
-                                   'mac_type': 'dynamic',
-                                   'port': 'Ethernet1/11'}},
-                                'secure': 'F'},
-             '00f5.0000.0000': {'entry': '*',
-                                'mac_address': '00f5.0000.0000',
-                                'ntfy': 'F',
-                                'ports': {'Ethernet1/11': 
-                                    {'age': '0',
-                                   'mac_type': 'dynamic',
-                                   'port': 'Ethernet1/11'}},
-                                'secure': 'F'}},
-                                   'vlan': '1001'}}}}
+    golden_parsed_output_1 =  {
+      'mac_table': {
+          'vlans': {
+              '1001': {
+                  'mac_addresses': {
+                      '0000.0191.0000': {
+                          'entry': '*',
+                          'mac_address': '0000.0191.0000',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Ethernet1/11': {
+                                  'age': '0',
+                                  'mac_type': 'dynamic',
+                                  'port': 'Ethernet1/11',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      '00f1.0000.0000': {
+                          'entry': '*',
+                          'mac_address': '00f1.0000.0000',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Ethernet1/11': {
+                                  'age': '0',
+                                  'mac_type': 'dynamic',
+                                  'port': 'Ethernet1/11',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      '00f5.0000.0000': {
+                          'entry': '*',
+                          'mac_address': '00f5.0000.0000',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Ethernet1/11': {
+                                  'age': '0',
+                                  'mac_type': 'dynamic',
+                                  'port': 'Ethernet1/11',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1001',
+                  },
+              },
+          },
+      }
 
     golden_output_1 = {'execute.return_value': '''\
 CH-P2-TOR-1# sh mac address-table local vni 2001001 
@@ -132,205 +171,453 @@ class test_show_mac_address_table(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output =  {'mac_table': {'vlans': {'-': {'mac_addresses': {'0000.dead.beef': {'entry': 'G',
-                                                                     'mac_address': '0000.dead.beef',
-                                                                     'ntfy': 'F',
-                                                                     'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                               'mac_type': 'static',
-                                                                                               'port': 'Sup-eth1(R)'}},
-                                                                     'secure': 'F'},
-                                                  '5e00.c000.0007': {'entry': 'G',
-                                                                     'mac_address': '5e00.c000.0007',
-                                                                     'ntfy': 'F',
-                                                                     'ports': {'(R)': {'age': '-',
-                                                                                       'mac_type': 'static',
-                                                                                       'port': '(R)'}},
-                                                                     'secure': 'F'}},
-                                'vlan': '-'},
-                          '10': {'mac_addresses': {'aaaa.bbbb.cccc': {'entry': '*',
-                                                                      'mac_address': 'aaaa.bbbb.cccc',
-                                                                      'ntfy': 'F',
-                                                                      'ports': {'Ethernet1/2': {'age': '-',
-                                                                                                'mac_type': 'static',
-                                                                                                'port': 'Ethernet1/2'}},
-                                                                      'secure': 'F'}},
-                                 'vlan': '10'},
-                          '100': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '100'},
-                          '1000': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                        'mac_address': '5e00.c000.0007',
-                                                                        'ntfy': 'F',
-                                                                        'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                  'mac_type': 'static',
-                                                                                                  'port': 'Sup-eth1(R)'}},
-                                                                        'secure': 'F'}},
-                                   'vlan': '1000'},
-                          '1005': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                        'mac_address': '5e00.c000.0007',
-                                                                        'ntfy': 'F',
-                                                                        'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                  'mac_type': 'static',
-                                                                                                  'port': 'Sup-eth1(R)'}},
-                                                                        'secure': 'F'}},
-                                   'vlan': '1005'},
-                          '1006': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                        'mac_address': '5e00.c000.0007',
-                                                                        'ntfy': 'F',
-                                                                        'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                  'mac_type': 'static',
-                                                                                                  'port': 'Sup-eth1(R)'}},
-                                                                        'secure': 'F'}},
-                                   'vlan': '1006'},
-                          '1007': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                        'mac_address': '5e00.c000.0007',
-                                                                        'ntfy': 'F',
-                                                                        'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                  'mac_type': 'static',
-                                                                                                  'port': 'Sup-eth1(R)'}},
-                                                                        'secure': 'F'}},
-                                   'vlan': '1007'},
-                          '1008': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                        'mac_address': '5e00.c000.0007',
-                                                                        'ntfy': 'F',
-                                                                        'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                  'mac_type': 'static',
-                                                                                                  'port': 'Sup-eth1(R)'}},
-                                                                        'secure': 'F'}},
-                                   'vlan': '1008'},
-                          '1009': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                        'mac_address': '5e00.c000.0007',
-                                                                        'ntfy': 'F',
-                                                                        'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                  'mac_type': 'static',
-                                                                                                  'port': 'Sup-eth1(R)'}},
-                                                                        'secure': 'F'}},
-                                   'vlan': '1009'},
-                          '101': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '101'},
-                          '102': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '102'},
-                          '103': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '103'},
-                          '105': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '105'},
-                          '106': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '106'},
-                          '107': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '107'},
-                          '108': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '108'},
-                          '109': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '109'},
-                          '110': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '110'},
-                          '111': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '111'},
-                          '112': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '112'},
-                          '113': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '113'},
-                          '114': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                                       'mac_address': '5e00.c000.0007',
-                                                                       'ntfy': 'F',
-                                                                       'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                                                 'mac_type': 'static',
-                                                                                                 'port': 'Sup-eth1(R)'}},
-                                                                       'secure': 'F'}},
-                                  'vlan': '114'},
-                          '20': {'mac_addresses': {'aaaa.bbbb.cccc': {'drop': {'age': '-',
-                                                                               'drop': True,
-                                                                               'mac_type': 'static'},
-                                                                      'entry': '*',
-                                                                      'mac_address': 'aaaa.bbbb.cccc',
-                                                                      'ntfy': 'F',
-                                                                      'secure': 'F'}},
-                                 'vlan': '20'},
-                          '30': {'mac_addresses': {'aaaa.bbbb.cccc': {'drop': {'age': '-',
-                                                                               'drop': True,
-                                                                               'mac_type': 'static'},
-                                                                      'entry': '*',
-                                                                      'mac_address': 'aaaa.bbbb.cccc',
-                                                                      'ntfy': 'F',
-                                                                      'secure': 'F'}},
-                                 'vlan': '30'}}}}
+    golden_parsed_output =  {
+      'mac_table': {
+          'vlans': {
+              '-': {
+                  'mac_addresses': {
+                      '0000.dead.beef': {
+                          'entry': 'G',
+                          'mac_address': '0000.dead.beef',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              '(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': '(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '-',
+                  },
+              '10': {
+                  'mac_addresses': {
+                      'aaaa.bbbb.cccc': {
+                          'entry': '*',
+                          'mac_address': 'aaaa.bbbb.cccc',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Ethernet1/2': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Ethernet1/2',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '10',
+                  },
+              '100': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '100',
+                  },
+              '1000': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1000',
+                  },
+              '1005': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1005',
+                  },
+              '1006': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1006',
+                  },
+              '1007': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1007',
+                  },
+              '1008': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1008',
+                  },
+              '1009': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1009',
+                  },
+              '101': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '101',
+                  },
+              '102': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '102',
+                  },
+              '103': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '103',
+                  },
+              '105': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '105',
+                  },
+              '106': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '106',
+                  },
+              '107': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '107',
+                  },
+              '108': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '108',
+                  },
+              '109': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '109',
+                  },
+              '110': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '110',
+                  },
+              '111': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '111',
+                  },
+              '112': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '112',
+                  },
+              '113': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '113',
+                  },
+              '114': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '114',
+                  },
+              '20': {
+                  'mac_addresses': {
+                      'aaaa.bbbb.cccc': {
+                          'drop': {
+                              'age': '-',
+                              'drop': True,
+                              'mac_type': 'static',
+                              },
+                          'entry': '*',
+                          'mac_address': 'aaaa.bbbb.cccc',
+                          'ntfy': 'F',
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '20',
+                  },
+              '30': {
+                  'mac_addresses': {
+                      'aaaa.bbbb.cccc': {
+                          'drop': {
+                              'age': '-',
+                              'drop': True,
+                              'mac_type': 'static',
+                              },
+                          'entry': '*',
+                          'mac_address': 'aaaa.bbbb.cccc',
+                          'ntfy': 'F',
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '30',
+                  },
+              },
+          },
+      }
 
     golden_output = {'execute.return_value': '''\
     N95_1# show mac address-table 
@@ -387,158 +674,219 @@ class test_show_mac_address_table_limit(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'configured_system_action': 'Flood',
-        'configured_system_limit': 111,
-        'current_system_count': 3,
-        'currently_system_is': 'Flooding Unknown SA',
-        'mac_table': {'vlans': {'1': {'cfg_action': 'Flood',
-                                      'conf_limit': 196000,
-                                      'curr_count': 0,
-                                      'currently': 'Flooding Unknown SA',
-                                      'vlan': '1'},
-                                '10': {'cfg_action': 'Flood',
-                                       'conf_limit': 196000,
-                                       'curr_count': 1,
-                                       'currently': 'Flooding Unknown SA',
-                                       'vlan': '10'},
-                                '100': {'cfg_action': 'Flood',
-                                        'conf_limit': 200,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '100'},
-                                '1000': {'cfg_action': 'Flood',
-                                         'conf_limit': 196000,
-                                         'curr_count': 0,
-                                         'currently': 'Flooding Unknown SA',
-                                         'vlan': '1000'},
-                                '1005': {'cfg_action': 'Flood',
-                                         'conf_limit': 196000,
-                                         'curr_count': 0,
-                                         'currently': 'Flooding Unknown SA',
-                                         'vlan': '1005'},
-                                '1006': {'cfg_action': 'Flood',
-                                         'conf_limit': 196000,
-                                         'curr_count': 0,
-                                         'currently': 'Flooding Unknown SA',
-                                         'vlan': '1006'},
-                                '1007': {'cfg_action': 'Flood',
-                                         'conf_limit': 196000,
-                                         'curr_count': 0,
-                                         'currently': 'Flooding Unknown SA',
-                                         'vlan': '1007'},
-                                '1008': {'cfg_action': 'Flood',
-                                         'conf_limit': 196000,
-                                         'curr_count': 0,
-                                         'currently': 'Flooding Unknown SA',
-                                         'vlan': '1008'},
-                                '1009': {'cfg_action': 'Flood',
-                                         'conf_limit': 196000,
-                                         'curr_count': 0,
-                                         'currently': 'Flooding Unknown SA',
-                                         'vlan': '1009'},
-                                '101': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '101'},
-                                '102': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '102'},
-                                '103': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '103'},
-                                '104': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '104'},
-                                '105': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '105'},
-                                '106': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '106'},
-                                '107': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '107'},
-                                '108': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '108'},
-                                '109': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '109'},
-                                '110': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '110'},
-                                '111': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '111'},
-                                '112': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '112'},
-                                '113': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '113'},
-                                '114': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '114'},
-                                '115': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '115'},
-                                '185': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '185'},
-                                '20': {'cfg_action': 'Flood',
-                                       'conf_limit': 196000,
-                                       'curr_count': 1,
-                                       'currently': 'Flooding Unknown SA',
-                                       'vlan': '20'},
-                                '285': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '285'},
-                                '30': {'cfg_action': 'Flood',
-                                       'conf_limit': 196000,
-                                       'curr_count': 1,
-                                       'currently': 'Flooding Unknown SA',
-                                       'vlan': '30'},
-                                '910': {'cfg_action': 'Flood',
-                                        'conf_limit': 196000,
-                                        'curr_count': 0,
-                                        'currently': 'Flooding Unknown SA',
-                                        'vlan': '910'}
-                                }
-                        }
-                        }
+    golden_parsed_output = {
+      'configured_system_action': 'Flood',
+      'configured_system_limit': 111,
+      'current_system_count': 3,
+      'currently_system_is': 'Flooding Unknown SA',
+      'mac_table': {
+          'vlans': {
+              '1': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1',
+                  },
+              '10': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 1,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '10',
+                  },
+              '100': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 200,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '100',
+                  },
+              '1000': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1000',
+                  },
+              '1005': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1005',
+                  },
+              '1006': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1006',
+                  },
+              '1007': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1007',
+                  },
+              '1008': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1008',
+                  },
+              '1009': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '1009',
+                  },
+              '101': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '101',
+                  },
+              '102': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '102',
+                  },
+              '103': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '103',
+                  },
+              '104': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '104',
+                  },
+              '105': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '105',
+                  },
+              '106': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '106',
+                  },
+              '107': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '107',
+                  },
+              '108': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '108',
+                  },
+              '109': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '109',
+                  },
+              '110': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '110',
+                  },
+              '111': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '111',
+                  },
+              '112': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '112',
+                  },
+              '113': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '113',
+                  },
+              '114': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '114',
+                  },
+              '115': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '115',
+                  },
+              '185': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '185',
+                  },
+              '20': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 1,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '20',
+                  },
+              '285': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '285',
+                  },
+              '30': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 1,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '30',
+                  },
+              '910': {
+                  'cfg_action': 'Flood',
+                  'conf_limit': 196000,
+                  'curr_count': 0,
+                  'currently': 'Flooding Unknown SA',
+                  'vlan': '910',
+                  },
+              },
+          },
+      }
 
     golden_output = {'execute.return_value': '''\
         N95_1# show mac address-table limit 
@@ -601,183 +949,408 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'mac_table': {'vlans': 
-    {'-': {'mac_addresses': {'5e00:c000:0007': {'entry': 'G',
-                                              'mac_address': '5e00:c000:0007',
-                                              'ntfy': 'F',
-                                              'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                        'mac_type': 'static',
-                                                                        'port': 'Sup-eth1(R)'}},
-                                              'secure': 'F'}},
-         'vlan': '-'},
-   '10': {'mac_addresses': {'aaaa.bbbb.cccc': {'entry': '*',
-                                               'mac_address': 'aaaa.bbbb.cccc',
-                                               'ntfy': 'F',
-                                               'ports': {'Ethernet1/2': {'age': '-',
-                                                                         'mac_type': 'static',
-                                                                         'port': 'Ethernet1/2'}},
-                                               'secure': 'F'}},
-          'vlan': '10'},
-   '100': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '100'},
-   '1000': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                 'mac_address': '5e00.c000.0007',
-                                                 'ntfy': 'F',
-                                                 'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                           'mac_type': 'static',
-                                                                           'port': 'Sup-eth1(R)'}},
-                                                 'secure': 'F'}},
-            'vlan': '1000'},
-   '1005': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                 'mac_address': '5e00.c000.0007',
-                                                 'ntfy': 'F',
-                                                 'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                           'mac_type': 'static',
-                                                                           'port': 'Sup-eth1(R)'}},
-                                                 'secure': 'F'}},
-            'vlan': '1005'},
-   '1006': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                 'mac_address': '5e00.c000.0007',
-                                                 'ntfy': 'F',
-                                                 'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                           'mac_type': 'static',
-                                                                           'port': 'Sup-eth1(R)'}},
-                                                 'secure': 'F'}},
-            'vlan': '1006'},
-   '1007': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                 'mac_address': '5e00.c000.0007',
-                                                 'ntfy': 'F',
-                                                 'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                           'mac_type': 'static',
-                                                                           'port': 'Sup-eth1(R)'}},
-                                                 'secure': 'F'}},
-            'vlan': '1007'},
-   '1008': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                 'mac_address': '5e00.c000.0007',
-                                                 'ntfy': 'F',
-                                                 'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                           'mac_type': 'static',
-                                                                           'port': 'Sup-eth1(R)'}},
-                                                 'secure': 'F'}},
-            'vlan': '1008'},
-   '1009': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                 'mac_address': '5e00.c000.0007',
-                                                 'ntfy': 'F',
-                                                 'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                           'mac_type': 'static',
-                                                                           'port': 'Sup-eth1(R)'}},
-                                                 'secure': 'F'}},
-            'vlan': '1009'},
-   '101': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '101'},
-   '102': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '102'},
-   '103': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '103'},
-   '105': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '105'},
-   '106': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '106'},
-   '107': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '107'},
-   '108': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '108'},
-   '109': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '109'},
-   '110': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '110'},
-   '111': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '111'},
-   '112': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '112'},
-   '113': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '113'},
-   '114': {'mac_addresses': {'5e00.c000.0007': {'entry': 'G',
-                                                'mac_address': '5e00.c000.0007',
-                                                'ntfy': 'F',
-                                                'ports': {'Sup-eth1(R)': {'age': '-',
-                                                                          'mac_type': 'static',
-                                                                          'port': 'Sup-eth1(R)'}},
-                                                'secure': 'F'}},
-           'vlan': '114'}}}}
+    golden_parsed_output = {
+      'mac_table': {
+          'vlans': {
+              '-': {
+                  'mac_addresses': {
+                      '5e00:c000:0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00:c000:0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '-',
+                  },
+              '10': {
+                  'mac_addresses': {
+                      'aaaa.bbbb.cccc': {
+                          'entry': '*',
+                          'mac_address': 'aaaa.bbbb.cccc',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Ethernet1/2': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Ethernet1/2',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '10',
+                  },
+              '100': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '100',
+                  },
+              '1000': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1000',
+                  },
+              '1005': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1005',
+                  },
+              '1006': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1006',
+                  },
+              '1007': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1007',
+                  },
+              '1008': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1008',
+                  },
+              '1009': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '1009',
+                  },
+              '101': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '101',
+                  },
+              '102': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '102',
+                  },
+              '103': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '103',
+                  },
+              '105': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '105',
+                  },
+              '106': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '106',
+                  },
+              '107': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '107',
+                  },
+              '108': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '108',
+                  },
+              '109': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '109',
+                  },
+              '110': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '110',
+                  },
+              '111': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '111',
+                  },
+              '112': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '112',
+                  },
+              '113': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '113',
+                  },
+              '114': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'entry': 'G',
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'ports': {
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'port': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '114',
+                  },
+              },
+          },
+      }
 
     golden_output = {'execute.return_value': '''\
     N95_1# show system internal l2fwder mac
