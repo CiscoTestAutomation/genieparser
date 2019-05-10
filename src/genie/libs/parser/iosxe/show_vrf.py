@@ -60,6 +60,7 @@ class ShowVrf(ShowVrfSchema):
 
         # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
         # VRF1                             65000:1               ipv4,ipv6   Tu1
+        # vpn4                           100:2          ipv4,ipv6
         p1 = re.compile(r'^(?P<vrf>\S+)\s+(?P<rd>\<not +set\>|[\d\:]+)\s+'
                         r'(?P<protocols>[(?:ipv\d)\,]+)(?:\s+(?P<intf>[\S\s]+))?$')
                                                                     
