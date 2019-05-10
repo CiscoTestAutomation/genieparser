@@ -19831,9 +19831,11 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
 
 class testShowIpBgpNeighborsRoutes(unittest.TestCase):
 
+    
+
     device = Device(name='aDevice')
 
-    device_output = {'execute.return_value': '''
+    output1 = '''
         BGP table version is 213, local router ID is 192.168.10.254
         Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
                       r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
@@ -19856,11 +19858,128 @@ class testShowIpBgpNeighborsRoutes(unittest.TestCase):
          *>   172.16.8.0/24    192.168.10.253           0             0 65555 ?
          *>   172.16.9.0/24    192.168.10.253           0             0 65555 ?
          *>   172.16.10.0/24   192.168.10.253           0             0 65555 ?
-    '''}
+    '''
+
+    output2 = '''
+        show bgp all neighbors | i BGP neighbor
+        BGP neighbor is 192.168.10.253,  vrf CE1test,  remote AS 65555, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0051,  remote AS 65555, external link
+          External BGP neighbor not directly connected.
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0101,  remote AS 60001, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0102,  remote AS 60002, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0103,  remote AS 60003, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0104,  remote AS 60004, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0105,  remote AS 60005, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0106,  remote AS 60006, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0107,  remote AS 60007, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0108,  remote AS 60008, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0109,  remote AS 60009, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0110,  remote AS 60010, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0111,  remote AS 60011, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0112,  remote AS 60012, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0113,  remote AS 60013, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0114,  remote AS 60014, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0115,  remote AS 60015, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0116,  remote AS 60016, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0117,  remote AS 60017, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0118,  remote AS 60018, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0119,  remote AS 60019, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0120,  remote AS 60020, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0121,  remote AS 60021, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0122,  remote AS 60022, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0123,  remote AS 60023, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0124,  remote AS 60024, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0125,  remote AS 60025, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0126,  remote AS 60026, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0127,  remote AS 60027, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0128,  remote AS 60028, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0129,  remote AS 60029, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0130,  remote AS 60030, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0131,  remote AS 60031, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0132,  remote AS 60032, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0133,  remote AS 60033, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0134,  remote AS 60034, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0135,  remote AS 60035, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0136,  remote AS 60036, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0137,  remote AS 60037, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0138,  remote AS 60038, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0139,  remote AS 60039, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0140,  remote AS 60040, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0141,  remote AS 60041, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0142,  remote AS 60042, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0143,  remote AS 60043, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0144,  remote AS 60044, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0145,  remote AS 60045, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0146,  remote AS 60046, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0147,  remote AS 60047, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0148,  remote AS 60048, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0149,  remote AS 60049, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 192.168.10.253,  vrf L3VPN-0150,  remote AS 60050, external link
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+        BGP neighbor is 202.239.165.119,  remote AS 9996, internal link
+        BGP neighbor is 202.239.165.120,  remote AS 9996, internal link
+        BGP neighbor is 202.239.165.119,  remote AS 9996, internal link
+        BGP neighbor is 202.239.165.120,  remote AS 9996, internal link
+        BGP neighbor is 202.239.165.220,  remote AS 9996, internal link
+
+    '''
+
+    
 
     parsed_output_1 = {
         'vrf': {
-            'default': {
+            'CE1test': {
                 'neighbor': {
                     '192.168.10.253': {
                         'address_family': {
@@ -19985,8 +20104,14 @@ class testShowIpBgpNeighborsRoutes(unittest.TestCase):
                                                 'path': '65555'}}}}}}}}}}}
 
     def test_golden_1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.device_output)
+        def mapper(key):
+            return self.outputs[key]
+        self.outputs = {}
+        self.outputs['show bgp all neighbors | i BGP neighbor'] = self.output2
+        self.outputs['show ip bgp vpnv4 vrf CE1test neighbors 192.168.10.253 routes'] = self.output1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
         obj = ShowIpBgpNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='192.168.10.253', address_family='vpnv4', vrf='CE1test')
         self.assertEqual(parsed_output, self.parsed_output_1)
