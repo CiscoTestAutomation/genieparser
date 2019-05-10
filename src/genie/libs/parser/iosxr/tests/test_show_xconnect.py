@@ -5,7 +5,7 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.iosxr.show_xconnect import ShowL2VpnXconnect
+from genie.libs.parser.iosxr.show_xconnect import ShowL2vpnXconnect
 
 
 # ==================================================
@@ -18,50 +18,57 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'groups':
-            {'Test_XCONN_Group2':
-				{'Name':
-					{'3000': {'status_group': 'UR',
-							  'segment_1':
-								{'GigabitEthernet0/0/0/5.3000':
-							 		{'status_seg1': 'UR',
-							 		 'segment_2':
-							 			{'1.1.1.206       3000':
-							 				{'status_seg2': 'DN'}
-							 			}
-							 		}
-							 	}
-							 }
-					}
-				},
-			'Test_XCONN_Group':
-				{'Name':
-					{'2000': {'status_group': 'DN',
-							  'segment_1':
-								{'GigabitEthernet0/0/0/5.2000':
-					 				{'status_seg1': 'UP',
-					 				 'segment_2':
-					 					{'1.1.1.206       2000':
-					 						{'status_seg2': 'DN'}
-					 					}
-					 				}
-					 			}
-						 	},
-				 	 '1000': {'status_group': 'DN',
-				 	 		  'segment_1':
-				 	 		    {'GigabitEthernet0/0/0/5.1000':
-				 		 			{'status_seg1': 'UP',
-				 		 			 'segment_2':
-				 		 				{'1.1.1.206       1000':
-				 		 					{'status_seg2': 'DN'}
-				 		 				}
-				 		 			}
-				 		 		}
-				 		 	  }
-				 	}
-				}
-			}
-    }
+    golden_parsed_output = {
+'groups': {
+    'Test_XCONN_Group': {
+        'name': {
+            '1000': {
+            	'status': 'DN',
+                'segment1': {
+                    'GigabitEthernet0/0/0/5.1000': {
+                    	'status': 'UP',
+                        'segment2': {
+                            '1.1.1.206       1000': {
+                                'status': 'DN',
+                                },
+                            },
+                        },
+                    },
+                },
+            '2000': {
+            	'status': 'DN',
+                'segment1': {
+                    'GigabitEthernet0/0/0/5.2000': {
+                    	'status': 'UP',
+                        'segment2': {
+                            '1.1.1.206       2000': {
+                                'status': 'DN',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    'Test_XCONN_Group2': {
+        'name': {
+            '3000': {
+            	'status': 'UR',
+                'segment1': {
+                    'GigabitEthernet0/0/0/5.3000': {
+                    	'status': 'UR',
+                        'segment2': {
+                            '1.1.1.206       3000': {
+                                'status': 'DN',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 
     golden_output = {'execute.return_value': '''
     XRv01_NUC# show l2vpn xconnect
@@ -83,14 +90,14 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowL2VpnXconnect(device=self.device)
+        obj = ShowL2vpnXconnect(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        obj = ShowL2VpnXconnect(device=self.device)
+        obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

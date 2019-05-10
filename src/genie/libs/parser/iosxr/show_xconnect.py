@@ -264,20 +264,20 @@ class ShowL2VpnXconnectMp2mpDetail(MetaParser):
 # vim: ft=python ts=8 sw=4 et
 
 
-class ShowL2VpnXconnectSchema(MetaParser):
+class ShowL2vpnXconnectSchema(MetaParser):
     """Schema for show l2vpn xconnect"""
     schema = {
       'groups': {
         Any(): {
-          'Name': {
+          'name': {
             Any(): {
-              'status_group': str,
-              'segment_1': {
+              'status': str,
+              'segment1': {
                 Any(): {
-                  'status_seg1': str,
-                  'segment_2': {
+                  'status': str,
+                  'segment2': {
                     Any(): {
-                      'status_seg2': str,
+                      'status': str,
                     },
                   },
                 },
@@ -289,7 +289,7 @@ class ShowL2VpnXconnectSchema(MetaParser):
     }
 
 
-class ShowL2VpnXconnect(ShowL2VpnXconnectSchema):
+class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
     """Parser for show l2vpn xconnect """
 
     cli_command = 'show l2vpn xconnect'
@@ -327,14 +327,14 @@ class ShowL2VpnXconnect(ShowL2VpnXconnectSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                name_dict = group_dict.setdefault('Name', {}) \
+                name_dict = group_dict.setdefault('name', {}) \
                     .setdefault(str(group['name']), {})
-                name_dict['status_group'] = str(group['status_group'])
-                segment1_dict = name_dict.setdefault('segment_1',{}) \
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
                     .setdefault(Common.convert_intf_name(group['segment_1']), {})
-                segment1_dict['status_seg1'] = str(group['status_seg1'])
-                segment1_dict.setdefault('segment_2', {}) \
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment1_dict.setdefault('segment2', {}) \
                     .setdefault( str(group['segment_2']), {}) \
-                    .setdefault('status_seg2', str(group['status_seg2']))
+                    .setdefault('status', str(group['status_seg2']))
 
         return ret_dict
