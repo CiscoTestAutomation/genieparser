@@ -431,7 +431,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     m.groupdict()['total_entries'])
 
                 continue
-        print(parsed_dict)
         return parsed_dict
 
 

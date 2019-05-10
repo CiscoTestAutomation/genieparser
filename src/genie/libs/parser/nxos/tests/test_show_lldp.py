@@ -256,7 +256,6 @@ class test_show_lldp_neighbors_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowLldpNeighborsDetail(device=self.device)
-        print(self.golden_output)
         parsed_output = obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output)
 
