@@ -406,7 +406,151 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
 # schema for show port-channel database
 # =====================================
 class ShowPortChannelDatabaseSchema(MetaParser):
-    """show post-channel database"""
+    """ schema for : show post-channel database"""
     schema = {
+        'interfaces': {
+            Any(): {
+                'last_update_success': bool,  # successful => True, else False
+                'total_ports': int,
+                'up_ports': int,
+                'first_oper_port': str,
+                'port_channel_age': str,
+                'time_last_bundle': str,
+                'last_bundled_member': str,
+                Optional('time_last_unbundle'): str,
+                Optional('last_unbundled_member'): str,
+                'members': {
+                    Any(): {
+                        'activity': str,
+                        'status': str,
+                        'is_first_oper_port': bool
+                    }
+                }
+
+            }
+        }
 
     }
+
+
+# =====================================
+# parser for show port-channel database
+# =====================================
+class ShowPortChannelDatabase(ShowPortChannelDatabaseSchema):
+    """parser show post-channel database"""
+    cli_command = 'show port-channel database'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        parsed_dict = {}
+        intf_dict = {}
+        # port-channel1
+        p1 = re.compile(r'^port-channel\d+$')
+        # Last membership update is successful
+        p2 = re.compile(r'^Last +membership +update +is +(?P<last_update_status>\w+)$')
+        # 2 ports in total, 2 ports up
+        p3 = re.compile(
+            r'^(?P<total_ports>\d+) +ports +in +total, +(?P<up_ports>\d+) +ports +up$')
+        # First operational port is Ethernet1/1
+        p4 = re.compile(r'^First +operational +port +is +(?P<first_oper_port>[\w/]+)$')
+        # Age of the port-channel is 0d:02h:31m:22s
+        p5 = re.compile(
+            r'^Age +of +the +port-channel +is +(?P<port_channel_age>[0-9:smhd]+)$')
+        # Time since last bundle is 0d:02h:28m:30s
+        p6 = re.compile(
+            r'^Time +since +last +bundle +is +(?P<time_last_bundle>[0-9:smhd]+)$')
+        # Last bundled member is Ethernet1/2
+        p7 = re.compile(r'^Last +bundled +member +is +(?P<last_bundled_member>[\w/]+)$')
+        # Time since last unbundle is 0d:00h:14m:05s
+        p8 = re.compile(
+            r'^Time +since +last +unbundle +is +(?P<time_last_unbundle>[0-9:smhd]+)$')
+        # Last unbundled member is Ethernet1/5
+        p9 = re.compile(
+            r'^Last +unbundled +member +is +(?P<last_unbundled_member>[\w/]+)$')
+        #     Ports:   Ethernet1/3     [passive] [up]
+        #              Ethernet1/4     [passive] [up] *
+        #              Ethernet1/5     [passive] [hot-standy]
+        p10 = re.compile(
+            r'^(Ports:)?\s*(?P<interface>[\w/]+)\s+\[(?P<activity>(passive|active)) *\] '
+            r'+\['
+            r'(?P<status>[\w-]+)\](?P<fop>\s+\*)*$')
+
+        for line in out.splitlines():
+            if line:
+                line = line.strip()
+            else:
+                continue
+            # port-channel1
+            m = p1.match(line)
+            if m:
+                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(m.group(),
+                                                                                {})
+                continue
+            # Last membership update is successful
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'last_update_success': True if group[
+                                                                     'last_update_status'] == 'successful' else False})
+                continue
+            # 2 ports in total, 2 ports up
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'total_ports': int(group['total_ports'])})
+                intf_dict.update({'up_ports': int(group['up_ports'])})
+                continue
+            # First operational port is Ethernet1/1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'first_oper_port': group['first_oper_port']})
+                continue
+            # Age of the port-channel is 0d:02h:31m:22s
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'port_channel_age': group['port_channel_age']})
+                continue
+            # Time since last bundle is 0d:02h:28m:30s
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'time_last_bundle': group['time_last_bundle']})
+                continue
+            # Last bundled member is Ethernet1/2
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'last_bundled_member': group['last_bundled_member']})
+                continue
+            # Time since last unbundle is 0d:00h:14m:05s
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'time_last_unbundle': group['time_last_unbundle']})
+                continue
+            # Last unbundled member is Ethernet1/5
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update(
+                    {'last_unbundled_member': group['last_unbundled_member']})
+                continue
+            #     Ports:   Ethernet1/3     [passive] [up]
+            #              Ethernet1/4     [passive] [up] *
+            #              Ethernet1/5     [passive] [hot-standy]
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict = intf_dict.setdefault('members', {}).setdefault(
+                    group['interface'], {})
+                sub_dict.update({'activity': group['activity']})
+                sub_dict.update({'status': group['status']})
+                sub_dict.update({'is_first_oper_port': True if group['fop'] else False})
+                continue
+        return parsed_dict

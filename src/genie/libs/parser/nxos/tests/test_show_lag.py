@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 
 # iosxe show_lisp
 from genie.libs.parser.nxos.show_lag import ShowFeature, ShowLacpSystemIdentifier, \
-    ShowLacpCounters, ShowLacpNeighbor, ShowPortChannelSummary
+    ShowLacpCounters, ShowLacpNeighbor, ShowPortChannelSummary, ShowPortChannelDatabase
 
 
 # =================================
@@ -369,7 +369,6 @@ Group Port-       Type     Protocol  Member Ports
 2     Po2(SU)     Eth      LACP      Eth1/3(P)    Eth1/4(P)    Eth1/5(H)
 '''}
 
-
     golden_parsed_output = {
         'interfaces': {
             'Port-channel1': {
@@ -409,13 +408,11 @@ Group Port-       Type     Protocol  Member Ports
         }
     }
 
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowPortChannelSummary(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
-
 
     def test_golden(self):
         self.maxDiff = None
@@ -424,6 +421,111 @@ Group Port-       Type     Protocol  Member Ports
         parsed_output = obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output)
 
+
+# =================================
+# Unit test for 'show port-channel database'
+# =================================
+class test_show_port_channel_database(unittest.TestCase):
+    """unittest for show port-channel database"""
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+port-channel1
+    Last membership update is successful
+    2 ports in total, 2 ports up
+    First operational port is Ethernet1/1
+    Age of the port-channel is 0d:02h:31m:22s
+    Time since last bundle is 0d:02h:28m:30s
+    Last bundled member is Ethernet1/2
+    Ports:   Ethernet1/1     [active ] [up] *
+             Ethernet1/2     [active ] [up]
+
+port-channel2
+    Last membership update is successful
+    3 ports in total, 2 ports up
+    First operational port is Ethernet1/4
+    Age of the port-channel is 0d:02h:27m:37s
+    Time since last bundle is 0d:00h:12m:50s
+    Last bundled member is Ethernet1/5
+    Time since last unbundle is 0d:00h:14m:05s
+    Last unbundled member is Ethernet1/5
+    Ports:   Ethernet1/3     [passive] [up]
+             Ethernet1/4     [passive] [up] *
+             Ethernet1/5     [passive] [hot-standy]
+'''}
+
+    golden_parsed_output = {
+        'interfaces': {
+            'port-channel1': {
+                'last_update_success': True,
+                'total_ports': 2,
+                'up_ports': 2,
+                'first_oper_port': 'Ethernet1/1',
+                'port_channel_age': '0d:02h:31m:22s',
+                'time_last_bundle': '0d:02h:28m:30s',
+                'last_bundled_member': 'Ethernet1/2',
+                'members': {
+                    'Ethernet1/1': {
+                        'activity': 'active',
+                        'status': 'up',
+                        'is_first_oper_port': True
+                    },
+                    'Ethernet1/2': {
+                        'activity': 'active',
+                        'status': 'up',
+                        'is_first_oper_port': False
+                    }
+                }
+
+            },
+            'port-channel2': {
+                'last_update_success': True,
+                'total_ports': 3,
+                'up_ports': 2,
+                'first_oper_port': 'Ethernet1/4',
+                'port_channel_age': '0d:02h:27m:37s',
+                'time_last_bundle': '0d:00h:12m:50s',
+                'last_bundled_member': 'Ethernet1/5',
+                'time_last_unbundle': '0d:00h:14m:05s',
+                'last_unbundled_member': 'Ethernet1/5',
+                'members': {
+                    'Ethernet1/3': {
+                        'activity': 'passive',
+                        'status': 'up',
+                        'is_first_oper_port': False
+                    },
+                    'Ethernet1/4': {
+                        'activity': 'passive',
+                        'status': 'up',
+                        'is_first_oper_port': True
+                    },
+                    'Ethernet1/5': {
+                        'activity': 'passive',
+                        'status': 'hot-standy',
+                        'is_first_oper_port': False
+                    }
+                }
+
+            }
+
+        }
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPortChannelDatabase(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPortChannelDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertDictEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
