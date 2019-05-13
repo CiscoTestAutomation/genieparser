@@ -19998,12 +19998,154 @@ class test_show_ip_bgp(unittest.TestCase):
                                         'status_codes': '*>i',
                                         'weight': 0}}}}}}}}}
 
+    golden_parsed_output_2 = {
+        'vrf': {
+            'HUEUHE': {
+                'address_family': {
+                    'vpnv4 RD 9996:4093': {
+                        'bgp_table_version': 7283,
+                        'default_vrf': 'HUEUHE',
+                        'route_distinguisher': '9996:4093',
+                        'route_identifier': '202.239.165.120',
+                        'routes': {
+                            '11.11.11.11/32': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.0.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.1.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.10.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0},
+                                    2: {
+                                        'next_hop': '192.168.10.0',
+                                        'status_codes': '*>i',
+                                        'weight': 106}}},
+                            '172.16.2.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.3.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.4.0/24': {
+                                'index': {
+                                        1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.5.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.6.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.7.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.8.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.9.0/24': {
+                                'index': {
+                                    1: {
+                                    'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}}}}}}}}
+
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_ouput)
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_ouput)
+        obj = ShowIpBgp(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', vrf='HUEUHE', rd='9996:4093')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
