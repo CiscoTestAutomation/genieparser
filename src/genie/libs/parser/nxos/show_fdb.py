@@ -23,10 +23,11 @@ from genie.metaparser.util.schemaengine import Schema, \
 from genie.libs.parser.utils.common import Common
 
 class ShowMacAddressTableVniSchema(MetaParser):
-    """Schema for show mac address-table vni <WORD> | grep <WORD>"""
-    """Schema for show mac address-table local vni <WORD>"""
-    """Schema for show mac address-table"""
-    """Schema for show system internal l2fwder mac"""
+    """Schema for:
+        'show mac address-table vni <WORD> | grep <WORD>'
+        'show mac address-table local vni <WORD>'
+        'show mac address-table'
+        'show system internal l2fwder mac'"""
 
     schema = {
             'mac_table': {
@@ -59,10 +60,11 @@ class ShowMacAddressTableVniSchema(MetaParser):
         }
 
 class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
-    """Base parser for show mac address-table vni <WORD> | grep <WORD>"""
-    """Base parser for show mac address-table local vni <WORD>"""
-    """Base parser for show mac address-table"""
-    """Base parser for show system internal l2fwder mac"""
+    """Base parser for:
+        'show mac address-table vni <WORD> | grep <WORD>'
+        'show mac address-table local vni <WORD>'
+        'show mac address-table'
+        'show system internal l2fwder mac'"""
 
     def cli(self, out):
 
@@ -116,8 +118,9 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
 
 
 class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSchema):
-    """Parser for show mac address-table vni <WORD> | grep <WORD>"""
-    """Parser for show mac address-table local vni <WORD>"""
+    """Parser for:
+        'show mac address-table vni <WORD> | grep <WORD>'
+        'show mac address-table local vni <WORD>'"""
 
     cli_command = ['show mac address-table vni {vni} | grep {intf}', 
                    'show mac address-table local vni {vni}']

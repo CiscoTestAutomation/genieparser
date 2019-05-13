@@ -342,12 +342,190 @@ class test_show_ip_ospf(unittest.TestCase):
                 Flood list length 0
         '''}
 
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '9996': {
+                                'adjacency_stagger': {
+                                    'initial_number': 300,
+                                    'maximum_number': 300
+                                },
+                                'area_transit': True,
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'area_id': '0.0.0.8',
+                                        'area_type': 'normal',
+                                        'ranges': {},
+                                        'statistics': {
+                                            'area_scope_lsa_cksum_sum': '0x07FAE2',
+                                            'area_scope_lsa_count': 21,
+                                            'area_scope_opaque_lsa_cksum_sum': '0x000000',
+                                            'area_scope_opaque_lsa_count': 0,
+                                            'dcbitless_lsa_count': 0,
+                                            'donotage_lsa_count': 0,
+                                            'flood_list_length': 0,
+                                            'indication_lsa_count': 0,
+                                            'interfaces_count': 2,
+                                            'loopback_count': 1,
+                                            'spf_last_executed': '13:02:02.080',
+                                            'spf_runs_count': 8
+                                        }
+                                    }
+                                },
+                                'auto_cost': {
+                                    'bandwidth_unit': 'mbps',
+                                    'enable': True,
+                                    'reference_bandwidth': 2488
+                                },
+                                'bfd': {
+                                    'enable': False
+                                },
+                                'db_exchange_summary_list_optimization': True,
+                                'elapsed_time': '13:07:02.634',
+                                'enable': True,
+                                'event_log': {
+                                    'enable': True,
+                                    'max_events': 1000,
+                                    'mode': 'cyclic'
+                                },
+                                'external_flood_list_length': 0,
+                                'graceful_restart': {
+                                    'cisco': {
+                                        'enable': False,
+                                        'helper_enable': True,
+                                        'type': 'cisco'
+                                    },
+                                    'ietf': {
+                                        'enable': False,
+                                        'helper_enable': True,
+                                        'type': 'ietf'
+                                    }
+                                },
+                                'interface_flood_pacing_timer': 33,
+                                'lls': True,
+                                'lsa_group_pacing_timer': 240,
+                                'nsr': {
+                                    'enable': False
+                                },
+                                'nssa': True,
+                                'numbers': {
+                                    'dc_bitless': 0,
+                                    'do_not_age': 0,
+                                    'external_lsa': 2,
+                                    'external_lsa_checksum': '0x00F934',
+                                    'opaque_as_lsa': 0,
+                                    'opaque_as_lsa_checksum': '0x000000'
+                                },
+                                'opqaue_lsa': True,
+                                'retransmission_pacing_timer': 66,
+                                'router_id': '106.162.197.254',
+                                'spf_control': {
+                                    'incremental_spf': False,
+                                    'throttle': {
+                                        'lsa': {
+                                            'arrival': 100,
+                                            'hold': 200,
+                                            'maximum': 5000,
+                                            'start': 50},
+                                        'spf': {
+                                            'hold': 3000,
+                                            'maximum': 3000,
+                                            'start': 500
+                                        }
+                                    }
+                                },
+                                'start_time': '00:02:39.151',
+                                'stub_router': {
+                                    'on_startup': {
+                                        'include_stub': True,
+                                        'on_startup': 300,
+                                        'state': 'inactive'
+                                    }
+                                },
+                                'total_areas': 1,
+                                'total_areas_transit_capable': 0,
+                                'total_normal_areas': 1,
+                                'total_nssa_areas': 0,
+                                'total_stub_areas': 0,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        R1_ospf_xe#show ip ospf 
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+        Time source is NTP, 23:17:46.919 JST Fri May 3 2019
+
+         Routing Process "ospf 9996" with ID 106.162.197.254
+         Start time: 00:02:39.151, Time elapsed: 13:07:02.634
+         Supports only single TOS(TOS0) routes
+         Supports opaque LSA
+         Supports Link-local Signaling (LLS)
+         Supports area transit capability
+         Supports NSSA (compatible with RFC 3101)
+         Supports Database Exchange Summary List Optimization (RFC 5243)
+         Event-log enabled, Maximum number of events: 1000, Mode: cyclic
+         Originating router-LSAs with maximum metric
+            Condition: on startup for 300 seconds, State: inactive
+            Advertise stub links with maximum metric in router-LSAs
+            Unset reason: timer expired, Originated for 300 seconds
+            Unset time: 00:07:39.152, Time elapsed: 13:02:02.633
+         Initial SPF schedule delay 500 msecs
+         Minimum hold time between two consecutive SPFs 3000 msecs
+         Maximum wait time between two consecutive SPFs 3000 msecs
+         Incremental-SPF disabled
+         Initial LSA throttle delay 50 msecs
+         Minimum hold time for LSA throttle 200 msecs
+         Maximum wait time for LSA throttle 5000 msecs
+         Minimum LSA arrival 100 msecs
+         LSA group pacing timer 240 secs
+         Interface flood pacing timer 33 msecs
+         Retransmission pacing timer 66 msecs
+         EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+         Number of external LSA 2. Checksum Sum 0x00F934
+         Number of opaque AS LSA 0. Checksum Sum 0x000000
+         Number of DCbitless external and opaque AS LSA 0
+         Number of DoNotAge external and opaque AS LSA 0
+         Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+         Number of areas transit capable is 0
+         External flood list length 0
+         IETF NSF helper support enabled
+         Cisco NSF helper support enabled
+         Reference bandwidth unit is 2488 mbps
+            Area 8
+                Number of interfaces in this area is 2 (1 loopback)
+            Area has no authentication
+            SPF algorithm last executed 13:02:02.080 ago
+            SPF algorithm executed 8 times
+            Area ranges are
+            Number of LSA 21. Checksum Sum 0x07FAE2
+            Number of opaque link LSA 0. Checksum Sum 0x000000
+            Number of DCbitless LSA 0
+            Number of indication LSA 0
+            Number of DoNotAge LSA 0
+            Flood list length 0
+        '''}
+
     def test_show_ip_ospf_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspf(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ip_ospf_empty(self):
         self.maxDiff = None

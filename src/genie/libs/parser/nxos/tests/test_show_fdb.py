@@ -10,12 +10,13 @@ from genie.libs.parser.nxos.show_fdb import ShowMacAddressTableVni, \
 
 
 # ==================================================
-#  Unit test for 'show mac address-table vni <WORD> | grep <WORD>''
-#  Unit test for 'show mac address-table local vni <WORD>''
-#  Unit test for 'show mac address-table'
-#  Unit test for 'show mac address-table aging-time'
-#  Unit test for 'show mac address-table limit'
-#  Unit test for 'show system internal l2fwder mac'
+#  Unit test for: 
+#   'show mac address-table vni <WORD> | grep <WORD>'
+#   'show mac address-table local vni <WORD>'
+#   'show mac address-table'
+#   'show mac address-table aging-time'
+#   'show mac address-table limit'
+#   'show system internal l2fwder mac'
 # ==================================================
 
 class test_show_mac_address_table_vni(unittest.TestCase):
