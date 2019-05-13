@@ -30,11 +30,11 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                     '0000.04b1.0000': {
                         'entry': 'C',
                         'mac_address': '0000.04b1.0000',
-                        'next_hops': {
-                            '10.9.0.101': {
+                        'interfaces': {
+                            'Nve1(10.9.0.101)': {
                                 'age': '0',
                                 'mac_type': 'dynamic',
-                                'next_hop': '10.9.0.101',
+                                'interface': 'Nve1(10.9.0.101)',
                                 },
                             },
                         'ntfy': 'F',
@@ -48,7 +48,7 @@ class test_show_mac_address_table_vni(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\
-      CH-P2-TOR-1# sh mac address-table vni 2001001 | grep nve1 
+      CH-P2-TOR-1# show mac address-table vni 2001001 | grep nve1 
     C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(10.9.0.101)
     '''
                      }
@@ -62,11 +62,11 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                           'entry': '*',
                           'mac_address': '0000.0191.0000',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Ethernet1/11': {
                                   'age': '0',
                                   'mac_type': 'dynamic',
-                                  'port': 'Ethernet1/11',
+                                  'interface': 'Ethernet1/11',
                                   },
                               },
                           'secure': 'F',
@@ -75,11 +75,11 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                           'entry': '*',
                           'mac_address': '00f1.0000.0000',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Ethernet1/11': {
                                   'age': '0',
                                   'mac_type': 'dynamic',
-                                  'port': 'Ethernet1/11',
+                                  'interface': 'Ethernet1/11',
                                   },
                               },
                           'secure': 'F',
@@ -88,11 +88,11 @@ class test_show_mac_address_table_vni(unittest.TestCase):
                           'entry': '*',
                           'mac_address': '00f5.0000.0000',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Ethernet1/11': {
                                   'age': '0',
                                   'mac_type': 'dynamic',
-                                  'port': 'Ethernet1/11',
+                                  'interface': 'Ethernet1/11',
                                   },
                               },
                           'secure': 'F',
@@ -105,12 +105,12 @@ class test_show_mac_address_table_vni(unittest.TestCase):
       }
 
     golden_output_1 = {'execute.return_value': '''\
-CH-P2-TOR-1# sh mac address-table local vni 2001001 
+CH-P2-TOR-1# show mac address-table local vni 2001001 
 Legend: 
         * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
         age - seconds since last seen,+ - primary entry using vPC Peer-Link,
         (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
-   VLAN     MAC Address      Type      age     Secure NTFY Ports
+   VLAN     MAC Address      Type      age     Secure NTFY interfaces
 ---------+-----------------+--------+---------+------+----+------------------
 * 1001     0000.0191.0000   dynamic  0         F      F    Eth1/11
 * 1001     00f1.0000.0000   dynamic  0         F      F    Eth1/11
@@ -130,7 +130,6 @@ Legend:
         self.device = Mock(**self.golden_output_1)
         obj = ShowMacAddressTableVni(device=self.device)
         parsed_output = obj.parse(vni='2001001')
-        # import pdb; pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_empty(self):
@@ -180,11 +179,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '0000.dead.beef',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -193,11 +192,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               '(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': '(R)',
+                                  'interface': '(R)',
                                   },
                               },
                           'secure': 'F',
@@ -211,11 +210,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': '*',
                           'mac_address': 'aaaa.bbbb.cccc',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Ethernet1/2': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Ethernet1/2',
+                                  'interface': 'Ethernet1/2',
                                   },
                               },
                           'secure': 'F',
@@ -229,11 +228,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -247,11 +246,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -265,11 +264,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -283,11 +282,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -301,11 +300,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -319,11 +318,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -337,11 +336,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -355,11 +354,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -373,11 +372,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -391,11 +390,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -409,11 +408,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -427,11 +426,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -445,11 +444,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -463,11 +462,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -481,11 +480,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -499,11 +498,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -517,11 +516,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -535,11 +534,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -553,11 +552,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -571,11 +570,11 @@ class test_show_mac_address_table(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -625,7 +624,7 @@ class test_show_mac_address_table(unittest.TestCase):
         * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
         age - seconds since last seen,+ - primary entry using vPC Peer-Link,
         (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
-       VLAN     MAC Address      Type      age     Secure NTFY Ports
+       VLAN     MAC Address      Type      age     Secure NTFY interfaces
     ---------+-----------------+--------+---------+------+----+---------------
     *   10     aaaa.bbbb.cccc   static   -         F      F    Eth1/2
     *   20     aaaa.bbbb.cccc   static   -         F      F    Drop
@@ -958,11 +957,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00:c000:0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -976,11 +975,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': '*',
                           'mac_address': 'aaaa.bbbb.cccc',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Ethernet1/2': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Ethernet1/2',
+                                  'interface': 'Ethernet1/2',
                                   },
                               },
                           'secure': 'F',
@@ -994,11 +993,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1012,11 +1011,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1030,11 +1029,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1048,11 +1047,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1066,11 +1065,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1084,11 +1083,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1102,11 +1101,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1120,11 +1119,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1138,11 +1137,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1156,11 +1155,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1174,11 +1173,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1192,11 +1191,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1210,11 +1209,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1228,11 +1227,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1246,11 +1245,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1264,11 +1263,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1282,11 +1281,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1300,11 +1299,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1318,11 +1317,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1336,11 +1335,11 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
                           'entry': 'G',
                           'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
-                          'ports': {
+                          'interfaces': {
                               'Sup-eth1(R)': {
                                   'age': '-',
                                   'mac_type': 'static',
-                                  'port': 'Sup-eth1(R)',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -1358,7 +1357,7 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
         * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
         age - seconds since last seen,+ - primary entry using vPC Peer-Link,
         (T) - True, (F) - False, C - ControlPlane MAC
-       VLAN     MAC Address      Type      age     Secure NTFY Ports
+       VLAN     MAC Address      Type      age     Secure NTFY interfaces
     ---------+-----------------+--------+---------+------+----+---------------
     G   114    5e00.c000.0007    static   -          F     F   sup-eth1(R)
     G   112    5e00.c000.0007    static   -          F     F   sup-eth1(R)

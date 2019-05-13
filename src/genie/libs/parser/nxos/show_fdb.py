@@ -28,42 +28,35 @@ class ShowMacAddressTableVniSchema(MetaParser):
     """Schema for show mac address-table"""
     """Schema for show system internal l2fwder mac"""
 
-    schema = {'mac_table':
-                {'vlans':
-                    {Any():
-                         {'vlan': str,
-                          'mac_addresses':
-                            {Any():
-                                {'mac_address': str,
-                                    'entry': str,
-                                    'secure': str,
-                                    'ntfy': str,
-                                    Optional('drop'):{
-                                        'drop': bool,
+    schema = {
+            'mac_table': {
+                'vlans': {
+                    Any(): {
+                        'vlan': str,
+                        'mac_addresses': {
+                            Any():{
+                                'mac_address': str,
+                                'entry': str,
+                                'secure': str,
+                                'ntfy': str,
+                                Optional('drop'): {
+                                    'drop': bool,
+                                    'age': str,
+                                    'mac_type': str,
+                                },
+                                Optional('interfaces'): {
+                                    Any(): {
+                                        'interface': str,
                                         'age': str,
                                         'mac_type': str,
                                     },
-                                    Optional('ports'): {
-                                        Any(): {
-                                            'port': str,
-                                            'age': str,
-                                            'mac_type': str,
-                                            }
-                                    },
-                                    Optional('next_hops'): {
-                                        Any():{
-                                            'next_hop': str,
-                                            'age': str,
-                                            'mac_type': str,
-                                            }
-                                        
-                                    },
-                                }
-                          }
-                         }
-                    }
-                }
-            }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
     """Base parser for show mac address-table vni <WORD> | grep <WORD>"""
@@ -83,7 +76,6 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
             '+(?P<age>[0-9\-]+) '
             '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
             '+(?P<drop>(drop|Drop))?'
-            '([a-z0-9]+\((?P<next_hop>[0-9\.]+)\))?'
             '(?P<ports>[a-zA-Z0-9\/\.\(\)\-]+)?$')
 
 
@@ -110,16 +102,9 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
                 port = str(group['ports'])
                 if not port == 'None':
                     converted_port = Common.convert_intf_name(group['ports'])
-                    intf_dict = mac_dict.setdefault('ports',{})\
+                    intf_dict = mac_dict.setdefault('interfaces',{})\
                     .setdefault(converted_port,{})
-                    intf_dict['port'] = converted_port
-                        
-
-                next_hop = str(group['next_hop'])
-                if not next_hop == 'None':
-                    intf_dict = mac_dict.setdefault('next_hops',{})\
-                    .setdefault(next_hop,{})
-                    intf_dict['next_hop'] = next_hop
+                    intf_dict['interface'] = converted_port
                 
                 intf_dict['mac_type'] = str(group['mac_type'])
                 intf_dict['age'] = str(group['age'])
@@ -149,7 +134,9 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSche
             out = self.device.execute(cmd)
         else:
             out = output
-
+            
+        # C 1001     0000.04b1.0000   dynamic  0         F      F    nve1(10.9.0.101)
+        # * 1001     00f1.0000.0000   dynamic  0         F      F    Eth1/11
         # get return dictionary
         ret_dict = super().cli(out)
 
@@ -167,6 +154,11 @@ class ShowMacAddressTable(ShowMacAddressTableBase, ShowMacAddressTableVniSchema)
             out = self.device.execute(self.cli_command)
         else:
             out = output
+
+        # *   10     aaaa.bbbb.cccc   static   -         F      F    Eth1/2
+        # *   20     aaaa.bbbb.cccc   static   -         F      F    Drop
+        # G    -     0000.dead.beef   static   -         F      F    sup-eth1(R)
+        # G    -     5e00.c000.0007   static   -         F      F     (R)
 
         # get return dictionary
         ret_dict = super().cli(out)
