@@ -43,6 +43,7 @@
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
 		    * vrf default value handled
 	  * Updated ShowIpBgpNeighbors to support different Address familiy
+    * Updated ShowIpBgp to support different Route Distinguisher values
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
