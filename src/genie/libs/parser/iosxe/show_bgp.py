@@ -191,7 +191,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         * 'show ip bgp {address_family} vrf {vrf}'
     '''
 
-    def cli(self, address_family='', output=None):
+    def cli(self, address_family='', vrf='', rd='', output=None):
 
         # Init dictionary
         route_dict = {}
