@@ -5251,25 +5251,27 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         * 'show ip bgp {address_family} neighbors {neighbor} routes'
     '''
 
-    def cli(self, neighbor, address_family='', vrf='default', output=None):
+    def cli(self, neighbor, address_family='', vrf='', output=None):
 
-        # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
-        out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
-        for line in out_vrf.splitlines():
-            line = line.strip()
-            # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
-            p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
-                            '(, +vrf +(?P<vrf>[0-9A-Za-z]+))?, +remote AS '
-                            '+(?P<remote_as_id>[0-9]+), '
-                            '+(?P<internal_external_link>[a-z\s]+)$')
-            m = p.match(line)
-            if m:
-                if m.groupdict()['bgp_neighbor'] == neighbor:
-                    if m.groupdict()['vrf']:
-                        vrf = str(m.groupdict()['vrf'])
-                        break
-                else:
-                    continue
+        if not vrf:
+            # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
+            out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
+            vrf='default'
+            for line in out_vrf.splitlines():
+                line = line.strip()
+                # BGP neighbor is 10.16.2.2,  remote AS 100, internal link
+                p = re.compile(r'^BGP +neighbor +is +(?P<bgp_neighbor>[0-9A-Z\:\.]+)'
+                                '(, +vrf +(?P<vrf>[0-9A-Za-z]+))?, +remote AS '
+                                '+(?P<remote_as_id>[0-9]+), '
+                                '+(?P<internal_external_link>[a-z\s]+)$')
+                m = p.match(line)
+                if m:
+                    if m.groupdict()['bgp_neighbor'] == neighbor:
+                        if m.groupdict()['vrf']:
+                            vrf = str(m.groupdict()['vrf'])
+                            break
+                    else:
+                        continue
 
         # Init dictionary
         route_dict = {}
