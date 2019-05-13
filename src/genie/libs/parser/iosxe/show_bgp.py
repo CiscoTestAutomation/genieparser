@@ -196,7 +196,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # Init dictionary
         route_dict = {}
         af_dict = {}
-        vrf = 'default'
+        if not vrf:
+            vrf = 'default'
         if address_family:
             original_address_family = address_family
         index = 1
