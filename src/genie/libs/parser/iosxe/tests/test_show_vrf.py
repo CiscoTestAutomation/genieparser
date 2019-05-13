@@ -50,11 +50,6 @@ class test_show_vrf(unittest.TestCase):
             'Mgmt-intf': {
                 'protocols': ['ipv4', 'ipv6'],
                 'interfaces': ['GigabitEthernet1'],
-                'interface': {
-                    'GigabitEthernet1': {
-                        'vrf': 'Mgmt-intf'
-                    }
-                }
             },
             'VRF1': {
                 'route_distinguisher': '65000:1',
@@ -73,50 +68,6 @@ class test_show_vrf(unittest.TestCase):
                                'Tunnel6', 
                                'Tunnel8', 
                                'GigabitEthernet3.420'],
-                'interface': {
-                    'Tunnel1': {
-                        'vrf': 'VRF1'
-                    },
-                    'Loopback300': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.390': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.410': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.415': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.420': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.390': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.410': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.415': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel3': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel4': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel6': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel8': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.420': {
-                        'vrf': 'VRF1'
-                    }
-                }
             }
         }
     }
@@ -146,64 +97,20 @@ class test_show_vrf(unittest.TestCase):
             'VRF1': {
                 'route_distinguisher': '65000:1',
                 'protocols': ['ipv4', 'ipv6'],
-                'interfaces': ['Tunnel1', 
-                               'Loopback300', 
-                               'GigabitEthernet2.390', 
-                               'GigabitEthernet2.410', 
-                               'GigabitEthernet2.415', 
-                               'GigabitEthernet2.420', 
-                               'GigabitEthernet3.390', 
-                               'GigabitEthernet3.410', 
-                               'GigabitEthernet3.415', 
-                               'Tunnel3', 
-                               'Tunnel4', 
-                               'Tunnel6', 
-                               'Tunnel8', 
+                'interfaces': ['Tunnel1',
+                               'Loopback300',
+                               'GigabitEthernet2.390',
+                               'GigabitEthernet2.410',
+                               'GigabitEthernet2.415',
+                               'GigabitEthernet2.420',
+                               'GigabitEthernet3.390',
+                               'GigabitEthernet3.410',
+                               'GigabitEthernet3.415',
+                               'Tunnel3',
+                               'Tunnel4',
+                               'Tunnel6',
+                               'Tunnel8',
                                'GigabitEthernet3.420'],
-                'interface': {
-                    'Tunnel1': {
-                        'vrf': 'VRF1'
-                    },
-                    'Loopback300': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.390': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.410': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.415': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet2.420': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.390': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.410': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.415': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel3': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel4': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel6': {
-                        'vrf': 'VRF1'
-                    },
-                    'Tunnel8': {
-                        'vrf': 'VRF1'
-                    },
-                    'GigabitEthernet3.420': {
-                        'vrf': 'VRF1'
-                    }
-                }
             }
         }
     }

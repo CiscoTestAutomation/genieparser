@@ -27,12 +27,7 @@ class ShowVrfSchema(MetaParser):
             Any(): {
                 Optional('route_distinguisher'): str,
                 'protocols': list,
-                Optional('interfaces'): list,
-                Optional('interface'): {
-                    Any(): {
-                        'vrf': str
-                    }
-                }
+                Optional('interfaces'): list
             }
         }
     }
@@ -93,10 +88,6 @@ class ShowVrf(ShowVrfSchema):
                     intfs = groups['intf'].split()
                     intf_list = [Common.convert_intf_name(item) for item in intfs]
                     vrf_dict.update({'interfaces': intf_list})
-                    
-                    interfaces_dict = vrf_dict.setdefault('interface', {})
-                    [interfaces_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
-                # interface_dict.update({'vrf': vrf})
                 continue
 
             # Lo300
@@ -107,8 +98,6 @@ class ShowVrf(ShowVrfSchema):
                 groups = m.groupdict()
                 intf = Common.convert_intf_name(groups['intf'])
                 vrf_dict.get('interfaces').append(intf)
-                interface_dict = interfaces_dict.setdefault(intf, {})
-                interface_dict.update({'vrf': vrf})
 
         return res_dict
 
