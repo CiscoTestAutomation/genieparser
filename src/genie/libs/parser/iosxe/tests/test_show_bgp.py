@@ -19829,6 +19829,182 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
 
 #-------------------------------------------------------------------------------
 
+class test_show_ip_bgp(unittest.TestCase):
+    '''
+        unit test for show ip bgp all dampening parameters
+    '''
+
+    device = Device(name='aDevice')
+
+    device_ouput = {'execute.return_value': '''
+        show ip bgp vpnv4 rd 9996:4093
+        BGP table version is 7283, local router ID is 202.239.165.120
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 9996:4093
+         *>i  11.11.11.11/32   106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.0.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.1.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.2.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.3.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.4.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.5.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.6.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.7.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.8.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.9.0/24    106.162.197.254          0    100      0 65555 ?
+         *>i  172.16.10.0/24   106.162.197.254          0    100      0 65555 ?
+         *>i  192.168.10.0     106.162.197.254          0    100      0 ?
+    '''}
+
+    golden_parsed_output = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'vpnv4 RD 9996:4093': {
+                        'bgp_table_version': 7283,
+                        'default_vrf': 'default',
+                        'route_distinguisher': '9996:4093',
+                        'route_identifier': '202.239.165.120',
+                        'routes': {
+                            '11.11.11.11/32': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.0.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.1.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.10.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0},
+                                    2: {
+                                        'next_hop': '192.168.10.0',
+                                        'status_codes': '*>i',
+                                        'weight': 106}}},
+                            '172.16.2.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.3.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.4.0/24': {
+                                'index': {
+                                        1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.5.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.6.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.7.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.8.0/24': {
+                                'index': {
+                                    1: {
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}},
+                            '172.16.9.0/24': {
+                                'index': {
+                                    1: {
+                                    'localpref': 100,
+                                        'metric': 0,
+                                        'next_hop': '106.162.197.254',
+                                        'origin_codes': '?',
+                                        'path': '65555',
+                                        'status_codes': '*>i',
+                                        'weight': 0}}}}}}}}}
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_ouput)
+        obj = ShowIpBgp(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
