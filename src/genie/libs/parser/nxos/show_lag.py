@@ -68,7 +68,7 @@ class ShowFeature(ShowFeatureSchema):
                 state = True if group['state'] == 'enabled' else False
                 sub_dict = parsed_dict.setdefault('features', {}).setdefault(
                     group['feature_name'], {}).setdefault('instances', {})
-                sub_dict[group['instance']] = state
+                sub_dict.update({group['instance']: state})
 
                 continue
         return parsed_dict
@@ -388,14 +388,14 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
                 intf_dict.update({'type': group['type'].lower()})
                 intf_dict.update({'protocol': group['protocol'].lower()})
                 flags = group['flags'].lower()
-                intf_dict['layer'] = 'switched' if 's' in flags else 'routed'
-                intf_dict['oper_status'] = 'up' if 'u' in flags else 'down'
+                intf_dict.update({'layer': 'switched' if 's' in flags else 'routed'})
+                intf_dict.update({'oper_status': 'up' if 'u' in flags else 'down'})
                 port_dict = intf_dict.setdefault('members', {})
                 port_list = re.findall(r'([\w/]+)\((\w+)\)', group['ports'])
                 for port in port_list:
                     intf = Common.convert_intf_name(port[0])
                     port_sub_dict = port_dict.setdefault(intf, {})
-                    port_sub_dict['flags'] = port[1]
+                    port_sub_dict.update({'flags': port[1]})
 
                 continue
 
