@@ -49,7 +49,7 @@ class ShowLldpAll(ShowLldpAllSchema):
         # Interface Information: Eth1/64 Enable (tx/rx/dcbx): Y/Y/Y
         # Interface Information: mgmt0 Enable (tx/rx/dcbx): Y/Y/N  
         p1 = re.compile(
-            r'^Interface Information: +(?P<interface>[\w/,]+) +('
+            r'^Interface Information: +(?P<interface>[\S]+) +('
             r'?P<enabled>[a-zA-Z]+) +\(tx/rx/dcbx\): +(?P<tx>[YN])/('
             r'?P<rx>[YN])/(?P<dcbx>[YN])$')
 
@@ -60,20 +60,16 @@ class ShowLldpAll(ShowLldpAllSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = group['interface']
-                sub_dict = parsed_dict.setdefault('interfaces', {})
-                sub_dict.setdefault(interface, {})
-                sub_dict[interface]['enabled'] = True if group[
-                                                             'enabled'] == \
-                                                         'Enable' else False
-                sub_dict[interface]['tx'] = True if group[
-                                                        'tx'] == 'Y' else False
-                sub_dict[interface]['rx'] = True if group[
-                                                        'rx'] == 'Y' else False
-                sub_dict[interface]['dcbx'] = True if group[
-                                                          'dcbx'] == 'Y' else \
-                    False
+                interface = Common.convert_intf_name(group["interface"])
+                sub_dict = parsed_dict.setdefault('interfaces', {}).setdefault(interface,
+                                                                               {})
 
+                sub_dict.update({'enabled': True if group[
+                                                        'enabled'] == 'Enable' else
+                False})
+                sub_dict.update({'tx': True if group['tx'] == 'Y' else False})
+                sub_dict.update({'rx': True if group['rx'] == 'Y' else False})
+                sub_dict.update({'dcbx': True if group['dcbx'] == 'Y' else False})
                 continue
 
         return parsed_dict
@@ -122,11 +118,11 @@ class ShowLldpTimers(ShowLldpTimersSchema):
                 timer_name = timer['timer']
                 seconds = int(timer['seconds'])
                 if timer_name == 'Holdtime':
-                    parsed_dict['hold_timer'] = seconds
+                    parsed_dict.update({'hold_timer': seconds})
                 elif timer_name == 'Reinit-time':
-                    parsed_dict['reinit_timer'] = seconds
+                    parsed_dict.update({'reinit_timer': seconds})
                 else:
-                    parsed_dict['hello_timer'] = seconds
+                    parsed_dict.update({'hello_timer': seconds})
                 continue
 
         return parsed_dict
@@ -192,7 +188,7 @@ class ShowLldpTlvSelect(ShowLldpTlvSelectSchema):
             if line in sub_dict.keys():
                 sub_dict[line] = False
             elif line in mgmt_set:
-                sub_dict['management_address'] = False
+                sub_dict.update({'management_address': False})
 
         return parsed_dict
 
@@ -348,7 +344,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['system_description'] = group['system_description']
+                sub_dict.update({'system_description': group['system_description']})
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
@@ -375,7 +371,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             # Time remaining: 95 seconds
             m = p7.match(line)
             if m:
-                sub_dict['time_remaining'] = int(m.groupdict()['time_remaining'])
+                sub_dict.update({'time_remaining': int(m.groupdict()['time_remaining'])})
                 continue
 
             # System Capabilities: B, R
@@ -387,7 +383,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 for item in cap:
                     cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
                                                                                   {})
-                    cap_dict['system'] = True
+                    cap_dict.update({'system': True})
                 continue
 
             # Enabled Capabilities: R
@@ -399,36 +395,36 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 for item in cap:
                     cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
                                                                                   {})
-                    cap_dict['enabled'] = True
+                    cap_dict.update({'enabled': True})
                 continue
 
             # Management Address: 10.2.3.2
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['management_address'] = group['mgmt_address_ipv4']
-                sub_dict['management_address_type'] = 'ipv4'
+                sub_dict.update({'management_address': group['mgmt_address_ipv4']})
+                sub_dict.update({'management_address_type': 'ipv4'})
                 continue
 
             # Management Address IPV6: not advertised
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict['management_address'] = group['mgmt_address_ipv6']
-                sub_dict['management_address_type'] = 'ipv6'
+                sub_dict.update({'management_address': group['mgmt_address_ipv6']})
+                sub_dict.update({'management_address_type': 'ipv6'})
                 continue
 
             # Vlan ID: not advertised
             m = p12.match(line)
             if m:
-                sub_dict['vlan_id'] = m.groupdict()['vlan_id']
+                sub_dict.update({'vlan_id': m.groupdict()['vlan_id']})
                 continue
 
             # Total entries displayed: 2
             m = p13.match(line)
             if m:
-                parsed_dict['total_entries'] = int(
-                    m.groupdict()['total_entries'])
+                parsed_dict.update({'total_entries': int(
+                    m.groupdict()['total_entries'])})
 
                 continue
         return parsed_dict
@@ -440,12 +436,12 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
     schema = {
-        "frame_in": int,  # Total frames received: 209
-        "frame_out": int,  # Total frames transmitted: 349
-        "frame_error_in": int,  # Total frames received in error: 0
-        "frame_discard": int,  # Total frames discarded: 0
-        'tlv_unknown': int,  # Total unrecognized TLVs: 0
-        'entries_aged_out': int  # Total entries aged: 0
+        "total_frames_received": int,  # Total frames received: 209
+        "total_frames_transmitted": int,  # Total frames transmitted: 349
+        "total_frames_received_in_error": int,  # Total frames received in error: 0
+        "total_frames_discarded": int,  # Total frames discarded: 0
+        'total_unrecognized_tlvs': int,  # Total unrecognized TLVs: 0
+        'total_entries_aged': int  # Total entries aged: 0
     }
 
 
@@ -470,27 +466,15 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         #         Total frames received in error: 0
         #         Total frames discarded: 0
         #         Total unrecognized TLVs: 0
-        p1 = re.compile(r'^Total +(?P<pattern>[\w\s]+): +(?P<value>\d+)$')
+        p1 = re.compile(r'^(?P<pattern>[\w\s]+): +(?P<value>\d+)$')
         for line in out.splitlines():
             line = line.strip()
             m = p1.match(line)
             if m:
                 traffic = m.groupdict()
-                traffic_key = traffic['pattern']
+                traffic_key = traffic['pattern'].replace(' ', '_').lower()
                 traffic_value = int(traffic['value'])
-                if re.search(r'frames +transmitted', traffic_key):
-                    parsed_dict['frame_out'] = traffic_value
-                elif re.search(r'entries +aged', traffic_key):
-                    parsed_dict['entries_aged_out'] = traffic_value
-                elif re.search(r'frames +received$', traffic_key):
-                    parsed_dict['frame_in'] = traffic_value
-                elif re.search(r'frames +received +in +error', traffic_key):
-                    parsed_dict['frame_error_in'] = traffic_value
-                elif re.search(r'frames +discarded', traffic_key):
-                    parsed_dict['frame_discard'] = traffic_value
-                elif re.search(r'unrecognized +TLVs', traffic_key):
-                    parsed_dict['tlv_unknown'] = traffic_value
-                else:
-                    continue
+                parsed_dict.update({traffic_key: traffic_value})
+
                 continue
         return parsed_dict

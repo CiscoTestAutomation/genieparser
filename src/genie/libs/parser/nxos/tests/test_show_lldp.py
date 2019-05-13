@@ -26,7 +26,7 @@ class test_show_lldp_all(unittest.TestCase):
 
     golden_parsed_output = {
         'interfaces': {
-            'Eth1/64':
+            'Ethernet1/64':
                 {'enabled': True,
                  'tx': True,
                  'rx': True,
@@ -278,12 +278,12 @@ class test_show_lldp_traffic(unittest.TestCase):
                     '''
                      }
     golden_parsed_output = {
-        "frame_in": 209,
-        "frame_out": 349,
-        "frame_error_in": 0,
-        "frame_discard": 0,
-        'tlv_unknown': 0,
-        'entries_aged_out': 0
+        "total_frames_received": 209,
+        "total_frames_transmitted": 349,
+        "total_frames_received_in_error": 0,
+        "total_frames_discarded": 0,
+        'total_unrecognized_tlvs': 0,
+        'total_entries_aged': 0
     }
 
     def test_empty(self):
