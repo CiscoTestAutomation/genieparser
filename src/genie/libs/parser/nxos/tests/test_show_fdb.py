@@ -110,7 +110,7 @@ Legend:
         * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
         age - seconds since last seen,+ - primary entry using vPC Peer-Link,
         (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
-   VLAN     MAC Address      Type      age     Secure NTFY interfaces
+   VLAN     MAC Address      Type      age     Secure NTFY Ports
 ---------+-----------------+--------+---------+------+----+------------------
 * 1001     0000.0191.0000   dynamic  0         F      F    Eth1/11
 * 1001     00f1.0000.0000   dynamic  0         F      F    Eth1/11
@@ -624,7 +624,7 @@ class test_show_mac_address_table(unittest.TestCase):
         * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
         age - seconds since last seen,+ - primary entry using vPC Peer-Link,
         (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
-       VLAN     MAC Address      Type      age     Secure NTFY interfaces
+       VLAN     MAC Address      Type      age     Secure NTFY Ports
     ---------+-----------------+--------+---------+------+----+---------------
     *   10     aaaa.bbbb.cccc   static   -         F      F    Eth1/2
     *   20     aaaa.bbbb.cccc   static   -         F      F    Drop
@@ -1357,7 +1357,7 @@ class test_show_system_internal_l2fwder_mac(unittest.TestCase):
         * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
         age - seconds since last seen,+ - primary entry using vPC Peer-Link,
         (T) - True, (F) - False, C - ControlPlane MAC
-       VLAN     MAC Address      Type      age     Secure NTFY interfaces
+       VLAN     MAC Address      Type      age     Secure NTFY Ports
     ---------+-----------------+--------+---------+------+----+---------------
     G   114    5e00.c000.0007    static   -          F     F   sup-eth1(R)
     G   112    5e00.c000.0007    static   -          F     F   sup-eth1(R)
