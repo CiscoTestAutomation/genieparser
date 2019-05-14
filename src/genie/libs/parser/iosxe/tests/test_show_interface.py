@@ -13,7 +13,6 @@ with patch.dict('sys.modules',
     from genie.parsergen import oper_fill
     from genie.parsergen import oper_check
     from genie.parsergen import oper_fill_tabular
-    from genie.parsergen.examples.parsergen.pyAts import parsergen_demo_mkpg
 
 import xml.etree.ElementTree as ET
 
