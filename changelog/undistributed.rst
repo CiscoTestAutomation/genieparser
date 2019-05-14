@@ -42,8 +42,8 @@
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
 		    * vrf default value handled
-	  * Updated ShowIpBgpNeighbors to support different Address familiy
-    * Updated ShowIpBgp to support different Route Distinguisher values
+	  * Updated ShowIpBgpNeighbors to support different Address families
+    * Updated ShowIpBgp to support different status codes
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
