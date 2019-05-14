@@ -107,7 +107,7 @@ class ShowLldpTimers(ShowLldpTimersSchema):
              Reinit-time in seconds: 2
              Transmit interval in seconds: 30
          '''
-        p1 = re.compile(r'^(?P<timer>[\w -]+) +in +seconds: +(?P<seconds>\d+)$')
+        p1 = re.compile(r'^(?P<timer>[\w\s-]+) +in +seconds: +(?P<seconds>\d+)$')
         for line in out.splitlines():
             line = line.strip()
 
