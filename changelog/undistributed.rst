@@ -84,18 +84,16 @@
     * Enhanced ShowIpOspf
 
 --------------------------------------------------------------------------------
-                                   LAG
+                                   LLDP
 --------------------------------------------------------------------------------
 * NXOS
-    * Added ShowFeature for:
-        show feature
-    * Added ShowLacpSystemIdentifier for:
-        show lacp system identifier
-    * Added ShowLacpCounters for:
-        show lacp counters
-    * Added ShowLacpNeighbor for:
-        show lacp neighbor
-    * Added ShowPortChannelSummary for:
-        show port-channel summary
-    * Added ShowPortChannelDatabase for:
-        show port-channel database
+    * Added ShowLldpAll for:
+        show lldp all
+    * Added ShowLldpTimers for:
+        show lldp timers
+    * Added ShowLldpTlvSelect for:
+        show lldp tlv-select
+    * Added ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Added ShowLldpTraffic for:
+        show lldp traffic
