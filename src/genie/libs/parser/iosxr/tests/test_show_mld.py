@@ -12,10 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # iosxe show_ip_parser
 from genie.libs.parser.iosxr.show_mld import ShowMldSummaryInternal, \
                                             ShowMldInterface, \
-                                            ShowMldSsmMapDetail, \
                                             ShowMldGroupsDetail
-
-import pdb    # python debugger
+                                            # ShowMldSsmMapDetail, \
 
 # ==============================================================================
 # Unit test for 'show mld summary internal', 'show mld vrf <vrf> summary internal' (1 and 2)
@@ -47,10 +45,10 @@ class test_show_mld_summary_internal(unittest.TestCase):
                         'parent': '0x0'
                     }
                 },
-                'max_groups': 75000,
+                'max_num_groups_x_intfs': 75000,
                 'mte_tuple_count': 0,
-                'num_groups': 13,
-                'robustness': 10,
+                'num_groups_x_intf': 13,
+                'robustness_value': 10,
                 'supported_intf': 1,
                 'unsupported_intf': 0
             }
@@ -59,6 +57,8 @@ class test_show_mld_summary_internal(unittest.TestCase):
 
     golden_output1 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld summary internal
+
         Robustness Value 10
         No. of Group x Interfaces 13
         Maximum number of Group x Interfaces 75000
@@ -93,10 +93,10 @@ class test_show_mld_summary_internal(unittest.TestCase):
                         'parent': '0x0'
                     }
                 },
-                'max_groups': 75000,
+                'max_num_groups_x_intfs': 75000,
                 'mte_tuple_count': 0,
-                'num_groups': 10,
-                'robustness': 10,
+                'num_groups_x_intf': 10,
+                'robustness_value': 10,
                 'supported_intf': 1,
                 'unsupported_intf': 0
             }
@@ -105,6 +105,8 @@ class test_show_mld_summary_internal(unittest.TestCase):
 
     golden_output2 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld vrf VRF1 summary internal 
+
         Robustness Value 10
         No. of Group x Interfaces 10
         Maximum number of Group x Interfaces 75000
@@ -170,7 +172,7 @@ class test_show_mld_interface(unittest.TestCase):
                             'leaves': 5
                         },
                         'enable': True,
-                        'interface_adress': 'fe80::5054:ff:fefa:9ad7',
+                        'internet_address': 'fe80::5054:ff:fefa:9ad7',
                         'interface_status': 'up',
                         'last_member_query_interval': 1,
                         'oper_status': 'up',
@@ -178,9 +180,9 @@ class test_show_mld_interface(unittest.TestCase):
                         'querier_timeout': 3666,
                         'query_interval': 366,
                         'query_max_response_time': 12,
-                        'te_igmp_router_enabled': '1d06h',
-                        'te_last_query_sent': '00:30:16',
-                        'te_last_report_received': '00:05:05',
+                        'time_elapsed_since_igmp_router_enabled': '1d06h',
+                        'time_elapsed_since_last_query_sent': '00:30:16',
+                        'time_elapsed_since_last_report_received': '00:05:05',
                         'version': 2
                     }
                 }
@@ -190,6 +192,8 @@ class test_show_mld_interface(unittest.TestCase):
 
     golden_output1 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld interface
+
         GigabitEthernet0/0/0/0 is up, line protocol is up
           Internet address is fe80::5054:ff:fefa:9ad7
           MLD is enabled on interface
@@ -217,16 +221,16 @@ class test_show_mld_interface(unittest.TestCase):
                             'leaves': 2
                         },
                         'enable': True,
-                        'interface_adress': 'fe80::5054:ff:fe35:f846',
+                        'internet_address': 'fe80::5054:ff:fe35:f846',
                         'interface_status': 'up',
                         'last_member_query_interval': 1,
                         'oper_status': 'up',
                         'querier_timeout': 3666,
                         'query_interval': 366,
                         'query_max_response_time': 12,
-                        'te_igmp_router_enabled': '1d06h',
-                        'te_last_query_sent': '00:00:53',
-                        'te_last_report_received': '00:00:51',
+                        'time_elapsed_since_igmp_router_enabled': '1d06h',
+                        'time_elapsed_since_last_query_sent': '00:00:53',
+                        'time_elapsed_since_last_report_received': '00:00:51',
                         'version': 2
                     }
                 }
@@ -236,6 +240,8 @@ class test_show_mld_interface(unittest.TestCase):
 
     golden_output2 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld vrf VRF1 interface
+
         GigabitEthernet0/0/0/1 is up, line protocol is up
           Internet address is fe80::5054:ff:fe35:f846
           MLD is enabled on interface
@@ -276,6 +282,7 @@ class test_show_mld_interface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
+"""
 # ==============================================================================
 # Unit test for 'show mld ssm map detail', 'show mld vrf <vrf> ssm map detail' (5 and 6)
 # ==============================================================================
@@ -296,6 +303,8 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
 
     golden_output1 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld ssm map detail
+
         No matching entries in MLD
         '''
     }
@@ -307,6 +316,8 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
 
     golden_output2 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld vrf VRF1 ssm map detail
+
         No matching entries in MLD
         '''
     }
@@ -335,6 +346,7 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
         parsed_output = obj.parse(vrf = 'VRF1')
         pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+"""
 
 
 # ==============================================================================
@@ -359,62 +371,62 @@ class test_show_mld_groups_detail(unittest.TestCase):
                         'group': {
                             'ff02::16': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'up_time': '1d06h'
                             },
                             'ff02::1:ff28:cd4b': {
                                 'expire': '01:00:01',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::eca7:a4ff:fe28:cd4b',
                                 'up_time': '1d06h'
                             },
                             'ff02::1:ff60:50aa': {
                                 'expire': '01:00:01',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::eca7:a4ff:fe28:cd4b',
                                 'up_time': '1d06h'
                             },
                             'ff02::1:ffae:4aba': {
                                 'expire': '01:00:01',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::eca7:a4ff:fe28:cd4b',
                                 'up_time': '1d06h'
                             },
                             'ff02::1:ffd7:c01f': {
                                 'expire': '00:29:15',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fed7:c01f',
                                 'up_time': '00:33:19'
                             },
                             'ff02::1:ffda:f428': {
                                 'expire': '01:00:01',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::eca7:a4ff:fe28:cd4b',
                                 'up_time': '06:27:46'
                             },
                             'ff02::2': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'up_time': '1d06h'
                             },
                             'ff02::d': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'up_time': '1d06h'
                             },
                             'ff15:1::1': {
-                                'filter_mode': 'include',
+                                'router_mode': 'include',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'source': {
@@ -429,13 +441,13 @@ class test_show_mld_groups_detail(unittest.TestCase):
                             },
                             'ff25:2::1': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'up_time': '08:06:00'
                             },
                             'ff35:1::1': {
-                                'filter_mode': 'include',
+                                'router_mode': 'include',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'source': {
@@ -450,14 +462,14 @@ class test_show_mld_groups_detail(unittest.TestCase):
                             },
                             'ff45:1::1': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fefa:9ad7',
                                 'up_time': '00:33:28'
                             },
                             'fffe::1': {
                                 'expire': '00:59:49',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fed7:c01f',
                                 'up_time': '07:59:31'
@@ -483,6 +495,8 @@ class test_show_mld_groups_detail(unittest.TestCase):
 
     golden_output1 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld groups detail
+
         Interface:      GigabitEthernet0/0/0/0
         Group:          ff02::2
         Uptime:         1d06h
@@ -590,48 +604,48 @@ class test_show_mld_groups_detail(unittest.TestCase):
                         'group': {
                             'ff02::16': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'up_time': '1d06h'
                             },
                             'ff02::1:ff00:1': {
                                 'expire': '00:58:14',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fe7c:dc70',
                                 'up_time': '09:00:17'
                             },
                             'ff02::1:ff24:c88d': {
                                 'expire': '00:58:30',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::7c2f:c2ff:fe24:c88d',
                                 'up_time': '1d06h'
                             },
                             'ff02::1:ff7c:dc70': {
                                 'expire': '00:58:14',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fe7c:dc70',
                                 'up_time': '09:00:17'
                             },
                             'ff02::2': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'up_time': '1d06h'
                             },
                             'ff02::d': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'up_time': '1d06h'
                             },
                             'ff15:1::1': {
-                                'filter_mode': 'include',
+                                'router_mode': 'include',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'source': {
@@ -646,13 +660,13 @@ class test_show_mld_groups_detail(unittest.TestCase):
                             },
                             'ff25:2::1': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'up_time': '08:11:12'
                             },
                             'ff35:1::1': {
-                                'filter_mode': 'include',
+                                'router_mode': 'include',
                                 'host_mode': 'include',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'source': {
@@ -667,7 +681,7 @@ class test_show_mld_groups_detail(unittest.TestCase):
                             },
                             'ff45:1::1': {
                                 'expire': 'never',
-                                'filter_mode': 'exclude',
+                                'router_mode': 'exclude',
                                 'host_mode': 'exclude',
                                 'last_reporter': 'fe80::5054:ff:fe35:f846',
                                 'up_time': '00:39:44'
@@ -693,6 +707,8 @@ class test_show_mld_groups_detail(unittest.TestCase):
 
     golden_output2 = { 'execute.return_value': 
         '''
+        RP/0/0/CPU0:ios#show mld vrf VRF1 groups detail
+
         Interface:      GigabitEthernet0/0/0/1
         Group:          ff02::2
         Uptime:         1d06h

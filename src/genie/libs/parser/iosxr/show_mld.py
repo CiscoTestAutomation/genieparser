@@ -39,9 +39,9 @@ class ShowMldSummaryInternalSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                Optional('robustness'): int, # Robustness Value 10
-                Optional('num_groups'): int, # No. of Group x Interfaces 13
-                Optional('max_groups'): int, 
+                Optional('robustness_value'): int, # Robustness Value 10
+                Optional('num_groups_x_intf'): int, # No. of Group x Interfaces 13
+                Optional('max_num_groups_x_intfs'): int, 
                 # Maximum number of Group x Interfaces 75000
                 Optional('supported_intf'): int, # Supported Interfaces   : 1
                 Optional('unsupported_intf'): int, # Unsupported Interfaces : 0
@@ -97,7 +97,7 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
             line = line.strip()
 
             # Robustness Value 10
-            p1 = re.compile(r'^Robustness +Value +(?P<robustness>\d+)$')
+            p1 = re.compile(r'^Robustness +Value +(?P<robustness_value>\d+)$')
             m = p1.match(line)
             if m:
                 if 'vrf' not in parsed_dict:
@@ -105,25 +105,25 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
                 if vrf not in parsed_dict['vrf']:
                     parsed_dict['vrf'][vrf] = {}
 
-                parsed_dict['vrf'][vrf]['robustness'] = \
-                    int(m.groupdict()['robustness'])
+                parsed_dict['vrf'][vrf]['robustness_value'] = \
+                    int(m.groupdict()['robustness_value'])
                 continue
 
             # No. of Group x Interfaces 13
-            p2 = re.compile(r'^No\. +of +Group +x +Interfaces +(?P<num_groups>\d+)$')
+            p2 = re.compile(r'^No\. +of +Group +x +Interfaces +(?P<num_groups_x_intf>\d+)$')
             m = p2.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['num_groups'] = \
-                int(m.groupdict()['num_groups'])
+                parsed_dict['vrf'][vrf]['num_groups_x_intf'] = \
+                int(m.groupdict()['num_groups_x_intf'])
                 continue
 
             # Maximum number of Group x Interfaces 75000
             p3 = re.compile(r'^Maximum +number +of +Group +x +Interfaces +'
-                '(?P<max_groups>\d+)$')
+                '(?P<max_num_groups_x_intfs>\d+)$')
             m = p3.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['max_groups'] = \
-                int(m.groupdict()['max_groups'])
+                parsed_dict['vrf'][vrf]['max_num_groups_x_intfs'] = \
+                int(m.groupdict()['max_num_groups_x_intfs'])
                 continue
 
             # Supported Interfaces   : 1
@@ -242,7 +242,7 @@ class ShowMldInterfaceSchema(MetaParser):
                     Any(): {
                         'oper_status': str, # line protocol is up
                         'interface_status': str, # GigabitEthernet0/0/0/0 is up
-                        Optional('interface_adress'): str,  
+                        Optional('internet_address'): str,  
                         # Internet address is fe80::5054:ff:fefa:9ad7
                         'enable': bool, # MLD is enabled on interface
                         Optional('version'): int, # Current MLD version is 2
@@ -262,11 +262,11 @@ class ShowMldInterfaceSchema(MetaParser):
                         },
                         Optional('querier'): str, 
                         # MLD querying router is fe80::5054:ff:fed7:c01f
-                        Optional('te_last_query_sent'): str, 
+                        Optional('time_elapsed_since_last_query_sent'): str, 
                         # Time elapsed since last query sent 00:30:16
-                        Optional('te_igmp_router_enabled'): str,
+                        Optional('time_elapsed_since_igmp_router_enabled'): str,
                         # Time elapsed since IGMP router enabled 1d06h
-                        Optional('te_last_report_received'): str,
+                        Optional('time_elapsed_since_last_report_received'): str,
                         # Time elapsed since last report received 00:05:05
                     },
                 }
@@ -329,7 +329,7 @@ class ShowMldInterface(ShowMldInterfaceSchema):
             p2 = re.compile(r'^Internet +address +is +(?P<ip>[\w\/\.\:]+)$')
             m = p2.match(line)
             if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['interface_adress'] = \
+                parsed_dict['vrf'][vrf]['interface'][intf]['internet_address'] = \
                     m.groupdict()['ip']
                 continue
 
@@ -406,32 +406,35 @@ class ShowMldInterface(ShowMldInterfaceSchema):
                 continue
 
             # Time elapsed since last query sent 00:30:16
-            p11 = re.compile(r'^Time +elapsed +since +last +query +sent +(?P<te_last_query_sent>[\w\:]+)$')
+            p11 = re.compile(r'^Time +elapsed +since +last +query +sent +'
+                '(?P<time_elapsed_since_last_query_sent>[\w\:]+)$')
             m = p11.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['te_last_query_sent'] = \
-                    m.groupdict()['te_last_query_sent']
+                parsed_dict['vrf'][vrf]['interface'][intf]['time_elapsed_since_last_query_sent'] = \
+                    m.groupdict()['time_elapsed_since_last_query_sent']
                 continue
 
             # Time elapsed since IGMP router enabled 1d06h
-            p12 = re.compile(r'^Time +elapsed +since +IGMP +router +enabled +(?P<te_igmp_router_enabled>[\w\:]+)$')
+            p12 = re.compile(r'^Time +elapsed +since +IGMP +router +enabled +'
+                '(?P<time_elapsed_since_igmp_router_enabled>[\w\:]+)$')
             m = p12.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['te_igmp_router_enabled'] = \
-                    m.groupdict()['te_igmp_router_enabled']
+                parsed_dict['vrf'][vrf]['interface'][intf]['time_elapsed_since_igmp_router_enabled'] = \
+                    m.groupdict()['time_elapsed_since_igmp_router_enabled']
                 continue
 
             # Time elapsed since last report received 00:00:51
-            p13 = re.compile(r'^Time +elapsed +since +last +report +received +(?P<te_last_report_received>[\w\:]+)$')
+            p13 = re.compile(r'^Time +elapsed +since +last +report +received +'
+                '(?P<time_elapsed_since_last_report_received>[\w\:]+)$')
             m = p13.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['te_last_report_received'] = \
-                    m.groupdict()['te_last_report_received']
+                parsed_dict['vrf'][vrf]['interface'][intf]['time_elapsed_since_last_report_received'] = \
+                    m.groupdict()['time_elapsed_since_last_report_received']
                 continue
 
         return parsed_dict
 
-
+"""
 # ==============================================================================
 # Schema for 'show mld ssm map detail', 'show mld vrf <vrf> ssm map detail' (5 and 6)
 # ==============================================================================
@@ -462,7 +465,7 @@ class ShowMldSsmMapDetail(ShowMldSsmMapDetailSchema):
     '''
 
     # TODO
-
+"""
 
 
 
@@ -501,7 +504,7 @@ class ShowMldGroupsDetailSchema(MetaParser):
                         'group': { # Group: ff15:1::1
                             Any(): {
                                 'up_time': str, # Uptime: 08:06:00
-                                'filter_mode': str, 
+                                'router_mode': str, 
                                 # Router mode: INCLUDE,or
                                 # Router mode: EXCLUDE (Expires: 00:29:15)
                                 'host_mode': str, # Host mode: INCLUDE
@@ -604,13 +607,13 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
 
             # Router mode:    INCLUDE
             # Router mode:    EXCLUDE (Expires: 00:29:15)
-            p5 = re.compile(r'^Router +mode: +(?P<filter_mode>\w+)'
+            p5 = re.compile(r'^Router +mode: +(?P<router_mode>\w+)'
                              '( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
             m = p5.match(line)
             if m:
-                filter_mode = m.groupdict()['filter_mode']
+                router_mode = m.groupdict()['router_mode']
                 expire = m.groupdict()['expire']
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['filter_mode'] = filter_mode.lower()
+                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['router_mode'] = router_mode.lower()
                 if expire:
                     parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['expire'] = expire
                 continue
