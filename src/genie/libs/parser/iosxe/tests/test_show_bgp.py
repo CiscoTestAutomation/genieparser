@@ -20028,6 +20028,40 @@ class testShowIpBgpNeighborsRoutes(unittest.TestCase):
                                                 'status_codes': 'r>',
                                                 'weight': 0}}}}}}}}}}}
 
+    device_output_3 = {'execute.return_value': '''
+        show bgp ipv4 unicast neighbors 3.3.3.3 routes
+        BGP table version is 4, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+         r>i  3.3.3.3/32       3.3.3.3                       100      0 i
+    '''}
+
+    parsed_output_3 = {
+        'vrf': {
+            'default': {
+                'neighbor': {
+                    '3.3.3.3': {
+                        'address_family': {
+                            'ipv4 unicast': {
+                                'bgp_table_version': 4,
+                                'local_router_id': '1.1.1.1',
+                                'routes': {
+                                    '3.3.3.3/32': {
+                                        'index': {
+                                            1: {
+                                                'localprf': 100,
+                                                'next_hop': '3.3.3.3',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': 'r>',
+                                                'weight': 0}}}}}}}}}}}
+
     def test_golden_1(self):
         self.maxDiff = None        
         self.device = Mock(**self.device_output_1)
@@ -20041,6 +20075,13 @@ class testShowIpBgpNeighborsRoutes(unittest.TestCase):
         obj = ShowBgpNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='3.3.3.3', address_family='vpnv4 unicast', vrf='VRF1')
         self.assertEqual(parsed_output, self.parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None        
+        self.device = Mock(**self.device_output_3)
+        obj = ShowBgpNeighborsRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='3.3.3.3', address_family='ipv4 unicast')
+        self.assertEqual(parsed_output, self.parsed_output_3)
 
 
 if __name__ == '__main__':
