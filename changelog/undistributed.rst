@@ -41,9 +41,11 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
-		    * vrf default value handled
-	  * Updated ShowIpBgpNeighbors to support different Address families
-    * Updated ShowIpBgp to support different status codes
+		    * vrf default value handled	  
+    * Updated ShowIpBgpNeighbors to support different Address families
+    * Updated ShowIpBgp to support different status codes	
+    * Updated ShowIpBgpNeighborsRoutes to support VRF
+    * Updated ShowBgpNeighborsRoutes to support VRF
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
@@ -84,3 +86,17 @@
     * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
 
+--------------------------------------------------------------------------------
+                                   LLDP
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowLldpAll for:
+        show lldp all
+    * Added ShowLldpTimers for:
+        show lldp timers
+    * Added ShowLldpTlvSelect for:
+        show lldp tlv-select
+    * Added ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Added ShowLldpTraffic for:
+        show lldp traffic
