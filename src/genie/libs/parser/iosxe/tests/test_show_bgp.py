@@ -19831,7 +19831,7 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
 
 class test_show_ip_bgp(unittest.TestCase):
     '''
-        unit test for show ip bgp all dampening parameters
+        unit test for 'show ip bgp {address_family} rd {rd}'
     '''
 
     device = Device(name='aDevice')
@@ -20133,6 +20133,45 @@ class test_show_ip_bgp(unittest.TestCase):
                                         'status_codes': '*>i',
                                         'weight': 0}}}}}}}}}
 
+    parsed_output_2 = {'vrf': {'VRF1': {'address_family': {'vpnv4 RD 65000:1': {'bgp_table_version': 4,
+                                                          'default_vrf': 'VRF1',
+                                                          'route_distinguisher': '65000:1',
+                                                          'route_identifier': '1.1.1.1',
+                                                          'routes': {'1.1.1.1/32': {'index': {1: {'metric': 0,
+                                                                                                  'next_hop': '0.0.0.0',
+                                                                                                  'origin_codes': 'i',
+                                                                                                  'status_codes': '*>',
+                                                                                                  'weight': 32768}}},
+                                                                     '2.2.2.2/32': {'index': {1: {'localpref': 100,
+                                                                                                  'metric': 0,
+                                                                                                  'next_hop': '2.2.2.2',
+                                                                                                  'origin_codes': 'i',
+                                                                                                  'status_codes': 'r>i',
+                                                                                                  'weight': 0}}},
+                                                                     '3.3.3.3/32': {'index': {1: {'next_hop': '3.3.3.3',
+                                                                                                  'origin_codes': 'i',
+                                                                                                  'path': '0',
+                                                                                                  'status_codes': 'r>i',
+                                                                                                  'weight': 100}}}}}}}}}
+
+
+    device_output_2 = {'execute.return_value':'''
+        # show ip bgp vpnv4 vrf VRF1
+        BGP table version is 4, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 65000:1 (default for vrf VRF1)
+         *>   1.1.1.1/32       0.0.0.0                  0         32768 i
+         r>i  2.2.2.2/32       2.2.2.2                  0    100      0 i
+         r>i  3.3.3.3/32       3.3.3.3                       100      0 i
+    '''}
+
     def test_golden_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_ouput)
@@ -20146,6 +20185,13 @@ class test_show_ip_bgp(unittest.TestCase):
         obj = ShowIpBgp(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', vrf='HUEUHE', rd='9996:4093')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowIpBgp(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', vrf='VRF1')        
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 
 if __name__ == '__main__':
