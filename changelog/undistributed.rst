@@ -66,3 +66,17 @@
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
 
+--------------------------------------------------------------------------------
+                                   LLDP
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowLldpAll for:
+        show lldp all
+    * Added ShowLldpTimers for:
+        show lldp timers
+    * Added ShowLldpTlvSelect for:
+        show lldp tlv-select
+    * Added ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Added ShowLldpTraffic for:
+        show lldp traffic
