@@ -275,12 +275,14 @@ class test_show_lldp_traffic(unittest.TestCase):
     '''unit test for show lldp traffic'''
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
-        "total_frames_received": 209,
-        "total_frames_transmitted": 349,
-        "total_frames_received_in_error": 0,
-        "total_frames_discarded": 0,
-        'total_unrecognized_tlvs': 0,
-        'total_entries_aged': 0
+        'counters': {
+            "total_frames_received": 209,
+            "total_frames_transmitted": 349,
+            "total_frames_received_in_error": 0,
+            "total_frames_discarded": 0,
+            'total_unrecognized_tlvs': 0,
+            'total_entries_aged': 0
+    }
     }
     golden_output = {'execute.return_value': '''
                     LLDP traffic statistics:

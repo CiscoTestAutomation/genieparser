@@ -415,12 +415,14 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
     schema = {
-        "total_frames_received": int,  # Total frames received: 209
-        "total_frames_transmitted": int,  # Total frames transmitted: 349
-        "total_frames_received_in_error": int,  # Total frames received in error: 0
-        "total_frames_discarded": int,  # Total frames discarded: 0
-        'total_unrecognized_tlvs': int,  # Total unrecognized TLVs: 0
-        'total_entries_aged': int  # Total entries aged: 0
+        'counters': {
+            "total_frames_received": int,  # Total frames received: 209
+            "total_frames_transmitted": int,  # Total frames transmitted: 349
+            "total_frames_received_in_error": int,  # Total frames received in error: 0
+            "total_frames_discarded": int,  # Total frames discarded: 0
+            'total_unrecognized_tlvs': int,  # Total unrecognized TLVs: 0
+            'total_entries_aged': int  # Total entries aged: 0
+        }
     }
 
 
@@ -451,9 +453,10 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
             m = p1.match(line)
             if m:
                 traffic = m.groupdict()
+                traffic_dict=parsed_dict.setdefault('counters',{})
                 traffic_key = traffic['pattern'].replace(' ', '_').lower()
                 traffic_value = int(traffic['value'])
-                parsed_dict.update({traffic_key: traffic_value})
+                traffic_dict.update({traffic_key: traffic_value})
 
                 continue
         return parsed_dict
