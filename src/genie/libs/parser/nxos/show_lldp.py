@@ -135,15 +135,7 @@ class ShowLldpTimers(ShowLldpTimersSchema):
 class ShowLldpTlvSelectSchema(MetaParser):
     """Schema for show lldp tlv-select"""
     schema = {'suppress_tlv_advertisement': {
-        'port_description': bool,
-        'system_name': bool,
-        'system_description': bool,
-        'system_capabilities': bool,
-        'management_address': bool,
-        'port_vlan': bool,
-        'dcbxp': bool,
-        # not sure about this one, what if there're more properties from output?
-        # Any(): bool
+        Any(): bool
     }
     }
 
@@ -160,35 +152,16 @@ class ShowLldpTlvSelect(ShowLldpTlvSelectSchema):
 
         # init return dictionary
         parsed_dict = {}
-        mgmt_set = {'management_address_v4', 'management_address_v6'}
 
-        #    management-address-v4
-        #    management-address-v6
-        #    port-description
-        #    port-vlan
-        #    power-management
-        #    system-capabilities
-        #    system-description
-        #    system-name
-        #    dcbxp
         for line in out.splitlines():
-            line = line.strip().replace('-', '_')
+            line = line.strip().lower()
+            line = re.sub(r'[ -]', '_', line)
             if not line:
                 continue
-            sub_dict = parsed_dict.setdefault('suppress_tlv_advertisement', {
-                'port_description': True,
-                'system_name': True,
-                'system_description': True,
-                'system_capabilities': True,
-                'management_address': True,
-                'port_vlan': True,
-                'dcbxp': True
-            })
+            sub_dict = parsed_dict.setdefault(
+                'suppress_tlv_advertisement', {})
 
-            if line in sub_dict.keys():
-                sub_dict[line] = False
-            elif line in mgmt_set:
-                sub_dict.update({'management_address': False})
+            sub_dict.update({line: False})
 
         return parsed_dict
 
@@ -211,17 +184,17 @@ class ShowLldpNeighborsDetailSchema(MetaParser):
                                 'system_name': str,
                                 'system_description': str,
                                 'time_remaining': int,
-                                'neighbor_id': str,
                                 'capabilities': {
                                     Any(): {
+                                        'name': str,
                                         Optional('system'): bool,
                                         Optional('enabled'): bool
                                     }
                                 },
-                                'management_address': str,
-                                'management_address_type': str,
+                                'management_address_v4': str,
+                                'management_address_v6': str,
 
-                                Optional('vlan_id'): str
+                                'vlan_id': str
                             }
                         }
                     }
@@ -259,6 +232,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         intf_dict = {}
         port_dict = {}
         tmp_chassis_id = ''
+        tmp_port_id = ''
         # Chassis id: 000d.bd09.46fa
         p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w.]+)$')
         # Port id: Gi0/0/0/1
@@ -284,12 +258,12 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         # Enabled Capabilities: R
         p9 = re.compile(r'^Enabled +Capabilities: +(?P<enabled>[\w ,]+)$')
         # Management Address: 10.2.3.2
-        p10 = re.compile(r'^Management +Address: +(?P<mgmt_address_ipv4>[\d.]+)$')
+        p10 = re.compile(r'^Management +Address: +(?P<mgmt_address_ipv4>.+)$')
         # Management Address IPV6: not advertised
         p11 = re.compile(
-            r'^Management +Address +IPV6: +(?P<mgmt_address_ipv6>[\d:A-Fa-f]+)$')
+            r'^Management +Address +IPV6: +(?P<mgmt_address_ipv6>.+)$')
         # Vlan ID: not advertised
-        p12 = re.compile(r'^VLAN +ID: +(?P<port_id>\S+)$')
+        p12 = re.compile(r'^Vlan +ID: +(?P<vlan_id>.+)$')
         # Total entries displayed: 2
         p13 = re.compile(r'^Total +entries +displayed: +(?P<total_entries>\d+)$')
 
@@ -302,24 +276,26 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 group = m.groupdict()
                 tmp_chassis_id = group['chassis_id']
                 continue
+
             # Port id: Gi0/0/0/1
             m = p2.match(line)
             if m:
-                sub_dict = {}
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group['port_id'])
-                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf, {})
-                sub_dict.update({'chassis_id': tmp_chassis_id})
+                port_id = Common.convert_intf_name(group['port_id'])
+                tmp_port_id = port_id
                 continue
             # Local Port id: Eth1/2
             m = p3.match(line)
             if m:
+                sub_dict = {}
                 group = m.groupdict()
-                port_id = Common.convert_intf_name(group['local_port_id'])
-                port_dict = intf_dict.setdefault('port_id', {}). \
-                    setdefault(port_id, {})
+                intf = Common.convert_intf_name(group['local_port_id'])
+                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf,
+                                                                                {})
+                sub_dict.update({'chassis_id': tmp_chassis_id})
+                port_dict = intf_dict.setdefault('port_id', {}).setdefault(tmp_port_id,
+                                                                           {})
                 continue
-
             # Port Description: null
             m = p4.match(line)
             if m:
@@ -334,7 +310,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 group = m.groupdict()
                 system_name = group['system_name']
                 sub_dict.update({'system_name': system_name})
-                sub_dict.update({'neighbor_id': system_name})
+
                 port_dict.setdefault('neighbors', {}).setdefault(system_name, sub_dict)
                 continue
 
@@ -383,6 +359,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 for item in cap:
                     cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
                                                                                   {})
+                    cap_dict.update({'name': item})
                     cap_dict.update({'system': True})
                 continue
 
@@ -395,6 +372,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 for item in cap:
                     cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
                                                                                   {})
+                    cap_dict.update({'name': item})
                     cap_dict.update({'enabled': True})
                 continue
 
@@ -402,16 +380,16 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.update({'management_address': group['mgmt_address_ipv4']})
-                sub_dict.update({'management_address_type': 'ipv4'})
+                sub_dict.update({'management_address_v4': group['mgmt_address_ipv4']})
+
                 continue
 
             # Management Address IPV6: not advertised
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.update({'management_address': group['mgmt_address_ipv6']})
-                sub_dict.update({'management_address_type': 'ipv6'})
+                sub_dict.update({'management_address_v6': group['mgmt_address_ipv6']})
+
                 continue
 
             # Vlan ID: not advertised
@@ -427,6 +405,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     m.groupdict()['total_entries'])})
 
                 continue
+
         return parsed_dict
 
 
