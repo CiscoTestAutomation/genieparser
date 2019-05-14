@@ -85,3 +85,17 @@
     * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
 
+--------------------------------------------------------------------------------
+                                   LLDP
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowLldpAll for:
+        show lldp all
+    * Added ShowLldpTimers for:
+        show lldp timers
+    * Added ShowLldpTlvSelect for:
+        show lldp tlv-select
+    * Added ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Added ShowLldpTraffic for:
+        show lldp traffic
