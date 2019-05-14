@@ -83,3 +83,19 @@
     * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
 
+--------------------------------------------------------------------------------
+                                   LAG
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowFeature for:
+        show feature
+    * Added ShowLacpSystemIdentifier for:
+        show lacp system identifier
+    * Added ShowLacpCounters for:
+        show lacp counters
+    * Added ShowLacpNeighbor for:
+        show lacp neighbor
+    * Added ShowPortChannelSummary for:
+        show port-channel summary
+    * Added ShowPortChannelDatabase for:
+        show port-channel database
