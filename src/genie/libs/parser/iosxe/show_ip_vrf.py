@@ -21,12 +21,13 @@ from genie.libs.parser.utils.common import Common
 from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetail
 
 class ShowIpVrfSchema(MetaParser):
-    """Schema for show ip vrf"""
-    """Schema for show ip vrf <vrf>"""
+    """Schema for 
+        * 'show ip vrf'
+        * 'show ip vrf <vrf>'"""
 
     schema = {'vrf':
                 {Any():
-                    {Optional('default_route_distinguisher'): str,
+                    {Optional('route_distinguisher'): str,
                      'interfaces': list,
                     }
                 },
@@ -34,19 +35,19 @@ class ShowIpVrfSchema(MetaParser):
 
 
 class ShowIpVrf(ShowIpVrfSchema):
-    """Parser for show ip vrf"""
-    """Parser for show ip vrf <vrf>"""
+    """Parser for: 
+        * 'show ip vrf'
+        * 'show ip vrf <vrf>'"""
 
-    # cli_command = ['show mac address-table vni {vni} | grep {intf}', 'show mac address-table local vni {vni}']
     cli_command = ['show ip vrf', 'show ip vrf {vrf}']
-    def cli(self, vrf=None, output=None):
+    def cli(self, vrf='', output=None):
 
         cmd = ""
         if output is None:
-            if not vrf:
-                cmd = self.cli_command[0]
-            else:
+            if vrf:
                 cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -72,7 +73,7 @@ class ShowIpVrf(ShowIpVrfSchema):
                 groups = m.groupdict()
                 vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(str(groups['vrf']),{})
                 if 'not' not in groups['rd']:
-                    vrf_dict['default_route_distinguisher'] = str(groups['rd'])
+                    vrf_dict['route_distinguisher'] = str(groups['rd'])
                 vrf_dict['interfaces'] = [Common.convert_intf_name(groups['interfaces'])]
                 continue
 
@@ -86,8 +87,9 @@ class ShowIpVrf(ShowIpVrfSchema):
 
 
 class ShowIpVrfDetail(ShowVrfDetail, ShowVrfDetailSchema):
-    """Parser for show ip vrf detail"""
-    """Parser for show ip vrf detail <vrf>"""
+    """Parser for 
+        * 'show ip vrf detail'
+        * 'show ip vrf detail <vrf>'"""
     cli_command = ['show ip vrf detail' , 'show ip vrf detail <vrf>']
 
     def cli(self, vrf=None, output=None):
