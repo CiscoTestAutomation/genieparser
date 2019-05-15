@@ -195,6 +195,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                 if m:
                     continue
                 # Time source is NTP, 19:16:19.992 EST Thu Sep 15 2016
+                # Time source is NTP, *02:20:46.845 EST Thu May 16 2019
                 m = p5.match(line)
                 if m:
                     continue
