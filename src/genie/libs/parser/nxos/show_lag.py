@@ -1,6 +1,5 @@
 """show_lag.py
     supported commands:
-    * show feature
     * show lacp system-identifier
     * show lacp counters
     * show lacp neighbor
