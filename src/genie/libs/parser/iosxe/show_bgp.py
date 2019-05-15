@@ -193,12 +193,13 @@ class ShowBgpSuperParser(ShowBgpSchema):
         * 'show ip bgp {address_family} vrf {vrf}'
     '''
 
-    def cli(self, address_family='', output=None):
+    def cli(self, address_family='', vrf='', output=None):
 
         # Init dictionary
         route_dict = {}
         af_dict = {}
-        vrf = 'default'
+        if not vrf:
+            vrf = 'default'
         if address_family:
             original_address_family = address_family
         index = 1
@@ -246,7 +247,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>i 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
         # *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         # *>  100:2051:VEID-2:Blk-1/136
-        p4 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+        p4 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
                         '(?P<path_type>(i|e|c|l|a|r|I))?'
                         ' +(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+)'
                         ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
@@ -698,7 +699,7 @@ class ShowIpBgp(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
 
