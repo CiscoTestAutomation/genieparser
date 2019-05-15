@@ -25,11 +25,13 @@
 * IOSXR
      * Added ShowIpv6NeighborsDetail for:
         show ipv6 neighbors detail
+
 --------------------------------------------------------------------------------
                                    VLAN
 --------------------------------------------------------------------------------
 * NXOS
      * Updated ShowVlan to support different names
+     
 --------------------------------------------------------------------------------
                                    INTERFACE
 --------------------------------------------------------------------------------
@@ -41,8 +43,11 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
-		    * vrf default value handled
-	  * Updated ShowIpBgpNeighbors to support different Address familiy
+		    * vrf default value handled	  
+    * Updated ShowIpBgpNeighbors to support different Address families
+    * Updated ShowIpBgp to support different status codes	
+    * Updated ShowIpBgpNeighborsRoutes to support VRF
+    * Updated ShowBgpNeighborsRoutes to support VRF
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
@@ -90,3 +95,41 @@
     * Added ShowVrf for:
         show vrf
         show vrf {vrf}
+
+--------------------------------------------------------------------------------       
+                                xconnect
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowL2VpnXconnect for:
+        show l2vpn xconnect 
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowMacAddressTable for:
+        show mac address-table
+    * Added ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Added ShowMacAddressTableLimit for:
+        show mac address-table limit
+    * Added ShowSystemInternalL2fwderMac for:
+        show system internal l2fwder mac
+    * Updated ShowMacAddressTableVni for:
+        show mac address-table vni <WORD> | grep <WORD>
+        show mac address-table local vni <WORD>
+
+--------------------------------------------------------------------------------
+                                   LLDP
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowLldpAll for:
+        show lldp all
+    * Added ShowLldpTimers for:
+        show lldp timers
+    * Added ShowLldpTlvSelect for:
+        show lldp tlv-select
+    * Added ShowLldpNeighborsDetail for:
+        show lldp neighbors detail
+    * Added ShowLldpTraffic for:
+        show lldp traffic

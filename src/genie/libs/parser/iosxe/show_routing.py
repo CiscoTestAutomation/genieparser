@@ -1235,7 +1235,7 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
-                        '( +label +(?P<outgoing_label>[\d\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
+                        '( +label +(?P<outgoing_label>[\w\-\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
 
