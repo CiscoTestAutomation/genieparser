@@ -133,3 +133,9 @@
         show lldp neighbors detail
     * Added ShowLldpTraffic for:
         show lldp traffic
+
+--------------------------------------------------------------------------------
+                                   ARCHIVE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowArchiveConfigDifferences for more varied output matching
