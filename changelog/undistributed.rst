@@ -79,12 +79,29 @@
     * Added ShowIPAliasDefaultVrf:
        show ip aliases default-vrf
 
-
+--------------------------------------------------------------------------------
                                    OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspfNeighbor for more varied states
     * Enhanced ShowIpOspf
+
+--------------------------------------------------------------------------------
+                                   FDB
+--------------------------------------------------------------------------------
+
+* NXOS
+    * Added ShowMacAddressTable for:
+        show mac address-table
+    * Added ShowMacAddressTableAgingTime for:
+        show mac address-table aging-time
+    * Added ShowMacAddressTableLimit for:
+        show mac address-table limit
+    * Added ShowSystemInternalL2fwderMac for:
+        show system internal l2fwder mac
+    * Updated ShowMacAddressTableVni for:
+        show mac address-table vni <WORD> | grep <WORD>
+        show mac address-table local vni <WORD>
 
 --------------------------------------------------------------------------------
                                    LLDP
@@ -100,3 +117,4 @@
         show lldp neighbors detail
     * Added ShowLldpTraffic for:
         show lldp traffic
+
