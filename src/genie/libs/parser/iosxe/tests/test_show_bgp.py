@@ -19828,7 +19828,5 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
 
 
 #-------------------------------------------------------------------------------
-
-
 if __name__ == '__main__':
     unittest.main()
