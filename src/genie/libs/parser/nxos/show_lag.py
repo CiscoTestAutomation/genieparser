@@ -10,7 +10,6 @@
 
 # Python
 import re
-import random
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -25,55 +24,6 @@ from genie.metaparser.util.schemaengine import Schema, \
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-
-# ============================
-# parser for show feature
-# ============================
-class ShowFeatureSchema(MetaParser):
-    """schema for: show feature"""
-    schema = {
-        'features': {
-            Any(): {
-                'instances': {
-                    Any(): bool
-                }
-            }
-        }
-    }
-
-
-class ShowFeature(ShowFeatureSchema):
-    """parser for show feature"""
-    cli_command = 'show feature'
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        # init dictionary
-        parsed_dict = {}
-        # bash-shell             1          disabled
-        p1 = re.compile(
-            r'^(?P<feature_name>[\w-]+)\s+(?P<instance>\d+)\s+(?P<state>('
-            r'disabled|enabled))$')
-
-        for line in out.splitlines():
-            line = line.strip()
-            # bash-shell             1          disabled
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                state = True if group['state'] == 'enabled' else False
-                sub_dict = parsed_dict.setdefault('features', {}).setdefault(
-                    group['feature_name'], {}).setdefault('instances', {})
-                sub_dict.update({group['instance']: state})
-
-                continue
-        return parsed_dict
-
-
 # ============================
 # parser for show lacp system-identifier
 # ============================
@@ -87,9 +37,9 @@ class ShowLacpSystemIdentifierSchema(MetaParser):
 
 class ShowLacpSystemIdentifier(ShowLacpSystemIdentifierSchema):
     """Parser for :
-       show lacp sys-id"""
+       show lacp system-identifier"""
 
-    cli_command = 'show lacp sys-id'
+    cli_command = 'show lacp system-identifier'
 
     def cli(self, output=None):
         if output is None:
@@ -132,8 +82,8 @@ class ShowLacpCountersSchema(MetaParser):
                             'lacp_in_pkts': int,
                             'lacp_out_pkts': int,
                             'lacp_errors': int,
-                            'marker_in_pkts': int,
-                            'marker_out_pkts': int
+                            'marker_resp_in_pkts': int,
+                            'marker_resp_out_pkts': int
                         },
                     },
                 }
@@ -195,22 +145,24 @@ class ShowLacpCounters(ShowLacpCountersSchema):
             # port-channel1
             m = p1.match(line)
             if m:
-                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(m.group(),
-                                                                                {})
+                port_channel = Common.convert_intf_name(m.group()).capitalize()
+                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(
+                    port_channel, {})
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface = Common.convert_intf_name(group["interface"])
+                interface = Common.convert_intf_name(group["interface"]).capitalize()
                 member_dict = intf_dict.setdefault('members', {}).setdefault(interface,
                                                                              {})
                 member_dict.update({'interface': interface})
                 counter_dict = member_dict.setdefault('counters', {})
                 counter_dict.update({'lacp_in_pkts': int(group['lacp_in_pkts'])})
                 counter_dict.update({'lacp_out_pkts': int(group['lacp_out_pkts'])})
-                counter_dict.update({'marker_in_pkts': int(group['marker_in_pkts'])})
-                counter_dict.update({'marker_out_pkts': int(group['marker_out_pkts'])})
+                counter_dict.update({'marker_resp_in_pkts': int(group['marker_in_pkts'])})
+                counter_dict.update(
+                    {'marker_resp_out_pkts': int(group['marker_out_pkts'])})
                 counter_dict.update({'lacp_errors': int(group['lacp_pkts_errors'])})
                 continue
 
@@ -284,13 +236,15 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                port_channel = Common.convert_intf_name(
+                    group['port_channel']).capitalize()
                 intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(
-                    group['port_channel'], {})
+                    port_channel, {})
                 continue
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                interface = Common.convert_intf_name(group.pop("interface"))
+                interface = Common.convert_intf_name(group.pop("interface")).capitalize()
                 member_dict = intf_dict.setdefault('members', {}).setdefault(interface,
                                                                              {})
                 member_dict.update({'interface': interface})
@@ -382,7 +336,7 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                name = Common.convert_intf_name(group["name"])
+                name = Common.convert_intf_name(group["name"]).capitalize()
                 intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(name, {})
                 intf_dict.update({'bundle_id': int(group["bundle_id"])})
                 intf_dict.update({'type': group['type'].lower()})
@@ -393,7 +347,7 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
                 port_dict = intf_dict.setdefault('members', {})
                 port_list = re.findall(r'([\w/]+)\((\w+)\)', group['ports'])
                 for port in port_list:
-                    intf = Common.convert_intf_name(port[0])
+                    intf = Common.convert_intf_name(port[0]).capitalize()
                     port_sub_dict = port_dict.setdefault(intf, {})
                     port_sub_dict.update({'flags': port[1]})
 
@@ -487,8 +441,8 @@ class ShowPortChannelDatabase(ShowPortChannelDatabaseSchema):
             # port-channel1
             m = p1.match(line)
             if m:
-                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(m.group(),
-                                                                                {})
+                name = Common.convert_intf_name(m.group()).capitalize()
+                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(name, {})
                 continue
             # Last membership update is successful
             m = p2.match(line)
