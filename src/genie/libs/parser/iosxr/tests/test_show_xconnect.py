@@ -91,62 +91,6 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
     ---------------------------------------------------------------------------
         '''}
 
-    golden_parsed_output2 = {
-        'groups': {
-            'L2TPV3_V4_XC_GRP': {
-                'name': {
-                    'L2TPV3_P2P_1': {
-                        'status': 'UP',
-                        'segment1': {
-                            'GigabitEthernet0/2/0/1.2': {
-                                'status': 'UP',
-                                'segment2': {
-                                    '26.26.26.26': {
-                                        'pw_id': '100',
-                                        'status': 'UP',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    'L2TPV3_P2P_2': {
-                        'status': 'UP',
-                        'segment1': {
-                            'GigabitEthernet0/2/0/1.3': {
-                                'status': 'UP',
-                                'segment2': {
-                                    '26.26.26.26': {
-                                        'pw_id': '200',
-                                        'status': 'UP',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        }
-
-    golden_output2 = {'execute.return_value': '''
-    RP/0/RP0/CPU0:router# show l2vpn xconnect
-    Wed May 21 09:06:47.944 UTC
-    Legend: ST = State, UP = Up, DN = Down, AD = Admin Down, UR = Unresolved,
-            SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
-
-    XConnect                   Segment 1               Segment 2                
-    Group      Name       ST   Description    ST       Description            ST    
-    ------------------------   --------------------   --------------------------
-    L2TPV3_V4_XC_GRP
-               L2TPV3_P2P_1
-                          UP   Gi0/2/0/1.2    UP       26.26.26.26     100    UP    
-    ----------------------------------------------------------------------------
-    L2TPV3_V4_XC_GRP
-               L2TPV3_P2P_2
-                          UP   Gi0/2/0/1.3    UP       26.26.26.26     200    UP    
-    ----------------------------------------------------------------------------
-    '''}
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnXconnect(device=self.device)
@@ -159,14 +103,6 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_golden2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output2)
-        obj = ShowL2vpnXconnect(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
-
 
 if __name__ == '__main__':
     unittest.main()
