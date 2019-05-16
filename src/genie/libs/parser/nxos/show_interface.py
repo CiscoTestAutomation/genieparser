@@ -1709,7 +1709,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 continue
 
             # Operational Mode: trunk
-            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>\S+)$')
+            p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[\w\s-]+)$')
             m = p4.match(line)
             if m:
                 interface_switchport_dict[interface]['switchport_mode'] = m.groupdict()['switchport_mode'] 
@@ -1761,7 +1761,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             #Administrative private-vlan primary host-association: none
             p8 = re.compile(r'^\s*Administrative *private-vlan *primary'
                              ' *host-association:'
-                             ' *(?P<admin_priv_vlan_primary_host_assoc>[a-z]+)$')
+                             ' *(?P<admin_priv_vlan_primary_host_assoc>\w+)$')
             m = p8.match(line)
             if m:
                 admin_priv_vlan_primary_host_assoc = m.groupdict()['admin_priv_vlan_primary_host_assoc']
@@ -1772,7 +1772,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             #Administrative private-vlan secondary host-association: none
             p9 = re.compile(r'^\s*Administrative *private-vlan *secondary'
                              ' *host-association:'
-                             ' *(?P<admin_priv_vlan_secondary_host_assoc>[a-z]+)$')
+                             ' *(?P<admin_priv_vlan_secondary_host_assoc>\w+)$')
             m = p9.match(line)
             if m:
                 admin_priv_vlan_secondary_host_assoc\
@@ -1811,7 +1811,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             #Administrative private-vlan trunk native VLAN: none
             p12 = re.compile(r'^\s*Administrative *private-vlan *trunk *native'
                              ' *VLAN:'
-                             ' *(?P<admin_priv_vlan_trunk_native_vlan>[a-z]+)$')
+                             ' *(?P<admin_priv_vlan_trunk_native_vlan>\w+)$')
             m = p12.match(line)
             if m:
                 admin_priv_vlan_trunk_native_vlan = m.groupdict()['admin_priv_vlan_trunk_native_vlan']
@@ -1859,7 +1859,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
 
             #Operational private-vlan: none
             p16 = re.compile(r'^\s*Operational *private-vlan:'
-                             ' *(?P<operational_private_vlan>[a-z]+)$')
+                             ' *(?P<operational_private_vlan>\S+)$')
             m = p16.match(line)
             if m:
                 operational_private_vlan = m.groupdict()['operational_private_vlan']
