@@ -157,7 +157,8 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
         p4 = re.compile(r'^Load +for +five +secs: +\d+%\/\d+%; +one +minute:' \
             ' +\d+%; +five +minutes: +\d+%$')
         # Time source is NTP, 19:16:19.992 EST Thu Sep 15 2016
-        p5 = re.compile(r'^Time +source +is +\w+, +\d+:\d+:\d+\.\d+ +\w+ +' \
+        # Time source is NTP, *02:20:46.845 EST Thu May 16 2019
+        p5 = re.compile(r'^Time +source +is +\w+, +\*?\d+:\d+:\d+\.\d+ +\w+ +' \
             '\w+ +\w+ +\d+ +\d+$')
         # test#show archive config incremental-diffs bootflash:A.cfg
         p6 = re.compile(r'^(test#|Device#|Router#)')
@@ -194,6 +195,7 @@ class ShowArchiveConfigDifferences(ShowArchiveConfigDifferencesSchema):
                 if m:
                     continue
                 # Time source is NTP, 19:16:19.992 EST Thu Sep 15 2016
+                # Time source is NTP, *02:20:46.845 EST Thu May 16 2019
                 m = p5.match(line)
                 if m:
                     continue
