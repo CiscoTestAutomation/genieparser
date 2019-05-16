@@ -3,6 +3,9 @@
 NX-OS parsers for the following show commands:
     * show virtual-service global
     * show virtual-service list
+    * show virtual-service detail
+    * show virtual-service detail name <name>
+    * show guestshell
 """
 
 # Python
@@ -235,3 +238,193 @@ class ShowVirtualServiceList(ShowVirtualServiceListSchema):
                 continue
 
         return services_dict
+
+
+# ======================================================
+# Schema for "show virtual-service detail [name <name>]"
+# ======================================================
+class ShowVirtualServiceDetailSchema(MetaParser):
+    """Schema for:
+      * show virtual-service detail
+      * show virtual-service detail name <name>
+    """
+
+    schema = {
+        'service': {
+            Any(): {
+                'state': str,
+                'info': {
+                    'package_location': str,
+                    'version' : str,
+                    'description' : str,
+                    'signing_key_type': str,
+                },
+                'resource_reservation': {
+                    'disk_mb': int,
+                    'memory_mb': int,
+                    'cpu_percent': int,
+                }
+            }
+        }
+    }
+
+
+# ============================================================================
+# Parser for "show virtual-service detail [name <name>]" and "show guestshell"
+# ============================================================================
+class ShowVirtualServiceDetail(ShowVirtualServiceDetailSchema):
+    """Parser for:
+      * show virtual-service detail name <name>
+      * show guestshell
+    """
+
+    cli_command = ["show virtual-service detail",
+                   "show virtual-service detail name {name}"]
+
+    def cli(self, name="", output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[1].format(name=name)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        services_dict = {}
+
+        # Virtual service guestshell+ detail
+        p1 = re.compile(r'^Virtual +service +(?P<name>\S+) +detail$')
+
+        # State                 : Activated
+        p2 = re.compile(r'^State +: +(?P<state>.+)$')
+
+        # Package information
+        #   Name                : guestshell.ova
+        #   Path                : /isanboot/bin/guestshell.ova
+        p3 = re.compile(r'^Path +: +(?P<path>.+)$')
+
+        # Application
+        #   Name              : GuestShell
+        #   Installed version : 2.4(0.0)
+        #   Description       : Cisco Systems Guest Shell
+        p4 = re.compile(r'^Installed +version +: +(?P<version>.+)$')
+        p5 = re.compile(r'^Description +: +(?P<description>.+)$')
+
+        # Signing
+        #   Key type          : Cisco release key
+        #   Method            : SHA-1
+        p6 = re.compile(r'^Key +type +: +(?P<key_type>.+)$')
+
+        # Licensing
+        #   Name              : None
+        #   Version           : None
+        # Resource reservation
+        #   Disk                : 1000 MB
+        #   Memory              : 500 MB
+        #   CPU                 : 1% system CPU
+        p7 = re.compile(r'^Disk +: +(?P<disk>\d+) +MB$')
+        p8 = re.compile(r'^Memory +: +(?P<memory>\d+) +MB$')
+        p9 = re.compile(r'^CPU +: +(?P<cpu>\d+)% system CPU')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            match = p1.match(line)
+            if match:
+                service_dict = services_dict.setdefault(
+                    'service', {}).setdefault(match.groupdict()['name'], {})
+                continue
+
+            match = p2.match(line)
+            if match:
+                service_dict['state'] = match.groupdict()['state'].lower()
+                continue
+
+            match = p3.match(line)
+            if match:
+                path = match.groupdict()['path']
+                service_dict.setdefault('info', {})['package_location'] = path
+                continue
+
+            match = p4.match(line)
+            if match:
+                version = match.groupdict()['version']
+                service_dict.setdefault('info', {})['version'] = version
+                continue
+
+            match = p5.match(line)
+            if match:
+                description = match.groupdict()['description']
+                service_dict.setdefault('info', {})['description'] = description
+                continue
+
+            match = p6.match(line)
+            if match:
+                key_type = match.groupdict()['key_type']
+                service_dict.setdefault('info',
+                                        {})['signing_key_type'] = key_type
+                continue
+
+            match = p7.match(line)
+            if match:
+                disk = int(match.groupdict()['disk'])
+                service_dict.setdefault('resource_reservation',
+                                        {})['disk_mb'] = disk
+                continue
+
+            match = p8.match(line)
+            if match:
+                memory = int(match.groupdict()['memory'])
+                service_dict.setdefault('resource_reservation',
+                                        {})['memory_mb'] = memory
+                continue
+
+            match = p9.match(line)
+            if match:
+                cpu = int(match.groupdict()['cpu'])
+                service_dict.setdefault('resource_reservation',
+                                        {})['cpu_percent'] = cpu
+                continue
+
+        return services_dict
+
+
+# ======================================================
+# Schema for "show guestshell"
+# ======================================================
+class ShowGuestshellSchema(MetaParser):
+    """Schema for "show guestshell".
+
+    This is the same as ShowVirtualServiceDetailSchema, minus the redundant
+    `["service"]["guestshell+"]` enclosing container.
+    """
+
+    schema = {
+        'state': str,
+        'info': {
+            'package_location': str,
+            'version' : str,
+            'description' : str,
+            'signing_key_type': str,
+        },
+        'resource_reservation': {
+            'disk_mb': int,
+            'memory_mb': int,
+            'cpu_percent': int,
+        }
+    }
+
+
+# ============================================================================
+# Parser for "show guestshell"
+# ============================================================================
+class ShowGuestshell(ShowGuestshellSchema, ShowVirtualServiceDetail):
+    """Parser for "show guestshell"."""
+
+    cli_command = "show guestshell"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        services_dict = super().cli(output=output)
+        return services_dict.get('service', {}).get('guestshell+', {})

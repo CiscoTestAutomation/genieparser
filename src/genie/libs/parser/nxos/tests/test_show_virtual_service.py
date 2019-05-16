@@ -12,6 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.nxos.show_virtual_service import (
     ShowVirtualServiceGlobal,
     ShowVirtualServiceList,
+    ShowVirtualServiceDetail,
+    ShowGuestshell,
 )
 
 # ===========================================
@@ -115,10 +117,8 @@ class test_show_virtual_service_list(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': """
-        
-        
         Virtual Service List:
-        
+
         Name                    Status             Package Name
         ----------------------------------------------------------------------
         guestshell+             Activated          guestshell.ova
@@ -140,6 +140,108 @@ class test_show_virtual_service_list(unittest.TestCase):
         obj = ShowVirtualServiceList(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ===========================================
+# Unit test for "show virtual-service detail"
+# ===========================================
+class test_show_virtual_service_detail(unittest.TestCase):
+    """Unit test for "show virtual-service detail"."""
+
+    empty_output = {'execute.return_value': """
+
+    """}
+
+    golden_parsed_output_1 = {
+        'service': {
+            'guestshell+': {
+                'state': 'activated',
+                'info': {
+                    'package_location': '/isanboot/bin/guestshell.ova',
+                    'version': '2.4(0.0)',
+                    'description': 'Cisco Systems Guest Shell',
+                    'signing_key_type': 'Cisco release key',
+                },
+                'resource_reservation': {
+                    'disk_mb': 1000,
+                    'memory_mb': 500,
+                    'cpu_percent': 1,
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': """
+        Virtual service guestshell+ detail
+          State                 : Activated
+          Package information
+            Name                : guestshell.ova
+            Path                : /isanboot/bin/guestshell.ova
+            Application
+              Name              : GuestShell
+              Installed version : 2.4(0.0)
+              Description       : Cisco Systems Guest Shell
+            Signing
+              Key type          : Cisco release key
+              Method            : SHA-1
+            Licensing
+              Name              : None
+              Version           : None
+          Resource reservation
+            Disk                : 1000 MB
+            Memory              : 500 MB
+            CPU                 : 1% system CPU
+
+          Attached devices
+            Type              Name        Alias
+            ---------------------------------------------
+            Disk              _rootfs
+            Disk              /cisco/cor
+            Serial/shell
+            Serial/aux
+            Serial/Syslog                 serial2
+            Serial/Trace                  serial3
+    """}
+
+    my_test_class = ShowVirtualServiceDetail
+
+    def test_show_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = self.my_test_class(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = self.my_test_class(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+# ===============================
+# Unit test for "show guestshell"
+# ===============================
+class test_show_guestshell(test_show_virtual_service_detail):
+    """Unit test for "show guestshell"."""
+
+    golden_parsed_output_1 = {
+        'state': 'activated',
+        'info': {
+            'package_location': '/isanboot/bin/guestshell.ova',
+            'version': '2.4(0.0)',
+            'description': 'Cisco Systems Guest Shell',
+            'signing_key_type': 'Cisco release key',
+        },
+        'resource_reservation': {
+            'disk_mb': 1000,
+            'memory_mb': 500,
+            'cpu_percent': 1,
+        }
+    }
+
+    my_test_class = ShowGuestshell
 
 
 if __name__ == "__main__":
