@@ -90,7 +90,7 @@ class ShowIpVrfDetail(ShowVrfDetail, ShowVrfDetailSchema):
     """Parser for 
         * 'show ip vrf detail'
         * 'show ip vrf detail <vrf>'"""
-    cli_command = ['show ip vrf detail' , 'show ip vrf detail <vrf>']
+    cli_command = ['show ip vrf detail' , 'show ip vrf detail {vrf}']
 
-    def cli(self, vrf=None, output=None):
-        return super().cli(vrf, output)
+    def cli(self, vrf='', output=None, flag_showipvrfdetail=True):
+        return super().cli(vrf, output, flag_showipvrfdetail)

@@ -220,7 +220,6 @@ class test_show_vrf_detail(unittest.TestCase):
           },
       }
 
-
     golden_output1 = {'execute.return_value': '''
     R1_xe#show ip vrf detail Mgmt-intf
     VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>
@@ -238,13 +237,13 @@ class test_show_vrf_detail(unittest.TestCase):
       VRF label distribution protocol: not configured
       VRF label allocation mode: per-prefix
     '''}
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowVrfDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -258,7 +257,6 @@ class test_show_vrf_detail(unittest.TestCase):
         obj = ShowVrfDetail(device=self.device)
         parsed_output = obj.parse(vrf='Mgmt-intf')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
 
     def test_empty1(self):
         self.device = Mock(**self.empty_output)

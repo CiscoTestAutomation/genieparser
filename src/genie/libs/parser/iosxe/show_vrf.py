@@ -30,9 +30,11 @@ class ShowVrfDetailSchema(MetaParser):
             Optional('vrf_id'):  int,
             Optional('route_distinguisher'): str,
             Optional('vpn_id'): str,
-            Optional('interfaces'):  list,
-            Optional('interface'):  {Any(): {'vrf': str}},
+            Optional('interfaces'): list,
+            Optional('interface'): {Any(): {'vrf': str}},
             Optional('flags'):  str,
+            Optional('cli_format'): str,
+            Optional('support_af'): str,
             Optional('address_family'): {
                 Any(): {
                     'table_id': str,
@@ -83,12 +85,12 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
     cli_command = ['show vrf detail' , 'show vrf detail {vrf}']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', output=None, flag_showipvrfdetail=False):
         if output is None:
             if vrf:
-                cmd = self.cli_command[0]
-            else:
                 cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -111,6 +113,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                         r'Table +ID +\= +(?P<alt_vrf_id>\d))?$')
 
         # New CLI format, supports multiple address-families
+        p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format, +supports +(?P<support_af>[\s\S]+)$')
+
         # Flags: 0x180C
         p2 = re.compile(r'^Flags: +(?P<flags>\w+)$')
 
@@ -159,7 +163,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                         r'current +count +(?P<count>\d+)$')
 
         # VRF label distribution protocol: not configured
-        p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\w\s\-]+)\)$')
+        p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\w\s\-]+)$')
 
         # VRF label allocation mode: per-prefix
         p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)$')
@@ -194,6 +198,15 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 continue
 
             # New CLI format, supports multiple address-families
+
+            m = p1_1.match(line)
+            if m:
+                if flag_showipvrfdetail:
+                    groups = m.groupdict()
+                    vrf_dict.update({'cli_format':groups['cli_format']})
+                    vrf_dict.update({'support_af':groups['support_af']})
+                    continue
+
             # Flags: 0x180C
             m = p2.match(line)
             if m:
@@ -222,8 +235,9 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                     vrf_dict.get('interfaces').extend(intf_list)
                 else:
                     vrf_dict.update({'interfaces': intf_list})
-                intf_dict = vrf_dict.setdefault('interface', {})
-                [intf_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
+                if not flag_showipvrfdetail:
+                    intf_dict = vrf_dict.setdefault('interface', {})
+                    [intf_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
                 continue
 
             # Address family ipv4 unicast (Table ID = 0x1):

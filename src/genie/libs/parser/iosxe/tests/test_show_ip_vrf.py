@@ -47,9 +47,9 @@ class test_show_ip_vrf(unittest.TestCase):
                                'Tunnel4',
                                'Tunnel6',
                                'Tunnel8'],
+                },
             },
-        },
-    }
+        }
 
     golden_output = {'execute.return_value': '''
         R1_xe#show ip vrf
@@ -175,12 +175,9 @@ class test_show_ip_vrf_detail(unittest.TestCase):
         'Mgmt-intf': {
             'vrf_id': 1,
             'flags': '0x1808',
-            'interface': {
-                'GigabitEthernet1': {
-                    'vrf': 'Mgmt-intf',
-                },
-            },
             'interfaces': ['GigabitEthernet1'],
+            'cli_format': 'New',
+            'support_af': 'multiple address-families',
             'address_family': {
                 'ipv4 unicast': {
                     'flags': '0x0',
@@ -194,50 +191,6 @@ class test_show_ip_vrf_detail(unittest.TestCase):
         'VRF1': {
             'vrf_id': 2,
             'route_distinguisher': '65000:1',
-            'interface': {
-                'GigabitEthernet2.390': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet2.410': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet2.415': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet2.420': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet3.390': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet3.410': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet3.415': {
-                    'vrf': 'VRF1',
-                },
-                'GigabitEthernet3.420': {
-                    'vrf': 'VRF1',
-                },
-                'Loopback300': {
-                    'vrf': 'VRF1',
-                },
-                'Tunnel1': {
-                    'vrf': 'VRF1',
-                },
-                'Tunnel3': {
-                    'vrf': 'VRF1',
-                },
-                'Tunnel4': {
-                    'vrf': 'VRF1',
-                },
-                'Tunnel6': {
-                    'vrf': 'VRF1',
-                },
-                'Tunnel8': {
-                    'vrf': 'VRF1',
-                },
-            },
             'interfaces': ['Tunnel1',
                            'Loopback300',
                            'GigabitEthernet2.390',
@@ -258,10 +211,13 @@ class test_show_ip_vrf_detail(unittest.TestCase):
                     'table_id': '0x2',
                     'vrf_label': {
                         'allocation_mode': 'per-prefix',
+                        'distribution_protocol': 'LDP',
                     },
                 },
             },
             'flags': '0x180C',
+            'cli_format': 'New',
+            'support_af': 'multiple address-families',
         },
     }
 
@@ -305,13 +261,10 @@ class test_show_ip_vrf_detail(unittest.TestCase):
     golden_parsed_output1 = {
         'Mgmt-intf': {
             'flags': '0x1808',
-            'interface': {
-                'GigabitEthernet1': {
-                    'vrf': 'Mgmt-intf',
-                },
-            },
             'interfaces': ['GigabitEthernet1'],
             'vrf_id': 1,
+            'cli_format': 'New',
+            'support_af': 'multiple address-families',
             'address_family': {
                 'ipv4 unicast': {
                     'flags': '0x0',
@@ -341,7 +294,64 @@ class test_show_ip_vrf_detail(unittest.TestCase):
       VRF label distribution protocol: not configured
       VRF label allocation mode: per-prefix
     '''
-                      }
+    }
+
+    golden_parsed_output2 = {
+        'VRF1': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x0',
+                    'table_id': '0x2',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix',
+                        'distribution_protocol': 'LDP'
+                        },
+                    },
+                },
+            'cli_format': 'New',
+            'flags': '0x180C',
+            'interfaces': ['Tunnel1',
+                           'Loopback300',
+                           'GigabitEthernet2.390',
+                           'GigabitEthernet2.410',
+                           'GigabitEthernet2.415',
+                           'GigabitEthernet2.420',
+                           'GigabitEthernet3.390',
+                           'GigabitEthernet3.410',
+                           'GigabitEthernet3.415',
+                           'GigabitEthernet3.420',
+                           'Tunnel3',
+                           'Tunnel4',
+                           'Tunnel6',
+                           'Tunnel8'],
+            'route_distinguisher': '65000:1',
+            'support_af': 'multiple address-families',
+            'vrf_id': 2,
+            },
+        }
+
+    golden_output2 = {'execute.return_value': '''
+    show ip vrf detail VRF1
+    VRF VRF1 (VRF Id = 2); default RD 65000:1; default VPNID <not set>
+      New CLI format, supports multiple address-families
+      Flags: 0x180C
+      Interfaces:
+        Tu1                      Lo300                    Gi2.390
+        Gi2.410                  Gi2.415                  Gi2.420
+        Gi3.390                  Gi3.410                  Gi3.415
+        Gi3.420                  Tu3                      Tu4
+        Tu6                      Tu8
+    Address family ipv4 unicast (Table ID = 0x2):
+      Flags: 0x0
+      No Export VPN route-target communities
+      No Import VPN route-target communities
+      No import route-map
+      No global export route-map
+      No export route-map
+      VRF label distribution protocol: LDP
+      VRF label allocation mode: per-prefix
+    '''
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -368,6 +378,19 @@ class test_show_ip_vrf_detail(unittest.TestCase):
         obj = ShowIpVrfDetail(device=self.device)
         parsed_output = obj.parse(vrf='Mgmt-intf')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_empty2(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpVrfDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='VRF1')
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpVrfDetail(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 if __name__ == '__main__':
