@@ -18,7 +18,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Default, \
                                          Use
 from genie.libs.parser.utils.common import Common
-from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetail
+from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetailSuperParser
 
 class ShowIpVrfSchema(MetaParser):
     """Schema for 
@@ -86,11 +86,21 @@ class ShowIpVrf(ShowIpVrfSchema):
         return ret_dict
 
 
-class ShowIpVrfDetail(ShowVrfDetail, ShowVrfDetailSchema):
+class ShowIpVrfDetail(ShowVrfDetailSuperParser, ShowVrfDetailSchema):
     """Parser for 
         * 'show ip vrf detail'
         * 'show ip vrf detail <vrf>'"""
     cli_command = ['show ip vrf detail' , 'show ip vrf detail {vrf}']
+    flag_showipvrfdetail=True
 
-    def cli(self, vrf='', output=None, flag_showipvrfdetail=True):
-        return super().cli(vrf, output, flag_showipvrfdetail)
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        return super().cli(vrf=vrf, out=show_output)

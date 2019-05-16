@@ -161,24 +161,14 @@ class ShowVrfDetailSchema(MetaParser):
         }
     }
 
+class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
+    """Super Paser for:
+        * show vrf detail
+        * Super Paser for show vrf detail <vrf>
+        * Super Paser for show ip vrf detail
+        * Super Paser for show ip vrf detail <vrf>"""
 
-class ShowVrfDetail(ShowVrfDetailSchema):
-    """Paser for show vrf detail"""
-    """Paser for show vrf detail <vrf>"""
-    """Super Paser for show ip vrf detail"""
-    """Super Paser for show ip vrf detail <vrf>"""
-
-    cli_command = ['show vrf detail' , 'show vrf detail {vrf}']
-
-    def cli(self, vrf='', output=None, flag_showipvrfdetail=False):
-        if output is None:
-            if vrf:
-                cmd = self.cli_command[1].format(vrf=vrf)
-            else:
-                cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
+    def cli(self, vrf='', out=None):
 
         # Init vars
         result_dict = {}
@@ -319,7 +309,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                     vrf_dict.get('interfaces').extend(intf_list)
                 else:
                     vrf_dict.update({'interfaces': intf_list})
-                if not flag_showipvrfdetail:
+                if not self.flag_showipvrfdetail:
                     intf_dict = vrf_dict.setdefault('interface', {})
                     [intf_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
                 continue
@@ -448,4 +438,24 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
         return result_dict
 
+
+class ShowVrfDetail(ShowVrfDetailSuperParser, ShowVrfDetailSchema):
+    """Parser for 
+        * 'show vrf detail'
+        * 'show vrf detail <vrf>'"""
+    cli_command = ['show vrf detail' , 'show vrf detail {vrf}']
+    flag_showipvrfdetail=False
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        return super().cli(vrf=vrf, out=out)
 # vim: ft=python et sw=4
