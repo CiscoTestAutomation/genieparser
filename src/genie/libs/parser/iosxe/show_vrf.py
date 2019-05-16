@@ -164,9 +164,9 @@ class ShowVrfDetailSchema(MetaParser):
 class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
     """Super Paser for:
         * show vrf detail
-        * Super Paser for show vrf detail <vrf>
-        * Super Paser for show ip vrf detail
-        * Super Paser for show ip vrf detail <vrf>"""
+        * show vrf detail <vrf>
+        * show ip vrf detail
+        * show ip vrf detail <vrf>"""
 
     def cli(self, vrf='', out=None):
 
