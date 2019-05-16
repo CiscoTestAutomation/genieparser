@@ -3,16 +3,16 @@ show_mld.py
 
 IOSXR parsers for the following show commands:
     * show mld summary internal
-    * show mld vrf <vrf> summary internal
+    * show mld vrf {vrf} summary internal
 
     * show mld interface
-    * show mld vrf <vrf> interface
+    * show mld vrf {vrf} interface
     
     * show mld ssm map detail
-    * show mld vrf <vrf> ssm map detail
+    * show mld vrf {vrf} ssm map detail
     
     * show mld groups detail
-    * show mld vrf <vrf> groups detail
+    * show mld vrf {vrf} groups detail
 '''
 
 # Python
@@ -26,14 +26,14 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
 
 # ==============================================================================
-# Schema for 'show mld summary internal', 'show mld vrf <vrf> summary internal' (1 and 2)
+# Schema for 'show mld summary internal', 'show mld vrf {vrf} summary internal' (1 and 2)
 # ==============================================================================
 
 class ShowMldSummaryInternalSchema(MetaParser):
     '''
     Schema for:
     show mld summary internal
-    show mld vrf <vrf> summary internal
+    show mld vrf {vrf} summary internal
     '''
 
     schema = {
@@ -67,17 +67,17 @@ class ShowMldSummaryInternalSchema(MetaParser):
 
 
 # ==============================================================================
-# Parser for 'show mld summary internal', 'show mld vrf <vrf> summary internal' (1 and 2)
+# Parser for 'show mld summary internal', 'show mld vrf {vrf} summary internal' (1 and 2)
 # ==============================================================================
 
 class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
     '''
     Parser for:
     show mld summary internal
-    show mld vrf <vrf> summary internal
+    show mld vrf {vrf} summary internal
     '''
 
-    cli_command = ['show mld vrf <vrf> summary internal','show mld summary internal']
+    cli_command = ['show mld vrf {vrf} summary internal','show mld summary internal']
 
     def cli(self, vrf = '', output = None):
         if output is None:
@@ -225,13 +225,13 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
 
 
 # ==============================================================================
-# Schema for 'show mld interface', 'show mld vrf <vrf> interface' (3 and 4)
+# Schema for 'show mld interface', 'show mld vrf {vrf} interface' (3 and 4)
 # ==============================================================================
 class ShowMldInterfaceSchema(MetaParser):
     '''
     Schema for:
     show mld interface
-    show mld vrf <vrf> interface
+    show mld vrf {vrf} interface
     '''
     schema = {
         'vrf': {
@@ -275,16 +275,16 @@ class ShowMldInterfaceSchema(MetaParser):
     }
 
 # ==============================================================================
-# Parser for 'show mld interface', 'show mld vrf <vrf> interface' (3 and 4)
+# Parser for 'show mld interface', 'show mld vrf {vrf} interface' (3 and 4)
 # ==============================================================================
 class ShowMldInterface(ShowMldInterfaceSchema):
     '''
     Parser for:
     show mld interface
-    show mld vrf <vrf> interface
+    show mld vrf {vrf} interface
     '''
 
-    cli_command = ['show mld vrf <vrf> interface','show mld interface']
+    cli_command = ['show mld vrf {vrf} interface','show mld interface']
 
     def cli(self, vrf = '', output = None):
         if output is None:
@@ -436,14 +436,14 @@ class ShowMldInterface(ShowMldInterfaceSchema):
 
 """
 # ==============================================================================
-# Schema for 'show mld ssm map detail', 'show mld vrf <vrf> ssm map detail' (5 and 6)
+# Schema for 'show mld ssm map detail', 'show mld vrf {vrf} ssm map detail' (5 and 6)
 # ==============================================================================
 
 class ShowMldSsmMapDetailSchema(MetaParser):
     '''
     Schema for:
     show mld ssm map detail
-    show mld vrf <vrf> ssm map detail
+    show mld vrf {vrf} ssm map detail
     '''
 
     # TODO
@@ -454,14 +454,14 @@ class ShowMldSsmMapDetailSchema(MetaParser):
 
 
 # ==============================================================================
-# Parser for 'show mld ssm map detail', 'show mld vrf <vrf> ssm map detail' (5 and 6)
+# Parser for 'show mld ssm map detail', 'show mld vrf {vrf} ssm map detail' (5 and 6)
 # ==============================================================================
 
 class ShowMldSsmMapDetail(ShowMldSsmMapDetailSchema):
     '''
     Parser for:
     show mld ssm map detail
-    show mld vrf <vrf> ssm map detail
+    show mld vrf {vrf} ssm map detail
     '''
 
     # TODO
@@ -474,14 +474,14 @@ class ShowMldSsmMapDetail(ShowMldSsmMapDetailSchema):
 
 
 # ==============================================================================
-# Schema for 'show mld groups detail', 'show mld vrf <vrf> groups detail' (7 and 8)
+# Schema for 'show mld groups detail', 'show mld vrf {vrf} groups detail' (7 and 8)
 # ==============================================================================
 
 class ShowMldGroupsDetailSchema(MetaParser):
     '''
     Schema for:
     show mld groups detail
-    show mld vrf <vrf> groups detail
+    show mld vrf {vrf} groups detail
     '''
 
     schema = {
@@ -531,16 +531,16 @@ class ShowMldGroupsDetailSchema(MetaParser):
     }
 
 # ==============================================================================
-# Parser for 'show mld groups detail', 'show mld vrf <vrf> groups detail' (7 and 8)
+# Parser for 'show mld groups detail', 'show mld vrf {vrf} groups detail' (7 and 8)
 # ==============================================================================
 class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
     '''
     Parser for:
     show mld groups detail
-    show mld vrf <vrf> groups detail
+    show mld vrf {vrf} groups detail
     '''
 
-    cli_command = ['show mld vrf <vrf> groups detail', 'show mld groups detail']
+    cli_command = ['show mld vrf {vrf} groups detail', 'show mld groups detail']
 
     def cli(self, vrf = '', output = None):
         if output is None:

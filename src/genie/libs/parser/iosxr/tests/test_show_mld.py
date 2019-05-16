@@ -11,18 +11,18 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 
 # iosxe show_ip_parser
 from genie.libs.parser.iosxr.show_mld import ShowMldSummaryInternal, \
-                                            ShowMldInterface, \
-                                            ShowMldGroupsDetail
-                                            # ShowMldSsmMapDetail, \
+                                             ShowMldInterface, \
+                                             ShowMldGroupsDetail
+                                             # ShowMldSsmMapDetail, \
 
 # ==============================================================================
-# Unit test for 'show mld summary internal', 'show mld vrf <vrf> summary internal' (1 and 2)
+# Unit test for 'show mld summary internal', 'show mld vrf {vrf} summary internal' (1 and 2)
 # ==============================================================================
 class test_show_mld_summary_internal(unittest.TestCase):
     ''' 
     Unit test for:
     show mld summary internal
-    show mld vrf <vrf> summary internal
+    show mld vrf {vrf} summary internal
     '''
 
     device = Device(name = 'aDevice')
@@ -76,7 +76,7 @@ class test_show_mld_summary_internal(unittest.TestCase):
         '''
     }
 
-    # show mld vrf <vrf> summary internal
+    # show mld vrf {vrf} summary internal
     golden_parsed_output2 = {
         'vrf': {
             'VRF1': {
@@ -139,7 +139,7 @@ class test_show_mld_summary_internal(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
-    # show mld vrf <vrf> summary internal
+    # show mld vrf {vrf} summary internal
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -149,13 +149,13 @@ class test_show_mld_summary_internal(unittest.TestCase):
 
 
 # ==============================================================================
-# Unit test for 'show mld interface', 'show mld vrf <vrf> interface' (3 and 4)
+# Unit test for 'show mld interface', 'show mld vrf {vrf} interface' (3 and 4)
 # ==============================================================================
 class test_show_mld_interface(unittest.TestCase):
     ''' 
     Unit test for:
     show mld interface
-    show mld vrf <vrf> interface
+    show mld vrf {vrf} interface
     '''
 
     device = Device(name = 'aDevice')
@@ -210,7 +210,7 @@ class test_show_mld_interface(unittest.TestCase):
         '''
     }
 
-    # show mld vrf <vrf> interface
+    # show mld vrf {vrf} interface
     golden_parsed_output2 = {
         'vrf': {
             'VRF1': {
@@ -273,7 +273,7 @@ class test_show_mld_interface(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
-    # show mld vrf <vrf> interface
+    # show mld vrf {vrf} interface
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -284,13 +284,13 @@ class test_show_mld_interface(unittest.TestCase):
 
 """
 # ==============================================================================
-# Unit test for 'show mld ssm map detail', 'show mld vrf <vrf> ssm map detail' (5 and 6)
+# Unit test for 'show mld ssm map detail', 'show mld vrf {vrf} ssm map detail' (5 and 6)
 # ==============================================================================
 class test_show_mld_ssm_map_detail(unittest.TestCase):
     ''' 
     Unit test for:
     show mld ssm map detail
-    show mld vrf <vrf> ssm map detail
+    show mld vrf {vrf} ssm map detail
     '''
 
     device = Device(name = 'aDevice')
@@ -309,7 +309,7 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
         '''
     }
 
-    # show mld vrf <vrf> ssm map detail
+    # show mld vrf {vrf} ssm map detail
     golden_parsed_output2 = {
         
     }
@@ -338,7 +338,7 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
         pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
-    # show mld vrf <vrf> ssm map detail
+    # show mld vrf {vrf} ssm map detail
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -350,13 +350,13 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
 
 
 # ==============================================================================
-# Unit test for 'show mld groups detail', 'show mld vrf <vrf> groups detail' (7 and 8)
+# Unit test for 'show mld groups detail', 'show mld vrf {vrf} groups detail' (7 and 8)
 # ==============================================================================
 class test_show_mld_groups_detail(unittest.TestCase):
     ''' 
     Unit test for:
     show mld groups detail
-    show mld vrf <vrf> groups detail
+    show mld vrf {vrf} groups detail
     '''
 
     device = Device(name = 'aDevice')
@@ -595,7 +595,7 @@ class test_show_mld_groups_detail(unittest.TestCase):
         '''
     }
 
-    # show mld vrf <vrf> groups detail
+    # show mld vrf {vrf} groups detail
     golden_parsed_output2 = {
         'vrf': {
             'VRF1': {
@@ -801,7 +801,7 @@ class test_show_mld_groups_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
     
-    # show mld vrf <vrf> groups detail
+    # show mld vrf {vrf} groups detail
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
