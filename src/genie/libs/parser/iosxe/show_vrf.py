@@ -286,11 +286,10 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
             m = p1_1.match(line)
             if m:
-                if flag_showipvrfdetail:
-                    groups = m.groupdict()
-                    vrf_dict.update({'cli_format':groups['cli_format']})
-                    vrf_dict.update({'support_af':groups['support_af']})
-                    continue
+                groups = m.groupdict()
+                vrf_dict.update({'cli_format':groups['cli_format']})
+                vrf_dict.update({'support_af':groups['support_af']})
+                continue
 
             # Flags: 0x180C
             m = p2.match(line)

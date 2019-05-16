@@ -163,11 +163,13 @@ class test_show_vrf_detail(unittest.TestCase):
                         "table_id": "0x1E000001",
                         "flags": "0x0",
                         "vrf_label": {
-                            'allocation_mode': 'per-prefix'
+                            "allocation_mode": "per-prefix",
                         }
                    }
               },
-              "flags": "0x1808"
+              "flags": "0x1808",
+              "cli_format": "New",
+              "support_af": "multiple address-families",
          },
         "VRF1": {
               "interfaces": [
@@ -251,6 +253,8 @@ class test_show_vrf_detail(unittest.TestCase):
                    }
               },
               "flags": "0x180C",
+              "cli_format": "New",
+              "support_af": "multiple address-families",
               "route_distinguisher": "100:1",
               "vrf_id": 1
          }
@@ -316,26 +320,28 @@ class test_show_vrf_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output1 = {
-      'Mgmt-intf': {
-          'vrf_id': 1,
-          'flags': '0x1808',
-          'interface': {
-              'GigabitEthernet1': {
+        'Mgmt-intf': {
+            'vrf_id': 1,
+            'flags': '0x1808',
+            "cli_format": "New",
+            "support_af": "multiple address-families",
+            'interface': {
+                'GigabitEthernet1': {
                   'vrf': 'Mgmt-intf',
                   },
-              },
-          'interfaces': ['GigabitEthernet1'],
-          'address_family': {
-              'ipv4 unicast': {
-                  'flags': '0x0',
-                  'table_id': '0x1',
-                  'vrf_label': {
-                      'allocation_mode': 'per-prefix',
-                      },
-                  },
-              },
-          },
-      }
+                },
+            'interfaces': ['GigabitEthernet1'],
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x0',
+                    'table_id': '0x1',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix',
+                        },
+                    },
+                },
+            },
+        }
 
     golden_output1 = {'execute.return_value': '''
     VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>
