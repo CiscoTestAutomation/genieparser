@@ -86,12 +86,11 @@ class ShowIpVrf(ShowIpVrfSchema):
         return ret_dict
 
 
-class ShowIpVrfDetail(ShowVrfDetailSuperParser, ShowVrfDetailSchema):
+class ShowIpVrfDetail(ShowVrfDetailSuperParser):
     """Parser for 
         * 'show ip vrf detail'
         * 'show ip vrf detail <vrf>'"""
     cli_command = ['show ip vrf detail' , 'show ip vrf detail {vrf}']
-    flag_showipvrfdetail=True
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -103,4 +102,4 @@ class ShowIpVrfDetail(ShowVrfDetailSuperParser, ShowVrfDetailSchema):
         else:
             show_output = output
 
-        return super().cli(vrf=vrf, out=show_output)
+        return super().cli(out=show_output)

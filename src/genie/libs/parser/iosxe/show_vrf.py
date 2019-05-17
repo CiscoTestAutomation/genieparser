@@ -168,7 +168,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         * show ip vrf detail
         * show ip vrf detail <vrf>"""
 
-    def cli(self, vrf='', out=None):
+    def cli(self, out=None):
 
         # Init vars
         result_dict = {}
@@ -309,9 +309,8 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                     vrf_dict.get('interfaces').extend(intf_list)
                 else:
                     vrf_dict.update({'interfaces': intf_list})
-                if not self.flag_showipvrfdetail:
                     intf_dict = vrf_dict.setdefault('interface', {})
-                    [intf_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
+                [intf_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
                 continue
 
             # Address family ipv4 unicast (Table ID = 0x1):
@@ -439,12 +438,11 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         return result_dict
 
 
-class ShowVrfDetail(ShowVrfDetailSuperParser, ShowVrfDetailSchema):
+class ShowVrfDetail(ShowVrfDetailSuperParser):
     """Parser for 
         * 'show vrf detail'
         * 'show vrf detail <vrf>'"""
     cli_command = ['show vrf detail' , 'show vrf detail {vrf}']
-    flag_showipvrfdetail=False
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -457,5 +455,5 @@ class ShowVrfDetail(ShowVrfDetailSuperParser, ShowVrfDetailSchema):
         else:
             out = output
 
-        return super().cli(vrf=vrf, out=out)
+        return super().cli(out=out)
 # vim: ft=python et sw=4
