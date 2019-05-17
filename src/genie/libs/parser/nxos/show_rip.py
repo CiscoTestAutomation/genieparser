@@ -1,12 +1,25 @@
 """show_rip.py
 
-NXOS parser class for below command(s):
-    show ip rip vrf all
-    show ip rip route vrf all
-    show ip rip interface vrf all
-    show ipv6 rip vrf all
-    show ipv6 rip route vrf all
-    show ipv6 interface vrf all
+NXOS parser class for below commands:
+    * show ip rip
+    * show ip rip vrf <vrf>
+    * show ip rip vrf all
+
+    * show ipv6 rip
+    * show ipv6 rip vrf <vrf>
+    * show ipv6 rip vrf all
+
+    * show ip rip route
+    * show ip rip route vrf <vrf>
+    * show ip rip route vrf all
+
+    * show ipv6 rip route
+    * show ipv6 rip route vrf {vrf}
+    * show ipv6 rip route vrf all
+
+    * show ip rip interface
+    * show ip rip interface vrf {vrf}
+    * show ip rip interface vrf all
 """
 import xmltodict
 import re
@@ -51,44 +64,44 @@ class ShowIpRipSchema(MetaParser):
             }
 
 
-class ShowIpRipVrfAll(ShowIpRipSchema, MetaParser):
-    """Parser for:
-        show ip rip vrf all
-        parser class implements detail parsing mechanisms for cli and xml output.
-    """
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+# class ShowIpRipVrfAll(ShowIpRipSchema, MetaParser):
+#     """Parser for:
+#         show ip rip vrf all
+#         parser class implements detail parsing mechanisms for cli and xml output.
+#     """
+#     #*************************
+#     # schema - class variable
+#     #
+#     # Purpose is to make sure the parser always return the output
+#     # (nested dict) that has the same data structure across all supported
+#     # parsing mechanisms (cli(), yang(), xml()).
 
 
-    def cli(self):
-        ''' parsing mechanism: cli
+#     def cli(self):
+#         ''' parsing mechanism: cli
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        result = tcl.q.caas.abstract(device=self.device.handle,
-                                     exec='show ip rip vrf all')
+#         Function cli() defines the cli type output parsing mechanism which
+#         typically contains 3 steps: executing, transforming, returning
+#         '''
+#         result = tcl.q.caas.abstract(device=self.device.handle,
+#                                      exec='show ip rip vrf all')
 
-        #        # To leverage router_show parsers:
-        #        result = tcl.q.router_show(device=device, cmd='show version')
+#         #        # To leverage router_show parsers:
+#         #        result = tcl.q.router_show(device=device, cmd='show version')
 
-        return tcl.cast_any(result[1])
+#         return tcl.cast_any(result[1])
 
-    def xml(self):
-        ''' parsing mechanism: xml
+#     def xml(self):
+#         ''' parsing mechanism: xml
 
-        Function xml() defines the xml type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
-        output =  tcl.q.caas.abstract(device=self.device.handle,
-                                      exec='show ip rip vrf all | xml')
-        result = tcl.cast_any(output[1])
+#         Function xml() defines the xml type output parsing mechanism which
+#         typically contains 3 steps: executing, transforming, returning
+#         '''
+#         output =  tcl.q.caas.abstract(device=self.device.handle,
+#                                       exec='show ip rip vrf all | xml')
+#         result = tcl.cast_any(output[1])
 
-        return result
+#         return result
 
 class ShowIpv6RipVrfAll(MetaParser):
     """Parser for:
@@ -544,13 +557,17 @@ class ShowIpv6RipStatistics(ShowIpRipStatisticsSchema, MetaParser):
 
 class ShowIpRipVrfAllSchema(MetaParser):
     """Schema for:
+        * show ip rip
+        * show ip rip vrf <vrf>
         * show ip rip vrf all
+        * show ipv6 rip
+        * show ipv6 rip vrf <vrf>
         * show ipv6 rip vrf all"""
 
     schema = {
+        'isolate_mode': bool,
+        'mmode': str,
         'vrf': {
-            'isolate_mode': bool,
-            'mmode': str,
             Any(): {
                 'address_family': {
                     Any(): {
@@ -561,12 +578,13 @@ class ShowIpRipVrfAllSchema(MetaParser):
                                 'distance': int,
                                 Optional('timers'): {
                                     Optional('update_interval'): int,
-                                    Optional('expire_time'): int,
-                                    Optional('flush_time'): int,
+                                    Optional('expire_in'): int,
+                                    Optional('collect_garbage_in'): int,
                                 },
                                 'default_metric': int,
-                                'max_path': int,
-                                'state': str,
+                                'maximum_path': int,
+                                Optional('default_originate'): str,
+                                'process': str,
                                 Optional('interfaces'): {
                                     Any(): {
                                     },
@@ -586,14 +604,28 @@ class ShowIpRipVrfAllSchema(MetaParser):
 
 
 class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
-    """Parser for show ip rip vrf all"""
+    """Parser for:
+        * show ip rip
+        * show ip rip vrf <vrf>
+        * show ip rip vrf all"""
 
-    cli_command = "show ip rip vrf all"
+    cli_command = ["show ip rip",
+                   "show ip rip vrf {vrf}",
+                   "show ip rip vrf all"]
+
     address_family = "ipv4"
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
+        cmd = ""
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                if vrf == 'all':
+                    cmd = self.cli_command[2]
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -619,29 +651,34 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
 
         # Updates every 10 sec, expire in 21 sec
         p6 = re.compile(r'^Updates +every +(?P<update_interval>\d+) +sec,'
-                        r' +expire +in +(?P<expire_time>\d+) +sec$')
+                        r' +expire +in +(?P<expire_in>\d+) +sec$')
 
         # Collect garbage in 23 sec
-        p7 = re.compile(r'^Collect +garbage +in +(?P<flush_time>\d+) +sec$')
+        p7 = re.compile(r'^Collect +garbage +in +(?P<collect_garbage_in>\d+) '
+                        r'+sec$')
 
         # Default-metric: 3
         p8 = re.compile(r'^Default\-metric\: +(?P<default_metric>\d+)$')
 
         # Max-paths: 16
-        p9 = re.compile(r'^Max\-paths\: +(?P<max_path>\d+)$')
+        p9 = re.compile(r'^Max\-paths\: +(?P<maximum_path>\d+)$')
+
+        # Default-originate:
+        p10 = re.compile(r'Default\-originate\: *'
+                         '(?P<default_originate>[\s\S]+)?$')
 
         # Process is up and running
-        p10 = re.compile(r'^Process +is +(?P<state>.+)$')
+        p11 = re.compile(r'^Process +is +(?P<process>.+)$')
 
         #   Interfaces supported by ipv4 RIP :
         #     Ethernet1/1.100
         #     Ethernet1/2.100
-        p11 = re.compile(r'^(?P<interface>^(?!None)[\w\/\.]+)$')
+        p12 = re.compile(r'^(?P<interface>^(?!None)[\w\/\.]+)$')
 
         #   Redistributing :
         #     direct          policy ALL
         #     static          policy ALL
-        p12 = re.compile(r'^(?P<redistribute>\w+)\s+policy +'
+        p13 = re.compile(r'^(?P<redistribute>\w+)\s+policy +'
                          r'(?P<route_policy>[\w\-]+)$')
 
         ret_dict = {}
@@ -654,21 +691,21 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                vrf_dict = ret_dict.setdefault('vrf', {})
-                vrf_dict['isolate_mode'] = \
+
+                ret_dict['isolate_mode'] = \
                     True if group['isolate_mode'] == 'Yes' else False
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                vrf_dict['mmode'] = str(group['mmode'])
+                ret_dict['mmode'] = str(group['mmode'])
                 continue
 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                instance_dict = vrf_dict \
+                instance_dict = ret_dict.setdefault('vrf', {}) \
                     .setdefault(str(group['vrf']), {}) \
                     .setdefault('address_family', {}) \
                     .setdefault(address_family, {}) \
@@ -695,14 +732,15 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
                 group = m.groupdict()
                 timers_dict = instance_dict.setdefault('timers', {})
                 timers_dict['update_interval'] = int(group['update_interval'])
-                timers_dict['expire_time'] = int(group['expire_time'])
+                timers_dict['expire_in'] = int(group['expire_in'])
                 continue
 
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 timers_dict = instance_dict.setdefault('timers', {})
-                timers_dict['flush_time'] = int(group['flush_time'])
+                timers_dict['collect_garbage_in'] = \
+                    int(group['collect_garbage_in'])
                 continue
 
             m = p8.match(line)
@@ -715,16 +753,24 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                instance_dict['max_path'] = int(group['max_path'])
+                instance_dict['maximum_path'] = int(group['maximum_path'])
                 continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                instance_dict['state'] = str(group['state'])
+                if group['default_originate']:
+                    instance_dict['default_originate'] \
+                        = str(group['default_originate']).strip()
                 continue
 
             m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                instance_dict['process'] = str(group['process'])
+                continue
+
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict = instance_dict \
@@ -732,7 +778,7 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
                 interface_dict.setdefault(str(group['interface']), {})
                 continue
 
-            m = p12.match(line)
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
                 redistribute_str = str(group['redistribute'])
@@ -747,8 +793,13 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
 
 class ShowIpRipRouteVrfAllSchema(MetaParser):
     """Schema for:
-        * show ip rip vrf all
-        * show ipv6 rip vrf all"""
+        * show ip rip route
+        * show ip rip route vrf <vrf>
+        * show ip rip route vrf all
+        * show ipv6 rip route
+        * show ipv6 rip route vrf {vrf}
+        * show ipv6 rip route vrf all"""
+
     schema = {
         'vrf': {
             Any(): {
@@ -758,6 +809,8 @@ class ShowIpRipRouteVrfAllSchema(MetaParser):
                             Any(): {
                                 'routes': {
                                     Any(): {
+                                        'best_route': bool,
+                                        'next_hops': int,
                                         'index': {
                                             Any(): {
                                                 Optional('next_hop'): str,
@@ -781,13 +834,26 @@ class ShowIpRipRouteVrfAllSchema(MetaParser):
 
 
 class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
-    """Parser for : show ip rip route vrf all"""
+    """Parser for:
+        * show ip rip route
+        * show ip rip route vrf <vrf>
+        * show ip rip route vrf all"""
 
-    cli_command = "show ip rip route vrf all"
+    cli_command = ["show ip rip route",
+                   "show ip rip route vrf {vrf}",
+                   "show ip rip route vrf all"]
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
+        cmd = ""
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                if vrf == 'all':
+                    cmd = self.cli_command[2]
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -800,8 +866,8 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
 
         # >10.1.2.0/24 next-hops 0
         # >2001:db8:1:2::/64 next-hops 0
-        p2 = re.compile(r'^\> *(?P<route>[a-zA-Z0-9\.\/\:]+) +'
-                        r'next\-hops +\d+$')
+        p2 = re.compile(r'^(?P<best>\>)? *(?P<route>[a-zA-Z0-9\.\/\:]+) +'
+                        r'next\-hops +(?P<next_hops>\d+)$')
 
         # via 10.1.2.1 Ethernet1/1.100, metric 1, tag 0, direct route
         p3 = re.compile(
@@ -821,6 +887,7 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
         index = 1
         route_type_list = ['connected', 'external', 'external-backup', 'rip']
         route_dict = {}
+        best = False
 
         for line in out.splitlines():
             if line:
@@ -848,6 +915,9 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
                 if route not in routes_dict.keys():
                     index = 1
                 route_dict = routes_dict.setdefault(route, {})
+                route_dict.update({'best_route':
+                                  True if group['best'] else False})
+                route_dict.update({'next_hops': int(group['next_hops'])})
                 continue
 
             m = p3.match(line)
@@ -856,7 +926,7 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
                 index_dict = route_dict.setdefault('index', {}) \
                     .setdefault(index, {})
                 index_dict.update({'next_hop': str(group['next_hop'])})
-                if 'interface' in group.keys():
+                if group['interface']:
                     index_dict.update({'interface': str(group['interface'])})
                 index_dict.update({'metric': int(group['metric'])})
                 index_dict.update({'tag': int(group['tag'])})
@@ -887,7 +957,11 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
 
 
 class ShowIpRipInterfaceVrfAllSchema(MetaParser):
-    """Schema for show ip rip interface vrf all"""
+    """Schema for:
+        * show ip rip interface
+        * show ip rip interface vrf {vrf}
+        * show ip rip interface vrf all"""
+
     schema = {
         'vrf': {
             Any(): {
@@ -911,11 +985,13 @@ class ShowIpRipInterfaceVrfAllSchema(MetaParser):
                                                 'crypto_algorithm': str,
                                             },
                                         },
-                                        'summary_address': {
+                                        'ipv4': {
                                             Any(): {
-                                                'metric': int,
+                                                'ip': str,
+                                                'prefix_length': int,
                                             },
                                         },
+                                        'metric': int,
                                         Optional('split_horizon'): bool,
                                         Optional('passive'): bool,
                                     },
@@ -930,13 +1006,26 @@ class ShowIpRipInterfaceVrfAllSchema(MetaParser):
 
 
 class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceVrfAllSchema):
-    """Parser for : show ip rip interface vrf all"""
+    """Parser for:
+        * show ip rip interface
+        * show ip rip interface vrf {vrf}
+        * show ip rip interface vrf all"""
 
-    cli_command = "show ip rip interface vrf all"
+    cli_command = ["show ip rip interface",
+                   "show ip rip interface vrf {vrf}",
+                   "show ip rip interface vrf all"]
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
+        cmd = ""
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                if vrf == 'all':
+                    cmd = self.cli_command[2]
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -956,7 +1045,7 @@ class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceVrfAllSchema):
         #   address/mask 10.1.2.1/24, metric 1, split-horizon, passive (
         # no outbound updates)
         #   address/mask 10.1.3.1/24, metric 1, split-horizon
-        p3 = re.compile(r'^address\/mask +(?P<summary_address>[\d\.\/]+),'
+        p3 = re.compile(r'^address\/mask +(?P<ipv4>[\d\.\/]+),'
                         r' +metric +(?P<metric>\d+)'
                         r'(, +(?P<split_horizon>split\-horizon))?'
                         r'(, +(?P<passive>passive)[a-zA-Z\(\) ]+)?$')
@@ -994,18 +1083,23 @@ class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceVrfAllSchema):
                 for key in state_list:
                     if key in group.keys():
                         intf_dict.setdefault('states', {}) \
-                            .setdefault(key, str(group[key]))
+                            .update({key: str(group[key])})
                 intf_dict.update({'oper_status': group['oper_status']})
                 continue
 
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.setdefault('summary_address', {}) \
-                    .setdefault(str(group['summary_address']), {}) \
-                    .setdefault('metric', int(group['metric']))
+                temp_address = str(group['ipv4'])
+                temp_address_dict = intf_dict.setdefault('ipv4', {}) \
+                    .setdefault(temp_address, {})
+                temp_ip, temp_prefixlen = temp_address.split('/')
+                temp_address_dict.update({'ip': temp_ip})
+                temp_address_dict.update({'prefix_length': int(temp_prefixlen)})
+                intf_dict.update({'metric': int(group['metric'])})
                 for key in ['split_horizon', 'passive']:
-                    intf_dict[key] = True if key in group.keys() else False
+                    if group[key]:
+                        intf_dict[key] = True
                 continue
 
             m = p4.match(line)
@@ -1021,347 +1115,32 @@ class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceVrfAllSchema):
 
 
 class ShowIpv6RipVrfAll(ShowIpRipVrfAll, ShowIpRipVrfAllSchema):
-    """Parser for show ipv6 rip vrf all"""
+    """Parser for:
+        * show ipv6 rip
+        * show ipv6 rip vrf {vrf}
+        * show ipv6 rip vrf all"""
 
-    cli_command = "show ipv6 rip vrf all"
+    cli_command = ["show ipv6 rip",
+                   "show ipv6 rip vrf {vrf}",
+                   "show ipv6 rip vrf all"]
+
     address_family = "ipv6"
 
-    def cli(self, output=None):
-        return super().cli(output)
+    def cli(self, vrf='', output=None):
+        return super().cli(vrf, output)
 
 
 class ShowIpv6RipRouteVrfAll(ShowIpRipRouteVrfAll, ShowIpRipRouteVrfAllSchema):
-    """Parser for show ipv6 rip route vrf all"""
+    """Parser for:
+        * show ipv6 rip route
+        * show ipv6 rip route vrf {vrf}
+        * show ipv6 rip route vrf all"""
 
-    cli_command = "show ipv6 rip route vrf all"
+    cli_command = ["show ipv6 rip route",
+                   "show ipv6 rip route vrf {vrf}",
+                   "show ipv6 rip route vrf all"]
+
     address_family = "ipv6"
 
-    def cli(self, output=None):
-        return super().cli(output)
-
-
-class ShowIpv6InterfaceVrfAllSchema(MetaParser):
-    """Schema for show ip rip interface vrf all"""
-    schema = {
-        'vrf': {
-            Any(): {
-                'address_family': {
-                    Any(): {
-                        'instance': {
-                            Any(): {
-                                Optional('interfaces'): {
-                                    Any(): {
-                                        'states': {
-                                            Optional('protocol_state'): str,
-                                            Optional('link_state'): str,
-                                            Optional('admin_state'): str,
-                                        },
-                                        'iod': int,
-                                        'address': {
-                                            Any(): {
-                                                'valid': bool
-                                            }
-                                        },
-                                        'subnet': str,
-                                        'link_local_address': {
-                                            Any(): {
-                                                'default': bool,
-                                                'valid': bool,
-                                            },
-                                        },
-                                        Optional(
-                                            'virtual_addresses_configured'): str,
-                                        'multicast_routing': str,
-                                        'report_link_local': str,
-                                        'forwarding_feature': str,
-                                        Optional(
-                                            'multicast_groups_locally_joined'):list,
-                                        Optional(
-                                            'multicast_SG_entries_joined'): str,
-                                        Optional('mtu'): int,
-                                        Optional(
-                                            'unicast_reverse_path_forwarding'): str,
-                                        Optional('load_sharing'): str,
-                                        Optional(
-                                            'interface_statistics_last_reset'): str,
-                                        'RP_traffic_statistics': {
-                                            Optional('unicast_packets'): str,
-                                            Optional('unicast_bytes'): str,
-                                            Optional('multicast_packets'): str,
-                                            Optional('multicast_bytes'): str,
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
-    """Parser for : show ipv6 interface vrf all"""
-
-    cli_command = "show ipv6 interface vrf all"
-
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        # IPv6 Interface Status for VRF "default"
-        p1 = re.compile(r'^(?P<address_family>(IP|ip)v\d) +Interface +Status +'
-                        r'for +VRF +\"(?P<vrf>.+)\"$')
-
-        # Ethernet1/1.100, Interface status: protocol-up/link-up/admin-up, iod: 136
-        p2 = re.compile(r'^(?P<interface>\S+), +Interface +status\: +'
-                        r'protocol\-(?P<protocol_state>(up|down))\/'
-                        r'link\-(?P<link_state>(up|down))\/'
-                        r'admin\-(?P<admin_state>(up|down)), +'
-                        r'iod: +(?P<iod>\d+)$')
-
-        # IPv6 address: 
-        #   2001:db8:1:2::1/64 [VALID]
-        p3 = re.compile(r'^IPv6 +address\:$')
-        p4 = re.compile(r'^(?P<address>[0-9a-zA-Z\:\/]+)( +\[(?P<valid>VALID)\])?$')
-
-        # IPv6 subnet:  2001:db8:1:2::/64
-        p5 = re.compile(r'IPv6 +subnet\: +(?P<subnet>[0-9a-zA-Z\:\/]+)$')
-
-        # IPv6 link-local address: fe80::5c00:ff:fe00:7 (default) [VALID]
-        p6 = re.compile(r'IPv6 +link\-local +address\: +'
-            r'(?P<address>[0-9a-zA-Z\:\/]+)'
-            r'( +\((?P<default>default)\))?'
-            r'( +\[(?P<valid>VALID)\])?$')
-
-        # IPv6 virtual addresses configured: none
-        p7 = re.compile(r'IPv6 +virtual +addresses +configured\: +'
-            r'(?P<virtual_addresses_configured>[\s\S]+)$')
-
-        # IPv6 multicast routing: disabled
-        p8 = re.compile(r'IPv6 +multicast +routing\: +'
-            r'(?P<multicast_routing>\w+)$')
-
-        # IPv6 report link local: disabled
-        p9 = re.compile(r'IPv6 +report +link +local\: +'
-            r'(?P<report_link_local>\w+)$')
-
-        # IPv6 Forwarding feature: disabled
-        p10 = re.compile(r'IPv6 +Forwarding +feature\: +'
-            r'(?P<forwarding_feature>\w+)$')
-
-        # IPv6 multicast groups locally joined:
-        p11 = re.compile(r'^IPv6 +multicast +groups +locally +joined:$')
-        p11_1 = re.compile(r'^(?P<address>[0-9a-zA-Z\:\s]+)+$')
-
-        # IPv6 multicast (S,G) entries joined: none
-        p12 = re.compile(r'^IPv6 +multicast +\(S\,G\) +entries +joined\:'
-            r'(?P<multicast_SG_entries_joined>[\s\S]+)$')
-
-        # IPv6 MTU: 1500 (using link MTU)
-        p13 = re.compile(r'IPv6 +MTU\: +(?P<mtu>\d+)(\s\S)+$')
-
-        # IPv6 unicast reverse path forwarding: none
-        p14 = re.compile(r'IPv6 +unicast +reverse +path +forwarding\:'
-            r' +(?P<unicast_reverse_path_forwarding>[\s\S]+)$')
-
-        # IPv6 load sharing: none
-        p15 = re.compile(r'IPv6 +load +sharing\: +'
-            r'(?P<load_sharing>[\s\S]+)$')
-
-        # IPv6 interface statistics last reset: never
-        p16 = re.compile(r'^IPv6 +interface +statistics +last +reset\: +'
-            r'(?P<interface_statistics_last_reset>[\s\S]+)$')
-
-        # IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
-        p17 = re.compile(r'IPv6 +interface +RP-traffic +statistics\: +'
-            r'\(forwarded\/originated\/consumed\)$')
-
-        #     Unicast packets:      0/11/11
-        p17_1 = re.compile(r'Unicast +packets\:\s'
-            r'+ (?P<unicast_packets>[0-9\/]+)$')
-        #     Unicast bytes:        0/990/792
-        p17_2 = re.compile(r'Unicast +bytes\:\s'
-            r'+ (?P<unicast_bytes>[0-9\/]+)$')
-        #     Multicast packets:    0/162/157
-        p17_3 = re.compile(r'Multicast +packets\:\s'
-            r'+ (?P<multicast_packets>[0-9\/]+)$')
-        #     Multicast bytes:      0/19712/14568
-        p17_4 = re.compile(r'Multicast +bytes\:\s'
-            r'+ (?P<multicast_bytes>[0-9\/]+)$')
-
-        instance = 'rip'
-        state_list = ['protocol_state', 'link_state', 'admin_state']
-        ret_dict = {}
-        bool_ipv6_address = False
-        
-        for line in out.splitlines():
-            if line:
-                line = line.strip()
-            else:
-                continue
-
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                inst_dict = ret_dict.setdefault('vrf', {}) \
-                    .setdefault(str(group['vrf']), {}) \
-                    .setdefault('address_family', {}) \
-                    .setdefault(str(group['address_family']).lower(), {}) \
-                    .setdefault('instance', {}) \
-                    .setdefault(instance, {})
-                continue
-
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict = inst_dict.setdefault('interfaces', {}) \
-                    .setdefault(str(group['interface']),{})
-                for key in state_list:
-                    if key in group.keys():
-                        intf_dict.setdefault('states', {}) \
-                            .update({key: str(group[key])})
-                intf_dict.update({'iod': int(group['iod'])})
-                continue
-
-            m = p3.match(line)
-            if m:
-                bool_ipv6_address = True
-                continue
-
-            m = p4.match(line)
-            if bool_ipv6_address and m:
-                group = m.groupdict()
-                address_dict = intf_dict.setdefault('address', {}) \
-                    .setdefault(str(group['address']), {})
-                if 'valid' in group.keys():
-                    address_dict.setdefault('valid', True)
-                bool_ipv6_address = False
-                continue
-
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'subnet': group['subnet']})
-                continue
-
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                link_dict = intf_dict.setdefault('link_local_address', {}) \
-                    .setdefault(str(group['address']), {})
-                for key in ['valid', 'default']:
-                    if key in group.keys():
-                        link_dict.setdefault(key, True)
-                continue
-
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'virtual_addresses_configured': \
-                    group['virtual_addresses_configured']})
-                continue
-
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'multicast_routing': \
-                    group['multicast_routing']})
-                continue
-
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'report_link_local': \
-                    group['report_link_local']})
-                continue
-
-            m = p10.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'forwarding_feature': \
-                    group['forwarding_feature']})
-                continue
-
-            m = p12.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'multicast_SG_entries_joined': \
-                    group['multicast_SG_entries_joined']})
-                continue
-
-            m = p13.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'mtu': group['mtu']})
-                continue
-            
-            m = p14.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'unicast_reverse_path_forwarding': \
-                    group['unicast_reverse_path_forwarding']})
-                continue
-
-            m = p15.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'load_sharing': group['load_sharing']})
-                continue
-
-            m = p16.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.update({'interface_statistics_last_reset': \
-                    group['interface_statistics_last_reset']})
-                continue
-
-            m = p17.match(line)
-            if m:
-                RP_dict = intf_dict.setdefault('RP_traffic_statistics', {})
-                continue
-
-            m = p17_1.match(line)
-            if m:
-                group = m.groupdict()
-                RP_dict.update({'unicast_packets': \
-                    group['unicast_packets']})
-                continue
-
-            m = p17_2.match(line)
-            if m:
-                group = m.groupdict()
-                RP_dict.update({'unicast_bytes': \
-                    group['unicast_bytes']})
-                continue
-
-            m = p17_3.match(line)
-            if m:
-                group = m.groupdict()
-                RP_dict.update({'multicast_packets': \
-                    group['multicast_packets']})
-                continue
-
-            m = p17_4.match(line)
-            if m:
-                group = m.groupdict()
-                RP_dict.update({'multicast_bytes': \
-                    group['multicast_bytes']})
-                continue
-
-            m = p11.match(line)
-            if m:
-                continue
-
-            m = p11_1.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict.setdefault('multicast_groups_locally_joined', [])
-                multicast_groups = str(group['address']).split()
-                intf_dict.get('multicast_groups_locally_joined').extend(multicast_groups)
-                continue
-
-        return ret_dict
+    def cli(self, vrf='', output=None):
+        return super().cli(vrf, output)
