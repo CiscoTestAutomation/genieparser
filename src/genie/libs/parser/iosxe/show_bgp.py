@@ -92,6 +92,8 @@ IOSXE parsers for the following show commands:
     * show ip bgp template peer-policy {template_name}
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
+
+    * show ip bgp vpnv4 rd {rd_export} neighbors {neighbor} advertised-routes
 '''
 
 # Python
@@ -620,6 +622,28 @@ class ShowIpBgpAll(ShowBgpSuperParser, ShowBgpSchema):
         # Call super
         return super().cli(output=show_output, address_family=address_family)
 
+# =============================================================================
+# Parser for:
+#   * 'show ip bgp vpnv4 rd {rd_export} neighbors {neighbor} advertised-routes'
+# =============================================================================
+class ShowIpBgpRdexportNeighborsAdvertisedRoutes(ShowIpBgpAll):
+    ''' Parser for:
+        'show ip bgp vpnv4 rd {rd_export} neighbors {neighbor} advertised-routes'
+    '''
+    cli_command = 'show ip bgp {address_family} rd {rd_export} neighbors {neighbor} advertised-routes'
+    def cli(self,address_family, rd_export, neighbor, output=None):
+
+        if output is None:
+            # Build command
+            cmd = self.cli_command.format(address_family=address_family,
+                rd_export=rd_export,neighbor=neighbor)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output,address_family=address_family)
 
 # =============================================
 # Parser for:

@@ -44,7 +44,8 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAll,\
                                              ShowBgpAllNeighborsPolicy,\
                                              ShowIpBgpTemplatePeerSession,\
                                              ShowIpBgpTemplatePeerPolicy,\
-                                             ShowIpBgpAllDampeningParameters
+                                             ShowIpBgpAllDampeningParameters, \
+                                             ShowIpBgpRdexportNeighborsAdvertisedRoutes
 
 
 # ===================================
@@ -1434,6 +1435,86 @@ class test_show_ip_bgp_all(unittest.TestCase):
         obj = ShowIpBgpAll(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+#-------------------------------------------------------------------------------
+
+
+# =========================
+# Unit test for:
+#   * 'show ip bgp vpnv4 rd {rd_export} neighbors {neighbor} advertised-routes'
+# =========================
+class test_show_ip_bgp_rd_neighbors_advertised_routes(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_output1 = {'execute.return_value' : '''
+    BGP table version is 252, local router ID is 192.168.0.254
+
+    Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
+
+                  r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
+
+                  x best-external, a additional-path, c RIB-compressed, 
+
+                  t secondary path, L long-lived-stale,
+
+    Origin codes: i - IGP, e - EGP, ? - incomplete
+
+    RPKI validation codes: V valid, I invalid, N Not found
+
+
+
+         Network          Next Hop            Metric LocPrf Weight Path
+
+    Route Distinguisher: 9996:116 (default for vrf L3VPN-0116) VRF Router ID 192.168.0.254
+
+     *>   192.168.0.0      0.0.0.0                  0         32768 ?
+
+
+
+    Total number of prefixes 1 
+
+    '''}
+    golden_parsed_output1 = {
+    'vrf': {
+        'L3VPN-0116': {
+            'address_family': {
+                'vpnv4 RD 9996:116': {
+                    'bgp_table_version': 252,
+                    'route_identifier': '192.168.0.254',
+                    'route_distinguisher': '9996:116',
+                    'default_vrf': 'L3VPN-0116',
+                    'vrf_route_identifier': '192.168.0.254',
+                    'routes': {
+                        '': {
+                            'index': {
+                                2: {
+                                    'status_codes': '*>',
+                                    'next_hop': '192.168.0.0',
+                                    'weight': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    def test_show_ip_bgp_rd_neighbors_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpBgpRdexportNeighborsAdvertisedRoutes(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(address_family='vpnv4',
+                rd_export='9996:116', neighbor='202.239.165.120')
+
+    def test_show_ip_bgp_rd_neighbors_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpBgpRdexportNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4',
+                rd_export='9996:116', neighbor='202.239.165.120')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 #-------------------------------------------------------------------------------
