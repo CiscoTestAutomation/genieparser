@@ -13,6 +13,7 @@ IOSXR parsers for the following show commands:
     
     * show mld groups detail
     * show mld vrf {vrf} groups detail
+    * show mld groups {group} detail
 '''
 
 # Python
@@ -474,7 +475,8 @@ class ShowMldSsmMapDetail(ShowMldSsmMapDetailSchema):
 
 
 # ==============================================================================
-# Schema for 'show mld groups detail', 'show mld vrf {vrf} groups detail' (7 and 8)
+# Schema for 'show mld groups detail', 'show mld vrf {vrf} groups detail', 
+#            'show mld groups {group} detail' (7, 8, 9)
 # ==============================================================================
 
 class ShowMldGroupsDetailSchema(MetaParser):
@@ -482,6 +484,7 @@ class ShowMldGroupsDetailSchema(MetaParser):
     Schema for:
     show mld groups detail
     show mld vrf {vrf} groups detail
+    show mld groups {group} detail
     '''
 
     schema = {
@@ -510,6 +513,7 @@ class ShowMldGroupsDetailSchema(MetaParser):
                                 'host_mode': str, # Host mode: INCLUDE
                                 'last_reporter': str, 
                                 # Last reporter: fe80::5054:ff:fefa:9ad7
+                                Optional('suppress'): int, # Suppress:       0
                                 Optional('expire'): str,
                                 Optional('source'): {
                                     # Source Address: 2001:db8:2:2::2
@@ -551,6 +555,7 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
+            vrf = 'default' ###### not completely sure
             out = output
 
         # initial variables
@@ -626,19 +631,27 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                 parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['last_reporter'] = last_reporter
                 continue
 
+            # Suppress:       0
+            p7 = re.compile(r'^Suppress: +(?P<suppress>(\d+))$')
+            m = p7.match(line)
+            if m:
+                suppress = int(m.groupdict()['suppress'])
+                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['suppress'] = suppress
+                continue
+
             # Source Address                          Uptime    Expires   Fwd  Flags
-            p7_1 = re.compile(r'^Source +Address +Uptime +Expires +Fwd +Flags$')
-            m = p7_1.match(line)
+            p8_1 = re.compile(r'^Source +Address +Uptime +Expires +Fwd +Flags$')
+            m = p8_1.match(line)
             if m:
                 continue
 
             # 2001:db8:2:2::2                       08:06:00  01:00:00  Yes  Remote Local 2d
-            p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
+            p8 = re.compile(r'^(?P<source>[\w\.\:]+) +'
                              '(?P<up_time>[\w\.\:]+) +'
                              '(?P<expire>[\w\.\:]+) +'
                              '(?P<forward>\w+) +'
                              '(?P<flags>[\w\s]+)$')
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 source = m.groupdict()['source']
                 flags = m.groupdict()['flags']
@@ -666,9 +679,9 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                 flag_list = flags.lower().split()
                 if ('4' in flag_list or '2d' in flag_list) and 'e' in flag_list:
                     keys = ['join_group', 'static_group']
-                elif '4' in flag_list or '2d' in flag_list:
+                elif '4' in flag_list or '2d' in flag_list or '29' in flag_list:
                     keys = ['join_group']
-                elif 'e' in flag_list:
+                elif 'e' in flag_list or 'a' in flag_list:
                     keys = ['static_group']
                 else:
                     keys = []
@@ -687,3 +700,25 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                         parsed_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source
 
         return parsed_dict
+
+
+# ==============================================================================
+# Parser for 'show mld groups {group} detail' (9)
+# ==============================================================================
+class ShowMldGroupsVrfDetail(ShowMldGroupsDetail):
+    ''' 
+    Parser for:
+    show mld groups {group} detail
+    '''
+    cli_command = 'show mld groups {group} detail'
+
+    def cli(self, group = '', output = None):
+        if output is None:
+            if group:
+                out = self.device.execute(self.cli_command.format(group = group))
+            else:
+                out = self.device.execute(self.cli_command.format(group = 'default'))
+        else:
+            out = output
+    
+        return super().cli(output = out)

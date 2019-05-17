@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # iosxe show_ip_parser
 from genie.libs.parser.iosxr.show_mld import ShowMldSummaryInternal, \
                                              ShowMldInterface, \
-                                             ShowMldGroupsDetail
+                                             ShowMldGroupsDetail, \
+                                             ShowMldGroupsVrfDetail
                                              # ShowMldSsmMapDetail, \
 
 # ==============================================================================
@@ -350,13 +351,15 @@ class test_show_mld_ssm_map_detail(unittest.TestCase):
 
 
 # ==============================================================================
-# Unit test for 'show mld groups detail', 'show mld vrf {vrf} groups detail' (7 and 8)
+# Unit test for 'show mld groups detail', 'show mld vrf {vrf} groups detail', 
+#               'show mld groups {group} detail' (7, 8, 9)
 # ==============================================================================
 class test_show_mld_groups_detail(unittest.TestCase):
     ''' 
     Unit test for:
     show mld groups detail
     show mld vrf {vrf} groups detail
+    show mld groups {group} detail
     '''
 
     device = Device(name = 'aDevice')
@@ -786,6 +789,110 @@ class test_show_mld_groups_detail(unittest.TestCase):
         '''
     }
 
+    # show mld groups {group} detail
+    golden_parsed_output3 = {
+        'vrf': {
+            'default': {
+                'interface': {
+                    'GigabitEthernet0/0/0/0.115': {
+                        'group': {
+                            'ff35::232:2:2:2': {
+                                'host_mode': 'include',
+                                'last_reporter': '::',
+                                'router_mode': 'include',
+                                'source': {
+                                    'fc00::10:255:134:44': {
+                                        'expire': 'expired',
+                                        'flags': 'Local 29',
+                                        'forward': False,
+                                        'up_time': '07:17:10'
+                                    }
+                                },
+                                'suppress': 0,
+                                'up_time': '07:17:10'
+                            }
+                        },
+                        'join_group': {
+                            'ff35::232:2:2:2 fc00::10:255:134:44': {
+                                'group': 'ff35::232:2:2:2',
+                                'source': 'fc00::10:255:134:44'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output3 = { 'execute.return_value' : 
+        '''
+        RP/0/RP0/CPU0:R2_xr#show mld groups ff35::232:2:2:2 detail
+
+        Interface:      GigabitEthernet0/0/0/0.115
+        Group:          ff35::232:2:2:2
+        Uptime:         07:17:10
+        Router mode:    INCLUDE
+        Host mode:      INCLUDE
+        Last reporter:  ::
+        Suppress:       0
+        Group source list:
+          Source Address                          Uptime    Expires   Fwd  Flags
+          fc00::10:255:134:44                   07:17:10  expired   No   Local 29
+        '''
+    }
+
+    golden_parsed_output4 = {
+        'vrf': {
+            'default': {
+                'interface': {
+                    'GigabitEthernet0/0/0/0.115': {
+                        'group': {
+                            'ff35::232:2:2:22': {
+                                'host_mode': 'include',
+                                'last_reporter': '::',
+                                'router_mode': 'include',
+                                'source': {
+                                    'fc00::10:255:134:44': {
+                                        'expire': 'expired',
+                                        'flags': 'Local a',
+                                        'forward': False,
+                                        'up_time': '00:01:21'
+                                    }
+                                },
+                                'suppress': 0,
+                                'up_time': '00:01:21'
+                            }
+                        },
+                        'static_group': {
+                            'ff35::232:2:2:22 fc00::10:255:134:44': {
+                                'group': 'ff35::232:2:2:22',
+                                'source': 'fc00::10:255:134:44'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output4 = { 'execute.return_value' : 
+        '''
+        RP/0/RP0/CPU0:R2_xr#show mld groups ff35::232:2:2:22 detail
+
+        Interface:      GigabitEthernet0/0/0/0.115
+        Group:          ff35::232:2:2:22
+        Uptime:         00:01:21
+        Router mode:    INCLUDE
+        Host mode:      INCLUDE
+        Last reporter:  ::
+        Suppress:       0
+        Group source list:
+          Source Address                          Uptime    Expires   Fwd  Flags
+          fc00::10:255:134:44                   00:01:21  expired   No   Local a
+        '''
+    }
+
+
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -808,6 +915,21 @@ class test_show_mld_groups_detail(unittest.TestCase):
         obj = ShowMldGroupsDetail(device = self.device)
         parsed_output = obj.parse(vrf = 'VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    # show mld groups {group} detail
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowMldGroupsVrfDetail(device = self.device)
+        parsed_output = obj.parse(group = 'ff35::232:2:2:2')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowMldGroupsVrfDetail(device = self.device)
+        parsed_output = obj.parse(group = 'ff35::232:2:2:22')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 if __name__ == '__main__':
