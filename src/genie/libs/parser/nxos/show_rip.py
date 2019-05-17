@@ -664,8 +664,8 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
         p9 = re.compile(r'^Max\-paths\: +(?P<maximum_path>\d+)$')
 
         # Default-originate:
-        p10 = re.compile(r'Default\-originate\: *'
-                         '(?P<default_originate>[\s\S]+)?$')
+        p10 = re.compile(r'^Default\-originate\: *'
+                         r'(?P<default_originate>[\s\S]+)?$')
 
         # Process is up and running
         p11 = re.compile(r'^Process +is +(?P<process>.+)$')
