@@ -139,3 +139,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowArchiveConfigDifferences for more varied output matching
+
+--------------------------------------------------------------------------------
+                                   interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed issues for ShowInterfaceSwitchport where some output are not parsed
