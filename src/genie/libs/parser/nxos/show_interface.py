@@ -1302,7 +1302,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             #IP unicast reverse path forwarding: none
             p16 = re.compile(r'^\s*IP *unicast *reverse *path *forwarding:'
-                              ' *(?P<unicast_reverse_path>\w+)$')
+                              ' *(?P<unicast_reverse_path>[a-z]+)$')
             m = p16.match(line)
             if m:
                 unicast_reverse_path = m.groupdict()['unicast_reverse_path']
@@ -1312,7 +1312,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #IP load sharing: none 
-            p17 = re.compile(r'^\s*IP *load *sharing: *(?P<load_sharing>\w+)$')
+            p17 = re.compile(r'^\s*IP *load *sharing: *(?P<load_sharing>[a-z]+)$')
             m = p17.match(line)
             if m:
                 load_sharing = m.groupdict()['load_sharing']
@@ -1708,7 +1708,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 interface_switchport_dict[interface]['switchport_monitor'] = switchport_monitor
                 continue
 
-            # Operational Mode: Private-vlan host
+            # Operational Mode: trunk
             p4 = re.compile(r'^\s*Operational *Mode: *(?P<switchport_mode>[\w\s-]+)$')
             m = p4.match(line)
             if m:
@@ -1758,7 +1758,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 interface_switchport_dict[interface]['trunk_vlans'] = trunk_vlans
                 continue
 
-            # Administrative private-vlan primary host-association: 2000
+            #Administrative private-vlan primary host-association: none
             p8 = re.compile(r'^\s*Administrative *private-vlan *primary'
                              ' *host-association:'
                              ' *(?P<admin_priv_vlan_primary_host_assoc>\w+)$')
@@ -1769,7 +1769,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 interface_switchport_dict[interface]['admin_priv_vlan_primary_host_assoc'] = admin_priv_vlan_primary_host_assoc
                 continue
 
-            # Administrative private-vlan secondary host-association: 110
+            #Administrative private-vlan secondary host-association: none
             p9 = re.compile(r'^\s*Administrative *private-vlan *secondary'
                              ' *host-association:'
                              ' *(?P<admin_priv_vlan_secondary_host_assoc>\w+)$')
@@ -1785,7 +1785,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             #Administrative private-vlan primary mapping: none
             p10 = re.compile(r'^\s*Administrative *private-vlan *primary'
                              ' *mapping:'
-                             ' *(?P<admin_priv_vlan_primary_mapping>\w+)$')
+                             ' *(?P<admin_priv_vlan_primary_mapping>[a-z]+)$')
             m = p10.match(line)
             if m:
                 admin_priv_vlan_primary_mapping\
@@ -1799,7 +1799,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             #Administrative private-vlan secondary mapping: none
             p11 = re.compile(r'^\s*Administrative *private-vlan *secondary'
                              ' *mapping:'
-                             ' *(?P<admin_priv_vlan_secondary_mapping>\w+)$')
+                             ' *(?P<admin_priv_vlan_secondary_mapping>[a-z]+)$')
             m = p11.match(line)
             if m:
                 admin_priv_vlan_secondary_mapping = m.groupdict()['admin_priv_vlan_secondary_mapping']
@@ -1808,7 +1808,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 ['admin_priv_vlan_secondary_mapping'] = admin_priv_vlan_secondary_mapping
                 continue
 
-            #Administrative private-vlan trunk native VLAN: 1
+            #Administrative private-vlan trunk native VLAN: none
             p12 = re.compile(r'^\s*Administrative *private-vlan *trunk *native'
                              ' *VLAN:'
                              ' *(?P<admin_priv_vlan_trunk_native_vlan>\w+)$')
@@ -1835,7 +1835,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             #Administrative private-vlan trunk normal VLANs: none
             p14 = re.compile(r'^\s*Administrative *private-vlan *trunk'
                              ' *normal VLANs:'
-                             ' *(?P<admin_priv_vlan_trunk_normal_vlans>\w+)$')
+                             ' *(?P<admin_priv_vlan_trunk_normal_vlans>[a-z]+)$')
             m = p14.match(line)
             if m:
                 admin_priv_vlan_trunk_normal_vlans = m.groupdict()['admin_priv_vlan_trunk_normal_vlans']
@@ -1848,7 +1848,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             # Administrative private-vlan trunk private VLANs: none(0 none)
             p15 = re.compile(r'^\s*Administrative *private-vlan *trunk'
                              ' *private VLANs:'
-                             ' *(?P<admin_priv_vlan_trunk_private_vlans>\w+)(?P<dummy>.*)?$')
+                             ' *(?P<admin_priv_vlan_trunk_private_vlans>[a-z]+)(?P<dummy>.*)?$')
             m = p15.match(line)
             if m:
                 admin_priv_vlan_trunk_private_vlans = m.groupdict()['admin_priv_vlan_trunk_private_vlans']
@@ -1857,7 +1857,7 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
                 ['admin_priv_vlan_trunk_private_vlans'] = admin_priv_vlan_trunk_private_vlans
                 continue
 
-            # Operational private-vlan: (2500,101)
+            #Operational private-vlan: none
             p16 = re.compile(r'^\s*Operational *private-vlan:'
                              ' *(?P<operational_private_vlan>\S+)$')
             m = p16.match(line)
@@ -2060,7 +2060,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             #IPv6 virtual addresses configured: none
             p6 = re.compile(r'^\s*IPv6 *virtual *addresses *configured:'
-                             ' *(?P<ipv6_virtual_add>\w+)$')
+                             ' *(?P<ipv6_virtual_add>[a-z]+)$')
             m = p6.match(line)
             if m:
                 ipv6_virtual_add = m.groupdict()['ipv6_virtual_add']
@@ -2186,7 +2186,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             #IPv6 unicast reverse path forwarding: none
             p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
-                              ' *(?P<ipv6_unicast_rev_path_forwarding>\w+)$')
+                              ' *(?P<ipv6_unicast_rev_path_forwarding>[a-z]+)$')
             m = p14.match(line)
             if m:
                 ipv6_unicast_rev_path_forwarding = m.groupdict()\
@@ -2199,7 +2199,7 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             #IPv6 load sharing: none
             p15 = re.compile(r'^\s*IPv6 *load *sharing:'
-                             ' *(?P<ipv6_load_sharing>\w+)$')
+                             ' *(?P<ipv6_load_sharing>[a-z]+)$')
             m = p15.match(line)
             if m:
                 ipv6_load_sharing = m.groupdict()['ipv6_load_sharing']

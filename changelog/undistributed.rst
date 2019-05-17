@@ -89,6 +89,14 @@
     * Enhanced ShowIpOspf
 
 --------------------------------------------------------------------------------
+                                   VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowVrf for:
+        show vrf
+        show vrf {vrf}
+
+--------------------------------------------------------------------------------       
                                 xconnect
 --------------------------------------------------------------------------------
 * IOSXR
@@ -127,22 +135,7 @@
         show lldp traffic
 
 --------------------------------------------------------------------------------
-                                   LAG
---------------------------------------------------------------------------------
-* NXOS
-    * Added ShowLacpSystemIdentifier for:
-        show lacp system-identifier
-    * Added ShowLacpCounters for:
-        show lacp counters
-    * Added ShowLacpNeighbor for:
-        show lacp neighbor
-    * Added ShowPortChannelSummary for:
-        show port-channel summary
-    * Added ShowPortChannelDatabase for:
-        show port-channel database
-
---------------------------------------------------------------------------------
-                                   interface
+                                   ARCHIVE
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowInterfaceSwitchport to parse more varied output
+    * Updated ShowArchiveConfigDifferences for more varied output matching
