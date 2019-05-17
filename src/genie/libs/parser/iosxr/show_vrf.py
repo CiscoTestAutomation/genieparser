@@ -44,11 +44,11 @@ class ShowVrfAllDetailSchema(MetaParser):
 class ShowVrfAllDetail(ShowVrfAllDetailSchema):
     """Parser for show vrf all detail"""
 
-    cli_command = 'show vrf all detail'
+    cli_command = 'show vrf {vrf} detail'
 
-    def cli(self,output=None):
+    def cli(self, vrf='all', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command.format(vrf=vrf))
         else:
             out = output
         

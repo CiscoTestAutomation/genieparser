@@ -95,6 +95,8 @@
     * Added ShowVrf for:
         show vrf
         show vrf {vrf}
+* IOSXR
+    * Updated ShowVrfAllDetail to support custom vrf argument
 
 --------------------------------------------------------------------------------       
                                 xconnect
