@@ -705,7 +705,7 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
 # ==============================================================================
 # Parser for 'show mld groups {group} detail' (9)
 # ==============================================================================
-class ShowMldGroupsVrfDetail(ShowMldGroupsDetail):
+class ShowMldGroupsGroupDetail(ShowMldGroupsDetail):
     ''' 
     Parser for:
     show mld groups {group} detail

@@ -13,7 +13,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.iosxr.show_mld import ShowMldSummaryInternal, \
                                              ShowMldInterface, \
                                              ShowMldGroupsDetail, \
-                                             ShowMldGroupsVrfDetail
+                                             ShowMldGroupsGroupDetail
                                              # ShowMldSsmMapDetail, \
 
 # ==============================================================================
@@ -920,14 +920,14 @@ class test_show_mld_groups_detail(unittest.TestCase):
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
-        obj = ShowMldGroupsVrfDetail(device = self.device)
+        obj = ShowMldGroupsGroupDetail(device = self.device)
         parsed_output = obj.parse(group = 'ff35::232:2:2:2')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
-        obj = ShowMldGroupsVrfDetail(device = self.device)
+        obj = ShowMldGroupsGroupDetail(device = self.device)
         parsed_output = obj.parse(group = 'ff35::232:2:2:22')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
