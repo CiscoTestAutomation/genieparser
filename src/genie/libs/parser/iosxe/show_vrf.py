@@ -309,7 +309,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                     vrf_dict.get('interfaces').extend(intf_list)
                 else:
                     vrf_dict.update({'interfaces': intf_list})
-                    intf_dict = vrf_dict.setdefault('interface', {})
+                intf_dict = vrf_dict.setdefault('interface', {})
                 [intf_dict.setdefault(intf, {}).update({'vrf': vrf}) for intf in intf_list]
                 continue
 
