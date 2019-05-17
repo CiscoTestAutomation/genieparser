@@ -555,7 +555,7 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
         else:
-            vrf = 'default' ###### not completely sure
+            vrf = 'default'
             out = output
 
         # initial variables
