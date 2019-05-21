@@ -1476,22 +1476,22 @@ class test_show_ip_bgp_rd_neighbors_advertised_routes(unittest.TestCase):
     '''}
     golden_parsed_output1 = {
     'vrf': {
-        'L3VPN-0116': {
-            'address_family': {
-                'vpnv4 RD 9996:116': {
-                    'bgp_table_version': 252,
-                    'route_identifier': '192.168.0.254',
-                    'route_distinguisher': '9996:116',
-                    'default_vrf': 'L3VPN-0116',
-                    'vrf_route_identifier': '192.168.0.254',
-                    'routes': {
-                        '': {
-                            'index': {
-                                2: {
-                                    'status_codes': '*>',
-                                    'next_hop': '192.168.0.0',
-                                    'weight': 0,
-                                    },
+        'default': {
+            'neighbor': {
+                '202.239.165.120': {
+                    'address_family': {
+                        'vpnv4': {
+                            'advertised': {
+                                },
+                            'bgp_table_version': 252,
+                            'local_router_id': '192.168.0.254',
+                            },
+                        'vpnv4 RD 9996:116': {
+                            'bgp_table_version': 252,
+                            'local_router_id': '192.168.0.254',
+                            'route_distinguisher': '9996:116',
+                            'default_vrf': 'L3VPN-0116',
+                            'advertised': {
                                 },
                             },
                         },
