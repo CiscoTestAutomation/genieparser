@@ -93,7 +93,7 @@ IOSXE parsers for the following show commands:
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
 
-    * show ip bgp vpnv4 rd {rd_export} neighbors {neighbor} advertised-routes
+    * show ip bgp {address_family} rd {rd_export} neighbors {neighbor} advertised-routes
 '''
 
 # Python
