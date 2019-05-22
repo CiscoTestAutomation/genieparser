@@ -863,6 +863,7 @@ class ShowMplsLdpBindingsSchema(MetaParser):
                     Any():{
                         'rev': str,
                         Optional('checkpoint'): str,
+                        Optional('no_route'): bool,
                         Optional('label_binding'): {
                             'label':{
                                 Any():{
@@ -932,7 +933,9 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # lib entry: 10.120.202.64/32, rev 12, chkpt: none
         # tib entry: 10.0.0.0/8, rev 4
         # 10.16.16.16/32, rev 775
-        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),?( +chkpt: +(?P<checkpoint>\S+))?(, +elc)?$')
+        # lib entry: 10.0.0.0/8, rev 300(no route)
+        p1 = re.compile(r'^([\w]+ +entry: +)?(?P<lib_entry>[\d\.\/]+), +rev +(?P<rev>\d+),'
+            '?( +chkpt: +(?P<checkpoint>\S+))?(, +elc)?(?P<no_route>\(no route\))?$')
 
         #  local binding:  label: 2536
         #  local binding:  label: 2027 (owner LDP)
@@ -970,6 +973,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                 lib_entry_dict.update({'rev': group['rev']})
                 if group['checkpoint']:
                     lib_entry_dict.update({'checkpoint': group['checkpoint']})
+                if group['no_route']:
+                    lib_entry_dict.update({'no_route': True})
                 continue
 
             # local binding:  label: 2536
