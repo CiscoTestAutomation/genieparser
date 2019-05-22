@@ -64,7 +64,7 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                     'Ethernet1/2.200': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': '224.0.0.9',
                                 'port': 520,
                                 'redistribute': {
@@ -78,7 +78,7 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                 'process': 'up and running',
                                 'timers': {
                                     'expire_in': 180,
-                                    'collect_garbage_in': 120,
+                                    'collect_garbage': 120,
                                     'update_interval': 30,
                                     },
                                 },
@@ -99,7 +99,7 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                     'Ethernet1/2.100': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': '224.0.0.9',
                                 'port': 520,
                                 'redistribute': {
@@ -113,7 +113,7 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                 'process': 'up and running',
                                 'timers': {
                                     'expire_in': 21,
-                                    'collect_garbage_in': 23,
+                                    'collect_garbage': 23,
                                     'update_interval': 10,
                                     },
                                 },
@@ -177,12 +177,12 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                     'loopback0': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': '224.0.0.9',
                                 'port': 520,
                                 'process': 'up and running',
                                 'timers': {
-                                    'collect_garbage_in': 120,
+                                    'collect_garbage': 120,
                                     'expire_in': 180,
                                     'update_interval': 30,
                                     },
@@ -229,7 +229,7 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                     'Ethernet1/2.200': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': '224.0.0.9',
                                 'port': 520,
                                 'redistribute': {
@@ -243,7 +243,7 @@ class test_show_ip_rip_vrf_all(unittest.TestCase):
                                 'process': 'up and running',
                                 'timers': {
                                     'expire_in': 180,
-                                    'collect_garbage_in': 120,
+                                    'collect_garbage': 120,
                                     'update_interval': 30,
                                     },
                                 },
@@ -1107,7 +1107,7 @@ class test_show_ipv6_rip_vrf_all(unittest.TestCase):
                                     'Ethernet1/2.200': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': 'ff02::9',
                                 'port': 521,
                                 'redistribute': {
@@ -1121,7 +1121,7 @@ class test_show_ipv6_rip_vrf_all(unittest.TestCase):
                                 'process': 'up and running',
                                 'timers': {
                                     'expire_in': 180,
-                                    'collect_garbage_in': 120,
+                                    'collect_garbage': 120,
                                     'update_interval': 30,
                                     },
                                 },
@@ -1142,7 +1142,7 @@ class test_show_ipv6_rip_vrf_all(unittest.TestCase):
                                     'Ethernet1/2.100': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': 'ff02::9',
                                 'port': 521,
                                 'redistribute': {
@@ -1153,7 +1153,7 @@ class test_show_ipv6_rip_vrf_all(unittest.TestCase):
                                 'process': 'up and running',
                                 'timers': {
                                     'expire_in': 180,
-                                    'collect_garbage_in': 120,
+                                    'collect_garbage': 120,
                                     'update_interval': 30,
                                     },
                                 },
@@ -1215,7 +1215,7 @@ class test_show_ipv6_rip_vrf_all(unittest.TestCase):
                                     'Ethernet1/2.100': {
                                         },
                                     },
-                                'maximum_path': 16,
+                                'maximum_paths': 16,
                                 'multicast_group': 'ff02::9',
                                 'port': 521,
                                 'redistribute': {
@@ -1226,7 +1226,7 @@ class test_show_ipv6_rip_vrf_all(unittest.TestCase):
                                 'process': 'up and running',
                                 'timers': {
                                     'expire_in': 180,
-                                    'collect_garbage_in': 120,
+                                    'collect_garbage': 120,
                                     'update_interval': 30,
                                     },
                                 },

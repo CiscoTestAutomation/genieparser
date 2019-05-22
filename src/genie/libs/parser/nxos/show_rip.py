@@ -579,10 +579,10 @@ class ShowIpRipVrfAllSchema(MetaParser):
                                 Optional('timers'): {
                                     Optional('update_interval'): int,
                                     Optional('expire_in'): int,
-                                    Optional('collect_garbage_in'): int,
+                                    Optional('collect_garbage'): int,
                                 },
                                 'default_metric': int,
-                                'maximum_path': int,
+                                'maximum_paths': int,
                                 Optional('default_originate'): str,
                                 'process': str,
                                 Optional('interfaces'): {
@@ -610,8 +610,7 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
         * show ip rip vrf all"""
 
     cli_command = ["show ip rip",
-                   "show ip rip vrf {vrf}",
-                   "show ip rip vrf all"]
+                   "show ip rip vrf {vrf}"]
 
     address_family = "ipv4"
 
@@ -619,10 +618,7 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
         cmd = ""
         if output is None:
             if vrf:
-                if vrf == 'all':
-                    cmd = self.cli_command[2]
-                else:
-                    cmd = self.cli_command[1].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -654,14 +650,14 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
                         r' +expire +in +(?P<expire_in>\d+) +sec$')
 
         # Collect garbage in 23 sec
-        p7 = re.compile(r'^Collect +garbage +in +(?P<collect_garbage_in>\d+) '
+        p7 = re.compile(r'^Collect +garbage +in +(?P<collect_garbage>\d+) '
                         r'+sec$')
 
         # Default-metric: 3
         p8 = re.compile(r'^Default\-metric\: +(?P<default_metric>\d+)$')
 
         # Max-paths: 16
-        p9 = re.compile(r'^Max\-paths\: +(?P<maximum_path>\d+)$')
+        p9 = re.compile(r'^Max\-paths\: +(?P<maximum_paths>\d+)$')
 
         # Default-originate:
         p10 = re.compile(r'^Default\-originate\: *'
@@ -739,8 +735,8 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
             if m:
                 group = m.groupdict()
                 timers_dict = instance_dict.setdefault('timers', {})
-                timers_dict['collect_garbage_in'] = \
-                    int(group['collect_garbage_in'])
+                timers_dict['collect_garbage'] = \
+                    int(group['collect_garbage'])
                 continue
 
             m = p8.match(line)
@@ -753,7 +749,7 @@ class ShowIpRipVrfAll(ShowIpRipVrfAllSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                instance_dict['maximum_path'] = int(group['maximum_path'])
+                instance_dict['maximum_paths'] = int(group['maximum_paths'])
                 continue
 
             m = p10.match(line)
@@ -840,17 +836,13 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
         * show ip rip route vrf all"""
 
     cli_command = ["show ip rip route",
-                   "show ip rip route vrf {vrf}",
-                   "show ip rip route vrf all"]
+                   "show ip rip route vrf {vrf}"]
 
     def cli(self, vrf='', output=None):
         cmd = ""
         if output is None:
             if vrf:
-                if vrf == 'all':
-                    cmd = self.cli_command[2]
-                else:
-                    cmd = self.cli_command[1].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -1012,17 +1004,13 @@ class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceVrfAllSchema):
         * show ip rip interface vrf all"""
 
     cli_command = ["show ip rip interface",
-                   "show ip rip interface vrf {vrf}",
-                   "show ip rip interface vrf all"]
+                   "show ip rip interface vrf {vrf}"]
 
     def cli(self, vrf='', output=None):
         cmd = ""
         if output is None:
             if vrf:
-                if vrf == 'all':
-                    cmd = self.cli_command[2]
-                else:
-                    cmd = self.cli_command[1].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
@@ -1114,15 +1102,14 @@ class ShowIpRipInterfaceVrfAll(ShowIpRipInterfaceVrfAllSchema):
         return ret_dict
 
 
-class ShowIpv6RipVrfAll(ShowIpRipVrfAll, ShowIpRipVrfAllSchema):
+class ShowIpv6RipVrfAll(ShowIpRipVrfAll):
     """Parser for:
         * show ipv6 rip
         * show ipv6 rip vrf {vrf}
         * show ipv6 rip vrf all"""
 
     cli_command = ["show ipv6 rip",
-                   "show ipv6 rip vrf {vrf}",
-                   "show ipv6 rip vrf all"]
+                   "show ipv6 rip vrf {vrf}"]
 
     address_family = "ipv6"
 
@@ -1130,15 +1117,14 @@ class ShowIpv6RipVrfAll(ShowIpRipVrfAll, ShowIpRipVrfAllSchema):
         return super().cli(vrf, output)
 
 
-class ShowIpv6RipRouteVrfAll(ShowIpRipRouteVrfAll, ShowIpRipRouteVrfAllSchema):
+class ShowIpv6RipRouteVrfAll(ShowIpRipRouteVrfAll):
     """Parser for:
         * show ipv6 rip route
         * show ipv6 rip route vrf {vrf}
         * show ipv6 rip route vrf all"""
 
     cli_command = ["show ipv6 rip route",
-                   "show ipv6 rip route vrf {vrf}",
-                   "show ipv6 rip route vrf all"]
+                   "show ipv6 rip route vrf {vrf}"]
 
     address_family = "ipv6"
 
