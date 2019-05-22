@@ -4081,7 +4081,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|b|h|\*|\>|\s)+)'
                            '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
                            '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
-                           '[\.][0-9]+[\/]*[0-9]*)|([a-zA-Z0-9]+[\:]'
+                           '[\.][0-9]+[\/]?[0-9]*)|([a-zA-Z0-9]+[\:]'
                            '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
                            '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
                            '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
@@ -4213,7 +4213,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
             # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             # Condition placed to handle the situation of a long line that is
             # divided nto two lines while actually it is not another index.
-            if not data_on_nextline:                
+            if not data_on_nextline:
                 m = p3_2.match(line.strip())
 
                 if m:
