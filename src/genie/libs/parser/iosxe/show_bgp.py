@@ -4564,7 +4564,7 @@ class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPa
             # Build command
             if address_family and neighbor and rd_export:
                 cmd = self.cli_command[2].format(address_family=address_family,
-                                                 neighbor=neighbor, rd=rd_export)
+                                                 rd=rd_export,neighbor=neighbor)
             elif address_family and neighbor:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  neighbor=neighbor)
