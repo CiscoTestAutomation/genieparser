@@ -1480,28 +1480,6 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
         # Call super
         return super().cli(output=show_output)
 
-# ============================
-# Parser for:
-#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
-# ============================
-class ShowIpBgpVrfNeighbor(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
-    ''' Parser for:
-        * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
-    '''
-    cli_command = 'show ip bgp {address_family} vrf {vrf} {neighbor}'
-    def cli(self, vrf, neighbor, address_family ,output=None):
-
-        if output is None:
-            cmd = self.cli_command.format(vrf=vrf, neighbor=neighbor,
-                address_family=address_family)
-            # Execute command
-            show_output = self.device.execute(cmd)
-        else:
-            show_output = output
-
-        # Call super
-        return super().cli(output=show_output, vrf=vrf,address_family=address_family)
-
 
 # ================================================
 # Parser for:
@@ -3884,7 +3862,27 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
+# =======================================================
+# Parser for:
+#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+# =======================================================
+class ShowIpBgpVrfNeighbor(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
+    ''' Parser for:
+        * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+    '''
+    cli_command = 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+    def cli(self, vrf, neighbor, address_family ,output=None):
 
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf, neighbor=neighbor,
+                address_family=address_family)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output, vrf=vrf,address_family=address_family)
 # ===================================================================
 # Parser for:
 #   * 'show ip bgp neighbors'

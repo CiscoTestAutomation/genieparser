@@ -2898,6 +2898,10 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
+# ===============================================
+# Unit test for:
+#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+# ===============================================
 class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
