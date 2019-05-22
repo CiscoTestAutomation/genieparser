@@ -4549,7 +4549,7 @@ class ShowIpBgpRdexportNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoute
     '''
     cli_command = 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     def cli(self,address_family, rd_export, neighbor, output=None):
-
+        print('cli_command ' + self.cli_command )
         if output is None:
             # Build command
             cmd = self.cli_command.format(address_family=address_family,
