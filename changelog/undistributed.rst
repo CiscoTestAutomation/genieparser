@@ -118,7 +118,8 @@
     * Updated ShowMacAddressTableVni for:
         show mac address-table vni <WORD> | grep <WORD>
         show mac address-table local vni <WORD>
-
+* IOSXE
+    *Updated ShowMacAddressTable to make total_mac_addresses optional
 --------------------------------------------------------------------------------
                                    LLDP
 --------------------------------------------------------------------------------
