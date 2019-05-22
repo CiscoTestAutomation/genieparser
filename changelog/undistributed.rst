@@ -48,6 +48,7 @@
     * Updated ShowIpBgp to support different status codes	
     * Updated ShowIpBgpNeighborsRoutes to support VRF
     * Updated ShowBgpNeighborsRoutes to support VRF
+    * Updated ShowBgpAllNeighborsAdvertisedRoutes to support Ips addresses without subnet mask
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
