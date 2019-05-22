@@ -4005,8 +4005,8 @@ class ShowBgpNeighborsAdvertisedRoutesSchema(MetaParser):
 #   * 'show ip bgp all neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
-#   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
 # ==============================================================================
 class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRoutesSchema):
 
@@ -4018,8 +4018,8 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         * 'show ip bgp all neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
         * 'show ip bgp neighbors {neighbor} advertised-routes'
-        * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
     '''
 
     def cli(self, neighbor, address_family='', output=None):
@@ -4542,15 +4542,15 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
 # ===========================================================================
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
-#   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
 # ===========================================================================
 class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
 
     ''' Parser for:
         * 'show ip bgp neighbors {neighbor} advertised-routes'
-        * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
     '''
 
     cli_command = ['show ip bgp {address_family} neighbors {neighbor} advertised-routes',
