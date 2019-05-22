@@ -512,10 +512,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
             m = p6.match(line)
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
-                if original_address_family.find((' RD ' + route_distinguisher).lower()) != -1:
-                    new_address_family = original_address_family
-                else:
-                    new_address_family = original_address_family + ' RD ' + route_distinguisher
+                new_address_family = original_address_family + ' RD ' + route_distinguisher
 
                 # Init dict
                 if m.groupdict()['default_vrf']:
@@ -5643,10 +5640,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
             m = p7.match(line)
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
-                if original_address_family.find((' RD ' + route_distinguisher).lower()) != -1 :
-                    new_address_family = original_address_family
-                else:
-                    new_address_family = original_address_family + ' RD ' + route_distinguisher
+                new_address_family = original_address_family + ' RD ' + route_distinguisher
 
                 # Init dict
                 if 'address_family' not in route_dict['vrf'][vrf]['neighbor']\
