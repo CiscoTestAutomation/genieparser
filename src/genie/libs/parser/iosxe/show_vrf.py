@@ -1,6 +1,8 @@
 """show_vrf.py
 
 IOSXE parsers for the following show commands:
+    * 'show vrf'
+    * 'show vrf <vrf>'
     * 'show vrf detail'
     * 'show vrf detail <vrf>'
 """
