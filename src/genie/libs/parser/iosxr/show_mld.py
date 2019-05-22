@@ -212,7 +212,9 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
                 vrf_dict = parsed_dict.setdefault('vrf', {}).\
                                        setdefault(vrf, {})
 
-                if interface:
+                if 'interface' not in parsed_dict['vrf'][vrf]:
+                    interface_dict = vrf_dict.setdefault('interface', {})
+                if interface not in parsed_dict['vrf'][vrf]['interface']:
                     interface_dict = vrf_dict.setdefault('interface', {}).\
                                               setdefault(interface, {})
 
@@ -351,98 +353,103 @@ class ShowMldInterface(ShowMldInterfaceSchema):
 
             m = p1.match(line)
             if m:
-                intf = m.groupdict()['intf']
-                if 'vrf' not in parsed_dict:
-                    parsed_dict['vrf'] = {}
-                if vrf not in parsed_dict['vrf']:
-                    parsed_dict['vrf'][vrf] = {}
+                group = m.groupdict()
+                intf = group['intf']
+                if vrf:
+                    vrf = vrf
+                else:
+                    vrf = 'default'
+                vrf_dict = parsed_dict.setdefault('vrf', {}).\
+                                       setdefault(vrf, {})
 
                 if 'interface' not in parsed_dict['vrf'][vrf]:
-                    parsed_dict['vrf'][vrf]['interface'] = {}
+                    interface_dict = vrf_dict.setdefault('interface', {})
                 if intf not in parsed_dict['vrf'][vrf]['interface']:
-                    parsed_dict['vrf'][vrf]['interface'][intf] = {}
+                    interface_dict = vrf_dict.setdefault('interface', {}).\
+                                              setdefault(intf, {})
 
-                parsed_dict['vrf'][vrf]['interface'][intf]['oper_status'] = \
-                    m.groupdict()['oper_status'].lower()
-                parsed_dict['vrf'][vrf]['interface'][intf]['interface_status'] = \
-                    m.groupdict()['intf_status'].lower()
+                interface_dict['oper_status'] = group['oper_status'].lower()
+                interface_dict['interface_status'] = group['intf_status'].lower()
                 continue
 
             m = p2.match(line)
-            if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['internet_address'] = \
-                    m.groupdict()['ip']
+            if m:
+                group = m.groupdict()
+                interface_dict['internet_address'] = group['ip']
                 continue
 
             m = p3.match(line)
             if m:
-                status = m.groupdict()['status'].lower()
-                parsed_dict['vrf'][vrf]['interface'][intf]['enable'] = True if \
-                    'enable' in status else False
+                group = m.groupdict()
+                status = group['status'].lower()
+                interface_dict['enable'] = True if 'enable' in status else False
                 continue
 
             m = p4.match(line)
-            if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['version'] = \
-                    int(m.groupdict()['ver'])
+            if m:
+                group = m.groupdict()
+                interface_dict['version'] = int(group['ver'])
                 continue
 
             m = p5.match(line)
-            if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['query_interval'] = \
-                    int(m.groupdict()['query_interval'])
+            if m:
+                group = m.groupdict()
+                interface_dict['query_interval'] = int(group['query_interval'])
                 continue
 
             m = p6.match(line)
-            if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['querier_timeout'] = \
-                    int(m.groupdict()['timeout'])
+            if m:
+                group = m.groupdict()
+                interface_dict['querier_timeout'] = int(group['timeout'])
                 continue
 
             m = p7.match(line)
-            if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['query_max_response_time'] = \
-                    int(m.groupdict()['time'])
+            if m:
+                group = m.groupdict()
+                interface_dict['query_max_response_time'] = int(group['time'])
                 continue
 
             m = p8.match(line)
-            if m:                
-                parsed_dict['vrf'][vrf]['interface'][intf]['last_member_query_interval'] = \
-                    int(m.groupdict()['time'])
+            if m:
+                group = m.groupdict()
+                interface_dict['last_member_query_interval'] = int(group['time'])
                 continue
 
             m = p9.match(line)
             if m:
-                if 'counters' not in parsed_dict['vrf'][vrf]['interface'][intf]:
-                    parsed_dict['vrf'][vrf]['interface'][intf]['counters'] = {}
-                parsed_dict['vrf'][vrf]['interface'][intf]['counters']['joins'] = \
-                    int(m.groupdict()['joins'])
-                parsed_dict['vrf'][vrf]['interface'][intf]['counters']['leaves'] = \
-                    int(m.groupdict()['leaves'])
+                if 'counters' not in interface_dict:
+                    counters_dict = interface_dict.setdefault('counters', {})
+
+                group = m.groupdict()
+                counters_dict['joins'] = int(group['joins'])
+                counters_dict['leaves'] = int(group['leaves'])
                 continue
 
             m = p10.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['querier'] = \
-                    m.groupdict()['querier']
+                group = m.groupdict()
+                interface_dict['querier'] = group['querier']
                 continue
 
             m = p11.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['time_elapsed_since_last_query_sent'] = \
-                    m.groupdict()['time_elapsed_since_last_query_sent']
+                group = m.groupdict()
+                interface_dict['time_elapsed_since_last_query_sent'] = \
+                    group['time_elapsed_since_last_query_sent']
                 continue
 
             m = p12.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['time_elapsed_since_igmp_router_enabled'] = \
-                    m.groupdict()['time_elapsed_since_igmp_router_enabled']
+                group = m.groupdict()
+                interface_dict['time_elapsed_since_igmp_router_enabled'] = \
+                    group['time_elapsed_since_igmp_router_enabled']
                 continue
 
             m = p13.match(line)
             if m:
-                parsed_dict['vrf'][vrf]['interface'][intf]['time_elapsed_since_last_report_received'] = \
-                    m.groupdict()['time_elapsed_since_last_report_received']
+                group = m.groupdict()
+                interface_dict['time_elapsed_since_last_report_received'] = \
+                    group['time_elapsed_since_last_report_received']
                 continue
 
         return parsed_dict
@@ -579,58 +586,66 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
 
             m = p1.match(line)
             if m:
-                if 'vrf' not in parsed_dict:
-                    parsed_dict['vrf'] = {}
-                if vrf not in parsed_dict['vrf']:
-                    parsed_dict['vrf'][vrf] = {}
+                gd = m.groupdict()
 
-                intf = m.groupdict()['intf']
+                if vrf:
+                    vrf = vrf
+                else:
+                    vrf = 'default'
+                vrf_dict = parsed_dict.setdefault('vrf', {}).\
+                                       setdefault(vrf, {})
+
+                intf = gd['intf']
                 if 'interface' not in parsed_dict['vrf'][vrf]:
-                    parsed_dict['vrf'][vrf]['interface'] = {}
+                    interface_dict = vrf_dict.setdefault('interface', {})
                 if intf not in parsed_dict['vrf'][vrf]['interface']:
-                    parsed_dict['vrf'][vrf]['interface'][intf] = {}
+                    interface_dict = vrf_dict.setdefault('interface', {}).\
+                                              setdefault(intf, {})
                 continue
+
 
             m = p2.match(line)
             if m:
-                group = m.groupdict()['group']
+                gd = m.groupdict()
+                group = gd['group']
                 if 'group' not in parsed_dict['vrf'][vrf]['interface'][intf]:
-                    parsed_dict['vrf'][vrf]['interface'][intf]['group'] = {}
+                    group_dict = interface_dict.setdefault('group', {})
                 if group not in parsed_dict['vrf'][vrf]['interface'][intf]['group']:
-                    parsed_dict['vrf'][vrf]['interface'][intf]['group'][group] = {}
+                    group_dict = interface_dict.setdefault('group', {}).\
+                                                setdefault(group, {})
                 continue
 
             m = p3.match(line)
             if m:
-                host_mode = m.groupdict()['host_mode']
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['host_mode'] = host_mode.lower()
+                gd = m.groupdict()
+                group_dict['host_mode'] = gd['host_mode'].lower()
                 continue
 
             m = p4.match(line)
             if m:
-                up_time = m.groupdict()['up_time']
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['up_time'] = up_time
+                gd = m.groupdict()
+                group_dict['up_time'] = gd['up_time']
                 continue
 
             m = p5.match(line)
             if m:
-                router_mode = m.groupdict()['router_mode']
-                expire = m.groupdict()['expire']
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['router_mode'] = router_mode.lower()
+                gd = m.groupdict()
+                expire = gd['expire']
+                group_dict['router_mode'] = gd['router_mode'].lower()
                 if expire:
-                    parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['expire'] = expire
+                    group_dict['expire'] = expire
                 continue
 
             m = p6.match(line)
             if m:
-                last_reporter = m.groupdict()['last_reporter']
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['last_reporter'] = last_reporter
+                gd = m.groupdict()
+                group_dict['last_reporter'] = gd['last_reporter']
                 continue
 
             m = p7.match(line)
             if m:
-                suppress = int(m.groupdict()['suppress'])
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['suppress'] = suppress
+                gd = m.groupdict()
+                group_dict['suppress'] = int(gd['suppress'])
                 continue
 
             m = p8_1.match(line)
@@ -639,28 +654,21 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
 
             m = p8.match(line)
             if m:
-                source = m.groupdict()['source']
-                flags = m.groupdict()['flags']
-
+                gd = m.groupdict()
+                source = gd['source']
+                flags = gd['flags']
 
                 # group structure
                 if 'source' not in parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]:
-                    parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['source'] = {}
+                    source_dict = group_dict.setdefault('source', {})
                 if source not in parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['source']:
-                    parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]['source'][source] = {}
-
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                    ['source'][source]['up_time'] = m.groupdict()['up_time']
-
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                    ['source'][source]['expire'] = m.groupdict()['expire']
-
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                    ['source'][source]['forward'] = True \
-                        if m.groupdict()['forward'].lower() == 'yes' else False
-
-                parsed_dict['vrf'][vrf]['interface'][intf]['group'][group]\
-                    ['source'][source]['flags'] = flags
+                    source_dict = group_dict.setdefault('source', {}).\
+                                             setdefault(source, {})
+                source_dict['up_time'] = gd['up_time']
+                source_dict['expire'] = gd['expire']
+                source_dict['forward'] = True \
+                    if gd['forward'].lower() == 'yes' else False
+                source_dict['flags'] = flags
 
                 flag_list = flags.lower().split()
                 if (('4' in flag_list or '2d' in flag_list) and 'e' in flag_list) or '2b' in flag_list:
@@ -672,18 +680,17 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                 else:
                     keys = []
 
-                # join_group or static_group structure
                 if keys:
                     static_join_group = group + ' ' + source
                     for key in keys:
                         if key not in parsed_dict['vrf'][vrf]['interface'][intf]:
-                            parsed_dict['vrf'][vrf]['interface'][intf][key] = {}
+                            key_dict = interface_dict.setdefault(key, {})
 
                         if static_join_group not in parsed_dict['vrf'][vrf]['interface'][intf][key]:
-                            parsed_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}
+                            static_join_group_dict = key_dict.setdefault(static_join_group, {})
 
-                        parsed_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
-                        parsed_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source
+                        static_join_group_dict['group'] = group
+                        static_join_group_dict['source'] = source
 
         return parsed_dict
 

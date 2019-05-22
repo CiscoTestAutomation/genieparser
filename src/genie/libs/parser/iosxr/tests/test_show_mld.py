@@ -14,10 +14,11 @@ from genie.libs.parser.iosxr.show_mld import ShowMldSummaryInternal, \
                                              ShowMldInterface, \
                                              ShowMldGroupsDetail, \
                                              ShowMldGroupsGroupDetail
-                                             # ShowMldSsmMapDetail, \
 
 # ==============================================================================
-# Unit test for 'show mld summary internal', 'show mld vrf {vrf} summary internal' (1 and 2)
+# Unit test for 
+#    * 'show mld summary internal'
+#    * 'show mld vrf {vrf} summary internal'
 # ==============================================================================
 class test_show_mld_summary_internal(unittest.TestCase):
     ''' 
@@ -150,7 +151,9 @@ class test_show_mld_summary_internal(unittest.TestCase):
 
 
 # ==============================================================================
-# Unit test for 'show mld interface', 'show mld vrf {vrf} interface' (3 and 4)
+# Unit test for 
+#    * 'show mld interface'
+#    * 'show mld vrf {vrf} interface'
 # ==============================================================================
 class test_show_mld_interface(unittest.TestCase):
     ''' 
@@ -283,76 +286,12 @@ class test_show_mld_interface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
-"""
-# ==============================================================================
-# Unit test for 'show mld ssm map detail', 'show mld vrf {vrf} ssm map detail' (5 and 6)
-# ==============================================================================
-class test_show_mld_ssm_map_detail(unittest.TestCase):
-    ''' 
-    Unit test for:
-    show mld ssm map detail
-    show mld vrf {vrf} ssm map detail
-    '''
-
-    device = Device(name = 'aDevice')
-    empty_output = { 'execute.return_value' : '' }
-
-    # show mld ssm map detail
-    golden_parsed_output1 = {
-        
-    }
-
-    golden_output1 = { 'execute.return_value': 
-        '''
-        RP/0/0/CPU0:ios#show mld ssm map detail
-
-        No matching entries in MLD
-        '''
-    }
-
-    # show mld vrf {vrf} ssm map detail
-    golden_parsed_output2 = {
-        
-    }
-
-    golden_output2 = { 'execute.return_value': 
-        '''
-        RP/0/0/CPU0:ios#show mld vrf VRF1 ssm map detail
-
-        No matching entries in MLD
-        '''
-    }
-
-    def test_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowMldSsmMapDetail(device = self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    # show mld ssm map detail
-    def test_golden1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowMldSsmMapDetail(device = self.device)
-        parsed_output = obj.parse()
-        pdb.set_trace()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-    
-    # show mld vrf {vrf} ssm map detail
-    def test_golden2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output2)
-        obj = ShowMldSsmMapDetail(device = self.device)
-        parsed_output = obj.parse(vrf = 'VRF1')
-        pdb.set_trace()
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
-"""
-
 
 # ==============================================================================
-# Unit test for 'show mld groups detail', 'show mld vrf {vrf} groups detail', 
-#               'show mld groups {group} detail' (7, 8, 9)
+# Unit test for 
+#    * 'show mld groups detail'
+#    * 'show mld vrf {vrf} groups detail'
+#    * 'show mld groups {group} detail'
 # ==============================================================================
 class test_show_mld_groups_detail(unittest.TestCase):
     ''' 
