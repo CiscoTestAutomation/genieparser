@@ -892,6 +892,62 @@ class test_show_mld_groups_detail(unittest.TestCase):
         '''
     }
 
+    golden_parsed_output5 = {
+        'vrf': {
+            'default': {
+                'interface': {
+                    'GigabitEthernet0/0/0/0.115': {
+                        'group': {
+                            'ff35::232:2:2:2': {
+                                'host_mode': 'include',
+                                'last_reporter': '::',
+                                'router_mode': 'include',
+                                'source': {
+                                    'fc00::10:255:134:44': {
+                                        'expire': 'expired',
+                                        'flags': 'Local 2b',
+                                        'forward': False,
+                                        'up_time': '1w1d'
+                                    }
+                                },
+                                'suppress': 0,
+                                'up_time': '1w1d'
+                            }
+                        },
+                        'join_group': {
+                            'ff35::232:2:2:2 fc00::10:255:134:44': {
+                                'group': 'ff35::232:2:2:2',
+                                'source': 'fc00::10:255:134:44'
+                            }
+                        },
+                        'static_group': {
+                            'ff35::232:2:2:2 fc00::10:255:134:44': {
+                                'group': 'ff35::232:2:2:2',
+                                'source': 'fc00::10:255:134:44'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output5 = { 'execute.return_value' : 
+        '''
+        RP/0/RP0/CPU0:R2_xr#show mld groups ff35::232:2:2:2 detail
+
+        Interface:      GigabitEthernet0/0/0/0.115
+        Group:          ff35::232:2:2:2
+        Uptime:         1w1d
+        Router mode:    INCLUDE
+        Host mode:      INCLUDE
+        Last reporter:  ::
+        Suppress:       0
+        Group source list:
+          Source Address                          Uptime    Expires   Fwd  Flags
+          fc00::10:255:134:44                   1w1d      expired   No   Local 2b
+        '''
+    }
 
     def test_empty(self):
         self.maxDiff = None
@@ -931,6 +987,12 @@ class test_show_mld_groups_detail(unittest.TestCase):
         parsed_output = obj.parse(group = 'ff35::232:2:2:22')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowMldGroupsGroupDetail(device = self.device)
+        parsed_output = obj.parse(group = 'ff35::232:2:2:2')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 if __name__ == '__main__':
     unittest.main()

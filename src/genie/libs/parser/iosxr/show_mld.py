@@ -677,7 +677,7 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
                     ['source'][source]['flags'] = flags
 
                 flag_list = flags.lower().split()
-                if ('4' in flag_list or '2d' in flag_list) and 'e' in flag_list:
+                if (('4' in flag_list or '2d' in flag_list) and 'e' in flag_list) or '2b' in flag_list:
                     keys = ['join_group', 'static_group']
                 elif '4' in flag_list or '2d' in flag_list or '29' in flag_list:
                     keys = ['join_group']
