@@ -168,7 +168,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         * show ip vrf detail
         * show ip vrf detail <vrf>"""
 
-    def cli(self, out=None):
+    def cli(self, output=None):
 
         # Init vars
         result_dict = {}
@@ -243,7 +243,7 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         # VRF label allocation mode: per-prefix
         p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # VRF VRF1 (VRF Id = 1); default RD 100:1; default VPNID <not set>
@@ -455,5 +455,5 @@ class ShowVrfDetail(ShowVrfDetailSuperParser):
         else:
             out = output
 
-        return super().cli(out=out)
+        return super().cli(output=out)
 # vim: ft=python et sw=4

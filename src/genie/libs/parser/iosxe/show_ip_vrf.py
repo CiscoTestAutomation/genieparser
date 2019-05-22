@@ -71,7 +71,7 @@ class ShowIpVrf(ShowIpVrfSchema):
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(str(groups['vrf']),{})
+                vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(groups['vrf'],{})
                 if 'not' not in groups['rd']:
                     vrf_dict['route_distinguisher'] = str(groups['rd'])
                 vrf_dict['interfaces'] = [Common.convert_intf_name(groups['interfaces'])]
@@ -102,4 +102,4 @@ class ShowIpVrfDetail(ShowVrfDetailSuperParser):
         else:
             show_output = output
 
-        return super().cli(out=show_output)
+        return super().cli(output=show_output)
