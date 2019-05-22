@@ -16404,7 +16404,18 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
                                                 'origin_codes': '?',
                                                 'path': '62000',
                                                 'status_codes': '*>',
-                                                'weight': 0}}}},
+                                                'weight': 0}}},
+                                    "192.168.10.0": {
+                                        "index": {
+                                            1: {
+                                                "status_codes": "*>",
+                                                "next_hop": "0.0.0.0",
+                                                "origin_codes": "?",
+                                                "weight": 32768,
+                                                "localprf": 0
+                                            }
+                                    }
+                                }},
                                 'bgp_table_version': 16933183,
                                 'default_vrf': 'L3VPN-0050',
                                 'local_router_id': '10.169.197.254',
@@ -19828,5 +19839,1302 @@ class test_show_ip_bgp_all_dampening_parameters(unittest.TestCase):
 
 
 #-------------------------------------------------------------------------------
+
+class test_show_bgp_advertised_routes_costumer(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    device_output = {'execute.return_value': '''
+        PE1#show bgp vpnv4 unicast all neighbors 202.239.165.119 advertised-routes
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+        Time source is NTP, 04:55:00.149 JST Wed May 22 2019
+
+        BGP table version is 334, local router ID is 106.162.197.254
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 9996:51 (default for vrf L3VPN-0051) VRF Router ID 192.168.10.254
+         *>   106.162.197.0/24 0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:101 (default for vrf L3VPN-0101) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:102 (default for vrf L3VPN-0102) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:103 (default for vrf L3VPN-0103) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:104 (default for vrf L3VPN-0104) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:105 (default for vrf L3VPN-0105) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:106 (default for vrf L3VPN-0106) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:107 (default for vrf L3VPN-0107) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:108 (default for vrf L3VPN-0108) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:109 (default for vrf L3VPN-0109) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:110 (default for vrf L3VPN-0110) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:111 (default for vrf L3VPN-0111) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:112 (default for vrf L3VPN-0112) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:113 (default for vrf L3VPN-0113) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:114 (default for vrf L3VPN-0114) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:115 (default for vrf L3VPN-0115) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:116 (default for vrf L3VPN-0116) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:117 (default for vrf L3VPN-0117) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:118 (default for vrf L3VPN-0118) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:119 (default for vrf L3VPN-0119) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:120 (default for vrf L3VPN-0120) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:121 (default for vrf L3VPN-0121) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:122 (default for vrf L3VPN-0122) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:123 (default for vrf L3VPN-0123) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:124 (default for vrf L3VPN-0124) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:125 (default for vrf L3VPN-0125) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:126 (default for vrf L3VPN-0126) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:127 (default for vrf L3VPN-0127) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:128 (default for vrf L3VPN-0128) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:129 (default for vrf L3VPN-0129) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:130 (default for vrf L3VPN-0130) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:131 (default for vrf L3VPN-0131) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:132 (default for vrf L3VPN-0132) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:133 (default for vrf L3V^[[APN-0133) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:134 (default for vrf L3VPN-0134) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:135 (default for vrf L3VPN-0135) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:136 (default for vrf L3VPN-0136) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:137 (default for vrf L3VPN-0137) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:138 (default for vrf L3VPN-0138) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:139 (default for vrf L3VPN-0139) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:140 (default for vrf L3VPN-0140) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:141 (default for vrf L3VPN-0141) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:142 (default for vrf L3VPN-0142) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:143 (default for vrf L3VPN-0143) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:144 (default for vrf L3VPN-0144) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:145 (default for vrf L3VPN-0145) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:146 (default for vrf L3VPN-0146) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:147 (default for vrf L3VPN-0147) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:148 (default for vrf L3VPN-0148) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:149 (default for vrf L3VPN-0149) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:150 (default for vrf L3VPN-0150) VRF Router ID 192.168.10.254
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+        Route Distinguisher: 9996:4093 (default for vrf CE1test) VRF Router ID 192.168.10.254
+         *>   11.11.11.11/32   192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.0.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.1.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.2.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.3.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.4.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.5.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.6.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.7.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.8.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.9.0/24    192.168.10.253           0             0 1234 65555 ?
+         *>   172.16.10.0/24   192.168.10.253           0             0 1234 65555 ?
+         *>   192.168.10.0     0.0.0.0                  0         32768 ?
+
+        Total number of prefixes 64
+
+    '''}
+
+    golden_parsed_output = {
+    "vrf": {
+        "default": {
+            "neighbor": {
+                "202.239.165.119": {
+                    "address_family": {
+                        "vpnv4 unicast": {
+                            "advertised": {},
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254"
+                        },
+                        "vpnv4 unicast RD 9996:51": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:51",
+                            "default_vrf": "L3VPN-0051",
+                            "advertised": {
+                                "106.162.197.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:101": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:101",
+                            "default_vrf": "L3VPN-0101",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:102": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:102",
+                            "default_vrf": "L3VPN-0102",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:103": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:103",
+                            "default_vrf": "L3VPN-0103",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:104": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:104",
+                            "default_vrf": "L3VPN-0104",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:105": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:105",
+                            "default_vrf": "L3VPN-0105",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:106": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:106",
+                            "default_vrf": "L3VPN-0106",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:107": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:107",
+                            "default_vrf": "L3VPN-0107",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:108": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:108",
+                            "default_vrf": "L3VPN-0108",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:109": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:109",
+                            "default_vrf": "L3VPN-0109",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:110": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:110",
+                            "default_vrf": "L3VPN-0110",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:111": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:111",
+                            "default_vrf": "L3VPN-0111",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:112": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:112",
+                            "default_vrf": "L3VPN-0112",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:113": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:113",
+                            "default_vrf": "L3VPN-0113",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:114": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:114",
+                            "default_vrf": "L3VPN-0114",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:115": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:115",
+                            "default_vrf": "L3VPN-0115",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:116": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:116",
+                            "default_vrf": "L3VPN-0116",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:117": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:117",
+                            "default_vrf": "L3VPN-0117",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:118": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:118",
+                            "default_vrf": "L3VPN-0118",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:119": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:119",
+                            "default_vrf": "L3VPN-0119",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:120": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:120",
+                            "default_vrf": "L3VPN-0120",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:121": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:121",
+                            "default_vrf": "L3VPN-0121",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:122": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:122",
+                            "default_vrf": "L3VPN-0122",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:123": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:123",
+                            "default_vrf": "L3VPN-0123",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:124": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:124",
+                            "default_vrf": "L3VPN-0124",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:125": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:125",
+                            "default_vrf": "L3VPN-0125",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:126": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:126",
+                            "default_vrf": "L3VPN-0126",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:127": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:127",
+                            "default_vrf": "L3VPN-0127",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:128": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:128",
+                            "default_vrf": "L3VPN-0128",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:129": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:129",
+                            "default_vrf": "L3VPN-0129",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:130": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:130",
+                            "default_vrf": "L3VPN-0130",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:131": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:131",
+                            "default_vrf": "L3VPN-0131",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:132": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:132",
+                            "default_vrf": "L3VPN-0132",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:133": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:133",
+                            "default_vrf": "L3V^[[APN-0133",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:134": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:134",
+                            "default_vrf": "L3VPN-0134",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:135": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:135",
+                            "default_vrf": "L3VPN-0135",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:136": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:136",
+                            "default_vrf": "L3VPN-0136",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:137": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:137",
+                            "default_vrf": "L3VPN-0137",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:138": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:138",
+                            "default_vrf": "L3VPN-0138",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:139": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:139",
+                            "default_vrf": "L3VPN-0139",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:140": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:140",
+                            "default_vrf": "L3VPN-0140",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:141": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:141",
+                            "default_vrf": "L3VPN-0141",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:142": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:142",
+                            "default_vrf": "L3VPN-0142",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:143": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:143",
+                            "default_vrf": "L3VPN-0143",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:144": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:144",
+                            "default_vrf": "L3VPN-0144",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:145": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:145",
+                            "default_vrf": "L3VPN-0145",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:146": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:146",
+                            "default_vrf": "L3VPN-0146",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:147": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:147",
+                            "default_vrf": "L3VPN-0147",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:148": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:148",
+                            "default_vrf": "L3VPN-0148",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:149": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:149",
+                            "default_vrf": "L3VPN-0149",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:150": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:150",
+                            "default_vrf": "L3VPN-0150",
+                            "advertised": {
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpnv4 unicast RD 9996:4093": {
+                            "bgp_table_version": 334,
+                            "local_router_id": "106.162.197.254",
+                            "route_distinguisher": "9996:4093",
+                            "default_vrf": "CE1test",
+                            "advertised": {
+                                "11.11.11.11/32": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.0.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.1.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.2.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.3.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.4.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.5.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.6.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.7.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.8.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.9.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "172.16.10.0/24": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "192.168.10.253",
+                                            "origin_codes": "?",
+                                            "weight": 0,
+                                            "metric": 0,
+                                            "path": "1234 65555"
+                                        }
+                                    }
+                                },
+                                "192.168.10.0": {
+                                    "index": {
+                                        1: {
+                                            "status_codes": "*>",
+                                            "next_hop": "0.0.0.0",
+                                            "origin_codes": "?",
+                                            "weight": 32768,
+                                            "localprf": 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output)
+        obj = ShowBgpNeighborsAdvertisedRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='202.239.165.119', address_family='vpnv4 unicast')        
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 if __name__ == '__main__':
     unittest.main()
