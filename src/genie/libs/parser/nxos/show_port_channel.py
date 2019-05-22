@@ -24,7 +24,8 @@ class ShowPortChannelSummarySchema(MetaParser):
     schema = {
         'port_channel': 
             {Any(): 
-                {'group': int,
+                {'state': str,
+                'group': int,
                 'type': str,
                 'protocol': str,
                 'member': str,
@@ -60,7 +61,7 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
         #       Channel
         # --------------------------------------------------------------------------------
         # 1     Po1(SU)     Eth      LACP      Eth3/1(P)    Eth3/2(P)
-        p1 = re.compile(r'^(?P<group>(\d+)) +(?P<pch>(\S+))'
+        p1 = re.compile(r'^(?P<group>(\d+)) +(?P<pch>([a-zA-Z0-9]+))\((?P<state>(\S+))\)'
                          ' +(?P<type>([a-zA-Z]+)) +(?P<protocol>([a-zA-Z]+))'
                          ' +(?P<member>(\S+)) +(?P<ports>(\S+))$')
 
@@ -72,6 +73,7 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
                 group = m.groupdict()
                 pch_dict = parsed_dict.setdefault('port_channel', {}).\
                                        setdefault(group['pch'], {})
+                pch_dict['state'] = group['state']
                 pch_dict['group'] = int(group['group'])
                 pch_dict['type'] = group['type']
                 pch_dict['protocol'] = group['protocol']
