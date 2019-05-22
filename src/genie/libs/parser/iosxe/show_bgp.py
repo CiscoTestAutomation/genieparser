@@ -3882,7 +3882,7 @@ class ShowIpBgpVrfNeighbor(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, vrf=vrf,address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family)
 # ===================================================================
 # Parser for:
 #   * 'show ip bgp neighbors'
