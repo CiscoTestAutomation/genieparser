@@ -4023,7 +4023,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
     '''
 
     def cli(self, neighbor, address_family='', output=None):
-
+        print('address_family' + address_family)
         # Get VRF name by executing 'show bgp all neighbors | i BGP neighbor'
         out_vrf = self.device.execute('show bgp all neighbors | i BGP neighbor')
         vrf = 'default'
