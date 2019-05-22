@@ -1,7 +1,7 @@
-''' show_port_channel.py
+''' show_etherchannel.py
 
 IOSXE parsers for the following show commands:
-    * show port-channel summary
+    * show etherchannel summary
 '''
 
 # Python
@@ -13,12 +13,12 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 
 # ======================================
-# Schema for 'show port-channel summary'
+# Schema for 'show etherchannel summary'
 # ======================================
-class ShowPortChannelSummarySchema(MetaParser):
+class ShowEtherchannelSummarySchema(MetaParser):
     
     '''Schema for:
-        * 'show port-channel summary'
+        * 'show etherchannel summary'
     '''
 
     schema = {
@@ -26,7 +26,6 @@ class ShowPortChannelSummarySchema(MetaParser):
             {Any(): 
                 {'group': int,
                 'protocol': str,
-                'member': str,
                 'ports': str,
                 },
             },
@@ -34,15 +33,15 @@ class ShowPortChannelSummarySchema(MetaParser):
 
 
 # ======================================
-# Parser for 'show port-channel summary'
+# Parser for 'show etherchannel summary'
 # ======================================
-class ShowPortChannelSummary(ShowPortChannelSummarySchema):
+class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
 
     '''Parser for:
-        * 'show port-channel summary'
+        * 'show etherchannel summary'
     '''
 
-    cli_command = ['show port-channel summary']
+    cli_command = ['show etherchannel summary']
 
     def cli(self, output=None):
 
@@ -55,13 +54,12 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
         parsed_dict = {}
         acl_names = []
 
-        # Group Port-            Protocol  Member      Ports
-        #       Channel
+        # Group  Port-channel    Protocol    Ports
         # --------------------------------------------------------------------------------
-        # 1      Po1(SU)         LACP      Gi1/0/2(P)  Gi1/0/3(P)
+        # 1      Po1(SU)         LACP        Gi1/0/2(P)  Gi1/0/3(P)
         p1 = re.compile(r'^(?P<group>(\d+)) +(?P<pch>(\S+))'
-                         ' +(?P<protocol>([a-zA-Z]+)) +(?P<member>(\S+))'
-                         ' +(?P<ports>(\S+))$')
+                         ' +(?P<protocol>([a-zA-Z]+))'
+                         ' +(?P<ports>([a-zA-Z0-9\/\(\)\s]+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -73,7 +71,6 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
                                        setdefault(group['pch'], {})
                 pch_dict['group'] = int(group['group'])
                 pch_dict['protocol'] = group['protocol']
-                pch_dict['member'] = group['member']
                 pch_dict['ports'] = group['ports']
                 continue
 
