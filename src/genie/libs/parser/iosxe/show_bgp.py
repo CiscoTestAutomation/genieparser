@@ -1003,6 +1003,13 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Paths: (1 available, best #1, table default, RIB-failure(17))
             m = p2.match(line)
             if m:
+                original_address_family = address_family.lower()
+                if 'instance' not in ret_dict:
+                    ret_dict['instance'] = {}
+                if 'default' not in ret_dict['instance']:
+                    ret_dict['instance']['default'] = {}
+                if 'vrf' not in ret_dict['instance']['default']:
+                    ret_dict['instance']['default']['vrf'] = {}
                 paths = m.groupdict()['paths']
                 available_path = m.groupdict()['available_path']
                 if m.groupdict()['best_path']:
@@ -1472,6 +1479,28 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
         # Call super
         return super().cli(output=show_output)
+
+# ============================
+# Parser for:
+#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+# ============================
+class ShowIpBgpVrfNeighbor(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
+    ''' Parser for:
+        * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+    '''
+    cli_command = 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+    def cli(self, vrf, neighbor, address_family ,output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf, neighbor=neighbor,
+                address_family=address_family)
+            # Execute command
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+
+        # Call super
+        return super().cli(output=show_output, vrf=vrf,address_family=address_family)
 
 
 # ================================================
