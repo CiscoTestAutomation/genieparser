@@ -2420,7 +2420,131 @@ class test_show_bgp_all_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+# ===============================================
+# Unit test for:
+#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+# ===============================================
+class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output1 = {
+'instance': {
+    'default': {
+        'vrf': {
+            'CE1test': {
+                'address_family': {
+                    'vpnv4': {
+                        'prefixes': {
+                            '172.32.0.0/24': {
+                                'table_version': '229',
+                                'available_path': '2',
+                                'best_path': '2',
+                                'paths': '2 available, best #2, table CE1test',
+                                'index': {
+                                    1: {
+                                        'next_hop': '202.239.165.220',
+                                        'gateway': '202.239.165.120',
+                                        'originator': '202.239.165.120',
+                                        'next_hop_igp_metric': '66636',
+                                        'next_hop_via': 'default',
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                        'status_codes': '* i',
+                                        'refresh_epoch': 9,
+                                        'route_info': 'Local',
+                                        'evpn': {
+                                            'ext_community': 'RT:9996:4093',
+                                            },
+                                        'cluster_list': '0.0.0.61',
+                                        'recipient_pathid': '0',
+                                        'transfer_pathid': '0',
+                                        },
+                                    2: {
+                                        'next_hop': '202.239.165.220',
+                                        'gateway': '202.239.165.119',
+                                        'originator': '202.239.165.119',
+                                        'next_hop_igp_metric': '66636',
+                                        'next_hop_via': 'default',
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                        'status_codes': '*>',
+                                        'refresh_epoch': 9,
+                                        'route_info': 'Local',
+                                        'evpn': {
+                                            'ext_community': 'RT:9996:4093',
+                                            },
+                                        'cluster_list': '0.0.0.61',
+                                        'recipient_pathid': '0',
+                                        'transfer_pathid': '0x0',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+    golden_output1 = {'execute.return_value': '''
+    BGP routing table entry for 9996:4093:172.32.0.0/24, version 229
 
+Paths: (2 available, best #2, table CE1test)
+
+  Advertised to update-groups:
+
+     1         
+
+  Refresh Epoch 9
+
+  Local
+
+    202.239.165.220 (metric 66636) (via default) from 202.239.165.120 (202.239.165.120)
+
+      Origin incomplete, metric 0, localpref 100, valid, internal
+
+      Extended Community: RT:9996:4093
+
+      Originator: 192.168.0.254, Cluster list: 0.0.0.61
+
+      mpls labels in/out nolabel/582
+
+      rx pathid: 0, tx pathid: 0
+
+  Refresh Epoch 9
+
+  Local
+
+    202.239.165.220 (metric 66636) (via default) from 202.239.165.119 (202.239.165.119)
+
+      Origin incomplete, metric 0, localpref 100, valid, internal, best
+
+      Extended Community: RT:9996:4093
+
+      Originator: 192.168.0.254, Cluster list: 0.0.0.61
+
+      mpls labels in/out nolabel/582
+
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpBgpVrfNeighbor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='CE1test', 
+                neighbor='172.32.0.0/24', address_family='vpnv4')
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpBgpVrfNeighbor(device=self.device)
+        parsed_output = obj.parse(vrf='CE1test', 
+                neighbor='172.32.0.0/24', address_family='vpnv4')
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+        
 # ============================
 # Unit test for:
 #   * 'show ip bgp all detail'
@@ -2898,130 +3022,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
-# ===============================================
-# Unit test for:
-#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
-# ===============================================
-class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-    golden_parsed_output1 = {
-'instance': {
-    'default': {
-        'vrf': {
-            'CE1test': {
-                'address_family': {
-                    'vpnv4': {
-                        'prefixes': {
-                            '172.32.0.0/24': {
-                                'table_version': '229',
-                                'available_path': '2',
-                                'best_path': '2',
-                                'paths': '2 available, best #2, table CE1test',
-                                'index': {
-                                    1: {
-                                        'next_hop': '202.239.165.220',
-                                        'gateway': '202.239.165.120',
-                                        'originator': '202.239.165.120',
-                                        'next_hop_igp_metric': '66636',
-                                        'next_hop_via': 'default',
-                                        'localpref': 100,
-                                        'metric': 0,
-                                        'origin_codes': '?',
-                                        'status_codes': '* i',
-                                        'refresh_epoch': 9,
-                                        'route_info': 'Local',
-                                        'evpn': {
-                                            'ext_community': 'RT:9996:4093',
-                                            },
-                                        'cluster_list': '0.0.0.61',
-                                        'recipient_pathid': '0',
-                                        'transfer_pathid': '0',
-                                        },
-                                    2: {
-                                        'next_hop': '202.239.165.220',
-                                        'gateway': '202.239.165.119',
-                                        'originator': '202.239.165.119',
-                                        'next_hop_igp_metric': '66636',
-                                        'next_hop_via': 'default',
-                                        'localpref': 100,
-                                        'metric': 0,
-                                        'origin_codes': '?',
-                                        'status_codes': '*>',
-                                        'refresh_epoch': 9,
-                                        'route_info': 'Local',
-                                        'evpn': {
-                                            'ext_community': 'RT:9996:4093',
-                                            },
-                                        'cluster_list': '0.0.0.61',
-                                        'recipient_pathid': '0',
-                                        'transfer_pathid': '0x0',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    },
-}
-    golden_output1 = {'execute.return_value': '''
-    BGP routing table entry for 9996:4093:172.32.0.0/24, version 229
 
-Paths: (2 available, best #2, table CE1test)
-
-  Advertised to update-groups:
-
-     1         
-
-  Refresh Epoch 9
-
-  Local
-
-    202.239.165.220 (metric 66636) (via default) from 202.239.165.120 (202.239.165.120)
-
-      Origin incomplete, metric 0, localpref 100, valid, internal
-
-      Extended Community: RT:9996:4093
-
-      Originator: 192.168.0.254, Cluster list: 0.0.0.61
-
-      mpls labels in/out nolabel/582
-
-      rx pathid: 0, tx pathid: 0
-
-  Refresh Epoch 9
-
-  Local
-
-    202.239.165.220 (metric 66636) (via default) from 202.239.165.119 (202.239.165.119)
-
-      Origin incomplete, metric 0, localpref 100, valid, internal, best
-
-      Extended Community: RT:9996:4093
-
-      Originator: 192.168.0.254, Cluster list: 0.0.0.61
-
-      mpls labels in/out nolabel/582
-
-      rx pathid: 0, tx pathid: 0x0
-    '''}
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowIpBgpVrfNeighbor(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vrf='CE1test', 
-                neighbor='172.32.0.0/24', address_family='vpnv4')
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpBgpVrfNeighbor(device=self.device)
-        parsed_output = obj.parse(vrf='CE1test', 
-                neighbor='172.32.0.0/24', address_family='vpnv4')
-        self.assertEqual(parsed_output,self.golden_parsed_output1)
 # ===============================================
 # Unit test for:
 #   * 'show bgp {address_family} rd {rd} detail'
