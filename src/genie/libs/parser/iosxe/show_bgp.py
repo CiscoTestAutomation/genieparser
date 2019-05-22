@@ -4539,51 +4539,33 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
                            address_family=address_family)
 
 
-# =============================================================================
-# Parser for:
-#   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
-# =============================================================================
-class ShowIpBgpRdexportNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
-    ''' Parser for:
-        'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
-    '''
-    cli_command = 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
-    def cli(self,address_family, rd_export, neighbor, output=None):
-
-        if output is None:
-            # Build command
-            cmd = self.cli_command.format(address_family=address_family,
-                rd=rd_export,neighbor=neighbor)
-            # Execute command
-            show_output = self.device.execute(cmd)
-        else:
-            show_output = output
-
-        # Call super
-        return super().cli(output=show_output, neighbor=neighbor,
-                           address_family=address_family)
-
 # ===========================================================================
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
 # ===========================================================================
 class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
 
     ''' Parser for:
         * 'show ip bgp neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     '''
 
     cli_command = ['show ip bgp {address_family} neighbors {neighbor} advertised-routes',
                    'show ip bgp neighbors {neighbor} advertised-routes',
+                   'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
                    ]
 
-    def cli(self, neighbor, address_family='', output=None):
+    def cli(self, neighbor,rd_export='',address_family='', output=None):
 
         if output is None:
             # Build command
-            if address_family and neighbor:
+            if address_family and neighbor and rd_export:
+                cmd = self.cli_command[2].format(address_family=address_family,
+                                                 neighbor=neighbor, rd=rd_export)
+            elif address_family and neighbor:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  neighbor=neighbor)
             elif neighbor:
