@@ -1661,6 +1661,11 @@ Total number of prefixes 13
         obj = ShowIpBgpRdexportNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4',
                 rd_export='9996:116', neighbor='202.239.165.120')
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 

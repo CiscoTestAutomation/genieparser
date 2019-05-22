@@ -93,7 +93,7 @@ IOSXE parsers for the following show commands:
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
 
-    * show ip bgp {address_family} rd {rd_export} neighbors {neighbor} advertised-routes
+    * show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes
 '''
 
 # Python
@@ -4006,6 +4006,7 @@ class ShowBgpNeighborsAdvertisedRoutesSchema(MetaParser):
 #   * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
 # ==============================================================================
 class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRoutesSchema):
 
@@ -4018,6 +4019,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
         * 'show ip bgp neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     '''
 
     def cli(self, neighbor, address_family='', output=None):
@@ -4539,19 +4541,19 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
 
 # =============================================================================
 # Parser for:
-#   * 'show ip bgp {address_family} rd {rd_export} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
 # =============================================================================
-class ShowIpBgpRdexportNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser):
+class ShowIpBgpRdexportNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
     ''' Parser for:
-        'show ip bgp {address_family} rd {rd_export} neighbors {neighbor} advertised-routes'
+        'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     '''
-    cli_command = 'show ip bgp {address_family} rd {rd_export} neighbors {neighbor} advertised-routes'
+    cli_command = 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     def cli(self,address_family, rd_export, neighbor, output=None):
 
         if output is None:
             # Build command
             cmd = self.cli_command.format(address_family=address_family,
-                rd_export=rd_export,neighbor=neighbor)
+                rd=rd_export,neighbor=neighbor)
             # Execute command
             show_output = self.device.execute(cmd)
         else:
