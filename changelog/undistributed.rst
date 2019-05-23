@@ -151,6 +151,20 @@
         show lldp traffic
 
 --------------------------------------------------------------------------------
+                                   LAG
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowLacpSystemIdentifier for:
+        show lacp system-identifier
+    * Added ShowLacpCounters for:
+        show lacp counters
+    * Added ShowLacpNeighbor for:
+        show lacp neighbor
+    * Added ShowPortChannelSummary for:
+        show port-channel summary
+    * Added ShowPortChannelDatabase for:
+        show port-channel database
+--------------------------------------------------------------------------------
                                    ARCHIVE
 --------------------------------------------------------------------------------
 * IOSXE
