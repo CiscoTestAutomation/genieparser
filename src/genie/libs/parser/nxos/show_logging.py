@@ -62,7 +62,6 @@ class ShowLoggingLogfile(ShowLoggingLogfileSchema):
         # Init vars
         parsed_dict = {}
         log_lines = []
-        acl_names = []
 
         for line in out.splitlines():
             line = line.strip()
