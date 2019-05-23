@@ -16,10 +16,13 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 
 # ================================
-#  Unit tests for:
-#   'show vrf'
-#   'show vrf {vrf}'
+#  Unit test for 
+#    * 'show vrf'
+#    * 'show vrf {vrf}'
+#    * 'show vrf detail'
+#    * 'show vrf detail <vrf>'
 # ================================
+
 class test_show_vrf(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -134,9 +137,6 @@ class test_show_vrf(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
 
 
-# ================================
-#  Unit test for 'show vrf detail'
-# ================================
 class test_show_vrf_detail(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -163,11 +163,13 @@ class test_show_vrf_detail(unittest.TestCase):
                         "table_id": "0x1E000001",
                         "flags": "0x0",
                         "vrf_label": {
-                            'allocation_mode': 'per-prefix'
+                            "allocation_mode": "per-prefix",
                         }
                    }
               },
-              "flags": "0x1808"
+              "flags": "0x1808",
+              "cli_format": "New",
+              "support_af": "multiple address-families",
          },
         "VRF1": {
               "interfaces": [
@@ -251,6 +253,8 @@ class test_show_vrf_detail(unittest.TestCase):
                    }
               },
               "flags": "0x180C",
+              "cli_format": "New",
+              "support_af": "multiple address-families",
               "route_distinguisher": "100:1",
               "vrf_id": 1
          }
@@ -315,6 +319,47 @@ class test_show_vrf_detail(unittest.TestCase):
         Address family ipv6 multicast not active
         '''}
 
+    golden_parsed_output1 = {
+        'Mgmt-intf': {
+            'vrf_id': 1,
+            'flags': '0x1808',
+            "cli_format": "New",
+            "support_af": "multiple address-families",
+            'interface': {
+                'GigabitEthernet1': {
+                  'vrf': 'Mgmt-intf',
+                  },
+                },
+            'interfaces': ['GigabitEthernet1'],
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x0',
+                    'table_id': '0x1',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix',
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output1 = {'execute.return_value': '''
+    VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>
+      New CLI format, supports multiple address-families
+      Flags: 0x1808
+      Interfaces:
+        Gi1                     
+    Address family ipv4 unicast (Table ID = 0x1):
+      Flags: 0x0
+      No Export VPN route-target communities
+      No Import VPN route-target communities
+      No import route-map
+      No global export route-map
+      No export route-map
+      VRF label distribution protocol: not configured
+      VRF label allocation mode: per-prefix
+    '''}
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -322,12 +367,24 @@ class test_show_vrf_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowVrfDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowVrfDetail(device=self.device)
+        parsed_output = obj.parse(vrf='Mgmt-intf')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_empty1(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVrfDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vrf='Mgmt-intf')
 
 
 if __name__ == '__main__':
