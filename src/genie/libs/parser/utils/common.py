@@ -94,10 +94,7 @@ def _find_command(command, data, device):
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
-            if word == 'vrf':
-                new_pattern = '(?P<{p}>\S+)'.format(p=word)
-            else:
-                new_pattern = '(?P<{p}>.*)'.format(p=word)
+            new_pattern = '(?P<{p}>\S+)'.format(p=word) if word == 'vrf' else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
         # Convert | to \|
