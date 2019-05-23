@@ -8,7 +8,7 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from genie.libs.parser.ios.show_vrf import ShowVrfDetail
+from genie.libs.parser.ios.show_vrf import ShowVrfDetail, ShowVrf
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -120,6 +120,118 @@ class test_show_vrf_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+class test_show_vrf(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        [2019-05-10 06:56:37,856] +++ R1_xe: executing command 'show vrf' +++
+        show vrf
+        Name                             Default RD            Protocols   Interfaces
+        Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+        VRF1                             65000:1               ipv4,ipv6   Tu1
+                                                                            Lo300
+                                                                            Gi2.390
+                                                                            Gi2.410
+                                                                            Gi2.415
+                                                                            Gi2.420
+                                                                            Gi3.390
+                                                                            Gi3.410
+                                                                            Gi3.415
+                                                                            Tu3
+                                                                            Tu4
+                                                                            Tu6
+                                                                            Tu8
+                                                                            Gi3.420
+    '''}
+
+    golden_parsed_output = {
+        'vrf': {
+            'Mgmt-intf': {
+                'protocols': ['ipv4', 'ipv6'],
+                'interfaces': ['GigabitEthernet1'],
+            },
+            'VRF1': {
+                'route_distinguisher': '65000:1',
+                'protocols': ['ipv4', 'ipv6'],
+                'interfaces': ['Tunnel1',
+                               'Loopback300',
+                               'GigabitEthernet2.390',
+                               'GigabitEthernet2.410',
+                               'GigabitEthernet2.415',
+                               'GigabitEthernet2.420',
+                               'GigabitEthernet3.390',
+                               'GigabitEthernet3.410',
+                               'GigabitEthernet3.415',
+                               'Tunnel3',
+                               'Tunnel4',
+                               'Tunnel6',
+                               'Tunnel8',
+                               'GigabitEthernet3.420'],
+            }
+        }
+    }
+
+    golden_output_vrf = {'execute.return_value': '''
+        [2019-05-10 06:56:43,272] +++ R1_xe: executing command 'show vrf VRF1' +++
+        show vrf VRF1
+        Name                             Default RD            Protocols   Interfaces
+        VRF1                             65000:1               ipv4,ipv6   Tu1
+                                                                            Lo300
+                                                                            Gi2.390
+                                                                            Gi2.410
+                                                                            Gi2.415
+                                                                            Gi2.420
+                                                                            Gi3.390
+                                                                            Gi3.410
+                                                                            Gi3.415
+                                                                            Tu3
+                                                                            Tu4
+                                                                            Tu6
+                                                                            Tu8
+                                                                            Gi3.420
+    '''}
+
+    golden_parsed_output_vrf = {
+        'vrf': {
+            'VRF1': {
+                'route_distinguisher': '65000:1',
+                'protocols': ['ipv4', 'ipv6'],
+                'interfaces': ['Tunnel1',
+                               'Loopback300',
+                               'GigabitEthernet2.390',
+                               'GigabitEthernet2.410',
+                               'GigabitEthernet2.415',
+                               'GigabitEthernet2.420',
+                               'GigabitEthernet3.390',
+                               'GigabitEthernet3.410',
+                               'GigabitEthernet3.415',
+                               'Tunnel3',
+                               'Tunnel4',
+                               'Tunnel6',
+                               'Tunnel8',
+                               'GigabitEthernet3.420'],
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVrf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_vrf(self):
+        self.device = Mock(**self.golden_output_vrf)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
 
 if __name__ == '__main__':
     unittest.main()
