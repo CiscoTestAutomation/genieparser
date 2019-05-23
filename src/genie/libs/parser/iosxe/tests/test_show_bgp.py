@@ -1640,6 +1640,17 @@ Total number of prefixes 13
                                         },
                                     },
                                 },
+                            '192.168.10.0': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': '?',
+                                        'weight': 32768,
+                                        'localprf': 0,
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
