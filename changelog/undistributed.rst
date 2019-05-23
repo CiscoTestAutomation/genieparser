@@ -190,3 +190,11 @@
         show mld groups detail
         show mld vrf {vrf} groups detail
         show mld groups {group} detail
+
+--------------------------------------------------------------------------------
+                                   ARP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpArp for:
+        show ip arp
+        show ip arp vrf <vrf>
