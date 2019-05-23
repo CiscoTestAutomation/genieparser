@@ -2431,51 +2431,28 @@ class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
 'instance': {
     'default': {
         'vrf': {
-            'CE1test': {
+            'VRF1,': {
                 'address_family': {
                     'vpnv4': {
                         'prefixes': {
-                            '172.32.0.0/24': {
-                                'table_version': '229',
-                                'available_path': '2',
-                                'best_path': '2',
-                                'paths': '2 available, best #2, table CE1test',
+                            '2.2.2.2/32': {
+                                'table_version': '4',
+                                'available_path': '1',
+                                'best_path': '1',
+                                'paths': '1 available, best #1, table VRF1, RIB-failure(17)',
                                 'index': {
                                     1: {
-                                        'next_hop': '202.239.165.220',
-                                        'gateway': '202.239.165.120',
-                                        'originator': '202.239.165.120',
-                                        'next_hop_igp_metric': '66636',
-                                        'next_hop_via': 'default',
+                                        'next_hop': '2.2.2.2',
+                                        'gateway': '2.2.2.2',
+                                        'originator': '2.2.2.2',
+                                        'next_hop_igp_metric': '10752',
+                                        'next_hop_via': 'vrf VRF1',
                                         'localpref': 100,
                                         'metric': 0,
-                                        'origin_codes': '?',
-                                        'status_codes': '* i',
-                                        'refresh_epoch': 9,
-                                        'route_info': 'Local',
-                                        'evpn': {
-                                            'ext_community': 'RT:9996:4093',
-                                            },
-                                        'cluster_list': '0.0.0.61',
-                                        'recipient_pathid': '0',
-                                        'transfer_pathid': '0',
-                                        },
-                                    2: {
-                                        'next_hop': '202.239.165.220',
-                                        'gateway': '202.239.165.119',
-                                        'originator': '202.239.165.119',
-                                        'next_hop_igp_metric': '66636',
-                                        'next_hop_via': 'default',
-                                        'localpref': 100,
-                                        'metric': 0,
-                                        'origin_codes': '?',
+                                        'origin_codes': 'i',
                                         'status_codes': '*>',
-                                        'refresh_epoch': 9,
+                                        'refresh_epoch': 1,
                                         'route_info': 'Local',
-                                        'evpn': {
-                                            'ext_community': 'RT:9996:4093',
-                                            },
-                                        'cluster_list': '0.0.0.61',
                                         'recipient_pathid': '0',
                                         'transfer_pathid': '0x0',
                                         },
@@ -2490,45 +2467,15 @@ class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
     },
 }
     golden_output1 = {'execute.return_value': '''
-    BGP routing table entry for 9996:4093:172.32.0.0/24, version 229
-
-Paths: (2 available, best #2, table CE1test)
-
-  Advertised to update-groups:
-
-     1         
-
-  Refresh Epoch 9
-
-  Local
-
-    202.239.165.220 (metric 66636) (via default) from 202.239.165.120 (202.239.165.120)
-
-      Origin incomplete, metric 0, localpref 100, valid, internal
-
-      Extended Community: RT:9996:4093
-
-      Originator: 192.168.0.254, Cluster list: 0.0.0.61
-
-      mpls labels in/out nolabel/582
-
-      rx pathid: 0, tx pathid: 0
-
-  Refresh Epoch 9
-
-  Local
-
-    202.239.165.220 (metric 66636) (via default) from 202.239.165.119 (202.239.165.119)
-
-      Origin incomplete, metric 0, localpref 100, valid, internal, best
-
-      Extended Community: RT:9996:4093
-
-      Originator: 192.168.0.254, Cluster list: 0.0.0.61
-
-      mpls labels in/out nolabel/582
-
-      rx pathid: 0, tx pathid: 0x0
+       BGP routing table entry for 65000:1:2.2.2.2/32, version 4
+    Paths: (1 available, best #1, table VRF1, RIB-failure(17))
+      Flag: 0x100
+      Not advertised to any peer
+      Refresh Epoch 1
+      Local
+        2.2.2.2 (metric 10752) (via vrf VRF1) from 2.2.2.2 (2.2.2.2)
+          Origin IGP, metric 0, localpref 100, valid, internal, best
+          rx pathid: 0, tx pathid: 0x0
     '''}
     def test_empty(self):
         self.device = Mock(**self.empty_output)
