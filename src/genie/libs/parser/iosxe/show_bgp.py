@@ -4105,13 +4105,14 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         # *>i 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
         # *>l10.4.1.0/24         0.0.0.0                           100      32768 i
         # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
+        # *>r10.16.1.0           0.0.0.0               4444        100      32768 ?
         # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
         # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
         # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|b|h|\*|\>|\s)+)'
                            '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
                            '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
-                           '[\.][0-9]+[\/][0-9]+)|([a-zA-Z0-9]+[\:]'
+                           '[\.][0-9]+[\/]?[0-9]*)|([a-zA-Z0-9]+[\:]'
                            '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
                            '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
                            '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
@@ -4238,12 +4239,14 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
             # *>l10.4.1.0/24         0.0.0.0                           100      32768 i
             # *>r10.16.1.0/24         0.0.0.0               4444        100      32768 ?
             # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
+            # *>r10.16.2.0         0.0.0.0               4444        100      32768 ?
             # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
             # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
             # Condition placed to handle the situation of a long line that is
             # divided nto two lines while actually it is not another index.
             if not data_on_nextline:
-                m = p3_2.match(line)
+                m = p3_2.match(line.strip())
+
                 if m:
                     # New prefix, reset index count
                     index = 1

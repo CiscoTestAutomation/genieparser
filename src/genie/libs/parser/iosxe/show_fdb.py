@@ -46,7 +46,7 @@ class ShowMacAddressTableSchema(MetaParser):
                 }
             }
         },
-        'total_mac_addresses': int,
+        Optional('total_mac_addresses'): int,
     }
 
 class ShowMacAddressTable(ShowMacAddressTableSchema):
