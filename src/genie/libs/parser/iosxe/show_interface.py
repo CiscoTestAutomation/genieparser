@@ -198,11 +198,11 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
+                              ' +(?P<oper_status>[\w\s]+),'
                               ' +line +protocol +is +(?P<line_protocol>\w+)'
                               '( *\((?P<attribute>\S+)\))?$')
             p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
+                              ' +(?P<oper_status>[\w\s]+),'
                               ' +line +protocol +is +(?P<line_protocol>\w+)'
                               '( *, *(?P<attribute>[\w\s]+))?$')
             m = p1.match(line)
@@ -210,7 +210,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = m if m else m1
             if m:
                 interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled']
+                oper_status = m.groupdict()['oper_status']
                 line_protocol = m.groupdict()['line_protocol']
                 connected = m.groupdict()['attribute']
 
@@ -220,17 +220,18 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
 
-                if enabled and 'up' in enabled:
+                if oper_status and 'up' in oper_status:
                     interface_dict[interface]['enabled'] = True
                 else:
                     interface_dict[interface]['enabled'] = False
 
+                interface_dict[interface]\
+                                ['oper_status'] = oper_status
+
                 if line_protocol:
                     interface_dict[interface]\
                                 ['line_protocol'] = line_protocol
-                    interface_dict[interface]\
-                                ['oper_status'] = line_protocol
-
+                    
                 if connected:
                     if connected == 'connected':
                         interface_dict[interface]['connected'] = True
@@ -1521,6 +1522,7 @@ class ShowIpInterfaceSchema(MetaParser):
                 Any(): {
                     'enabled': bool,
                     'oper_status': str,
+                    Optional('line_protocol'): str,
                     Optional('ipv4'): {
                         Any(): {
                             'ip': str,
@@ -1605,20 +1607,21 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             # Vlan211 is up, line protocol is up
             # GigabitEthernet2 is administratively down, line protocol is down
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<oper_status>\w+)$')
+                              ' +(?P<oper_status>[\w\s]+),'
+                              ' +line +protocol +is +(?P<line_protocol>\w+)$')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
-                enabled = m.groupdict()['enabled'].lower()
-                if interface not in interface_dict:
-                    interface_dict[interface] = {}
-                if 'down' in enabled or 'delete' in enabled:
-                    interface_dict[interface]['enabled'] = False
+                oper_status = m.groupdict()['oper_status'].lower()
+                line_protocol = m.groupdict()['line_protocol'].lower()
+                sub_dict = interface_dict.setdefault(interface, {})
+                
+                if 'down' in oper_status or 'delete' in oper_status:
+                    sub_dict['enabled'] = False
                 else:
-                    interface_dict[interface]['enabled'] = True
-                interface_dict[interface]['oper_status'] = \
-                    m.groupdict()['oper_status'].lower()
+                    sub_dict['enabled'] = True
+                sub_dict['oper_status'] = oper_status
+                sub_dict['line_protocol'] = line_protocol
 
                 # initial variables
                 multicast_groups = []
