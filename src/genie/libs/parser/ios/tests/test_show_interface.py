@@ -518,7 +518,6 @@ class test_show_ip_interface(unittest.TestCase):
         "GigabitEthernet0/2.1": {
             "ip_multicast_fast_switching": True,
             "enabled": True,
-            'line_protocol': 'up',
             "mtu": 1500,
             "ip_multicast_distributed_fast_switching": False,
             "tcp_ip_header_compression": False,
@@ -620,15 +619,13 @@ class test_show_ip_interface(unittest.TestCase):
                "Fast"
             ],
             "oper_status": "up",
-            'line_protocol': 'up',
             "network_address_translation": False,
             "directed_broadcast_forwarding": False,
             "ip_output_packet_accounting": False
         },
         "GigabitEthernet0/2": {
             "enabled": True,
-            "oper_status": "up",
-            'line_protocol': 'up',
+            "oper_status": "up"
         }
     }
     golden_output = {'execute.return_value': '''
