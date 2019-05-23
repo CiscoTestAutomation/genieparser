@@ -115,7 +115,7 @@ class ShowArp(ShowArpSchema):
 # Parser for 'show ip arp'
 # =====================================
 class ShowIpArp(ShowArp):
-    """Parser for 'show ip arp,  how ip arp vrf <vrf>"""
+    """Parser for 'show ip arp,  show ip arp vrf <vrf>"""
     cli_command = ['show ip arp', 'show ip arp vrf {vrf}']
 
     def cli(self, vrf='', output=None):
