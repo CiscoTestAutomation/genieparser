@@ -48,6 +48,7 @@
     * Updated ShowIpBgp to support different status codes	
     * Updated ShowIpBgpNeighborsRoutes to support VRF
     * Updated ShowBgpNeighborsRoutes to support VRF
+    * Updated ShowBgpAllNeighborsAdvertisedRoutes to support Ips addresses without subnet mask
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
@@ -72,6 +73,16 @@
     * Updated ShowRipInterface for more varied interface name and status
 
 --------------------------------------------------------------------------------
+                                   IP_VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpVrf for:
+      * show ip vrf
+      * show ip vrf <vrf>
+      * show ip vrf detail
+      * show ip vrf detial <vrf>
+
+--------------------------------------------------------------------------------
                                    IP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -92,11 +103,15 @@
                                    VRF
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowVrf for:
-        show vrf
-        show vrf {vrf}
+    * Updated ShowVrf for:
+      * show vrf detail
+      * show vrf detail <vrf>
+      * show vrf
+      * show vrf <vrf>
+* IOSXR
+    * Updated ShowVrfAllDetail to support custom vrf argument
 
---------------------------------------------------------------------------------       
+--------------------------------------------------------------------------------     
                                 xconnect
 --------------------------------------------------------------------------------
 * IOSXR
@@ -136,6 +151,20 @@
         show lldp traffic
 
 --------------------------------------------------------------------------------
+                                   LAG
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowLacpSystemIdentifier for:
+        show lacp system-identifier
+    * Added ShowLacpCounters for:
+        show lacp counters
+    * Added ShowLacpNeighbor for:
+        show lacp neighbor
+    * Added ShowPortChannelSummary for:
+        show port-channel summary
+    * Added ShowPortChannelDatabase for:
+        show port-channel database
+--------------------------------------------------------------------------------
                                    ARCHIVE
 --------------------------------------------------------------------------------
 * IOSXE
@@ -146,3 +175,18 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed issues for ShowInterfaceSwitchport where some output are not parsed
+
+--------------------------------------------------------------------------------
+                                   MLD
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowMldSummaryInternal for:
+        show mld summary internal
+        show mld vrf {vrf} summary internal
+    * Added ShowMldInterface:
+        show mld interface
+        show mld vrf {vrf} interface
+    * Added ShowMldGroupsDetail:
+        show mld groups detail
+        show mld vrf {vrf} groups detail
+        show mld groups {group} detail
