@@ -1,7 +1,10 @@
 """show_vrf.py
 
 IOSXE parsers for the following show commands:
+    * 'show vrf'
+    * 'show vrf <vrf>'
     * 'show vrf detail'
+    * 'show vrf detail <vrf>'
 """
 
 # Python
@@ -17,17 +20,108 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 from genie.libs.parser.utils.common import Common
 
 
+class ShowVrfSchema(MetaParser):
+    ''' Schema for:
+            show vrf
+            show vrf {vrf}
+    '''
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('route_distinguisher'): str,
+                'protocols': list,
+                Optional('interfaces'): list
+            }
+        }
+    }
+
+
+class ShowVrf(ShowVrfSchema):
+    ''' Parser for:
+            show vrf
+            show vrf {vrf}
+    '''
+    cli_command = ['show vrf', 'show vrf {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        res_dict = {}
+
+        # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+        # VRF1                             65000:1               ipv4,ipv6   Tu1
+        # vpn4                           100:2          ipv4,ipv6
+        p1 = re.compile(r'^(?P<vrf>\S+)\s+(?P<rd>\<not +set\>|[\d\:]+)\s+'
+                        r'(?P<protocols>[(?:ipv\d)\,]+)(?:\s+(?P<intf>[\S\s]+))?$')
+                                                                    
+        # Lo300
+        # Gi2.390
+        # Gi2.410
+        p2 = re.compile(r'^(?P<intf>[\w\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+            # VRF1                             65000:1               ipv4,ipv6   Tu1
+            # vpn2                           100:3          ipv4              Lo23  AT3/0/0.1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+
+                vrf = groups['vrf']
+                vrf_dict = res_dict.setdefault('vrf', {}).setdefault(vrf, {})
+
+                rd = groups['rd']
+                if 'not set' not in rd:
+                    vrf_dict.update({'route_distinguisher': rd})
+
+                protocols = groups['protocols'].split(',')
+                vrf_dict.update({'protocols': protocols})
+
+                if groups['intf']:
+                    intfs = groups['intf'].split()
+                    intf_list = [Common.convert_intf_name(item) for item in intfs]
+                    vrf_dict.update({'interfaces': intf_list})
+                continue
+
+            # Lo300
+            # Gi2.390
+            # Gi2.410
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                intf = Common.convert_intf_name(groups['intf'])
+                vrf_dict.get('interfaces').append(intf)
+
+        return res_dict
+
+
 class ShowVrfDetailSchema(MetaParser):
-    """Schema for show vrf detail"""
+    """Schema for
+        * 'show vrf detail'
+        * 'show vrf detail <vrf>'
+        * 'show ip vrf detail'
+        * 'show ip vrf detail <vrf>'"""
 
     schema = {
         Any(): {
             Optional('vrf_id'):  int,
             Optional('route_distinguisher'): str,
             Optional('vpn_id'): str,
-            Optional('interfaces'):  list,
-            Optional('interface'):  {Any(): {'vrf': str}},
+            Optional('interfaces'): list,
+            Optional('interface'): {Any(): {'vrf': str}},
             Optional('flags'):  str,
+            Optional('cli_format'): str,
+            Optional('support_af'): str,
             Optional('address_family'): {
                 Any(): {
                     'table_id': str,
@@ -69,16 +163,14 @@ class ShowVrfDetailSchema(MetaParser):
         }
     }
 
-
-class ShowVrfDetail(ShowVrfDetailSchema):
-    """Parser for show vrf detail"""
-    cli_command = 'show vrf detail'
+class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
+    """Super Paser for:
+        * show vrf detail
+        * show vrf detail <vrf>
+        * show ip vrf detail
+        * show ip vrf detail <vrf>"""
 
     def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
 
         # Init vars
         result_dict = {}
@@ -98,6 +190,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                         r'Table +ID +\= +(?P<alt_vrf_id>\d))?$')
 
         # New CLI format, supports multiple address-families
+        p1_1 = re.compile(r'^(?P<cli_format>(New|Old)) +CLI +format, +supports +(?P<support_af>[\s\S]+)$')
+
         # Flags: 0x180C
         p2 = re.compile(r'^Flags: +(?P<flags>\w+)$')
 
@@ -146,12 +240,12 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                         r'current +count +(?P<count>\d+)$')
 
         # VRF label distribution protocol: not configured
-        p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\w\s\-]+)\)$')
+        p10 = re.compile(r'^VRF +label +distribution +protocol: +(?P<vrf_label>[\w\s\-]+)$')
 
         # VRF label allocation mode: per-prefix
         p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # VRF VRF1 (VRF Id = 1); default RD 100:1; default VPNID <not set>
@@ -181,6 +275,14 @@ class ShowVrfDetail(ShowVrfDetailSchema):
                 continue
 
             # New CLI format, supports multiple address-families
+
+            m = p1_1.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf_dict.update({'cli_format':groups['cli_format']})
+                vrf_dict.update({'support_af':groups['support_af']})
+                continue
+
             # Flags: 0x180C
             m = p2.match(line)
             if m:
@@ -337,4 +439,23 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
         return result_dict
 
+
+class ShowVrfDetail(ShowVrfDetailSuperParser):
+    """Parser for 
+        * 'show vrf detail'
+        * 'show vrf detail <vrf>'"""
+    cli_command = ['show vrf detail' , 'show vrf detail {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        return super().cli(output=out)
 # vim: ft=python et sw=4

@@ -5929,7 +5929,7 @@ class ShowRunningConfigBgpSchema(MetaParser):
                 },
         Optional('vxlan'): {
             'evpn': {
-                'evpn_vni': {
+                Optional('evpn_vni'): {
                     Any(): {
                         Optional("evpn_vni"): int,
                         Optional("evpn_vni_rd"): str,
