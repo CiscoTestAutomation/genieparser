@@ -73,6 +73,16 @@
     * Updated ShowRipInterface for more varied interface name and status
 
 --------------------------------------------------------------------------------
+                                   IP_VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpVrf for:
+      * show ip vrf
+      * show ip vrf <vrf>
+      * show ip vrf detail
+      * show ip vrf detial <vrf>
+
+--------------------------------------------------------------------------------
                                    IP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -93,13 +103,15 @@
                                    VRF
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowVrf for:
-        show vrf
-        show vrf {vrf}
+    * Updated ShowVrf for:
+      * show vrf detail
+      * show vrf detail <vrf>
+      * show vrf
+      * show vrf <vrf>
 * IOSXR
     * Updated ShowVrfAllDetail to support custom vrf argument
 
---------------------------------------------------------------------------------       
+--------------------------------------------------------------------------------     
                                 xconnect
 --------------------------------------------------------------------------------
 * IOSXR
