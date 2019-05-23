@@ -149,3 +149,18 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed issues for ShowInterfaceSwitchport where some output are not parsed
+
+--------------------------------------------------------------------------------
+                                   MLD
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowMldSummaryInternal for:
+        show mld summary internal
+        show mld vrf {vrf} summary internal
+    * Added ShowMldInterface:
+        show mld interface
+        show mld vrf {vrf} interface
+    * Added ShowMldGroupsDetail:
+        show mld groups detail
+        show mld vrf {vrf} groups detail
+        show mld groups {group} detail
