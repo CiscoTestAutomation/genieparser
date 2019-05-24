@@ -118,6 +118,8 @@
       * show vrf <vrf>
 * IOSXR
     * Updated ShowVrfAllDetail to support custom vrf argument
+* IOS
+    * Updated ShowVrfDetail unittest
 
 --------------------------------------------------------------------------------     
                                 xconnect
