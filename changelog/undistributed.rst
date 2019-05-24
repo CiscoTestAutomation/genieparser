@@ -217,6 +217,11 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed issues for ShowInterfaceSwitchport where some output are not parsed
+* IOSXR
+    * Updated ShowInterfaceDetail to support custom interface
+        show interface {interface} detail
+    * Updated ShowEthernetTag to support custom interface
+        show ethernet tag {interface}
 
 --------------------------------------------------------------------------------
                                    MLD
@@ -240,3 +245,4 @@
     * Added ShowIpArp for:
         show ip arp
         show ip arp vrf {vrf}
+
