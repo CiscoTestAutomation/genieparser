@@ -44,20 +44,20 @@
                                    INTERFACE
 --------------------------------------------------------------------------------
 * IOSXE
-	   * Added interface value under convert_intf_name method of common file
+     * Added interface value under convert_intf_name method of common file
 
 --------------------------------------------------------------------------------
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
-		    * vrf default value handled	  
+        * vrf default value handled   
     * Updated ShowIpBgpNeighbors to support different Address families
-    * Updated ShowIpBgp to support different status codes	
+    * Updated ShowIpBgp to support different status codes 
     * Updated ShowIpBgpNeighborsRoutes to support VRF
     * Updated ShowBgpNeighborsRoutes to support VRF
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support Ips addresses without subnet mask
-    * Added ShowIpBgpRdexportNeighborsAdvertisedRoutes for:
+    * Added ShowIpBgpRdNeighborsAdvertisedRoutes for:
         show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes
     * Added ShowIpBgpVrfNeighbor for:
         show ip bgp {address_family} vrf {vrf} {route}
@@ -83,6 +83,31 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowRipInterface for more varied interface name and status
+* NXOS
+    * Added ShowIpRipVrfAll for:
+        show ip rip
+        show ip rip vrf <vrf>
+        show ip rip vrf all
+
+    * Added ShowIpv6RipVrfAll for:
+        show ipv6 rip
+        show ipv6 rip vrf <vrf>
+        show ipv6 rip vrf all
+
+    * Added ShowIpRipRouteVrfAll for:
+        show ip rip route
+        show ip rip route vrf <vrf>
+        show ip rip route vrf all
+
+    * Added ShowIpv6RipRouteVrfAll for:
+        show ipv6 rip route
+        show ipv6 rip route vrf {vrf}
+        show ipv6 rip route vrf all
+    
+    * Added ShowIpRipInterfaceVrfAll for:
+        show ip rip interface
+        show ip rip interface vrf {vrf}
+        show ip rip interface vrf all
 
 --------------------------------------------------------------------------------
                                    IP_VRF
@@ -205,3 +230,10 @@
         show mld vrf {vrf} groups detail
         show mld groups {group} detail
 
+--------------------------------------------------------------------------------
+                                   ARP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpArp for:
+        show ip arp
+        show ip arp vrf {vrf}

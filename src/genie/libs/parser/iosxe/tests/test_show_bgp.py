@@ -45,7 +45,7 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAll,\
                                              ShowIpBgpTemplatePeerSession,\
                                              ShowIpBgpTemplatePeerPolicy,\
                                              ShowIpBgpAllDampeningParameters, \
-                                             ShowIpBgpRdexportNeighborsAdvertisedRoutes, \
+                                             ShowIpBgpRdNeighborsAdvertisedRoutes, \
                                              ShowIpBgpVrfNeighbor
 
 
@@ -1662,7 +1662,7 @@ Total number of prefixes 13
 
     def test_show_ip_bgp_rd_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpBgpRdexportNeighborsAdvertisedRoutes(device=self.device)
+        obj = ShowIpBgpRdNeighborsAdvertisedRoutes(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(address_family='vpnv4',
                 rd='9996:4093', neighbor='202.239.165.120')
@@ -1670,7 +1670,7 @@ Total number of prefixes 13
     def test_show_ip_bgp_rd_neighbors_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
-        obj = ShowIpBgpRdexportNeighborsAdvertisedRoutes(device=self.device)
+        obj = ShowIpBgpRdNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4',
                 rd='9996:4093', neighbor='202.239.165.120')
         self.assertEqual(parsed_output, self.golden_parsed_output1)

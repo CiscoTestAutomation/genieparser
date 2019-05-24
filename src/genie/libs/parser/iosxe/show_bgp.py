@@ -4574,7 +4574,7 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
 # Parser for:
 #   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
 # =============================================================================
-class ShowIpBgpRdexportNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
+class ShowIpBgpRdNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
     ''' Parser for:
         'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     '''
