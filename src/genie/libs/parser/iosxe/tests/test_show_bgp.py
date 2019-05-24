@@ -2662,7 +2662,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                     'address_family': {
                         'vpnv4': {
                             'prefixes': {
-                                '12.0.0.0/24': {
+                                '10.144.0.0/24': {
                                     'table_version': '88',
                                     'available_path': '4',
                                     'best_path': '1',
@@ -2711,7 +2711,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                         4: {
                                             'next_hop': '10.11.11.11',
                                             'gateway': '10.11.11.11',
-                                            'originator': '1.0.0.1',
+                                            'originator': '10.1.0.1',
                                             'evpn': {
                                                 'ext_community': 'RT:11:12 ',
                                                 'recursive_via_connected': True,
@@ -2728,29 +2728,29 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
         },
     }
     golden_output2 = {'execute.return_value': '''
-       BGP routing table entry for 10:12:12.0.0.0/24, version 88
+       BGP routing table entry for 10:12:10.144.0.0/24, version 88
     Paths: (4 available, best #1, table blue)
       Additional-path
       Advertised to update-groups:
          6
-      1, imported path from 12:23:12.0.0.0/24
+      1, imported path from 12:23:10.144.0.0/24
         10.3.3.3 (metric 21) from 10.6.6.6 (10.6.6.6)
           Origin incomplete, metric 0, localpref 200, valid, internal, best
           Extended Community: RT:12:23
           Originator: 10.3.3.3, Cluster list: 10.0.0.1 , recursive-via-host
           mpls labels in/out nolabel/37
-      1, imported path from 12:23:12.0.0.0/24
+      1, imported path from 12:23:10.144.0.0/24
         10.13.13.13 (via green) from 10.13.13.13 (10.0.0.2)
           Origin incomplete, metric 0, localpref 100, valid, external
           Extended Community: RT:12:23 , recursive-via-connected
-      1, imported path from 12:23:12.0.0.0/24
+      1, imported path from 12:23:10.144.0.0/24
         10.3.3.3 (metric 21) from 10.7.7.7 (10.7.7.7)
           Origin incomplete, metric 0, localpref 200, valid, internal
           Extended Community: RT:12:23
           Originator: 10.3.3.3, Cluster list: 10.0.0.1 , recursive-via-host
           mpls labels in/out nolabel/37
       1
-        10.11.11.11 from 10.11.11.11 (1.0.0.1)
+        10.11.11.11 from 10.11.11.11 (10.1.0.1)
           Origin incomplete, metric 0, localpref 100, valid, external, backup/repair
           Extended Community: RT:11:12 , recursive-via-connected
     '''}
@@ -13665,17 +13665,17 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
 
     golden_parsed_output3 = {
         'list_of_neighbors': [
-            '202.239.165.120'
+            '192.168.36.120'
         ],
         'vrf': {
             'default': {
                 'neighbor': {
-                    '202.239.165.120': {
-                        'remote_as': 9996,
+                    '192.168.36.120': {
+                        'remote_as': 65109,
                         'link': 'internal',
                         'shutdown': False,
                         'bgp_version': 4,
-                        'router_id': '202.239.165.120',
+                        'router_id': '192.168.36.120',
                         'session_state': 'Idle',
                         'bgp_negotiated_keepalive_timers': {
                             'hold_time': 90,
@@ -13725,7 +13725,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
                         'bgp_session_transport': {
                             'min_time_between_advertisement_runs': 0,
                             'address_tracking_status': 'enabled',
-                            'rib_route_ip': '202.239.165.120',
+                            'rib_route_ip': '192.168.36.120',
                             'connection': {
                                 'established': 2,
                                 'dropped': 1,
@@ -13932,8 +13932,8 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
 
     golden_output3 = {'execute.return_value': '''
         #show ip bgp link-state link-state neighbors
-        BGP neighbor is 202.239.165.120,  remote AS 9996, internal link
-        BGP version 4, remote router ID 202.239.165.120
+        BGP neighbor is 192.168.36.120,  remote AS 65109, internal link
+        BGP version 4, remote router ID 192.168.36.120
         BGP state = Idle, down for never
         Configured hold time is 90, keepalive interval is 30 seconds
         Minimum holdtime from neighbor is 15 seconds
@@ -13967,7 +13967,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         Default minimum time between advertisement runs is 0 seconds
 
         For address family: VPNv4 Unicast
-        Session: 202.239.165.120
+        Session: 192.168.36.120
         BGP table version 1266, neighbor version 1266/0
         Output queue size : 0
         Index 1, Advertise bit 0
@@ -14007,7 +14007,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
               Refresh End-of-RIB            1          1
 
         For address family: L2VPN Vpls
-        Session: 202.239.165.120
+        Session: 192.168.36.120
         BGP table version 621, neighbor version 621/0
         Output queue size : 0
         Index 1, Advertise bit 0
@@ -14078,7 +14078,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
               Refresh Start-of-RIB          0          0
               Refresh End-of-RIB            0          0
 
-        Address tracking is enabled, the RIB does have a route to 202.239.165.120
+        Address tracking is enabled, the RIB does have a route to 192.168.36.120
         Route to peer address reachability Up: 1; Down: 0
         Last notification 1d21h
         Connections established 2; dropped 1
@@ -16619,7 +16619,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
     golden_output5 = {'execute.return_value': '''
         PE1#show bgp vpnv4 unicast all neighbors 192.168.36.119 advertised-routes
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 04:55:00.149 JST Wed May 22 2019
+        Time source is NTP, 04:55:00.149 EST Wed May 22 2019
 
         BGP table version is 334, local router ID is 10.169.197.254
         Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
