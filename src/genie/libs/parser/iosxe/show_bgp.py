@@ -829,6 +829,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         original_address_family = address_family
         refresh_epoch_flag = False
         route_info = ''
+        refresh_epoch = None
 
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
@@ -1259,7 +1260,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 subdict['status_codes'] = status_codes
 
                 # Adding the keys we got from 'Refresh Epoch' line
-                subdict['refresh_epoch'] = refresh_epoch
+                if refresh_epoch:
+                    subdict['refresh_epoch'] = refresh_epoch
 
                 # Adding the keys we got from 'route_info' line
                 if route_info:
@@ -1461,7 +1463,7 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 #   * 'show ip bgp all detail'
 #   * 'show ip bgp {address_family} vrf {vrf} {route}'
 # ====================================================
-class ShowIpBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
+class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
 
     ''' Parser for:
         * 'show ip bgp all detail'

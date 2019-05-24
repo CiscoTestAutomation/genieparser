@@ -2655,33 +2655,68 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-'instance': {
-    'default': {
-        'vrf': {
-            'VRF1,': {
-                'address_family': {
-                    'vpnv4': {
-                        'prefixes': {
-                            '2.2.2.2/32': {
-                                'table_version': '4',
-                                'available_path': '1',
-                                'best_path': '1',
-                                'paths': '1 available, best #1, table VRF1, RIB-failure(17)',
-                                'index': {
-                                    1: {
-                                        'next_hop': '2.2.2.2',
-                                        'gateway': '2.2.2.2',
-                                        'originator': '2.2.2.2',
-                                        'next_hop_igp_metric': '10752',
-                                        'next_hop_via': 'vrf VRF1',
-                                        'localpref': 100,
-                                        'metric': 0,
-                                        'origin_codes': 'i',
-                                        'status_codes': '*>',
-                                        'refresh_epoch': 1,
-                                        'route_info': 'Local',
-                                        'recipient_pathid': '0',
-                                        'transfer_pathid': '0x0',
+    'instance': {
+        'default': {
+            'vrf': {
+                'blue': {
+                    'address_family': {
+                        'vpnv4': {
+                            'prefixes': {
+                                '12.0.0.0/24': {
+                                    'table_version': '88',
+                                    'available_path': '4',
+                                    'best_path': '1',
+                                    'paths': '4 available, best #1, table blue',
+                                    'index': {
+                                        1: {
+                                            'next_hop': '10.3.3.3',
+                                            'gateway': '10.6.6.6',
+                                            'originator': '10.6.6.6',
+                                            'next_hop_igp_metric': '21',
+                                            'localpref': 200,
+                                            'metric': 0,
+                                            'origin_codes': '?',
+                                            'status_codes': '*>',
+                                            'evpn': {
+                                                'ext_community': 'RT:12:23',
+                                                },
+                                            },
+                                        2: {
+                                            'next_hop': '10.13.13.13',
+                                            'gateway': '10.13.13.13',
+                                            'originator': '10.0.0.2',
+                                            'next_hop_via': 'green',
+                                            'localpref': 100,
+                                            'metric': 0,
+                                            'origin_codes': '?',
+                                            'status_codes': '* ',
+                                            'evpn': {
+                                                'ext_community': 'RT:12:23 ',
+                                                'recursive_via_connected': True,
+                                                },
+                                            },
+                                        3: {
+                                            'next_hop': '10.3.3.3',
+                                            'gateway': '10.7.7.7',
+                                            'originator': '10.7.7.7',
+                                            'next_hop_igp_metric': '21',
+                                            'localpref': 200,
+                                            'metric': 0,
+                                            'origin_codes': '?',
+                                            'status_codes': '* i',
+                                            'evpn': {
+                                                'ext_community': 'RT:12:23',
+                                                },
+                                            },
+                                        4: {
+                                            'next_hop': '10.11.11.11',
+                                            'gateway': '10.11.11.11',
+                                            'originator': '1.0.0.1',
+                                            'evpn': {
+                                                'ext_community': 'RT:11:12 ',
+                                                'recursive_via_connected': True,
+                                                },
+                                            },
                                         },
                                     },
                                 },
@@ -2691,18 +2726,33 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                 },
             },
         },
-    },
-}
+    }
     golden_output2 = {'execute.return_value': '''
-       BGP routing table entry for 65000:1:2.2.2.2/32, version 4
-    Paths: (1 available, best #1, table VRF1, RIB-failure(17))
-      Flag: 0x100
-      Not advertised to any peer
-      Refresh Epoch 1
-      Local
-        2.2.2.2 (metric 10752) (via vrf VRF1) from 2.2.2.2 (2.2.2.2)
-          Origin IGP, metric 0, localpref 100, valid, internal, best
-          rx pathid: 0, tx pathid: 0x0
+       BGP routing table entry for 10:12:12.0.0.0/24, version 88
+    Paths: (4 available, best #1, table blue)
+      Additional-path
+      Advertised to update-groups:
+         6
+      1, imported path from 12:23:12.0.0.0/24
+        10.3.3.3 (metric 21) from 10.6.6.6 (10.6.6.6)
+          Origin incomplete, metric 0, localpref 200, valid, internal, best
+          Extended Community: RT:12:23
+          Originator: 10.3.3.3, Cluster list: 10.0.0.1 , recursive-via-host
+          mpls labels in/out nolabel/37
+      1, imported path from 12:23:12.0.0.0/24
+        10.13.13.13 (via green) from 10.13.13.13 (10.0.0.2)
+          Origin incomplete, metric 0, localpref 100, valid, external
+          Extended Community: RT:12:23 , recursive-via-connected
+      1, imported path from 12:23:12.0.0.0/24
+        10.3.3.3 (metric 21) from 10.7.7.7 (10.7.7.7)
+          Origin incomplete, metric 0, localpref 200, valid, internal
+          Extended Community: RT:12:23
+          Originator: 10.3.3.3, Cluster list: 10.0.0.1 , recursive-via-host
+          mpls labels in/out nolabel/37
+      1
+        10.11.11.11 from 10.11.11.11 (1.0.0.1)
+          Origin incomplete, metric 0, localpref 100, valid, external, backup/repair
+          Extended Community: RT:11:12 , recursive-via-connected
     '''}
 
     def test_show_ip_bgp_all_detail_empty(self):
@@ -2722,8 +2772,8 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIpBgpAllDetail(device=self.device)
-        parsed_output = obj.parse(vrf='CE1test', 
-                route='172.32.0.0/24', address_family='vpnv4')
+        parsed_output = obj.parse(vrf='blue', 
+                route='10.0.0.0', address_family='vpnv4')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
@@ -16749,206 +16799,57 @@ class test_show_ip_bgp_neighbors_advertised_routes(unittest.TestCase):
         '''}
 
     golden_output2 = {'execute.return_value' : '''
-    Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-Time source is NTP, 06:01:35.551 JST Wed May 22 2019
+    BGP table version is 166, local router ID is 172.16.1.1
 
-BGP table version is 253, local router ID is 192.168.10.254
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-              x best-external, a additional-path, c RIB-compressed,
-              t secondary path, L long-lived-stale,
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
+    Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
 
-     Network          Next Hop            Metric LocPrf Weight Path
-Route Distinguisher: 9996:4093 (default for vrf CE1test) VRF Router ID 192.168.10.254
- *>   11.11.11.11/32   192.168.10.253           0             0 65555 ?
- *>   172.16.0.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.1.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.2.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.3.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.4.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.5.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.6.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.7.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.8.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.9.0/24    192.168.10.253           0             0 65555 ?
- *>   172.16.10.0/24   192.168.10.253           0             0 65555 ?
- *>   192.168.10.0     0.0.0.0                  0         32768 ?
+                  r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
 
-Total number of prefixes 13
+                  x best-external, a additional-path, c RIB-compressed, 
+
+                  t secondary path, L long-lived-stale,
+
+    Origin codes: i - IGP, e - EGP, ? - incomplete
+
+    RPKI validation codes: V valid, I invalid, N Not found
+
+
+
+         Network          Next Hop            Metric LocPrf Weight Path
+
+    Route Distinguisher: 65000:100 (default for vrf TEST-VPN) VRF Router ID 172.16.1.1
+
+     *>   192.168.1.0      0.0.0.0                  0         32768 ?
 
     '''}
     golden_parsed_output2 = {
-'vrf': {
-    'default': {
-        'neighbor': {
-            '202.239.165.120': {
-                'address_family': {
-                    'vpnv4': {
-                        'advertised': {
-                            },
-                        'bgp_table_version': 253,
-                        'local_router_id': '192.168.10.254',
-                        },
-                    'vpnv4 RD 9996:4093': {
-                        'bgp_table_version': 253,
-                        'local_router_id': '192.168.10.254',
-                        'route_distinguisher': '9996:4093',
-                        'default_vrf': 'CE1test',
-                        'advertised': {
-                            '11.11.11.11/32': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
+        'vrf': {
+            'default': {
+                'neighbor': {
+                    '172.16.1.1': {
+                        'address_family': {
+                            'vpnv4': {
+                                'advertised': {
                                     },
+                                'bgp_table_version': 166,
+                                'local_router_id': '172.16.1.1',
                                 },
-                            '172.16.0.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.1.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.2.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.3.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.4.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.5.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.6.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.7.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.8.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.9.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '172.16.10.0/24': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '192.168.10.253',
-                                        'origin_codes': '?',
-                                        'weight': 0,
-                                        'metric': 0,
-                                        'path': '65555',
-                                        },
-                                    },
-                                },
-                            '192.168.10.0': {
-                                'index': {
-                                    1: {
-                                        'status_codes': '*>',
-                                        'next_hop': '0.0.0.0',
-                                        'origin_codes': '?',
-                                        'weight': 32768,
-                                        'localprf': 0,
+                            'vpnv4 RD 65000:100': {
+                                'bgp_table_version': 166,
+                                'local_router_id': '172.16.1.1',
+                                'route_distinguisher': '65000:100',
+                                'default_vrf': 'TEST-VPN',
+                                'advertised': {
+                                    '192.168.1.0': {
+                                        'index': {
+                                            1: {
+                                                'status_codes': '*>',
+                                                'next_hop': '0.0.0.0',
+                                                'origin_codes': '?',
+                                                'weight': 32768,
+                                                'localprf': 0,
+                                                },
+                                            },
                                         },
                                     },
                                 },
@@ -16957,10 +16858,7 @@ Total number of prefixes 13
                     },
                 },
             },
-        },
-    },
-}
-
+        }
     def test_show_ip_bgp_neighbors_advertised_routes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpNeighborsAdvertisedRoutes(device=self.device)
@@ -16979,7 +16877,7 @@ Total number of prefixes 13
         self.device = Mock(**self.golden_output2)
         obj = ShowIpBgpNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4',
-                rd='9996:4093', neighbor='202.239.165.120')
+                rd='65000:100', neighbor='172.16.1.1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
