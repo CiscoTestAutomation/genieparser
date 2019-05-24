@@ -122,6 +122,7 @@
     * Updated ShowVrf for:
       * show vrf
       * show vrf <vrf>
+    * Updated ShowVrfDetail unittest
 
 --------------------------------------------------------------------------------     
                                 xconnect
