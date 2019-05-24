@@ -1160,11 +1160,15 @@ class ShowInterfacesSwitchportSchema(MetaParser):
 class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
     """parser for show interfaces switchport"""
 
-    cli_command = 'show interfaces switchport'
+    cli_command = ['show interfaces switchport','show interfaces {interface} switchport']
 
-    def cli(self,output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
