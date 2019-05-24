@@ -57,6 +57,10 @@
     * Updated ShowIpBgpNeighborsRoutes to support VRF
     * Updated ShowBgpNeighborsRoutes to support VRF
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support Ips addresses without subnet mask
+    * Updated ShowIpBgpNeighborsAdvertisedRoutes for:
+        show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes
+    * Updated ShowIpBgpAllDetail for:
+        show ip bgp {address_family} vrf {vrf} {route}
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities
