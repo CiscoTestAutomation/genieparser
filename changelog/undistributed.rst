@@ -217,6 +217,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed issues for ShowInterfaceSwitchport where some output are not parsed
+    * Enhance ShowInterfaces to support interface state 'admin down down'
+
 * IOSXR
     * Updated ShowInterfaceDetail to support custom interface
         show interface {interface} detail

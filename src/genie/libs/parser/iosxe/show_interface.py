@@ -220,10 +220,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]['port_channel']\
                         ['port_channel_member'] = False
 
-                if enabled and 'up' in enabled:
-                    interface_dict[interface]['enabled'] = True
-                else:
+                if 'administratively down' in enabled or 'delete' in enabled:
                     interface_dict[interface]['enabled'] = False
+                else:
+                    interface_dict[interface]['enabled'] = True
 
                 if line_protocol:
                     interface_dict[interface]\
@@ -1613,7 +1613,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 enabled = m.groupdict()['enabled'].lower()
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
-                if 'down' in enabled or 'delete' in enabled:
+                if 'administratively down' in enabled or 'delete' in enabled:
                     interface_dict[interface]['enabled'] = False
                 else:
                     interface_dict[interface]['enabled'] = True
@@ -2234,7 +2234,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 enabled = m.groupdict()['enabled'].lower()
                 if intf not in ret_dict:
                     ret_dict[intf] = {}
-                if 'down' in enabled:
+                if 'administratively down' in enabled:
                     ret_dict[intf]['enabled'] = False
                 else:
                     ret_dict[intf]['enabled'] = True
