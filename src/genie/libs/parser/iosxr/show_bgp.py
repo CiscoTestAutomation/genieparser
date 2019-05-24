@@ -110,6 +110,7 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                              ' +(?P<bgp_id>\d+)'
                              ' +(?P<num_vrfs>\d+)'
                              ' +(?P<address_family>[\w\s\,\-]+)$')
+
             m = p1.match(line)
             if m:
                 instance_id = m.groupdict()['instance_id']
@@ -141,12 +142,17 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
 
                 continue
 
+            # ID  Placed-Grp  Name              AS        VRFs    Address Families
+            # --------------------------------------------------------------------------------
+            p1_1 = re.compile(r'(ID +Placed-Grp +Name +AS +VRFs +Address +Families)|(\-)+')
+            m = p1_1.match(line)
+            if m:
+                continue
             #                                                     IPv6 Unicast, VPNv6 Unicast
-            p2 = re.compile(r'^(?P<address_family>[\w\s\,]+)$')
+            p2 = re.compile(r'^(?P<address_family>[\w\s\,\-]+)$')
             m = p2.match(line)
             if m:
                 address_family_extra_line = m.groupdict()['address_family'].lower()
-
                 if address_family_extra_line and address_family_extra_line != 'none':
                     address_family_extra_line = address_family_extra_line.strip(',').split(',')
                     address_family_extra_line = [item.strip() for item in address_family_extra_line]
@@ -995,14 +1001,18 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         - vrf_type
 
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} process detail'
+    cli_command = ['show bgp instance all {vrf_type} all process detail',
+        'show bgp instance all {vrf_type} all {af_type} process detail']
 
     def cli(self, vrf_type, af_type='',output=None):
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+            if vrf_type and af_type:
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            else:
+                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
         else:
             out = output
 
@@ -1013,11 +1023,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         flag = None
         
         # Init vars
-        if vrf_type == 'all':
-            vrf = 'default'
-        elif vrf_type == 'vrf':
-            vrf = None
-
+        vrf = 'default'
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -1041,7 +1048,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                         continue
 
             # VRF: VRF1
-            p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9]+)$')
+            p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p1_1.match(line)
             if m:
                 vrf = str(m.groupdict()['vrf'])
@@ -2066,16 +2073,8 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                     Optional('keepalive_interval'): int
                                     },
                                  Optional('bgp_negotiated_capabilities'):
-                                    {Optional('route_refresh'): str,
-                                     Optional('four_octets_asn'): str,
-                                     Optional('vpnv4_unicast'): str,
-                                     Optional('vpnv6_unicast'): str,
-                                     Optional('ipv4_unicast'): str,
-                                     Optional('ipv6_unicast'): str,
-                                     Optional('graceful_restart'): str,
-                                     Optional('enhanced_refresh'): str,
-                                     Optional('multisession'): str,
-                                     Optional('stateful_switchover'): str
+                                    {
+                                        Any(): str
                                     },
                                  Optional('message_stats_input_queue'): int,
                                  Optional('message_stats_output_queue'): int,
@@ -2180,15 +2179,21 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors detail'
+    
+    cli_command = ['show bgp instance all {vrf_type} all neighbors detail',
+        'show bgp instance all {vrf_type} all {af_type} neighbors detail']
 
+        
     def cli(self, vrf_type, af_type='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+            if vrf_type and af_type:
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            else:
+                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
         else:
             out = output
         # Init variables
@@ -2545,33 +2550,26 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             #    Route refresh:                  Yes         No
             #    4-byte AS:                      Yes         No
             #    Address family IPv4 Unicast:    Yes         Yes
-            p27_1= re.compile(r'^(?P<name>[a-zA-Z0-9\s\-]+): *(?P<adv>(Y|y)es|(N|n)o) *(?P<rcvd>(Y|y)es|(N|n)o+)$')
+            p27_1= re.compile(r'^(Address +family +)?(?P<name>[a-zA-Z0-9\s\-]+): *(?P<adv>(Y|y)es|(N|n)o) *(?P<rcvd>(Y|y)es|(N|n)o+)$')
             m = p27_1.match(line)
             if m:
                 name = m.groupdict()['name'].lower()
                 adv = 'advertised' if m.groupdict()['adv'].lower() == 'yes' else ''
                 rcvd = 'received' if m.groupdict()['rcvd'].lower() == 'yes' else ''
                 # mapping ops name
-                if 'route refresh' in name:
-                    name = 'route_refresh'
+
                 if 'enhanced refresh' in name:
                     name = 'enhanced_refresh'
-                if '4-byte' in name:
+                elif '4-byte' in name:
                     name = 'four_octets_asn'
-                if 'vpnv4' in name:
-                    name = 'vpnv4_unicast'
-                if 'vpnv6' in name:
-                    name = 'vpnv6_unicast'
-                if 'ipv4' in name:
-                    name = 'ipv4_unicast'
-                if 'ipv6' in name:
-                    name = 'ipv6_unicast'
-                if 'restart' in name:
+                elif 'restart' in name:
                     name = 'graceful_restart'
-                if 'multi' in name:
+                elif 'multi' in name:
                     name = 'multisession'
-                if 'switchover' in name:
+                elif 'switchover' in name:
                     name = 'stateful_switchover'
+                else:
+                    name = name.replace(' ', '_')
                 sub_dict['bgp_negotiated_capabilities'][name] = adv + ' ' + rcvd
                 continue
 
@@ -3704,7 +3702,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                     continue
 
             # VRF: VRF2
-            p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -4036,7 +4034,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                         continue
 
             # VRF: VRF1
-            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -4369,14 +4367,18 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         - vrf_type
 
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type}'
+    cli_command = ['show bgp instance all {vrf_type} all',
+                   'show bgp instance all {vrf_type} all {af_type}']
 
     def cli(self, vrf_type, af_type='',output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf_type=vrf_type, af_type=af_type))
+            if af_type:
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            else:
+                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
         else:
             out = output
 
@@ -4418,7 +4420,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                         continue
 
             # VRF: VRF1
-            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9]+)$')
+            p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
                 vrf = m.groupdict()['vrf']

@@ -721,7 +721,9 @@ class ShowRipInterface(ShowRipInterfaceSchema):
         ret_dict = {}
 
         # GigabitEthernet0/0/0/0.100
-        p1 = re.compile(r'^(?P<interface>\w+[\d/]+\.\d+)$')
+        # GigabitEthernet0/0/0/1.420 (Forward Reference)
+        # Loopback300
+        p1 = re.compile(r'^(?P<interface>\w+[\d\/]+\.?\d+)(?: +\([\S\s]+)?$')
 
         # Rip enabled?:               Passive
         p2 = re.compile(r'^Rip +enabled\?:\s+(?P<passive>\w+)$')
@@ -742,7 +744,8 @@ class ShowRipInterface(ShowRipInterfaceSchema):
         p7 = re.compile(r'^Receive +versions:\s+(?P<version>\d+)$')
 
         # Interface state:            Up
-        p8 = re.compile(r'^Interface +state:\s+(?P<state>\w+)$')
+        # Interface state:            Unknown State
+        p8 = re.compile(r'^Interface +state:\s+(?P<state>[\w ]+)$')
 
         # IP address:                 10.1.2.1/24
         p9 = re.compile(r'^IP +address:\s+(?P<ip_address>[\d\/\.]+)$')
@@ -791,6 +794,8 @@ class ShowRipInterface(ShowRipInterfaceSchema):
             line = line.strip()
 
             # GigabitEthernet0/0/0/0.100
+            # GigabitEthernet0/0/0/1.420 (Forward Reference)
+            # Loopback300
             m = p1.match(line)
             if m:
                 if not ret_dict:
@@ -849,10 +854,14 @@ class ShowRipInterface(ShowRipInterfaceSchema):
                 continue
 
             # Interface state:            Up
+            # Interface state:            Unknown State
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
-                interface_dict.update({'oper_status': groups['state']})
+                state = groups['state']
+                if 'up' not in state.lower():
+                    state = 'down'
+                interface_dict.update({'oper_status': state})
                 continue
 
             # IP address:                 10.1.2.1/24
