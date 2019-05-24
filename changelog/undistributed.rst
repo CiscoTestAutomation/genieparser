@@ -197,4 +197,4 @@
 * IOSXE
     * Added ShowIpArp for:
         show ip arp
-        show ip arp vrf <vrf>
+        show ip arp vrf {vrf}

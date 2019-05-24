@@ -112,7 +112,7 @@ class ShowArp(ShowArpSchema):
         return ret_dict
 
 # =====================================
-# Parser for 'show ip arp'
+# Parser for 'show ip arp, show ip arp vrf <vrf>'
 # =====================================
 class ShowIpArp(ShowArp):
     """Parser for 'show ip arp,  show ip arp vrf <vrf>"""
