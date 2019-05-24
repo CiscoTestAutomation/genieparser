@@ -8,11 +8,12 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from genie.libs.parser.ios.show_vrf import ShowVrfDetail
+from genie.libs.parser.ios.show_vrf import ShowVrfDetail, ShowVrf
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-
+#iosxe unit test
+from genie.libs.parser.iosxe.tests.test_show_vrf import test_show_vrf as test_show_vrf_xe
  
 # ================================
 #  Unit test for 'show vrf detail'
@@ -34,11 +35,13 @@ class test_show_vrf_detail(unittest.TestCase):
                                                                                   'rt_type': 'both'}},
                                                       'table_id': '0x1E000001',
                                                       'vrf_label': {'allocation_mode': 'per-prefix'}}},
+                  'cli_format': 'New',
                   'flags': '0x180C',
                   'interfaces': ['Loopback1', 'GigabitEthernet0/4.200'],
                   'interface': {'Loopback1': {'vrf': 'VRF1'},
                                 'GigabitEthernet0/4.200': {'vrf': 'VRF1'}},
                   'route_distinguisher': '100:1',
+                  'support_af': 'multiple address-families',
                   'vrf_id': 1},
          'VRF2': {'address_family': {'ipv4 unicast': {'flags': '0x0',
                                                       'table_id': '0x2',
@@ -46,7 +49,9 @@ class test_show_vrf_detail(unittest.TestCase):
                                      'ipv6 unicast': {'flags': '0x0',
                                                       'table_id': '0x1E000002',
                                                       'vrf_label': {'allocation_mode': 'per-prefix'}}},
+                  'cli_format': 'New',
                   'flags': '0x1808',
+                  'support_af': 'multiple address-families',
                   'vrf_id': 2}
     }
 
@@ -120,6 +125,25 @@ class test_show_vrf_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+class test_show_vrf(test_show_vrf_xe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVrf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_vrf(self):
+        self.device = Mock(**self.golden_output_vrf)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
 
 if __name__ == '__main__':
     unittest.main()
