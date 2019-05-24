@@ -1440,10 +1440,10 @@ class test_show_ip_bgp_all(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 
-# =========================
+# ==============================================================================
 # Unit test for:
 #   * 'show ip bgp vpnv4 rd {rd_export} neighbors {neighbor} advertised-routes'
-# =========================
+# ==============================================================================
 class test_show_ip_bgp_rd_neighbors_advertised_routes(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -2431,10 +2431,10 @@ class test_show_bgp_all_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
-# ===============================================
+# ====================================================
 # Unit test for:
-#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
-# ===============================================
+#   * 'show ip bgp {address_family} vrf {vrf} {route}'
+# ====================================================
 class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -2493,14 +2493,14 @@ class test_show_ip_bgp_vrf_neighbor(unittest.TestCase):
         obj = ShowIpBgpVrfNeighbor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf='CE1test', 
-                neighbor='172.32.0.0/24', address_family='vpnv4')
+                route='172.32.0.0/24', address_family='vpnv4')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpBgpVrfNeighbor(device=self.device)
         parsed_output = obj.parse(vrf='CE1test', 
-                neighbor='172.32.0.0/24', address_family='vpnv4')
+                route='172.32.0.0/24', address_family='vpnv4')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
         
 # ============================

@@ -94,6 +94,7 @@ IOSXE parsers for the following show commands:
     * show ip bgp all dampening parameters
 
     * show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes
+    * show ip bgp {address_family} vrf {vrf} {route}
 '''
 
 # Python
@@ -3864,17 +3865,17 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
 
 # =======================================================
 # Parser for:
-#   * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+#   * 'show ip bgp {address_family} vrf {vrf} {route}'
 # =======================================================
 class ShowIpBgpVrfNeighbor(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
     ''' Parser for:
-        * 'show ip bgp {address_family} vrf {vrf} {neighbor}'
+        * 'show ip bgp {address_family} vrf {vrf} {route}'
     '''
-    cli_command = 'show ip bgp {address_family} vrf {vrf} {neighbor}'
-    def cli(self, vrf, neighbor, address_family ,output=None):
+    cli_command = 'show ip bgp {address_family} vrf {vrf} {route}'
+    def cli(self, vrf, route, address_family ,output=None):
 
         if output is None:
-            cmd = self.cli_command.format(vrf=vrf, neighbor=neighbor,
+            cmd = self.cli_command.format(vrf=vrf, route=route,
                 address_family=address_family)
             # Execute command
             show_output = self.device.execute(cmd)
