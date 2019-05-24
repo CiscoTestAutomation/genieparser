@@ -19,5 +19,5 @@ class ShowVrfDetail(ShowVrfDetail_iosxe):
     pass
 
 class ShowVrf(ShowVrf_iosxe):
-    """Parser for show vrf detail"""
+    """Parser for show vrf"""
     pass
