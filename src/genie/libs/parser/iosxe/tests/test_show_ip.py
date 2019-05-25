@@ -37,11 +37,11 @@ class test_show_ip_alias(unittest.TestCase):
                 'index': {
                     1: {
                         'address_type': 'Interface',
-                        'ip_address': '106.162.197.94',
+                        'ip_address': '10.169.197.94',
                     },
                     2: {
                         'address_type': 'Interface',
-                        'ip_address': '106.162.197.254',
+                        'ip_address': '10.169.197.254',
                     },
                     3: {
                         'address_type': 'Interface',
@@ -69,7 +69,7 @@ class test_show_ip_alias(unittest.TestCase):
                     },
                     9: {
                         'address_type': 'Interface',
-                        'ip_address': '192.255.255.254',
+                        'ip_address': '192.168.144.254',
                     },
                 },
             },
@@ -80,15 +80,15 @@ class test_show_ip_alias(unittest.TestCase):
         '''
         show ip aliases
         Address Type             IP Address      Port
-        Interface                106.162.197.94
-        Interface                106.162.197.254
+        Interface                10.169.197.94
+        Interface                10.169.197.254
         Interface                172.16.1.56
         Interface                192.168.10.254
         Interface                192.168.10.254
         Interface                192.168.10.254
         Interface                192.168.10.254
         Interface                192.168.10.254
-        Interface                192.255.255.254
+        Interface                192.168.144.254
         '''
     }
 
@@ -99,11 +99,11 @@ class test_show_ip_alias(unittest.TestCase):
                 'index': {
                     1: {
                         'address_type': 'Interface',
-                        'ip_address': '106.162.197.94',
+                        'ip_address': '10.169.197.94',
                     },
                     2: {
                         'address_type': 'Interface',
-                        'ip_address': '106.162.197.254',
+                        'ip_address': '10.169.197.254',
                     },
                     3: {
                         'address_type': 'Interface',
@@ -131,7 +131,7 @@ class test_show_ip_alias(unittest.TestCase):
                     },
                     9: {
                         'address_type': 'Interface',
-                        'ip_address': '192.255.255.254',
+                        'ip_address': '192.168.144.254',
                     },
                 },
             },
@@ -142,15 +142,15 @@ class test_show_ip_alias(unittest.TestCase):
         '''
         show ip aliases default-vrf
         Address Type             IP Address      Port
-        Interface                106.162.197.94
-        Interface                106.162.197.254
+        Interface                10.169.197.94
+        Interface                10.169.197.254
         Interface                172.16.1.56
         Interface                192.168.10.254
         Interface                192.168.10.254
         Interface                192.168.10.254
         Interface                192.168.10.254
         Interface                192.168.10.254
-        Interface                192.255.255.254
+        Interface                192.168.144.254
         '''
     }
 

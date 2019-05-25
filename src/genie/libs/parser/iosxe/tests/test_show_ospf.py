@@ -348,7 +348,7 @@ class test_show_ip_ospf(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'instance': {
-                            '9996': {
+                            '65109': {
                                 'adjacency_stagger': {
                                     'initial_number': 300,
                                     'maximum_number': 300
@@ -421,7 +421,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                 },
                                 'opqaue_lsa': True,
                                 'retransmission_pacing_timer': 66,
-                                'router_id': '106.162.197.254',
+                                'router_id': '10.169.197.254',
                                 'spf_control': {
                                     'incremental_spf': False,
                                     'throttle': {
@@ -461,9 +461,9 @@ class test_show_ip_ospf(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         R1_ospf_xe#show ip ospf 
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 23:17:46.919 JST Fri May 3 2019
+        Time source is NTP, 23:17:46.919 EST Fri May 3 2019
 
-         Routing Process "ospf 9996" with ID 106.162.197.254
+         Routing Process "ospf 65109" with ID 10.169.197.254
          Start time: 00:02:39.151, Time elapsed: 13:07:02.634
          Supports only single TOS(TOS0) routes
          Supports opaque LSA
