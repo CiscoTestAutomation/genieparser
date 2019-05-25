@@ -2280,7 +2280,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z]+(\d+\/)+\d+\.?\d*)')
+        p1 = re.compile(r'^\s*(?P<interface>\S+)\s*$')
         p2 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<pkts_in>\d+)\s+'
                          '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
                          '(?P<chars_out>\d+)')
