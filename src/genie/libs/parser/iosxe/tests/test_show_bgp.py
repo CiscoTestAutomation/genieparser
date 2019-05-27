@@ -5870,7 +5870,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
     golden_parsed_output3={
     'bgp_id': 9996,
     'vrf': {
-        'default': {
+        'CE1test': {
             'neighbor': {
                 '192.168.10.253': {
                     'address_family': {
@@ -5967,8 +5967,6 @@ class test_show_bgp_all_summary(unittest.TestCase):
         f.write( str(format_output(parsed_output)) )
         f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
-
-
 
 # =================================================
 # Unit test for

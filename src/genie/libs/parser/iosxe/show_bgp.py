@@ -1793,7 +1793,8 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             if m:
                 # Save variables for use later
                 address_family = m.groupdict()['address_family'].lower()
-                vrf = 'default'
+                if not vrf:
+                    vrf = 'default'
                 attribute_entries = ""
                 num_prefix_entries = ""
                 path_total_entries = ""
@@ -2131,7 +2132,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family, vrf=vrf)
 
 # =====================================================
 # Parser for:
