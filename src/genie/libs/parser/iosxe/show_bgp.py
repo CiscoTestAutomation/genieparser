@@ -1545,6 +1545,7 @@ class ShowBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 # Parser for:
 #   * 'show ip bgp {address_family} vrf {vrf} detail'
 #   * 'show ip bgp {address_family} rd {rd} detail'
+#   * 'show ip bgp {address_family} rd {rd} {route}'
 # ====================================================
 class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
