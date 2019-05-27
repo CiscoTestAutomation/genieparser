@@ -3009,6 +3009,7 @@ class test_show_bgp_detail(unittest.TestCase):
 # Unit test for:
 #   * 'show ip bgp {address_family} rd {rd} detail'
 #   * 'show ip bgp {address_family} vrf {vrf} detail'
+#   * 'show ip bgp {address_family} rd {rd} {route}'
 # ====================================================
 class test_show_ip_bgp_detail(unittest.TestCase):
 
@@ -5022,6 +5023,63 @@ class test_show_ip_bgp_detail(unittest.TestCase):
               rx pathid: 0, tx pathid: 0x0
         '''}
 
+    golden_output3 = {'execute.return_value':'''
+    BGP routing table entry for 9996:4093:11.11.11.11/32, version 6195
+Paths: (1 available, best #1, no table)
+  Advertised to update-groups:
+     17         18
+  Refresh Epoch 9
+  65555, (Received from a RR-client)
+    106.162.197.254 (metric 1002) (via default) from 106.162.197.254 (106.162.197.254)
+      Origin incomplete, metric 0, localpref 100, valid, internal, best
+      Community: 62000:1
+      Extended Community: RT:9996:4093
+      mpls labels in/out nolabel/584
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    golden_parsed_output3 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'vpnv4': {
+                                'prefixes': {
+                                    '11.11.11.11/32': {
+                                        'table_version': '6195',
+                                        'available_path': '1',
+                                        'best_path': '1',
+                                        'paths': '1 available, best #1, no table',
+                                        'index': {
+                                            1: {
+                                                'next_hop': '106.162.197.254',
+                                                'gateway': '106.162.197.254',
+                                                'originator': '106.162.197.254',
+                                                'next_hop_igp_metric': '1002',
+                                                'next_hop_via': 'default',
+                                                'localpref': 100,
+                                                'metric': 0,
+                                                'origin_codes': '?',
+                                                'status_codes': '*>',
+                                                'refresh_epoch': 9,
+                                                'route_info': '65555, (Received from a RR-client)',
+                                                'community': '62000:1',
+                                                'evpn': {
+                                                    'ext_community': 'RT:9996:4093',
+                                                    },
+                                                'recipient_pathid': '0',
+                                                'transfer_pathid': '0x0',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
     def test_show_bgp_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpDetail(device=self.device)
@@ -5041,6 +5099,14 @@ class test_show_ip_bgp_detail(unittest.TestCase):
         obj = ShowIpBgpDetail(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', vrf='L3VPN-0050')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_all_detail_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpBgpDetail(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093',
+            route='11.11.11.11/32')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 
 #-------------------------------------------------------------------------------

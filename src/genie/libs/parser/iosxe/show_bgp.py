@@ -97,7 +97,8 @@ IOSXE parsers for the following show commands:
     * show ip bgp {address_family} vrf {vrf} {route}
 
     * show bgp vrf {vrf} all summary
-    * show bgp vrf {vrf_name} {route}
+    * show bgp vrf {vrf} {route}
+    * show ip bgp {address_family} rd {rd} {route}
 '''
 
 # Python
@@ -1550,19 +1551,24 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
     ''' Parser for:
         * 'show ip bgp {address_family} vrf {vrf} detail'
         * 'show ip bgp {address_family} rd {rd} detail'
+        * 'show ip bgp {address_family} rd {rd} {route}'
     '''
 
     cli_command = ['show ip bgp {address_family} vrf {vrf} detail',
                    'show ip bgp {address_family} rd {rd} detail',
+                   'show ip bgp {address_family} rd {rd} {route}'
                    ]
 
-    def cli(self, address_family='', vrf='', rd='', output=None):
+    def cli(self, address_family='', vrf='', rd='', route='', output=None):
 
         # Init dict
         ret_dict = {}
 
         if output is None:
-            if address_family and vrf:
+            if address_family and rd and route:
+                cmd = self.cli_command[2].format(address_family=address_family,
+                                                 rd=rd, route=route)
+            elif address_family and vrf:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
             elif address_family and rd:
