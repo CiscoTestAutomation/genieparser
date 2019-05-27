@@ -1438,24 +1438,24 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
 # ======================================
 # Parser for:
 #   * 'show bgp all detail'
-#   * 'show bgp vrf {vrf_name} {route}'
+#   * 'show bgp vrf {vrf} {route}'
 # =====================================
 class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
     ''' Parser for:
         * 'show bgp all detail'
-        * 'show bgp vrf {vrf_name} {route}'
+        * 'show bgp vrf {vrf} {route}'
     '''
 
     cli_command = ['show bgp all detail',
-                    'show bgp vrf {vrf_name} {route}'
+                    'show bgp vrf {vrf} {route}'
                    ]
 
     def cli(self, vrf='', route='',output=None):
 
         if output is None:
             if vrf and route:
-                cmd = self.cli_command[1].format(vrf_name=vrf,
+                cmd = self.cli_command[1].format(vrf=vrf,
                     route=route)
             else:
                 cmd = self.cli_command[0]
