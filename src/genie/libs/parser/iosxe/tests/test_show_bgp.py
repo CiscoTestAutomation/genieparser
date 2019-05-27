@@ -4972,10 +4972,11 @@ class test_show_ip_bgp_detail(unittest.TestCase):
 #-------------------------------------------------------------------------------
 
 
-# ==========================
+# =========================================
 # Unit test for
 #   * 'show bgp all summary'
-# ==========================
+#   * 'show bgp vrf {vrf} all summary'
+# =========================================
 class test_show_bgp_all_summary(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -5821,7 +5822,120 @@ class test_show_bgp_all_summary(unittest.TestCase):
         2001:DB8:20:4:6::6
                 4          400      67      73       66    0    0 01:03:11        5
             '''}
+    golden_output3 = {'execute.return_value' : '''
+            For address family: IPv4 Unicast
 
+
+
+
+
+        For address family: VPNv4 Unicast
+
+        BGP router identifier 192.168.10.254, local AS number 9996
+
+        BGP table version is 189, main routing table version 189
+
+        25 network entries using 6400 bytes of memory
+
+        38 path entries using 5168 bytes of memory
+
+        110/106 BGP path/bestpath attribute entries using 32560 bytes of memory
+
+        1 BGP rrinfo entries using 40 bytes of memory
+
+        1 BGP AS-PATH entries using 24 bytes of memory
+
+        2 BGP community entries using 48 bytes of memory
+
+        102 BGP extended community entries using 3248 bytes of memory
+
+        0 BGP route-map cache entries using 0 bytes of memory
+
+        0 BGP filter-list cache entries using 0 bytes of memory
+
+        BGP using 47488 total bytes of memory
+
+        BGP activity 226/0 prefixes, 339/0 paths, scan interval 60 secs
+
+
+
+        Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+
+        192.168.10.253  4        65555      20      12      189    0    0 00:03:52       13
+
+
+
+        For address family: IPv4 Flowspec
+    '''}
+    golden_parsed_output3= {
+    'bgp_id': 9996,
+    'vrf': {
+        'default': {
+            'neighbor': {
+                '192.168.10.253': {
+                    'address_family': {
+                        'vpnv4 unicast': {
+                            'version': 4,
+                            'as': 65555,
+                            'msg_rcvd': 20,
+                            'msg_sent': 12,
+                            'tbl_ver': 189,
+                            'input_queue': 0,
+                            'output_queue': 0,
+                            'up_down': '00:03:52',
+                            'state_pfxrcd': '13',
+                            'route_identifier': '192.168.10.254',
+                            'local_as': 9996,
+                            'bgp_table_version': 189,
+                            'routing_table_version': 189,
+                            'attribute_entries': '110/106',
+                            'prefixes': {
+                                'total_entries': 25,
+                                'memory_usage': 6400,
+                                },
+                            'path': {
+                                'total_entries': 38,
+                                'memory_usage': 5168,
+                                },
+                            'total_memory': 47488,
+                            'activity_prefixes': '226/0',
+                            'activity_paths': '339/0',
+                            'scan_interval': 60,
+                            'cache_entries': {
+                                'route-map': {
+                                    'total_entries': 0,
+                                    'memory_usage': 0,
+                                    },
+                                'filter-list': {
+                                    'total_entries': 0,
+                                    'memory_usage': 0,
+                                    },
+                                },
+                            'entries': {
+                                'rrinfo': {
+                                    'total_entries': 1,
+                                    'memory_usage': 40,
+                                    },
+                                'AS-PATH': {
+                                    'total_entries': 1,
+                                    'memory_usage': 24,
+                                    },
+                                'community': {
+                                    'total_entries': 2,
+                                    'memory_usage': 48,
+                                    },
+                                },
+                            'community_entries': {
+                                'total_entries': 102,
+                                'memory_usage': 3248,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_show_bgp_all_summary_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpAllSummary(device=self.device1)
@@ -5841,6 +5955,14 @@ class test_show_bgp_all_summary(unittest.TestCase):
         obj = ShowBgpAllSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_all_summary_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
 
 
 # =================================================
