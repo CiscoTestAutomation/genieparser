@@ -24,296 +24,363 @@ class test_show_interface(unittest.TestCase):
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'GigabitEthernet0/0/0/0': {'auto_negotiate': False,
-                            'bandwidth': 768,
-                            'carrier_delay': '10',
-                            'counters': {'carrier_transitions': 0,
-                                         'in_abort': 0,
-                                         'in_broadcast_pkts': 0,
-                                         'in_crc_errors': 0,
-                                         'in_discards': 0,
-                                         'in_frame': 0,
-                                         'in_frame_errors': 0,
-                                         'in_giants': 0,
-                                         'in_ignored': 0,
-                                         'in_multicast_pkts': 0,
-                                         'in_octets': 0,
-                                         'in_overrun': 0,
-                                         'in_parity': 0,
-                                         'in_pkts': 0,
-                                         'in_runts': 0,
-                                         'in_throttles': 0,
-                                         'in_unknown_protos': 0,
-                                         'last_clear': 'never',
-                                         'out_applique': 0,
-                                         'out_broadcast_pkts': 0,
-                                         'out_buffer_failures': 0,
-                                         'out_buffer_swapped_out': 0,
-                                         'out_discards': 0,
-                                         'out_errors': 0,
-                                         'out_multicast_pkts': 0,
-                                         'out_octets': 0,
-                                         'out_pkts': 0,
-                                         'out_resets': 0,
-                                         'out_underruns': 0,
-                                         'rate': {'in_rate': 0,
-                                                  'in_rate_pkts': 0,
-                                                  'load_interval': 30,
-                                                  'out_rate': 0,
-                                                  'out_rate_pkts': 0}},
-                            'description': 'desc',
-                            'duplex_mode': 'full',
-                            'enabled': False,
-                            'encapsulations': {'encapsulation': 'arpa'},
-                            'flow_control': {'flow_control_receive': False,
-                                             'flow_control_send': False},
-                            'interface_state': 0,
-                            'ipv4': {'10.1.1.1/24': {'ip': '10.1.1.1',
-                                                     'prefix_length': '24'}},
-                            'last_input': 'never',
-                            'last_output': 'never',
-                            'line_protocol': 'administratively down',
-                            'oper_status': 'down',
-                            'location': 'unknown',
-                            'mac_address': 'aaaa.bbbb.cccc',
-                            'mtu': 1600,
-                            'phys_address': '5254.0077.9407',
-                            'port_speed': '1000Mb/s',
-                            'reliability': '255/255',
-                            'rxload': '0/255',
-                            'txload': '0/255',
-                            'types': 'gigabitethernet'},
- 'GigabitEthernet0/0/0/0.10': {'bandwidth': 768,
-                               'counters': {'in_broadcast_pkts': 0,
-                                            'in_discards': 0,
-                                            'in_multicast_pkts': 0,
-                                            'in_octets': 0,
-                                            'in_pkts': 0,
-                                            'in_unknown_protos': 0,
-                                            'last_clear': 'never',
-                                            'out_broadcast_pkts': 0,
-                                            'out_discards': 0,
-                                            'out_multicast_pkts': 0,
-                                            'out_octets': 0,
-                                            'out_pkts': 0,
-                                            'rate': {'in_rate': 0,
-                                                     'in_rate_pkts': 0,
-                                                     'load_interval': 300,
-                                                     'out_rate': 0,
-                                                     'out_rate_pkts': 0}},
-                               'enabled': False,
-                               'encapsulations': {'encapsulation': '802.1q '
-                                                                   'virtual '
-                                                                   'lan',
-                                                  'first_dot1q': '10',
-                                                  'second_dot1q': '10'},
-                               'interface_state': 0,
-                               'last_input': 'never',
-                               'last_output': 'never',
-                               'line_protocol': 'administratively down',
-                               'oper_status': 'down',
-                               'mac_address': 'aaaa.bbbb.cccc',
-                               'mtu': 1608,
-                               'reliability': '255/255',
-                               'rxload': '0/255',
-                               'txload': '0/255',
-                               'types': 'vlan sub-(s)'},
- 'GigabitEthernet0/0/0/0.20': {'bandwidth': 768,
-                               'counters': {'in_broadcast_pkts': 0,
-                                            'in_discards': 0,
-                                            'in_multicast_pkts': 0,
-                                            'in_octets': 0,
-                                            'in_pkts': 0,
-                                            'in_unknown_protos': 0,
-                                            'last_clear': 'never',
-                                            'out_broadcast_pkts': 0,
-                                            'out_discards': 0,
-                                            'out_multicast_pkts': 0,
-                                            'out_octets': 0,
-                                            'out_pkts': 0,
-                                            'rate': {'in_rate': 0,
-                                                     'in_rate_pkts': 0,
-                                                     'load_interval': 300,
-                                                     'out_rate': 0,
-                                                     'out_rate_pkts': 0}},
-                               'enabled': False,
-                               'encapsulations': {'encapsulation': '802.1q '
-                                                                   'virtual '
-                                                                   'lan',
-                                                  'first_dot1q': '20'},
-                               'interface_state': 0,
-                               'last_input': 'never',
-                               'last_output': 'never',
-                               'line_protocol': 'administratively down',
-                               'oper_status': 'down',
-                               'mac_address': 'aaaa.bbbb.cccc',
-                               'mtu': 1604,
-                               'reliability': '255/255',
-                               'rxload': '0/255',
-                               'txload': '0/255',
-                               'types': 'vlan sub-(s)'},
- 'GigabitEthernet0/0/0/1': {'arp_timeout': '04:00:00',
-                            'arp_type': 'arpa',
-                            'auto_negotiate': False,
-                            'bandwidth': 1000000,
-                            'carrier_delay': '10',
-                            'counters': {'carrier_transitions': 1,
-                                         'in_abort': 0,
-                                         'in_broadcast_pkts': 0,
-                                         'in_crc_errors': 0,
-                                         'in_discards': 0,
-                                         'in_frame': 0,
-                                         'in_frame_errors': 0,
-                                         'in_giants': 0,
-                                         'in_ignored': 0,
-                                         'in_multicast_pkts': 29056,
-                                         'in_octets': 18221418,
-                                         'in_overrun': 0,
-                                         'in_parity': 0,
-                                         'in_pkts': 146164,
-                                         'in_runts': 0,
-                                         'in_throttles': 0,
-                                         'in_unknown_protos': 0,
-                                         'last_clear': 'never',
-                                         'out_applique': 0,
-                                         'out_broadcast_pkts': 2,
-                                         'out_buffer_failures': 0,
-                                         'out_buffer_swapped_out': 0,
-                                         'out_discards': 0,
-                                         'out_errors': 0,
-                                         'out_multicast_pkts': 6246,
-                                         'out_octets': 10777610,
-                                         'out_pkts': 123696,
-                                         'out_resets': 0,
-                                         'out_underruns': 0,
-                                         'rate': {'in_rate': 0,
-                                                  'in_rate_pkts': 0,
-                                                  'load_interval': 300,
-                                                  'out_rate': 0,
-                                                  'out_rate_pkts': 0}},
-                            'duplex_mode': 'full',
-                            'enabled': True,
-                            'encapsulations': {'encapsulation': 'arpa'},
-                            'flow_control': {'flow_control_receive': False,
-                                             'flow_control_send': False},
-                            'interface_state': 1,
-                            'ipv4': {'10.1.5.1/24': {'ip': '10.1.5.1',
-                                                     'prefix_length': '24'}},
-                            'last_input': '00:01:09',
-                            'last_link_flapped': '1w5d',
-                            'last_output': '00:01:09',
-                            'line_protocol': 'up',
-                            'oper_status': 'up',
-                            'location': 'unknown',
-                            'mac_address': '5254.0078.ebe0',
-                            'mtu': 1514,
-                            'phys_address': '5254.0078.ebe0',
-                            'port_speed': '1000Mb/s',
-                            'reliability': '255/255',
-                            'rxload': '0/255',
-                            'txload': '0/255',
-                            'types': 'gigabitethernet'},
- 'MgmtEth0/0/CPU0/0': {'auto_negotiate': True,
-                       'bandwidth': 0,
-                       'carrier_delay': '10',
-                       'counters': {'carrier_transitions': 0,
-                                    'in_abort': 0,
-                                    'in_broadcast_pkts': 0,
-                                    'in_crc_errors': 0,
-                                    'in_discards': 0,
-                                    'in_frame': 0,
-                                    'in_frame_errors': 0,
-                                    'in_giants': 0,
-                                    'in_ignored': 0,
-                                    'in_multicast_pkts': 0,
-                                    'in_octets': 0,
-                                    'in_overrun': 0,
-                                    'in_parity': 0,
-                                    'in_pkts': 0,
-                                    'in_runts': 0,
-                                    'in_throttles': 0,
-                                    'in_unknown_protos': 0,
-                                    'last_clear': 'never',
-                                    'out_applique': 0,
-                                    'out_broadcast_pkts': 0,
-                                    'out_buffer_failures': 0,
-                                    'out_buffer_swapped_out': 0,
-                                    'out_discards': 0,
-                                    'out_errors': 0,
-                                    'out_multicast_pkts': 0,
-                                    'out_octets': 0,
-                                    'out_pkts': 0,
-                                    'out_resets': 0,
-                                    'out_underruns': 0,
-                                    'rate': {'in_rate': 0,
-                                             'in_rate_pkts': 0,
-                                             'load_interval': 300,
-                                             'out_rate': 0,
-                                             'out_rate_pkts': 0}},
-                       'duplex_mode': 'duplex unknown',
-                       'enabled': False,
-                       'encapsulations': {'encapsulation': 'arpa'},
-                       'flow_control': {'flow_control_receive': False,
-                                        'flow_control_send': False},
-                       'interface_state': 0,
-                       'last_input': 'never',
-                       'last_output': 'never',
-                       'line_protocol': 'administratively down',
-                       'oper_status': 'down',
-                       'location': 'unknown',
-                       'mac_address': '5254.00c3.6c43',
-                       'mtu': 1514,
-                       'phys_address': '5254.00c3.6c43',
-                       'port_speed': '0',
-                       'reliability': '255/255',
-                       'rxload': 'unknown',
-                       'txload': 'unknown',
-                       'types': 'management ethernet'},
-'Loopback0': {'bandwidth': 0,
-              'description': 'loopback0 BGP test',
-              'enabled': True,
-              'encapsulations': {'encapsulation': 'loopback'},
-              'interface_state': 1,
-              'ipv4': {'10.255.20.81/32': {'ip': '10.255.20.81',
-                                           'prefix_length': '32'}},
-              'last_input': 'Unknown',
-              'last_link_flapped': '13:45:11',
-              'last_output': 'Unknown',
-              'line_protocol': 'up',
-              'mtu': 1500,
-              'oper_status': 'up',
-              'reliability': 'Unknown',
-              'rxload': 'unknown',
-              'txload': 'unknown'},
- 'Null0': {'bandwidth': 0,
-           'counters': {'in_broadcast_pkts': 0,
-                        'in_discards': 0,
-                        'in_multicast_pkts': 0,
-                        'in_octets': 0,
-                        'in_pkts': 0,
-                        'in_unknown_protos': 0,
-                        'last_clear': 'never',
-                        'out_broadcast_pkts': 0,
-                        'out_discards': 0,
-                        'out_multicast_pkts': 0,
-                        'out_octets': 0,
-                        'out_pkts': 0,
-                        'rate': {'in_rate': 0,
-                                 'in_rate_pkts': 0,
-                                 'load_interval': 300,
-                                 'out_rate': 0,
-                                 'out_rate_pkts': 0}},
-           'enabled': True,
-           'encapsulations': {'encapsulation': 'null'},
-           'last_input': 'never',
-           'last_output': 'never',
-           'line_protocol': 'up',
-           'oper_status': 'up',
-           'mtu': 1500,
-           'reliability': '255/255',
-           'rxload': 'unknown',
-           'txload': 'unknown',
-           'types': 'null'}}
+    golden_parsed_output = {
+        'GigabitEthernet0/0/0/0': {
+            'auto_negotiate': False,
+            'bandwidth': 768,
+            'carrier_delay': '10',
+            'counters': {'carrier_transitions': 0,
+                         'in_abort': 0,
+                         'in_broadcast_pkts': 0,
+                         'in_crc_errors': 0,
+                         'in_discards': 0,
+                         'in_frame': 0,
+                         'in_frame_errors': 0,
+                         'in_giants': 0,
+                         'in_ignored': 0,
+                         'in_multicast_pkts': 0,
+                         'in_octets': 0,
+                         'in_overrun': 0,
+                         'in_parity': 0,
+                         'in_pkts': 0,
+                         'in_runts': 0,
+                         'in_throttles': 0,
+                         'in_unknown_protos': 0,
+                         'last_clear': 'never',
+                         'out_applique': 0,
+                         'out_broadcast_pkts': 0,
+                         'out_buffer_failures': 0,
+                         'out_buffer_swapped_out': 0,
+                         'out_discards': 0,
+                         'out_errors': 0,
+                         'out_multicast_pkts': 0,
+                         'out_octets': 0,
+                         'out_pkts': 0,
+                         'out_resets': 0,
+                         'out_underruns': 0,
+                         'rate': {'in_rate': 0,
+                                  'in_rate_pkts': 0,
+                                  'load_interval': 30,
+                                  'out_rate': 0,
+                                  'out_rate_pkts': 0}},
+            'description': 'desc',
+            'duplex_mode': 'full',
+            'enabled': False,
+            'encapsulations': {'encapsulation': 'arpa'},
+            'flow_control': {'flow_control_receive': False,
+                             'flow_control_send': False},
+            'interface_state': 0,
+            'ipv4': {'10.1.1.1/24': {'ip': '10.1.1.1',
+                                     'prefix_length': '24'}},
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'administratively down',
+            'oper_status': 'down',
+            'location': 'unknown',
+            'mac_address': 'aaaa.bbbb.cccc',
+            'mtu': 1600,
+            'phys_address': '5254.0077.9407',
+            'port_speed': '1000Mb/s',
+            'reliability': '255/255',
+            'rxload': '0/255',
+            'txload': '0/255',
+            'types': 'gigabitethernet'},
+        'GigabitEthernet0/0/0/0.10': {'bandwidth': 768,
+                                      'counters': {'in_broadcast_pkts': 0,
+                                                   'in_discards': 0,
+                                                   'in_multicast_pkts': 0,
+                                                   'in_octets': 0,
+                                                   'in_pkts': 0,
+                                                   'in_unknown_protos': 0,
+                                                   'last_clear': 'never',
+                                                   'out_broadcast_pkts': 0,
+                                                   'out_discards': 0,
+                                                   'out_multicast_pkts': 0,
+                                                   'out_octets': 0,
+                                                   'out_pkts': 0,
+                                                   'rate': {'in_rate': 0,
+                                                            'in_rate_pkts': 0,
+                                                            'load_interval': 300,
+                                                            'out_rate': 0,
+                                                            'out_rate_pkts': 0}},
+                                      'enabled': False,
+                                      'encapsulations': {'encapsulation': '802.1q '
+                                                                          'virtual '
+                                                                          'lan',
+                                                         'first_dot1q': '10',
+                                                         'second_dot1q': '10'},
+                                      'interface_state': 0,
+                                      'last_input': 'never',
+                                      'last_output': 'never',
+                                      'line_protocol': 'administratively down',
+                                      'oper_status': 'down',
+                                      'mac_address': 'aaaa.bbbb.cccc',
+                                      'mtu': 1608,
+                                      'reliability': '255/255',
+                                      'rxload': '0/255',
+                                      'txload': '0/255',
+                                      'types': 'vlan sub-(s)'},
+        'GigabitEthernet0/0/0/0.20': {'bandwidth': 768,
+                                      'counters': {'in_broadcast_pkts': 0,
+                                                   'in_discards': 0,
+                                                   'in_multicast_pkts': 0,
+                                                   'in_octets': 0,
+                                                   'in_pkts': 0,
+                                                   'in_unknown_protos': 0,
+                                                   'last_clear': 'never',
+                                                   'out_broadcast_pkts': 0,
+                                                   'out_discards': 0,
+                                                   'out_multicast_pkts': 0,
+                                                   'out_octets': 0,
+                                                   'out_pkts': 0,
+                                                   'rate': {'in_rate': 0,
+                                                            'in_rate_pkts': 0,
+                                                            'load_interval': 300,
+                                                            'out_rate': 0,
+                                                            'out_rate_pkts': 0}},
+                                      'enabled': False,
+                                      'encapsulations': {'encapsulation': '802.1q '
+                                                                          'virtual '
+                                                                          'lan',
+                                                         'first_dot1q': '20'},
+                                      'interface_state': 0,
+                                      'last_input': 'never',
+                                      'last_output': 'never',
+                                      'line_protocol': 'administratively down',
+                                      'oper_status': 'down',
+                                      'mac_address': 'aaaa.bbbb.cccc',
+                                      'mtu': 1604,
+                                      'reliability': '255/255',
+                                      'rxload': '0/255',
+                                      'txload': '0/255',
+                                      'types': 'vlan sub-(s)'},
+        'GigabitEthernet0/0/0/1': {'arp_timeout': '04:00:00',
+                                   'arp_type': 'arpa',
+                                   'auto_negotiate': False,
+                                   'bandwidth': 1000000,
+                                   'carrier_delay': '10',
+                                   'counters': {'carrier_transitions': 1,
+                                                'in_abort': 0,
+                                                'in_broadcast_pkts': 0,
+                                                'in_crc_errors': 0,
+                                                'in_discards': 0,
+                                                'in_frame': 0,
+                                                'in_frame_errors': 0,
+                                                'in_giants': 0,
+                                                'in_ignored': 0,
+                                                'in_multicast_pkts': 29056,
+                                                'in_octets': 18221418,
+                                                'in_overrun': 0,
+                                                'in_parity': 0,
+                                                'in_pkts': 146164,
+                                                'in_runts': 0,
+                                                'in_throttles': 0,
+                                                'in_unknown_protos': 0,
+                                                'last_clear': 'never',
+                                                'out_applique': 0,
+                                                'out_broadcast_pkts': 2,
+                                                'out_buffer_failures': 0,
+                                                'out_buffer_swapped_out': 0,
+                                                'out_discards': 0,
+                                                'out_errors': 0,
+                                                'out_multicast_pkts': 6246,
+                                                'out_octets': 10777610,
+                                                'out_pkts': 123696,
+                                                'out_resets': 0,
+                                                'out_underruns': 0,
+                                                'rate': {'in_rate': 0,
+                                                         'in_rate_pkts': 0,
+                                                         'load_interval': 300,
+                                                         'out_rate': 0,
+                                                         'out_rate_pkts': 0}},
+                                   'duplex_mode': 'full',
+                                   'enabled': True,
+                                   'encapsulations': {'encapsulation': 'arpa'},
+                                   'flow_control': {'flow_control_receive': False,
+                                                    'flow_control_send': False},
+                                   'interface_state': 1,
+                                   'ipv4': {'10.1.5.1/24': {'ip': '10.1.5.1',
+                                                            'prefix_length': '24'}},
+                                   'last_input': '00:01:09',
+                                   'last_link_flapped': '1w5d',
+                                   'last_output': '00:01:09',
+                                   'line_protocol': 'up',
+                                   'oper_status': 'up',
+                                   'location': 'unknown',
+                                   'mac_address': '5254.0078.ebe0',
+                                   'mtu': 1514,
+                                   'phys_address': '5254.0078.ebe0',
+                                   'port_speed': '1000Mb/s',
+                                   'reliability': '255/255',
+                                   'rxload': '0/255',
+                                   'txload': '0/255',
+                                   'types': 'gigabitethernet'},
+        'MgmtEth0/0/CPU0/0': {'auto_negotiate': True,
+                              'bandwidth': 0,
+                              'carrier_delay': '10',
+                              'counters': {'carrier_transitions': 0,
+                                           'in_abort': 0,
+                                           'in_broadcast_pkts': 0,
+                                           'in_crc_errors': 0,
+                                           'in_discards': 0,
+                                           'in_frame': 0,
+                                           'in_frame_errors': 0,
+                                           'in_giants': 0,
+                                           'in_ignored': 0,
+                                           'in_multicast_pkts': 0,
+                                           'in_octets': 0,
+                                           'in_overrun': 0,
+                                           'in_parity': 0,
+                                           'in_pkts': 0,
+                                           'in_runts': 0,
+                                           'in_throttles': 0,
+                                           'in_unknown_protos': 0,
+                                           'last_clear': 'never',
+                                           'out_applique': 0,
+                                           'out_broadcast_pkts': 0,
+                                           'out_buffer_failures': 0,
+                                           'out_buffer_swapped_out': 0,
+                                           'out_discards': 0,
+                                           'out_errors': 0,
+                                           'out_multicast_pkts': 0,
+                                           'out_octets': 0,
+                                           'out_pkts': 0,
+                                           'out_resets': 0,
+                                           'out_underruns': 0,
+                                           'rate': {'in_rate': 0,
+                                                    'in_rate_pkts': 0,
+                                                    'load_interval': 300,
+                                                    'out_rate': 0,
+                                                    'out_rate_pkts': 0}},
+                              'duplex_mode': 'duplex unknown',
+                              'enabled': False,
+                              'encapsulations': {'encapsulation': 'arpa'},
+                              'flow_control': {'flow_control_receive': False,
+                                               'flow_control_send': False},
+                              'interface_state': 0,
+                              'last_input': 'never',
+                              'last_output': 'never',
+                              'line_protocol': 'administratively down',
+                              'oper_status': 'down',
+                              'location': 'unknown',
+                              'mac_address': '5254.00c3.6c43',
+                              'mtu': 1514,
+                              'phys_address': '5254.00c3.6c43',
+                              'port_speed': '0',
+                              'reliability': '255/255',
+                              'rxload': 'unknown',
+                              'txload': 'unknown',
+                              'types': 'management ethernet'},
+        'Loopback0': {'bandwidth': 0,
+                      'description': 'loopback0 BGP test',
+                      'enabled': True,
+                      'encapsulations': {'encapsulation': 'loopback'},
+                      'interface_state': 1,
+                      'ipv4': {'10.255.20.81/32': {'ip': '10.255.20.81',
+                                                   'prefix_length': '32'}},
+                      'last_input': 'Unknown',
+                      'last_link_flapped': '13:45:11',
+                      'last_output': 'Unknown',
+                      'line_protocol': 'up',
+                      'mtu': 1500,
+                      'oper_status': 'up',
+                      'reliability': 'Unknown',
+                      'rxload': 'unknown',
+                      'txload': 'unknown'},
+        'Null0': {'bandwidth': 0,
+                  'counters': {'in_broadcast_pkts': 0,
+                               'in_discards': 0,
+                               'in_multicast_pkts': 0,
+                               'in_octets': 0,
+                               'in_pkts': 0,
+                               'in_unknown_protos': 0,
+                               'last_clear': 'never',
+                               'out_broadcast_pkts': 0,
+                               'out_discards': 0,
+                               'out_multicast_pkts': 0,
+                               'out_octets': 0,
+                               'out_pkts': 0,
+                               'rate': {'in_rate': 0,
+                                        'in_rate_pkts': 0,
+                                        'load_interval': 300,
+                                        'out_rate': 0,
+                                        'out_rate_pkts': 0}},
+                  'enabled': True,
+                  'encapsulations': {'encapsulation': 'null'},
+                  'last_input': 'never',
+                  'last_output': 'never',
+                  'line_protocol': 'up',
+                  'oper_status': 'up',
+                  'mtu': 1500,
+                  'reliability': '255/255',
+                  'rxload': 'unknown',
+                  'txload': 'unknown',
+                  'types': 'null'}}
+    golden_parsed_interface_output = {
+        'GigabitEthernet0/0/0/1': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'auto_negotiate': False,
+            'bandwidth': 1000000,
+            'carrier_delay': '10',
+            'counters': {
+                'carrier_transitions': 1,
+                'in_abort': 0,
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_discards': 0,
+                'in_frame': 0,
+                'in_frame_errors': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_multicast_pkts': 29056,
+                'in_octets': 18221418,
+                'in_overrun': 0,
+                'in_parity': 0,
+                'in_pkts': 146164,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_unknown_protos': 0,
+                'last_clear': 'never',
+                'out_applique': 0,
+                'out_broadcast_pkts': 2,
+                'out_buffer_failures': 0,
+                'out_buffer_swapped_out': 0,
+                'out_discards': 0,
+                'out_errors': 0,
+                'out_multicast_pkts': 6246,
+                'out_octets': 10777610,
+                'out_pkts': 123696,
+                'out_resets': 0,
+                'out_underruns': 0,
+                'rate': {'in_rate': 0,
+                         'in_rate_pkts': 0,
+                         'load_interval': 300,
+                         'out_rate': 0,
+                         'out_rate_pkts': 0}},
+            'duplex_mode': 'full',
+            'enabled': True,
+            'encapsulations': {'encapsulation': 'arpa'},
+            'flow_control': {'flow_control_receive': False,
+                             'flow_control_send': False},
+            'interface_state': 1,
+            'ipv4': {'10.1.5.1/24': {'ip': '10.1.5.1',
+                                     'prefix_length': '24'}},
+            'last_input': '00:01:09',
+            'last_link_flapped': '1w5d',
+            'last_output': '00:01:09',
+            'line_protocol': 'up',
+            'oper_status': 'up',
+            'location': 'unknown',
+            'mac_address': '5254.0078.ebe0',
+            'mtu': 1514,
+            'phys_address': '5254.0078.ebe0',
+            'port_speed': '1000Mb/s',
+            'reliability': '255/255',
+            'rxload': '0/255',
+            'txload': '0/255',
+            'types': 'gigabitethernet'},
+    }
 
     golden_output = {'execute.return_value': '''
         Null0 is up, line protocol is up 
@@ -465,6 +532,35 @@ class test_show_interface(unittest.TestCase):
       Input/output data rate is disabled.
     
     '''}
+    golden_interface_output={'execute.return_value':'''
+    GigabitEthernet0/0/0/1 is up, line protocol is up 
+        Interface state transitions: 1
+        Hardware is GigabitEthernet, address is 5254.0078.ebe0 (bia 5254.0078.ebe0)
+        Internet address is 10.1.5.1/24
+        MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+        Encapsulation ARPA,
+        Full-duplex, 1000Mb/s, unknown, link type is force-up
+        output flow control is off, input flow control is off
+        Carrier delay (up) is 10 msec
+        loopback not set,
+        Last link flapped 1w5d
+        ARP type ARPA, ARP timeout 04:00:00
+        Last input 00:01:09, output 00:01:09
+        Last clearing of "show interface" counters never
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+         146164 packets input, 18221418 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 0 broadcast packets, 29056 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         123696 packets output, 10777610 bytes, 0 total output drops
+         Output 2 broadcast packets, 6246 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         1 carrier transitions
+    '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -478,6 +574,13 @@ class test_show_interface(unittest.TestCase):
         parsed_output = interface_detail_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_custom(self):
+        self.device = Mock(**self.golden_interface_output)
+        interface_detail_obj = ShowInterfacesDetail(device=self.device)
+        parsed_output = interface_detail_obj.parse(interface='GigabitEthernet0/0/0/1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_interface_output)
 
 
 #############################################################################
@@ -798,7 +901,8 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'GigabitEthernet0/0/0/0': {'enabled': True,
+    golden_parsed_output = {
+        'GigabitEthernet0/0/0/0': {'enabled': True,
                             'int_status': 'shutdown',
                             'ipv6': {'2001:db8:1:1::1/64': {'ipv6': '2001:db8:1:1::1',
                                                             'ipv6_prefix_length': '64',
@@ -842,130 +946,130 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                             'oper_status': 'down',
                             'vrf': 'VRF1',
                             'vrf_id': '0x60000002'},
- 'GigabitEthernet0/0/0/0.10': {'enabled': True,
-                               'int_status': 'shutdown',
-                               'ipv6': {'2001:db8:1:3::1/64': {'ipv6': '2001:db8:1:3::1',
-                                                               'ipv6_prefix_length': '64',
-                                                               'ipv6_subnet': '2001:db8:1:3::'},
-                                        'complete_glean_adj': '0',
-                                        'complete_protocol_adj': '0',
-                                        'dad_attempts': '1',
-                                        'dropped_glean_req': '0',
-                                        'dropped_protocol_req': '0',
-                                        'icmp_redirects': 'disabled',
-                                        'icmp_unreachables': 'enabled',
-                                        'incomplete_glean_adj': '0',
-                                        'incomplete_protocol_adj': '0',
-                                        'ipv6_groups': ['ff02::1:ff00:1',
-                                                        'ff02::1:ffa6:78c5',
-                                                        'ff02::2',
-                                                        'ff02::1'],
-                                        'ipv6_link_local': 'fe80::5054:ff:fea6:78c5',
-                                        'ipv6_mtu': '1514',
-                                        'ipv6_mtu_available': '1500',
-                                        'nd_adv_duration': '160-240',
-                                        'nd_adv_retrans_int': '0',
-                                        'nd_cache_limit': '1000000000',
-                                        'nd_dad': 'enabled',
-                                        'nd_reachable_time': '0',
-                                        'nd_router_adv': '1800',
-                                        'stateless_autoconfig': True,
-                                        'table_id': '0xe0800000'},
-                               'ipv6_enabled': False,
-                               'oper_status': 'down',
-                               'vrf': 'default',
-                               'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/1': {'enabled': True,
-                            'int_status': 'up',
-                            'ipv6': {'2001:db8:1:5::1/64': {'ipv6': '2001:db8:1:5::1',
-                                                            'ipv6_prefix_length': '64',
-                                                            'ipv6_subnet': '2001:db8:1:5::'},
-                                     'complete_glean_adj': '1',
-                                     'complete_protocol_adj': '1',
-                                     'dad_attempts': '1',
-                                     'dropped_glean_req': '0',
-                                     'dropped_protocol_req': '0',
-                                     'icmp_redirects': 'disabled',
-                                     'icmp_unreachables': 'enabled',
-                                     'incomplete_glean_adj': '0',
-                                     'incomplete_protocol_adj': '0',
-                                     'ipv6_groups': ['ff02::1:ff00:1',
-                                                     'ff02::1:ff78:ebe0',
-                                                     'ff02::2',
-                                                     'ff02::1'],
-                                     'ipv6_link_local': 'fe80::5054:ff:fe78:ebe0',
-                                     'ipv6_mtu': '1514',
-                                     'ipv6_mtu_available': '1500',
-                                     'nd_adv_duration': '160-240',
-                                     'nd_adv_retrans_int': '0',
-                                     'nd_cache_limit': '1000000000',
-                                     'nd_dad': 'enabled',
-                                     'nd_reachable_time': '0',
-                                     'nd_router_adv': '1800',
-                                     'stateless_autoconfig': True,
-                                     'table_id': '0xe0800010'},
-                            'ipv6_enabled': True,
-                            'oper_status': 'up',
-                            'vrf': 'VRF1',
-                            'vrf_id': '0x60000001'},
- 'GigabitEthernet0/0/0/2': {'enabled': True,
-                            'int_status': 'up',
-                            'ipv6': {'2001:db8:20:1:5::1/64': {'ipv6': '2001:db8:20:1:5::1',
-                                                               'ipv6_prefix_length': '64',
-                                                               'ipv6_subnet': '2001:db8:20:1::'},
-                                     'complete_glean_adj': '2',
-                                     'complete_protocol_adj': '0',
-                                     'dad_attempts': '1',
-                                     'dropped_glean_req': '0',
-                                     'dropped_protocol_req': '0',
-                                     'icmp_redirects': 'disabled',
-                                     'icmp_unreachables': 'enabled',
-                                     'incomplete_glean_adj': '0',
-                                     'incomplete_protocol_adj': '0',
-                                     'ipv6_groups': ['ff02::1:ff00:1',
-                                                     'ff02::1:ff15:c05c',
-                                                     'ff02::2',
-                                                     'ff02::1'],
-                                     'ipv6_link_local': 'fe80::5054:ff:fe15:c05c',
-                                     'ipv6_mtu': '1514',
-                                     'ipv6_mtu_available': '1500',
-                                     'nd_adv_duration': '160-240',
-                                     'nd_adv_retrans_int': '0',
-                                     'nd_cache_limit': '1000000000',
-                                     'nd_dad': 'enabled',
-                                     'nd_reachable_time': '0',
-                                     'nd_router_adv': '1800',
-                                     'stateless_autoconfig': True,
-                                     'table_id': '0xe0800011'},
-                            'ipv6_enabled': True,
-                            'oper_status': 'up',
-                            'vrf': 'VRF2',
-                            'vrf_id': '0x60000002'},
- 'GigabitEthernet0/0/0/3': {'enabled': False,
-                            'int_status': 'up',
-                            'ipv6_enabled': True,
-                            'oper_status': 'up',
-                            'vrf': 'default',
-                            'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/4': {'enabled': False,
-                            'int_status': 'up',
-                            'ipv6_enabled': True,
-                            'oper_status': 'up',
-                            'vrf': 'default',
-                            'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/5': {'enabled': False,
-                            'int_status': 'shutdown',
-                            'ipv6_enabled': False,
-                            'oper_status': 'down',
-                            'vrf': 'default',
-                            'vrf_id': '0x60000000'},
- 'GigabitEthernet0/0/0/6': {'enabled': False,
-                            'int_status': 'shutdown',
-                            'ipv6_enabled': False,
-                            'oper_status': 'down',
-                            'vrf': 'default',
-                            'vrf_id': '0x60000000'},
- 'MgmtEth0/0/CPU0/0': {'enabled': False,
+        'GigabitEthernet0/0/0/0.10': {'enabled': True,
+                                      'int_status': 'shutdown',
+                                      'ipv6': {'2001:db8:1:3::1/64': {'ipv6': '2001:db8:1:3::1',
+                                                                      'ipv6_prefix_length': '64',
+                                                                      'ipv6_subnet': '2001:db8:1:3::'},
+                                               'complete_glean_adj': '0',
+                                               'complete_protocol_adj': '0',
+                                               'dad_attempts': '1',
+                                               'dropped_glean_req': '0',
+                                               'dropped_protocol_req': '0',
+                                               'icmp_redirects': 'disabled',
+                                               'icmp_unreachables': 'enabled',
+                                               'incomplete_glean_adj': '0',
+                                               'incomplete_protocol_adj': '0',
+                                               'ipv6_groups': ['ff02::1:ff00:1',
+                                                               'ff02::1:ffa6:78c5',
+                                                               'ff02::2',
+                                                               'ff02::1'],
+                                               'ipv6_link_local': 'fe80::5054:ff:fea6:78c5',
+                                               'ipv6_mtu': '1514',
+                                               'ipv6_mtu_available': '1500',
+                                               'nd_adv_duration': '160-240',
+                                               'nd_adv_retrans_int': '0',
+                                               'nd_cache_limit': '1000000000',
+                                               'nd_dad': 'enabled',
+                                               'nd_reachable_time': '0',
+                                               'nd_router_adv': '1800',
+                                               'stateless_autoconfig': True,
+                                               'table_id': '0xe0800000'},
+                                      'ipv6_enabled': False,
+                                      'oper_status': 'down',
+                                      'vrf': 'default',
+                                      'vrf_id': '0x60000000'},
+        'GigabitEthernet0/0/0/1': {'enabled': True,
+                                   'int_status': 'up',
+                                   'ipv6': {'2001:db8:1:5::1/64': {'ipv6': '2001:db8:1:5::1',
+                                                                   'ipv6_prefix_length': '64',
+                                                                   'ipv6_subnet': '2001:db8:1:5::'},
+                                            'complete_glean_adj': '1',
+                                            'complete_protocol_adj': '1',
+                                            'dad_attempts': '1',
+                                            'dropped_glean_req': '0',
+                                            'dropped_protocol_req': '0',
+                                            'icmp_redirects': 'disabled',
+                                            'icmp_unreachables': 'enabled',
+                                            'incomplete_glean_adj': '0',
+                                            'incomplete_protocol_adj': '0',
+                                            'ipv6_groups': ['ff02::1:ff00:1',
+                                                            'ff02::1:ff78:ebe0',
+                                                            'ff02::2',
+                                                            'ff02::1'],
+                                            'ipv6_link_local': 'fe80::5054:ff:fe78:ebe0',
+                                            'ipv6_mtu': '1514',
+                                            'ipv6_mtu_available': '1500',
+                                            'nd_adv_duration': '160-240',
+                                            'nd_adv_retrans_int': '0',
+                                            'nd_cache_limit': '1000000000',
+                                            'nd_dad': 'enabled',
+                                            'nd_reachable_time': '0',
+                                            'nd_router_adv': '1800',
+                                            'stateless_autoconfig': True,
+                                            'table_id': '0xe0800010'},
+                                   'ipv6_enabled': True,
+                                   'oper_status': 'up',
+                                   'vrf': 'VRF1',
+                                   'vrf_id': '0x60000001'},
+        'GigabitEthernet0/0/0/2': {'enabled': True,
+                                   'int_status': 'up',
+                                   'ipv6': {'2001:db8:20:1:5::1/64': {'ipv6': '2001:db8:20:1:5::1',
+                                                                      'ipv6_prefix_length': '64',
+                                                                      'ipv6_subnet': '2001:db8:20:1::'},
+                                            'complete_glean_adj': '2',
+                                            'complete_protocol_adj': '0',
+                                            'dad_attempts': '1',
+                                            'dropped_glean_req': '0',
+                                            'dropped_protocol_req': '0',
+                                            'icmp_redirects': 'disabled',
+                                            'icmp_unreachables': 'enabled',
+                                            'incomplete_glean_adj': '0',
+                                            'incomplete_protocol_adj': '0',
+                                            'ipv6_groups': ['ff02::1:ff00:1',
+                                                            'ff02::1:ff15:c05c',
+                                                            'ff02::2',
+                                                            'ff02::1'],
+                                            'ipv6_link_local': 'fe80::5054:ff:fe15:c05c',
+                                            'ipv6_mtu': '1514',
+                                            'ipv6_mtu_available': '1500',
+                                            'nd_adv_duration': '160-240',
+                                            'nd_adv_retrans_int': '0',
+                                            'nd_cache_limit': '1000000000',
+                                            'nd_dad': 'enabled',
+                                            'nd_reachable_time': '0',
+                                            'nd_router_adv': '1800',
+                                            'stateless_autoconfig': True,
+                                            'table_id': '0xe0800011'},
+                                   'ipv6_enabled': True,
+                                   'oper_status': 'up',
+                                   'vrf': 'VRF2',
+                                   'vrf_id': '0x60000002'},
+        'GigabitEthernet0/0/0/3': {'enabled': False,
+                                   'int_status': 'up',
+                                   'ipv6_enabled': True,
+                                   'oper_status': 'up',
+                                   'vrf': 'default',
+                                   'vrf_id': '0x60000000'},
+        'GigabitEthernet0/0/0/4': {'enabled': False,
+                                   'int_status': 'up',
+                                   'ipv6_enabled': True,
+                                   'oper_status': 'up',
+                                   'vrf': 'default',
+                                   'vrf_id': '0x60000000'},
+        'GigabitEthernet0/0/0/5': {'enabled': False,
+                                   'int_status': 'shutdown',
+                                   'ipv6_enabled': False,
+                                   'oper_status': 'down',
+                                   'vrf': 'default',
+                                   'vrf_id': '0x60000000'},
+        'GigabitEthernet0/0/0/6': {'enabled': False,
+                                   'int_status': 'shutdown',
+                                   'ipv6_enabled': False,
+                                   'oper_status': 'down',
+                                   'vrf': 'default',
+                                   'vrf_id': '0x60000000'},
+        'MgmtEth0/0/CPU0/0': {'enabled': False,
                        'int_status': 'shutdown',
                        'ipv6_enabled': False,
                        'oper_status': 'down',
@@ -1091,6 +1195,383 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
     
     '''}
 
+    golden_parsed_output1 = {
+        'GigabitEthernet0/0/0/0': {
+            'enabled': True,
+            'int_status': 'up',
+            'ipv6': {
+                '2010:1:2::2/64': {
+                    'ipv6': '2010:1:2::2',
+                    'ipv6_prefix_length': '64',
+                    'ipv6_subnet': '2010:1:2::'},
+                'complete_glean_adj': '1',
+                'complete_protocol_adj': '1',
+                'dad_attempts': '1',
+                'dropped_glean_req': '0',
+                'dropped_protocol_req': '0',
+                'icmp_redirects': 'disabled',
+                'icmp_unreachables': 'enabled',
+                'incomplete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'ipv6_groups': ['ff02::1:ff00:2',
+                                'ff02::1:ffca:3efd',
+                                'ff02::2',
+                                'ff02::1',
+                                'ff02::5',
+                                'ff02::6'],
+                'ipv6_link_local': 'fe80::f816:3eff:feca:3efd',
+                'ipv6_mtu': '1514',
+                'ipv6_mtu_available': '1500',
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '1000000000',
+                'nd_dad': 'enabled',
+                'nd_reachable_time': '0',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000'},
+            'ipv6_enabled': True,
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000'},
+        'GigabitEthernet0/0/0/1': {
+            'enabled': True,
+            'int_status': 'up',
+            'ipv6': {
+                '2020:1:2::2/64': {
+                    'ipv6': '2020:1:2::2',
+                    'ipv6_prefix_length': '64',
+                    'ipv6_subnet': '2020:1:2::'},
+                'complete_glean_adj': '2',
+                'complete_protocol_adj': '0',
+                'dad_attempts': '1',
+                'dropped_glean_req': '0',
+                'dropped_protocol_req': '0',
+                'icmp_redirects': 'disabled',
+                'icmp_unreachables': 'enabled',
+                'incomplete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'ipv6_groups': ['ff02::1:ff00:2',
+                                'ff02::1:ff20:fa5b',
+                                'ff02::2',
+                                'ff02::1',
+                                'ff02::5',
+                                'ff02::6'],
+                'ipv6_link_local': 'fe80::f816:3eff:fe20:fa5b',
+                'ipv6_mtu': '1514',
+                'ipv6_mtu_available': '1500',
+                'nd_adv_duration': '160-240',
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '1000000000',
+                'nd_dad': 'enabled',
+                'nd_reachable_time': '0',
+                'nd_router_adv': '1800',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800001'},
+            'ipv6_enabled': True,
+            'oper_status': 'up',
+            'vrf': 'vrf1',
+            'vrf_id': '0x60000001'},
+        'GigabitEthernet0/0/0/2': {
+            'enabled': True,
+            'int_status': 'up',
+            'ipv6': {
+                '2010:2:3::2/64': {
+                    'ipv6': '2010:2:3::2',
+                    'ipv6_prefix_length': '64',
+                    'ipv6_subnet': '2010:2:3::'},
+                'complete_glean_adj': '1',
+                'complete_protocol_adj': '1',
+                'dad_attempts': '1',
+                'dropped_glean_req': '0',
+                'dropped_protocol_req': '0',
+                'icmp_redirects': 'disabled',
+                'icmp_unreachables': 'enabled',
+                'incomplete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'ipv6_groups': ['ff02::1:ff00:2',
+                                'ff02::1:ff82:6320',
+                                'ff02::2',
+                                'ff02::1',
+                                'ff02::5',
+                                'ff02::6'],
+                'ipv6_link_local': 'fe80::f816:3eff:fe82:6320',
+                'ipv6_mtu': '1514',
+                'ipv6_mtu_available': '1500',
+                'nd_adv_duration': '160-240',
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '1000000000',
+                'nd_dad': 'enabled',
+                'nd_reachable_time': '0',
+                'nd_router_adv': '1800',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000'},
+            'ipv6_enabled': True,
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000'},
+        'GigabitEthernet0/0/0/3': {
+            'enabled': True,
+            'int_status': 'up',
+            'ipv6': {
+                '2020:2:3::2/64': {
+                    'ipv6': '2020:2:3::2',
+                    'ipv6_prefix_length': '64',
+                    'ipv6_subnet': '2020:2:3::'},
+                'complete_glean_adj': '1',
+                'complete_protocol_adj': '1',
+                'dad_attempts': '1',
+                'dropped_glean_req': '0',
+                'dropped_protocol_req': '0',
+                'icmp_redirects': 'disabled',
+                'icmp_unreachables': 'enabled',
+                'incomplete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'ipv6_groups': ['ff02::1:ff00:2',
+                                'ff02::1:ff8b:59c9',
+                                'ff02::2',
+                                'ff02::1',
+                                'ff02::5',
+                                'ff02::6'],
+                'ipv6_link_local': 'fe80::f816:3eff:fe8b:59c9',
+                'ipv6_mtu': '1514',
+                'ipv6_mtu_available': '1500',
+                'nd_adv_duration': '160-240',
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '1000000000',
+                'nd_dad': 'enabled',
+                'nd_reachable_time': '0',
+                'nd_router_adv': '1800',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800001'},
+            'ipv6_enabled': True,
+            'oper_status': 'up',
+            'vrf': 'vrf1',
+            'vrf_id': '0x60000001'},
+        'Loopback0': {
+            'enabled': True,
+            'int_status': 'up',
+            'ipv6': {
+                '2001:2:2::2/128': {
+                    'ipv6': '2001:2:2::2',
+                    'ipv6_prefix_length': '128',
+                    'ipv6_subnet': '2001:2:2::2'},
+                'complete_glean_adj': '0',
+                'complete_protocol_adj': '0',
+                'dad_attempts': '0',
+                'dropped_glean_req': '0',
+                'dropped_protocol_req': '0',
+                'icmp_redirects': 'disabled',
+                'incomplete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'ipv6_groups': ['ff02::1:ff00:2',
+                                'ff02::1:ffbd:853e',
+                                'ff02::2',
+                                'ff02::1'],
+                'ipv6_link_local': 'fe80::6983:ecff:febd:853e',
+                'ipv6_mtu': '1500',
+                'ipv6_mtu_available': '1500',
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '0',
+                'nd_dad': 'disabled',
+                'nd_reachable_time': '0',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000'},
+            'ipv6_enabled': True,
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000'},
+        'Loopback1': {
+            'enabled': True,
+            'int_status': 'up',
+            'ipv6': {
+                '2001:22:22::22/128': {
+                    'ipv6': '2001:22:22::22',
+                    'ipv6_prefix_length': '128',
+                    'ipv6_subnet': '2001:22:22::22'},
+                'complete_glean_adj': '0',
+                'complete_protocol_adj': '0',
+                'dad_attempts': '0',
+                'dropped_glean_req': '0',
+                'dropped_protocol_req': '0',
+                'icmp_redirects': 'disabled',
+                'incomplete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'ipv6_groups': ['ff02::1:ff00:22',
+                                'ff02::1:ffbd:853e',
+                                'ff02::2',
+                                'ff02::1'],
+                'ipv6_link_local': 'fe80::6983:ecff:febd:853e',
+                'ipv6_mtu': '1500',
+                'ipv6_mtu_available': '1500',
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '0',
+                'nd_dad': 'disabled',
+                'nd_reachable_time': '0',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000'},
+            'ipv6_enabled': True,
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000'},
+        'MgmtEth0/RP0/CPU0/0': {
+            'enabled': False,
+            'int_status': 'shutdown',
+            'ipv6_enabled': False,
+            'oper_status': 'down',
+            'vrf': 'default',
+            'vrf_id': '0x60000000'}}
+
+    golden_output1 = {'execute.return_value': '''
+            RP/0/RP0/CPU0:xr9kv-2#show ipv6 vrf all interface 
+            Thu Apr 26 13:10:00.784 UTC
+            Loopback0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::6983:ecff:febd:853e 
+                Global unicast address(es):
+                  2001:2:2::2, subnet is 2001:2:2::2/128 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ffbd:853e ff02::2
+                    ff02::1
+                MTU is 1500 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are always on
+                ND DAD is disabled, number of DAD attempts 0
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 0
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 0
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            Loopback1 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::6983:ecff:febd:853e 
+                Global unicast address(es):
+                  2001:22:22::22, subnet is 2001:22:22::22/128 
+                Joined group address(es): ff02::1:ff00:22 ff02::1:ffbd:853e ff02::2
+                    ff02::1
+                MTU is 1500 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are always on
+                ND DAD is disabled, number of DAD attempts 0
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 0
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 0
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            MgmtEth0/RP0/CPU0/0 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+                IPv6 is disabled, link-local address unassigned
+                No global unicast address is configured
+            GigabitEthernet0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::f816:3eff:feca:3efd 
+                Global unicast address(es):
+                    2010:1:2::2, subnet is 2010:1:2::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ffca:3efd ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            GigabitEthernet0/0/0/1 is Up, ipv6 protocol is Up, Vrfid is vrf1 (0x60000001)
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe20:fa5b 
+                Global unicast address(es):
+                  2020:1:2::2, subnet is 2020:1:2::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff20:fa5b ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800001
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 2
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            GigabitEthernet0/0/0/2 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe82:6320 
+                Global unicast address(es):
+                  2010:2:3::2, subnet is 2010:2:3::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff82:6320 ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            GigabitEthernet0/0/0/3 is Up, ipv6 protocol is Up, Vrfid is vrf1 (0x60000001)
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe8b:59c9 
+                Global unicast address(es):
+                  2020:2:3::2, subnet is 2020:2:3::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff8b:59c9 ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800001
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+        '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device1)
@@ -1102,6 +1583,12 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
+        parsed_output = ipv6_vrf_all_interface_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 
 #############################################################################
@@ -1179,6 +1666,16 @@ class test_show_ethernet_tags(unittest.TestCase):
          }
 
     }
+    golden_parsed_interface_output = {
+        "GigabitEthernet0/0/0/1.501": {
+            "rewrite_num_of_tags_push": 0,
+            "status": "up",
+            "rewrite_num_of_tags_pop": 1,
+            "mtu": 1518,
+            "outer_vlan": ".1Q:501",
+            "vlan_id": "501"
+        }
+    }
 
     golden_output = {'execute.return_value': '''
         St:    AD - Administratively Down, Dn - Down, Up - Up
@@ -1198,6 +1695,16 @@ class test_show_ethernet_tags(unittest.TestCase):
 
 
     '''}
+    golden_interface_output={'execute.return_value': '''
+        St:    AD - Administratively Down, Dn - Down, Up - Up
+        Ly:    L2 - Switched layer 2 service, L3 = Terminated layer 3 service,
+        Xtra   C - Match on Cos, E  - Match on Ethertype, M - Match on source MAC
+        -,+:   Ingress rewrite operation; number of tags to pop and push respectively
+
+        Interface               St  MTU  Ly Outer            Inner            Xtra -,+
+        Gi0/0/0/1.501           Up  1518 L3 .1Q:501          -                -    1 0
+    '''}
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1209,6 +1716,12 @@ class test_show_ethernet_tags(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowEthernetTags(device=self.device)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_custom(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowEthernetTags(device=self.device)
+        parsed_output = obj.parse(interface='Gi0/0/0/1.501')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
@@ -1435,7 +1948,7 @@ class test_show_ip_interface_brief(unittest.TestCase):
       MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
     '''}
 
-    golden_parsed_output_pipe_ip = {'interface': 
+    golden_parsed_output_pipe_ip = {'interface':
                {'MgmtEth0/RP0/CPU0/0': {'interface_status': 'Up',
                                        'ip_address': '10.1.17.179',
                                        'protocol_status': 'Up',

@@ -13,7 +13,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary,\
                                              ShowIpTraffic,\
                                              ShowArpApplication,\
-                                             ShowArpSummary
+                                             ShowArpSummary, ShowIpArp
 
 
 # ============================================
@@ -134,6 +134,72 @@ class test_show_arp(unittest.TestCase):
 				obj = ShowArp(device=self.device)
 				parsed_output = obj.parse(vrf='Mgmt-vrf', intf_or_ip='GigabitEthernet0/0')
 				self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+#=========================================================
+# Unit test for show ip arp
+#=========================================================
+class test_show_ip_arp(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'interfaces': {
+            'GigabitEthernet2.390': {
+                'ipv4': {
+                    'neighbors': {
+                        '10.12.90.1': {
+                            'age': '-',
+                            'ip': '10.12.90.1',
+                            'link_layer_address': 'fa16.3e24.787a',
+                            'origin': 'static',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'},
+                        '10.12.90.2':
+                            {'age': '139',
+                             'ip': '10.12.90.2',
+                             'link_layer_address': 'fa16.3e8a.cfeb',
+                             'origin': 'dynamic',
+                             'protocol': 'Internet',
+                             'type': 'ARPA'}
+                    }
+                }
+            },
+            'GigabitEthernet2.410': {
+                'ipv4': {
+                    'neighbors': {
+                        '10.12.110.1': {
+                            'age': '-',
+                            'ip': '10.12.110.1',
+                            'link_layer_address': 'fa16.3e24.787a',
+                            'origin': 'static',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'}
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value':
+                         '''
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  10.12.90.1              -   fa16.3e24.787a  ARPA   GigabitEthernet2.390
+Internet  10.12.90.2            139   fa16.3e8a.cfeb  ARPA   GigabitEthernet2.390
+Internet  10.12.110.1             -   fa16.3e24.787a  ARPA   GigabitEthernet2.410
+    		'''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpArp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff=None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpArp(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 #=========================================================
 # Unit test for show ip arp summary

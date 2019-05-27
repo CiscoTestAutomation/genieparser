@@ -558,13 +558,19 @@ class ShowInterfacesDetailSchema(MetaParser):
 
 
 class ShowInterfacesDetail(ShowInterfacesDetailSchema):
-    """Parser for show interface detail"""
+    """Parser for show interface detail
+                    show interface <interface> detail
+    """
 
-    cli_command = 'show interface detail'
+    cli_command = ['show interface detail', 'show interface {interface} detail']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2156,13 +2162,18 @@ class ShowEthernetTagsSchema(MetaParser):
         }
 
 class ShowEthernetTags(ShowEthernetTagsSchema):
-    """Parser for show ethernet tags"""
+    """Parser for show ethernet tags
+    show ethernet tags <interface>"""
 
-    cli_command = 'show ethernet tags'
+    cli_command = ['show ethernet tags', 'show ethernet tags {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2253,12 +2264,12 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces accounting
         show interfaces <interface> accounting
     """
-    cli_command = ['show interfaces {intf} accounting','show interfaces accounting']
+    cli_command = ['show interfaces {interface} accounting','show interfaces accounting']
 
-    def cli(self, intf=None, output=None):
+    def cli(self, interface=None, output=None):
         if output is None:
-            if intf:
-                cmd = self.cli_command[0].format(intf=intf)
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
