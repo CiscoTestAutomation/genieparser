@@ -937,7 +937,7 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
     def test_golden_custom(self):
         self.device = Mock(**self.golden_output_custom)
         ipv4_vrf_all_interface_obj = ShowIpv4VrfAllInterface(device=self.device)
-        parsed_output = ipv4_vrf_all_interface_obj.parse(vrf='VRF1')
+        parsed_output = ipv4_vrf_all_interface_obj.parse(vrf='VRF1', interface='GigabitEthernet0/0/0/1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
@@ -1702,7 +1702,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
     def test_golden_custom(self):
         self.device = Mock(**self.golden_output_custom)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
-        parsed_output = ipv6_vrf_all_interface_obj.parse(vrf='VRF1')
+        parsed_output = ipv6_vrf_all_interface_obj.parse(vrf='VRF1', interface='GigabitEthernet0/0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
 #############################################################################
