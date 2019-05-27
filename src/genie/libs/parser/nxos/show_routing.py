@@ -72,21 +72,24 @@ class ShowRoutingVrfAllSchema(MetaParser):
 
 
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
-    """Parser for show ip routing vrf all"""
-    cli_command = ['show routing {ip} vrf all', 'show routing vrf all']
+    """Parser for show ip routing vrf all
+                show ip routing vrf <vrf>"""
+    cli_command = ['show routing {ip} vrf all', 'show routing vrf all', 'show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']
 
-    def cli(self, ip='',output=None):
-        if ip:
+    def cli(self, ip='', vrf='', output=None):
+        if ip and vrf:
+            cmd = self.cli_command[2].format(ip=ip, vrf=vrf)
+        elif ip :
             cmd = self.cli_command[0].format(ip=ip)
+        elif vrf:
+            cmd = self.cli_command[3].format(vrf=vrf)
         else:
             cmd = self.cli_command[1]
-
         # excute command to get output
         if output is None:
             out = self.device.execute(cmd)
         else:
             out = output
-        
         # Init dict
         bgp_dict = {}
         sub_dict = {}
@@ -256,10 +259,11 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
 
 class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
-    """Parser for show ipv6 routing vrf all"""
+    """Parser for show ipv6 routing vrf all,
+            show ipv6 routing vrf <vrf>"""
 
-    def cli(self,output=None):
-        return(super().cli(ip='ipv6',output=output))
+    def cli(self, vrf='', output=None):
+        return super().cli(ip='ipv6', vrf=vrf, output=output)
 
 
 # ====================================================
