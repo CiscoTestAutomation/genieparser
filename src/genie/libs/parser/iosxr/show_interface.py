@@ -1299,13 +1299,18 @@ class ShowIpv4VrfAllInterfaceSchema(MetaParser):
         }
 
 class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
-    """Parser for show ipv4 vrf all interface"""
+    """Parser for show ipv4 vrf all interface
+                    show ipv4 vrf <vrf> interface"""
 
-    cli_command = 'show ipv4 vrf all interface'
+    cli_command = ['show ipv4 vrf all interface', 'show ipv4 vrf {vrf} interface']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1646,11 +1651,15 @@ class ShowIpv6VrfAllInterfaceSchema(MetaParser):
 class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
     """Parser for show ipv6 vrf all interface"""
 
-    cli_command = 'show ipv6 vrf all interface'
+    cli_command = ['show ipv6 vrf all interface', 'show ipv6 vrf {vrf} interface']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 

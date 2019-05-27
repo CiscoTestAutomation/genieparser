@@ -877,7 +877,51 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
       Vrf is default (vrfid 0x60000000)
       Internet protocol processing disabled
     '''}
-
+    golden_parsed_output_custom = {'GigabitEthernet0/0/0/1': {'int_status': 'up',
+                                                       'ipv4': {'10.1.5.1/24': {
+                                                           'ip': '10.1.5.1',
+                                                           'prefix_length': '24',
+                                                           'route_tag': 50},
+                                                                '10.2.2.2/24': {
+                                                                    'ip': '10.2.2.2',
+                                                                    'prefix_length': '24',
+                                                                    'secondary': True},
+                                                                'broadcast_forwarding':
+                                                                    'disabled',
+                                                                'icmp_redirects':
+                                                                    'never sent',
+                                                                'icmp_replies': 'never '
+                                                                                'sent',
+                                                                'icmp_unreachables':
+                                                                    'always sent',
+                                                                'mtu': 1514,
+                                                                'mtu_available': 1500,
+                                                                'proxy_arp': 'disabled',
+                                                                'table_id': '0xe0000010'},
+                                                       'multicast_groups': ['224.0.0.2',
+                                                                            '224.0.0.1'],
+                                                       'oper_status': 'up',
+                                                       'vrf': 'VRF1',
+                                                       'vrf_id': '0x60000001'},
+                            }
+    golden_output_custom={'execute.return_value': '''
+      GigabitEthernet0/0/0/1 is Up, ipv4 protocol is Up
+      Vrf is VRF1 (vrfid 0x60000001)
+      Internet address is 10.1.5.1/24 with route-tag 50
+      Secondary address 10.2.2.2/24
+      MTU is 1514 (1500 is available to IP)
+      Helper address is not set
+      Multicast reserved groups joined: 224.0.0.2 224.0.0.1
+      Directed broadcast forwarding is disabled
+      Outgoing access list is not set
+      Inbound  common access list is not set, access list is not set
+      Proxy ARP is disabled
+      ICMP redirects are never sent
+      ICMP unreachables are always sent
+      ICMP mask replies are never sent
+      Table Id is 0xe0000010
+      '''
+    }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv4_vrf_all_interface_obj = ShowIpv4VrfAllInterface(device=self.device1)
@@ -890,7 +934,12 @@ class test_show_ipv4_vrf_all_interface(unittest.TestCase):
         parsed_output = ipv4_vrf_all_interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
+    def test_golden_custom(self):
+        self.device = Mock(**self.golden_output_custom)
+        ipv4_vrf_all_interface_obj = ShowIpv4VrfAllInterface(device=self.device)
+        parsed_output = ipv4_vrf_all_interface_obj.parse(vrf='VRF1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
 #############################################################################
 # unitest For show ipv6 vrf all interface
@@ -1571,7 +1620,68 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                 Dropped protocol request: 0
                 Dropped glean request: 0
         '''}
-
+    golden_parsed_output_custom={'GigabitEthernet0/0/0/1': {'enabled': True,
+                                   'int_status': 'up',
+                                   'ipv6': {'2001:db8:1:5::1/64': {'ipv6': '2001:db8:1:5::1',
+                                                                   'ipv6_prefix_length': '64',
+                                                                   'ipv6_subnet': '2001:db8:1:5::'},
+                                            'complete_glean_adj': '1',
+                                            'complete_protocol_adj': '1',
+                                            'dad_attempts': '1',
+                                            'dropped_glean_req': '0',
+                                            'dropped_protocol_req': '0',
+                                            'icmp_redirects': 'disabled',
+                                            'icmp_unreachables': 'enabled',
+                                            'incomplete_glean_adj': '0',
+                                            'incomplete_protocol_adj': '0',
+                                            'ipv6_groups': ['ff02::1:ff00:1',
+                                                            'ff02::1:ff78:ebe0',
+                                                            'ff02::2',
+                                                            'ff02::1'],
+                                            'ipv6_link_local': 'fe80::5054:ff:fe78:ebe0',
+                                            'ipv6_mtu': '1514',
+                                            'ipv6_mtu_available': '1500',
+                                            'nd_adv_duration': '160-240',
+                                            'nd_adv_retrans_int': '0',
+                                            'nd_cache_limit': '1000000000',
+                                            'nd_dad': 'enabled',
+                                            'nd_reachable_time': '0',
+                                            'nd_router_adv': '1800',
+                                            'stateless_autoconfig': True,
+                                            'table_id': '0xe0800010'},
+                                   'ipv6_enabled': True,
+                                   'oper_status': 'up',
+                                   'vrf': 'VRF1',
+                                   'vrf_id': '0x60000001'},}
+    golden_output_custom={'execute.return_value':
+    '''
+       GigabitEthernet0/0/0/1 is Up, ipv6 protocol is Up, Vrfid is VRF1 (0x60000001)
+      IPv6 is enabled, link-local address is fe80::5054:ff:fe78:ebe0 
+      Global unicast address(es):
+        2001:db8:1:5::1, subnet is 2001:db8:1:5::/64 
+      Joined group address(es): ff02::1:ff00:1 ff02::1:ff78:ebe0 ff02::2
+          ff02::1
+      MTU is 1514 (1500 is available to IPv6)
+      ICMP redirects are disabled
+      ICMP unreachables are enabled
+      ND DAD is enabled, number of DAD attempts 1
+      ND reachable time is 0 milliseconds
+      ND cache entry limit is 1000000000
+      ND advertised retransmit interval is 0 milliseconds
+      ND router advertisements are sent every 160 to 240 seconds
+      ND router advertisements live for 1800 seconds
+      Hosts use stateless autoconfig for addresses.
+      Outgoing access list is not set
+      Inbound  common access list is not set, access list is not set
+      Table Id is 0xe0800010
+      Complete protocol adjacency: 1
+      Complete glean adjacency: 1
+      Incomplete protocol adjacency: 0
+      Incomplete glean adjacency: 0
+      Dropped protocol request: 0
+      Dropped glean request: 0
+      '''
+                          }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device1)
@@ -1589,7 +1699,11 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-
+    def test_golden_custom(self):
+        self.device = Mock(**self.golden_output_custom)
+        ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
+        parsed_output = ipv6_vrf_all_interface_obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
 #############################################################################
 # unitest For show ethernet tags
