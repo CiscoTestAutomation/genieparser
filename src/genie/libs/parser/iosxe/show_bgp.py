@@ -2111,7 +2111,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
     '''
 
     cli_command = ['show bgp {address_family} all summary',
-                   'show bgp summary'
+                   'show bgp summary',
                    'show bgp vrf {vrf} all summary'
                    ]
 
@@ -2122,7 +2122,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             if address_family and not vrf:
                 cmd = self.cli_command[0].format(address_family=address_family)
             elif vrf and not address_family:
-                cmd = self.cli_command[2].format(address_family=address_family)
+                cmd = self.cli_command[2].format(vrf=vrf)
             else:
                 cmd = self.cli_command[1]
             # Execute command

@@ -5867,7 +5867,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
 
         For address family: IPv4 Flowspec
     '''}
-    golden_parsed_output3= {
+    golden_parsed_output3={
     'bgp_id': 9996,
     'vrf': {
         'default': {
@@ -5960,7 +5960,12 @@ class test_show_bgp_all_summary(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllSummary(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(vrf='CE1test')
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
