@@ -2170,6 +2170,73 @@ class test_show_bgp_all_detail(unittest.TestCase):
         For address family: VPNv4 Flowspec
         '''}
 
+    golden_output3 = {'execute.return_value': '''
+    BGP routing table entry for 9996:4093:11.11.11.11/32, version 103
+
+Paths: (1 available, best #1, table CE1test)
+
+  Advertised to update-groups:
+
+     3         
+
+  Refresh Epoch 2
+
+  65555
+
+    192.168.10.253 (via vrf CE1test) from 192.168.10.253 (192.168.10.253)
+
+      Origin incomplete, metric 0, localpref 100, valid, external, best
+
+      Community: 62000:1
+
+      Extended Community: RT:9996:4093
+
+      mpls labels in/out 584/nolabel
+
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    golden_parsed_output3 = {
+'instance': {
+    'default': {
+        'vrf': {
+            'CE1test': {
+                'address_family': {
+                    '': {
+                        'prefixes': {
+                            '11.11.11.11/32': {
+                                'table_version': '103',
+                                'available_path': '1',
+                                'best_path': '1',
+                                'paths': '1 available, best #1, table CE1test',
+                                'index': {
+                                    1: {
+                                        'next_hop': '192.168.10.253',
+                                        'gateway': '192.168.10.253',
+                                        'originator': '192.168.10.253',
+                                        'next_hop_via': 'vrf CE1test',
+                                        'localpref': 100,
+                                        'metric': 0,
+                                        'origin_codes': '?',
+                                        'status_codes': '*>',
+                                        'refresh_epoch': 2,
+                                        'route_info': '65555',
+                                        'community': '62000:1',
+                                        'evpn': {
+                                            'ext_community': 'RT:9996:4093',
+                                            },
+                                        'recipient_pathid': '0',
+                                        'transfer_pathid': '0x0',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
     def test_show_bgp_all_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllDetail(device=self.device)
@@ -2189,6 +2256,13 @@ class test_show_bgp_all_detail(unittest.TestCase):
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_route_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllDetail(device=self.device)
+        parsed_output = obj.parse(vrf='CE1test', route='11.11.11.11')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ============================
 # Unit test for:
@@ -5961,11 +6035,6 @@ class test_show_bgp_all_summary(unittest.TestCase):
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllSummary(device=self.device)
         parsed_output = obj.parse(vrf='CE1test')
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =================================================
