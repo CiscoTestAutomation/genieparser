@@ -8,11 +8,12 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 # Parser
-from genie.libs.parser.ios.show_vrf import ShowVrfDetail
+from genie.libs.parser.ios.show_vrf import ShowVrfDetail, ShowVrf
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
-
+#iosxe unit test
+from genie.libs.parser.iosxe.tests.test_show_vrf import test_show_vrf as test_show_vrf_xe
  
 # ================================
 #  Unit test for 'show vrf detail'
@@ -124,6 +125,25 @@ class test_show_vrf_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+class test_show_vrf(test_show_vrf_xe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowVrf(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_vrf(self):
+        self.device = Mock(**self.golden_output_vrf)
+        obj = ShowVrf(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
 
 if __name__ == '__main__':
     unittest.main()
