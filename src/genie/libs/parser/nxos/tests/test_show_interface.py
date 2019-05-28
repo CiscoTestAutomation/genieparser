@@ -2841,7 +2841,16 @@ class test_show_interface_switchport(unittest.TestCase):
               Administrative private-vlan trunk private VLANs: none
               Operational private-vlan: none
               '''}
-
+    golden_parsed_output_disabled = {
+        'Ethernet1/1':{
+            'switchport_status': 'disabled',
+            'switchport_enable': False,
+        }
+    }
+    golden_output_disabled={'execute.return_value': '''
+    Name: Ethernet1/1
+        Switchport: Disabled
+    '''}
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_switchport_obj = ShowInterfaceSwitchport(device=self.device1)
@@ -2869,6 +2878,12 @@ class test_show_interface_switchport(unittest.TestCase):
         parsed_output = interface_switchport_obj.parse(interface='Ethernet2/2')
         self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
+    def test_golden_disabled(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_disabled)
+        interface_switchport_obj = ShowInterfaceSwitchport(device=self.device)
+        parsed_output = interface_switchport_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_disabled)
 
 # #############################################################################
 # # unitest For Show Ipv6 Interface Vrf All

@@ -1667,23 +1667,23 @@ class ShowInterfaceSwitchportSchema(MetaParser):
     schema = {
         Any():
             {'switchport_status': str,
-             'switchport_monitor': str,
-             'switchport_mode': str,
-             'access_vlan': int,
+             Optional('switchport_monitor'): str,
+             Optional('switchport_mode'): str,
+             Optional('access_vlan'): int,
              'switchport_enable': bool,
              Optional('access_vlan_mode'): str,
-             'native_vlan': int,
+             Optional('native_vlan'): int,
              Optional('native_vlan_mode'): str,
-             'trunk_vlans': str,
-             'admin_priv_vlan_primary_host_assoc': str,
-             'admin_priv_vlan_secondary_host_assoc': str,
-             'admin_priv_vlan_primary_mapping': str,
-             'admin_priv_vlan_secondary_mapping': str,
-             'admin_priv_vlan_trunk_native_vlan': str,
-             'admin_priv_vlan_trunk_encapsulation': str,
-             'admin_priv_vlan_trunk_normal_vlans': str,
-             'admin_priv_vlan_trunk_private_vlans': str,
-             'operational_private_vlan': str
+             Optional('trunk_vlans'): str,
+             Optional('admin_priv_vlan_primary_host_assoc'): str,
+             Optional('admin_priv_vlan_secondary_host_assoc'): str,
+             Optional('admin_priv_vlan_primary_mapping'): str,
+             Optional('admin_priv_vlan_secondary_mapping'): str,
+             Optional('admin_priv_vlan_trunk_native_vlan'): str,
+             Optional('admin_priv_vlan_trunk_encapsulation'): str,
+             Optional('admin_priv_vlan_trunk_normal_vlans'): str,
+             Optional('admin_priv_vlan_trunk_private_vlans'): str,
+             Optional('operational_private_vlan'): str
             },
         }
                     
