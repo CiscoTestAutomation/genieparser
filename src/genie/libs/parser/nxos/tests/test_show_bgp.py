@@ -28940,6 +28940,35 @@ Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
 
 """}
 
+    golden_output_customer = {'execute.return_value':'''
+    BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 421384, Local Router ID is 10.16.2.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
+  Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 2.2.2.2:36964    (L2VNI 101)
+*>l[2]:[0]:[0]:[48]:[1a2a.3a4a.0065]:[0]:[0.0.0.0]/216
+                      2.2.2.2                           100      32768 i
+*>e[2]:[0]:[0]:[48]:[1a2a.4a5a.0065]:[0]:[0.0.0.0]/216
+                      4.4.4.4                                        0 200 100 i
+*>l[2]:[0]:[0]:[48]:[5254.0045.3e29]:[0]:[0.0.0.0]/216
+                      2.2.2.2                           100      32768 i
+ 
+ 
+Route Distinguisher: 2.2.2.2:3
+*>e[2]:[0]:[0]:[48]:[1a2a.4a5a.0065]:[32]:[17.0.0.101]/272
+                      4.4.4.4                                        0 200 100 i
+*>e[2]:[0]:[0]:[48]:[2222.2244.4444]:[32]:[10.10.10.2]/272
+                      4.4.4.4                                        0 200 100 i
+*>e[2]:[0]:[0]:[48]:[5577.7777.8888]:[32]:[10.10.10.3]/272
+                      4.4.4.4                                        0 200 100 i
+*>l[5]:[0]:[0]:[24]:[10.10.10.0]/224
+                      0.0.0.0                  0        100      32768 ?
+*>l[5]:[0]:[0]:[32]:[7.7.7.7]/224
+                      0.0.0.0  
+
+    '''}
     def test_show_bgp_l2vpn_evpn_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -28952,6 +28981,13 @@ Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
         obj = ShowBgpL2vpnEvpn(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf="all")
+    def test_show_bgp_l2vpn_evpn_golden_customer(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_customer)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse(vrf="all")
+        import pprint
+        pprint.pprint(parsed_output)
 
 # =======================================================================
 #  Unit test for 'show bgp ipv4 mvpn'
