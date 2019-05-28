@@ -1684,8 +1684,37 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         sum_dict = {}
         cache_dict = {}
         entries_dict = {}
+        bgp_config_dict = {}
+        passed_vrf = vrf
+
         if not vrf:
-            vrf = 'default'
+            out_vrf = self.device.execute('show run | sec address-family ipv4 vrf')
+
+            rc1 = re.compile(r'address\-family\s+ipv4\s+'
+                            'vrf\s+(?P<vrf>\S+)')
+
+            rc2 = re.compile(r'neighbor\s+(?P<neighbor_address>\S+)\s+'
+                        'remote\-as\s+(?P<remote_as>\S+)')
+
+            flag_address_family = False            
+
+            for line in out_vrf.splitlines():
+                line = line.strip()
+
+                result = rc1.match(line)
+                if result:
+                    groupdict = result.groupdict()
+                    vrf_dict = bgp_config_dict.setdefault(groupdict['vrf'], {})                
+                    flag_address_family = True
+                    continue
+
+                if flag_address_family:
+                    result = rc2.match(line)
+                    if result:
+                        groupdict = result.groupdict()
+                        neighbor_dict = vrf_dict.setdefault(groupdict['neighbor_address'], {})
+                        neighbor_dict['remote_as'] = groupdict['remote_as']
+                    continue
 
         # For address family: IPv4 Unicast
         p1 = re.compile(r'^For address family: +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
@@ -1792,13 +1821,8 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                 route_identifier = m.groupdict()['route_identifier']
                 local_as = int(m.groupdict()['local_as'])
 
-                if 'bgp_id' not in sum_dict:
-                    sum_dict['bgp_id'] = local_as
-
-                if 'vrf' not in sum_dict:
-                    sum_dict['vrf'] = {}
-                if vrf not in sum_dict['vrf']:
-                    sum_dict['vrf'][vrf] = {}
+                sum_dict['bgp_id'] = local_as
+                
                 continue
 
             # BGP table version is 28, main routing table version 28
@@ -1882,22 +1906,32 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             if m:
                 # Add neighbor to dictionary
                 neighbor = str(m.groupdict()['neighbor'])
-                if 'neighbor' not in sum_dict['vrf'][vrf]:
-                    sum_dict['vrf'][vrf]['neighbor'] = {}
-                if neighbor not in sum_dict['vrf'][vrf]['neighbor']:
-                    sum_dict['vrf'][vrf]['neighbor'][neighbor] = {}
-                nbr_dict = sum_dict['vrf'][vrf]['neighbor'][neighbor]
+                neighbor_as = int(m.groupdict()['as'])
 
-                # Add address family to this neighbor
-                if 'address_family' not in nbr_dict:
-                    nbr_dict['address_family'] = {}
-                if address_family not in nbr_dict['address_family']:
-                    nbr_dict['address_family'][address_family] = {}
+                if not passed_vrf:
+                    for vrf_value, neighbors_value in bgp_config_dict.items():
+                        for local_neighbor, as_num in neighbors_value.items():
+                            if (local_neighbor == neighbor and
+                                as_num['remote_as'] == str(neighbor_as)):
+                                vrf = vrf_value
+                                break
+                        else:
+                            continue
+                        break
+                    else:
+                        vrf = 'default'
+
+                nbr_dict = sum_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                           .setdefault('neighbor', {}).setdefault(neighbor, {})
+
+                nbr_af_dict = nbr_dict.setdefault('address_family', {})\
+                                      .setdefault(address_family, {})
+
                 nbr_af_dict = nbr_dict['address_family'][address_family]
 
                 # Add keys for this address_family
                 nbr_af_dict['version'] = int(m.groupdict()['version'])
-                nbr_af_dict['as'] = int(m.groupdict()['as'])
+                nbr_af_dict['as'] = neighbor_as
                 nbr_af_dict['msg_rcvd'] = int(m.groupdict()['msg_rcvd'])
                 nbr_af_dict['msg_sent'] = int(m.groupdict()['msg_sent'])
                 nbr_af_dict['tbl_ver'] = int(m.groupdict()['tbl_ver'])
