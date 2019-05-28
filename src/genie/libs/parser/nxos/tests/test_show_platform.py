@@ -1159,19 +1159,20 @@ class test_show_vdc_detail(unittest.TestCase):
             parsed_output = vdc_detail_obj.parse()
 
 class test_show_vdc_current(unittest.TestCase):
+
     device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'current_vdc':
-                            {'id': '1',
-                             'name': 'PE1'}
-                         }
+
+    golden_parsed_output = {
+        'current_vdc':
+            {'id': '1',
+            'name': 'PE1',
+            },
+        }
 
     golden_output = {'execute.return_value': '''
- 
-Current vdc is 1 - PE1
-
-'''}
+        Current vdc is 1 - PE1
+        '''}
 
     def test_golden(self):
         self.maxDiff = None
@@ -1181,8 +1182,8 @@ Current vdc is 1 - PE1
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        vdc_current_obj = ShowVdcCurrent(device=self.device1)
+        self.device = Mock(**self.empty_output)
+        vdc_current_obj = ShowVdcCurrent(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = vdc_current_obj.parse()
 
