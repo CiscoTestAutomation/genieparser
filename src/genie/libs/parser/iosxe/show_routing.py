@@ -84,22 +84,20 @@ class ShowIpRoute(ShowIpRouteSchema):
     cli_command = ['show ip route vrf {vrf}','show ip route','show ip route {route}','show ip route vrf {vrf} {route}']
 
     def cli(self,vrf="",route="",output=None):
+        if not vrf:
+            vrf = 'default'
         if output is None:
             if vrf and not route:
                 cmd = self.cli_command[0].format(vrf=vrf)
             elif not route and not vrf :
                 cmd = self.cli_command[1]
-                vrf = 'default'
-            elif route and not vrf :
+            elif route and not vrf:
                 cmd = self.cli_command[2].format(route=route)
-                vrf = 'default'
             elif route and vrf :
                 cmd = self.cli_command[3].format(route=route,vrf=vrf)
 
             out = self.device.execute(cmd)
         else:
-            if not vrf:
-                vrf='default'
             out = output
 
         af = 'ipv4'
