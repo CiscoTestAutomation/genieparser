@@ -716,40 +716,6 @@ class test_show_ip_route(unittest.TestCase):
         L        10.12.7.38/32 is directly connected, Vlan101
         '''}
 
-    golden_output_customer = {'execute.return_value':'''
-Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
-       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
-       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-       E1 - OSPF external type 1, E2 - OSPF external type 2
-       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
-       ia - IS-IS inter area, * - candidate default, U - per-user static route
-       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
-       a - application route
-       + - replicated route, % - next hop override, p - overrides from PfR
-
-Gateway of last resort is not set
-
-      10.0.0.0/24 is subnetted, 3 subnets
-O IA     10.20.2.0 [110/11] via 172.20.0.4, 19:03:55, GigabitEthernet3
-O IA     10.20.3.0 [110/11] via 172.20.0.4, 19:03:55, GigabitEthernet3
-O IA     10.20.4.0 [110/11] via 172.20.0.4, 19:03:55, GigabitEthernet3
-B     172.16.0.0/12 [20/0] via 172.16.20.1, 19:02:52
-      172.16.0.0/16 is variably subnetted, 2 subnets, 2 masks
-C        172.16.20.0/24 is directly connected, GigabitEthernet2
-L        172.16.20.2/32 is directly connected, GigabitEthernet2
-      172.17.0.0/24 is subnetted, 1 subnets
-B        172.17.0.0 [20/0] via 172.16.20.1, 19:02:52
-      172.18.0.0/24 is subnetted, 1 subnets
-B        172.18.0.0 [20/0] via 172.16.20.1, 19:02:52
-      172.20.0.0/16 is variably subnetted, 4 subnets, 3 masks
-S        172.20.0.0/16 is directly connected, Null0
-C        172.20.0.0/24 is directly connected, GigabitEthernet3
-L        172.20.0.2/32 is directly connected, GigabitEthernet3
-O IA     172.20.1.0/24 [110/11] via 172.20.0.4, 19:03:55, GigabitEthernet3
-B     172.21.0.0/16 [20/0] via 172.16.20.1, 19:02:21
-    '''}
-
-
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRoute(device=self.device)
@@ -783,13 +749,7 @@ B     172.21.0.0/16 [20/0] via 172.16.20.1, 19:02:21
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-    def test_show_ip_route_customer(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_customer)
-        obj = ShowIpRoute(device=self.device)
-        parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
+
 ###################################################
 # unit test for show ipv6 route updated
 ####################################################

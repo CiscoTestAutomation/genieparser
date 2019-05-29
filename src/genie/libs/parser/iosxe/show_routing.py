@@ -87,7 +87,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         if output is None:
             if vrf and not route:
                 cmd = self.cli_command[0].format(vrf=vrf)
-            elif not route  and not vrf :
+            elif not route and not vrf :
                 cmd = self.cli_command[1]
                 vrf = 'default'
             elif route and not vrf :
@@ -98,6 +98,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             out = self.device.execute(cmd)
         else:
+            if not vrf:
+                vrf='default'
             out = output
 
         af = 'ipv4'
@@ -1235,7 +1237,7 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
-                        '( +label +(?P<outgoing_label>[\w\-\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
+                        '( +label +(?P<outgoing_label>[\d\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
 
