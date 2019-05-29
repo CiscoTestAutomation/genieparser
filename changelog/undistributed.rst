@@ -10,4 +10,12 @@
                                 BGP
 --------------------------------------------------------------------------------
 * NXOS
-    * Updated ShowBgpIpMvpnRouteType to fix a issue where parsed not parsing some lines
+    * Updated ShowBgpIpMvpnRouteType to fix parser issue
+
+--------------------------------------------------------------------------------
+                                   PLATFORM
+--------------------------------------------------------------------------------
+* NXOS
+    * Bugfix for ShowVdcCurrent
+
+

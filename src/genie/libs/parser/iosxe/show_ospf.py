@@ -6078,3 +6078,19 @@ class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
 
         return ret_dict
 
+
+# =================================================
+# Parser for:
+#   * 'show ip ospf database router self-originate'
+# =================================================
+class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabaseTypeParser):
+
+    ''' Parser for:
+        * 'show ip ospf database router self-originate'
+    '''
+
+    cli_command = 'show ip ospf database router self-originate'
+
+    def cli(self, output=None):
+
+        return super().cli(cmd=self.cli_command, db_type='router', output=output)
