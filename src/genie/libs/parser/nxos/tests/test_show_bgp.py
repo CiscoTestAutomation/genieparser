@@ -28939,6 +28939,7 @@ Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup
                       10.1.8.8                           100          0 i
 
 """}
+ 
 
     def test_show_bgp_l2vpn_evpn_golden(self):
         self.maxDiff = None
@@ -29006,7 +29007,8 @@ Route Distinguisher: 10.16.2.2:4    (L3VNI 10200)
                                 "10.16.2.2:3": {
                                     "prefix": {
                                         "[5][10.111.1.3][238.8.4.101]/64": {
-                                            "nonipprefix": "[5][10.111.1.3][238.8.4.101]/64",
+                                            "nonipprefix": "[5][10.111.1.3]["
+                                                           "238.8.4.101]/64",
                                             "path": {
                                                 1: {
                                                     "bestcode": ">",
