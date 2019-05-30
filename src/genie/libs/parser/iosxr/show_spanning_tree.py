@@ -119,7 +119,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    if m:
 		    	group = m.groupdict()
 		    	mst_instances = ret_dict.setdefault('mstp', {}). \
-		    		setdefault(mst_id, {}). \
+		    		setdefault(mst, {}). \
 		    		setdefault('mst_instances', {}).setdefault(group['mst'], {})
 		    	mst_instances.update({'mst_id' : group['mst']})
 		    	continue
