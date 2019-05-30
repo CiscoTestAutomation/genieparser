@@ -150,18 +150,18 @@ class show_spanning_tree_mst(unittest.TestCase):
 	    self.dev = Mock(**self.empty_output)
 	    obj = ShowSpanningTreeMst(device=self.dev)
 	    with self.assertRaises(SchemaEmptyParserError):
-	        parsed_output = obj.parse(mst_id='test')
+	        parsed_output = obj.parse(mst='test')
 
 	def test_golden_mst(self):
 	    self.dev = Mock(**self.golden_output)
 	    obj = ShowSpanningTreeMst(device=self.dev)
-	    parsed_output = obj.parse(mst_id='test')
+	    parsed_output = obj.parse(mst='test')
 	    self.assertEqual(parsed_output,self.golden_parsed_output)
 
 	def test_golden_mst_2(self):
 	    self.dev = Mock(**self.golden_output_2)
 	    obj = ShowSpanningTreeMst(device=self.dev)
-	    parsed_output = obj.parse(mst_id='blocked-ports')
+	    parsed_output = obj.parse(mst='blocked-ports')
 	    self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 """

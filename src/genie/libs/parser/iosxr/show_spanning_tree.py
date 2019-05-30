@@ -80,14 +80,14 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 	def cli(self, mst, output=None):
 		if output is None:
 		    # get output from device
-		    out = self.device.execute(self.cli_command.format(mst=mst_id))
+		    out = self.device.execute(self.cli_command.format(mst=mst))
 		else:
 		    out = output
 
 		# initial return dictionary
 		ret_dict = {}
 		# MSTI 0 (CIST):
-		p1 = re.compile(r'^MSTI +(?P<mst_id>\d+)([\s\S]+)?:$')
+		p1 = re.compile(r'^MSTI +(?P<mst>\d+)([\s\S]+)?:$')
 		# VLANS Mapped: 1-4094
 		p2 = re.compile(r'^VLANS +Mapped: +(?P<vlan>\S+)$')
 		# CIST Root  Priority    32768
@@ -120,8 +120,8 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    	group = m.groupdict()
 		    	mst_instances = ret_dict.setdefault('mstp', {}). \
 		    		setdefault(mst_id, {}). \
-		    		setdefault('mst_instances', {}).setdefault(group['mst_id'], {})
-		    	mst_instances.update({'mst_id' : group['mst_id']})
+		    		setdefault('mst_instances', {}).setdefault(group['mst'], {})
+		    	mst_instances.update({'mst_id' : group['mst']})
 		    	continue
 
 		    # VLANS Mapped: 1-4094
