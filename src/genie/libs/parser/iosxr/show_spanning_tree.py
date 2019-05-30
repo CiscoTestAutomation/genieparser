@@ -77,7 +77,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		* 'show spanning-tree mst {mst}'
 	'''
 	cli_command = 'show spanning-tree mst {mst}'
-	def cli(self, mst_id, output=None):
+	def cli(self, mst, output=None):
 		if output is None:
 		    # get output from device
 		    out = self.device.execute(self.cli_command.format(mst=mst_id))
