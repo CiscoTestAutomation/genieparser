@@ -1,7 +1,7 @@
 """show_spanning_tree.py
 
 IOSXR parser for the following show commands:
-	* show spanning-tree mst <mst_id>
+	* show spanning-tree mst {mst_id}
 	* show spanning-tree mstag <mag_domain>
 	* show spanning-tree pvrst <pvst_id>
 	* show spanning-tree pvrstag <pvrstag_domain>
@@ -22,7 +22,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-"""Schema for 'show spanning-tree mst <mst_id>'"""
+"""Schema for 'show spanning-tree mst {mst_id}'"""
 class ShowSpanningTreeMstSchema(MetaParser):
 	schema = {
 		'mstp': {
@@ -68,8 +68,14 @@ class ShowSpanningTreeMstSchema(MetaParser):
 		}
 	}
 
+# ======================================
+# Parser for:
+#   * 'show spanning-tree mst {mst_id}'
+# ======================================
 class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
-	"""Parser for 'show spanning-tree mst <mst_id>'"""
+	'''Parser for:
+		* 'show spanning-tree mst {mst_id}'
+	'''
 	cli_command = 'show spanning-tree mst {mst_id}'
 	def cli(self, mst_id, output=None):
 		if output is None:
@@ -80,7 +86,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 
 		# initial return dictionary
 		ret_dict = {}
-
+		breakpoint()
 		# MSTI 0 (CIST):
 		p1 = re.compile(r'^MSTI +(?P<mst_id>\d+)([\s\S]+)?:$')
 		# VLANS Mapped: 1-4094
