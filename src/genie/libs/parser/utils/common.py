@@ -88,19 +88,19 @@ def _find_command(command, data, device):
             continue
 
         # Okay... this is not optimal
-        patterns = re.findall('{.*?}', key)
+        patterns = re.findall('{.*?}(?: +{.*?})*', key)
         len_normal_words = len(set(key.split()) - set(patterns))
         reg = key
 
         for pattern in patterns:
-            word = pattern.replace('{', '').replace('}', '')
-            new_pattern = '(?P<{p}>\S+)'.format(p=word) if word == 'vrf' else '(?P<{p}>.*)'.format(p=word)
+            new_pattern= pattern.replace('}',r'>\S+)').replace('{', '(?P<')
             reg = re.sub(pattern, new_pattern, reg)
+        reg = reg.strip()
         reg += '$'
         # Convert | to \|
         reg = reg.replace('|', '\|')
-
-        match = re.match(reg, command)
+        
+        match = re.search(reg, command)
         if match:
             # Found a match!
             lookup = Lookup.from_device(device, packages={'parser':parser})
