@@ -1452,7 +1452,7 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                     'show bgp vrf {vrf} {route}'
                    ]
 
-    def cli(self, vrf='', route='',output=None):
+    def cli(self, vrf='', route='', address_family='',output=None):
 
         if output is None:
             if vrf and route:
@@ -1466,7 +1466,7 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output)
+        return super().cli(address_family=address_family,output=show_output)
 
 
 # ====================================================
