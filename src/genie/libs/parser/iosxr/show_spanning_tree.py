@@ -1,7 +1,7 @@
 """show_spanning_tree.py
 
 IOSXR parser for the following show commands:
-	* show spanning-tree mst {mst_id}
+	* show spanning-tree mst {mst}
 	* show spanning-tree mstag <mag_domain>
 	* show spanning-tree pvrst <pvst_id>
 	* show spanning-tree pvrstag <pvrstag_domain>
@@ -22,7 +22,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-"""Schema for 'show spanning-tree mst {mst_id}'"""
+"""Schema for 'show spanning-tree mst {mst}'"""
 class ShowSpanningTreeMstSchema(MetaParser):
 	schema = {
 		'mstp': {
@@ -70,17 +70,17 @@ class ShowSpanningTreeMstSchema(MetaParser):
 
 # ======================================
 # Parser for:
-#   * 'show spanning-tree mst {mst_id}'
+#   * 'show spanning-tree mst {mst}'
 # ======================================
 class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 	'''Parser for:
-		* 'show spanning-tree mst {mst_id}'
+		* 'show spanning-tree mst {mst}'
 	'''
-	cli_command = 'show spanning-tree mst {mst_id}'
+	cli_command = 'show spanning-tree mst {mst}'
 	def cli(self, mst_id, output=None):
 		if output is None:
 		    # get output from device
-		    out = self.device.execute(self.cli_command.format(mst_id=mst_id))
+		    out = self.device.execute(self.cli_command.format(mst=mst_id))
 		else:
 		    out = output
 
