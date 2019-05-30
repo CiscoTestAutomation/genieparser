@@ -86,7 +86,6 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 
 		# initial return dictionary
 		ret_dict = {}
-		breakpoint()
 		# MSTI 0 (CIST):
 		p1 = re.compile(r'^MSTI +(?P<mst_id>\d+)([\s\S]+)?:$')
 		# VLANS Mapped: 1-4094
