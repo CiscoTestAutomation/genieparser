@@ -62,6 +62,7 @@ class ShowIpRouteSchema(MetaParser):
                                             Optional('reliability'): str,
                                             Optional('minimum_bandwidth'): str,
                                             Optional('total_delay'): str,
+                                            Optional('vrf'): str
                                         },
                                     },
                                 },
@@ -79,11 +80,19 @@ class ShowIpRouteSchema(MetaParser):
 # ====================================================
 class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
-       show ip route
-       show ip route vrf <vrf>"""
-    cli_command = ['show ip route vrf {vrf}','show ip route','show ip route {route}','show ip route vrf {vrf} {route}']
+        show ip route
+        show ip route vrf <vrf>
+        show ip route bgp
+        show ip route vrf <vrf> bgp
+        show ipv6 route bgp
+        show ipv6 route vrf <vrf> bgp"""
+    cli_command = ['show ip route vrf {vrf}', 'show ip route', 'show ip route {route}',
+                   'show ip route vrf {vrf} {route}',
+                   'show {ip} route vrf {vrf} {protocol}', 'show {ip} route {protocol}',
+                   'show ip route vrf {vrf} {protocol}',
+                   'show route {protocol}']
 
-    def cli(self,vrf="",route="",output=None):
+    def cli(self, protocol='', vrf="",route="",ip='ip', output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
@@ -95,12 +104,20 @@ class ShowIpRoute(ShowIpRouteSchema):
                 cmd = self.cli_command[2].format(route=route)
             elif route and vrf :
                 cmd = self.cli_command[3].format(route=route,vrf=vrf)
+            elif ip and vrf:
+                cmd = self.cli_command[4].format(ip=ip,vrf=vrf, protocol= protocol)
+            elif ip:
+                cmd = self.cli_command[5].format(ip=ip,protocol= protocol)
+            elif vrf:
+                cmd = self.cli_command[6].format(vrf=vrf,protocol= protocol)
+            else:
+                cmd = self.cli_command[7].format(protocol= protocol)
 
             out = self.device.execute(cmd)
         else:
             out = output
 
-        af = 'ipv4'
+        af = 'ipv4' if ip == 'ip' else 'ipv6'
         route = ""
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
@@ -189,9 +206,11 @@ class ShowIpRoute(ShowIpRouteSchema):
             # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
             # D        192.168.205.1
-            p3 = re.compile(r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\d\/\.]+)?'
-                            '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
-                            '( +via )?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+            p3 = re.compile(
+                r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
+                r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
+                r'via +)?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+
             m = p3.match(line)
             if m:
                 active = True
@@ -220,9 +239,12 @@ class ShowIpRoute(ShowIpRouteSchema):
                         route_preference = int(routepreference.split('/')[0])
                         metrics = routepreference.split('/')[1]
 
-                index = 1
+
                 if m.groupdict()['next_hop']:
                     next_hop = m.groupdict()['next_hop']
+                    index = 1
+                else:
+                    index = 0
                 if m.groupdict()['interface']:
                     interface = m.groupdict()['interface']
 
@@ -267,7 +289,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                     if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
 
-                    if not next_hop:
+                    if not next_hop and interface:
 
                         if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
                                 ['routes'][route]['next_hop']:
@@ -284,7 +306,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
                                 ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
 
-                    else:
+                    elif next_hop:
                         if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'][
                                 'next_hop_list'] = {}
@@ -295,9 +317,9 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
                             ['next_hop_list'][index]['index'] = index
-
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['next_hop'] = next_hop
+                        if next_hop:
+                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
+                                ['next_hop_list'][index]['next_hop'] = next_hop
 
                         if updated:
                             result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
@@ -316,7 +338,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             if m:
 
                 routepreference = m.groupdict()['route_preference']
-                if '/' in routepreference:
+                if routepreference and '/' in routepreference:
                     route_preference = int(routepreference.split('/')[0])
                     metrics = routepreference.split('/')[1]
 
@@ -485,6 +507,75 @@ class ShowIpRoute(ShowIpRouteSchema):
                                 ['next_hop_list'][index]['outgoing_interface'] = interface
 
                 continue
+            #      via 2001:DB8:1:1::2
+            #      via 10.4.1.1%default, indirectly connected
+            #      via 2001:DB8:4:6::6
+            #      via 2001:DB8:20:4:6::6%VRF2
+            p6 = re.compile(r'^\s*via +(?P<next_hop>[a-zA-Z0-9./:]+)%?(?P<vrf>[a-zA-Z0-9]+)?,?[\w\s]*$')
+            m = p6.match(line)
+            if m:
+                vrf_val = ''
+                next_hop = m.groupdict()['next_hop']
+                if m.groupdict()['vrf']:
+                    vrf_val = m.groupdict()['vrf']
+                index += 1
+                if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
+                if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
+
+                result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                    'route'] = route
+
+                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                    ['active'] = active
+
+                if metrics:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                        ['metric'] = int(metrics)
+                if route_preference:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                        ['route_preference'] = route_preference
+                if source_protocol_codes:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                        ['source_protocol_codes'] = source_protocol_codes
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
+                        ['source_protocol'] = source_protocol
+
+                if 'next_hop' not in \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                        'next_hop'] = {}
+
+                if 'next_hop_list' not in \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                            'next_hop']:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                        'next_hop'][
+                        'next_hop_list'] = {}
+
+                if index not in \
+                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                            'next_hop'] \
+                                ['next_hop_list']:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                        'next_hop'] \
+                        ['next_hop_list'][index] = {}
+
+                result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                    'next_hop'] \
+                    ['next_hop_list'][index]['index'] = index
+
+                result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                    'next_hop'] \
+                    ['next_hop_list'][index]['next_hop'] = next_hop
+
+                if vrf_val:
+                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
+                        'next_hop'] \
+                        ['next_hop_list'][index]['vrf'] = vrf_val
+
+                continue
             # Routing entry for 10.151.0.0/24, 1 known subnets
             # Routing entry for 0.0.0.0/0, supernet
             # Routing entry for 192.168.154.0/24
@@ -568,6 +659,14 @@ class ShowIpRoute(ShowIpRouteSchema):
                 path_dict.update({k: v for k, v in group.items() if v})
                 continue
         return result_dict
+
+class ShowIpv6Route(ShowIpRoute):
+    """Parser for:
+        show ipv6 route bgp
+        show ipv6 route vrf <vrf> bgp"""
+
+    def cli(self, protocol, ip='ipv6', vrf = '',output=None):
+        return(super().cli(protocol=protocol, ip='ipv6', vrf=vrf, output=output))
 
 # ====================================================
 #  schema for show ipv6 route updated

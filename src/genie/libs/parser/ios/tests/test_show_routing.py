@@ -7,7 +7,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.ios.show_routing import ShowIpRoute, ShowIpv6RouteUpdated, ShowIpv6RouteWord  
+from genie.libs.parser.ios.show_routing import ShowIpRoute, ShowIpv6Route, ShowIpv6RouteUpdated, ShowIpv6RouteWord
 
 from genie.libs.parser.iosxe.tests.test_show_routing import \
                         test_show_ip_route as test_show_ip_route_iosxe,\
@@ -120,6 +120,19 @@ class test_show_ip_route(test_show_ip_route_iosxe):
 
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        route_map_obj = ShowIpRoute(device=self.device)
+        parsed_output = route_map_obj.parse(protocol='bgp', ip='ip')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        route_map_obj = ShowIpv6Route(device=self.device)
+        parsed_output = route_map_obj.parse(protocol='bgp',)
+        self.assertDictEqual(parsed_output, self.golden_parsed_output6)
 
 ###################################################
 # unit test for show ipv6 route updated
