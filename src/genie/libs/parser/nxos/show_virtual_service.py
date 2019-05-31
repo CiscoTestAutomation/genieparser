@@ -253,17 +253,35 @@ class ShowVirtualServiceDetailSchema(MetaParser):
         'service': {
             Any(): {
                 'state': str,
-                'info': {
-                    'package_location': str,
-                    'version' : str,
-                    'description' : str,
-                    'signing_key_type': str,
+                'package_information': {
+                    'name': str,
+                    'path': str,
+                    'application': {
+                        'name': str,
+                        'version': str,
+                        'description': str,
+                    },
+                    'signing': {
+                        'key_type': str,
+                        'method': str,
+                    },
+                    'licensing': {
+                        'name': str,
+                        'version': str,
+                    },
                 },
                 'resource_reservation': {
                     'disk_mb': int,
                     'memory_mb': int,
                     'cpu_percent': int,
-                }
+                },
+                Optional('attached_devices'): {
+                    Any(): {
+                        'type': str,
+                        Optional('name'): str,
+                        Optional('alias'): str,
+                    },
+                },
             }
         }
     }
@@ -274,8 +292,9 @@ class ShowVirtualServiceDetailSchema(MetaParser):
 # ============================================================================
 class ShowVirtualServiceDetail(ShowVirtualServiceDetailSchema):
     """Parser for:
+      * show virtual-service detail
       * show virtual-service detail name <name>
-      * show guestshell
+      * show guestshell (by way of subclass ShowGuestshell)
     """
 
     cli_command = ["show virtual-service detail",
@@ -300,30 +319,64 @@ class ShowVirtualServiceDetail(ShowVirtualServiceDetailSchema):
         # Package information
         #   Name                : guestshell.ova
         #   Path                : /isanboot/bin/guestshell.ova
-        p3 = re.compile(r'^Path +: +(?P<path>.+)$')
+        p3 = re.compile(r'^Package information$')
+        p3_1 = re.compile(r'^Name +: +(?P<name>.+)$')
+        p3_2 = re.compile(r'^Path +: +(?P<path>.+)$')
 
         # Application
         #   Name              : GuestShell
         #   Installed version : 2.4(0.0)
         #   Description       : Cisco Systems Guest Shell
-        p4 = re.compile(r'^Installed +version +: +(?P<version>.+)$')
-        p5 = re.compile(r'^Description +: +(?P<description>.+)$')
+        p4 = re.compile(r'^Application$')
+        p4_1 = re.compile(r'^Name +: +(?P<name>.+)$')
+        p4_2 = re.compile(r'^Installed +version +: +(?P<version>.+)$')
+        p4_3 = re.compile(r'^Description +: +(?P<description>.+)$')
 
         # Signing
         #   Key type          : Cisco release key
         #   Method            : SHA-1
-        p6 = re.compile(r'^Key +type +: +(?P<key_type>.+)$')
+        p5 = re.compile(r'^Signing')
+        p5_1 = re.compile(r'^Key +type +: +(?P<key_type>.+)$')
+        p5_2 = re.compile(r'^Method +: +(?P<method>.+)$')
 
         # Licensing
         #   Name              : None
         #   Version           : None
+        p6 = re.compile(r'^Licensing')
+        p6_1 = re.compile(r'^Name +: +(?P<name>.+)$')
+        p6_2 = re.compile(r'^Version +: +(?P<version>.+)$')
+
         # Resource reservation
         #   Disk                : 1000 MB
         #   Memory              : 500 MB
         #   CPU                 : 1% system CPU
-        p7 = re.compile(r'^Disk +: +(?P<disk>\d+) +MB$')
-        p8 = re.compile(r'^Memory +: +(?P<memory>\d+) +MB$')
-        p9 = re.compile(r'^CPU +: +(?P<cpu>\d+)% system CPU')
+        p7 = re.compile(r'^Resource reservation$')
+        p7_1 = re.compile(r'^Disk +: +(?P<disk>\d+) +MB$')
+        p7_2 = re.compile(r'^Memory +: +(?P<memory>\d+) +MB$')
+        p7_3 = re.compile(r'^CPU +: +(?P<cpu>\d+)% system CPU')
+
+        # Attached devices
+        #   Type              Name        Alias
+        #   ---------------------------------------------
+        #   Disk              _rootfs
+        #   Disk              /cisco/cor
+        #   Serial/shell
+        #   Serial/aux
+        #   Serial/Syslog                 serial2
+        #   Serial/Trace                  serial3
+        p8 = re.compile(r'^Attached devices$')
+        p8_1 = re.compile(r'^Type +Name +Alias$')
+        # It appears that any given entry never has both name and alias
+        p8_2 = re.compile(
+            r'^(?P<type>.{1,17})(?: (?P<name>\S+)| {13}(?P<alias>\S+))?$')
+
+        service_dict = None
+        info_dict = None
+        app_dict = None
+        signing_dict = None
+        licensing_dict = None
+        res_dict = None
+        device_dict = None
 
         for line in output.splitlines():
             line = line.strip()
@@ -332,6 +385,12 @@ class ShowVirtualServiceDetail(ShowVirtualServiceDetailSchema):
             if match:
                 service_dict = services_dict.setdefault(
                     'service', {}).setdefault(match.groupdict()['name'], {})
+                info_dict = None
+                app_dict = None
+                signing_dict = None
+                licensing_dict = None
+                res_dict = None
+                device_list = None
                 continue
 
             match = p2.match(line)
@@ -341,49 +400,114 @@ class ShowVirtualServiceDetail(ShowVirtualServiceDetailSchema):
 
             match = p3.match(line)
             if match:
-                path = match.groupdict()['path']
-                service_dict.setdefault('info', {})['package_location'] = path
+                info_dict = service_dict.setdefault('package_information', {})
                 continue
+
+            if info_dict is not None and app_dict is None:
+                match = p3_1.match(line)
+                if match:
+                    info_dict['name'] = match.groupdict()['name']
+                    continue
+
+                match = p3_2.match(line)
+                if match:
+                    info_dict['path'] = match.groupdict()['path']
+                    continue
 
             match = p4.match(line)
             if match:
-                version = match.groupdict()['version']
-                service_dict.setdefault('info', {})['version'] = version
+                app_dict = info_dict.setdefault('application', {})
                 continue
+
+            if app_dict is not None and signing_dict is None:
+                match = p4_1.match(line)
+                if match:
+                    app_dict['name'] = match.groupdict()['name']
+                    continue
+
+                match = p4_2.match(line)
+                if match:
+                    app_dict['version'] = match.groupdict()['version']
+                    continue
+
+                match = p4_3.match(line)
+                if match:
+                    app_dict['description'] = match.groupdict()['description']
+                    continue
 
             match = p5.match(line)
             if match:
-                description = match.groupdict()['description']
-                service_dict.setdefault('info', {})['description'] = description
+                signing_dict = info_dict.setdefault('signing', {})
                 continue
+
+            if signing_dict is not None and licensing_dict is None:
+                match = p5_1.match(line)
+                if match:
+                    signing_dict['key_type'] = match.groupdict()['key_type']
+                    continue
+
+                match = p5_2.match(line)
+                if match:
+                    signing_dict['method'] = match.groupdict()['method']
+                    continue
 
             match = p6.match(line)
             if match:
-                key_type = match.groupdict()['key_type']
-                service_dict.setdefault('info',
-                                        {})['signing_key_type'] = key_type
+                licensing_dict = info_dict.setdefault('licensing', {})
                 continue
+
+            if licensing_dict is not None and res_dict is None:
+                match = p6_1.match(line)
+                if match:
+                    licensing_dict['name'] = match.groupdict()['name']
+                    continue
+
+                match = p6_2.match(line)
+                if match:
+                    licensing_dict['version'] = match.groupdict()['version']
+                    continue
 
             match = p7.match(line)
             if match:
-                disk = int(match.groupdict()['disk'])
-                service_dict.setdefault('resource_reservation',
-                                        {})['disk_mb'] = disk
+                res_dict = service_dict.setdefault('resource_reservation', {})
                 continue
+
+            if res_dict is not None and device_dict is None:
+                match = p7_1.match(line)
+                if match:
+                    res_dict['disk_mb'] = int(match.groupdict()['disk'])
+                    continue
+
+                match = p7_2.match(line)
+                if match:
+                    res_dict['memory_mb'] = int(match.groupdict()['memory'])
+                    continue
+
+                match = p7_3.match(line)
+                if match:
+                    res_dict['cpu_percent'] = int(match.groupdict()['cpu'])
+                    continue
 
             match = p8.match(line)
             if match:
-                memory = int(match.groupdict()['memory'])
-                service_dict.setdefault('resource_reservation',
-                                        {})['memory_mb'] = memory
+                device_dict = service_dict.setdefault('attached_devices', {})
                 continue
 
-            match = p9.match(line)
-            if match:
-                cpu = int(match.groupdict()['cpu'])
-                service_dict.setdefault('resource_reservation',
-                                        {})['cpu_percent'] = cpu
-                continue
+            if device_dict is not None:
+                match = p8_1.match(line)
+                if match:
+                    continue
+
+                match = p8_2.match(line)
+                if match:
+                    gd = match.groupdict()
+                    entry = {'type': gd['type'].strip()}
+                    if gd.get('name') and gd['name'].strip():
+                        entry['name'] = gd['name'].strip()
+                    if gd.get('alias') and gd['alias'].strip():
+                        entry['alias'] = gd['alias'].strip()
+                    device_dict[len(device_dict) + 1] = entry
+                    continue
 
         return services_dict
 
@@ -400,17 +524,35 @@ class ShowGuestshellSchema(MetaParser):
 
     schema = {
         'state': str,
-        'info': {
-            'package_location': str,
-            'version' : str,
-            'description' : str,
-            'signing_key_type': str,
+        'package_information': {
+            'name': str,
+            'path': str,
+            'application': {
+                'name': str,
+                'version': str,
+                'description': str,
+            },
+            'signing': {
+                'key_type': str,
+                'method': str,
+            },
+            'licensing': {
+                'name': str,
+                'version': str,
+            },
         },
         'resource_reservation': {
             'disk_mb': int,
             'memory_mb': int,
             'cpu_percent': int,
-        }
+        },
+        Optional('attached_devices'): {
+            Any(): {
+                'type': str,
+                Optional('name'): str,
+                Optional('alias'): str,
+            },
+        },
     }
 
 
