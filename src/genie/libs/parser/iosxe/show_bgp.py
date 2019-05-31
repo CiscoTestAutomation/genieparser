@@ -1456,6 +1456,7 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
         if output is None:
             if vrf and route:
+                address_family = 'vpnv4 unicast'
                 cmd = self.cli_command[1].format(vrf=vrf,
                     route=route)
             else:

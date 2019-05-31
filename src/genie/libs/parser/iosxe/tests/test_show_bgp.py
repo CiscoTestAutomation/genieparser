@@ -2261,8 +2261,7 @@ Paths: (1 available, best #1, table CE1test)
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllDetail(device=self.device)
-        parsed_output = obj.parse(vrf='CE1test', route='11.11.11.11',
-            address_family='vpnv4 unicast')
+        parsed_output = obj.parse(vrf='CE1test', route='11.11.11.11')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ============================
