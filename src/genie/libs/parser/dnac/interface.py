@@ -30,15 +30,46 @@ from genie.libs.parser.utils.common import Common
 logger = logging.getLogger(__name__)
 
 
-class Interface(MetaParser):
+class InterfaceSchema(MetaParser):
     """schema for /dna/intent/api/v1/interface"""
 
     schema = {
-               Any(): {},
+               Any(): {
+                       "adminStatus": str,
+                       Optional("className"): str,
+                       Optional("description"): str,
+                       "deviceId": str,
+                       Optional("duplex"): str,
+                       Optional("id"): str,
+                       "ifIndex": str,
+                       Optional("instanceTenantId"): str,
+                       Optional("instanceUuid"): str,
+                       "interfaceType": str,
+                       Optional("ipv4Address"): str,
+                       Optional("ipv4Mask"): str,
+                       "isisSupport": str,
+                       "lastUpdated": str,
+                       Optional("macAddress"): str,
+                       Optional("mappedPhysicalInterfaceId"): str,
+                       Optional("mappedPhysicalInterfaceName"): str,
+                       Optional("mediaType"): str,
+                       Optional("nativeVlanId"): str,
+                       "ospfSupport": str,
+                       "pid": str,
+                       "portMode": str,
+                       "portName": str,
+                       Optional("portType"): str,
+                       "serialNo": str,
+                       "series": str,
+                       Optional("speed"): str,
+                       "status": str,
+                       Optional("vlanId"): str,
+                       Optional("voiceVlan"): str
+               }
              }
 
 
-class Interfaces(InterfacesSchema):
+class Interface(InterfaceSchema):
     """parser for /dna/intent/api/v1/interface"""
 
     cli_command = ['/dna/intent/api/v1/interface']
@@ -49,8 +80,14 @@ class Interfaces(InterfacesSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.get(cmd)
+            out = self.device.get(cmd).json()['response']
+
         else:
             out = output
 
-        return {}
+        result_dict={}
+        for intf_dict in out:
+            # remove None values
+            result_dict[intf_dict['portName']] = {k: v for k, v in intf_dict.items() if v is not None}
+
+        return result_dict
