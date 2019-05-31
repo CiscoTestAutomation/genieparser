@@ -718,30 +718,34 @@ class test_show_ip_route(unittest.TestCase):
         '''}
 
     golden_parsed_output5 = {
-        'vrf':
-            {'default':
-                 {'address_family':
-                      {'ipv4':
-                           {'routes':
-                                {'10.1.1.0/24':
-
-                                     {'active': True,
-                                      'next_hop': {
-                                          'next_hop_list': {
-                                              1: {
-                                                  'index': 1,
-                                                  'next_hop':
-                                                      '10.4.1.1',
-                                                  'updated':
-                                                      '01:40:40'}
-                                          }
-                                      },
-                                      'source_protocol': 'bgp',
-                                      'metric': 2219,
-                                      'route_preference': 200,
-                                      'source_protocol_codes': 'B',
-                                      'route': '10.1.1.0/24'
-                                      }}}}}}}
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "routes": {
+                            "10.1.1.0/24": {
+                                "active": True,
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "10.4.1.1",
+                                            "updated": "01:40:40"
+                                        }
+                                    }
+                                },
+                                "source_protocol": "bgp",
+                                "metric": 2219,
+                                "route_preference": 200,
+                                "source_protocol_codes": "B",
+                                "route": "10.1.1.0/24"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     golden_output5 = {'execute.return_value': '''
           R1#show ip route bgp
@@ -759,55 +763,50 @@ class test_show_ip_route(unittest.TestCase):
           '''}
 
     golden_parsed_output6 = {
-        'vrf':
-            {'default':
-                 {'address_family':
-                      {'ipv6':
-                           {'routes':
-                                {'2001:2:2:2::2/128':
-                                     {'active': True,
-                                      'next_hop':
-                                          {'next_hop_list': {
-                                              1: {
-                                                  'index': 1,
-                                                  'next_hop':
-                                                      '2001:DB8:1:1::2'
-                                              }
-                                          }
-                                          },
-                                      'source_protocol': 'bgp',
-                                      'metric': 0,
-                                      'route_preference': 200,
-                                      'source_protocol_codes': 'B',
-                                      'route': '2001:2:2:2::2/128'
-                                      },
-
-                                 '615:11:11:4::/64': {
-                                     'active': True,
-                                     'metric': 2219,
-                                     'next_hop': {
-                                         'next_hop_list': {
-                                             1: {
-                                                 'index': 1,
-                                                 'next_hop':
-                                                     '10.4.1.1',
-                                                 'vrf': 'default'
-                                             }
-                                         }
-                                     },
-
-                                     'route':
-                                         '615:11:11:4::/64',
-                                     'route_preference': 200,
-                                     'source_protocol': 'bgp',
-                                     'source_protocol_codes': 'B'}
-                                 }
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv6": {
+                        "routes": {
+                            "2001:2:2:2::2/128": {
+                                "active": True,
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "2001:DB8:1:1::2"
+                                        }
+                                    }
+                                },
+                                "source_protocol": "bgp",
+                                "metric": 0,
+                                "route_preference": 200,
+                                "source_protocol_codes": "B",
+                                "route": "2001:2:2:2::2/128"
+                            },
+                            "615:11:11:4::/64": {
+                                "active": True,
+                                "metric": 2219,
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "10.4.1.1",
+                                            "vrf": "default"
+                                        }
+                                    }
+                                },
+                                "route": "615:11:11:4::/64",
+                                "route_preference": 200,
+                                "source_protocol": "bgp",
+                                "source_protocol_codes": "B"
                             }
-                       }
-                  }
-             }
+                        }
+                    }
+                }
+            }
+        }
     }
-
 
     golden_output6 = {'execute.return_value': '''
           R1#show ipv6 route bgp
@@ -825,7 +824,6 @@ class test_show_ip_route(unittest.TestCase):
           B   615:11:11:4::/64 [200/2219]
             via 10.4.1.1%default, indirectly connected
           '''}
-
 
 
     def test_empty_1(self):
