@@ -12,6 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.nxos.show_virtual_service import (
     ShowVirtualServiceGlobal,
     ShowVirtualServiceList,
+    ShowVirtualServiceCore,
     ShowVirtualServiceDetail,
     ShowGuestshell,
 )
@@ -152,6 +153,60 @@ class test_show_virtual_service_list(unittest.TestCase):
         obj = ShowVirtualServiceList(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# =======================================================
+# Unit test for "show virtual-service core [name <name>]"
+# =======================================================
+class test_show_virtual_service_core(unittest.TestCase):
+    """Unit test for "show virtual-service core [name <name>]."""
+
+    empty_output = {'execute.return_value': """
+
+    Virtual-Service  Process-name  PID       Date(Year-Month-Day Time)
+    ---------------  ------------  --------  -------------------------
+    """}
+
+    golden_output_1 = {'execute.return_value': """
+
+    Virtual-Service  Process-name  PID       Date(Year-Month-Day Time)
+    ---------------  ------------  --------  -------------------------
+    guestshell+      sleep         266       2019-05-30 19:53:28
+    """}
+
+    golden_parsed_output_1 = {
+        'cores': {
+            1: {
+                'virtual_service': 'guestshell+',
+                'process_name': 'sleep',
+                'pid': 266,
+                'date': '2019-05-30 19:53:28',
+            },
+        }
+    }
+
+    def test_show_virtual_service_core_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowVirtualServiceCore(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+        obj = ShowVirtualServiceCore(device=self.device, name='guestshell+')
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_virtual_service_core(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowVirtualServiceCore(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+        obj = ShowVirtualServiceCore(device=self.device, name='guestshell+')
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 
 # ===========================================

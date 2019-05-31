@@ -3,6 +3,8 @@
 NX-OS parsers for the following show commands:
     * show virtual-service global
     * show virtual-service list
+    * show virtual-service core
+    * show virtual-service core name <name>
     * show virtual-service detail
     * show virtual-service detail name <name>
     * show guestshell
@@ -238,6 +240,72 @@ class ShowVirtualServiceList(ShowVirtualServiceListSchema):
                 continue
 
         return services_dict
+
+# ====================================================
+# Schema for "show virtual-service core [name <name>]"
+# ====================================================
+class ShowVirtualServiceCoreSchema(MetaParser):
+    """Schema for:
+      * show virtual-service core
+      * show virtual-service core name <name>
+    """
+
+    schema = {
+        'cores': {
+            Any(): {
+                'virtual_service': str,
+                'process_name': str,
+                'pid': int,
+                'date': str,
+            }
+        }
+    }
+
+
+# ====================================================
+# Parser for "show virtual-service core [name <name>]"
+# ====================================================
+class ShowVirtualServiceCore(ShowVirtualServiceCoreSchema):
+    """Parser for:
+      * show virtual-service core
+      * show virtual-service core name <name>
+    """
+
+    cli_command = ["show virtual-service core",
+                   "show virtual-service core name {name}"]
+
+    def cli(self, name="", output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[1].format(name=name)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        cores_dict = {}
+
+        # Virtual-Service  Process-name  PID       Date(Year-Month-Day Time)
+        # ---------------  ------------  --------  -------------------------
+        # guestshell+      sleep         266       2019-05-30 19:53:28
+        p1 = re.compile(
+            r'^(?P<vs>\S+)\s+(?P<proc>\S+)\s+(?P<pid>\d+)\s+(?P<date>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            match = p1.match(line)
+            if match:
+                g = match.groupdict()
+                cd = cores_dict.setdefault('cores', {})
+                cd[len(cd) + 1] = {
+                    'virtual_service': g['vs'],
+                    'process_name': g['proc'],
+                    'pid': int(g['pid']),
+                    'date': g['date'].strip(),
+                }
+                continue
+
+        return cores_dict
 
 
 # ======================================================
