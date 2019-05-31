@@ -1001,18 +1001,18 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         - vrf_type
 
     """
-    cli_command = ['show bgp instance all {vrf_type} all process detail',
-        'show bgp instance all {vrf_type} all {af_type} process detail']
+    cli_command = ['show bgp instance {instance} {vrf_type} all process detail',
+        'show bgp instance {instance} {vrf_type} all {af_type} process detail']
 
-    def cli(self, vrf_type, af_type='',output=None):
+    def cli(self, vrf_type, instance='all', vrf='all', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            if vrf_type and af_type:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            if vrf_type =='vrf' and address_family:
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=address_family, instance=instance, vrf))
             else:
-                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
+                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type, instance=instance, vrf=vrf))
         else:
             out = output
 
