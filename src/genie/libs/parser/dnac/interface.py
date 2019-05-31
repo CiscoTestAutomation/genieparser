@@ -29,9 +29,11 @@ from genie.libs.parser.utils.common import Common
 
 logger = logging.getLogger(__name__)
 
-
+# ============================================
+# Schema for '/dna/intent/api/v1/interface'
+# ============================================
 class InterfaceSchema(MetaParser):
-    """schema for /dna/intent/api/v1/interface"""
+    """schema for /dna/intent/api/v1/interface, /dna/intent/api/v1/interface/{interface}"""
 
     schema = {
                Any(): {
@@ -68,11 +70,13 @@ class InterfaceSchema(MetaParser):
                }
              }
 
-
+# ============================================
+# Parser for '/dna/intent/api/v1/interface'
+# ============================================
 class Interface(InterfaceSchema):
-    """parser for /dna/intent/api/v1/interface"""
+    """parser for /dna/intent/api/v1/interface, /dna/intent/api/v1/interface/{interface}"""
 
-    cli_command = ['/dna/intent/api/v1/interface']
+    cli_command = ['/dna/intent/api/v1/interface', '/dna/intent/api/v1/interface/{interface}']
 
     def cli(self,interface="", output=None):
         if output is None:
