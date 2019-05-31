@@ -1010,7 +1010,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
         if output is None:
             if vrf_type =='vrf' and address_family:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=address_family, instance=instance, vrf))
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=address_family, instance=instance, vrf=vrf))
             else:
                 out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type, instance=instance, vrf=vrf))
         else:
@@ -2187,11 +2187,11 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
     def cli(self, vrf_type, address_family='', output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
             if vrf_type and af_type:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=address_family))
             else:
                 out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
         else:
@@ -3152,14 +3152,14 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
     """
     cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
 
-    def cli(self, neighbor, vrf_type, af_type='', route_type='received routes', output=None):
+    def cli(self, neighbor, vrf_type, address_family='', route_type='received routes', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert route_type in ['received routes', 'routes']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route=route_type))
+            out = self.device.execute(self.cli_command.format(neighbor=neighbor, vrf_type=vrf_type, af_type=address_family, route=route_type))
         else:
             out = output
 
@@ -3173,7 +3173,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             af = ''
         elif vrf_type == 'vrf':
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af = 'vpnv6 unicast'
             else:
                 af = 'vpnv4 unicast'
@@ -3662,29 +3662,29 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
     """
     cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'
 
-    def cli(self, neighbor, vrf_type, af_type='', output=None):
+    def cli(self, neighbor, vrf_type, address_family='', output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_famliy in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
             out = self.device.execute(self.cli_command. \
-                                      format(neighbor=neighbor, af_type=af_type, vrf_type=vrf_type))
+                                      format(neighbor=neighbor, af_type=address_family, vrf_type=vrf_type))
         else:
             out = output
 
         ret_dict = {}
-        address_family = None
+
 
         if vrf_type == 'all':
             vrf = 'default'
             af = ''
         elif vrf_type == 'vrf':
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af = 'vpnv6 unicast'
             else:
                 af = 'vpnv4 unicast'
-
+        address_family = None
         for line in out.splitlines():
             line = line.strip()
 
@@ -3891,9 +3891,9 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
         - vrf_type
     """
     cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
-    def cli(self, neighbor, vrf_type, af_type='',output=None):
+    def cli(self, neighbor, vrf_type, address_family='',output=None):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
-            self, neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route_type='routes',output=output)
+            self, neighbor=neighbor, vrf_type=vrf_type, af_type=address_family, route_type='routes',output=output)
 
 
 # ====================================================
@@ -3983,13 +3983,13 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
     """
     cli_command = 'show bgp instance all {vrf_type} all {af_type} summary'
 
-    def cli(self, vrf_type, af_type='',output=None):
+    def cli(self, vrf_type, address_family='',output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
             out = self.device.execute(self.cli_command. \
-                                          format(af_type=af_type, vrf_type=vrf_type))
+                                          format(af_type=address_family, vrf_type=vrf_type))
         else:
             out = output
 
@@ -4002,7 +4002,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             af_default = None
         elif vrf_type == 'vrf':
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
             else:
                 af_default = 'vpnv4 unicast'
@@ -4370,13 +4370,13 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
     cli_command = ['show bgp instance all {vrf_type} all',
                    'show bgp instance all {vrf_type} all {af_type}']
 
-    def cli(self, vrf_type, af_type='',output=None):
+    def cli(self, vrf_type, address_famliy='',output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_famliy in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            if af_type:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            if address_famliy:
+                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=address_famliy))
             else:
                 out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
         else:
@@ -4389,7 +4389,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             af_default = None
         elif vrf_type == 'vrf':
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_famliy == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
             else:
                 af_default = 'vpnv4 unicast'
