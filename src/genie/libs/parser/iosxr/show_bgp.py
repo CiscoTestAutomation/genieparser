@@ -2184,7 +2184,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         'show bgp instance all {vrf_type} all {af_type} neighbors detail']
 
         
-    def cli(self, vrf_type, af_type='', output=None):
+    def cli(self, vrf_type, address_family='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
