@@ -95,19 +95,20 @@ class ShowIpRoute(ShowIpRouteSchema):
         if not vrf:
             vrf = 'default'
         if output is None:
-            if vrf != 'default' and not route:
-                cmd = self.cli_command[0].format(vrf=vrf)
-            elif not route and vrf == 'default':
-                cmd = self.cli_command[1]
-            elif route and vrf == 'default':
-                cmd = self.cli_command[2].format(route=route)
-            elif route and vrf != 'default' :
-                cmd = self.cli_command[3].format(route=route,vrf=vrf)
-
-            elif vrf != 'default':
-                cmd = self.cli_command[4].format(vrf=vrf,protocol= protocol)
+            if vrf != 'default':
+                if route:
+                    cmd = self.cli_command[3].format(route=route, vrf=vrf)
+                else:
+                    cmd = self.cli_command[0].format(vrf=vrf)
+                if protocol:
+                    cmd = self.cli_command[4].format(vrf=vrf, protocol=protocol)
             else:
-                cmd = self.cli_command[5].format(protocol= protocol)
+                if route:
+                    cmd = self.cli_command[2].format(route=route)
+                else:
+                    cmd = self.cli_command[1]
+                if protocol:
+                    cmd = self.cli_command[5].format(protocol=protocol)
 
             out = self.device.execute(cmd)
         else:
