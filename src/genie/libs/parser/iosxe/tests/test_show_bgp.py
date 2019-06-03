@@ -8364,7 +8364,105 @@ class test_show_ip_bgp_summary(unittest.TestCase):
         192.168.10.253  4        61100       0       0        1    0    0 never    Idle
         '''}
 
+    golden_parsed_output2 = {
+        'bgp_id': 9996, 
+        'vrf': {
+            'CE1test': {
+                'neighbor': {
+                    '192.168.10.253': {
+                        'address_family': {
+                            'vpnv4': {
+                                'version': 4, 
+                                'as': 65555, 
+                                'msg_rcvd': 9586, 
+                                'msg_sent': 9590, 
+                                'tbl_ver': 250, 
+                                'input_queue': 0, 
+                                'output_queue': 0, 
+                                'up_down': '3d01h', 
+                                'state_pfxrcd': '13', 
+                                'route_identifier': '192.168.10.254', 
+                                'local_as': 9996, 
+                                'bgp_table_version': 250, 
+                                'routing_table_version': 250, 
+                                'attribute_entries': '105/104', 
+                                'prefixes': {
+                                    'total_entries': 25, 
+                                    'memory_usage': 6400}, 
+                                'path': {
+                                    'total_entries': 38, 
+                                    'memory_usage': 5168}, 
+                                'total_memory': 45960, 
+                                'activity_prefixes': '226/0', 
+                                'activity_paths': '787/448', 
+                                'scan_interval': 60, 
+                                'cache_entries': {
+                                    'route-map': {
+                                        'total_entries': 0, 
+                                        'memory_usage': 0}, 
+                                    'filter-list': {
+                                        'total_entries': 0, 
+                                        'memory_usage': 0}}, 
+                                'entries': {
+                                    'rrinfo': {
+                                        'total_entries': 1, 'memory_usage': 40}, 
+                                    'AS-PATH': {
+                                        'total_entries': 1, 
+                                        'memory_usage': 24}}, 
+                                    'community_entries': {
+                                        'total_entries': 102, 
+                                        'memory_usage': 3248}}}}}}}}
 
+
+    golden_parsed_output3 = {
+        'bgp_id': 9996,
+        'vrf': {
+            'CE1test': {
+                'neighbor': {
+                    '192.168.10.253': {
+                        'address_family': {
+                            'vpnv4 unicast': {
+                                'activity_paths': '787/448',
+                                'activity_prefixes': '226/0',
+                                'as': 65555,
+                                'attribute_entries': '105/104',
+                                'bgp_table_version': 250,
+                                'cache_entries': {
+                                    'filter-list': {
+                                    'memory_usage': 0,
+                                    'total_entries': 0},
+                                'route-map': {
+                                    'memory_usage': 0,
+                                    'total_entries': 0}},
+                                'community_entries': {
+                                    'memory_usage': 3248,
+                                    'total_entries': 102},
+                                'entries': {
+                                    'AS-PATH': {
+                                        'memory_usage': 24,
+                                        'total_entries': 1},
+                                    'rrinfo': {
+                                        'memory_usage': 40,
+                                        'total_entries': 1}},
+                                'input_queue': 0,
+                                'local_as': 9996,
+                                'msg_rcvd': 9694,
+                                'msg_sent': 9698,
+                                'output_queue': 0,
+                                'path': {
+                                    'memory_usage': 5168,
+                                    'total_entries': 38},
+                                'prefixes': {
+                                    'memory_usage': 6400,
+                                    'total_entries': 25},
+                                'route_identifier': '192.168.10.254',
+                                'routing_table_version': 250,
+                                'scan_interval': 60,
+                                'state_pfxrcd': '13',
+                                'tbl_ver': 250,
+                                'total_memory': 45960,
+                                'up_down': '3d02h',
+                                'version': 4}}}}}}}
 
     def test_show_ip_bgp_summary_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -8378,6 +8476,200 @@ class test_show_ip_bgp_summary(unittest.TestCase):
         obj = ShowIpBgpSummary(device=self.device)
         parsed_output = obj.parse(address_family='vpnv4', vrf='L3VPN-1151')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_bgp_summary_golden2(self):
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''/
+            PE1#show ip bgp vpnv4 rd 9996:4093 summary 
+            Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+            Time source is NTP, 23:18:11.225 JST Mon Jun 3 2019
+            BGP router identifier 192.168.10.254, local AS number 9996
+            BGP table version is 250, main routing table version 250
+            25 network entries using 6400 bytes of memory
+            38 path entries using 5168 bytes of memory
+            105/104 BGP path/bestpath attribute entries using 31080 bytes of memory
+            1 BGP rrinfo entries using 40 bytes of memory
+            1 BGP AS-PATH entries using 24 bytes of memory
+            102 BGP extended community entries using 3248 bytes of memory
+            0 BGP route-map cache entries using 0 bytes of memory
+            0 BGP filter-list cache entries using 0 bytes of memory
+            BGP using 45960 total bytes of memory
+            BGP activity 226/0 prefixes, 787/448 paths, scan interval 60 secs
+
+            Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            192.168.10.253  4        65555    9586    9590      250    0    0 3d01h          13
+        '''
+
+        raw2 = '''
+            show vrf
+            Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+            Time source is NTP, 23:19:19.766 JST Mon Jun 3 2019
+
+              Name                             Default RD            Protocols   Interfaces
+              CE1test                          9996:4093             ipv4        Gi8.4093
+              L3VPN-0051                       9996:51               ipv4        Gi8.51
+              L3VPN-0101                       9996:101              ipv4        Gi8.101
+              L3VPN-0102                       9996:102              ipv4        Gi8.102
+              L3VPN-0103                       9996:103              ipv4        Gi8.103
+              L3VPN-0104                       9996:104              ipv4        Gi8.104
+              L3VPN-0105                       9996:105              ipv4        Gi8.105
+              L3VPN-0106                       9996:106              ipv4        Gi8.106
+              L3VPN-0107                       9996:107              ipv4        Gi8.107
+              L3VPN-0108                       9996:108              ipv4        Gi8.108
+              L3VPN-0109                       9996:109              ipv4        Gi8.109
+              L3VPN-0110                       9996:110              ipv4        Gi8.110
+              L3VPN-0111                       9996:111              ipv4        Gi8.111
+              L3VPN-0112                       9996:112              ipv4        Gi8.112
+              L3VPN-0113                       9996:113              ipv4        Gi8.113
+              L3VPN-0114                       9996:114              ipv4        Gi8.114
+              L3VPN-0115                       9996:115              ipv4        Gi8.115
+              L3VPN-0116                       9996:116              ipv4        Gi8.116
+              L3VPN-0117                       9996:117              ipv4        Gi8.117
+              L3VPN-0118                       9996:118              ipv4        Gi8.118
+              L3VPN-0119                       9996:119              ipv4        Gi8.119
+              L3VPN-0120                       9996:120              ipv4        Gi8.120
+              L3VPN-0121                       9996:121              ipv4        Gi8.121
+              L3VPN-0122                       9996:122              ipv4        Gi8.122
+              L3VPN-0123                       9996:123              ipv4        Gi8.123
+              L3VPN-0124                       9996:124              ipv4        Gi8.124
+              L3VPN-0125                       9996:125              ipv4        Gi8.125
+              L3VPN-0126                       9996:126              ipv4        Gi8.126
+              L3VPN-0127                       9996:127              ipv4        Gi8.127
+              L3VPN-0128                       9996:128              ipv4        Gi8.128
+              L3VPN-0129                       9996:129              ipv4        Gi8.129
+              L3VPN-0130                       9996:130              ipv4        Gi8.130
+              L3VPN-0131                       9996:131              ipv4        Gi8.131
+              L3VPN-0132                       9996:132              ipv4        Gi8.132
+              L3VPN-0133                       9996:133              ipv4        Gi8.133
+              L3VPN-0134                       9996:134              ipv4        Gi8.134
+              L3VPN-0135                       9996:135              ipv4        Gi8.135
+              L3VPN-0136                       9996:136              ipv4        Gi8.136
+              L3VPN-0137                       9996:137              ipv4        Gi8.137
+              L3VPN-0138                       9996:138              ipv4        Gi8.138
+              L3VPN-0139                       9996:139              ipv4        Gi8.139
+              L3VPN-0140                       9996:140              ipv4        Gi8.140
+              L3VPN-0141                       9996:141              ipv4        Gi8.141
+              L3VPN-0142                       9996:142              ipv4        Gi8.142
+              L3VPN-0143                       9996:143              ipv4        Gi8.143
+              L3VPN-0144                       9996:144              ipv4        Gi8.144
+              L3VPN-0145                       9996:145              ipv4        Gi8.145
+              L3VPN-0146                       9996:146              ipv4        Gi8.146
+              L3VPN-0147                       9996:147              ipv4        Gi8.147
+              L3VPN-0148                       9996:148              ipv4        Gi8.148
+              L3VPN-0149                       9996:149              ipv4        Gi8.149
+              L3VPN-0150                       9996:150              ipv4        Gi8.150
+              Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+        '''
+
+        self.outputs = {}
+        self.maxDiff = None
+        self.outputs['show vrf'] = raw2
+        self.outputs['show ip bgp vpnv4 rd 9996:4093 summary'] = raw1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        obj = ShowIpBgpSummary(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_ip_bgp_summary_golden3(self):
+        def mapper(key):
+            return self.outputs[key]
+
+        raw1 = '''/
+            PE1#show bgp vpnv4 unicast rd 9996:4093 summary
+            Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+            Time source is NTP, 00:07:47.856 JST Tue Jun 4 2019
+            BGP router identifier 192.168.10.254, local AS number 9996
+            BGP table version is 250, main routing table version 250
+            25 network entries using 6400 bytes of memory
+            38 path entries using 5168 bytes of memory
+            105/104 BGP path/bestpath attribute entries using 31080 bytes of memory
+            1 BGP rrinfo entries using 40 bytes of memory
+            1 BGP AS-PATH entries using 24 bytes of memory
+            102 BGP extended community entries using 3248 bytes of memory
+            0 BGP route-map cache entries using 0 bytes of memory
+            0 BGP filter-list cache entries using 0 bytes of memory
+            BGP using 45960 total bytes of memory
+            BGP activity 226/0 prefixes, 787/448 paths, scan interval 60 secs
+
+            Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            192.168.10.253  4        65555    9694    9698      250    0    0 3d02h          13
+        '''
+
+        raw2 = '''
+            show vrf
+            Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+            Time source is NTP, 23:19:19.766 JST Mon Jun 3 2019
+
+              Name                             Default RD            Protocols   Interfaces
+              CE1test                          9996:4093             ipv4        Gi8.4093
+              L3VPN-0051                       9996:51               ipv4        Gi8.51
+              L3VPN-0101                       9996:101              ipv4        Gi8.101
+              L3VPN-0102                       9996:102              ipv4        Gi8.102
+              L3VPN-0103                       9996:103              ipv4        Gi8.103
+              L3VPN-0104                       9996:104              ipv4        Gi8.104
+              L3VPN-0105                       9996:105              ipv4        Gi8.105
+              L3VPN-0106                       9996:106              ipv4        Gi8.106
+              L3VPN-0107                       9996:107              ipv4        Gi8.107
+              L3VPN-0108                       9996:108              ipv4        Gi8.108
+              L3VPN-0109                       9996:109              ipv4        Gi8.109
+              L3VPN-0110                       9996:110              ipv4        Gi8.110
+              L3VPN-0111                       9996:111              ipv4        Gi8.111
+              L3VPN-0112                       9996:112              ipv4        Gi8.112
+              L3VPN-0113                       9996:113              ipv4        Gi8.113
+              L3VPN-0114                       9996:114              ipv4        Gi8.114
+              L3VPN-0115                       9996:115              ipv4        Gi8.115
+              L3VPN-0116                       9996:116              ipv4        Gi8.116
+              L3VPN-0117                       9996:117              ipv4        Gi8.117
+              L3VPN-0118                       9996:118              ipv4        Gi8.118
+              L3VPN-0119                       9996:119              ipv4        Gi8.119
+              L3VPN-0120                       9996:120              ipv4        Gi8.120
+              L3VPN-0121                       9996:121              ipv4        Gi8.121
+              L3VPN-0122                       9996:122              ipv4        Gi8.122
+              L3VPN-0123                       9996:123              ipv4        Gi8.123
+              L3VPN-0124                       9996:124              ipv4        Gi8.124
+              L3VPN-0125                       9996:125              ipv4        Gi8.125
+              L3VPN-0126                       9996:126              ipv4        Gi8.126
+              L3VPN-0127                       9996:127              ipv4        Gi8.127
+              L3VPN-0128                       9996:128              ipv4        Gi8.128
+              L3VPN-0129                       9996:129              ipv4        Gi8.129
+              L3VPN-0130                       9996:130              ipv4        Gi8.130
+              L3VPN-0131                       9996:131              ipv4        Gi8.131
+              L3VPN-0132                       9996:132              ipv4        Gi8.132
+              L3VPN-0133                       9996:133              ipv4        Gi8.133
+              L3VPN-0134                       9996:134              ipv4        Gi8.134
+              L3VPN-0135                       9996:135              ipv4        Gi8.135
+              L3VPN-0136                       9996:136              ipv4        Gi8.136
+              L3VPN-0137                       9996:137              ipv4        Gi8.137
+              L3VPN-0138                       9996:138              ipv4        Gi8.138
+              L3VPN-0139                       9996:139              ipv4        Gi8.139
+              L3VPN-0140                       9996:140              ipv4        Gi8.140
+              L3VPN-0141                       9996:141              ipv4        Gi8.141
+              L3VPN-0142                       9996:142              ipv4        Gi8.142
+              L3VPN-0143                       9996:143              ipv4        Gi8.143
+              L3VPN-0144                       9996:144              ipv4        Gi8.144
+              L3VPN-0145                       9996:145              ipv4        Gi8.145
+              L3VPN-0146                       9996:146              ipv4        Gi8.146
+              L3VPN-0147                       9996:147              ipv4        Gi8.147
+              L3VPN-0148                       9996:148              ipv4        Gi8.148
+              L3VPN-0149                       9996:149              ipv4        Gi8.149
+              L3VPN-0150                       9996:150              ipv4        Gi8.150
+              Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+        '''
+
+        self.outputs = {}
+        self.maxDiff = None
+        self.outputs['show vrf'] = raw2
+        self.outputs['show bgp vpnv4 unicast rd 9996:4093 summary'] = raw1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        obj = ShowBgpSummary(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4 unicast', rd='9996:4093')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 
