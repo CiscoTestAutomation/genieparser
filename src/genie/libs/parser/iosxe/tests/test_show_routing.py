@@ -864,7 +864,7 @@ class test_show_ip_route(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp', ip='ip')
+        parsed_output = route_map_obj.parse(protocol='bgp')
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_golden6(self):

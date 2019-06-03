@@ -82,39 +82,33 @@ class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
         show ip route
         show ip route vrf <vrf>
-        show ip route bgp
-        show ip route vrf <vrf> bgp
-        show ipv6 route bgp
-        show ipv6 route vrf <vrf> bgp"""
-    cli_command = ['show ip route vrf {vrf}', 'show ip route', 'show ip route {route}',
-                   'show ip route vrf {vrf} {route}',
-                   'show ip route vrf {vrf} {protocol}',
-                   'show route {protocol}']
-
-    def cli(self, protocol='', vrf="",route="",ip='ip', output=None):
+        show ip route <protocol>
+        show ip route vrf <vrf> <protocol>
+        show ipv6 route <protocol>
+        show ipv6 route vrf <vrf> <protocol>"""
+    cli_command = ['show ip route vrf {vrf}', 'show ip route',
+                   'show ip route vrf {vrf} bgp',
+                   'show ip route bgp']
+    IP_VER='ipv4'
+    def cli(self, protocol='', vrf="", output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
             if vrf != 'default':
-                if route:
-                    cmd = self.cli_command[3].format(route=route, vrf=vrf)
+                if protocol:
+                    cmd = self.cli_command[2].format(vrf=vrf)
                 else:
                     cmd = self.cli_command[0].format(vrf=vrf)
-                if protocol:
-                    cmd = self.cli_command[4].format(vrf=vrf, protocol=protocol)
             else:
-                if route:
-                    cmd = self.cli_command[2].format(route=route)
+                if protocol:
+                    cmd = self.cli_command[3]
                 else:
                     cmd = self.cli_command[1]
-                if protocol:
-                    cmd = self.cli_command[5].format(protocol=protocol)
 
             out = self.device.execute(cmd)
         else:
             out = output
-
-        af = 'ipv4' if ip == 'ip' else 'ipv6'
+        af=self.IP_VER
         route = ""
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
@@ -659,23 +653,30 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 class ShowIpv6Route(ShowIpRoute):
     """Parser for:
-        show ipv6 route bgp
-        show ipv6 route vrf <vrf> bgp"""
-    cli_command = ['show {ip} route vrf {vrf} {protocol}', 'show {ip} route {protocol}']
-
-    def cli(self, protocol='', ip='ipv6', vrf='', output=None):
+        show ipv6 route <protocol>
+        show ipv6 route vrf <vrf> <protocol>"""
+    cli_command = ['show ipv6 route', 'show ipv6 route vrf {vrf}', 'show ipv6 route bgp',
+                   'show ipv6 route vrf {vrf} bgp']
+    IP_VER = 'ipv6'
+    def cli(self, protocol='', vrf='', output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
             if vrf != 'default':
-                cmd = self.cli_command[0].format(ip=ip, vrf=vrf, protocol= protocol)
+                if protocol:
+                    cmd = self.cli_command[3].format(vrf=vrf, protocol= protocol)
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
             else:
-                cmd = self.cli_command[1].format(ip=ip, protocol= protocol)
+                if protocol:
+                    cmd = self.cli_command[2].format(protocol= protocol)
+                else:
+                    cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
 
-        return super().cli(ip=ip, vrf=vrf, protocol=protocol, output=out)
+        return super().cli(vrf=vrf, protocol=protocol, output=out)
 
 # ====================================================
 #  schema for show ipv6 route updated
@@ -1054,7 +1055,7 @@ class ShowIpRouteWordSchema(MetaParser):
                 },
                 'paths': {
                     Any(): {
-                        'nexthop': str,
+                        Optional('nexthop'): str,
                         Optional('from'): str,
                         Optional('age'): str,
                         Optional('interface'): str,
@@ -1077,15 +1078,15 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
        show ip route vrf <vrf> <Hostname or A.B.C.D>"""
     IP_VER = 'ip'
 
-    cli_command = ['show {ip} route vrf {vrf} {route}', 'show {ip} route {route}']
+    cli_command = ['show ip route vrf {vrf} {route}', 'show ip route {route}']
 
     def cli(self, route, vrf='', output=None):
         if output is None:
             # excute command to get output
             if vrf:
-                cmd = self.cli_command[0].format(vrf=vrf, route=route, ip=self.IP_VER)
+                cmd = self.cli_command[0].format(vrf=vrf, route=route)
             else:
-                cmd = self.cli_command[1].format(route=route, ip=self.IP_VER)
+                cmd = self.cli_command[1].format(route=route)
 
             out = self.device.execute(cmd)
         else:
@@ -1262,6 +1263,20 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
     IP_VER = 'ipv6'
+    cli_command = ['show ipv6 route vrf {vrf} {route}', 'show ipv6 route {route}']
+
+    def cli(self, route, vrf='', output=None):
+        if output is None:
+            # excute command to get output
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf, route=route)
+            else:
+                cmd = self.cli_command[1].format(route=route)
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        return super().cli(route, vrf=vrf, output=out)
 
 # ====================================================
 #  schema for show ip cef
