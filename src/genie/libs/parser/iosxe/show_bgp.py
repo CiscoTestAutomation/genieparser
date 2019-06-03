@@ -98,6 +98,7 @@ IOSXE parsers for the following show commands:
 
     * show bgp vrf {vrf} all summary
     * show bgp vrf {vrf} {route}
+    * show bgp {address_family} vrf {vrf} {route}
     * show ip bgp {address_family} rd {rd} {route}
 '''
 
@@ -1436,29 +1437,36 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         return ret_dict
 
 
-# ======================================
+# =================================================
 # Parser for:
 #   * 'show bgp all detail'
 #   * 'show bgp vrf {vrf} {route}'
-# =====================================
+#   * 'show bgp {address_family} vrf {vrf} {route}'
+# =================================================
 class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
     ''' Parser for:
         * 'show bgp all detail'
         * 'show bgp vrf {vrf} {route}'
+        * 'show bgp {address_family} vrf {vrf} {route}'
     '''
 
     cli_command = ['show bgp all detail',
-                    'show bgp vrf {vrf} {route}'
+                    'show bgp vrf {vrf} {route}',
+                    'show bgp {address_family} vrf {vrf} {route}'
                    ]
 
     def cli(self, vrf='', route='', address_family='',output=None):
 
         if output is None:
             if vrf and route:
-                address_family = 'vpnv4 unicast'
-                cmd = self.cli_command[1].format(vrf=vrf,
-                    route=route)
+                if address_family:
+                    cmd = self.cli_command[2].format(vrf=vrf,
+                        route=route)
+                else:
+                    address_family = 'vpnv4 unicast'
+                    cmd = self.cli_command[1].format(vrf=vrf,
+                        route=route)
             else:
                 cmd = self.cli_command[0]
             # Execute command
