@@ -164,7 +164,6 @@ class ShowIpRoute(ShowIpRouteSchema):
                 line = line.strip()
             else:
                 continue
-            print(line)
             next_hop = interface = updated = metrics = route_preference = ""
             # Routing Table: VRF1
             p1 = re.compile(r'^\s*Routing Table: +(?P<vrf>[\w]+)$')
