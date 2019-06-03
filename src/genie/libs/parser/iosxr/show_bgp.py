@@ -3674,7 +3674,6 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
         ret_dict = {}
 
-
         if vrf_type == 'all':
             vrf = 'default'
             af = ''
@@ -3884,16 +3883,20 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
     """ Parser for:
         show bgp instance all all all neighbors <WORD> routes
         show bgp instance all vrf all neighbors <WORD> routes
+        show bgp instance <instance> vrf <vrf> neighbors <WORD> routes
+        show bgp instance <instance> all all neighbors <WORD> routes
         show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes
         show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
-    def cli(self, neighbor, vrf_type, address_family='',output=None):
+    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} neighbors {neighbor} {route}',
+                   'show bgp instance {instance} vrf {vrf} {af_type} neighbors {neighbor} {route}']
+    def cli(self, neighbor, vrf_type, vrf='', address_family='',output=None):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
-            self, neighbor=neighbor, vrf_type=vrf_type, address_family=address_family, route_type='routes',output=output)
+            self, neighbor=neighbor, vrf_type=vrf_type, address_family=address_family,
+            route_type='routes', vrf=vrf, instance=instance, output=output)
 
 
 # ====================================================
@@ -3977,19 +3980,39 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         show bgp instance all vrf all summary
         show bgp instance all vrf all ipv4 unicast summary
         show bgp instance all vrf all ipv6 unicast summary
+        show bgp instance <instance> all all summary
+        show bgp instance <instance> vrf <vrf> <address_family> summary
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} summary'
+    cli_command = ['show bgp instance all {vrf_type} all {af_type} summary',
+                   'show bgp instance all vrf {vrf} {af_type} summary',
+                   'show bgp instance {instance} vrf {vrf} {af_type} summary',
+                   'show bgp instance {instance} {vrf_type} all {af_type} summary']
 
-    def cli(self, vrf_type, address_family='',output=None):
+    def cli(self, vrf_type, address_family='', instance='', vrf='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            out = self.device.execute(self.cli_command. \
-                                          format(af_type=address_family, vrf_type=vrf_type))
+            if instance:
+                if vrf:
+                    out = self.device.execute(
+                        self.cli_command[2].format(instance=instance, vrf=vrf,
+                                                   af_type=address_family))
+                else:
+                    out = self.device.execute(
+                        self.cli_command[3].format(instance=instance, vrf_type=vrf_type,
+                                                   af_type=address_family))
+            else:
+                if vrf:
+                    out = self.device.execute(
+                        self.cli_command[1].format(vrf=vrf, af_type=address_family))
+                else:
+                    out = self.device.execute(
+                        self.cli_command[0].format(vrf_type=vrf_type,
+                                                   af_type=address_family))
         else:
             out = output
 
@@ -4362,23 +4385,34 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         show bgp instance all vrf all
         show bgp instance all vrf all ipv4 unicast
         show bgp instance all vrf all ipv6 unicast
+        show bgp instance <instance> all all
+        show bgp instance <instance> vrf <vrf> <address_family>
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
 
     """
-    cli_command = ['show bgp instance all {vrf_type} all',
-                   'show bgp instance all {vrf_type} all {af_type}']
+    cli_command = ['show bgp instance all {vrf_type} all {af_type}',
+                   'show bgp instance all vrf {vrf} {af_type}',
+                   'show bgp instance {instance} vrf {vrf} {af_type}',
+                   'show bgp instance {instance} {vrf_type} all {af_type}']
 
-    def cli(self, vrf_type, address_famliy='',output=None):
+    def cli(self, vrf_type, address_family='',instance='', vrf='', output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert address_famliy in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            if address_famliy:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=address_famliy))
+            if instance:
+                if vrf:
+                    out = self.device.execute(self.cli_command[2].format(instance=instance, vrf=vrf, af_type=address_family))
+                else:
+                    out = self.device.execute(self.cli_command[3].format(instance=instance,vrf_type=vrf_type, af_type=address_family))
             else:
-                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
+                if vrf:
+                    out = self.device.execute(self.cli_command[1].format(vrf=vrf, af_type=address_family))
+                else:
+                    out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type, af_type=address_family))
+
         else:
             out = output
 
@@ -4389,7 +4423,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             af_default = None
         elif vrf_type == 'vrf':
             vrf = None
-            if address_famliy == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
             else:
                 af_default = 'vpnv4 unicast'
