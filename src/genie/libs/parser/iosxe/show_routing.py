@@ -81,29 +81,17 @@ class ShowIpRouteSchema(MetaParser):
 class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
         show ip route
-        show ip route vrf <vrf>
-        show ip route <protocol>
-        show ip route vrf <vrf> <protocol>
-        show ipv6 route <protocol>
-        show ipv6 route vrf <vrf> <protocol>"""
-    cli_command = ['show ip route vrf {vrf}', 'show ip route',
-                   'show ip route vrf {vrf} bgp',
-                   'show ip route bgp']
+        show ip route vrf <vrf>"""
+    cli_command = ['show ip route vrf {vrf}', 'show ip route']
     IP_VER='ipv4'
-    def cli(self, protocol='', vrf="", output=None):
+    def cli(self, vrf="", output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
             if vrf != 'default':
-                if protocol:
-                    cmd = self.cli_command[2].format(vrf=vrf)
-                else:
-                    cmd = self.cli_command[0].format(vrf=vrf)
+                cmd = self.cli_command[0].format(vrf=vrf)
             else:
-                if protocol:
-                    cmd = self.cli_command[3]
-                else:
-                    cmd = self.cli_command[1]
+                cmd = self.cli_command[1]
 
             out = self.device.execute(cmd)
         else:
@@ -654,30 +642,23 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 class ShowIpv6Route(ShowIpRoute):
     """Parser for:
-        show ipv6 route <protocol>
-        show ipv6 route vrf <vrf> <protocol>"""
-    cli_command = ['show ipv6 route', 'show ipv6 route vrf {vrf}', 'show ipv6 route bgp',
-                   'show ipv6 route vrf {vrf} bgp']
+        show ipv6 route
+        show ipv6 route vrf <vrf>"""
+    cli_command = ['show ipv6 route', 'show ipv6 route vrf {vrf}']
     IP_VER = 'ipv6'
     def cli(self, protocol='', vrf='', output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
             if vrf != 'default':
-                if protocol:
-                    cmd = self.cli_command[3].format(vrf=vrf, protocol= protocol)
-                else:
-                    cmd = self.cli_command[1].format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
             else:
-                if protocol:
-                    cmd = self.cli_command[2].format(protocol= protocol)
-                else:
-                    cmd = self.cli_command[0]
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
 
-        return super().cli(vrf=vrf, protocol=protocol, output=out)
+        return super().cli(vrf=vrf, output=out)
 
 # ====================================================
 #  schema for show ipv6 route updated
