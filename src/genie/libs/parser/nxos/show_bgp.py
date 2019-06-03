@@ -11046,6 +11046,7 @@ class ShowBgpIpMvpnRouteTypeSchema(MetaParser):
                                                 'path': {
                                                     Any(): {
                                                         'pathnr': int,
+                                                        Optional('metric'): str,
                                                         Optional('statuscode'): str,
                                                         Optional('bestcode'): str,
                                                         Optional('typecode'): str,
@@ -11116,16 +11117,12 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         #                       Next Hop            Metric     LocPrf     Weight Path
         #                       10.196.7.7                           100          0 i
         # *>i                   10.196.7.7                           100          0 i
-        p6 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
-                        '(?P<typecode>(i|e|c|l|a|r|I)+)?'
-                        '(?P<space>\s{15,20})(?P<ipnexthop>[\d\.]+)?'
-                        '(?P<space1>\s{6,18})?'
-                        '(?P<metric>[\d]+)?'
-                        '(?P<space2>\s{6,12})'
-                        '(?P<localpref>[\d]+)?'
-                        '(?P<space3>\s{6,16})?'
-                        '(?P<weight>[\d]+)'
-                        ' +(?P<origin>[i|e|c|l|a|I]+)$')
+        #                       4.4.4.4                                        0 200 100 i
+        #                       0.0.0.0                  0        100      32768 ?
+        p6 = re.compile(
+            r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?(?P<typecode>('
+            r'i|e|c|l|a|r|I)+)?\s+(?P<ipnexthop>[\d\.]+)?(?P<space1>\s+)?(?P<metric>['
+            r'\d]+)?\s+(?P<localpref>[\d]+)\s+?(?P<weight>[\d]+) +(?P<origin>[i|e|c|l|a|I|?]+)$')
 
         for line in out.splitlines():
             if line:
@@ -11221,6 +11218,8 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                             path_dict.update({'bestcode': status_code})
                         else:
                             path_dict.update({'statuscode': status_code})
+                if group['metric']:
+                    path_dict.update({'metric': group['metric']})
 
                 path_dict.update({'ipnexthop': group['ipnexthop']})
                 path_dict.update({'weight': group['weight']})

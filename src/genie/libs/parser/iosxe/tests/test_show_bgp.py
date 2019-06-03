@@ -2183,7 +2183,7 @@ Paths: (1 available, best #1, table VRF1)
         0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
       rx pathid: 0, tx pathid: 0x0
     '''}
-        golden_parsed_output3 = {
+    golden_parsed_output3 = {
     'instance': {
         'default': {
             'vrf': {
@@ -2251,11 +2251,6 @@ Paths: (1 available, best #1, table VRF1)
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse(vrf='VRF1', route='1.1.1.1')
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ============================
