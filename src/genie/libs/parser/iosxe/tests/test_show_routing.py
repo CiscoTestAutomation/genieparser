@@ -778,10 +778,10 @@ class test_show_ip_route(unittest.TestCase):
                                         }
                                     }
                                 },
-                                "source_protocol": "bgp",
+                                "source_protocol": "local_connected",
                                 "metric": 0,
                                 "route_preference": 200,
-                                "source_protocol_codes": "B",
+                                "source_protocol_codes": "LC",
                                 "route": "2001:2:2:2::2/128"
                             },
                             "615:11:11:4::/64": {
@@ -819,7 +819,7 @@ class test_show_ip_route(unittest.TestCase):
                  OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1
                  ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations
                  ld - LISP dyn-eid, a - Application
-          B   2001:2:2:2::2/128 [200/0]
+        LC   2001:2:2:2::2/128 [200/0]
                via 2001:DB8:1:1::2
           B   615:11:11:4::/64 [200/2219]
             via 10.4.1.1%default, indirectly connected

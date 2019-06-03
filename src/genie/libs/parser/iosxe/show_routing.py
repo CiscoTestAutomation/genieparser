@@ -113,15 +113,16 @@ class ShowIpRoute(ShowIpRouteSchema):
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
         source_protocol_dict['odr'] = ['o']
-        source_protocol_dict['isis'] = ['i','su','L1','L2','ia']
+        source_protocol_dict['isis'] = ['i','su','L1','L2','ia', 'I1', 'I2']
         source_protocol_dict['eigrp'] = ['D','EX']
         source_protocol_dict['static'] = ['S']
         source_protocol_dict['mobile'] = ['M']
         source_protocol_dict['rip'] = ['R']
-        source_protocol_dict['lisp'] = ['I']
+        source_protocol_dict['lisp'] = ['I', 'Ir','Ia','Id']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
         source_protocol_dict['connected'] = ['C']
+        source_protocol_dict['local_connected'] = ['LC']
         source_protocol_dict['bgp'] = ['B']
 
         result_dict = {}
@@ -163,6 +164,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 line = line.strip()
             else:
                 continue
+            print(line)
             next_hop = interface = updated = metrics = route_preference = ""
             # Routing Table: VRF1
             p1 = re.compile(r'^\s*Routing Table: +(?P<vrf>[\w]+)$')
@@ -1096,10 +1098,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p1 = re.compile(r'^Routing +entry +for +'
                          '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
                          '(, +(?P<net>[\w\s]+))?$')
-        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +'
-                         'distance +(?P<distance>\d+), +'
-                         'metric +(?P<metric>\d+)'
-                         '(, +(?P<type>[\w\-\s]+)(?P<connected>, connected)?)?$')
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? +(?P<type>[\w\- ]+)?(\((connected)\))?$')
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
                          '(?P<redist_via_tag>\d+)?$')
         p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
