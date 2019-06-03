@@ -63,9 +63,9 @@
         show ip bgp {address_family} rd {rd} {route}
     * Updated ShowIpBgpAllDetail for:
         show ip bgp {address_family} vrf {vrf} {route}
-    * Added parser for ShowBgpAllSummary:
-        show bgp vrf {vrf} all summary
+    * Added parser for ShowBgpAllDetail:
         show bgp vrf {vrf} {route}
+        show bgp {address_family} vrf {vrf} {route}
 * IOSXR
     * Updated ShowBgpAllAll for more variations of parameters
     * Updated ShowBgpAllNeighbors for more varied neighbor capabilities

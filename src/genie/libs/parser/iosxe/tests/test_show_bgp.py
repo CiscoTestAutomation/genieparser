@@ -2171,61 +2171,51 @@ class test_show_bgp_all_detail(unittest.TestCase):
         '''}
 
     golden_output3 = {'execute.return_value': '''
-    BGP routing table entry for 9996:4093:11.11.11.11/32, version 103
-
-Paths: (1 available, best #1, table CE1test)
-
+    BGP routing table entry for 65000:1:1.1.1.1/32, version 2
+Paths: (1 available, best #1, table VRF1)
   Advertised to update-groups:
-
-     3         
-
-  Refresh Epoch 2
-
-  65555
-
-    192.168.10.253 (via vrf CE1test) from 192.168.10.253 (192.168.10.253)
-
-      Origin incomplete, metric 0, localpref 100, valid, external, best
-
-      Community: 62000:1
-
-      Extended Community: RT:9996:4093
-
-      mpls labels in/out 584/nolabel
-
+     1
+  Refresh Epoch 1
+  Local
+    0.0.0.0 (via vrf VRF1) from 0.0.0.0 (1.1.1.1)
+      Origin IGP, metric 0, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: Cost:pre-bestpath:128:1280 0x8800:32768:0
+        0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
       rx pathid: 0, tx pathid: 0x0
     '''}
-    golden_parsed_output3 = {
-'instance': {
-    'default': {
-        'vrf': {
-            'CE1test': {
-                'address_family': {
-                    'vpnv4 unicast': {
-                        'prefixes': {
-                            '11.11.11.11/32': {
-                                'table_version': '103',
-                                'available_path': '1',
-                                'best_path': '1',
-                                'paths': '1 available, best #1, table CE1test',
-                                'index': {
-                                    1: {
-                                        'next_hop': '192.168.10.253',
-                                        'gateway': '192.168.10.253',
-                                        'originator': '192.168.10.253',
-                                        'next_hop_via': 'vrf CE1test',
-                                        'localpref': 100,
-                                        'metric': 0,
-                                        'origin_codes': '?',
-                                        'status_codes': '*>',
-                                        'refresh_epoch': 2,
-                                        'route_info': '65555',
-                                        'community': '62000:1',
-                                        'evpn': {
-                                            'ext_community': 'RT:9996:4093',
+        golden_parsed_output3 = {
+    'instance': {
+        'default': {
+            'vrf': {
+                'VRF1': {
+                    'address_family': {
+                        'vpnv4 unicast': {
+                        
+                            'prefixes': {
+                                '1.1.1.1/32': {
+                                    'table_version': '2',
+                                    'available_path': '1',
+                                    'best_path': '1',
+                                    'paths': '1 available, best #1, table VRF1',
+                                    'index': {
+                                        1: {
+                                            'next_hop': '0.0.0.0',
+                                            'gateway': '0.0.0.0',
+                                            'originator': '1.1.1.1',
+                                            'next_hop_via': 'vrf VRF1',
+                                            'localpref': 100,
+                                            'metric': 0,
+                                            'weight': '32768',
+                                            'origin_codes': 'i',
+                                            'status_codes': '*>',
+                                            'refresh_epoch': 1,
+                                            'route_info': 'Local',
+                                            'evpn': {
+                                                'ext_community': 'Cost:pre-bestpath:128:1280 0x8800:32768:0',
+                                                },
+                                            'recipient_pathid': '0',
+                                            'transfer_pathid': '0x0',
                                             },
-                                        'recipient_pathid': '0',
-                                        'transfer_pathid': '0x0',
                                         },
                                     },
                                 },
@@ -2235,8 +2225,7 @@ Paths: (1 available, best #1, table CE1test)
                 },
             },
         },
-    },
-}
+    }
     def test_show_bgp_all_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllDetail(device=self.device)
@@ -2261,7 +2250,12 @@ Paths: (1 available, best #1, table CE1test)
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllDetail(device=self.device)
-        parsed_output = obj.parse(vrf='CE1test', route='11.11.11.11')
+        parsed_output = obj.parse(vrf='VRF1', route='1.1.1.1')
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ============================
