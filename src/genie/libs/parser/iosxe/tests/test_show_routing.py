@@ -8,6 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
 from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
+                                                 ShowIpRoute,\
+                                                 ShowIpRouteWord,\
                                                  ShowIpv6RouteUpdated,\
                                                  ShowIpCef,\
                                                  ShowIpv6Cef,\
@@ -833,7 +835,7 @@ class test_show_ip_route(unittest.TestCase):
     def test_show_ip_route_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowIpRouteDistributor(device=self.device)
+        obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
@@ -1174,6 +1176,12 @@ class test_show_ip_route_word(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_with_route)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='192.168.154.0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
