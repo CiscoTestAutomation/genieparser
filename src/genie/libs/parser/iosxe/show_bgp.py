@@ -1580,14 +1580,18 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                 if address_family:
                     cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
-            elif rd and route:
-                if address_family:
-                    cmd = self.cli_command[2].format(address_family=address_family,
-                                                 rd=rd, route=route)
+                else:
+                    return ret_dict
             elif rd:
                 if address_family:
-                    cmd = self.cli_command[1].format(address_family=address_family,
+                    if route:
+                        cmd = self.cli_command[2].format(address_family=address_family,
+                                                     rd=rd, route=route)
+                    else:
+                        cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
+                else:
+                    return ret_dict   
             else:
                 return ret_dict
             # Execute command
