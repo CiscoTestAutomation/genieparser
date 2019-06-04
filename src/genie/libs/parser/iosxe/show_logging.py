@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
     * show logging
+    * show logging | include {include}
 '''
 # Python
 import re
@@ -14,10 +15,12 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 # ==============================================
 # Schema for:
 #   * 'show logging'
+#   * 'show logging | include {include}'
 # ==============================================
 class ShowLoggingSchema(MetaParser):
     '''Schema for:
         * 'show logging'
+        * 'show logging | include {include}'
     '''
 
     schema = {
@@ -28,17 +31,27 @@ class ShowLoggingSchema(MetaParser):
 # ==============================================
 # Parser for:
 #   * 'show logging'
+#   * 'show logging | include {include}'
 # ==============================================
 class ShowLogging(ShowLoggingSchema):
     '''Parser for:
         * 'show logging'
+        * 'show logging | include {include}'
     '''
-    cli_command = 'show logging'
 
-    def cli(self, output=None):
+    cli_command = ['show logging | include {include}',
+                   'show logging',]
+
+    def cli(self, include='', output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            # Build the command
+            if include:
+                cmd = self.cli_command[0].format(include=include)
+            else:
+                cmd = self.cli_command[1]
+            # Execute the command
+            out = self.device.execute(cmd)
         else:
             out = output
 
