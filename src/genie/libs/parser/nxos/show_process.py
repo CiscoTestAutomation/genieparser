@@ -43,6 +43,12 @@ class ShowProcesses(ShowProcessesSchema):
     """Parser for show processes <process>"""
 
     cli_command = ['show processes | include {process}','show processes']
+    exclude = [
+        'pid',
+        'start_cnt',
+        '(flush.*)',
+        '(kworker.*)',
+        '(hwclock)']
 
     def cli(self, process='',output=None):
         if process:
