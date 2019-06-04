@@ -15,75 +15,83 @@ from genie.metaparser.util.schemaengine import Schema, \
 #  distributor class for show ip route
 # ====================================================
 class ShowIpRouteDistributor(MetaParser):
-
-    cli_command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {input}',
-                   'show ip route', 'show ip route {input}']
-    def cli(self, vrf='', input='', output=None):
+    """distributor class for show ip route"""
+    cli_command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {route}','show ip route vrf {vrf} {protocol}',
+                   'show ip route', 'show ip route {route}', 'show ip route {protocol}']
+    def cli(self, vrf='', route='', protocol='', output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
             if vrf != 'default':
-                if input:
-                    cmd = self.cli_command[1].format(vrf=vrf, input=input)
+                if route:
+                    cmd = self.cli_command[1].format(vrf=vrf, route=route)
+                elif protocol:
+                    cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
                 else:
                     cmd = self.cli_command[0].format(vrf=vrf)
             else:
-                if input:
-                    cmd = self.cli_command[3].format(input=input)
+                if route:
+                    cmd = self.cli_command[4].format(route=route)
+                elif protocol:
+                    cmd = self.cli_command[5].format(protocol=protocol)
                 else:
-                    cmd = self.cli_command[2]
+                    cmd = self.cli_command[3]
 
             out = self.device.execute(cmd)
         else:
             out = output
-        protocol_set={'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
+        protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                       'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
-        if input in protocol_set or not input:
+        if (route or protocol) in protocol_set or (not route and not protocol):
             parser = ShowIpRoute(self.device)
             self.schema = parser.schema
-            return parser.cli(vrf=vrf, protocol=input, output=out)
+            return parser.cli(vrf=vrf, protocol=protocol, output=out)
 
         else:
             parser = ShowIpRouteWord(self.device)
             self.schema=parser.schema
-            return parser.cli(vrf=vrf, route=input, output=out)
+            return parser.cli(vrf=vrf, route=route, output=out)
 
 # ====================================================
 #  distributor class for show ipv6 route
 # ====================================================
 class ShowIpv6RouteDistributor(MetaParser):
-
-    cli_command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {input}',
-                   'show ipv6 route', 'show ipv6 route {input}']
-    def cli(self, vrf='', input='', output=None):
+    """distributor class for show ipv6 route"""
+    cli_command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {route}', 'show ipv6 route vrf {vrf} {protocol}',
+                   'show ipv6 route', 'show ipv6 route {route}', 'show ip route {protocol}']
+    def cli(self, vrf='', route='', protocol='', output=None):
         if not vrf:
             vrf = 'default'
         if output is None:
             if vrf != 'default':
-                if input:
-                    cmd = self.cli_command[1].format(vrf=vrf, input=input)
+                if route:
+                    cmd = self.cli_command[1].format(vrf=vrf, route=route)
+                elif protocol:
+                    cmd = self.cli_command[2].format(vrf=vrf, protocol=protocol)
                 else:
                     cmd = self.cli_command[0].format(vrf=vrf)
             else:
-                if input:
-                    cmd = self.cli_command[3].format(input=input)
+                if route:
+                    cmd = self.cli_command[4].format(route=route)
+                elif protocol:
+                    cmd = self.cli_command[5].format(protocol=protocol)
                 else:
-                    cmd = self.cli_command[2]
+                    cmd = self.cli_command[3]
 
             out = self.device.execute(cmd)
         else:
             out = output
         protocol_set={'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                       'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
-        if input in protocol_set or not input:
+        if (route or protocol) in protocol_set or (not route and not protocol):
             parser = ShowIpv6Route(self.device)
             self.schema = parser.schema
-            return parser.cli(vrf=vrf, protocol=input, output=out)
+            return parser.cli(vrf=vrf, protocol=protocol, output=out)
 
         else:
             parser = ShowIpv6RouteWord(self.device)
             self.schema=parser.schema
-            return parser.cli(vrf=vrf, route=input, output=out)
+            return parser.cli(vrf=vrf, route=route, output=out)
 
 # ====================================================
 #  schema for show ip route

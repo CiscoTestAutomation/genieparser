@@ -6,3 +6,11 @@
 | ``genie.libs.parser``   |               |
 
 
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+* IOS
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+
