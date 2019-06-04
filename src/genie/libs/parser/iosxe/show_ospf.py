@@ -96,15 +96,15 @@ class ShowIpOspfSchema(MetaParser):
                                 Optional('stub_router'):
                                     {Optional('always'): 
                                         {'always': bool,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'external_lsa': bool,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('external_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
                                     Optional('on_startup'): 
                                         {'on_startup': int,
-                                        'include_stub': bool,
+                                        Optional('include_stub'): bool,
                                         Optional('summary_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa'): bool,
@@ -505,11 +505,12 @@ class ShowIpOspf(ShowIpOspfSchema):
                     continue
 
             # Condition: always State: active
+            # Condition: always, State: active
             # Condition: on start-up for 5 seconds, State: inactive
             # Condition: on startup for 300 seconds, State: inactive
             p14_2 = re.compile(r'^Condition:'
                                ' +(?P<condition>(always|on \S+))'
-                               '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
+                               '(?: +for +(?P<seconds>(\d+)) +seconds)?,?'
                                ' +State: +(?P<state>(\S+))$')
             m = p14_2.match(line)
             if m:
