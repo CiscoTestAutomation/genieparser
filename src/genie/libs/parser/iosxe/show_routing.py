@@ -713,7 +713,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
     """Parser for :
        show ipv6 route updated
        show ipv6 route vrf <vrf> updated"""
-       exclude = ['updated']
+    exclude = ['updated']
 
     cli_command = ['show ipv6 route vrf {vrf} updated', 'show ipv6 route updated']
 
