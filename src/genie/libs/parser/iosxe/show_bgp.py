@@ -1699,8 +1699,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         * 'show ip bgp {address_family} all summary'
     '''
 
-    def cli(self, address_family='', vrf='', rd='', flag_vrf_from_show_vrf=False, 
-            flag_vrf_from_config=False, output=None):
+    def cli(self, address_family='', vrf='', rd='', cmd='', output=None):
 
         # Init vars
         sum_dict = {}
@@ -1711,11 +1710,11 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         if not vrf:
             vrf='default'
 
-        if flag_vrf_from_show_vrf:            
+        if 'rd' in cmd and 'summary' in cmd:
             obj = ShowVrf(device=self.device)
             show_vrf_output = obj.parse()
 
-        if flag_vrf_from_config:
+        if 'all summary' in cmd:
             out_vrf = self.device.execute('show run | sec address-family ipv4 vrf')
 
             rc1 = re.compile(r'address\-family\s+ipv4\s+'
@@ -1936,7 +1935,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                 neighbor = str(m.groupdict()['neighbor'])
                 neighbor_as = int(m.groupdict()['as'])
 
-                if flag_vrf_from_config:
+                if 'all summary' in cmd:
                     for vrf_value, neighbors_value in bgp_config_dict.items():
                         for local_neighbor, as_num in neighbors_value.items():
                             if (local_neighbor == neighbor and
@@ -1949,7 +1948,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                     else:
                         vrf = 'default'
 
-                if flag_vrf_from_show_vrf:
+                if 'rd' in cmd and 'summary' in cmd:
                     for vrf_value, vrf_dict in show_vrf_output['vrf'].items():
                         if vrf_dict['route_distinguisher'] == rd:
                             vrf = vrf_value
@@ -2121,7 +2120,6 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    ]
 
     def cli(self, address_family='', vrf='', rd='', output=None):
-        flag_vrf_from_show_vrf = False
 
         if output is None:
             # Build command
@@ -2131,7 +2129,6 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             elif address_family and rd:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
-                flag_vrf_from_show_vrf = True
             elif address_family:
                 cmd = self.cli_command[2].format(address_family=address_family)
             else:
@@ -2143,8 +2140,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
         # Call super
         return super().cli(output=show_output, vrf=vrf, rd=rd,
-                           address_family=address_family, 
-                           flag_vrf_from_show_vrf=flag_vrf_from_show_vrf)
+                           address_family=address_family, cmd=cmd)
 
 
 # ============================================
@@ -2160,29 +2156,24 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
     '''
 
     cli_command = ['show bgp {address_family} all summary',
-                   'show bgp summary'
+                   'show bgp all summary'
                    ]
 
     def cli(self, address_family='', output=None):
-
-        flag_vrf_from_config = False
 
         if output is None:
             # Build command
             if address_family:
                 cmd = self.cli_command[0].format(address_family=address_family)
-                flag_vrf_from_config = True
             else:
                 cmd = self.cli_command[1]
-                flag_vrf_from_config = True
             # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family,
-                           flag_vrf_from_config=flag_vrf_from_config)
+        return super().cli(output=show_output, address_family=address_family, cmd=cmd)
 
 # =====================================================
 # Parser for:
@@ -2208,14 +2199,12 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
     def cli(self, address_family='', vrf='', rd='', output=None):
 
-        flag_vrf_from_show_vrf = False
-
         if output is None:
             # Build command
             if address_family and rd:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  rd=rd)
-                flag_vrf_from_show_vrf = True
+
             elif address_family and vrf:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  vrf=vrf)
@@ -2230,8 +2219,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
         # Call super
         return super().cli(output=show_output, vrf=vrf, rd=rd,
-                           address_family=address_family,
-                           flag_vrf_from_show_vrf=flag_vrf_from_show_vrf)
+                           address_family=address_family, cmd=cmd)
 
 
 # ===============================================
@@ -2251,23 +2239,19 @@ class ShowIpBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    ]
 
     def cli(self, address_family='', output=None):
-        flag_vrf_from_config = False
         if output is None:
             # Build command
             if address_family:
                 cmd = self.cli_command[0].format(address_family=address_family)
-                flag_vrf_from_config = True
             else:
                 cmd = self.cli_command[1]
-                flag_vrf_from_config = True
             # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family,
-                           flag_vrf_from_config=flag_vrf_from_config)
+        return super().cli(output=show_output, address_family=address_family, cmd=cmd)
 
 
 #-------------------------------------------------------------------------------
