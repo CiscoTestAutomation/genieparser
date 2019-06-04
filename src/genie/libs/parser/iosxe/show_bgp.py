@@ -1576,18 +1576,21 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
         ret_dict = {}
 
         if output is None:
-            if address_family and rd and route:
-                cmd = self.cli_command[2].format(address_family=address_family,
-                                                 rd=rd, route=route)
-            elif address_family and vrf:
-                cmd = self.cli_command[0].format(address_family=address_family,
+            if address_family:
+                if vrf:
+                    cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
-            elif address_family and rd:
-                cmd = self.cli_command[1].format(address_family=address_family,
+                elif rd and route:
+                    cmd = self.cli_command[2].format(address_family=address_family,
+                                                 rd=rd, route=route)
+                elif rd:
+                    cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
+                else:
+                    return ret_dict
             else:
                 return ret_dict
-            # Execute command
+                # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
@@ -2102,14 +2105,15 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
         if output is None:
             # Build command
-            if address_family and vrf:
-                cmd = self.cli_command[0].format(address_family=address_family,
+            if address_family:
+                if vrf:
+                    cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
-            elif address_family and rd:
-                cmd = self.cli_command[1].format(address_family=address_family,
+                elif rd:
+                    cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
-            elif address_family:
-                cmd = self.cli_command[2].format(address_family=address_family)
+                else:
+                    cmd = self.cli_command[2].format(address_family=address_family)
             else:
                 cmd = self.cli_command[3]
             # Execute command
