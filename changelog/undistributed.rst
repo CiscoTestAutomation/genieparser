@@ -16,3 +16,9 @@
     * Updated parser for ShowBgpAllDetail:
         show bgp vrf {vrf} {route}
         show bgp {address_family} vrf {vrf} {route}
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspf for more varied router-LSAs
