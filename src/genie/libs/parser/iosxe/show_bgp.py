@@ -578,6 +578,7 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
     cli_command = ['show bgp {address_family} all',
                    'show bgp all',
                    ]
+    exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
 
@@ -1455,6 +1456,8 @@ class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                     'show bgp vrf {vrf} {route}',
                     'show bgp {address_family} vrf {vrf} {route}'
                    ]
+    exclude = ['table_version', 'refresh_epoch', 'best_path', 'status_codes', 'transfer_pathid', 'paths']
+
 
     def cli(self, vrf='', route='', address_family='',output=None):
 
@@ -2150,6 +2153,10 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    'show bgp summary',
                    'show bgp vrf {vrf} all summary'
                    ]
+    exclude = ['msg_sent', 'msg_rcvd', 'activity_paths', 'activity_prefixes',
+        'bgp_table_version', 'routing_table_version', 'tbl_ver', 'up_down',
+        'attribute_entries', 'dropped', 'established']
+
 
     def cli(self, address_family='', vrf='',output=None):
 
@@ -3746,6 +3753,15 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
                    'show bgp {address_family} all neighbors',
                    'show bgp {address_family} all neighbors {neighbor}',
                    ]
+    exclude = ['current_time', 'last_read', 'last_write', 'retrans', 'keepalives',
+        'total', 'value', 'retransmit', 'total_data', 'with_data', 'krtt', 'receive_idletime',
+        'sent_idletime', 'sndnxt', 'snduna', 'sndwnd', 'uptime', 'ackhold', 'delrcvwnd', 'rcvnxt',
+        'receive_idletime', 'rcvwnd', 'updates', 'down_time', 'last_reset', 'notifications',
+        'opens', 'route_refresh', 'total', 'updates', 'up_time', 'rtto', 'rtv', 'srtt',
+        'pmtuager', 'min_rtt', 'irs', 'iss', 'tcp_semaphore', 'foreign_port', 'local_port',
+        'reset_reason', 'status_flags', 'dropped', 'established', 'out_of_order',
+        'keepalive', 'retransmit_packet', 'max_rtt', 'mss', 'rcv_scale']
+
 
     def cli(self, neighbor='', address_family='', output=None):
 

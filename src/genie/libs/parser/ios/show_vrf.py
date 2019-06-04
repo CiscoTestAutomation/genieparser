@@ -16,6 +16,7 @@ from genie.libs.parser.iosxe.show_vrf import ShowVrf as ShowVrf_iosxe
 
 class ShowVrfDetail(ShowVrfDetail_iosxe):
     """Parser for show vrf detail"""
+    exclude = ['vrf']
     pass
 
 class ShowVrf(ShowVrf_iosxe):

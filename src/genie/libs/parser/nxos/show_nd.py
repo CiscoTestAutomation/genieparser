@@ -64,6 +64,8 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
         show ipv6 neighbor detail vrf <vrf>"""
 
     cli_command = ['show ipv6 neighbor detail vrf {vrf}','show ipv6 neighbor detail']
+    exclude = [
+        'age']
 
     def cli(self, vrf="",output=None):
         if vrf:
@@ -231,6 +233,11 @@ class ShowIpv6NdInterface(ShowIpv6NdInterfaceSchema):
         show ipv6 nd interface vrf <vrf>"""
 
     cli_command = ['show ipv6 nd interface vrf {vrf}','show ipv6 nd interface']
+    exclude = [
+        'last_neighbor_advertisement',
+        'last_neighbor_solicitation',
+        'last_router_advertisement',
+        'next_router_advertisement']
 
     def cli(self, vrf="",output=None):
         if vrf:
@@ -528,6 +535,8 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
         show ipv6 icmp neighbor detail vrf <vrf>"""
 
     cli_command = ['show ipv6 icmp neighbor detail vrf {vrf}','show ipv6 icmp neighbor detail']
+    exclude = [
+        'age']
 
     def cli(self, vrf="", output=None):
         if vrf:

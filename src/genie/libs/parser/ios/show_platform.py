@@ -56,12 +56,14 @@ from genie.libs.parser.iosxe.show_platform import \
 class ShowVersion(ShowVersion_iosxe):
     """Parser for show version
     """
+    exclude = ['system_restarted_at', 'uptime_this_cp', 'uptime']
     pass
 
 
 class Dir(Dir_iosxe):
     """Parser for dir
     """
+    exclude = ['last_modified_date', 'bytes_free', 'files']
     pass
 
 
@@ -104,6 +106,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
     """Parser for show Inventory
     """
     cli_command = 'show inventory'
+    
 
     def cli(self, output=None):
         if output is None:

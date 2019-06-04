@@ -563,6 +563,12 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
     """
 
     cli_command = ['show interface detail', 'show interface {interface} detail']
+    exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts', 'in_rate', 
+        'in_rate_pkts', 'out_rate', 'out_rate_pkts', 'last_link_flapped', 'in_multicast_pkts',
+        'out_multicast_pkts', 'last_input', 'last_output', 'in_crc_errors', 'in_frame_errors',
+        'reliability', 'in_discards', 'in_broadcast_pkts', 'out_broadcast_pkts', 'rxload', 'txload', 
+        'interface_state', 'in_unknown_protos', 'last_clear', 'carrier_transitions', 'in_giants']
+
 
     def cli(self, interface='', output=None):
         if output is None:
@@ -1647,6 +1653,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
     """Parser for show ipv6 vrf all interface"""
 
     cli_command = 'show ipv6 vrf all interface'
+    exclude = ['complete_protocol_adj', 'complete_glean_adj', 'ipv6_groups', 'ipv6_link_local']
 
     def cli(self, output=None):
         if output is None:
@@ -2265,6 +2272,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces <interface> accounting
     """
     cli_command = ['show interfaces {interface} accounting','show interfaces accounting']
+    exclude = ['pkts_in', 'pkts_out', 'chars_in', 'chars_out']
+
 
     def cli(self, interface=None, output=None):
         if output is None:
