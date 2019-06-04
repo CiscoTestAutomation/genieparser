@@ -645,6 +645,8 @@ class ShowIpv6Route(ShowIpRoute):
         show ipv6 route
         show ipv6 route vrf <vrf>"""
     cli_command = ['show ipv6 route', 'show ipv6 route vrf {vrf}']
+    exclude = ['uptime']
+
     IP_VER = 'ipv6'
     def cli(self, protocol='', vrf='', output=None):
         if not vrf:
@@ -711,6 +713,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
     """Parser for :
        show ipv6 route updated
        show ipv6 route vrf <vrf> updated"""
+       exclude = ['updated']
 
     cli_command = ['show ipv6 route vrf {vrf} updated', 'show ipv6 route updated']
 

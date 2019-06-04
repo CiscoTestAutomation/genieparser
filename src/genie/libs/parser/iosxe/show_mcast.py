@@ -82,6 +82,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
         show ip mroute vrf <vrf>"""
 
     cli_command = 'show ip mroute'
+    exclude = ['expire', 'uptime', 'outgoing_interface_list', 'flags']
+
 
     def cli(self, cmd=cli_command, vrf='', output=None):
         if output is None:
@@ -295,6 +297,9 @@ class ShowIpv6Mroute(ShowIpMroute):
        show ipv6 mroute vrf <vrf>"""
 
     cli_command = 'show ipv6 mroute'
+    exclude = ['expire', 'uptime', 'joins', 'leaves',
+               'incoming_interface_list', '(Tunnel.*)']
+
 
     def cli(self, vrf='',output=None):
         return super().cli(cmd=self.cli_command, vrf=vrf,output=output)

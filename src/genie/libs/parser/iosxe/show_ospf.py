@@ -1425,6 +1425,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
     '''
 
     cli_command = 'show ip ospf interface'
+    exclude = ['hello_timer', 'dead_timer',
+        'bdr_ip_addr', 'bdr_router_id', 'last_flood_scan_length',
+        'last_flood_scan_time_msec', 
+        'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
+
 
     def cli(self):
         out = self.device.execute(self.cli_command)
@@ -2777,6 +2782,11 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
     '''
 
     cli_command = 'show ip ospf neighbor detail'
+    exclude = ['hello_timer', 'dead_timer', 'bdr_ip_addr',
+        'bdr_router_id', 'index', 'last_retrans_max_scan_length',
+        'last_retrans_max_scan_time_msec', 'total_retransmission',
+        'uptime', 'last_retrans_scan_length', 'last_retrans_scan_time_msec']
+
 
     def cli(self, output=None):
 
@@ -4180,6 +4190,8 @@ class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabas
     '''
 
     cli_command = 'show ip ospf database router'
+    exclude = ['age', 'seq_num', 'checksum', 'links']
+
 
     def cli(self, output=None):
 
@@ -4349,6 +4361,7 @@ class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatab
     '''
 
     cli_command = 'show ip ospf database network'
+    exclude = ['age', 'seq_num', 'checksum', 'lsas']
 
     def cli(self, output=None):
 
@@ -4433,6 +4446,8 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
     '''
 
     cli_command = 'show ip ospf database summary'
+    exclude = ['age', 'seq_num', 'checksum']
+
 
     def cli(self, output=None):
 
