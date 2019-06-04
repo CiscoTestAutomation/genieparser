@@ -656,7 +656,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
 
