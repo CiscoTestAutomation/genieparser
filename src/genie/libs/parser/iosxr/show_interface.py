@@ -1303,18 +1303,16 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                     show ipv4 vrf <vrf> interface"""
 
     cli_command = ['show ipv4 vrf {vrf} interface {interface}',
-                   'show ipv4 vrf all interface {interface}',
                    'show ipv4 vrf {vrf} interface', 'show ipv4 vrf all interface']
 
     def cli(self, interface='', vrf='', output=None):
-        if interface and vrf:
-            cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
-        elif interface:
-            cmd = self.cli_command[1].format(interface=interface)
-        elif vrf:
-            cmd = self.cli_command[2].format(vrf=vrf)
+        if vrf:
+            if interface and vrf != 'all':
+                cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
         else:
-            cmd = self.cli_command[3]
+            cmd = self.cli_command[2]
         if output is None:
             out = self.device.execute(cmd)
         else:
@@ -1658,18 +1656,16 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
     """Parser for show ipv6 vrf all interface"""
 
     cli_command = ['show ipv6 vrf {vrf} interface {interface}',
-                   'show ipv6 vrf all interface {interface}',
                    'show ipv6 vrf {vrf} interface', 'show ipv6 vrf all interface']
 
     def cli(self, interface='', vrf='', output=None):
-        if interface and vrf:
-            cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
-        elif interface:
-            cmd = self.cli_command[1].format(interface=interface)
-        elif vrf:
-            cmd = self.cli_command[2].format(vrf=vrf)
+        if vrf:
+            if interface and vrf != 'all':
+                cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+            else:
+                cmd = self.cli_command[1].format(vrf=vrf)
         else:
-            cmd = self.cli_command[3]
+            cmd = self.cli_command[2]
         if output is None:
             out = self.device.execute(cmd)
         else:
