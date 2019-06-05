@@ -48,7 +48,7 @@ class ShowVersionSchema(MetaParser):
                     Optional('uptime_this_cp'): str,
                     Optional('system_restarted_at'): str,
                     'system_image': str,
-                    'last_reload_reason': str,
+                    Optional('last_reload_reason'): str,
                     Optional('license_type'): str,
                     Optional('license_level'): str,
                     Optional('next_reload_license_level'): str,
@@ -106,8 +106,6 @@ class ShowVersion(ShowVersionSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show version'
-    exclude = ['system_restarted_at', 'uptime_this_cp', 'uptime']
-
 
     def cli(self,output=None):
         """parsing mechanism: cli
@@ -611,8 +609,6 @@ class Dir(DirSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     cli_command = 'dir'
-    exclude = ['last_modified_date', 'bytes_free', 'files']
-
 
     def cli(self, output=None):
         """parsing mechanism: cli
@@ -712,8 +708,6 @@ class ShowRedundancy(ShowRedundancySchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show redundancy'
-    exclude = ['available_system_uptime', 'uptime_in_curr_state']
-
 
     def cli(self,output=None):
         """parsing mechanism: cli
@@ -1291,7 +1285,6 @@ class ShowPlatform(ShowPlatformSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show platform'
-    exclude = ['insert_time']
 
     def cli(self, output=None):
         """parsing mechanism: cli
@@ -2090,7 +2083,6 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
     """Parser for show platform software status control-processor brief"""
 
     cli_command = 'show platform software status control-processor brief'
-    exclude = ['idle', 'system', 'user', '1_min', '5_min', '15_min', 'free', 'used', 'sirq', 'waiting', 'committed']
 
     def cli(self, output=None):
         if output is None:
