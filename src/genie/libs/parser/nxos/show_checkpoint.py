@@ -30,6 +30,10 @@ class ShowCheckpointSummarySchema(MetaParser):
 class ShowCheckpointSummary(ShowCheckpointSummarySchema):
     """Parser for show checkpoint summary"""
     cli_command = 'show checkpoint summary'
+    exclude = [
+        'size',
+        'created_time',
+        '(system-fm.*)']
 
     def cli(self, output=None):
 

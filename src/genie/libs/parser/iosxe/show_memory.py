@@ -36,6 +36,7 @@ class ShowMemoryStatistics(ShowMemoryStatisticsSchema):
     """Parser for show memory statistics"""
 
     cli_command = 'show memory statistics'
+    exclude = ['free', 'used']
 
     def cli(self,output=None):
         if output is None:

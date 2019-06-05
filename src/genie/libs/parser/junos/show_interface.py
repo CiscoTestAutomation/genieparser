@@ -47,6 +47,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
     """Parser for show interfaces terse [| match <interface>]"""
 
     cli_command = ['show interfaces terse | match {interface}','show interfaces terse' ]
+    exclude = [
+        'duration'
+    ]
 
     def cli(self, interface=None,output=None):
         # execute the command

@@ -311,7 +311,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
 #           L2TPV3_P2P_1
             p1 = re.compile(r'^(?P<group>[\w]+)$')
 
-#               1000     DN   Gi0/0/0/5.1000    UP   1.1.1.206       1000   DN
+#               1000     DN   Gi0/0/0/5.1000    UP   10.4.1.206       1000   DN
             p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
                             '+(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
                             '+(?P<segment_1>.*?) ' 
@@ -320,7 +320,7 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                             '+(?P<pw_id>\S*)? '
                             '+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
-#                        UP   Gi0/2/0/1.2            UP       26.26.26.26     100    UP  
+#                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100    UP  
             p3 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
                             '+(?P<segment_1>.*?) ' 
                             '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '

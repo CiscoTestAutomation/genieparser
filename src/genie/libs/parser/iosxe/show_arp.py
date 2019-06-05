@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show arp vrf <vrf>
     * show arp vrf <vrf> <WORD>
     * show ip arp
+    * show ip arp vrf <vrf>
     * show ip arp summary
     * show ip traffic
     * show arp application
@@ -61,6 +62,7 @@ class ShowArp(ShowArpSchema):
                   show arp vrf <vrf> <WROD> """
 
     cli_command = ['show arp','show arp vrf {vrf}','show arp vrf {vrf} {intf_or_ip}','show arp {intf_or_ip}']
+    exclude = ['age']
 
     def cli(self, vrf='', intf_or_ip='', cmd=None, output=None):
         if output is None:
@@ -110,6 +112,23 @@ class ShowArp(ShowArpSchema):
 
         return ret_dict
 
+# =====================================
+# Parser for 'show ip arp, show ip arp vrf <vrf>'
+# =====================================
+class ShowIpArp(ShowArp):
+    """Parser for 'show ip arp,  show ip arp vrf <vrf>"""
+    cli_command = ['show ip arp', 'show ip arp vrf {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        return super().cli(output=out)
 # =====================================
 # Schema for 'show ip arp summary'
 # =====================================

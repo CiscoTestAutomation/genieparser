@@ -28,7 +28,7 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/0/0/5.1000': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '1.1.1.206': {
+                                    '10.4.1.206': {
                                         'pw_id': '1000',
                                         'status': 'DN',
                                         },
@@ -42,7 +42,7 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/0/0/5.2000': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '1.1.1.206': {
+                                    '10.4.1.206': {
                                         'pw_id': '2000',
                                         'status': 'DN',
                                         },
@@ -60,7 +60,7 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/0/0/5.3000': {
                                 'status': 'UR',
                                 'segment2': {
-                                    '1.1.1.206': {
+                                    '10.4.1.206': {
                                         'pw_id': '3000',
                                         'status': 'DN',
                                         },
@@ -81,13 +81,13 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
     Group      Name     ST   Description       ST   Description            ST
     ----------------------   --------------------   ---------------------------
     Test_XCONN_Group
-               1000     DN   Gi0/0/0/5.1000    UP   1.1.1.206       1000   DN
+               1000     DN   Gi0/0/0/5.1000    UP   10.4.1.206       1000   DN
     ---------------------------------------------------------------------------
     Test_XCONN_Group
-               2000     DN   Gi0/0/0/5.2000    UP   1.1.1.206       2000   DN    
+               2000     DN   Gi0/0/0/5.2000    UP   10.4.1.206       2000   DN    
     ---------------------------------------------------------------------------
     Test_XCONN_Group2
-               3000     UR   Gi0/0/0/5.3000    UR   1.1.1.206       3000   DN
+               3000     UR   Gi0/0/0/5.3000    UR   10.4.1.206       3000   DN
     ---------------------------------------------------------------------------
         '''}
 

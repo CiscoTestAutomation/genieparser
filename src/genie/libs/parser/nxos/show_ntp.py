@@ -66,6 +66,8 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                 None: 'unsynchronized'}
 
     cli_command = 'show ntp peer-status'
+    exclude = [
+        'delay']
 
     def cli(self, output=None):
         # excute command to get output

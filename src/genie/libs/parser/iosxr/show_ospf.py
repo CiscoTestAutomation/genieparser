@@ -234,6 +234,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
     """Parser for show ospf vrf all-inclusive interface"""
 
     cli_command = 'show ospf vrf all-inclusive interface'
+    exclude = ['dead_timer', 'hello_timer', 'last_flood_scan_length', 'max_flood_scan_length', 'high_water_mark']
 
     def cli(self, output=None):
         if output is None:
@@ -784,6 +785,7 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
     """Parser for show ospf vrf all-inclusive neighbor detail"""
 
     cli_command = 'show ospf vrf all-inclusive neighbor detail'
+    exclude = ['dead_timer', 'neighbor_uptime', 'hello_timer', 'total_dbd_retrans']
 
     def cli(self, output=None):
         if output is None:
@@ -1239,6 +1241,8 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
     """Parser for show ospf vrf all-inclusive"""
 
     cli_command = 'show ospf vrf all-inclusive'
+    exclude = ['area_scope_lsa_cksum_sum', 'topology_version', 'spf_runs_count', 'external_lsa_checksum']
+
 
     def cli(self, output=None):
         if output is None:
@@ -2554,6 +2558,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
     """Parser for show ospf mpls traffic-eng link"""
 
     cli_command = 'show ospf mpls traffic-eng link'
+    exclude = ['area_instance']
 
     def cli(self, output=None):
         if output is None:
@@ -3717,6 +3722,7 @@ class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExt
     """
 
     cli_command = 'show ospf vrf all-inclusive database external'
+    exclude = ['age', 'checksum', 'seq_num']
 
     def cli(self, output=None):
 
@@ -3796,6 +3802,7 @@ class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetw
     """
 
     cli_command = 'show ospf vrf all-inclusive database network'
+    exclude = ['age', 'checksum', 'seq_num']
 
     def cli(self, output=None):
 
@@ -3878,6 +3885,7 @@ class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSumm
     """
 
     cli_command = 'show ospf vrf all-inclusive database summary'
+    exclude = ['age', 'checksum', 'seq_num']
 
     def cli(self, output=None):
         return super().cli(cmd=self.cli_command, db_type='summary',output=output)
@@ -3991,6 +3999,8 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseO
     """
 
     cli_command = 'show ospf vrf all-inclusive database opaque-area'
+    exclude = ['age', 'checksum', 'seq_num']
+
 
     def cli(self, output=None):
 

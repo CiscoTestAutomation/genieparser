@@ -92,6 +92,14 @@ IOSXE parsers for the following show commands:
     * show ip bgp template peer-policy {template_name}
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
+
+    * show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes
+    * show ip bgp {address_family} vrf {vrf} {route}
+
+    * show bgp vrf {vrf} all summary
+    * show bgp vrf {vrf} {route}
+    * show bgp {address_family} vrf {vrf} {route}
+    * show ip bgp {address_family} rd {rd} {route}
 '''
 
 # Python
@@ -570,6 +578,7 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
     cli_command = ['show bgp {address_family} all',
                    'show bgp all',
                    ]
+    exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
 
@@ -653,7 +662,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, vrf=vrf, rd=rd,
+        return super().cli(output=show_output, vrf=vrf,
                            address_family=address_family)
 
 
@@ -826,6 +835,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         original_address_family = address_family
         refresh_epoch_flag = False
         route_info = ''
+        refresh_epoch = None
 
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
@@ -1001,6 +1011,13 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Paths: (1 available, best #1, table default, RIB-failure(17))
             m = p2.match(line)
             if m:
+                original_address_family = address_family.lower()
+                if 'instance' not in ret_dict:
+                    ret_dict['instance'] = {}
+                if 'default' not in ret_dict['instance']:
+                    ret_dict['instance']['default'] = {}
+                if 'vrf' not in ret_dict['instance']['default']:
+                    ret_dict['instance']['default']['vrf'] = {}
                 paths = m.groupdict()['paths']
                 available_path = m.groupdict()['available_path']
                 if m.groupdict()['best_path']:
@@ -1249,7 +1266,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 subdict['status_codes'] = status_codes
 
                 # Adding the keys we got from 'Refresh Epoch' line
-                subdict['refresh_epoch'] = refresh_epoch
+                if refresh_epoch:
+                    subdict['refresh_epoch'] = refresh_epoch
 
                 # Adding the keys we got from 'route_info' line
                 if route_info:
@@ -1420,57 +1438,81 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         return ret_dict
 
 
-# =========================
+# =================================================
 # Parser for:
 #   * 'show bgp all detail'
-# =========================
+#   * 'show bgp vrf {vrf} {route}'
+#   * 'show bgp {address_family} vrf {vrf} {route}'
+# =================================================
 class ShowBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
     ''' Parser for:
         * 'show bgp all detail'
+        * 'show bgp vrf {vrf} {route}'
+        * 'show bgp {address_family} vrf {vrf} {route}'
     '''
 
     cli_command = ['show bgp all detail',
+                    'show bgp vrf {vrf} {route}',
+                    'show bgp {address_family} vrf {vrf} {route}'
                    ]
+    exclude = ['table_version', 'refresh_epoch', 'best_path', 'status_codes', 'transfer_pathid', 'paths']
 
-    def cli(self, output=None):
+
+    def cli(self, vrf='', route='', address_family='',output=None):
 
         if output is None:
-            cmd = self.cli_command[0]
+            if vrf and route:
+                if address_family:
+                    cmd = self.cli_command[2].format(vrf=vrf,
+                        route=route,
+                        address_family=address_family)
+                else:
+                    address_family = 'vpnv4 unicast'
+                    cmd = self.cli_command[1].format(vrf=vrf,
+                        route=route)
+            else:
+                cmd = self.cli_command[0]
             # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
 
         # Call super
-        return super().cli(output=show_output)
+        return super().cli(address_family=address_family,output=show_output)
 
 
-# ============================
+# ====================================================
 # Parser for:
 #   * 'show ip bgp all detail'
-# ============================
-class ShowIpBgpAllDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
+#   * 'show ip bgp {address_family} vrf {vrf} {route}'
+# ====================================================
+class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
 
     ''' Parser for:
-        * 'show bgp all detail'
+        * 'show ip bgp all detail'
+        * 'show ip bgp {address_family} vrf {vrf} {route}'
     '''
 
-    cli_command = ['show bgp all detail',
+    cli_command = ['show ip bgp all detail',
+        'show ip bgp {address_family} vrf {vrf} {route}'
                    ]
 
-    def cli(self, output=None):
+    def cli(self, address_family='', vrf='', route='',output=None):
 
         if output is None:
-            cmd = self.cli_command[0]
+            if address_family and vrf and route:
+                cmd = self.cli_command[1].format(address_family=address_family,
+                    vrf=vrf, route=route)
+            else:
+                cmd = self.cli_command[0]
             # Execute command
             show_output = self.device.execute(cmd)
         else:
             show_output = output
 
         # Call super
-        return super().cli(output=show_output)
-
+        return super().cli(output=show_output, address_family=address_family)
 
 # ================================================
 # Parser for:
@@ -1516,30 +1558,43 @@ class ShowBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 # Parser for:
 #   * 'show ip bgp {address_family} vrf {vrf} detail'
 #   * 'show ip bgp {address_family} rd {rd} detail'
+#   * 'show ip bgp {address_family} rd {rd} {route}'
 # ====================================================
 class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
 
     ''' Parser for:
         * 'show ip bgp {address_family} vrf {vrf} detail'
         * 'show ip bgp {address_family} rd {rd} detail'
+        * 'show ip bgp {address_family} rd {rd} {route}'
     '''
 
     cli_command = ['show ip bgp {address_family} vrf {vrf} detail',
                    'show ip bgp {address_family} rd {rd} detail',
+                   'show ip bgp {address_family} rd {rd} {route}'
                    ]
 
-    def cli(self, address_family='', vrf='', rd='', output=None):
+    def cli(self, address_family='', vrf='', rd='', route='', output=None):
 
         # Init dict
         ret_dict = {}
 
         if output is None:
-            if address_family and vrf:
-                cmd = self.cli_command[0].format(address_family=address_family,
+            if vrf:
+                if address_family:
+                    cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
-            elif address_family and rd:
-                cmd = self.cli_command[1].format(address_family=address_family,
+                else:
+                    return ret_dict
+            elif rd:
+                if address_family:
+                    if route:
+                        cmd = self.cli_command[2].format(address_family=address_family,
+                                                     rd=rd, route=route)
+                    else:
+                        cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
+                else:
+                    return ret_dict   
             else:
                 return ret_dict
             # Execute command
@@ -1773,7 +1828,8 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             if m:
                 # Save variables for use later
                 address_family = m.groupdict()['address_family'].lower()
-                vrf = 'default'
+                if not vrf:
+                    vrf = 'default'
                 attribute_entries = ""
                 num_prefix_entries = ""
                 path_total_entries = ""
@@ -2056,14 +2112,17 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
         if output is None:
             # Build command
-            if address_family and vrf:
-                cmd = self.cli_command[0].format(address_family=address_family,
+            if vrf:
+                if address_family:
+                    cmd = self.cli_command[0].format(address_family=address_family,
                                                  vrf=vrf)
-            elif address_family and rd:
-                cmd = self.cli_command[1].format(address_family=address_family,
+            elif rd:
+                if address_family:
+                    cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
             elif address_family:
                 cmd = self.cli_command[2].format(address_family=address_family)
+
             else:
                 cmd = self.cli_command[3]
             # Execute command
@@ -2080,24 +2139,33 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 # Parser for:
 #   * 'show bgp all summary'
 #   * 'show bgp {address_family} all summary'
+#   * 'show bgp vrf {vrf} all summary'
 # ============================================
 class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
     ''' Parser for:
         * 'show bgp all summary'
         * 'show bgp {address_family} all summary'
+        * 'show bgp vrf {vrf} all summary'
     '''
 
     cli_command = ['show bgp {address_family} all summary',
-                   'show bgp summary'
+                   'show bgp summary',
+                   'show bgp vrf {vrf} all summary'
                    ]
+    exclude = ['msg_sent', 'msg_rcvd', 'activity_paths', 'activity_prefixes',
+        'bgp_table_version', 'routing_table_version', 'tbl_ver', 'up_down',
+        'attribute_entries', 'dropped', 'established']
 
-    def cli(self, address_family='', output=None):
+
+    def cli(self, address_family='', vrf='',output=None):
 
         if output is None:
             # Build command
-            if address_family:
+            if address_family and not vrf:
                 cmd = self.cli_command[0].format(address_family=address_family)
+            elif vrf and not address_family:
+                cmd = self.cli_command[2].format(vrf=vrf)
             else:
                 cmd = self.cli_command[1]
             # Execute command
@@ -2106,7 +2174,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family, vrf=vrf)
 
 # =====================================================
 # Parser for:
@@ -3685,6 +3753,15 @@ class ShowBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema)
                    'show bgp {address_family} all neighbors',
                    'show bgp {address_family} all neighbors {neighbor}',
                    ]
+    exclude = ['current_time', 'last_read', 'last_write', 'retrans', 'keepalives',
+        'total', 'value', 'retransmit', 'total_data', 'with_data', 'krtt', 'receive_idletime',
+        'sent_idletime', 'sndnxt', 'snduna', 'sndwnd', 'uptime', 'ackhold', 'delrcvwnd', 'rcvnxt',
+        'receive_idletime', 'rcvwnd', 'updates', 'down_time', 'last_reset', 'notifications',
+        'opens', 'route_refresh', 'total', 'updates', 'up_time', 'rtto', 'rtv', 'srtt',
+        'pmtuager', 'min_rtt', 'irs', 'iss', 'tcp_semaphore', 'foreign_port', 'local_port',
+        'reset_reason', 'status_flags', 'dropped', 'established', 'out_of_order',
+        'keepalive', 'retransmit_packet', 'max_rtt', 'mss', 'rcv_scale']
+
 
     def cli(self, neighbor='', address_family='', output=None):
 
@@ -3853,7 +3930,6 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
 
-
 # ===================================================================
 # Parser for:
 #   * 'show ip bgp neighbors'
@@ -4004,6 +4080,7 @@ class ShowBgpNeighborsAdvertisedRoutesSchema(MetaParser):
 #   * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
 # ==============================================================================
 class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRoutesSchema):
 
@@ -4016,6 +4093,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         * 'show ip bgp {address_family} all neighbors {neighbor} advertised-routes'
         * 'show ip bgp neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     '''
 
     def cli(self, neighbor, address_family='', output=None):
@@ -4536,29 +4614,33 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
-
-
-# ===========================================================================
+# =================================================================================
 # Parser for:
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
-# ===========================================================================
+#   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+# =================================================================================
 class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
 
     ''' Parser for:
         * 'show ip bgp neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
     '''
 
     cli_command = ['show ip bgp {address_family} neighbors {neighbor} advertised-routes',
                    'show ip bgp neighbors {neighbor} advertised-routes',
+                   'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
                    ]
 
-    def cli(self, neighbor, address_family='', output=None):
+    def cli(self, neighbor='', rd='', address_family='', output=None):
 
         if output is None:
             # Build command
-            if address_family and neighbor:
+            if address_family and neighbor and rd:
+                cmd = self.cli_command[2].format(address_family=address_family,
+                    rd=rd,neighbor=neighbor)
+            elif address_family and neighbor:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  neighbor=neighbor)
             elif neighbor:
@@ -4571,6 +4653,8 @@ class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPa
         # Call super
         return super().cli(output=show_output, neighbor=neighbor,
                            address_family=address_family)
+
+
 
 
 #-------------------------------------------------------------------------------

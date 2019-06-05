@@ -88,19 +88,19 @@ def _find_command(command, data, device):
             continue
 
         # Okay... this is not optimal
-        patterns = re.findall('{.*?}(?: +{.*?})*', key)
+        patterns = re.findall('{.*?}', key)
         len_normal_words = len(set(key.split()) - set(patterns))
         reg = key
 
         for pattern in patterns:
-            new_pattern= pattern.replace('}',r'>\S+)').replace('{', '(?P<')
+            word = pattern.replace('{', '').replace('}', '')
+            new_pattern = '(?P<{p}>\S+)'.format(p=word) if word == 'vrf' or word == 'rd' else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
-        reg = reg.strip()
         reg += '$'
         # Convert | to \|
         reg = reg.replace('|', '\|')
-        
-        match = re.search(reg, command)
+
+        match = re.match(reg, command)
         if match:
             # Found a match!
             lookup = Lookup.from_device(device, packages={'parser':parser})
@@ -159,8 +159,8 @@ class Common():
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
                    'Fas': 'FastEthernet',
-	               'Po': 'Port-channel',
-	               'PO': 'Port-channel',
+                   'Po': 'Port-channel',
+                   'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
                    'Gig': 'GigabitEthernet',
@@ -306,9 +306,9 @@ class Common():
             # if there is no __readonly__ but the command has outputs
             # should be warining
             if 'TABLE' in tag:
-            	warnings.warn('Tag "__readonly__" should exsist in output when '
-            		          'there are actual values in output')
-            	break
+                warnings.warn('Tag "__readonly__" should exsist in output when '
+                              'there are actual values in output')
+                break
 
         cli = cli.strip()
         # compare the commands

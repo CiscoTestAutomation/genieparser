@@ -27,7 +27,8 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfMplsTrafficEngLink,\
                                               ShowIpOspfMaxMetric,\
                                               ShowIpOspfTraffic,\
-                                              ShowIpOspfNeighbor
+                                              ShowIpOspfNeighbor,\
+                                              ShowIpOspfDatabaseRouterSelfOriginate
 
 
 # ============================
@@ -348,7 +349,7 @@ class test_show_ip_ospf(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'instance': {
-                            '9996': {
+                            '65109': {
                                 'adjacency_stagger': {
                                     'initial_number': 300,
                                     'maximum_number': 300
@@ -421,7 +422,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                 },
                                 'opqaue_lsa': True,
                                 'retransmission_pacing_timer': 66,
-                                'router_id': '106.162.197.254',
+                                'router_id': '10.169.197.254',
                                 'spf_control': {
                                     'incremental_spf': False,
                                     'throttle': {
@@ -461,9 +462,9 @@ class test_show_ip_ospf(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         R1_ospf_xe#show ip ospf 
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 23:17:46.919 JST Fri May 3 2019
+        Time source is NTP, 23:17:46.919 EST Fri May 3 2019
 
-         Routing Process "ospf 9996" with ID 106.162.197.254
+         Routing Process "ospf 65109" with ID 10.169.197.254
          Start time: 00:02:39.151, Time elapsed: 13:07:02.634
          Supports only single TOS(TOS0) routes
          Supports opaque LSA
@@ -7719,6 +7720,160 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# ===========================================================
+# Unit test for 'show ip ospf database router self-originate'
+# ===========================================================
+class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
+
+    '''Unit test for "show ip ospf database router self-originate" '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '9996': {
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'database': {
+                                            'lsa_types': {
+                                                1: {
+                                                    'lsa_type': 1,
+                                                    'lsas': {
+                                                        '106.162.197.254 106.162.197.254': {
+                                                            'adv_router': '106.162.197.254',
+                                                            'lsa_id': '106.162.197.254',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'router': {
+                                                                        'links': {
+                                                                            '106.162.197.252': {
+                                                                                'link_data': '106.162.197.94',
+                                                                                'link_id': '106.162.197.252',
+                                                                                'num_mtid_metrics': 0,
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'metric': 65535,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0,
+                                                                                    }
+                                                                                },
+                                                                                'type': 'another '
+                                                                                        'router '
+                                                                                        '(point-to-point)'},
+                                                                            '106.162.197.254': {
+                                                                                'link_data': '255.255.255.255',
+                                                                                'link_id': '106.162.197.254',
+                                                                                'num_mtid_metrics': 0,
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'metric': 1,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}
+                                                                                },
+                                                                                'type': 'stub '
+                                                                                        'network'},
+                                                                            '106.162.197.92': {
+                                                                                'link_data': '255.255.255.252',
+                                                                                'link_id': '106.162.197.92',
+                                                                                'num_mtid_metrics': 0,
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'metric': 1000,
+                                                                                        'mt_id': 0,
+                                                                                        'tos': 0}
+                                                                                },
+                                                                                'type': 'stub '
+                                                                                        'network'}
+                                                                        },
+                                                                        'num_of_links': 3}
+                                                                    },
+                                                                    'header': {
+                                                                        'adv_router': '106.162.197.254',
+                                                                                      'age': 1141,
+                                                                                      'checksum': '0x1D38',
+                                                                                      'length': 60,
+                                                                                      'lsa_id': '106.162.197.254',
+                                                                                      'option': 'None',
+                                                                                      'option_desc': 'No '
+                                                                                                     'TOS-capability, '
+                                                                                                     'DC',
+                                                                                      'seq_num': '80000031',
+                                                                                      'type': 1}
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+    golden_output = {'execute.return_value':'''
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+        Time source is NTP, 00:59:52.329 JST Thu May 30 2019
+
+
+                    OSPF Router with ID (106.162.197.254) (Process ID 9996)
+
+                        Router Link States (Area 8)
+
+          Exception Flag: Announcing maximum link costs for topology Base with MTID 0
+          LS age: 1141
+          Options: (No TOS-capability, DC)
+          LS Type: Router Links
+          Link State ID: 106.162.197.254
+          Advertising Router: 106.162.197.254
+          LS Seq Number: 80000031
+          Checksum: 0x1D38
+          Length: 60
+          Number of Links: 3
+
+            Link connected to: a Stub Network
+             (Link ID) Network/subnet number: 106.162.197.254
+             (Link Data) Network Mask: 255.255.255.255
+              Number of MTID metrics: 0
+               TOS 0 Metrics: 1
+
+            Link connected to: another Router (point-to-point)
+             (Link ID) Neighboring Router ID: 106.162.197.252
+             (Link Data) Router Interface address: 106.162.197.94
+              Number of MTID metrics: 0
+               TOS 0 Metrics: 65535
+
+            Link connected to: a Stub Network
+             (Link ID) Network/subnet number: 106.162.197.92
+             (Link Data) Network Mask: 255.255.255.252
+              Number of MTID metrics: 0
+               TOS 0 Metrics: 1000
+        '''}
+
+    def test_show_ip_ospf_neighbor_empty(self):
+        self.maxDiff= None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfDatabaseRouterSelfOriginate(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_neighbor_full1(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output)
+        obj=ShowIpOspfDatabaseRouterSelfOriginate(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
