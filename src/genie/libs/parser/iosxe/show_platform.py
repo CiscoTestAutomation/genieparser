@@ -48,7 +48,7 @@ class ShowVersionSchema(MetaParser):
                     Optional('uptime_this_cp'): str,
                     Optional('system_restarted_at'): str,
                     'system_image': str,
-                    'last_reload_reason': str,
+                    Optional('last_reload_reason'): str,
                     Optional('license_type'): str,
                     Optional('license_level'): str,
                     Optional('next_reload_license_level'): str,
