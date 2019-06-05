@@ -3861,6 +3861,14 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 db_dict['links'][link_id]['num_mtid_metrics'] = \
                     int(m.groupdict()['num'])
                 continue
+                
+            # Number of TOS metrics: 0
+            p21_2 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
+            m = p21_2.match(line)
+            if m:
+                db_dict['links'][link_id]['num_tos_metrics'] = \
+                    int(m.groupdict()['num'])
+                continue
 
             # Opaque Type: 1
             p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))(?: +\((Traffic Engineering)\))?$')
@@ -4151,7 +4159,8 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
                                                                                 {'link_id': str,
                                                                                 'link_data': str,
                                                                                 'type': str,
-                                                                                'num_mtid_metrics': int,
+                                                                                Optional('num_mtid_metrics'): int,
+                                                                                Optional('num_tos_metrics'): int,
                                                                                 'topologies': 
                                                                                     {Any(): 
                                                                                         {'mt_id': int,

@@ -40,6 +40,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspf for more varied router-LSAs
+    * Updated ShowIpOspfDatabaseRouter to parse TOS metrics
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updates ShowVersion to make last_reload_reason an optional key
 
 --------------------------------------------------------------------------------
                                   SPT
