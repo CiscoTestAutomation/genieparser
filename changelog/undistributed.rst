@@ -24,6 +24,8 @@
     * Updated parser for ShowBgpAllDetail:
         show bgp vrf {vrf} {route}
         show bgp {address_family} vrf {vrf} {route}
+    * Updated ShowBgpDetailSuperParser for:
+        better handling of extended community
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -45,3 +47,18 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updates ShowVersion to make last_reload_reason an optional key
+
+--------------------------------------------------------------------------------
+                                  SPT
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowSpanningTreeMst for:
+        show spanning-tree mst <mst_id>
+    * Add ShowSpanningTreeMstag for:
+        show spanning-tree mstag <mag_domain>
+    * Add ShowSpanningTreePvrst for:
+        show spanning-tree pvrst <pvst_id>
+    * Add ShowSpanningTreePvrsTag for:
+        show spanning-tree pvrstag <pvrstag_domain>
+    * Add ShowSpanningTreePvsTag for:
+        show spanning-tree pvstag <pvstag_domain>
