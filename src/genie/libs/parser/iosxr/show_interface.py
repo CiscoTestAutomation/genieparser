@@ -1312,14 +1312,14 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                    'show ipv4 vrf {vrf} interface', 'show ipv4 vrf all interface']
 
     def cli(self, interface='', vrf='', output=None):
-        if vrf:
-            if interface and vrf != 'all':
-                cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
-            else:
-                cmd = self.cli_command[1].format(vrf=vrf)
-        else:
-            cmd = self.cli_command[2]
         if output is None:
+            if vrf:
+                if interface and vrf != 'all':
+                    cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[2]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1668,14 +1668,14 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
 
 
     def cli(self, interface='', vrf='', output=None):
-        if vrf:
-            if interface and vrf != 'all':
-                cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
-            else:
-                cmd = self.cli_command[1].format(vrf=vrf)
-        else:
-            cmd = self.cli_command[2]
         if output is None:
+            if vrf:
+                if interface and vrf != 'all':
+                    cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+                else:
+                    cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[2]
             out = self.device.execute(cmd)
         else:
             out = output
