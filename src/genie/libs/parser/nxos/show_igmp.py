@@ -76,6 +76,8 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
     """Parser for show ip igmp snooping"""
 
     cli_command = ['show ip igmp snooping vlan {vlan}', 'show ip igmp snooping']
+    exclude = [
+        'igmp_explicit_tracking']
 
     def cli(self, vlan='', output=None):
         if vlan:
@@ -464,6 +466,16 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             show ip igmp interface vrf <vrf>"""
 
     cli_command = ['show ip igmp interface vrf {vrf}', 'show ip igmp interface']
+    exclude = [
+        'next_query_sent_in'
+        'v2_queries',
+        'v2_reports',
+        'v2_leaves',
+        'enable_refcount',
+        'pim_dr',
+        'received',
+        'sent',
+        'expires']
 
     def cli(self, vrf='', output=None):
 
@@ -880,6 +892,10 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
         show ip igmp groups vrf <vrf>"""
 
     cli_command = ['show ip igmp groups vrf {vrf}', 'show ip igmp groups']
+    exclude = [
+        'expire',
+        'up_time',
+        'last_reporter']
 
     def cli(self, vrf='', output=None):
 
@@ -1030,6 +1046,8 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
         show ip igmp local-groups vrf <vrf>"""
 
     cli_command = ['show ip igmp local-groups vrf {vrf}', 'show ip igmp local-groups']
+    exclude = [
+    'last_reporter']
 
     def cli(self, vrf='', output=None):
         if output is None:

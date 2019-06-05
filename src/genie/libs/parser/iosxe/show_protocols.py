@@ -261,6 +261,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
     ''' Parser for "show ip protocols" '''
 
     cli_command = ['show ip protocols','show ip protocols vrf {vrf}']
+    exclude = ['last_update']
 
     def cli(self, vrf="" ,cmd="",output=None):
 

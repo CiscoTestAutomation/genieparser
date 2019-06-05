@@ -817,6 +817,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         show ip ospf mpls ldp interface vrf <vrf>"""
 
     cli_command = ['show ip ospf mpls ldp interface vrf {vrf}', 'show ip ospf mpls ldp interface']
+    exclude = [
+        'state']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -1508,6 +1510,10 @@ class ShowIpOspfVirtualLinks(ShowIpOspfVirtualLinksSchema, ShowIpOspfLinksParser
         show ip ospf virtual-links vrf <vrf>"""
 
     cli_command = ['show ip ospf virtual-links vrf {vrf}','show ip ospf virtual-links']
+    exclude = [
+        'df_uptime',
+        'is_rpf',
+        'df_address']
 
     def cli(self, vrf='',output=None):
         
@@ -1786,6 +1792,14 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         show ip ospf interface vrf <vrf>"""
 
     cli_command = ['show ip ospf interface vrf {vrf}', 'show ip ospf interface']
+    exclude = [
+        'hello_timer',
+        'bdr_ip_addr',
+        'bdr_router_id',
+        'dr_ip_addr',
+        'dr_router_id',
+        'state',
+        'index']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -2310,6 +2324,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         show ip ospf neighbors detail vrf <vrf>"""
 
     cli_command = ['show ip ospf neighbors detail vrf {vrf}', 'show ip ospf neighbors detail']
+    exclude = [
+        'dead_timer',
+        'last_non_hello_packet_received',
+        'last_state_change',
+        'bdr_ip_addr',
+        'dr_ip_addr',
+        'nbr_event_count']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -3237,6 +3258,10 @@ class ShowIpOspfDatabaseExternalDetail(ShowIpOspfDatabaseExternalDetailSchema, S
         show ip ospf database external detail vrf <vrf>"""
 
     cli_command = ['show ip ospf database external detail vrf {vrf}', 'show ip ospf database external detail']
+    exclude = [
+        'age',
+        'checksum',
+        'seq_num']
 
     def cli(self, vrf='',output=None):
         # excute command to get output
@@ -3318,6 +3343,12 @@ class ShowIpOspfDatabaseNetworkDetail(ShowIpOspfDatabaseNetworkDetailSchema, Sho
         show ip ospf database network detail
         show ip ospf database network detail vrf <vrf>"""
     cli_command = ['show ip ospf database network detail vrf {vrf}', 'show ip ospf database network detail']
+    exclude = [
+        'age',
+        'checksum',
+        'seq_num',
+        'lsas',
+        'links']
 
     def cli(self, vrf='', output=None):
         # excute command to get output
@@ -3404,6 +3435,12 @@ class ShowIpOspfDatabaseSummaryDetail(ShowIpOspfDatabaseSummaryDetailSchema, Sho
         show ip ospf database summary detail vrf <vrf>"""
 
     cli_command = ['show ip ospf database summary detail vrf {vrf}', 'show ip ospf database summary detail']
+    exclude = [
+        'age',
+        'checksum',
+        'seq_num',
+        'metric',
+        'lsas']
 
     def cli(self, vrf='', output=None):
         # excute command to get output
@@ -3498,6 +3535,12 @@ class ShowIpOspfDatabaseRouterDetail(ShowIpOspfDatabaseRouterDetailSchema, ShowI
         show ip ospf database router detail vrf <vrf>"""
 
     cli_command = ['show ip ospf database router detail vrf {vrf}', 'show ip ospf database router detail']
+    exclude = [
+        'age',
+        'checksum',
+        'seq_num',
+        'links',
+        'lsas']
 
     def cli(self, vrf='', output=None):
         # excute command to get output
@@ -3607,6 +3650,12 @@ class ShowIpOspfDatabaseOpaqueAreaDetail(ShowIpOspfDatabaseOpaqueAreaDetailSchem
         show ip ospf database opaque-area detail vrf <vrf>"""
 
     cli_command = ['show ip ospf database opaque-area detail vrf {vrf}', 'show ip ospf database opaque-area detail']
+    exclude = [
+        'age',
+        'checksum',
+        'seq_num',
+        'lsas',
+        'links']
 
     def cli(self, vrf='', output=None):
         # excute command to get output

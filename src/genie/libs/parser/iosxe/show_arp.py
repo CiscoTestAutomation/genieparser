@@ -62,6 +62,7 @@ class ShowArp(ShowArpSchema):
                   show arp vrf <vrf> <WROD> """
 
     cli_command = ['show arp','show arp vrf {vrf}','show arp vrf {vrf} {intf_or_ip}','show arp {intf_or_ip}']
+    exclude = ['age']
 
     def cli(self, vrf='', intf_or_ip='', cmd=None, output=None):
         if output is None:

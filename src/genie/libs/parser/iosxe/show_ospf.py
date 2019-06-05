@@ -96,15 +96,15 @@ class ShowIpOspfSchema(MetaParser):
                                 Optional('stub_router'):
                                     {Optional('always'): 
                                         {'always': bool,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'external_lsa': bool,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('external_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
                                     Optional('on_startup'): 
                                         {'on_startup': int,
-                                        'include_stub': bool,
+                                        Optional('include_stub'): bool,
                                         Optional('summary_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa'): bool,
@@ -505,11 +505,12 @@ class ShowIpOspf(ShowIpOspfSchema):
                     continue
 
             # Condition: always State: active
+            # Condition: always, State: active
             # Condition: on start-up for 5 seconds, State: inactive
             # Condition: on startup for 300 seconds, State: inactive
             p14_2 = re.compile(r'^Condition:'
                                ' +(?P<condition>(always|on \S+))'
-                               '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
+                               '(?: +for +(?P<seconds>(\d+)) +seconds)?,?'
                                ' +State: +(?P<state>(\S+))$')
             m = p14_2.match(line)
             if m:
@@ -1425,6 +1426,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
     '''
 
     cli_command = 'show ip ospf interface'
+    exclude = ['hello_timer', 'dead_timer',
+        'bdr_ip_addr', 'bdr_router_id', 'last_flood_scan_length',
+        'last_flood_scan_time_msec', 
+        'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
+
 
     def cli(self):
         out = self.device.execute(self.cli_command)
@@ -2777,6 +2783,11 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
     '''
 
     cli_command = 'show ip ospf neighbor detail'
+    exclude = ['hello_timer', 'dead_timer', 'bdr_ip_addr',
+        'bdr_router_id', 'index', 'last_retrans_max_scan_length',
+        'last_retrans_max_scan_time_msec', 'total_retransmission',
+        'uptime', 'last_retrans_scan_length', 'last_retrans_scan_time_msec']
+
 
     def cli(self, output=None):
 
@@ -4180,6 +4191,8 @@ class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabas
     '''
 
     cli_command = 'show ip ospf database router'
+    exclude = ['age', 'seq_num', 'checksum', 'links']
+
 
     def cli(self, output=None):
 
@@ -4349,6 +4362,7 @@ class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatab
     '''
 
     cli_command = 'show ip ospf database network'
+    exclude = ['age', 'seq_num', 'checksum', 'lsas']
 
     def cli(self, output=None):
 
@@ -4433,6 +4447,8 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
     '''
 
     cli_command = 'show ip ospf database summary'
+    exclude = ['age', 'seq_num', 'checksum']
+
 
     def cli(self, output=None):
 

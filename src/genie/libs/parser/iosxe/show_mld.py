@@ -63,6 +63,8 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
         show ipv6 mld vrf <vrf> interface"""
 
     cli_command = ['show ipv6 mld vrf {vrf} interface','show ipv6 mld interface']
+    exclude = ['(LIIN.*)', '(Tunnel.*)', '(Loopback.*)', 'joins', 'leaves']
+
 
     def cli(self, vrf='',output=None):
         if output is None:
@@ -276,6 +278,8 @@ class ShowIpv6MldGroupsDetail(ShowIpv6MldGroupsDetailSchema):
         show ipv6 mld vrf <vrf> groups detail"""
 
     cli_command = ['show ipv6 mld vrf {vrf} groups detail', 'show ipv6 mld groups detail']
+    exclude = ['expire', 'up_time']
+
 
     def cli(self, vrf='', output=None):
         if output is None:
