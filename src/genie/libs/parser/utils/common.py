@@ -46,6 +46,12 @@ def format_output(parser_data, tab=0):
     s.append('%s}' % ('  '*tab))
     return ''.join(s)
 
+def get_parser_exclude(command, device):
+    try:
+        return get_parser(command, device)[0].exclude
+    except AttributeError:
+        return []
+
 def get_parser(command, device):
     '''From a show command and device, return parser class and kwargs if any'''
 
