@@ -769,6 +769,8 @@ class ShowBgpAllDetailSchema(MetaParser):
                                                 Optional('recipient_pathid'): str,
                                                 Optional('transfer_pathid'): str,
                                                 Optional('community'): str,
+                                                Optional('ext_community'): str,
+                                                Optional('recursive_via_connected'): bool,
                                                 Optional('agi_version'): int,
                                                 Optional('ve_block_size'): int,
                                                 Optional('label_base'): int,
@@ -1327,12 +1329,15 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # Extended Community: RT:65109:50 RT:65109:51 , recursive-via-connected
             m = p8_2.match(line)
             if m:
-                if 'evpn' not in subdict:
-                    subdict['evpn'] = {}
                 ext_community = m.groupdict()['ext_community']
-                subdict['evpn']['ext_community'] = ext_community
-                if m.groupdict()['recursive']:
-                    subdict['evpn']['recursive_via_connected'] = True
+                if 'evpn' in subdict:
+                    subdict['evpn']['ext_community'] = ext_community
+                    if m.groupdict()['recursive']:
+                        subdict['evpn']['recursive_via_connected'] = True
+                else:
+                    subdict['ext_community'] = ext_community
+                    if m.groupdict()['recursive']:
+                        subdict['recursive_via_connected'] = True
                 continue
 
             # Community: 62000:1
