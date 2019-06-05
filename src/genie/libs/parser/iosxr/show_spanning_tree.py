@@ -77,6 +77,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		* 'show spanning-tree mst {mst_id}'
 	'''
 	cli_command = 'show spanning-tree mst {mst}'
+
 	def cli(self, mst, output=None):
 		if output is None:
 		    # get output from device
@@ -286,7 +287,10 @@ class ShowSpanningTreeMstagSchema(MetaParser):
 class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 	"""Parser for 'show spanning-tree mstag <mag_domain>'"""
 	cli_command = 'show spanning-tree mstag {mag_domain}'
-
+	exclude = [
+		'hello_time',
+		'bdpu_sent'
+	]
 	def cli(self,mag_domain, output=None):
 		if output is None:
 		    # get output from device
@@ -706,6 +710,10 @@ class ShowSpanningTreePvrsTagSchema(MetaParser):
 class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 	"""Parser for 'show spanning-tree pvrstag <pvrstag_domain>'"""
 	cli_command = 'show spanning-tree pvrstag {pvrstag_domain}'
+	exclude = [
+		'hello_time',
+		'bdpu_sent'
+	]
 	def cli(self,pvrstag_domain, output=None):
 		if output is None:
 		    # get output from device
@@ -914,6 +922,10 @@ class ShowSpanningTreePvsTagSchema(MetaParser):
 class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 	"""Parser for 'show spanning-tree pvstag <pvstag_domain>'"""
 	cli_command = 'show spanning-tree pvstag {pvstag_domain}'
+	exclude = [
+		'hello_time',
+		'bdpu_sent'
+	]
 	def cli(self,pvstag_domain, output=None):
 		if output is None:
 		    # get output from device
