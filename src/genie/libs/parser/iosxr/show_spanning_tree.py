@@ -4,8 +4,8 @@ IOSXR parser for the following show commands:
 	* show spanning-tree mst {mst_id}
 	* show spanning-tree mstag {mag_domain}
 	* show spanning-tree pvrst {pvst_id}
-	* show spanning-tree pvrstag <pvrstag_domain>
-	* show spanning-tree pvstag <pvstag_domain>
+	* show spanning-tree pvrstag {pvrstag_domain}
+	* show spanning-tree pvstag {pvstag_domain}
 """
 
 import re
@@ -91,23 +91,33 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		# VLANS Mapped: 1-4094
 		p2 = re.compile(r'^VLANS +Mapped: +(?P<vlan>\S+)$')
 		# CIST Root  Priority    32768
-		p3 = re.compile(r'^CIST\s+Root\s+Priority\s+(?P<cist_root_priority>\d+)')
+		p3 = re.compile(r'^CIST\s+Root\s+Priority\s+'
+			'(?P<cist_root_priority>\d+)')
 		# Address     0021.1bfd.1007
 		p4 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Ext Cost    2000
 		p5 = re.compile(r'^Ext\s+Cost\s+(?P<cist_root_cost>\d+)$')
 		# Root ID    Priority    32768
-		p6 = re.compile(r'^Root\s+ID\s+Priority\s+(?P<designated_root_priority>\d+)')
+		p6 = re.compile(r'^Root\s+ID\s+Priority\s+(?P<designated_root_priority>'
+			'\d+)')
 		# Int Cost    0
 		p7 = re.compile(r'^Int\s+Cost\s+(?P<root_cost>\d+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
-		p8 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
+		p8 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
+			'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
 		# Max Hops 20, Transmit Hold count    6
-		p9 = re.compile(r'^Max\s+Hops\s+(?P<bridge_max_hops>\d+),\s+Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)$')
+		p9 = re.compile(r'^Max\s+Hops\s+(?P<bridge_max_hops>\d+),'
+			'\s+Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)$')
 		# Bridge ID Priority 32768 (priority 32768 sys-id-ext 0)
-		p10 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
+		p10 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
+			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bfd.1007 128.1  
-		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>[\w\.]+)\s+(?P<designated_port_priority>\d+)\.(?P<designated_port_num>\d+)$')
+		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
+			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+'
+			'(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?'
+			'(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>'
+			'[\w\.]+)\s+(?P<designated_port_priority>\d+)\.'
+			'(?P<designated_port_num>\d+)$')
 		# This bridge is the root
 		p12 = re.compile(r'This +bridge +is +(?P<this_bridge_is>[\w ]+)$')
 		
@@ -173,11 +183,15 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    if m:
 		    	group = m.groupdict()
 		    	if address_type is 'designated_root_address':
-		    		mst_instances.update({'root_max_age' : int(group['max_age'])})
-		    		mst_instances.update({'root_forward_delay' : int(group['forward_delay'])})
+		    		mst_instances.update({
+		    			'root_max_age' : int(group['max_age'])})
+		    		mst_instances.update({
+		    			'root_forward_delay' : int(group['forward_delay'])})
 		    	if address_type is 'bridge_address':
-		    		mst_instances.update({'bridge_max_age' : int(group['max_age'])})
-		    		mst_instances.update({'bridge_forward_delay' : int(group['forward_delay'])})
+		    		mst_instances.update({
+		    			'bridge_max_age' : int(group['max_age'])})
+		    		mst_instances.update({
+		    			'bridge_forward_delay' : int(group['forward_delay'])})
 		    	continue
 
 		    # Max Hops 20, Transmit Hold count    6
@@ -207,10 +221,15 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    	interfaces.update({'port_priority' : int(group['port_priority'])})
 		    	interfaces.update({'port_num' : int(group['port_num'])})
 		    	interfaces.update({'port_state' : group['port_state']})
-		    	interfaces.update({'designated_bridge_priority' : int(group['designated_bridge_priority'])})
-		    	interfaces.update({'designated_bridge_address' : group['designated_bridge_address']})
-		    	interfaces.update({'designated_port_priority' : int(group['designated_port_priority'])})
-		    	interfaces.update({'designated_port_num' : int(group['designated_port_num'])})
+		    	interfaces.update({
+		    		'designated_bridge_priority' : int(group['designated_bridge_priority']
+		    			)})
+		    	interfaces.update({
+		    		'designated_bridge_address' : group['designated_bridge_address']})
+		    	interfaces.update({
+		    		'designated_port_priority' : int(group['designated_port_priority'])})
+		    	interfaces.update({
+		    		'designated_port_num' : int(group['designated_port_num'])})
 		    	continue
 
 		    # This bridge is the root
@@ -271,7 +290,8 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 	def cli(self,mag_domain, output=None):
 		if output is None:
 		    # get output from device
-		    out = self.device.execute(self.cli_command.format(mag_domain=mag_domain))
+		    out = self.device.execute(self.cli_command.\
+		    	format(mag_domain=mag_domain))
 		else:
 		    out = output
 
@@ -282,7 +302,9 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		p1 = re.compile(r'^(?P<mag_interface>\S+)$')
 		# Pre-empt delay is disabled
 		# Preempt delay is disabled.
-		p2 = re.compile(r'^Pre(\-)?empt +delay +is +(?P<preempt_delay>\w+)\.?( +)?(?P<preempt_delay_state>Sending +(startup|standard) +BPDU( +until \S+)?)?')
+		p2 = re.compile(r'^Pre(\-)?empt +delay +is +(?P<preempt_delay>\w+)\.?'
+			'( +)?(?P<preempt_delay_state>Sending +(startup|standard) '
+			'+BPDU( +until \S+)?)?')
 		# Name:            risc
 		p3 = re.compile(r'^Name:\s+(?P<name>\S+)$')
 		# Revision: 1
@@ -331,8 +353,10 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 					setdefault(mag_domain, {})
 				mstag.update({'domain' : mag_domain})
 				interfaces = mstag.setdefault('interfaces', {})
-				interface = interfaces.setdefault(Common.convert_intf_name(group['mag_interface']), {})
-				interface.update({'interface' : Common.convert_intf_name(group['mag_interface'])})
+				interface = interfaces.setdefault(
+					Common.convert_intf_name(group['mag_interface']), {})
+				interface.update({
+					'interface' : Common.convert_intf_name(group['mag_interface'])})
 				continue
 
 			# Pre-empt delay is disabled
@@ -342,7 +366,8 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 				preempt_delay = group['preempt_delay']
 				interface.update({'preempt_delay' : (preempt_delay != 'disabled')})
 				if group['preempt_delay_state']:
-					interface.update({'preempt_delay_state' : group['preempt_delay_state']})
+					interface.update({
+						'preempt_delay_state' : group['preempt_delay_state']})
 				continue
 			# Name:            risc
 			m = p3.match(line)
@@ -376,7 +401,8 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 			m = p6.match(line)
 			if m:
 				group = m.groupdict()
-				interface.update({'provider_bridge' : (group['provider_bridge'].lower() == 'yes')})
+				interface.update({
+					'provider_bridge':(group['provider_bridge'].lower() == 'yes')})
 				continue
 
 			# Bridge ID:       0000.0000.0002
@@ -477,7 +503,8 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 			m = p20.match(line)
 			if m:
 				group = m.groupdict()
-				topology_changes = {'topology_changes' : int(group['topology_changes'])}
+				topology_changes = {
+					'topology_changes' : int(group['topology_changes'])}
 				instances.update({'counters': topology_changes})
 				continue
 		return ret_dict
@@ -537,17 +564,25 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 		# VLAN 2:
 		p1 = re.compile(r'^VLAN +(?P<vlan_id>\d+):$')
 		# Root ID    Priority    32768
-		p2 = re.compile(r'^Root\s+ID\s+Priority\s+(?P<designated_root_priority>\d+)')
+		p2 = re.compile(r'^Root\s+ID\s+Priority\s+'
+			'(?P<designated_root_priority>\d+)')
 		# Address     0021.1bfc.dc76
 		p3 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
-		p4 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
+		p4 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
+			'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
 		# Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-		p5 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
+		p5 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
+			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Transmit Hold count   6
 		p6 = re.compile(r'^Transmit\s+Hold\s+count\s+(?P<bridge_transmit_hold_count>\d+)')
 		# Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fe9.7b9e 128.1
-		p7 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>\w+)\s+(?P<designated_bridge_priority>\d+)\s+(?P<designated_bridge_address>[\w\.]+)\s+(?P<designated_port_priority>\d+)\.(?P<designated_port_num>\d+)$')
+		p7 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
+			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+(?P<port_state>'
+			'\w+)\s+(?P<designated_bridge_priority>\d+)\s+'
+			'(?P<designated_bridge_address>[\w\.]+)\s+'
+			'(?P<designated_port_priority>\d+)\.'
+			'(?P<designated_port_num>\d+)$')
 
 		for line in out.splitlines():
 		    line = line.strip()
@@ -585,10 +620,12 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 		    	group = m.groupdict()
 		    	if address_type is 'designated_root_address':
 		    		vlan.update({'designated_root_max_age' : int(group['max_age'])})
-		    		vlan.update({'designated_root_forward_delay' : int(group['forward_delay'])})
+		    		vlan.update({
+		    			'designated_root_forward_delay' : int(group['forward_delay'])})
 		    	if address_type is 'bridge_address':
 		    		vlan.update({'bridge_max_age' : int(group['max_age'])})
-		    		vlan.update({'bridge_forward_delay' : int(group['forward_delay'])})
+		    		vlan.update({
+		    			'bridge_forward_delay' : int(group['forward_delay'])})
 		    	continue
 
 		    # Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
@@ -618,10 +655,14 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 		    	interfaces.update({'port_priority' : int(group['port_priority'])})
 		    	interfaces.update({'port_num' : int(group['port_num'])})
 		    	interfaces.update({'port_state' : group['port_state']})
-		    	interfaces.update({'designated_bridge_priority' : int(group['designated_bridge_priority'])})
-		    	interfaces.update({'designated_bridge_address' : group['designated_bridge_address']})
-		    	interfaces.update({'designated_port_priority' : int(group['designated_port_priority'])})
-		    	interfaces.update({'designated_port_num' : int(group['designated_port_num'])})
+		    	interfaces.update({
+		    		'designated_bridge_priority':int(group['designated_bridge_priority'])})
+		    	interfaces.update({
+		    		'designated_bridge_address':group['designated_bridge_address']})
+		    	interfaces.update({
+		    		'designated_port_priority':int(group['designated_port_priority'])})
+		    	interfaces.update({
+		    		'designated_port_num':int(group['designated_port_num'])})
 		    	continue
 		return ret_dict
 
@@ -668,7 +709,8 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 	def cli(self,pvrstag_domain, output=None):
 		if output is None:
 		    # get output from device
-		   	out = self.device.execute(self.cli_command.format(pvrstag_domain=pvrstag_domain))
+		   	out = self.device.execute(self.cli_command.\
+		   		format(pvrstag_domain=pvrstag_domain))
 		else:
 		    out = output
 
@@ -680,10 +722,13 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 		# Pre-empt delay is enabled. Sending startup BPDU until 13:38:03
 		# Pre-empt delay is enabled. Sending standard BPDU
 		# Pre-empt delay is disabled
-		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)\.?( +)?(?P<preempt_delay_state>Sending +(startup|standard) +BPDU( +until \S+)?)?')
+		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)'
+			'\.?( +)?(?P<preempt_delay_state>Sending +'
+			'(startup|standard) +BPDU( +until \S+)?)?')
 		# Sub-interface:    GigabitEthernet0/0/0/1.5 (Up)
 		# Sub-interface:    Bundle-Ether1000.2100 (Up)
-		p3 = re.compile(r'^Sub\-interface:\s+(?P<sub_interface>\S+)\s+\((?P<sub_interface_state>\w+)\)$')
+		p3 = re.compile(r'^Sub\-interface:\s+(?P<sub_interface>\S+)\s+'
+			'\((?P<sub_interface_state>\w+)\)$')
 		# Max Age:			20
 		p4 = re.compile(r'^Max\s+Age:\s+(?P<max_age>\d+)$')
 		# Root Priority:    0
@@ -730,7 +775,8 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 		    	preempt_delay = group['preempt_delay']
 		    	vlan.update({'preempt_delay': (preempt_delay == 'enabled')})
 		    	if group['preempt_delay_state']:
-		    		vlan.update({'preempt_delay_state' : group['preempt_delay_state']})
+		    		vlan.update({
+		    			'preempt_delay_state' : group['preempt_delay_state']})
 		    	continue
 		    # Sub-interface:    GigabitEthernet0/0/0/1.5 (Up)
 		    # Sub-interface:    Bundle-Ether1000.2100 (Up)
@@ -811,7 +857,8 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 		    if m:
 		    	group = m.groupdict()
 		    	counters = vlan.setdefault('counters', {})
-		    	counters.update({'topology_changes' : int(group['topology_changes'])})
+		    	counters.update({
+		    		'topology_changes' : int(group['topology_changes'])})
 		    	continue
 		    # GigabitEthernet0/0/0/0
 		    m = p16.match(line)
@@ -822,7 +869,8 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 		    	pvrstag.update({'domain' : pvrstag_domain})
 		    	interface = pvrstag.setdefault('interfaces', {}). \
 		    		setdefault(Common.convert_intf_name(group['interface']), {})
-		    	interface.update({'interface' : Common.convert_intf_name(group['interface'])})
+		    	interface.update({
+		    		'interface' : Common.convert_intf_name(group['interface'])})
 		    	vlans = interface.setdefault('vlans', {})
 		    	continue
 		return ret_dict
@@ -881,10 +929,12 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 		# Pre-empt delay is enabled. Sending startup BPDU until 13:38:03
 		# Pre-empt delay is enabled. Sending standard BPDU
 		# Pre-empt delay is disabled
-		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)\.?( +Sending +(startup|standard) +BPDU( +until \S+)?)?')
+		p2 = re.compile(r'^Pre\-empt +delay +is +(?P<preempt_delay>\w+)'
+			'\.?( +Sending +(startup|standard) +BPDU( +until \S+)?)?')
 		# Sub-interface:    GigabitEthernet0/0/0/1.5 (Up)
 		# Sub-interface:    Bundle-Ether1000.2100 (Up)
-		p3 = re.compile(r'^Sub\-interface:\s+(?P<sub_interface>\S+)\s+\((?P<sub_interface_state>\w+)\)$')
+		p3 = re.compile(r'^Sub\-interface:\s+(?P<sub_interface>\S+)'
+			'\s+\((?P<sub_interface_state>\w+)\)$')
 		# Max Age:			20
 		p4 = re.compile(r'^Max\s+Age:\s+(?P<max_age>\d+)$')
 		# Root Priority:    0
@@ -1003,14 +1053,16 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 		    if m:
 		    	group = m.groupdict()
 		    	counters = vlan.setdefault('counters', {})
-		    	counters.update({'bdpu_sent' : int(group['bdpu_sent'])})
+		    	counters.update({
+		    		'bdpu_sent' : int(group['bdpu_sent'])})
 		    	continue
 		    # Topology Changes: 0
 		    m = p15.match(line)
 		    if m:
 		    	group = m.groupdict()
 		    	counters = vlan.setdefault('counters', {})
-		    	counters.update({'topology_changes' : int(group['topology_changes'])})
+		    	counters.update({
+		    		'topology_changes' : int(group['topology_changes'])})
 		    	continue
 		    # Bundle-Ether1000
 		    m = p16.match(line)
@@ -1020,8 +1072,10 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 		    		setdefault(pvstag_domain, {})
 		    	pvrstag.update({'domain' : pvstag_domain})
 		    	interface = pvrstag.setdefault('interfaces', {}). \
-		    		setdefault(Common.convert_intf_name(group['interface']), {})
-		    	interface.update({'interface' : Common.convert_intf_name(group['interface'])})
+		    		setdefault(
+		    			Common.convert_intf_name(group['interface']), {})
+		    	interface.update(
+		    		{'interface' : Common.convert_intf_name(group['interface'])})
 		    	vlans = interface.setdefault('vlans', {})
 		    	continue
 
