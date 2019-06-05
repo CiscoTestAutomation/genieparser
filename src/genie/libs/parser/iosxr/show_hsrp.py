@@ -386,6 +386,8 @@ class ShowHsrpDetailSchema(MetaParser):
 class ShowHsrpDetail(ShowHsrpDetailSchema):
     """Parser for show hsrp detail"""
     cli_command = 'show hsrp detail'
+    exclude = ['last_state_change', 'standby_expire', 'active_expire', 'num_state_changes',
+        'last_coup_received', 'last_coup_sent', 'last_resign_received', 'last_resign_sent']
 
     def cli(self,output=None):
         if output is None:

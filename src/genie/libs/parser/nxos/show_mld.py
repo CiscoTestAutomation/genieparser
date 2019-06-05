@@ -108,6 +108,11 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
         show ipv6 mld interface vrf <vrf>"""
 
     cli_command = ['show ipv6 mld interface vrf {vrf}', 'show ipv6 mld interface']
+    exclude = [
+        'next_query_sent_in',
+        'address',
+        'ipv6_address',
+        'querier']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -470,6 +475,10 @@ class ShowIpv6MldGroups(ShowIpv6MldGroupsSchema):
         show ipv6 mld groups vrf all
         show ipv6 mld groups vrf <vrf>"""
     cli_command = ['show ipv6 mld groups vrf {vrf}', 'show ipv6 mld groups']
+    exclude = [
+        'expire',
+        'up_time',
+        'last_reporter']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -608,6 +617,11 @@ class ShowIpv6MldLocalGroups(ShowIpv6MldLocalGroupsSchema):
         show ipv6 mld local-groups vrf all
         show ipv6 mld local-groups vrf <vrf>"""
     cli_command = ['show ipv6 mld local-groups vrf {vrf}','show ipv6 mld local-groups']
+    exclude = [
+        'last_reported',
+        'uptime',
+        'oil_uptime',
+        'incoming_interface_list']
 
     def cli(self, vrf='', output=None):
         if vrf:

@@ -57,6 +57,8 @@ class ShowNvePeers(ShowNvePeersSchema):
        show nve peers"""
 
     cli_command = 'show nve peers'
+    exclude = [
+        'uptime']
 
     def cli(self, output=None):
         # excute command to get output
@@ -1061,6 +1063,8 @@ class ShowL2routeTopologyDetail(ShowL2routeTopologyDetailSchema):
         show l2route topology detail"""
 
     cli_command = 'show l2route topology detail'
+    exclude = [
+        'tx_id']
 
     def cli(self, output=None):
         # excute command to get output
@@ -1185,6 +1189,8 @@ class ShowL2routeMacAllDetail(ShowL2routeMacAllDetailSchema):
         show l2route mac all detail"""
 
     cli_command = 'show l2route mac all detail'
+    exclude = [
+        'mac']
 
     def cli(self, output=None):
         # excute command to get output
@@ -1432,6 +1438,12 @@ class ShowL2routeSummary(ShowL2routeSummarySchema):
         show l2route summary"""
 
     cli_command = 'show l2route summary'
+    exclude = [
+        'total_memory',
+        'total_mem',
+        'total_obj',
+        'memory',
+        'objects']
 
     def cli(self, output=None):
         # excute command to get output
@@ -1537,6 +1549,8 @@ class ShowL2routeFlAll(ShowL2routeFlAllSchema):
         show l2route fl all"""
 
     cli_command = 'show l2route fl all'
+    exclude = [
+        'peer_id']
 
     def cli(self, output=None):
         # excute command to get output
@@ -2031,6 +2045,8 @@ class ShowFabricMulticastIpSaAdRoute(ShowFabricMulticastIpSaAdRouteSchema):
         show fabric multicast ipv4 sa-ad-route vrf all"""
 
     cli_command = ['show fabric multicast ipv4 sa-ad-route vrf {vrf}','show fabric multicast ipv4 sa-ad-route']
+    exclude = [
+        'uptime']
 
     def cli(self,vrf="",output=None):
         if vrf:

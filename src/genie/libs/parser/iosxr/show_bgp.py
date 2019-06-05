@@ -1003,6 +1003,11 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
     """
     cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} process detail',
                     'show bgp instance {instance} {vrf_type} {vrf} {af_type} process detail']
+    exclude = ['alloc', 'free', 'sent_notifications', 'bgp_table_version',
+        'main_table_version', 'table_version_synced_to_rib', 'table_version_acked_by_rib',
+        'triggers', 'tbl_ver', 'ver', 'node', 'total_prefixes_scanned', 'sent_updates',
+        'allocated', 'freed', 'received_updates', 'num_of_scan_segments', 'state',
+        'restart_count', 'memory_used', 'number']
 
     def cli(self, vrf_type, instance='all', vrf='all', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
@@ -2184,9 +2189,24 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
 
         - vrf_type
     """
-    
+
     cli_command = ['show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} detail',
         'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} detail']
+
+    exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 
+        'nsr_initial_initsync_version', 'filter_group', 'last_ack_version', 'neighbor_version',
+        'prefix_advertised', 'prefix_withdrawn', 'update_group', 'attempted', 'keepalives', 
+        'opens', 'updates', 'connections_dropped', 'connections_established', 'foreign_port', 
+        'last_full_not_set_pulse_count', 'last_ka_expiry_before_reset', 'last_ka_expiry_before_second_last',
+        'last_read', 'last_read_before_reset', 'last_write', 'last_write_attempted', 
+        'last_write_before_reset', 'last_write_pulse_rcvd', 'last_write_pulse_rcvd_before_reset',
+        'last_write_thread_event_before_reset', 'last_write_thread_event_second_last', 
+        'last_write_written', 'second_attempted', 'second_last_write', 'second_last_write_before_attempted',
+        'second_last_write_before_reset', 'second_last_write_before_written', 'second_written', 'up_time',
+        'written', 'eor_status', 'local_port', 'last_reset', 'last_ka_start_before_reset', 'last_ka_start_before_second_last', 'totals',
+        'cummulative_no_prefixes_denied', 'route_refresh_request_sent',
+        'cummulative_no_by_orf_policy', 'cummulative_no_by_policy', 'cummulative_no_failed_rt_match'
+        , 'cummulative_no_no_policy', 'route_refresh_request_sent']
 
         
     def cli(self, vrf_type, vrf='all', instance='all', neighbor='', address_family='', output=None):
@@ -4023,8 +4043,14 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
 
         - vrf_type
     """
+
     cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} summary',
                    'show bgp instance {instance} {vrf_type} {vrf} {af_type} summary']
+
+    exclude = ['bgp_table_version', 'brib_rib', 'importver', 'labelver', 'rcvtblver',
+        'sendtblver', 'rd_version', 'msg_rcvd', 'msg_sent', 'tbl_ver', 'up_down',
+        'nsr_initial_initsync_version', 'nsr_initial_init_ver_status',
+        'nsr_issu_sync_group_versions', 'standbyver']
 
     def cli(self, vrf_type, address_family='', instance='all', vrf='all', output=None):
 
@@ -4421,6 +4447,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
     """
     cli_command = ['show bgp instance {instance} {vrf_type} all {af_type}',
                    'show bgp instance {instance} {vrf_type} {vrf} {af_type}']
+
+    exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 'nsr_initial_initsync_version']
 
     def cli(self, vrf_type, address_family='',instance='all', vrf='all', output=None):
 

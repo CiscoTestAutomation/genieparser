@@ -7,7 +7,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.ios.show_routing import ShowIpRoute, ShowIpv6Route, ShowIpv6RouteUpdated, ShowIpv6RouteWord
+from genie.libs.parser.ios.show_routing import ShowIpRouteDistributor, ShowIpv6RouteDistributor, ShowIpv6RouteUpdated
 
 from genie.libs.parser.iosxe.tests.test_show_routing import \
                         test_show_ip_route as test_show_ip_route_iosxe,\
@@ -25,50 +25,34 @@ class test_show_ip_route_ios(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_with_route ={
-        "vrf": {
-            "default": {
-                "address_family": {
-                    "ipv4": {
-                        "routes": {
-                            "": {
-                                "active": True,
-                                "distance": 90,
-                                "mask": "24",
-                                "metric": 3072,
-                                "next_hop": {
-                                    "next_hop_list": {
-                                        1: {
-                                            "age": "3d04h",
-                                            "from": "192.168.9.2",
-                                            "hops": "1",
-                                            "index": 1,
-                                            "loading": "1/255",
-                                            "metric": "3072",
-                                            "minimum_bandwidth": "1000000",
-                                            "minimum_mtu": "1500",
-                                            "next_hop": "192.168.9.2",
-                                            "outgoing_interface": "GigabitEthernet0/2.4",
-                                            "reliability": "255/255",
-                                            "share_count": "1",
-                                            "total_delay": "20"
-                                        }
-                                    }
-                                },
-                                "redist_via": "eigrp",
-                                "redist_via_tag": "1",
-                                "route": "192.168.234.0",
-                                "type": "internal",
-                                "update": {
-                                    "age": "3d04h",
-                                    "from": "192.168.9.2",
-                                    "interface": "GigabitEthernet0/2.4"
-                                }
-                            }
-                        }
+        "entry": {
+            "192.168.234.0/24": {
+                "mask": "24",
+                "type": "type internal",
+                "known_via": "eigrp 1",
+                "ip": "192.168.234.0",
+                "redist_via": "eigrp",
+                "distance": "90",
+                "metric": "3072",
+                "redist_via_tag": "1",
+                "update": {
+                    "age": "3d04h",
+                    "interface": "GigabitEthernet0/2.4",
+                    "from": "192.168.9.2"
+                },
+                "paths": {
+                    1: {
+                        "age": "3d04h",
+                        "interface": "GigabitEthernet0/2.4",
+                        "from": "192.168.9.2",
+                        "metric": "3072",
+                        "share_count": "1",
+                        "nexthop": "192.168.9.2"
                     }
                 }
             }
-        }
+        },
+        "total_prefixes": 1
     }
 
     golden_output_with_route = {'execute.return_value':'''
@@ -87,14 +71,14 @@ class test_show_ip_route_ios(unittest.TestCase):
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route='192.168.234.0')
 
     def test_show_ip_route_with_route(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_route)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(route='192.168.234.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_with_route)
 
@@ -102,37 +86,24 @@ class test_show_ip_route(test_show_ip_route_iosxe):
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_ip_route_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_show_ip_route_2_with_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2_with_vrf)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
 
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
-    def test_golden5(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output5)
-        route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp', ip='ip')
-        self.assertEqual(parsed_output, self.golden_parsed_output5)
-
-    def test_golden6(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output6)
-        route_map_obj = ShowIpv6Route(device=self.device)
-        parsed_output = route_map_obj.parse(protocol='bgp',)
-        self.assertDictEqual(parsed_output, self.golden_parsed_output6)
 
 ###################################################
 # unit test for show ipv6 route updated
@@ -167,14 +138,14 @@ class test_show_ipv6_route_word(test_show_ipv6_route_word_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpv6RouteWord(device=self.device)
+        obj = ShowIpv6RouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route='2000:2::4:1')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
-        obj = ShowIpv6RouteWord(device=self.device)
+        obj = ShowIpv6RouteDistributor(device=self.device)
         parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
