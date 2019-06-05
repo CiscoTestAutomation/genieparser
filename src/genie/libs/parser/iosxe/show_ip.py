@@ -66,14 +66,14 @@ class ShowIPAlias(ShowIPAliasSchema):
         index = 1   # set a counter for the index
 
         # Address Type             IP Address      Port
-        # Interface                106.162.197.94
+        # Interface                10.169.197.94
         p1 = re.compile(r'(?P<address_type>(\S+)) +(?P<ip_address>(\S+))(?: +(?P<port>(\d+)))?$')
         # "?:" (for port) means optional
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Interface                106.162.197.94
+            # Interface                10.169.197.94
             m = p1.match(line)
             if m:
                 group = m.groupdict()

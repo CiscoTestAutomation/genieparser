@@ -2170,6 +2170,62 @@ class test_show_bgp_all_detail(unittest.TestCase):
         For address family: VPNv4 Flowspec
         '''}
 
+    golden_output3 = {'execute.return_value': '''
+    BGP routing table entry for 65000:1:1.1.1.1/32, version 2
+Paths: (1 available, best #1, table VRF1)
+  Advertised to update-groups:
+     1
+  Refresh Epoch 1
+  Local
+    0.0.0.0 (via vrf VRF1) from 0.0.0.0 (1.1.1.1)
+      Origin IGP, metric 0, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: Cost:pre-bestpath:128:1280 0x8800:32768:0
+        0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    golden_parsed_output3 = {
+    'instance': {
+        'default': {
+            'vrf': {
+                'VRF1': {
+                    'address_family': {
+                        'vpnv4 unicast': {
+                        
+                            'prefixes': {
+                                '1.1.1.1/32': {
+                                    'table_version': '2',
+                                    'available_path': '1',
+                                    'best_path': '1',
+                                    'paths': '1 available, best #1, table VRF1',
+                                    'index': {
+                                        1: {
+                                            'next_hop': '0.0.0.0',
+                                            'gateway': '0.0.0.0',
+                                            'originator': '1.1.1.1',
+                                            'next_hop_via': 'vrf VRF1',
+                                            'localpref': 100,
+                                            'metric': 0,
+                                            'weight': '32768',
+                                            'origin_codes': 'i',
+                                            'status_codes': '*>',
+                                            'refresh_epoch': 1,
+                                            'route_info': 'Local',
+                                            'evpn': {
+                                                'ext_community': 'Cost:pre-bestpath:128:1280 0x8800:32768:0',
+                                                },
+                                            'recipient_pathid': '0',
+                                            'transfer_pathid': '0x0',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_show_bgp_all_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllDetail(device=self.device)
@@ -2189,6 +2245,13 @@ class test_show_bgp_all_detail(unittest.TestCase):
         obj = ShowBgpAllDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_show_bgp_vrf_route_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllDetail(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', route='1.1.1.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ============================
 # Unit test for:
@@ -2662,7 +2725,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                     'address_family': {
                         'vpnv4': {
                             'prefixes': {
-                                '12.0.0.0/24': {
+                                '10.144.0.0/24': {
                                     'table_version': '88',
                                     'available_path': '4',
                                     'best_path': '1',
@@ -2711,7 +2774,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                         4: {
                                             'next_hop': '10.11.11.11',
                                             'gateway': '10.11.11.11',
-                                            'originator': '1.0.0.1',
+                                            'originator': '10.1.0.1',
                                             'evpn': {
                                                 'ext_community': 'RT:11:12 ',
                                                 'recursive_via_connected': True,
@@ -2728,29 +2791,29 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
         },
     }
     golden_output2 = {'execute.return_value': '''
-       BGP routing table entry for 10:12:12.0.0.0/24, version 88
+       BGP routing table entry for 10:12:10.144.0.0/24, version 88
     Paths: (4 available, best #1, table blue)
       Additional-path
       Advertised to update-groups:
          6
-      1, imported path from 12:23:12.0.0.0/24
+      1, imported path from 12:23:10.144.0.0/24
         10.3.3.3 (metric 21) from 10.6.6.6 (10.6.6.6)
           Origin incomplete, metric 0, localpref 200, valid, internal, best
           Extended Community: RT:12:23
           Originator: 10.3.3.3, Cluster list: 10.0.0.1 , recursive-via-host
           mpls labels in/out nolabel/37
-      1, imported path from 12:23:12.0.0.0/24
+      1, imported path from 12:23:10.144.0.0/24
         10.13.13.13 (via green) from 10.13.13.13 (10.0.0.2)
           Origin incomplete, metric 0, localpref 100, valid, external
           Extended Community: RT:12:23 , recursive-via-connected
-      1, imported path from 12:23:12.0.0.0/24
+      1, imported path from 12:23:10.144.0.0/24
         10.3.3.3 (metric 21) from 10.7.7.7 (10.7.7.7)
           Origin incomplete, metric 0, localpref 200, valid, internal
           Extended Community: RT:12:23
           Originator: 10.3.3.3, Cluster list: 10.0.0.1 , recursive-via-host
           mpls labels in/out nolabel/37
       1
-        10.11.11.11 from 10.11.11.11 (1.0.0.1)
+        10.11.11.11 from 10.11.11.11 (10.1.0.1)
           Origin incomplete, metric 0, localpref 100, valid, external, backup/repair
           Extended Community: RT:11:12 , recursive-via-connected
     '''}
@@ -2935,6 +2998,7 @@ class test_show_bgp_detail(unittest.TestCase):
 # Unit test for:
 #   * 'show ip bgp {address_family} rd {rd} detail'
 #   * 'show ip bgp {address_family} vrf {vrf} detail'
+#   * 'show ip bgp {address_family} rd {rd} {route}'
 # ====================================================
 class test_show_ip_bgp_detail(unittest.TestCase):
 
@@ -4948,6 +5012,63 @@ class test_show_ip_bgp_detail(unittest.TestCase):
               rx pathid: 0, tx pathid: 0x0
         '''}
 
+    golden_output3 = {'execute.return_value':'''
+    BGP routing table entry for 9996:4093:11.11.11.11/32, version 6195
+Paths: (1 available, best #1, no table)
+  Advertised to update-groups:
+     17         18
+  Refresh Epoch 9
+  65555, (Received from a RR-client)
+    106.162.197.254 (metric 1002) (via default) from 106.162.197.254 (106.162.197.254)
+      Origin incomplete, metric 0, localpref 100, valid, internal, best
+      Community: 62000:1
+      Extended Community: RT:9996:4093
+      mpls labels in/out nolabel/584
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    golden_parsed_output3 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'vpnv4': {
+                                'prefixes': {
+                                    '11.11.11.11/32': {
+                                        'table_version': '6195',
+                                        'available_path': '1',
+                                        'best_path': '1',
+                                        'paths': '1 available, best #1, no table',
+                                        'index': {
+                                            1: {
+                                                'next_hop': '106.162.197.254',
+                                                'gateway': '106.162.197.254',
+                                                'originator': '106.162.197.254',
+                                                'next_hop_igp_metric': '1002',
+                                                'next_hop_via': 'default',
+                                                'localpref': 100,
+                                                'metric': 0,
+                                                'origin_codes': '?',
+                                                'status_codes': '*>',
+                                                'refresh_epoch': 9,
+                                                'route_info': '65555, (Received from a RR-client)',
+                                                'community': '62000:1',
+                                                'evpn': {
+                                                    'ext_community': 'RT:9996:4093',
+                                                    },
+                                                'recipient_pathid': '0',
+                                                'transfer_pathid': '0x0',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
     def test_show_bgp_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpDetail(device=self.device)
@@ -4968,14 +5089,23 @@ class test_show_ip_bgp_detail(unittest.TestCase):
         parsed_output = obj.parse(address_family='vpnv4', vrf='L3VPN-0050')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+    def test_show_bgp_all_detail_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpBgpDetail(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093',
+            route='11.11.11.11/32')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
 
 #-------------------------------------------------------------------------------
 
 
-# ==========================
+# =========================================
 # Unit test for
 #   * 'show bgp all summary'
-# ==========================
+#   * 'show bgp vrf {vrf} all summary'
+# =========================================
 class test_show_bgp_all_summary(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -5821,7 +5951,120 @@ class test_show_bgp_all_summary(unittest.TestCase):
         2001:DB8:20:4:6::6
                 4          400      67      73       66    0    0 01:03:11        5
             '''}
+    golden_output3 = {'execute.return_value' : '''
+            For address family: IPv4 Unicast
 
+
+
+
+
+        For address family: VPNv4 Unicast
+
+        BGP router identifier 192.168.10.254, local AS number 9996
+
+        BGP table version is 189, main routing table version 189
+
+        25 network entries using 6400 bytes of memory
+
+        38 path entries using 5168 bytes of memory
+
+        110/106 BGP path/bestpath attribute entries using 32560 bytes of memory
+
+        1 BGP rrinfo entries using 40 bytes of memory
+
+        1 BGP AS-PATH entries using 24 bytes of memory
+
+        2 BGP community entries using 48 bytes of memory
+
+        102 BGP extended community entries using 3248 bytes of memory
+
+        0 BGP route-map cache entries using 0 bytes of memory
+
+        0 BGP filter-list cache entries using 0 bytes of memory
+
+        BGP using 47488 total bytes of memory
+
+        BGP activity 226/0 prefixes, 339/0 paths, scan interval 60 secs
+
+
+
+        Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+
+        192.168.10.253  4        65555      20      12      189    0    0 00:03:52       13
+
+
+
+        For address family: IPv4 Flowspec
+    '''}
+    golden_parsed_output3={
+    'bgp_id': 9996,
+    'vrf': {
+        'CE1test': {
+            'neighbor': {
+                '192.168.10.253': {
+                    'address_family': {
+                        'vpnv4 unicast': {
+                            'version': 4,
+                            'as': 65555,
+                            'msg_rcvd': 20,
+                            'msg_sent': 12,
+                            'tbl_ver': 189,
+                            'input_queue': 0,
+                            'output_queue': 0,
+                            'up_down': '00:03:52',
+                            'state_pfxrcd': '13',
+                            'route_identifier': '192.168.10.254',
+                            'local_as': 9996,
+                            'bgp_table_version': 189,
+                            'routing_table_version': 189,
+                            'attribute_entries': '110/106',
+                            'prefixes': {
+                                'total_entries': 25,
+                                'memory_usage': 6400,
+                                },
+                            'path': {
+                                'total_entries': 38,
+                                'memory_usage': 5168,
+                                },
+                            'total_memory': 47488,
+                            'activity_prefixes': '226/0',
+                            'activity_paths': '339/0',
+                            'scan_interval': 60,
+                            'cache_entries': {
+                                'route-map': {
+                                    'total_entries': 0,
+                                    'memory_usage': 0,
+                                    },
+                                'filter-list': {
+                                    'total_entries': 0,
+                                    'memory_usage': 0,
+                                    },
+                                },
+                            'entries': {
+                                'rrinfo': {
+                                    'total_entries': 1,
+                                    'memory_usage': 40,
+                                    },
+                                'AS-PATH': {
+                                    'total_entries': 1,
+                                    'memory_usage': 24,
+                                    },
+                                'community': {
+                                    'total_entries': 2,
+                                    'memory_usage': 48,
+                                    },
+                                },
+                            'community_entries': {
+                                'total_entries': 102,
+                                'memory_usage': 3248,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_show_bgp_all_summary_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpAllSummary(device=self.device1)
@@ -5842,6 +6085,12 @@ class test_show_bgp_all_summary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_show_bgp_vrf_all_summary_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllSummary(device=self.device)
+        parsed_output = obj.parse(vrf='CE1test')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =================================================
 # Unit test for
@@ -13665,17 +13914,17 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
 
     golden_parsed_output3 = {
         'list_of_neighbors': [
-            '202.239.165.120'
+            '192.168.36.120'
         ],
         'vrf': {
             'default': {
                 'neighbor': {
-                    '202.239.165.120': {
-                        'remote_as': 9996,
+                    '192.168.36.120': {
+                        'remote_as': 65109,
                         'link': 'internal',
                         'shutdown': False,
                         'bgp_version': 4,
-                        'router_id': '202.239.165.120',
+                        'router_id': '192.168.36.120',
                         'session_state': 'Idle',
                         'bgp_negotiated_keepalive_timers': {
                             'hold_time': 90,
@@ -13725,7 +13974,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
                         'bgp_session_transport': {
                             'min_time_between_advertisement_runs': 0,
                             'address_tracking_status': 'enabled',
-                            'rib_route_ip': '202.239.165.120',
+                            'rib_route_ip': '192.168.36.120',
                             'connection': {
                                 'established': 2,
                                 'dropped': 1,
@@ -13932,8 +14181,8 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
 
     golden_output3 = {'execute.return_value': '''
         #show ip bgp link-state link-state neighbors
-        BGP neighbor is 202.239.165.120,  remote AS 9996, internal link
-        BGP version 4, remote router ID 202.239.165.120
+        BGP neighbor is 192.168.36.120,  remote AS 65109, internal link
+        BGP version 4, remote router ID 192.168.36.120
         BGP state = Idle, down for never
         Configured hold time is 90, keepalive interval is 30 seconds
         Minimum holdtime from neighbor is 15 seconds
@@ -13967,7 +14216,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         Default minimum time between advertisement runs is 0 seconds
 
         For address family: VPNv4 Unicast
-        Session: 202.239.165.120
+        Session: 192.168.36.120
         BGP table version 1266, neighbor version 1266/0
         Output queue size : 0
         Index 1, Advertise bit 0
@@ -14007,7 +14256,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
               Refresh End-of-RIB            1          1
 
         For address family: L2VPN Vpls
-        Session: 202.239.165.120
+        Session: 192.168.36.120
         BGP table version 621, neighbor version 621/0
         Output queue size : 0
         Index 1, Advertise bit 0
@@ -14078,7 +14327,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
               Refresh Start-of-RIB          0          0
               Refresh End-of-RIB            0          0
 
-        Address tracking is enabled, the RIB does have a route to 202.239.165.120
+        Address tracking is enabled, the RIB does have a route to 192.168.36.120
         Route to peer address reachability Up: 1; Down: 0
         Last notification 1d21h
         Connections established 2; dropped 1
@@ -16619,7 +16868,7 @@ class test_show_bgp_all_neighbors_advertised_routes(unittest.TestCase):
     golden_output5 = {'execute.return_value': '''
         PE1#show bgp vpnv4 unicast all neighbors 192.168.36.119 advertised-routes
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 04:55:00.149 JST Wed May 22 2019
+        Time source is NTP, 04:55:00.149 EST Wed May 22 2019
 
         BGP table version is 334, local router ID is 10.169.197.254
         Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,

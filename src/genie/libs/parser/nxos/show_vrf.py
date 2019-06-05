@@ -87,6 +87,8 @@ class ShowVrfInterface(ShowVrfInterfaceSchema):
     """Parser for show vrf Interface"""
 
     cli_command = 'show vrf interface'
+    exclude = [
+        '(Null.*)']
 
     def cli(self, output=None):
 
@@ -152,6 +154,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
     """Parser for show vrf <vrf> detail"""
 
     cli_command = ['show vrf {vrf} detail', 'show vrf all detail']
+    exclude = [
+        'route_distinguisher']
 
     def cli(self, vrf='', output=None):
         if output is None:

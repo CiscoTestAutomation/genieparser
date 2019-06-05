@@ -51,6 +51,11 @@ class ShowHsrpSummarySchema(MetaParser):
 class ShowHsrpSummary(ShowHsrpSummarySchema):
     '''Parser for show hsrp summary '''
     cli_command = 'show hsrp summary'
+    exclude = [
+        'total_mts_rx',
+        'rx_good',
+        'tx_pass',
+        'pkt_unknown_groups']
 
     def cli(self,output=None):
         if output is None:
@@ -274,6 +279,11 @@ class ShowHsrpAll(ShowHsrpAllSchema):
 
     ''' Parser for "'show hsrp all" '''
     cli_command = 'show hsrp all'
+    exclude = [
+        'last_state_change',
+        'standby_expire',
+        'num_state_changes',
+        'active_expire']
 
     def cli(self, output=None):
 

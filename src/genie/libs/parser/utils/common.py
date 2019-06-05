@@ -46,6 +46,12 @@ def format_output(parser_data, tab=0):
     s.append('%s}' % ('  '*tab))
     return ''.join(s)
 
+def get_parser_exclude(command, device):
+    try:
+        return get_parser(command, device)[0].exclude
+    except AttributeError:
+        return []
+
 def get_parser(command, device):
     '''From a show command and device, return parser class and kwargs if any'''
 
@@ -94,7 +100,7 @@ def _find_command(command, data, device):
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
-            new_pattern = '(?P<{p}>\S+)'.format(p=word) if word == 'vrf' else '(?P<{p}>.*)'.format(p=word)
+            new_pattern = '(?P<{p}>\S+)'.format(p=word) if word == 'vrf' or word == 'rd' else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
         # Convert | to \|

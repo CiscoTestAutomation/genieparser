@@ -45,6 +45,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
     """Parser for show vtp status """
 
     cli_command = 'show vtp status'
+    exclude = ['device_id']
 
     def cli(self, output=None):
         if output is None:

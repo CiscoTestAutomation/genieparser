@@ -56,6 +56,7 @@ class ShowVersionSchema(MetaParser):
 class ShowVersion(ShowVersionSchema):
     """Parser for show version"""
     cli_command = 'show version'
+    exclude = ['seconds', 'minutes', 'hours', 'uptime']
 
     def cli(self, output=None):
         if output is None:
@@ -1044,6 +1045,13 @@ class ShowRedundancySchema(MetaParser):
 class ShowRedundancy(ShowRedundancySchema):
     """Parser for show redundancy"""
     cli_command = 'show redundancy'
+    exclude = ['node_uptime', 'time_since_standby_boot',
+        'time_since_last_reload', 'time_since_last_switchover',
+        'time_since_standby_node_not_ready', 'time_since_standby_node_ready',
+        'standby_node_not_ready', 'standby_node_ready',
+        'standby_node_timestamp', 'node_uptime_in_seconds', 'iteration:']
+
+
     def cli(self,output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -1284,6 +1292,7 @@ class DirSchema(MetaParser):
 class Dir(DirSchema):
     """Parser for dir"""
     cli_command = 'dir'
+    exclude = ['size', 'time', 'total_free_bytes']
 
     def cli(self, output=None):
         if output is None:

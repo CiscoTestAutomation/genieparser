@@ -588,7 +588,7 @@ class test_show_ip_rip_route_vrf_all(unittest.TestCase):
                         'instance': {
                             'rip-1': {
                                 'routes': {
-                                    '1.0.0.0/8': {
+                                    '10.1.0.0/8': {
                                         'best_route': True,
                                         'index': {
                                             1: {
@@ -718,13 +718,13 @@ class test_show_ip_rip_route_vrf_all(unittest.TestCase):
                                             },
                                         'next_hops': 0,
                                         },
-                                    '3.3.3.3/32': {
+                                    '10.36.3.3/32': {
                                         'best_route': True,
                                         'index': {
                                             1: {
                                                 'interface': 'loopback0',
                                                 'metric': 1,
-                                                'next_hop': '3.3.3.3',
+                                                'next_hop': '10.36.3.3',
                                                 'route_type': 'connected',
                                                 'tag': 0,
                                                 },
@@ -748,11 +748,11 @@ class test_show_ip_rip_route_vrf_all(unittest.TestCase):
         
         > - indicates best RIP route
         
-        >1.0.0.0/8 next-hops 1
+        >10.1.0.0/8 next-hops 1
          via 10.13.120.1 Ethernet1/2.120, metric 2, tag 0, timeout 00:02:33
         
-        >3.3.3.3/32 next-hops 0
-         via 3.3.3.3 loopback0, metric 1, tag 0, direct route
+        >10.36.3.3/32 next-hops 0
+         via 10.36.3.3 loopback0, metric 1, tag 0, direct route
         
          10.12.90.0/24 next-hops 1
          via 10.13.120.1 Ethernet1/2.120, metric 2, tag 0, timeout 00:02:33
@@ -1004,8 +1004,8 @@ class test_show_ip_rip_interface_vrf_all(unittest.TestCase):
                                         },
                                     'loopback0': {
                                         'ipv4': {
-                                            '3.3.3.3/32': {
-                                                'ip': '3.3.3.3',
+                                            '10.36.3.3/32': {
+                                                'ip': '10.36.3.3',
                                                 'prefix_length': 32,
                                                 },
                                             },
@@ -1038,7 +1038,7 @@ class test_show_ip_rip_interface_vrf_all(unittest.TestCase):
     Ethernet1/2.120, protocol-up/link-up/admin-up, RIP state : up
       address/mask 10.13.120.3/24, metric 1, split-horizon
     loopback0, protocol-up/link-up/admin-up, RIP state : up
-      address/mask 3.3.3.3/32, metric 1, split-horizon
+      address/mask 10.36.3.3/32, metric 1, split-horizon
             '''}
 
     def test_show_empty1(self):
