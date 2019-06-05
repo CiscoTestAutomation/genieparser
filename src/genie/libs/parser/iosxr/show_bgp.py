@@ -3089,7 +3089,9 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
         show bgp instance all all all neighbors <neighbor> received routes
         show bgp instance all vrf all neighbors <neighbor> received routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
-        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes"""
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> received routes
+"""
 
     schema = {'instance':
                 {Any():
@@ -3146,13 +3148,14 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         show bgp instance all vrf all neighbors <neighbor> received routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> received routes
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
     cli_command = 'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} {route}'
 
-    def cli(self, neighbor, vrf_type, vrf='', instance='', address_family='', route_type='received routes', output=None):
+    def cli(self, neighbor, vrf_type, vrf='all', instance='all', address_family='', route_type='received routes', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert route_type in ['received routes', 'routes']
@@ -3616,6 +3619,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
         show bgp instance all vrf all neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> advertised-routes
+
     """
 
     schema = {'instance':
@@ -3660,19 +3665,20 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         show bgp instance all vrf all neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> advertised-routes
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
     cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'
 
-    def cli(self, neighbor, vrf_type, address_family='', output=None):
+    def cli(self, vrf_type, neighbor='', vrf='all', instance='all', address_family='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
             out = self.device.execute(self.cli_command. \
-                                      format(neighbor=neighbor, af_type=address_family, vrf_type=vrf_type))
+                                      format(vrf=vrf, instance=instance, neighbor=neighbor, af_type=address_family, vrf_type=vrf_type))
         else:
             out = output
 
@@ -3895,9 +3901,8 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
 
         - vrf_type
     """
-    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} neighbors {neighbor} {route}',
-                   'show bgp instance {instance} vrf {vrf} {af_type} neighbors {neighbor} {route}']
-    def cli(self, neighbor, vrf_type, vrf='', instance='', address_family='',output=None):
+    cli_command = 'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} {route}'
+    def cli(self, neighbor, vrf_type, vrf='all', instance='all', address_family='',output=None):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
             self, neighbor=neighbor, vrf_type=vrf_type, address_family=address_family,
             route_type='routes', vrf=vrf, instance=instance, output=output)
