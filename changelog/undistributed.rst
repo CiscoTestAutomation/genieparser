@@ -6,6 +6,14 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                logging
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowLogging for:
+    	show logging
+    	show logging | include {Word}
+    
+--------------------------------------------------------------------------------
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXE
@@ -16,6 +24,14 @@
     * Updated parser for ShowBgpAllDetail:
         show bgp vrf {vrf} {route}
         show bgp {address_family} vrf {vrf} {route}
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+* IOS
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
 
 --------------------------------------------------------------------------------
                                 OSPF
