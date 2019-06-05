@@ -165,8 +165,8 @@ class Common():
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
                    'Fas': 'FastEthernet',
-	               'Po': 'Port-channel',
-	               'PO': 'Port-channel',
+                   'Po': 'Port-channel',
+                   'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
                    'Gig': 'GigabitEthernet',
@@ -312,9 +312,9 @@ class Common():
             # if there is no __readonly__ but the command has outputs
             # should be warining
             if 'TABLE' in tag:
-            	warnings.warn('Tag "__readonly__" should exsist in output when '
-            		          'there are actual values in output')
-            	break
+                warnings.warn('Tag "__readonly__" should exsist in output when '
+                              'there are actual values in output')
+                break
 
         cli = cli.strip()
         # compare the commands
