@@ -3150,16 +3150,20 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
+    cli_command = 'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} {route}'
 
-    def cli(self, neighbor, vrf_type, address_family='', route_type='received routes', output=None):
+    def cli(self, neighbor, vrf_type, vrf='', instance='', address_family='', route_type='received routes', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert route_type in ['received routes', 'routes']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(neighbor=neighbor, vrf_type=vrf_type, af_type=address_family, route=route_type))
+            out = self.device.execute(self.cli_command.format(neighbor=neighbor,
+                                                              vrf_type=vrf_type,
+                                                              af_type=address_family,
+                                                              instance=instance,
+                                                              vrf=vrf, route=route_type))
         else:
             out = output
 
@@ -3893,7 +3897,7 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
     """
     cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} neighbors {neighbor} {route}',
                    'show bgp instance {instance} vrf {vrf} {af_type} neighbors {neighbor} {route}']
-    def cli(self, neighbor, vrf_type, vrf='', address_family='',output=None):
+    def cli(self, neighbor, vrf_type, vrf='', instance='', address_family='',output=None):
         return ShowBgpInstanceNeighborsReceivedRoutes.cli(
             self, neighbor=neighbor, vrf_type=vrf_type, address_family=address_family,
             route_type='routes', vrf=vrf, instance=instance, output=output)
