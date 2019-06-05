@@ -26,7 +26,16 @@
         show bgp {address_family} vrf {vrf} {route}
 
 --------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+* IOS
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+
+--------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspf for more varied router-LSAs
+
