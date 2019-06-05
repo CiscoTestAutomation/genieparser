@@ -1,9 +1,9 @@
 """show_spanning_tree.py
 
 IOSXR parser for the following show commands:
-	* show spanning-tree mst {mst}
-	* show spanning-tree mstag <mag_domain>
-	* show spanning-tree pvrst <pvst_id>
+	* show spanning-tree mst {mst_id}
+	* show spanning-tree mstag {mag_domain}
+	* show spanning-tree pvrst {pvst_id}
 	* show spanning-tree pvrstag <pvrstag_domain>
 	* show spanning-tree pvstag <pvstag_domain>
 """
@@ -22,7 +22,7 @@ from genie.metaparser.util.schemaengine import Schema, \
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-"""Schema for 'show spanning-tree mst {mst}'"""
+"""Schema for 'show spanning-tree mst {mst_id}'"""
 class ShowSpanningTreeMstSchema(MetaParser):
 	schema = {
 		'mstp': {
@@ -70,11 +70,11 @@ class ShowSpanningTreeMstSchema(MetaParser):
 
 # ======================================
 # Parser for:
-#   * 'show spanning-tree mst {mst}'
+#   * 'show spanning-tree mst {mst_id}'
 # ======================================
 class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 	'''Parser for:
-		* 'show spanning-tree mst {mst}'
+		* 'show spanning-tree mst {mst_id}'
 	'''
 	cli_command = 'show spanning-tree mst {mst}'
 	def cli(self, mst, output=None):
@@ -87,7 +87,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		# initial return dictionary
 		ret_dict = {}
 		# MSTI 0 (CIST):
-		p1 = re.compile(r'^MSTI +(?P<mst>\d+)([\s\S]+)?:$')
+		p1 = re.compile(r'^MSTI +(?P<mst_id>\d+)([\s\S]+)?:$')
 		# VLANS Mapped: 1-4094
 		p2 = re.compile(r'^VLANS +Mapped: +(?P<vlan>\S+)$')
 		# CIST Root  Priority    32768
@@ -120,8 +120,8 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		    	group = m.groupdict()
 		    	mst_instances = ret_dict.setdefault('mstp', {}). \
 		    		setdefault(mst, {}). \
-		    		setdefault('mst_instances', {}).setdefault(group['mst'], {})
-		    	mst_instances.update({'mst_id' : group['mst']})
+		    		setdefault('mst_instances', {}).setdefault(group['mst_id'], {})
+		    	mst_instances.update({'mst_id' : group['mst_id']})
 		    	continue
 
 		    # VLANS Mapped: 1-4094
@@ -664,7 +664,7 @@ class ShowSpanningTreePvrsTagSchema(MetaParser):
 
 class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 	"""Parser for 'show spanning-tree pvrstag <pvrstag_domain>'"""
-	cli_command = 'show spanning-tree pvrst {pvrstag_domain}'
+	cli_command = 'show spanning-tree pvrstag {pvrstag_domain}'
 	def cli(self,pvrstag_domain, output=None):
 		if output is None:
 		    # get output from device
