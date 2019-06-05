@@ -24,6 +24,8 @@
     * Updated parser for ShowBgpAllDetail:
         show bgp vrf {vrf} {route}
         show bgp {address_family} vrf {vrf} {route}
+    * Updated ShowBgpDetailSuperParser for:
+        better handling of extended community
 
 --------------------------------------------------------------------------------
                                 Routing
