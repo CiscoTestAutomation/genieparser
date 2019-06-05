@@ -8,6 +8,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_platform import ShowVersion,\
                                                   Dir,\
                                                   ShowRedundancy,\
+                                                  ShowRedundancyStates,\
                                                   ShowInventory,\
                                                   ShowPlatform, ShowBoot, \
                                                   ShowSwitchDetail, \
@@ -1223,6 +1224,114 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         redundancy_obj = ShowRedundancy(device=self.dev_asr1k)
         parsed_output = redundancy_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
+
+
+class test_show_redundancy(unittest.TestCase):
+    dev = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        "my_state": "13 -ACTIVE",
+        "peer_state": "1  -DISABLED",
+        "mode": "Simplex",
+        "unit": "Primary",
+        "unit_id": 48,
+        "redundancy_mode_operational": "Non-redundant",
+        "redundancy_mode_configured": "Non-redundant",
+        "redundancy_state": "Non Redundant",
+        "maintenance_mode": "Disabled",
+        "manual_swact": "disabled",
+        "manual_swact_reason": "system is simplex (no peer unit)",
+        "communications": "Down",
+        "communications_reason": "Simplex mode",
+        "client_count": 111,
+        "client_notification_tmr_msec": 30000,
+        "rf_debug_mask": "0x0"
+    }
+
+    golden_output1 = {'execute.return_value': '''
+    PE1#show redundancy states 
+    Load for five secs: 2%/0%; one minute: 1%; five minutes: 1%
+    Time source is NTP, 05:47:45.686 JST Thu Jun 6 2019
+           my state = 13 -ACTIVE 
+         peer state = 1  -DISABLED 
+               Mode = Simplex
+               Unit = Primary
+            Unit ID = 48
+
+    Redundancy Mode (Operational) = Non-redundant
+    Redundancy Mode (Configured)  = Non-redundant
+    Redundancy State              = Non Redundant
+         Maintenance Mode = Disabled
+        Manual Swact = disabled (system is simplex (no peer unit))
+     Communications = Down      Reason: Simplex mode
+
+       client count = 111
+     client_notification_TMR = 30000 milliseconds
+               RF debug mask = 0x0   
+
+    PE1#
+    '''}
+
+    golden_parsed_output2 = {
+        "my_state": "13 -ACTIVE",
+        "peer_state": "8  -STANDBY HOT",
+        "mode": "Duplex",
+        "unit": "Primary",
+        "unit_id": 48,
+        "redundancy_mode_operational": "sso",
+        "redundancy_mode_configured": "sso",
+        "redundancy_state": "sso",
+        "maintenance_mode": "Disabled",
+        "manual_swact": "enabled",
+        "communications": "Up",
+        "client_count": 76,
+        "client_notification_tmr_msec": 30000,
+        "rf_debug_mask": "0x0"
+    }
+
+    golden_output2 = {'execute.return_value': '''
+    asr104#show redundancy states 
+           my state = 13 -ACTIVE 
+         peer state = 8  -STANDBY HOT 
+               Mode = Duplex
+               Unit = Primary
+            Unit ID = 48
+
+    Redundancy Mode (Operational) = sso
+    Redundancy Mode (Configured)  = sso
+    Redundancy State              = sso
+         Maintenance Mode = Disabled
+        Manual Swact = enabled
+     Communications = Up
+
+       client count = 76
+     client_notification_TMR = 30000 milliseconds
+               RF debug mask = 0x0   
+
+    asr104#
+    '''}
+
+    def test_empty(self):
+        self.dev = Mock(**self.empty_output)
+        redundancy_obj = ShowRedundancyStates(device=self.dev)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = redundancy_obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output1)
+        redundancy_obj = ShowRedundancyStates(device=self.dev)
+        parsed_output = redundancy_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output2)
+        redundancy_obj = ShowRedundancyStates(device=self.dev)
+        parsed_output = redundancy_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ====================
