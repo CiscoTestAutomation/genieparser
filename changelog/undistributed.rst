@@ -11,3 +11,9 @@
 * IOSXE
     * Added ShowRedundancyStates for:
         show redundancy states
+
+--------------------------------------------------------------------------------
+                                policy-map
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix class ShowPolicyMapTypeSuperParser

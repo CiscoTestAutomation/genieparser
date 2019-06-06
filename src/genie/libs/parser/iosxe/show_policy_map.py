@@ -684,29 +684,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 violated_dict['bps'] = int(m.groupdict()['v_bps'])
                 continue
 
-            # drop
-            # transmit
-            # start
-            # set-qos-transmit 7
-            # set-mpls-exp-imposition-transmit 7
-            m = p12.match(line)
-            if m:
-                action = m.groupdict()['action'].replace('-', '_')
-                if action in self.BOOL_ACTION_LIST:
-                    value = True
-                else:
-                    value = m.groupdict()['value']
-                try:
-                    if conformed_line:
-                        conf_action_dict.update({action: value})
-                    elif exceeded_line:
-                        exc_action_dict.update({action: value})
-                    elif violated_line:
-                        viol_action_dict.update({action: value})
-                    continue
-                except Exception as e:
-                    pass
-
             # QoS Set
             m = p13.match(line)
             if m:
@@ -733,6 +710,29 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 qos_dict_map['packets_marked'] = int(m.groupdict()['packets_marked'])
                 continue
+
+            # drop
+            # transmit
+            # start
+            # set-qos-transmit 7
+            # set-mpls-exp-imposition-transmit 7
+            m = p12.match(line)
+            if m:
+                action = m.groupdict()['action'].replace('-', '_')
+                if action in self.BOOL_ACTION_LIST:
+                    value = True
+                else:
+                    value = m.groupdict()['value']
+                try:
+                    if conformed_line:
+                        conf_action_dict.update({action: value})
+                    elif exceeded_line:
+                        exc_action_dict.update({action: value})
+                    elif violated_line:
+                        viol_action_dict.update({action: value})
+                    continue
+                except Exception as e:
+                    pass
 
             # Queueing
             m = p14.match(line)
@@ -1703,7 +1703,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p10_1.match(line)
             if m:
                 priority_level = int(m.groupdict()['priority_levels'])
-                #import pdb;pdb.set_trace()
                 class_map_dict['priority_levels'] = priority_level
 
                 continue

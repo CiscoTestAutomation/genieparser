@@ -1889,6 +1889,221 @@ class test_show_policy_map_type(unittest.TestCase):
       bandwidth remaining ratio 2
     '''}
 
+    golden_parsed_output18 = {"TenGigabitEthernet0/0/0.101": {
+            "service_policy": {
+                "input": {
+                    "policy_name": {
+                        "L3VPN_in": {
+                            "class_map": {
+                                "class-default": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 300,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "any"
+                                    ],
+                                    "police": {
+                                        "cir_bps": 400000,
+                                        "bc_bytes": 400000,
+                                        "conformed": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "transmit": True
+                                            },
+                                            "bps": 0
+                                        },
+                                        "exceeded": {
+                                            "packets": 0,
+                                            "bytes": 0,
+                                            "actions": {
+                                                "drop": True
+                                            },
+                                            "bps": 0
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "STD_in_child": {
+                            "class_map": {
+                                "IPP567": {
+                                    "match_evaluation": "match-all",
+                                    "packets": 0,
+                                    "bytes": 0,
+                                    "rate": {
+                                        "interval": 300,
+                                        "offered_rate_bps": 0,
+                                        "drop_rate_bps": 0
+                                    },
+                                    "match": [
+                                        "ip precedence 3  4  5"
+                                    ],
+                                    "qos_set": {
+                                        "ip precedence": {
+                                            "1": {
+                                                "marker_statistics": "Disabled"
+                                            }
+                                        },
+                                        "qos-group": {
+                                            "1": {
+                                                "marker_statistics": "Disabled"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "output": {
+                    "policy_name": {
+                        "L3VPN_out": {
+                            "class_map": {
+                                "class-default": {
+                                    "match_evaluation": "match-any",
+                                    "packets": 2121212,
+                                    "bytes": 121212,
+                                    "rate": {
+                                        "interval": 300,
+                                        "offered_rate_bps": 11111171,
+                                        "drop_rate_bps": 1118111
+                                    },
+                                    "match": [
+                                        "any"
+                                    ],
+                                    "queueing": True,
+                                    "queue_limit_packets": "512",
+                                    "queue_depth": 0,
+                                    "total_drops": 11111,
+                                    "no_buffer_drops": 0,
+                                    "pkts_output": 11511,
+                                    "bytes_output": 111611,
+                                    "shape_type": "average",
+                                    "shape_cir_bps": 111222,
+                                    "shape_bc_bps": 2323,
+                                    "shape_be_bps": 3434,
+                                    "target_shape_rate": 454545
+                                }
+                            }
+                        },
+                        "leeaf": {
+                            "queue_stats_for_all_priority_classes": {
+                                "priority_level": {
+                                    "1": {
+                                        "queueing": True,
+                                        "queue_depth": 0,
+                                        "total_drops": 0,
+                                        "no_buffer_drops": 0,
+                                        "pkts_output": 123456,
+                                        "bytes_output": 7890123
+                                    }
+                                }
+                            },
+                            "class_map": {
+                                "IPP67": {
+                                    "match_evaluation": "match-all",
+                                    "packets": 123,
+                                    "bytes": 4567,
+                                    "rate": {
+                                        "interval": 300,
+                                        "offered_rate_bps": 123123123,
+                                        "drop_rate_bps": 456456456
+                                    },
+                                    "match": [
+                                        "ip precedence 6  7"
+                                    ],
+                                    "queueing": True,
+                                    "queue_limit_packets": "64",
+                                    "queue_depth": 63,
+                                    "total_drops": 2655550,
+                                    "no_buffer_drops": 0,
+                                    "pkts_output": 6612304,
+                                    "bytes_output": 819909328
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output18 = {'execute.return_value':'''
+    PE1#show policy-map interface te0/0/0.101
+ TenGigabitEthernet0/0/0.101
+
+  Service-policy input: L3VPN_in
+
+    Class-map: class-default (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+      police:
+          cir 400000 bps, bc 400000 bytes
+        conformed 0 packets, 0 bytes; actions:
+          transmit
+        exceeded 0 packets, 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps
+
+      Service-policy : STD_in_child
+
+        Class-map: IPP567 (match-all)
+          0 packets, 0 bytes
+          5 minute offered rate 0000 bps, drop rate 0000 bps
+          Match: ip precedence 3  4  5
+          QoS Set
+            ip precedence 1
+              Marker statistics: Disabled
+            qos-group 1
+              Marker statistics: Disabled
+
+  Service-policy output: L3VPN_out
+
+    Class-map: class-default (match-any)
+      2121212 packets, 121212 bytes
+      5 minute offered rate 11111171 bps, drop rate 1118111 bps
+      Match: any
+      Queueing
+      queue limit 64 packets
+      (queue depth/total drops/no-buffer drops) 0/11111/0
+      (pkts output/bytes output) 11511/111611
+      shape (average) cir 111222, bc 2323, be 3434
+      target shape rate 454545
+
+      Service-policy : leeaf
+
+        queue stats for all priority classes:
+          Queueing
+          priority level 1
+          queue limit 512 packets
+          (queue depth/total drops/no-buffer drops) 0/0/0
+          (pkts output/bytes output) 123456/7890123
+
+        Class-map: IPP67 (match-all)
+          123 packets, 4567 bytes
+          5 minute offered rate 123123123 bps, drop rate 456456456 bps
+          Match: ip precedence 6  7
+          Queueing
+          queue limit 64 packets
+          (queue depth/total drops/no-buffer drops) 63/2655550/0
+          (pkts output/bytes output) 6612304/819909328
+          bandwidth 50% (234 kbps)
+          '''}
+
+    def test_show_policy_map_control_plane_full18(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output18)
+        obj = ShowPolicyMapControlPlane(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output18)
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
