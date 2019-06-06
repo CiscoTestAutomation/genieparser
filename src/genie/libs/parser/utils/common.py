@@ -100,7 +100,7 @@ def _find_command(command, data, device):
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
-            new_pattern = '(?P<{p}>\S+)'.format(p=word) if word == 'vrf' or word == 'rd' else '(?P<{p}>.*)'.format(p=word)
+            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) if word == 'vrf' or word == 'rd' else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
         # Convert | to \|
@@ -165,8 +165,8 @@ class Common():
                    'Lo': 'Loopback',
                    'Fa': 'FastEthernet',
                    'Fas': 'FastEthernet',
-	               'Po': 'Port-channel',
-	               'PO': 'Port-channel',
+                   'Po': 'Port-channel',
+                   'PO': 'Port-channel',
                    'Null': 'Null',
                    'Gi': 'GigabitEthernet',
                    'Gig': 'GigabitEthernet',
@@ -312,9 +312,9 @@ class Common():
             # if there is no __readonly__ but the command has outputs
             # should be warining
             if 'TABLE' in tag:
-            	warnings.warn('Tag "__readonly__" should exsist in output when '
-            		          'there are actual values in output')
-            	break
+                warnings.warn('Tag "__readonly__" should exsist in output when '
+                              'there are actual values in output')
+                break
 
         cli = cli.strip()
         # compare the commands

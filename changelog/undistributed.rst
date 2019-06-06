@@ -24,6 +24,8 @@
     * Updated parser for ShowBgpAllDetail:
         show bgp vrf {vrf} {route}
         show bgp {address_family} vrf {vrf} {route}
+    * Updated ShowBgpDetailSuperParser for:
+        better handling of extended community
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -38,6 +40,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspf for more varied router-LSAs
+    * Updated ShowIpOspfDatabaseRouter to parse TOS metrics
 
 --------------------------------------------------------------------------------
                                    interface
@@ -47,3 +50,25 @@
         * show ipv4 vrf {vrf} interface
     * Updated ShowIpv6VrfAllInterface to support custom vrf
         * show ipv6 vrf {vrf} interface
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updates ShowVersion to make last_reload_reason an optional key
+
+--------------------------------------------------------------------------------
+                                  SPT
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowSpanningTreeMst for:
+        show spanning-tree mst <mst_id>
+    * Add ShowSpanningTreeMstag for:
+        show spanning-tree mstag <mag_domain>
+    * Add ShowSpanningTreePvrst for:
+        show spanning-tree pvrst <pvst_id>
+    * Add ShowSpanningTreePvrsTag for:
+        show spanning-tree pvrstag <pvrstag_domain>
+    * Add ShowSpanningTreePvsTag for:
+        show spanning-tree pvstag <pvstag_domain>
+>>>>>>> dev
