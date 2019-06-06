@@ -69,6 +69,7 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
     - af
     """
     cli_command = 'show mrib vrf {vrf} {af} route'
+    exclude = ['uptime']
 
     def cli(self, vrf='default', af='ipv4',output=None):
         if output is None:

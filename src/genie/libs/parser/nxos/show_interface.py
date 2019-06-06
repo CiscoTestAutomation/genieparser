@@ -146,6 +146,37 @@ class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface"""
 
     cli_command = 'show interface'
+    exclude = [
+      'in_unicast_pkts',
+      'out_unicast_pkts',
+      'in_octets',
+      'out_octets',
+      'in_pkts',
+      'out_pkts',
+      'in_multicast_pkts',
+      'out_multicast_pkts',
+      'in_rate',
+      'out_rate',
+      'in_broadcast_pkts',
+      'out_broadcast_pkts',
+      'last_link_flapped',
+      'in_rate_pkts',
+      'out_rate_pkts',
+      'out_rate_bps',
+      'in_rate_bps',
+      'interface_reset',
+      'in_rate_pps',
+      'out_rate_pps',
+      'last_clear',
+      'out_jumbo_packets',
+      'in_jumbo_packets',
+      'rxload',
+      'txload',
+      'in_errors',
+      'mac_address',
+      'phys_address',
+      'in_crc_errors',
+      'reliability']
 
     def cli(self, output=None):
         if output is None:
@@ -986,6 +1017,35 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
     """Parser for show ip interface vrf all"""
 
     cli_command = 'show ip interface vrf all'
+    exclude = [
+        'multicast_bytes_consumed',
+        'multicast_bytes_received',
+        'unicast_bytes_consumed',
+        'unicast_packets_consumed',
+        'unicast_bytes_originated',
+        'unicast_packets_originated',
+        'unicast_bytes_received',
+        'unicast_bytes_sent',
+        'unicast_packets_received',
+        'unicast_packets_sent',
+        'multicast_packets_consumed',
+        'multicast_packets_received',
+        'multicast_bytes_originated',
+        'multicast_bytes_sent',
+        'multicast_packets_originated',
+        'multicast_packets_sent',
+        'broadcast_bytes_consumed',
+        'broadcast_bytes_received',
+        'broadcast_packets_consumed',
+        'broadcast_packets_received',
+        'multicast_groups',
+        'int_stat_last_reset',
+        'unicast_bytes_forwarded',
+        'unicast_packets_forwarded',
+        'oil_uptime',
+        'iod',
+        '(tunnel.*)',
+        'multicast_groups_address']
 
     def cli(self, output=None):
         if output is None:
@@ -1585,6 +1645,8 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
     """Parser for show vrf all interface"""
 
     cli_command = 'show vrf all interface'
+    exclude = [
+        '(Null.*)']
 
     def cli(self, output=None):
         if output is None:
@@ -1932,6 +1994,21 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
     """Parser for ipv6 interface vrf all"""
 
     cli_command = 'show ipv6 interface vrf all'
+    exclude  = [
+        'multicast_bytes_consumed',
+        'multicast_packets_consumed',
+        'multicast_bytes_originated',
+        'multicast_packets_originated',
+        'unicast_bytes_consumed',
+        'unicast_packets_consumed',
+        'unicast_bytes_originated',
+        'unicast_packets_originated',
+        'ipv6_multicast_groups',
+        'iod',
+        'multicast_groups',
+        'unicast_bytes_forwarded',
+        'unicast_packets_forwarded',
+        'ipv6_link_local']
 
     def cli(self, output=None):
         if output is None:
@@ -2315,6 +2392,8 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     cli_command = 'show ip interface brief'
+    exclude = [
+        '(tunnel.*)']
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -2456,6 +2535,8 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     cli_command = 'show interface brief'
+    exclude = [
+    'reason']
 
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)

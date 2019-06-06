@@ -73,6 +73,13 @@ class ShowVersion(ShowVersionSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     cli_command = 'show version'
+    exclude = [
+        'seconds',
+        'minutes',
+        'hours',
+        'days',
+        'essor_board_id',
+        'reason']
 
     def cli(self,output=None):
         ''' parsing mechanism: cli
@@ -538,6 +545,10 @@ class ShowRedundancyStatusSchema(MetaParser):
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
     """Parser for show redundancy status"""
     cli_command = 'show redundancy status'
+    exclude = [
+        'active_supervisor_time',
+        'kernel_uptime',
+        'system_uptime']
 
     def cli(self, cmd='',output=None):
         if not cmd:
@@ -1047,6 +1058,12 @@ class Dir(DirSchema):
     """Parser for dir"""
 
     cli_command = 'dir'
+    exclude = [
+        'date',
+        'size',
+        'time',
+        'disk_free_space',
+        'disk_used_space']
 
     def cli(self,output=None):
         ''' parsing mechanism: cli
@@ -1124,6 +1141,8 @@ class ShowVdcDetail(ShowVdcDetailSchema):
     """Parser for show vdc detail"""
 
     cli_command = 'show vdc detail'
+    exclude = [
+        'uptime']
 
     def cli(self,output=None):
         ''' parsing mechanism: cli

@@ -41,11 +41,22 @@ from genie.libs.parser.utils.common import Common
 
 class ShowInterfaces(ShowInterfaces_iosxe):
     """parser for show interfaces"""
+    exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
+        'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
+        'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts'
+        'last_output', 'out_unknown_protocl_drops', 'last_input',
+        'input_queue_drops', 'out_interface_resets', 
+        'rxload', 'txload', 'last_clear', 'in_crc_errors',
+        'in_errors', 'in_giants', 'unnumbered', 'mac_address', 
+        'phys_address', 'out_lost_carrier', '(Tunnel.*)',
+        'input_queue_flushes', 'reliability', 'in_runts']
+
     pass
 
 
 class ShowIpInterfaceBrief(ShowIpInterfaceBrief_iosxe):
     """Parser for: show ip interface brief"""
+    exclude = ['method', '(Tunnel.*)']
     pass
 
 
@@ -61,11 +72,15 @@ class ShowIpInterfaceBriefPipeIp(ShowIpInterfaceBriefPipeIp_iosxe):
 
 class ShowIpInterface(ShowIpInterface_iosxe):
     """Parser for show ip interface"""
+    exclude = ['unnumbered', 'address_determined_by',
+               '(Tunnel.*)', 'joins', 'leaves']
     pass
 
 
 class ShowIpv6Interface(ShowIpv6Interface_iosxe):
     """Parser for show ipv6 interface"""
+    exclude = ['unnumbered', 'interface_ref',
+               '(Tunnel.*)', 'joined_group_addresses', 'ipv6']
     pass
 
 
@@ -74,6 +89,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccounting_iosxe):
         show interfaces accounting
         show interfaces <interface> accounting
     """
+    exclude = ['pkts_in', 'pkts_out', 'chars_in', 'chars_out']
     pass
 
 

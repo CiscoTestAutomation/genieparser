@@ -61,6 +61,12 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
     """Parser for show ip mroute vrf all"""
 
     cli_command = 'show ip mroute vrf all'
+    exclude = [
+        'uptime',
+        'oil_count',
+        'outgoing_interface_list',
+        'flags',
+        'incoming_interface_list']
 
     def cli(self, output=None):
         if output is None:
@@ -240,6 +246,11 @@ class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
     """Parser for show ipv6 mroute vrf all"""
 
     cli_command = 'show ipv6 mroute vrf all'
+    exclude = [
+        'last_reported',
+        'uptime',
+        'oil_uptime',
+        'incoming_interface_list']
 
     def cli(self, output=None):
         # Parser for show ipv6 mroute vrf all
@@ -803,6 +814,11 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
         show forwarding distribution multicast route vrf all"""
     cli_command = ['show forwarding distribution multicast route vrf {vrf}',
                    'show forwarding distribution multicast route']
+    exclude = [
+        'flags',
+        'oif_index',
+        'num_of_oifs',
+        'oifs']
 
     def cli(self, vrf="", output=None):
         # finding vrf names

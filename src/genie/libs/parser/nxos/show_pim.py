@@ -101,6 +101,12 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
     cli_command = ['show ipv6 pim interface {interface} vrf {vrf}', 'show ipv6 pim interface vrf {vrf}',
                    'show ipv6 pim interface {interface}','show ipv6 pim interface']
+    exclude = [
+        'hello_expiration',
+        'hellos',
+        'genid',
+        'hello_interval',
+        'dr_address']
 
     def cli(self , interface ="", vrf="",output=None):
 
@@ -1318,6 +1324,9 @@ class ShowIpv6PimRp(ShowPimRp):
     """Parser for:
         show ipv6 pim rp
         show ipv6 pim rp vrf <vrf>"""
+    exclude = [
+        'up_time',
+        'bsr_next_discovery']
 
     def cli(self, vrf='',output=None):
         return super().cli(af='ipv6', vrf=vrf, output=output)
@@ -1329,6 +1338,13 @@ class ShowIpPimRp(ShowPimRp):
     """Parser for:
         show ip pim rp
         show ip pim rp vrf <vrf>"""
+    exclude = [
+        'expires',
+        'up_time',
+        'rp_candidate_next_advertisement',
+        'expiration',
+        'bsr_next_bootstrap',
+        'bsr_next_discovery']
 
     def cli(self, vrf='',output=None):
         return super().cli(af='ip', vrf=vrf, output=output)
@@ -1383,6 +1399,9 @@ class ShowIpv6PimDf(ShowIpv6PimDfSchema):
         show ipv6 pim df vrf <vrf>"""
 
     cli_command = ['show ipv6 pim df vrf {vrf}', 'show ipv6 pim df']
+    exclude = [
+        'df_uptime',
+        'df_address']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -1774,6 +1793,12 @@ class ShowIpv6PimRoute(ShowIpv6PimRouteSchema):
         show ipv6 pim route
         show ipv6 pim route vrf <vrf>"""
     cli_command = ['show ipv6 pim route vrf {vrf}','show ipv6 pim route']
+    exclude = [
+        'expiration',
+        'timeout_interval',
+        'incoming_interface',
+        'rpf_neighbor',
+        'rp_bit']
 
     def cli(self, vrf="",output=None):
         if output is None:
@@ -2031,6 +2056,9 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
         show ipv6 pim neighbor
         show ipv6 pim neighbor vrf <vrf>"""
     cli_command = ['show ipv6 pim neighbor','show ipv6 pim neighbor vrf {vrf}']
+    exclude = [
+        'expiration',
+        'up_time']
 
     def cli(self, vrf="",output=None):
         if output is None:
@@ -2589,6 +2617,9 @@ class ShowIpPimNeighbor(ShowIpPimNeighborSchema):
         show ip pim neighbor
         show ip pim neighbor vrf <vrf>"""
     cli_command = ['show ip pim neighbor','show ip pim neighbor vrf {vrf}']
+    exclude = [
+        'expiration',
+        'up_time']
 
     def cli(self, vrf="",output=None):
         if output is None:
@@ -3190,6 +3221,16 @@ class ShowIpPimPolicyStaticticsRegisterPolicy(ShowIpPimPolicyStaticticsRegisterP
         show ip pim policy statictics register_policy vrf <vrf>"""
 
     cli_command = ['show ip pim policy statistics register-policy','show ip pim policy statistics register-policy vrf {vrf}']
+    exclude = [
+        'expiration',
+        'timeout_interval',
+        'immediate_timeout_count',
+        'oif_timeout_count',
+        'immediate_count',
+        'oif_count',
+        'incoming_interface',
+        'rpf_neighbor']
+
     def cli(self, vrf=""):
 
         cmd_vrf = "sh run | egrep '^vrf|register-policy'"
@@ -3444,6 +3485,18 @@ class ShowIpPimInterface(ShowIpPimInterfaceSchema):
         show ip pim interface <interface> vrf <vrf>"""
     cli_command = ['show ip pim interface','show ip pim interface {interface}',\
                    'show ip pim interface vrf {vrf}','show ip pim interface {interface} vrf {vrf}']
+    exclude = [
+        'hello_expiration',
+        'df_winners',
+        'hellos',
+        'genid',
+        'jp_next_sending',
+        'jps',
+        'df_offers',
+        'dr_delay',
+        'dr_address',
+        'asserts']
+
     def cli(self , interface ="", vrf="",output=None):
         if output is None:
             if not vrf and not interface:
