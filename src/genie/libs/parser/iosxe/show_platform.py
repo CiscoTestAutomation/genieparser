@@ -951,10 +951,12 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
         p5 = re.compile(r'^Unit +ID += +(?P<unit_id>[\d]+)$')
 
         # Redundancy Mode (Operational) = sso
-        p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +(?P<redundancy_mode_operational>[\S]+)$')
+        p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +'
+                         '(?P<redundancy_mode_operational>[\S]+)$')
 
         # Redundancy Mode (Configured)  = sso
-        p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +(?P<redundancy_mode_configured>[\S]+)$')
+        p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +'
+                         '(?P<redundancy_mode_configured>[\S]+)$')
 
         # Redundancy State              = sso
         p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
@@ -964,17 +966,20 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
 
         # Manual Swact = enabled
         # Manual Swact = disabled (system is simplex (no peer unit))
-        p10 = re.compile(r'^Manual +Swact += +(?P<manual_swact>[\w]+)( +\((?P<manual_swact_reason>.*)\))?$')
+        p10 = re.compile(r'^Manual +Swact += +(?P<manual_swact>[\w]+)'
+                          '( +\((?P<manual_swact_reason>.*)\))?$')
 
         # Communications = Up
         # Communications = Down      Reason: Simplex mode
-        p11 = re.compile(r'^Communications += +(?P<communications>[\w]+)( +Reason: +(?P<communications_reason>[\s\S]+))?$')
+        p11 = re.compile(r'^Communications += +(?P<communications>[\w]+)'
+                          '( +Reason: +(?P<communications_reason>[\s\S]+))?$')
 
         # client count = 76
         p12 = re.compile(r'^client +count += +(?P<client_count>[\d]+)$')
 
         # client_notification_TMR = 30000 milliseconds
-        p13 = re.compile(r'^client_notification_TMR += +(?P<client_notification_tmr_msec>[\d]+) +milliseconds$')
+        p13 = re.compile(r'^client_notification_TMR += +'
+                          '(?P<client_notification_tmr_msec>[\d]+) +milliseconds$')
 
         # RF debug mask = 0x0
         p14 = re.compile(r'^RF +debug +mask += +(?P<rf_debug_mask>[\w]+)$')
@@ -1017,13 +1022,15 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
             # Redundancy Mode (Operational) = Non-redundant
             m = p6.match(line)
             if m:
-                ret_dict['redundancy_mode_operational'] = m.groupdict()['redundancy_mode_operational']
+                ret_dict['redundancy_mode_operational'] = \
+                        m.groupdict()['redundancy_mode_operational']
                 continue
 
             # Redundancy Mode (Configured)  = Non-redundant
             m = p7.match(line)
             if m:
-                ret_dict['redundancy_mode_configured'] = m.groupdict()['redundancy_mode_configured']
+                ret_dict['redundancy_mode_configured'] = \
+                        m.groupdict()['redundancy_mode_configured']
                 continue
 
             # Redundancy State              = sso
@@ -1065,7 +1072,8 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
             # client_notification_TMR = 30000 milliseconds
             m = p13.match(line)
             if m:
-                ret_dict['client_notification_tmr_msec'] = int(m.groupdict()['client_notification_tmr_msec'])
+                ret_dict['client_notification_tmr_msec'] = int(
+                    m.groupdict()['client_notification_tmr_msec'])
                 continue
 
             # RF debug mask = 0x0 
