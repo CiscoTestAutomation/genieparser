@@ -7,13 +7,13 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.show_routing import ShowIpRoute, \
-                                                 ShowIpv6RouteUpdated,\
+from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
+                                                 ShowIpRoute,\
                                                  ShowIpRouteWord,\
-                                                 ShowIpv6RouteWord,\
+                                                 ShowIpv6RouteUpdated,\
                                                  ShowIpCef,\
                                                  ShowIpv6Cef,\
-                                                 ShowIpv6Route
+                                                 ShowIpv6RouteDistributor
 
 # ============================================
 # unit test for 'show ip route'
@@ -828,7 +828,7 @@ class test_show_ip_route(unittest.TestCase):
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
@@ -842,35 +842,35 @@ class test_show_ip_route(unittest.TestCase):
     def test_show_ip_route_2_with_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2_with_vrf)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
 
     def test_show_ip_route3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(vrf='OOB_Mgmt')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_ip_route4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_golden5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
-        route_map_obj = ShowIpRoute(device=self.device)
-        parsed_output = route_map_obj.parse()
+        route_map_obj = ShowIpRouteDistributor(device=self.device)
+        parsed_output = route_map_obj.parse(protocol='bgp')
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
     def test_golden6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
-        route_map_obj = ShowIpv6Route(device=self.device)
+        route_map_obj = ShowIpv6RouteDistributor(device=self.device)
         parsed_output = route_map_obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output6)
 
@@ -1165,17 +1165,23 @@ class test_show_ip_route_word(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpRouteWord(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route='192.168.154.0')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_route)
-        obj = ShowIpRouteWord(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_with_route)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='192.168.154.0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
@@ -1223,14 +1229,14 @@ class test_show_ipv6_route_word(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpv6RouteWord(device=self.device)
+        obj = ShowIpv6RouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route='2000:2::4:1')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
-        obj = ShowIpv6RouteWord(device=self.device)
+        obj = ShowIpv6RouteDistributor(device=self.device)
         parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 

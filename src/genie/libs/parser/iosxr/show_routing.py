@@ -93,6 +93,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
        show route ipv4
        show route vrf <vrf> ipv4"""
     cli_command = ['show route vrf {vrf} ipv4','show route ipv4']
+    exclude = ['updated']
 
     def cli(self, vrf="",output=None):
         if output is None:

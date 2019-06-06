@@ -58,6 +58,8 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
        show ip static route vrf <vrf>
     """
     cli_command = ['show ip static route vrf {vrf}','show ip static route']
+    exclude = ['unnumbered', 'interface_ref',
+               '(Tunnel.*)', 'joined_group_addresses', 'ipv6']
 
     def cli(self, vrf="",output=None):
         if output is None:

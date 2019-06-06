@@ -76,6 +76,9 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 '-': 'active'}
 
     cli_command = 'show ntp associations'
+    exclude = [
+        'receive_time'
+    ]
 
     def cli(self,output=None):
         if output is None:
@@ -188,6 +191,11 @@ class ShowNtpStatus(ShowNtpStatusSchema):
     """Parser for: show ntp status"""
 
     cli_command = 'show ntp status'
+    exclude = [
+        'system_status',
+        'rootdispersion'
+    ]
+
     def cli(self,output=None):
 
         def _conver_val(value):

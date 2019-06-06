@@ -85,6 +85,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
     """
     cli_command = ['show static vrf {vrf} {af} topology detail','show static vrf {vrf} topology detail',
                    'show static {af} topology detail','show static topology detail']
+    exclude = ['install_date', 'configure_date', 'path_version']
 
     def cli(self, vrf="", af="", output=None):
         if output is None:
