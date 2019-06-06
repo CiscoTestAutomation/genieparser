@@ -43,6 +43,15 @@
     * Updated ShowIpOspfDatabaseRouter to parse TOS metrics
 
 --------------------------------------------------------------------------------
+                                   interface
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowIpv4VrfAllInterface to support custom vrf
+        * show ipv4 vrf {vrf} interface
+    * Updated ShowIpv6VrfAllInterface to support custom vrf
+        * show ipv6 vrf {vrf} interface
+
+--------------------------------------------------------------------------------
                                 Platform
 --------------------------------------------------------------------------------
 * IOSXE
@@ -62,3 +71,4 @@
         show spanning-tree pvrstag <pvrstag_domain>
     * Add ShowSpanningTreePvsTag for:
         show spanning-tree pvstag <pvstag_domain>
+>>>>>>> dev
