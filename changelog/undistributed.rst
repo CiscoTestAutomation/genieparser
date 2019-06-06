@@ -71,4 +71,3 @@
         show spanning-tree pvrstag <pvrstag_domain>
     * Add ShowSpanningTreePvsTag for:
         show spanning-tree pvstag <pvstag_domain>
->>>>>>> dev
