@@ -8274,6 +8274,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         self.maxDiff = None 
         self.outputs['show ip bgp vpnv4 all summary'] = golden_output2
         self.outputs['show run | sec address-family ipv4 vrf'] = raw1
+        self.outputs['show run | sec address-family ipv6 vrf'] = ''
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
@@ -8282,6 +8283,349 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         parsed_output = obj.parse(address_family='vpnv4')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_show_ip_bgp_all_summary_golden3(self):
+
+        def mapper(key):
+            return self.outputs[key]
+        
+        raw1 = '''
+            [2019-06-05 09:46:16,345] +++ R1_xe: executing command 'show ip bgp all summary' +++
+            show ip bgp all summary
+            For address family: IPv4 Unicast
+            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP table version is 4, main routing table version 4
+            3 network entries using 744 bytes of memory
+            3 path entries using 408 bytes of memory
+            3/3 BGP path/bestpath attribute entries using 840 bytes of memory
+            2 BGP extended community entries using 500 bytes of memory
+            0 BGP route-map cache entries using 0 bytes of memory
+            0 BGP filter-list cache entries using 0 bytes of memory
+            BGP using 2492 total bytes of memory
+            BGP activity 12/0 prefixes, 12/0 paths, scan interval 60 secs
+
+            Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            2.2.2.2         4        65000   30178   33211        4    0    0 2w6d            1
+            3.3.3.3         4        65000   30182   33227        4    0    0 2w6d            1
+
+            For address family: IPv6 Unicast
+            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP table version is 5, main routing table version 5
+            3 network entries using 816 bytes of memory
+            3 path entries using 456 bytes of memory
+            3/3 BGP path/bestpath attribute entries using 840 bytes of memory
+            2 BGP extended community entries using 500 bytes of memory
+            0 BGP route-map cache entries using 0 bytes of memory
+            0 BGP filter-list cache entries using 0 bytes of memory
+            BGP using 2612 total bytes of memory
+            BGP activity 12/0 prefixes, 12/0 paths, scan interval 60 secs
+
+            Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            2001:2:2:2::2   4        65000   30178   33214        5    0    0 2w6d            1
+            2001:3:3:3::3   4        65000   30182   33196        5    0    0 2w6d            1
+
+            For address family: VPNv4 Unicast
+            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP table version is 4, main routing table version 4
+            3 network entries using 768 bytes of memory
+            3 path entries using 408 bytes of memory
+            3/3 BGP path/bestpath attribute entries using 888 bytes of memory
+            2 BGP extended community entries using 500 bytes of memory
+            0 BGP route-map cache entries using 0 bytes of memory
+            0 BGP filter-list cache entries using 0 bytes of memory
+            BGP using 2564 total bytes of memory
+            BGP activity 12/0 prefixes, 12/0 paths, scan interval 60 secs
+
+            Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            2.2.2.2         4        65000   30178   33215        4    0    0 2w6d            1
+            3.3.3.3         4        65000   30182   33221        4    0    0 2w6d            1
+
+            For address family: VPNv6 Unicast
+            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP table version is 5, main routing table version 5
+            3 network entries using 840 bytes of memory
+            3 path entries using 468 bytes of memory
+            3/3 BGP path/bestpath attribute entries using 888 bytes of memory
+            2 BGP extended community entries using 500 bytes of memory
+            0 BGP route-map cache entries using 0 bytes of memory
+            0 BGP filter-list cache entries using 0 bytes of memory
+            BGP using 2696 total bytes of memory
+            BGP activity 12/0 prefixes, 12/0 paths, scan interval 60 secs
+
+            Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+            2001:2:2:2::2   4        65000   30178   33203        5    0    0 2w6d            1
+            2001:3:3:3::3   4        65000   30183   33216        5    0    0 2w6d            1
+        '''
+
+        raw2 = '''
+            [2019-06-05 09:46:59,306] +++ R1_xe: executing command 'show run | sec address-family ipv4 vrf' +++
+            show run | sec address-family ipv4 vrf
+             address-family ipv4 vrf VRF1
+              network 1.0.0.0
+              network 10.0.0.0
+              no auto-summary
+             address-family ipv4 vrf VRF1
+              network 1.1.1.1 mask 255.255.255.255
+              neighbor 2.2.2.2 remote-as 65000
+              neighbor 2.2.2.2 update-source Loopback300
+              neighbor 2.2.2.2 activate
+              neighbor 3.3.3.3 remote-as 65000
+              neighbor 3.3.3.3 update-source Loopback300
+              neighbor 3.3.3.3 activate
+        '''
+
+        raw3='''
+            [2019-06-05 09:47:19,474] +++ R1_xe: executing command 'show run | sec address-family ipv6 vrf' +++
+            show run | sec address-family ipv6 vrf
+             address-family ipv6 vrf VRF1
+              network 2001:1:1:1::1/128
+              neighbor 2001:2:2:2::2 remote-as 65000
+              neighbor 2001:2:2:2::2 update-source Loopback300
+              neighbor 2001:2:2:2::2 activate
+              neighbor 2001:3:3:3::3 remote-as 65000
+              neighbor 2001:3:3:3::3 update-source Loopback300
+              neighbor 2001:3:3:3::3 activate
+             address-family ipv6 vrf VRF1
+        '''
+
+        parsed_output3 = {'bgp_id': 65000,
+            'vrf': {'VRF1': {'neighbor': {'2.2.2.2': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
+                                                                                'activity_prefixes': '12/0',
+                                                                                'as': 65000,
+                                                                                'attribute_entries': '3/3',
+                                                                                'bgp_table_version': 4,
+                                                                                'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                  'total_entries': 0},
+                                                                                                  'route-map': {'memory_usage': 0,
+                                                                                                                'total_entries': 0}},
+                                                                                'community_entries': {'memory_usage': 500,
+                                                                                                      'total_entries': 2},
+                                                                                'input_queue': 0,
+                                                                                'local_as': 65000,
+                                                                                'msg_rcvd': 30178,
+                                                                                'msg_sent': 33215,
+                                                                                'output_queue': 0,
+                                                                                'path': {'memory_usage': 408,
+                                                                                         'total_entries': 3},
+                                                                                'prefixes': {'memory_usage': 768,
+                                                                                             'total_entries': 3},
+                                                                                'route_identifier': '1.1.1.1',
+                                                                                'routing_table_version': 4,
+                                                                                'scan_interval': 60,
+                                                                                'state_pfxrcd': '1',
+                                                                                'tbl_ver': 4,
+                                                                                'total_memory': 2564,
+                                                                                'up_down': '2w6d',
+                                                                                'version': 4}}},
+                               '2001:2:2:2::2': {'address_family': {'vpnv6 unicast': {'activity_paths': '12/0',
+                                                                                      'activity_prefixes': '12/0',
+                                                                                      'as': 65000,
+                                                                                      'attribute_entries': '3/3',
+                                                                                      'bgp_table_version': 5,
+                                                                                      'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                        'total_entries': 0},
+                                                                                                        'route-map': {'memory_usage': 0,
+                                                                                                                      'total_entries': 0}},
+                                                                                      'community_entries': {'memory_usage': 500,
+                                                                                                            'total_entries': 2},
+                                                                                      'input_queue': 0,
+                                                                                      'local_as': 65000,
+                                                                                      'msg_rcvd': 30178,
+                                                                                      'msg_sent': 33203,
+                                                                                      'output_queue': 0,
+                                                                                      'path': {'memory_usage': 468,
+                                                                                               'total_entries': 3},
+                                                                                      'prefixes': {'memory_usage': 840,
+                                                                                                   'total_entries': 3},
+                                                                                      'route_identifier': '1.1.1.1',
+                                                                                      'routing_table_version': 5,
+                                                                                      'scan_interval': 60,
+                                                                                      'state_pfxrcd': '1',
+                                                                                      'tbl_ver': 5,
+                                                                                      'total_memory': 2696,
+                                                                                      'up_down': '2w6d',
+                                                                                      'version': 4}}},
+                               '2001:3:3:3::3': {'address_family': {'vpnv6 unicast': {'activity_paths': '12/0',
+                                                                                      'activity_prefixes': '12/0',
+                                                                                      'as': 65000,
+                                                                                      'attribute_entries': '3/3',
+                                                                                      'bgp_table_version': 5,
+                                                                                      'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                        'total_entries': 0},
+                                                                                                        'route-map': {'memory_usage': 0,
+                                                                                                                      'total_entries': 0}},
+                                                                                      'community_entries': {'memory_usage': 500,
+                                                                                                            'total_entries': 2},
+                                                                                      'input_queue': 0,
+                                                                                      'local_as': 65000,
+                                                                                      'msg_rcvd': 30183,
+                                                                                      'msg_sent': 33216,
+                                                                                      'output_queue': 0,
+                                                                                      'path': {'memory_usage': 468,
+                                                                                               'total_entries': 3},
+                                                                                      'prefixes': {'memory_usage': 840,
+                                                                                                   'total_entries': 3},
+                                                                                      'route_identifier': '1.1.1.1',
+                                                                                      'routing_table_version': 5,
+                                                                                      'scan_interval': 60,
+                                                                                      'state_pfxrcd': '1',
+                                                                                      'tbl_ver': 5,
+                                                                                      'total_memory': 2696,
+                                                                                      'up_down': '2w6d',
+                                                                                      'version': 4}}},
+                               '3.3.3.3': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
+                                                                                'activity_prefixes': '12/0',
+                                                                                'as': 65000,
+                                                                                'attribute_entries': '3/3',
+                                                                                'bgp_table_version': 4,
+                                                                                'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                  'total_entries': 0},
+                                                                                                  'route-map': {'memory_usage': 0,
+                                                                                                                'total_entries': 0}},
+                                                                                'community_entries': {'memory_usage': 500,
+                                                                                                      'total_entries': 2},
+                                                                                'input_queue': 0,
+                                                                                'local_as': 65000,
+                                                                                'msg_rcvd': 30182,
+                                                                                'msg_sent': 33221,
+                                                                                'output_queue': 0,
+                                                                                'path': {'memory_usage': 408,
+                                                                                         'total_entries': 3},
+                                                                                'prefixes': {'memory_usage': 768,
+                                                                                             'total_entries': 3},
+                                                                                'route_identifier': '1.1.1.1',
+                                                                                'routing_table_version': 4,
+                                                                                'scan_interval': 60,
+                                                                                'state_pfxrcd': '1',
+                                                                                'tbl_ver': 4,
+                                                                                'total_memory': 2564,
+                                                                                'up_down': '2w6d',
+                                                                                'version': 4}}}}},
+         'default': {'neighbor': {'2.2.2.2': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
+                                                                                  'activity_prefixes': '12/0',
+                                                                                  'as': 65000,
+                                                                                  'attribute_entries': '3/3',
+                                                                                  'bgp_table_version': 4,
+                                                                                  'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                    'total_entries': 0},
+                                                                                                    'route-map': {'memory_usage': 0,
+                                                                                                                  'total_entries': 0}},
+                                                                                  'community_entries': {'memory_usage': 500,
+                                                                                                        'total_entries': 2},
+                                                                                  'input_queue': 0,
+                                                                                  'local_as': 65000,
+                                                                                  'msg_rcvd': 30178,
+                                                                                  'msg_sent': 33211,
+                                                                                  'output_queue': 0,
+                                                                                  'path': {'memory_usage': 408,
+                                                                                           'total_entries': 3},
+                                                                                  'prefixes': {'memory_usage': 744,
+                                                                                               'total_entries': 3},
+                                                                                  'route_identifier': '1.1.1.1',
+                                                                                  'routing_table_version': 4,
+                                                                                  'scan_interval': 60,
+                                                                                  'state_pfxrcd': '1',
+                                                                                  'tbl_ver': 4,
+                                                                                  'total_memory': 2492,
+                                                                                  'up_down': '2w6d',
+                                                                                  'version': 4}}},
+                                  '2001:2:2:2::2': {'address_family': {'ipv6 unicast': {'activity_paths': '12/0',
+                                                                                        'activity_prefixes': '12/0',
+                                                                                        'as': 65000,
+                                                                                        'attribute_entries': '3/3',
+                                                                                        'bgp_table_version': 5,
+                                                                                        'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                          'total_entries': 0},
+                                                                                                          'route-map': {'memory_usage': 0,
+                                                                                                                        'total_entries': 0}},
+                                                                                        'community_entries': {'memory_usage': 500,
+                                                                                                              'total_entries': 2},
+                                                                                        'input_queue': 0,
+                                                                                        'local_as': 65000,
+                                                                                        'msg_rcvd': 30178,
+                                                                                        'msg_sent': 33214,
+                                                                                        'output_queue': 0,
+                                                                                        'path': {'memory_usage': 456,
+                                                                                                 'total_entries': 3},
+                                                                                        'prefixes': {'memory_usage': 816,
+                                                                                                     'total_entries': 3},
+                                                                                        'route_identifier': '1.1.1.1',
+                                                                                        'routing_table_version': 5,
+                                                                                        'scan_interval': 60,
+                                                                                        'state_pfxrcd': '1',
+                                                                                        'tbl_ver': 5,
+                                                                                        'total_memory': 2612,
+                                                                                        'up_down': '2w6d',
+                                                                                        'version': 4}}},
+                                  '2001:3:3:3::3': {'address_family': {'ipv6 unicast': {'activity_paths': '12/0',
+                                                                                        'activity_prefixes': '12/0',
+                                                                                        'as': 65000,
+                                                                                        'attribute_entries': '3/3',
+                                                                                        'bgp_table_version': 5,
+                                                                                        'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                          'total_entries': 0},
+                                                                                                          'route-map': {'memory_usage': 0,
+                                                                                                                        'total_entries': 0}},
+                                                                                        'community_entries': {'memory_usage': 500,
+                                                                                                              'total_entries': 2},
+                                                                                        'input_queue': 0,
+                                                                                        'local_as': 65000,
+                                                                                        'msg_rcvd': 30182,
+                                                                                        'msg_sent': 33196,
+                                                                                        'output_queue': 0,
+                                                                                        'path': {'memory_usage': 456,
+                                                                                                 'total_entries': 3},
+                                                                                        'prefixes': {'memory_usage': 816,
+                                                                                                     'total_entries': 3},
+                                                                                        'route_identifier': '1.1.1.1',
+                                                                                        'routing_table_version': 5,
+                                                                                        'scan_interval': 60,
+                                                                                        'state_pfxrcd': '1',
+                                                                                        'tbl_ver': 5,
+                                                                                        'total_memory': 2612,
+                                                                                        'up_down': '2w6d',
+                                                                                        'version': 4}}},
+                                  '3.3.3.3': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
+                                                                                  'activity_prefixes': '12/0',
+                                                                                  'as': 65000,
+                                                                                  'attribute_entries': '3/3',
+                                                                                  'bgp_table_version': 4,
+                                                                                  'cache_entries': {'filter-list': {'memory_usage': 0,
+                                                                                                                    'total_entries': 0},
+                                                                                                    'route-map': {'memory_usage': 0,
+                                                                                                                  'total_entries': 0}},
+                                                                                  'community_entries': {'memory_usage': 500,
+                                                                                                        'total_entries': 2},
+                                                                                  'input_queue': 0,
+                                                                                  'local_as': 65000,
+                                                                                  'msg_rcvd': 30182,
+                                                                                  'msg_sent': 33227,
+                                                                                  'output_queue': 0,
+                                                                                  'path': {'memory_usage': 408,
+                                                                                           'total_entries': 3},
+                                                                                  'prefixes': {'memory_usage': 744,
+                                                                                               'total_entries': 3},
+                                                                                  'route_identifier': '1.1.1.1',
+                                                                                  'routing_table_version': 4,
+                                                                                  'scan_interval': 60,
+                                                                                  'state_pfxrcd': '1',
+                                                                                  'tbl_ver': 4,
+                                                                                  'total_memory': 2492,
+                                                                                  'up_down': '2w6d',
+                                                                                  'version': 4}}}}}}}
+
+
+        self.outputs = {}
+        self.maxDiff = None 
+        self.outputs['show ip bgp all summary'] = raw1
+        self.outputs['show run | sec address-family ipv4 vrf'] = raw2
+        self.outputs['show run | sec address-family ipv6 vrf'] = raw3
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+
+        obj = ShowIpBgpAllSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, parsed_output3)
 
 
 # ====================================================
