@@ -18,3 +18,10 @@
 * IOSXE
     * Fix class ShowPolicyMapTypeSuperParser
     * Fix class ShowPolicyMap
+
+--------------------------------------------------------------------------------
+                            running-configuration
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowRunPolicyMap for:
+        show run policy-map {name}
