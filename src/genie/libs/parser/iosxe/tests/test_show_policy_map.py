@@ -1889,6 +1889,7 @@ class test_show_policy_map_type(unittest.TestCase):
       bandwidth remaining ratio 2
     '''}
 
+
     golden_parsed_output18 = {"TenGigabitEthernet0/0/0.101": {
             "service_policy": {
                 "input": {
@@ -2206,6 +2207,7 @@ show policy-map interface te0/0/0.101
       bandwidth 4% (536 kbps)
           '''}
 
+
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2353,7 +2355,6 @@ show policy-map interface te0/0/0.101
         self.device = Mock(**self.golden_output17)
         obj = ShowPolicyMapTargetClass(device=self.device)
         parsed_output = obj.parse(num='1')
-        #import pdb;pdb.set_trace()
         self.assertEqual(parsed_output, self.golden_parsed_output17)
 
 
