@@ -17,3 +17,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix class ShowPolicyMapTypeSuperParser
+    * Fix class ShowPolicyMap
