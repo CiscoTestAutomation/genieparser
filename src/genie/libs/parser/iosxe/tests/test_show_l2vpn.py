@@ -11,7 +11,8 @@ from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
                                                ShowEthernetServiceInstanceStats, \
                                                ShowEthernetServiceInstanceSummary, \
                                                ShowL2vpnVfi, \
-                                               ShowL2vpnServiceAll
+                                               ShowL2vpnServiceAll, \
+                                               ShowEthernetServiceInstance
 
 
 class test_show_bridge_domain(unittest.TestCase):
@@ -704,6 +705,39 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     '''
     }
 
+    golden_output_id_interface = {'execute.return_value' : '''
+        Microblock type: Storm-Control
+        storm-control unicast cir 8000
+        storm-control broadcast cir 8000
+        storm-control multicast cir 8000
+    '''}
+    golden_parsed_output_id_interface = {
+        'service_instance': {
+            151: {
+                'l2protocol_drop': False,
+                'ce_vlans': '',
+                'associated_evc': '',
+                'associated_interface': 'gi8',
+                'state': 'Up',
+                'micro_block_type': {
+                    'storm_control': {
+                        'type': {
+                            'unicast': {
+                                'cir': 8000,
+                                },
+                            'broadcast': {
+                                'cir': 8000,
+                                },
+                            'multicast': {
+                                'cir': 8000,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        } 
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
@@ -724,6 +758,75 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         parsed_output = platform_obj.parse(interface='ethernet 0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
+    def test_golden_id_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_id_interface)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(service_instance_id=151,interface='gi8')
+        self.assertEqual(parsed_output, self.golden_parsed_output_id_interface)
+
+class test_show_ethernet_service_instance(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    golden_output_1 = {'execute.return_value': '''
+
+        Id    Type    Interface                     State     CE-Vlans
+        501   Static  TenGigabitEthernet0/3/0       Up
+        502   Static  TenGigabitEthernet0/3/0       Up
+        503   Static  TenGigabitEthernet0/3/0       Up
+        504   Static  TenGigabitEthernet0/3/0       Up
+    '''}
+
+    golden_parsed_output_1 = {
+    'service_instance': {
+        501: {
+            'l2protocol_drop': False,
+            'associated_evc': '',
+            'state': 'Up',
+            'type': 'Static',
+            'associated_interface': 'TenGigabitEthernet0/3/0',
+            'ce_vlans': '',
+            },
+        502: {
+            'l2protocol_drop': False,
+            'associated_evc': '',
+            'state': 'Up',
+            'type': 'Static',
+            'associated_interface': 'TenGigabitEthernet0/3/0',
+            'ce_vlans': '',
+            },
+        503: {
+            'l2protocol_drop': False,
+            'associated_evc': '',
+            'state': 'Up',
+            'type': 'Static',
+            'associated_interface': 'TenGigabitEthernet0/3/0',
+            'ce_vlans': '',
+            },
+        504: {
+            'l2protocol_drop': False,
+            'associated_evc': '',
+            'state': 'Up',
+            'type': 'Static',
+            'associated_interface': 'TenGigabitEthernet0/3/0',
+            'ce_vlans': '',
+            },
+        },
+    }
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowEthernetServiceInstance(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        platform_obj = ShowEthernetServiceInstance(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 class test_show_ethernet_service_instance_stats(unittest.TestCase):
 
@@ -1239,6 +1342,71 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     '''
     }
 
+    golden_output_storm_control = {'execute.return_value':'''
+    Port maximum number of service instances: 8000
+    Service Instance 151, Interface GigabitEthernet8
+       Pkts In   Bytes In   Pkts Out  Bytes Out
+             0          0          0          0
+    StormControl Discard Pkts:    <--- this section
+       Broadcast            Multicast            Unknown Unicast
+       default:0            default:0            default:0           
+       cos 0:0              cos 0:0              cos 0:0           
+       cos 1:0              cos 1:0              cos 1:0           
+       cos 2:0              cos 2:0              cos 2:0           
+       cos 3:0              cos 3:0              cos 3:0           
+       cos 4:0              cos 4:0              cos 4:0           
+       cos 5:0              cos 5:0              cos 5:0           
+       cos 6:0              cos 6:0              cos 6:0           
+       cos 7:0              cos 7:0              cos 7:0           
+
+    '''}
+    golden_parsed_output_storm_control = {
+    'max_num_of_service_instances': 8000,
+    'service_instance': {
+        151: {
+            'interface': 'GigabitEthernet8',
+            'pkts_in': 0,
+            'bytes_in': 0,
+            'pkts_out': 0,
+            'bytes_out': 0,
+            'storm_control_discard_pkts': {
+                'broadcast': {
+                    'default': 0,
+                    'cos 0': 0,
+                    'cos 1': 0,
+                    'cos 2': 0,
+                    'cos 3': 0,
+                    'cos 4': 0,
+                    'cos 5': 0,
+                    'cos 6': 0,
+                    'cos 7': 0,
+                    },
+                'multicast': {
+                    'default': 0,
+                    'cos 0': 0,
+                    'cos 1': 0,
+                    'cos 2': 0,
+                    'cos 3': 0,
+                    'cos 4': 0,
+                    'cos 5': 0,
+                    'cos 6': 0,
+                    'cos 7': 0,
+                    },
+                'unknown_unicast': {
+                    'default': 0,
+                    'cos 0': 0,
+                    'cos 1': 0,
+                    'cos 2': 0,
+                    'cos 3': 0,
+                    'cos 4': 0,
+                    'cos 5': 0,
+                    'cos 6': 0,
+                    'cos 7': 0,
+                    },
+                },
+            },
+        },
+    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
@@ -1265,6 +1433,17 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_shrinked)
+
+    def test_golden_storm_control(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_storm_control)
+        platform_obj = ShowEthernetServiceInstanceStats(
+            device=self.device,
+            service_instance_id=151,
+            interface='gi8')
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_storm_control)
+
 
 class test_show_ethernet_service_instance_summary(unittest.TestCase):
 

@@ -9,6 +9,9 @@ IOSXE parsers for the following show commands:
     * show ethernet service instance interface <interface> detail
     * show l2vpn vfi
     * show l2vpn service all
+    * show ethernet service instance
+    * show ethernet service instance id {service_instance_id} interface {interface} detail
+    * show ethernet service instance id {service_instance_id} interface {interface} stats
 '''
 
 # Python
@@ -230,7 +233,8 @@ class ShowBridgeDomain(ShowBridgeDomainSchema):
 # Parser for 'show ethernet service instance detail'
 # ==================================================
 class ShowEthernetServiceInstanceDetailSchema(MetaParser):
-    """Schema for show ethernet service instance detail
+    """Schema for show ethernet service instance
+                  show ethernet service instance detail
                   show ethernet service instance interface <interface> detail
     """
 
@@ -249,27 +253,42 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
                 Optional('intiators'): str,
                 Optional('dot1q_tunnel_ethertype'): str,
                 'state': str,
-                'efp_statistics': {
+                Optional('efp_statistics'): {
                     'pkts_in': int,
                     'pkts_out': int,
                     'bytes_in': int,
                     'bytes_out': int,
+                },
+                Optional('micro_block_type'): {
+                    Any():{
+                        'type': {
+                            Any(): {
+                                Any(): Any()
+                            }
+                        }
+                    }
                 }
             },
         }
     }
 
-
 class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema):
     """Parser for show ethernet service instance detail
                   show ethernet service instance interface <interface> detail
+                  show ethernet service instance id {service_instance_id} interface {interface} detail
     """
 
-    cli_command = ['show ethernet service instance detail', 'show ethernet service instance interface {interface} detail']
+    cli_command = [
+        'show ethernet service instance detail', 
+        'show ethernet service instance interface {interface} detail',
+        'show ethernet service instance id {service_instance_id} interface {interface} detail']
 
-    def cli(self, interface=None, output=None):
+    def cli(self, service_instance_id=None, interface=None, output=None):
         if output is None:
-            if interface:
+            if service_instance_id and interface:
+                cli = self.cli_command[2].format(service_instance_id=service_instance_id, 
+                    interface=interface)
+            elif interface:
                 cli = self.cli_command[1].format(interface=interface)
             else:
                 cli = self.cli_command[0]
@@ -327,6 +346,15 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
 
         # Control policy: ABC
         p15 = re.compile(r'^Control +policy: +(?P<control_policy>[\S\s]+)$')
+
+        # 1   Static GigabitEthernet0/0/3       Up
+        p16 = re.compile(r'^(?P<service_id>\d+) +(?P<service_instance_type>\w+) +'
+            '(?P<associated_interface>\S+) +(?P<state>\w+)( +(?P<vlans>\S+))?$')
+
+        # Microblock type: Storm-Control
+        p17 = re.compile(r'^Microblock +type: +(?P<micro_block_type>\S+)$')
+
+        micro_block_found = False
 
         for line in out.splitlines():
             line = line.strip()
@@ -425,8 +453,64 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 final_dict['control_policy'] = group['control_policy']
                 continue
 
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                service_id = int(group['service_id'])
+                final_dict = ret_dict.setdefault('service_instance', {}).\
+                    setdefault(service_id, {})
+                final_dict['l2protocol_drop'] = False
+                final_dict['associated_evc'] = ''
+                final_dict['state'] = group['state']
+                final_dict['type'] = group['service_instance_type']
+                final_dict['associated_interface'] = group['associated_interface']
+                final_dict['ce_vlans'] = '' if not group['vlans'] else group['vlans'] 
+
+                continue
+            
+            # Microblock type: Storm-Control
+            m = p17.match(line)
+            if m and service_instance_id and interface:
+                final_dict = ret_dict.setdefault('service_instance', {}).\
+                    setdefault(service_instance_id, {})
+                final_dict['l2protocol_drop'] = False
+                final_dict['ce_vlans'] = ''
+                final_dict['associated_evc'] = ''
+                final_dict['associated_interface'] = interface
+                final_dict['state'] = 'Up'
+                group = m.groupdict()
+                micro_block_type = group['micro_block_type'].lower()
+                micro_block_dict = final_dict.setdefault('micro_block_type', {}).\
+                    setdefault(micro_block_type.replace('-', '_').replace(' ', '_'), {}).\
+                    setdefault('type', {})
+                micro_block_found = True
+                continue
+            
+            if micro_block_found:
+                # storm-control unicast cir 8000
+                p18 = re.compile(r'{} +(?P<type>\S+) +(?P<sub_type>\S+) +(?P<sub_type_value>\d+)'.\
+                    format(micro_block_type.lower()))
+                
+                m = p18.match(line)
+                if m:
+                    group = m.groupdict()
+                    micro_block_dict.setdefault(group['type'], {}).\
+                        setdefault(group['sub_type'], int(group['sub_type_value']))
+                else:
+                    micro_block_found = False
+                continue
         return ret_dict
 
+class ShowEthernetServiceInstance(ShowEthernetServiceInstanceDetail):
+    """Parser for show ethernet service instance
+    """
+    cli_command = 'show ethernet service instance'
+    def cli(self, interface=None, output=None):
+        if output is None:
+            show_output = self.device.execute(self.cli_command)
+        else:
+            show_output = output
+        return super().cli(output=show_output)
 
 # =================================================
 # Parser for 'show ethernet service instance stats'
@@ -445,6 +529,17 @@ class ShowEthernetServiceInstanceStatsSchema(MetaParser):
                 'pkts_out': int,
                 'bytes_in': int,
                 'bytes_out': int,
+                Optional('storm_control_discard_pkts'): {
+                    'broadcast': {
+                        Any(): int
+                    },
+                    'multicast': {
+                        Any(): int
+                    },
+                    'unknown_unicast': {
+                        Any(): int
+                    }
+                }
             },
         }
     }
@@ -453,14 +548,21 @@ class ShowEthernetServiceInstanceStatsSchema(MetaParser):
 class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
     """Parser for show ethernet service instance stats
                   show ethernet service instance interface <interface> stats
+                  show ethernet service instance id {service_instance_id} interface {interface} stats
     """
 
-    cli_command = ['show ethernet service instance stats', 'show ethernet service instance interface {interface} stats']
+    cli_command = ['show ethernet service instance stats', 
+        'show ethernet service instance interface {interface} stats',
+        'show ethernet service instance id {service_instance_id} interface {interface} stats']
 
-    def cli(self, interface=None, output=None):
+    def cli(self, service_instance_id=None, interface=None, output=None):
         cli = self.cli_command
         if output is None:
-            if interface:
+            if service_instance_id and interface:
+                cli = self.cli_command[2].format(
+                    service_instance_id=service_instance_id,
+                    interface=interface)
+            elif interface:
                 cli = self.cli_command[1].format(interface=interface)
             else:
                 cli = self.cli_command[0]
@@ -473,7 +575,7 @@ class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
 
         # initial regexp pattern
         # System maximum number of service instances: 32768
-        p1 = re.compile(r'^System +maximum +number +of +service +instances: +(?P<max_num_of_service_instances>\d+)$')
+        p1 = re.compile(r'^\S+ +maximum +number +of +service +instances: +(?P<max_num_of_service_instances>\d+)$')
 
         # Service Instance 2051, Interface GigabitEthernet0/0/3
         p2 = re.compile(r'^Service +Instance +(?P<service_instance>\d+), Interface +(?P<interface>\S+)$')
@@ -481,6 +583,12 @@ class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
         #    Pkts In   Bytes In   Pkts Out  Bytes Out
         #          0          0          0          0
         p3 = re.compile(r'^(?P<pkts_in>\d+) +(?P<bytes_in>\d+) +(?P<pkts_out>\d+) +(?P<bytes_out>\d+)$')
+        
+        # default:0            default:0            default:0           
+        # cos 0:0              cos 0:0              cos 0:0  
+        p4 = re.compile(r'^(?P<broadcast_key>(default)|(\w+ +\d+)):(?P<broadcast_value>\d+) +'
+                '(?P<multicast_key>(default)|(\w+ +\d+)):(?P<multicast_value>\d+) +'
+                '(?P<unknown_unicast_key>(default)|(\w+ +\d+)):(?P<unknown_unicast_value>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -505,6 +613,21 @@ class ShowEthernetServiceInstanceStats(ShowEthernetServiceInstanceStatsSchema):
                 group = m.groupdict()
                 final_dict.update({k: int(v) for k, v in group.items()})
                 continue
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                broadcast = final_dict.setdefault('storm_control_discard_pkts', {}).\
+                    setdefault('broadcast', {})
+                broadcast.update({group['broadcast_key']: int(group['broadcast_value'])})
+
+                multicast = final_dict.setdefault('storm_control_discard_pkts', {}).\
+                    setdefault('multicast', {})
+                multicast.update({group['multicast_key']: int(group['multicast_value'])})
+
+                unknown_unicast = final_dict.setdefault('storm_control_discard_pkts', {}).\
+                    setdefault('unknown_unicast', {})
+                unknown_unicast.update({group['unknown_unicast_key']: int(group['unknown_unicast_value'])})
 
         return ret_dict
 
