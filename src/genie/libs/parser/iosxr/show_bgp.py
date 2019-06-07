@@ -1001,8 +1001,8 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         - vrf_type
 
     """
-    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} process detail',
-                    'show bgp instance {instance} {vrf_type} {vrf} {af_type} process detail']
+    cli_command = ['show bgp instance {instance} {vrf_type} all {address_family} process detail',
+                    'show bgp instance {instance} {vrf_type} {vrf} {address_family} process detail']
     exclude = ['alloc', 'free', 'sent_notifications', 'bgp_table_version',
         'main_table_version', 'table_version_synced_to_rib', 'table_version_acked_by_rib',
         'triggers', 'tbl_ver', 'ver', 'node', 'total_prefixes_scanned', 'sent_updates',
@@ -1016,11 +1016,11 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         if output is None:
             if vrf_type == 'all':
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
-                                                                     af_type=address_family,
+                                                                     address_family=address_family,
                                                                      vrf_type=vrf_type))
             else:
                 out = self.device.execute(self.cli_command[1].format(instance=instance,
-                                                                     af_type=address_family,
+                                                                     address_family=address_family,
                                                                      vrf_type=vrf_type,
                                                                      vrf=vrf))
         else:
@@ -2190,8 +2190,8 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         - vrf_type
     """
 
-    cli_command = ['show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} detail',
-        'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} detail']
+    cli_command = ['show bgp instance all {vrf_type} all {address_family} neighbors {neighbor} detail',
+        'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} detail']
 
     exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 
         'nsr_initial_initsync_version', 'filter_group', 'last_ack_version', 'neighbor_version',
@@ -2219,13 +2219,13 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
                                                                      neighbor=neighbor,
                                                                      vrf_type=vrf_type,
-                                                                     af_type=address_family))
+                                                                     address_family=address_family))
             else:
                 out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type,
                                                                      instance=instance,
                                                                      neighbor=neighbor,
                                                                      vrf=vrf,
-                                                                     af_type=address_family))
+                                                                     address_family=address_family))
         else:
             out = output
         # Init variables
@@ -3185,8 +3185,8 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
 
         - vrf_type
     """
-    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} neighbors {neighbor} {route}',
-                   'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} {route}']
+    cli_command = ['show bgp instance {instance} {vrf_type} all {address_family} neighbors {neighbor} {route}',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} {route}']
 
     def cli(self, vrf_type, neighbor='', vrf='all', instance='all', address_family='', route_type='received routes', output=None):
 
@@ -3198,13 +3198,13 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             if vrf_type == 'all':
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
                                                                      neighbor=neighbor,
-                                                                     af_type=address_family,
+                                                                     address_family=address_family,
                                                                      vrf_type=vrf_type,
                                                                      route=route_type))
             else:
                 out = self.device.execute(self.cli_command[1].format(instance=instance,
                                                                      neighbor=neighbor,
-                                                                     af_type=address_family,
+                                                                     address_family=address_family,
                                                                      vrf_type=vrf_type,
                                                                      vrf=vrf,
                                                                      route=route_type))
@@ -3711,8 +3711,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
 
         - vrf_type
     """
-    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} neighbors {neighbor} advertised-routes',
-                   'show bgp instance {instance} {vrf_type} {vrf} {af_type} neighbors {neighbor} advertised-routes']
+    cli_command = ['show bgp instance {instance} {vrf_type} all {address_family} neighbors {neighbor} advertised-routes',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} advertised-routes']
 
     def cli(self, vrf_type, neighbor='', vrf='all', instance='all', address_family='', output=None):
 
@@ -3722,12 +3722,12 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             if vrf_type == 'all':
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
                                                                   neighbor=neighbor,
-                                                                  af_type=address_family,
+                                                                  address_family=address_family,
                                                                   vrf_type=vrf_type))
             else:
                 out = self.device.execute(self.cli_command[1].format(instance=instance,
                                                                   neighbor=neighbor,
-                                                                  af_type=address_family,
+                                                                  address_family=address_family,
                                                                   vrf_type=vrf_type, vrf=vrf))
         else:
             out = output
@@ -3951,6 +3951,7 @@ class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema, ShowB
 
         - vrf_type
     """
+
     def cli(self, vrf_type, neighbor='', vrf='all', instance='all', address_family='', output=None):
         return super().cli(neighbor=neighbor, vrf_type=vrf_type, address_family=address_family,
             route_type='routes', vrf=vrf, instance=instance, output=output)
@@ -4044,8 +4045,8 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         - vrf_type
     """
 
-    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type} summary',
-                   'show bgp instance {instance} {vrf_type} {vrf} {af_type} summary']
+    cli_command = ['show bgp instance {instance} {vrf_type} all {address_family} summary',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} summary']
 
     exclude = ['bgp_table_version', 'brib_rib', 'importver', 'labelver', 'rcvtblver',
         'sendtblver', 'rd_version', 'msg_rcvd', 'msg_sent', 'tbl_ver', 'up_down',
@@ -4059,11 +4060,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         if output is None:
             if vrf_type == 'all':
                 out = self.device.execute(self.cli_command[0].format(instance=instance,
-                                                                     af_type=address_family,
+                                                                     address_family=address_family,
                                                                      vrf_type=vrf_type))
             else:
                 out = self.device.execute(self.cli_command[1].format(instance=instance,
-                                                                     af_type=address_family,
+                                                                     address_family=address_family,
                                                                      vrf_type=vrf_type,
                                                                      vrf=vrf))
         else:
@@ -4445,8 +4446,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         - vrf_type
 
     """
-    cli_command = ['show bgp instance {instance} {vrf_type} all {af_type}',
-                   'show bgp instance {instance} {vrf_type} {vrf} {af_type}']
+    cli_command = ['show bgp instance {instance} {vrf_type} all {address_family}',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family}']
 
     exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 'nsr_initial_initsync_version']
 
@@ -4459,12 +4460,12 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                 if vrf_type == 'all':
                     out = self.device.execute(
                         self.cli_command[0].format(instance=instance,
-                                                   af_type=address_family,
+                                                   address_family=address_family,
                                                    vrf_type=vrf_type))
                 else:
                     out = self.device.execute(
                         self.cli_command[1].format(instance=instance,
-                                                   af_type=address_family,
+                                                   address_family=address_family,
                                                    vrf_type=vrf_type,
                                                    vrf=vrf))
         else:
