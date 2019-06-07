@@ -1,4 +1,4 @@
-''' show_interface_summary.py
+''' show_interface.py
 
 ASA parserr for the following show commands:
     * show interface summary
@@ -26,12 +26,17 @@ class ShowInterfaceSummarySchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                'oper_status': str,
-                'protocol_status': str,
+                'link_status': str,
+                'line_protocol': str,
                 Optional('name'): str,
                 Optional('mac_address'): str,
                 Optional('mtu'): int,
-                Optional('ip_address'): str,
+                Optional('ipv4'): {
+                    Any(): { 
+                        Optional('ip'): str,
+                        Optional('prefix_length'): str
+                    }
+                },
                 Optional('subnet'): str,
                 Optional('interface_state'): bool,
                 Optional('config_status'): bool,
@@ -61,16 +66,18 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
 
         # Interface Vlan1000 "pod100", is up, line protocol is up
         p1 = re.compile(r'^Interface +(?P<interface>\w+) +"(?P<name>[\w\-\+\/\_]*)"'
-            ', +is +(?P<oper_status>up|down), +line +protocol +is '
-            '+(?P<protocol_status>up|down)$')
+            ', +is +(?P<link_status>up|down), +line +protocol +is '
+            '+(?P<line_protocol>up|down)$')
 
         # MAC address 286f.7fb1.032c, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
         # IP address 172.16.100.251, subnet mask 255.255.255.0
-        p3 = re.compile(r'^IP +address +(?P<ip_address>[\w\.]+), +subnet +mask '
+        p3 = re.compile(r'^IP +address +(?P<ip>[a-z0-9\.]+)'
+            '(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
             '+(?P<subnet>[\w\.]+)$')
 
+        # Available but not configured via nameif
         p4 = re.compile(r'^(?P<interface_state>Available) +but '
             '+(?P<config_status>not +configured) +via '
             '+(?P<config_issue>[\w\-\+\/\_]*)$')
@@ -86,22 +93,22 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                 instance_dict = ret_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
                 instance_dict.update({'name': groups['name']})
-                instance_dict.update({'oper_status': groups['oper_status']})
+                instance_dict.update({'link_status': groups['link_status']})
                 instance_dict.update(
-                    {'protocol_status': groups['protocol_status']})
+                    {'line_protocol': groups['line_protocol']})
                 if groups['name'] != '' \
-                and groups['oper_status'] == 'up' \
-                and groups['protocol_status'] == 'up':
+                and groups['link_status'] == 'up' \
+                and groups['line_protocol'] == 'up':
                     instance_dict.update({'interface_state': True, \
                         'config_status': True})
                 if groups['name'] != '' \
-                and groups['oper_status'] == 'down' \
-                and groups['protocol_status'] == 'down':
+                and groups['link_status'] == 'down' \
+                and groups['line_protocol'] == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': True})
                 if groups['name'] == '' \
-                and groups['oper_status'] == 'down' \
-                and groups['protocol_status'] == 'down':
+                and groups['link_status'] == 'down' \
+                and groups['line_protocol'] == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': False})
                 continue
@@ -118,11 +125,17 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'ip_address': groups['ip_address']})
+                ipv4 = groups['ip']
+                if groups['prefix_length'] is not None:
+                    address = groups['ip'] + '/' + groups['prefix_length']
+                dict_ipv4 = instance_dict.setdefault('ipv4', {}).setdefault(ipv4, {})
+                dict_ipv4.update({'ip': groups['ip']})
+                if groups['prefix_length'] is not None:
+                    dict_ipv4.update({'prefix_length': groups['prefix_length']})                
                 instance_dict.update({'subnet': groups['subnet']})
                 continue
 
-              # Available but not configured via nameif
+            # Available but not configured via nameif
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
@@ -146,14 +159,22 @@ class ShowInterfaceIpBriefSchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                    Optional('ip_address'): str,
-                    Optional('check'): str,
-                    Optional('method'): str,
-                    Optional('oper_status'): str,
-                    Optional('protocol_status'): str
+                Optional('ipv4'): {
+                    Any(): { 
+                        Optional('ip'): str,
+                        Optional('prefix_length'): str
                     },
-                }
+                    Optional('unnumbered'): {
+                        Optional('unnumbered_intf_ref'): str
+                    }
+                },
+                'check': str,
+                'method': str,
+                'link_status': str,
+                'line_protocol': str
+                },
             }
+        }
 
 # =============================================
 # Parser for 'show interface ip brief'
@@ -173,26 +194,39 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
 
         ret_dict = {}
 
-        # Vlan1000                   172.16.100.251  YES CONFIG up                    up
-        p1 = re.compile(r'^(?P<interface>\w+) +(?P<ip_address>[\w\.]+) '
-            '+(?P<check>\w+) +(?P<method>\w+) +(?P<oper_status>up|down) '
-            '+(?P<protocol_status>up|down)$')
+        # Vlan1000 172.16.100.251 YES CONFIG up up
+        p1 = re.compile(r'^(?P<interface>\w+) +(?P<ip>[a-z0-9\.]+)'
+            '(\/(?P<prefix_length>[0-9]+))? '
+            '+(?P<check>\w+) +(?P<method>\w+) +(?P<link_status>up|down) '
+            '+(?P<line_protocol>up|down)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Interface Vlan1000 "pod100", is up, line protocol is up
+        # Vlan1000 172.16.100.251 YES CONFIG up up
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
                 interface = groups['interface']
                 instance_dict = ret_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
-                instance_dict.update({'ip_address': groups['ip_address']})
+                if groups['ip'] == 'unassigned':
+                    dict_unnumbered = instance_dict.setdefault('ipv4', {}). \
+                    setdefault('unnumbered', {})
+                    dict_unnumbered.update({'unnumbered_intf_ref': groups['ip']})
+                else:
+                    ipv4 = groups['ip']
+                    if groups['prefix_length'] is not None:
+                        address = groups['ip'] + '/' + groups['prefix_length']
+                    dict_ipv4 = instance_dict.setdefault('ipv4', {}). \
+                    setdefault(ipv4, {})
+                    dict_ipv4.update({'ip': groups['ip']})
+                    if groups['prefix_length'] is not None:
+                        dict_ipv4.update({'prefix_length': groups['prefix_length']})
                 instance_dict.update({'check': groups['check']})
                 instance_dict.update({'method': groups['method']})
-                instance_dict.update({'oper_status': groups['oper_status']})
-                instance_dict.update({'protocol_status': groups['protocol_status']})
+                instance_dict.update({'link_status': groups['link_status']})
+                instance_dict.update({'line_protocol': groups['line_protocol']})
                 continue
 
         return ret_dict
@@ -208,24 +242,39 @@ class ShowInterfaceDetailSchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                'oper_status': str,
-                'protocol_status': str,
+                'link_status': str,
+                'line_protocol': str,
                 Optional('name'): str,
                 Optional('mac_address'): str,
                 Optional('mtu'): int,
-                Optional('ip_address'): str,
+                Optional('ipv4'): {
+                    Any(): { 
+                        Optional('ip'): str,
+                        Optional('prefix_length'): str
+                    },
+                },
                 Optional('subnet'): str,
                 Optional('interface_state'): bool,
                 Optional('config_status'): bool,
                 Optional('config_issue'): str,
-                Optional('traffic_input_packets'): int,
-                Optional('traffic_input_bytes'): int,
-                Optional('traffic_output_packets'): int,
-                Optional('traffic_output_bytes'): int,
-                Optional('traffic_dropped_packets'): int,
-                Optional('interface_number'): int,
-                Optional('vlan_config'): bool,
-                Optional('vlan_state'): str
+                Optional('traffic_statistics'): {
+                    'packets_input': int,
+                    'bytes_input': int,
+                    'packets_output': int,
+                    'bytes_output': int,
+                    'packets_dropped': int
+                },
+                Optional('control_point_states'): {
+                    'interface': {
+                        'interface_number': int,
+                        'interface_config_status': str,
+                        'interface_state': str
+                    },
+                    Any():{
+                        'interface_vlan_config_status': str,
+                        'interface_vlan_state': str
+                    },
+                }
             },
         }
     }
@@ -250,36 +299,53 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         ret_dict = {}
 
         # Interface Vlan1000 "pod100", is up, line protocol is up
-        p1 = re.compile(r'^Interface +(?P<interface>\w+) +"(?P<name>[\w\-\+\/\_]*)", +is '
-            '+(?P<oper_status>up|down), +line +protocol +is '
-            '+(?P<protocol_status>up|down)$')
+        p1 = re.compile(r'^Interface +(?P<interface>\w+) ' \
+            '+"(?P<name>[\w\-\+\/\_]*)", +is +(?P<link_status>up|down), ' \
+            '+line +protocol +is +(?P<line_protocol>up|down)$')
 
         # MAC address 286f.7fb1.032c, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
         # IP address 172.16.100.251, subnet mask 255.255.255.0
-        p3 = re.compile(r'^IP +address +(?P<ip_address>[\w\.]+), +subnet +mask '
+        p3 = re.compile(r'^IP +address +(?P<ip>[a-z0-9\.]+)'
+            '(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
             '+(?P<subnet>[\w\.]+)$')
 
+        # Available but not configured via nameif
         p4 = re.compile(r'^(?P<interface_state>Available) +but '
             '+(?P<config_status>not +configured) +via '
             '+(?P<config_issue>[\w\-\+\/\_]*)$')
 
-        p5 = re.compile(r'^(?P<traffic_input_packets>[\d]+) +packets +input, '
-            '+(?P<traffic_input_bytes>[\d]+) +bytes$')
+        # 16863445 packets input, 10312133394 bytes
+        p5 = re.compile(r'^(?P<packets_input>[\d]+) +packets +input, '
+            '+(?P<bytes_input>[\d]+) +bytes$')
 
-        p6 = re.compile(r'^(?P<traffic_output_packets>[\d]+) +packets +output, '
-            '+(?P<traffic_output_bytes>[\d]+) +bytes$')
+        # 10475426 packets output, 5376026271 bytes
+        p6 = re.compile(r'^(?P<packets_output>[\d]+) +packets +output, '
+            '+(?P<bytes_output>[\d]+) +bytes$')
 
-        p7 = re.compile(r'^(?P<traffic_dropped_packets>[\d]+) +packets +dropped$')
+        # 2551519 packets dropped
+        p7 = re.compile(r'^(?P<packets_dropped>[\d]+) +packets +dropped$')
 
+        # Interface number is 756
         p8 = re.compile(r'^Interface +number +is +(?P<interface_number>[\d]+)$')
 
-        p9 = re.compile(r'^Interface +vlan +config +status +is '
-            '+(?P<vlan_config>not +active|active)$')
+        # Interface config status is active
+        # Interface config status is not active
+        p9 = re.compile(r'^Interface +config +status +is +(?P<interface_config_status>[\w\ ]+)$')
 
-        p10 = re.compile(r'^Interface +vlan +state +is +(?P<vlan_state>UP|DOWN)'
-            '+([\w\(\)down in system space]+)?$')
+        # Interface state is active
+        # Interface state is not active           
+        p10 = re.compile(r'^Interface +state +is +(?P<interface_state>[\w\ ]+)$')
+
+        # Interface vlan config status is active
+        # Interface vlan config status is not active
+        p11 = re.compile(r'^Interface +vlan +config +status +is '
+            '+(?P<interface_vlan_config_status>[\w\ ]+)$')
+
+        # Interface vlan state is UP
+        # Interface vlan state is DOWN (down in system space)
+        p12 = re.compile(r'^Interface +vlan +state +is +(?P<interface_vlan_state>[\w]+)+([\w\(\)\ ]+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -292,22 +358,22 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
                 instance_dict = ret_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
                 instance_dict.update({'name': groups['name']})
-                instance_dict.update({'oper_status': groups['oper_status']})
+                instance_dict.update({'link_status': groups['link_status']})
                 instance_dict.update(
-                    {'protocol_status': groups['protocol_status']})
+                    {'line_protocol': groups['line_protocol']})
                 if groups['name'] != '' \
-                and groups['oper_status'] == 'up' \
-                and groups['protocol_status'] == 'up':
+                and groups['link_status'] == 'up' \
+                and groups['line_protocol'] == 'up':
                     instance_dict.update({'interface_state': True, \
                         'config_status': True})
                 if groups['name'] != '' \
-                and groups['oper_status'] == 'down' \
-                and groups['protocol_status'] == 'down':
+                and groups['link_status'] == 'down' \
+                and groups['line_protocol'] == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': True})
                 if groups['name'] == '' \
-                and groups['oper_status'] == 'down' \
-                and groups['protocol_status'] == 'down':
+                and groups['link_status'] == 'down' \
+                and groups['line_protocol'] == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': False})
                 continue
@@ -324,7 +390,13 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'ip_address': groups['ip_address']})
+                ipv4 = groups['ip']
+                if groups['prefix_length'] is not None:
+                    address = groups['ip'] + '/' + groups['prefix_length']
+                dict_ipv4 = instance_dict.setdefault('ipv4', {}).setdefault(ipv4, {})
+                dict_ipv4.update({'ip': groups['ip']})
+                if groups['prefix_length'] is not None:
+                    dict_ipv4.update({'prefix_length': groups['prefix_length']})                
                 instance_dict.update({'subnet': groups['subnet']})
                 continue
 
@@ -343,53 +415,72 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'traffic_input_packets': \
-                    int(groups['traffic_input_packets'])})
-                instance_dict.update({'traffic_input_bytes': \
-                    int(groups['traffic_input_bytes'])})
+                dict_traffic = instance_dict.setdefault('traffic_statistics', {})
+                dict_traffic.update({'packets_input': \
+                    int(groups['packets_input'])})
+                dict_traffic.update({'bytes_input': \
+                    int(groups['bytes_input'])})
                 continue
 
             # 10475426 packets output, 5376026271 bytes
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'traffic_output_packets': \
-                    int(groups['traffic_output_packets'])})
-                instance_dict.update({'traffic_output_bytes': \
-                    int(groups['traffic_output_bytes'])})
+                dict_traffic.update({'packets_output': \
+                    int(groups['packets_output'])})
+                dict_traffic.update({'bytes_output': \
+                    int(groups['bytes_output'])})
                 continue
 
             # 2551519 packets dropped
             m = p7.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'traffic_dropped_packets': \
-                    int(groups['traffic_dropped_packets'])})
+                dict_traffic.update({'packets_dropped': \
+                    int(groups['packets_dropped'])})
                 continue
 
             # Interface number is 756
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'interface_number': \
+                dict_control = instance_dict.setdefault('control_point_states', {})
+                dict_interface = dict_control.setdefault('interface', {})
+                dict_interface.update({'interface_number': \
                     int(groups['interface_number'])})
                 continue
 
-            # Interface vlan config status is active
+            # Interface config status is active
+            # Interface config status is not active
             m = p9.match(line)
             if m:
                 groups = m.groupdict()
-                if groups['vlan_config'] == 'active':
-                    instance_dict.update({'vlan_config': True})
-                else:
-                    instance_dict.update({'vlan_config': False})
+                dict_interface.update({'interface_config_status': groups['interface_config_status']})
                 continue
 
-            # Interface vlan state is UP
+            # Interface state is active
+            # Interface state is not active                     
             m = p10.match(line)
             if m:
                 groups = m.groupdict()
-                instance_dict.update({'vlan_state': groups['vlan_state']})
+                dict_interface.update({'interface_state': groups['interface_state']})
+                continue
+
+            # Interface vlan config status is active
+            # Interface vlan config status is not active
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                dict_vlan = dict_control.setdefault(interface, {})
+                dict_vlan.update({'interface_vlan_config_status': groups['interface_vlan_config_status']})
+                continue
+
+            # Interface vlan state is UP
+            # Interface vlan state is DOWN (down in system space)
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                dict_vlan.update({'interface_vlan_state': groups['interface_vlan_state']})
                 continue
 
         return ret_dict

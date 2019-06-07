@@ -24,17 +24,22 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod100',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.100.251',
+				'ipv4': {
+                    '172.16.100.251': { 
+                        'ip': '172.16.100.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             }
         }
     }
 
     golden_output = {'execute.return_value': '''
+		DevNet-asa-sm-1/admin# show interface summary
 		Interface Vlan1000 "pod100", is up, line protocol is up
 			MAC address 286f.7fb1.032c, MTU 1500
 			IP address 172.16.100.251, subnet mask 255.255.255.0
@@ -42,27 +47,34 @@ class test_show_interface_summary(unittest.TestCase):
 
     golden_parsed_output_2 = {
         'interfaces': {
-            'Vlan300': {
+        	'Vlan300': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'devadmin-out',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '10.10.10.4',
-                'subnet': '255.255.255.0',
-
+				'ipv4': {
+                    '10.10.10.4': { 
+                        'ip': '10.10.10.4'
+                    },
+                },
+                'subnet': '255.255.255.0'
             },
             'Vlan400': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod100-in',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '10.110.10.230',
+				'ipv4': {
+                    '10.110.10.230': { 
+                        'ip': '10.110.10.230'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan700': {
@@ -70,134 +82,179 @@ class test_show_interface_summary(unittest.TestCase):
                 'config_status': False,
                 'config_issue': 'nameif',
                 'name': '',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
             },
             'Vlan900': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'adminNAT',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.0.4',
+				'ipv4': {
+                    '172.16.0.4': { 
+                        'ip': '172.16.0.4'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan901': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod1',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.1.251',
+				'ipv4': {
+                    '172.16.1.251': { 
+                        'ip': '172.16.1.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan902': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod2',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.2.251',
+				'ipv4': {
+                    '172.16.2.251': { 
+                        'ip': '172.16.2.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan903': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod3',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.3.251',
+				'ipv4': {
+                    '172.16.3.251': { 
+                        'ip': '172.16.3.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan904': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod4',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.4.251',
+				'ipv4': {
+                    '172.16.4.251': { 
+                        'ip': '172.16.4.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan905': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod5',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.5.251',
+				'ipv4': {
+                    '172.16.5.251': { 
+                        'ip': '172.16.5.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan906': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod6',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.6.251',
+				'ipv4': {
+                    '172.16.6.251': { 
+                        'ip': '172.16.6.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan907': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod7',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.7.251',
+				'ipv4': {
+                    '172.16.7.251': { 
+                        'ip': '172.16.7.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan908': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod8',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.8.251',
+				'ipv4': {
+                    '172.16.8.251': { 
+                        'ip': '172.16.8.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan909': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod9',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.9.251',
+				'ipv4': {
+                    '172.16.9.251': { 
+                        'ip': '172.16.9.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             },
             'Vlan1178': {
                 'interface_state': False,
                 'config_status': True,
                 'name': 'pod249',
-                'oper_status': 'down',
-                'protocol_status': 'down',
+                'link_status': 'down',
+                'line_protocol': 'down',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.249.251',
+				'ipv4': {
+                    '172.16.249.251': { 
+                        'ip': '172.16.249.251'
+                    },
+                },
                 'subnet': '255.255.255.0'
             }
         }
     }
 
     golden_output_2 = {'execute.return_value': '''
+    	DevNet-asa-sm-1/admin# show interface summary
 		Interface Vlan300 "devadmin-out", is up, line protocol is up
 			MAC address 286f.7fb1.032c, MTU 1500
 			IP address 10.10.10.4, subnet mask 255.255.255.0
@@ -272,179 +329,275 @@ class test_show_interface_ip_brief(unittest.TestCase):
     golden_parsed_output = {
         'interfaces': {
             'Vlan1000': {
-                'ip_address': '172.16.100.251',
+				'ipv4': {
+                    '172.16.100.251': { 
+                        'ip': '172.16.100.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             }
         }
     }
 
     golden_output = {'execute.return_value': '''
-		Vlan1000  172.16.100.251  YES CONFIG up up
+		DevNet-asa-sm-1/admin# show interface ip brief
+		Interface                  IP-Address      OK? Method Status                Protocol
+		Vlan1000                   172.16.100.251  YES CONFIG up                    up
 	'''}
 
     golden_parsed_output_2 = {
         'interfaces': {
             'Vlan1160': {
-                'ip_address': '172.16.232.251',
+				'ipv4': {
+                    '172.16.232.251': { 
+                        'ip': '172.16.232.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1161': {
-                'ip_address': '172.16.233.251',
+				'ipv4': {
+                    '172.16.233.251': { 
+                        'ip': '172.16.233.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1162': {
-                'ip_address': '10.10.2.4',
+				'ipv4': {
+                    '10.10.2.4': { 
+                        'ip': '10.10.2.4'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1163': {
-                'ip_address': '172.16.234.251',
+				'ipv4': {
+                    '172.16.234.251': { 
+                        'ip': '172.16.234.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1164': {
-                'ip_address': '172.16.235.251',
+				'ipv4': {
+                    '172.16.235.251': { 
+                        'ip': '172.16.235.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1165': {
-                'ip_address': '172.16.236.251',
+				'ipv4': {
+                    '172.16.236.251': { 
+                        'ip': '172.16.236.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1166': {
-                'ip_address': '172.16.237.251',
+				'ipv4': {
+                    '172.16.237.251': { 
+                        'ip': '172.16.237.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1167': {
-                'ip_address': '172.16.238.251',
+				'ipv4': {
+                    '172.16.238.251': { 
+                        'ip': '172.16.238.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1168': {
-                'ip_address': '172.16.239.251',
+				'ipv4': {
+                    '172.16.239.251': { 
+                        'ip': '172.16.239.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1169': {
-                'ip_address': '172.16.240.251',
+				'ipv4': {
+                    '172.16.240.251': { 
+                        'ip': '172.16.240.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1170': {
-                'ip_address': '172.16.241.251',
+				'ipv4': {
+                    '172.16.241.251': { 
+                        'ip': '172.16.241.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1171': {
-                'ip_address': '172.16.242.251',
+				'ipv4': {
+                    '172.16.242.251': { 
+                        'ip': '172.16.242.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1172': {
-                'ip_address': '172.16.243.251',
+				'ipv4': {
+                    '172.16.243.251': { 
+                        'ip': '172.16.243.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1173': {
-                'ip_address': '172.16.244.251',
+				'ipv4': {
+                    '172.16.244.251': { 
+                        'ip': '172.16.244.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1174': {
-                'ip_address': '172.16.245.251',
+				'ipv4': {
+                    '172.16.245.251': { 
+                        'ip': '172.16.245.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1175': {
-                'ip_address': '172.16.246.251',
+				'ipv4': {
+                    '172.16.246.251': { 
+                        'ip': '172.16.246.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1176': {
-                'ip_address': '172.16.247.251',
+				'ipv4': {
+                    '172.16.247.251': { 
+                        'ip': '172.16.247.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1177': {
-                'ip_address': '172.16.248.251',
+				'ipv4': {
+                    '172.16.248.251': { 
+                        'ip': '172.16.248.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan1178': {
-                'ip_address': '172.16.249.251',
+				'ipv4': {
+                    '172.16.249.251': { 
+                        'ip': '172.16.249.251'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'down',
-                'protocol_status': 'down'
+                'link_status': 'down',
+                'line_protocol': 'down'
             },
             'Vlan300': {
-                'ip_address': '10.10.10.4',
+				'ipv4': {
+                    '10.10.10.4': { 
+                        'ip': '10.10.10.4'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan400': {
-                'ip_address': '10.110.10.230',
+				'ipv4': {
+                    '10.110.10.230': { 
+                        'ip': '10.110.10.230'
+                    },
+                },
                 'check': 'YES',
                 'method': 'CONFIG',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             },
             'Vlan700': {
-                'ip_address': 'unassigned',
+				'ipv4': {
+                    'unnumbered': { 
+                        'unnumbered_intf_ref': 'unassigned'
+                    },
+                },
                 'check': 'YES',
                 'method': 'unset',
-                'oper_status': 'up',
-                'protocol_status': 'up'
+                'link_status': 'up',
+                'line_protocol': 'up'
             }
         }
     }
 
     golden_output_2 = {'execute.return_value': '''
+    	DevNet-asa-sm-1/admin# show interface ip brief
+		Interface                  IP-Address      OK? Method Status                Protocol
 		Vlan1160                   172.16.232.251  YES CONFIG up                    up
 		Vlan1161                   172.16.233.251  YES CONFIG up                    up
 		Vlan1162                   10.10.2.4       YES CONFIG up                    up
@@ -503,25 +656,40 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod248',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.248.251',
+                'ipv4': {
+                    '172.16.248.251': { 
+                        'ip': '172.16.248.251'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 16863445,
-                'traffic_input_bytes': 10312133394,
-                'traffic_output_packets': 10475426,
-                'traffic_output_bytes': 5376026271,
-                'traffic_dropped_packets': 2551519,
-                'interface_number': 756,
-                'vlan_config': True,
-                'vlan_state': 'UP'
+                'traffic_statistics': {
+                    'packets_input': 16863445,
+                    'bytes_input': 10312133394,
+                    'packets_output': 10475426,
+                    'bytes_output': 5376026271,
+                    'packets_dropped': 2551519
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 756,
+                        'interface_config_status': 'active',
+                        'interface_state': 'active'
+                    },
+                    'Vlan1177':{
+                        'interface_vlan_config_status': 'active',
+                        'interface_vlan_state': 'UP'
+                    },
+                }
             }
         }
     }
 
     golden_output = {'execute.return_value': '''
+    	DevNet-asa-sm-1/admin# show interface detail
 		Interface Vlan1177 "pod248", is up, line protocol is up
 			MAC address 286f.7fb1.032c, MTU 1500
 			IP address 172.16.248.251, subnet mask 255.255.255.0
@@ -544,25 +712,40 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': False,
                 'config_status': True,
                 'name': 'pod249',
-                'oper_status': 'down',
-                'protocol_status': 'down',
+                'link_status': 'down',
+                'line_protocol': 'down',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.249.251',
+                'ipv4': {
+                    '172.16.249.251': { 
+                        'ip': '172.16.249.251'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 0,
-                'traffic_input_bytes': 0,
-                'traffic_output_packets': 0,
-                'traffic_output_bytes': 0,
-                'traffic_dropped_packets': 0,
-                'interface_number': 757,
-                'vlan_config': False,
-                'vlan_state': 'DOWN'
+                'traffic_statistics': {
+                    'packets_input': 0,
+                    'bytes_input': 0,
+                    'packets_output': 0,
+                    'bytes_output': 0,
+                    'packets_dropped': 0
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 757,
+                        'interface_config_status': 'active',
+                        'interface_state': 'not active'
+                    },
+                    'Vlan1178':{
+                        'interface_vlan_config_status': 'not active',
+                        'interface_vlan_state': 'DOWN'
+                    },
+                }
             }
         }
     }
 
     golden_output_2 = {'execute.return_value': '''
+    	DevNet-asa-sm-1/admin# show interface detail
 		Interface Vlan1178 "pod249", is down, line protocol is down
 			MAC address 286f.7fb1.032c, MTU 1500
 			IP address 172.16.249.251, subnet mask 255.255.255.0
@@ -585,109 +768,180 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'devadmin-out',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '10.10.10.4',
+                'ipv4': {
+                    '10.10.10.4': { 
+                        'ip': '10.10.10.4'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 889007666,
-                'traffic_input_bytes': 785740327549,
-                'traffic_output_packets': 621453837,
-                'traffic_output_bytes': 428046938178,
-                'traffic_dropped_packets': 2988535,
-                'interface_number': 5,
-                'vlan_config': True,
-                'vlan_state': 'UP'
+                'traffic_statistics': {
+	                'packets_input': 889007666,
+	                'bytes_input': 785740327549,
+	                'packets_output': 621453837,
+	                'bytes_output': 428046938178,
+	                'packets_dropped': 2988535
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 5,
+                        'interface_config_status': 'active',
+                        'interface_state': 'active'
+                    },
+                    'Vlan300':{
+                        'interface_vlan_config_status': 'active',
+                        'interface_vlan_state': 'UP'
+                    },
+                }
             },
             'Vlan400': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod100-in',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '10.110.10.230',
+                'ipv4': {
+                    '10.110.10.230': { 
+                        'ip': '10.110.10.230'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 1286035,
-                'traffic_input_bytes': 100030768,
-                'traffic_output_packets': 1,
-                'traffic_output_bytes': 28,
-                'traffic_dropped_packets': 1285569,
-                'interface_number': 105,
-                'vlan_config': True,
-                'vlan_state': 'UP'
+                'traffic_statistics': {
+	                'packets_input': 1286035,
+	                'bytes_input': 100030768,
+	                'packets_output': 1,
+	                'bytes_output': 28,
+	                'packets_dropped': 1285569
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 105,
+                        'interface_config_status': 'active',
+                        'interface_state': 'active'
+                    },
+                    'Vlan400':{
+                        'interface_vlan_config_status': 'active',
+                        'interface_vlan_state': 'UP'
+                    },
+                }
             },
             'Vlan700': {
                 'interface_state': True,
                 'config_status': False,
                 'name': '',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'config_issue': 'nameif'
             },
             'Vlan900': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'adminNAT',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.0.4',
+                'ipv4': {
+                    '172.16.0.4': { 
+                        'ip': '172.16.0.4'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 1212307,
-                'traffic_input_bytes': 96880666,
-                'traffic_output_packets': 1,
-                'traffic_output_bytes': 28,
-                'traffic_dropped_packets': 1212268,
-                'interface_number': 507,
-                'vlan_config': True,
-                'vlan_state': 'UP'
+                'traffic_statistics': {
+	                'packets_input': 1212307,
+	                'bytes_input': 96880666,
+	                'packets_output': 1,
+	                'bytes_output': 28,
+	                'packets_dropped': 1212268
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 507,
+                        'interface_config_status': 'active',
+                        'interface_state': 'active'
+                    },
+                    'Vlan900':{
+                        'interface_vlan_config_status': 'active',
+                        'interface_vlan_state': 'UP'
+                    },
+                }
             },
             'Vlan901': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod1',
-                'oper_status': 'up',
-                'protocol_status': 'up',
+                'link_status': 'up',
+                'line_protocol': 'up',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.1.251',
+                'ipv4': {
+                    '172.16.1.251': { 
+                        'ip': '172.16.1.251'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 7299914,
-                'traffic_input_bytes': 6411442725,
-                'traffic_output_packets': 2862092,
-                'traffic_output_bytes': 118819269,
-                'traffic_dropped_packets': 1288374,
-                'interface_number': 508,
-                'vlan_config': True,
-                'vlan_state': 'UP'
+                'traffic_statistics': {
+	                'packets_input': 7299914,
+	                'bytes_input': 6411442725,
+	                'packets_output': 2862092,
+	                'bytes_output': 118819269,
+	                'packets_dropped': 1288374
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 508,
+                        'interface_config_status': 'active',
+                        'interface_state': 'active'
+                    },
+                    'Vlan901':{
+                        'interface_vlan_config_status': 'active',
+                        'interface_vlan_state': 'UP'
+                    },
+                }
             },
-             'Vlan1178': {
+            'Vlan1178': {
                 'interface_state': False,
                 'config_status': True,
                 'name': 'pod249',
-                'oper_status': 'down',
-                'protocol_status': 'down',
+                'link_status': 'down',
+                'line_protocol': 'down',
                 'mac_address': '286f.7fb1.032c',
                 'mtu': 1500,
-                'ip_address': '172.16.249.251',
+                'ipv4': {
+                    '172.16.249.251': { 
+                        'ip': '172.16.249.251'
+                    },
+                },
                 'subnet': '255.255.255.0',
-                'traffic_input_packets': 0,
-                'traffic_input_bytes': 0,
-                'traffic_output_packets': 0,
-                'traffic_output_bytes': 0,
-                'traffic_dropped_packets': 0,
-                'interface_number': 757,
-                'vlan_config': False,
-                'vlan_state': 'DOWN'
+                'traffic_statistics': {
+	                'packets_input': 0,
+	                'bytes_input': 0,
+	                'packets_output': 0,
+	                'bytes_output': 0,
+	                'packets_dropped': 0
+                },
+                'control_point_states': {
+                    'interface': {
+                        'interface_number': 757,
+                        'interface_config_status': 'active',
+                        'interface_state': 'not active'
+                    },
+                    'Vlan1178':{
+		                'interface_vlan_config_status': 'not active',
+		                'interface_vlan_state': 'DOWN'
+                    },
+                }
             }
         }
     }
 
     golden_output_3 = {'execute.return_value': '''
+    	DevNet-asa-sm-1/admin# show interface detail
 		Interface Vlan300 "devadmin-out", is up, line protocol is up
 			MAC address 286f.7fb1.032c, MTU 1500
 			IP address 10.10.10.4, subnet mask 255.255.255.0
