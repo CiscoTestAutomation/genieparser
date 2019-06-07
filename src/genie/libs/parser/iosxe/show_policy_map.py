@@ -1843,6 +1843,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 if weight_line == 1:
                     weight_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 else:
+                    random_detect = class_map_dict.setdefault('random_detect', {})
                     random_detect['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 continue
 
