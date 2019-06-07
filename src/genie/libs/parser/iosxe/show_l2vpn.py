@@ -472,7 +472,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
             m = p17.match(line)
             if m and service_instance_id and interface:
                 final_dict = ret_dict.setdefault('service_instance', {}).\
-                    setdefault(service_instance_id, {})
+                    setdefault(int(service_instance_id), {})
                 final_dict['l2protocol_drop'] = False
                 final_dict['ce_vlans'] = ''
                 final_dict['associated_evc'] = ''
