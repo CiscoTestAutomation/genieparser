@@ -22,3 +22,10 @@
 * IOSXE
     * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
     * Update ShowPlatformHardware to support qlimit/queue depth in bytes and pkts
+
+--------------------------------------------------------------------------------
+                                interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed a bug in ShowIpInterface to handle dhcp negtiated address
+
