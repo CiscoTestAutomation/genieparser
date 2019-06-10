@@ -27,3 +27,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed a bug in ShowIpInterface to handle dhcp negtiated address
+    * Update ShowPlatformHardware to support qlimit/queue depth in bytes and pkts
