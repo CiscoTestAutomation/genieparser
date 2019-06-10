@@ -58,6 +58,152 @@ class ShowPolicyMapTypeSchema(MetaParser):
                 Any(): {
                     'policy_name': {
                         Any(): {
+                            Optional('child_policy_name'): {
+                                Any(): {
+                                    Optional('class_map'): {
+                                        Any(): {
+                                            'match_evaluation': str,
+                                            'match': list,
+                                            Optional('packets'): int,
+                                            Optional('packet_output'): int,
+                                            Optional('packet_drop'): int,
+                                            Optional('tail_random_drops'): int,
+                                            Optional('other_drops'): int,
+                                            Optional('bytes'): int,
+                                            Optional('queueing'): bool,
+                                            Optional('queue_limit_packets'): str,
+                                            Optional('queue_size'): int,
+                                            Optional('queue_limit'): int,
+                                            Optional('queue_limit_bytes'): int,
+                                            Optional('queue_limit_us'): int,
+                                            Optional('queue_depth'): int,
+                                            Optional('total_drops'): int,
+                                            Optional('no_buffer_drops'): int,
+                                            Optional('pkts_output'): int,
+                                            Optional('bytes_output'): int,
+                                            Optional('pkts_matched'): int,
+                                            Optional('bytes_matched'): int,
+                                            Optional('pkts_queued'): int,
+                                            Optional('bytes_queued'): int,
+                                            Optional('shape_type'): str,
+                                            Optional('shape_cir_bps'): int,
+                                            Optional('shape_bc_bps'): int,
+                                            Optional('shape_be_bps'): int,
+                                            Optional('target_shape_rate'): int,
+                                            Optional('output_queue'): str,
+                                            Optional('bandwidth_percent'): int,
+                                            Optional('bandwidth_kbps'): int,
+                                            Optional('bandwidth'): str,
+                                            Optional('bandwidth_remaining_ratio'): int,
+                                            Optional('bandwidth_remaining_percent'): int,
+                                            Optional(
+                                                'bandwidth_max_threshold_packets'): int,
+                                            Optional('priority_level'): int,
+                                            Optional('random_detect'): {
+                                                Optional('exp_weight_constant'): str,
+                                                Optional('exponential_weight'): str,
+                                                Optional('mean_queue_depth'): int,
+                                                Optional('class'): {
+                                                    Any(): {
+                                                        'transmitted': str,
+                                                        'random_drop': str,
+                                                        'tail_drop': str,
+                                                        'minimum_thresh': str,
+                                                        'maximum_thresh': str,
+                                                        'mark_prob': str,
+                                                        Optional('ecn_mark'): str
+                                                    },
+                                                },
+                                            },
+                                            Optional('priority'): {
+                                                Optional('percent'): int,
+                                                Optional('kbps'): int,
+                                                Optional('burst_bytes'): int,
+                                                Optional('exceed_drops'): int},
+                                            Optional('rate'): {
+                                                Optional('interval'): int,
+                                                Optional('offered_rate_bps'): int,
+                                                Optional('drop_rate_bps'): int
+                                            },
+                                            Optional('policy'): {
+                                                Any(): {
+                                                    'class': {
+                                                        Any(): {
+                                                            Optional('bandwidth'): int,
+                                                            Optional('random_detect'): {
+                                                                'precedence': list,
+                                                                'bytes1': list,
+                                                                'bytes2': list,
+                                                                'bytes3': list,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                            Optional('qos_set'): {
+                                                Any(): {
+                                                    Any(): {
+                                                        Optional('packets_marked'): int,
+                                                        Optional(
+                                                            'marker_statistics'): str,
+                                                    },
+                                                },
+                                            },
+                                            Optional('police'): {
+                                                Optional('cir_bps'): int,
+                                                Optional('pir_bps'): int,
+                                                Optional('cir_bc_bytes'): int,
+                                                Optional('cir_be_bytes'): int,
+                                                Optional('pir_bc_bytes'): int,
+                                                Optional('pir_be_bytes'): int,
+                                                Optional('police_bps'): int,
+                                                Optional('police_limit'): int,
+                                                Optional('extended_limit'): int,
+                                                Optional(
+                                                    'bandwidth_remaining_ratio'): int,
+                                                Optional('conformed'): {
+                                                    'packets': int,
+                                                    'bytes': int,
+                                                    'bps': int,
+                                                    Optional('actions'): {
+                                                        Any(): Or(bool, str),
+                                                    }
+                                                },
+                                                Optional('exceeded'): {
+                                                    'packets': int,
+                                                    'bytes': int,
+                                                    'bps': int,
+                                                    Optional('actions'): {
+                                                        Any(): Or(bool, str),
+                                                    }
+                                                },
+                                                Optional('violated'): {
+                                                    'packets': int,
+                                                    'bytes': int,
+                                                    'bps': int,
+                                                    Optional('actions'): {
+                                                        Any(): Or(bool, str),
+                                                    }
+                                                },
+                                            },
+                                        },
+                                    },
+                                    Optional('queue_stats_for_all_priority_classes'): {
+                                        'priority_level': {
+                                            Any(): {
+                                                Optional('queueing'): bool,
+                                                Optional('queue_limit_bytes'): int,
+                                                Optional('queue_limit_us'): int,
+                                                Optional('queue_depth'): int,
+                                                Optional('total_drops'): int,
+                                                Optional('no_buffer_drops'): int,
+                                                Optional('pkts_output'): int,
+                                                Optional('bytes_output'): int,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
                             Optional('class_map'): {
                                 Any(): {
                                     'match_evaluation': str,
@@ -96,7 +242,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     Optional('bandwidth_remaining_percent'): int,
                                     Optional('bandwidth_max_threshold_packets'): int,
                                     Optional('priority_level'): int,
-                                    Optional('random_detect'):{
+                                    Optional('random_detect'): {
                                         Optional('exp_weight_constant'): str,
                                         Optional('exponential_weight'): str,
                                         Optional('mean_queue_depth'): int,
@@ -239,7 +385,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         ret_dict = {}
         class_line_type = None
         queue_stats = 0
-
+        priority_dict = {}
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
@@ -501,18 +647,20 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 group = m.groupdict()
                 service_policy = group['service_policy'].strip()
                 policy_name = group['policy_name'].strip()
+
                 # Set dict
                 service_policy_dict = top_level_dict.setdefault('service_policy', {}).\
                                                      setdefault(service_policy, {})
                 policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
                                                        setdefault(policy_name, {})
+                parent_policy_dict = policy_name_dict
                 continue
 
             # Service policy : child
             m = p1_1.match(line)
             if m:
                 policy_name = m.groupdict()['policy_name'].strip()
-                policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
+                policy_name_dict = parent_policy_dict.setdefault('child_policy_name', {}).\
                                                        setdefault(policy_name, {})
                 continue
 
@@ -803,9 +951,13 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             m = p17.match(line)
             if m:
                 if queue_stats == 1:
+                    if not priority_dict:
+                        priority_dict = queue_dict.setdefault('priority_level',
+                                                              {}).setdefault('default', {})
                     priority_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
                     priority_dict['total_drops'] = int(m.groupdict()['total_drops'])
                     priority_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+
                 else:
                     class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
                     class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
@@ -1284,6 +1436,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('set'): str,
                         Optional('conform_burst'): int,
                         Optional('priority'): bool,
+                        Optional('priority_kbps'): int,
                         Optional('priority_levels'): int,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
@@ -1297,7 +1450,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('random_detect'): {
                             Optional('exponential_weight'): int,
                             Optional('bandwidth_percent'): int,
-                            Optional('time_based'): str,
+                            Optional('wred_type'): str,
                             Optional('class_val'): {
                                 Any(): {
                                     'min_threshold': str,
@@ -1414,7 +1567,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p6 = re.compile(r'^priority +level +(?P<pri_level>(\d+)) +(?P<kb_per_sec>(\d+)) \(kb\/s\)$')
 
         # bandwidth 20000 (kb/s)
-        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb\/s\)$')
+        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb[p/]s\)$')
 
         # bandwidth 100
         p7_1 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
@@ -1453,7 +1606,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                          'be (?P<be_msec>(\d+)) \(msec\)$')
 
         # priority
-        p10 = re.compile(r'^priority$')
+        p10 = re.compile(r'^priority( +(?P<priority_kbps>\d+) +\(kbps\))?$')
 
         # priority level 1
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
@@ -1487,7 +1640,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                             '+exceed-action +(?P<exceed_action>([\w\-\s]+)) +violate-action +(?P<violate_action>(\w+))$')
 
         # time-based wred, exponential weight 9
-        p16 = re.compile(r'^time-based +(?P<time_based>(\w+)), +exponential +weight +(?P<exponential_weight>(\d+))$')
+        p16 = re.compile(r'^(?P<wred_type>[\w-]+) +wred, +exponential +weight +(?P<exponential_weight>(\d+))$')
 
         # queue-limit 200 ms
         p17 = re.compile(r'^queue-limit +(?P<queue_limit_ms>(\d+)) ms$')
@@ -1693,6 +1846,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 if weight_line == 1:
                     weight_dict['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 else:
+                    random_detect = class_map_dict.setdefault('random_detect', {})
                     random_detect['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 continue
 
@@ -1724,6 +1878,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                     class_dict['max_threshold'] = group['max_threshold']
                     class_dict['mark_probability'] = group['mark_probability']
                 else:
+                    random_detect = class_map_dict.setdefault('random_detect', {})
                     class_dict = random_detect.setdefault('class_val', {}).setdefault(class_val, {})
                     class_dict['min_threshold'] = group['min_threshold']
                     class_dict['max_threshold'] = group['max_threshold']
@@ -1738,10 +1893,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['be_msec'] = int(m.groupdict()['be_msec'])
                 continue
 
-            # priority
+            # priority 1000000 kbps
             m = p10.match(line)
             if m:
                 class_map_dict['priority'] = True
+                if m.group('priority_kbps'):
+                    class_map_dict['priority_kbps'] = int(m.groupdict()['priority_kbps'])
                 continue
 
             # priority level 1
@@ -1827,7 +1984,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             #  time-based wred, exponential weight 9
             m = p16.match(line)
             if m:
-                random_detect['time_based'] = m.groupdict()['time_based']
+                random_detect = class_map_dict.setdefault('random_detect', {})
+                random_detect['wred_type'] = m.groupdict()['wred_type']
                 random_detect['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 continue
 
