@@ -2796,7 +2796,8 @@ class ShowVersionRp(ShowVersionRpSchema):
 
 
 class ShowPlatformHardwareSchema(MetaParser):
-    """Schema for show platform hardware qfp active infrastructure bqs queue output default all"""
+    """Schema for show platform hardware qfp active infrastructure bqs queue output default all
+        show platform hardware qfp active infrastructure bqs queue output default interface {interface}"""
 
     schema = {
         Any(): {
@@ -2845,7 +2846,8 @@ class ShowPlatformHardwareSchema(MetaParser):
 
 
 class ShowPlatformHardware(ShowPlatformHardwareSchema):
-    """Parser for show platform hardware qfp active infrastructure bqs queue output default all"""
+    """Parser for show platform hardware qfp active infrastructure bqs queue output default all
+        show platform hardware qfp active infrastructure bqs queue output default interface {interface}"""
 
     cli_command = ['show platform hardware qfp active infrastructure bqs queue output default all',
         'show platform hardware qfp active infrastructure bqs queue output default interface {interface}']
