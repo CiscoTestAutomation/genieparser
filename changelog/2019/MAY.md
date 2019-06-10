@@ -26,6 +26,12 @@
 * IOSXE
     * Fixed a bug in ShowIpInterface to handle dhcp negtiated address
 
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowNtpStatus to support refid after adding leap second
+
 
 | Module                  |      Version           |
 | ------------------------|:----------------------:|
