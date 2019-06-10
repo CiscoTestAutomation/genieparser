@@ -22,3 +22,10 @@
 * IOSXE
     * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
     * Update ShowPlatformHardware to support qlimit/queue depth in bytes and pkts
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+
+* IOSXE
+    * Update ShowNtpStatus to support refid after adding leap second
