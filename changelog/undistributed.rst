@@ -15,3 +15,9 @@
     * Fix ShowPolicyMapInterface
         set priority level to default if not exist in output
         moved child-policy under parent-policy
+
+--------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
