@@ -225,14 +225,14 @@ class test_show_arp(unittest.TestCase):
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
-        interface_obj = ShowArp(device=self.device1)
+        arp_obj = ShowArp(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = interface_obj.parse()
+            parsed_output = arp_obj.parse()
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        interface_obj = ShowArp(device=self.device)
-        parsed_output = interface_obj.parse()
+        arp_obj = ShowArp(device=self.device)
+        parsed_output = arp_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
