@@ -21,3 +21,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
+
+--------------------------------------------------------------------------------
+                                interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed a bug in ShowIpInterface to handle dhcp negtiated address
