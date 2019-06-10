@@ -6,7 +6,7 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.asa.show_arp_allen import ShowArp
+from genie.libs.parser.asa.show_arp import ShowArp
 
 # =============================================
 # Parser for 'show arp'
@@ -167,6 +167,36 @@ class test_show_arp(unittest.TestCase):
 	                    'ip': '10.10.2.29'
 	               	}
 	            }	        	
+        	},
+        	16: {
+        		'name': 'outside',
+       			'mac_address': '0011.2094.1d2b',
+	        	'entry': '2',
+	        	'ipv4': {
+	                '10.86.194.61': { 
+	                    'ip': '10.86.194.61'
+	               	}
+	            }	        	
+        	},
+        	17: {
+        		'name': 'outside',
+       			'mac_address': '001a.300c.8000',
+	        	'entry': '-',
+	        	'ipv4': {
+	                '10.86.194.1': { 
+	                    'ip': '10.86.194.1'
+	               	}
+	            }	        	
+        	},
+        	18: {
+        		'name': 'outside',
+       			'mac_address': '00d0.02a8.440a',
+	        	'entry': 'alias',
+	        	'ipv4': {
+	                '10.86.195.2': { 
+	                    'ip': '10.86.195.2'
+	               	}
+	            }	        	
         	}
         }
     }
@@ -188,6 +218,9 @@ class test_show_arp(unittest.TestCase):
 			devadmin-in 10.10.2.20 0050.56ac.f1ce 4
 			devadmin-in 10.10.2.65 0050.56ac.7871 12
 			devadmin-in 10.10.2.29 0050.56ac.6d00 12
+			outside 10.86.194.61 0011.2094.1d2b 2
+			outside 10.86.194.1 001a.300c.8000 -
+			outside 10.86.195.2 00d0.02a8.440a alias
     '''}
 
     def test_empty(self):

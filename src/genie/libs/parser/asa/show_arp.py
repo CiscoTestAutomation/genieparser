@@ -57,8 +57,8 @@ class ShowArp(ShowArpSchema):
         arp_id = 1
 
         # pod100 172.16.100.254 0000.0c9f.f00b 318
-        p1 = re.compile(r'^(?P<name>[\d\w\.\-\(\)]+) +(?P<ip>[a-z0-9\.]+)'
-            '(\/(?P<prefix_length>[0-9]+))? +(?P<mac_address>[\w\.]+) +(?P<entry>[\d\-\w]+)$')
+        p1 = re.compile(r'^(?P<name>[\w\S\.\-\(\)]+) +(?P<ip>[a-z0-9\.\w]+)'
+            '(\/(?P<prefix_length>[0-9]+))? +(?P<mac_address>[\w\.]+) +(?P<entry>[\-\w]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -72,11 +72,11 @@ class ShowArp(ShowArpSchema):
                 dict_arp.update({'mac_address': groups['mac_address']})
                 dict_arp.update({'entry': groups['entry']})
                 ipv4 = groups['ip']
-                if groups['prefix_length'] is not None:
+                if groups['prefix_length']:
                     address = groups['ip'] + '/' + groups['prefix_length']
                 dict_ipv4 = dict_arp.setdefault('ipv4', {}).setdefault(ipv4, {})
                 dict_ipv4.update({'ip': groups['ip']})
-                if groups['prefix_length'] is not None:
+                if groups['prefix_length']:
                     dict_ipv4.update({'prefix_length': groups['prefix_length']})
                 arp_id += 1   
                 continue
