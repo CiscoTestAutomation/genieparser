@@ -4,3 +4,11 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
+
+--------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
+
+

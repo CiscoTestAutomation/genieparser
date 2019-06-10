@@ -728,8 +728,6 @@ class ShowRedundancy(ShowRedundancySchema):
             out = output
 
         redundancy_dict = {}
-        if out:
-            redundancy_dict['red_sys_info'] = {}
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -738,6 +736,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 r'\s*[Aa]vailable +[Ss]ystem +[Uu]ptime +\= +(?P<available_system_uptime>.+)$')
             m = p1.match(line)
             if m:
+                redundancy_dict.setdefault('red_sys_info', {})
                 redundancy_dict['red_sys_info']['available_system_uptime'] = \
                     m.groupdict()['available_system_uptime']
                 continue
