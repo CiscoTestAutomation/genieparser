@@ -2210,6 +2210,114 @@ show policy-map interface te0/0/0.101
       bandwidth 4% (536 kbps)
           '''}
 
+    golden_parsed_output21 = {
+        'GigabitEthernet4.1': {
+            'service_policy': {
+                'output': {
+                    'policy_name': {
+                        'parent-policy': {
+                            'child_policy_name': {
+                                'child-policy': {
+                                    'class_map': {
+                                        'band-policy': {
+                                            'bandwidth': '110000 kbps',
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['none'],
+                                            'match_evaluation': 'match-all',
+                                            'no_buffer_drops': 0,
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '64',
+                                            'queueing': True,
+                                            'rate': {'drop_rate_bps': 0,
+                                                     'interval': 300,
+                                                     'offered_rate_bps': 0},
+                                            'total_drops': 0},
+                                        'class-default': {
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['any'],
+                                            'match_evaluation': 'match-any',
+                                            'no_buffer_drops': 0,
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '100',
+                                            'random_detect': {
+                                                'exp_weight_constant': '4 (1/16)',
+                                                'mean_queue_depth': 0},
+                                            'rate': {'drop_rate_bps': 0,
+                                                     'interval': 300,
+                                                     'offered_rate_bps': 0},
+                                            'total_drops': 0},
+                                        'high-priority': {
+                                            'bytes': 0,
+                                            'match': ['none'],
+                                            'match_evaluation': 'match-all',
+                                            'packets': 0,
+                                            'rate': {'drop_rate_bps': 0,
+                                                     'interval': 300,
+                                                     'offered_rate_bps':
+                                                         0}},
+                                        'low-priority': {
+                                            'bytes': 0,
+                                            'match': ['none'],
+                                            'match_evaluation': 'match-all',
+                                            'packets': 0,
+                                            'rate': {'drop_rate_bps': 0,
+                                                     'interval': 300,
+                                                     'offered_rate_bps': 0}},
+                                        'test-cir': {
+                                            'bandwidth': '600000 '
+                                                         'kbps',
+                                            'bytes': 0,
+                                            'bytes_output': 0,
+                                            'match': ['none'],
+                                            'match_evaluation': 'match-all',
+                                            'no_buffer_drops': 0,
+                                            'packets': 0,
+                                            'pkts_output': 0,
+                                            'queue_depth': 0,
+                                            'queue_limit_packets': '64',
+                                            'queueing': True,
+                                            'rate': {'drop_rate_bps': 0,
+                                                     'interval': 300,
+                                                     'offered_rate_bps': 0},
+                                            'total_drops': 0}},
+                                    'queue_stats_for_all_priority_classes': {
+                                        'priority_level': {
+                                            'default': {'bytes_output': 0,
+                                                        'no_buffer_drops': 0,
+                                                        'pkts_output': 0,
+                                                        'queue_depth': 0,
+                                                        'total_drops':
+                                                            0}}}}},
+                            'class_map': {
+                                'class-default': {
+                                    'bytes': 0,
+                                    'bytes_output': 0,
+                                    'match': ['any'],
+                                    'match_evaluation':
+                                        'match-any',
+                                    'no_buffer_drops': 0,
+                                    'packets': 0,
+                                    'pkts_output': 0,
+                                    'queue_depth': 0,
+                                    'queue_limit_packets': '512',
+                                    'queueing': True,
+                                    'rate': {'drop_rate_bps': 0,
+                                             'interval': 300,
+                                             'offered_rate_bps': 0},
+                                    'shape_bc_bps': 21000000,
+                                    'shape_be_bps': 21000000,
+                                    'shape_cir_bps': 1000000000,
+                                    'shape_type': 'average',
+                                    'target_shape_rate':
+                                        3000000000,
+                                    'total_drops': 0}}}}}}}}
+
     golden_output21 = {'execute.return_value':'''
     GigabitEthernet4.1
     
@@ -2220,11 +2328,11 @@ show policy-map interface te0/0/0.101
           5 minute offered rate 0000 bps, drop rate 0000 bps
           Match: any
           Queueing
-          queue limit 74 packets
+          queue limit 34 packets
           (queue depth/total drops/no-buffer drops) 0/0/0
           (pkts output/bytes output) 0/0
-          shape (average) cir 7000000000, bc 28000000, be 28000000
-          target shape rate 7000000000
+          shape (average) cir 1000000000, bc 21000000, be 21000000
+          target shape rate 3000000000
     
           Service-policy : child-policy
     
@@ -2278,17 +2386,27 @@ show policy-map interface te0/0/0.101
               (pkts output/bytes output) 0/0
                 Exp-weight-constant: 4 (1/16)
                 Mean queue depth: 0 packets
-                class       Transmitted         Random drop      Tail drop          Minimum        Maximum     Mark
-                        pkts/bytes            pkts/bytes       pkts/bytes          thresh         thresh     prob
+                class       Transmitted         Random drop      Tail drop          
+                Minimum        Maximum     Mark
+                        pkts/bytes            pkts/bytes       pkts/bytes          
+                        thresh         thresh     prob
     
-                0               0/0               0/0              0/0                 25            50  1/10
-                1               0/0               0/0              0/0                 50            70  1/10
-                2               0/0               0/0              0/0                 80           100  1/10
-                3               0/0               0/0              0/0                 80           100  1/10
-                4               0/0               0/0              0/0                 80           100  1/10
-                5               0/0               0/0              0/0                 80           100  1/10
-                6               0/0               0/0              0/0                 80           100  1/10
-                7               0/0               0/0              0/0                 25            50  1/10
+                0               0/0               0/0              0/0                 
+                25            50  1/10
+                1               0/0               0/0              0/0                 
+                50            70  1/10
+                2               0/0               0/0              0/0                 
+                80           100  1/10
+                3               0/0               0/0              0/0                 
+                80           100  1/10
+                4               0/0               0/0              0/0                 
+                80           100  1/10
+                5               0/0               0/0              0/0                 
+                80           100  1/10
+                6               0/0               0/0              0/0                 
+                80           100  1/10
+                7               0/0               0/0              0/0                 
+                25            50  1/10
 
     '''}
 
@@ -2389,7 +2507,8 @@ show policy-map interface te0/0/0.101
         self.maxDiff = None
         self.device = Mock(**self.golden_output10)
         obj = ShowPolicyMapInterfaceOutput(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/1/1', class_name='class-default')
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/1',
+                                  class_name='class-default')
         self.assertEqual(parsed_output, self.golden_parsed_output10)
 
     def test_show_policy_map_interface_output_full2(self):
@@ -2403,7 +2522,8 @@ show policy-map interface te0/0/0.101
         self.maxDiff = None
         self.device = Mock(**self.golden_output12)
         obj = ShowPolicyMapInterfaceInput(device=self.device)
-        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4', class_name='class-default')
+        parsed_output = obj.parse(interface='gigabitEthernet 0/1/4',
+                                  class_name='class-default')
         self.assertEqual(parsed_output, self.golden_parsed_output12)
 
     def test_show_policy_map_interface_input_full2(self):
@@ -2441,13 +2561,12 @@ show policy-map interface te0/0/0.101
         parsed_output = obj.parse(num='1')
         self.assertEqual(parsed_output, self.golden_parsed_output17)
 
-    def test_show_policy_map_golden21(self):
+    def test_show_policy_map_interface_class13(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output21)
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse()
-        import pprint;
-        pprint.pprint(parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output21)
 
 # =============================================
 # Unit test for :
@@ -2935,18 +3054,61 @@ class test_show_policy_map(unittest.TestCase):
          bandwidth remaining ratio 20 
     '''}
 
-
+    golden_parsed_output12 = {
+        'policy_map': {
+            'child-policy': {
+                'class': {
+                    'band-policy': {
+                        'bandwidth_kbps': 150000},
+                    'class-default': {
+                        'queue_limit_packets': 100,
+                        'random_detect': {
+                            'class_val': {
+                                '0': {'mark_probability': '1/10',
+                                      'max_threshold': '50',
+                                      'min_threshold': '25'},
+                                '1': {'mark_probability': '1/10',
+                                      'max_threshold': '70',
+                                      'min_threshold': '50'},
+                                '2': {'mark_probability': '1/10',
+                                      'max_threshold': '100',
+                                      'min_threshold': '80'},
+                                '3': {'mark_probability': '1/10',
+                                      'max_threshold': '100',
+                                      'min_threshold': '80'},
+                                '4': {'mark_probability': '1/10',
+                                      'max_threshold': '100',
+                                      'min_threshold': '80'},
+                                '5': {'mark_probability': '1/10',
+                                      'max_threshold': '100',
+                                      'min_threshold': '80'},
+                                '6': {'mark_probability': '1/10',
+                                      'max_threshold': '100',
+                                      'min_threshold': '80'},
+                                '7': {'mark_probability': '1/10',
+                                      'max_threshold': '50',
+                                      'min_threshold': '25'}},
+                            'exponential_weight': 4,
+                            'wred_type': 'packet-based'}},
+                    'high-priority': {
+                        'priority': True,
+                        'priority_kbps': 2000000},
+                    'low-priority': {
+                        'priority': True,
+                        'priority_kbps': 2000000},
+                    'test-cir': {
+                        'bandwidth_kbps': 800000}}}}}
 
     golden_output12 = {'execute.return_value':'''
       Policy Map child-policy
         Class high-priority
-          priority 1000000 (kbps)
+          priority 2000000 (kbps)
         Class low-priority
-          priority 1000000 (kbps)
+          priority 2000000 (kbps)
         Class band-policy
-          bandwidth 110000 (kbps)
+          bandwidth 150000 (kbps)
         Class test-cir
-          bandwidth 600000 (kbps)
+          bandwidth 800000 (kbps)
         Class class-default
            packet-based wred, exponential weight 4
     
@@ -2961,7 +3123,7 @@ class test_show_policy_map(unittest.TestCase):
           6       80               100              1/10
           7       25               50               1/10
           queue-limit 100 packets
-'''}
+    '''}
 
     def test_show_policy_map_empty(self):
         self.maxDiff = None
@@ -3052,8 +3214,7 @@ class test_show_policy_map(unittest.TestCase):
         self.device = Mock(**self.golden_output12)
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
-        import pprint;
-        pprint.pprint(parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output12)
 
 if __name__ == '__main__':
     unittest.main()

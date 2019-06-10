@@ -385,7 +385,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         ret_dict = {}
         class_line_type = None
         queue_stats = 0
-
+        priority_dict = {}
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
@@ -951,9 +951,13 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             m = p17.match(line)
             if m:
                 if queue_stats == 1:
+                    if not priority_dict:
+                        priority_dict = queue_dict.setdefault('priority_level',
+                                                              {}).setdefault('default', {})
                     priority_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
                     priority_dict['total_drops'] = int(m.groupdict()['total_drops'])
                     priority_dict['no_buffer_drops'] = int(m.groupdict()['no_buffer_drops'])
+
                 else:
                     class_map_dict['queue_depth'] = int(m.groupdict()['queue_depth'])
                     class_map_dict['total_drops'] = int(m.groupdict()['total_drops'])
@@ -1432,7 +1436,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('set'): str,
                         Optional('conform_burst'): int,
                         Optional('priority'): bool,
-                        Optional('priority_kbps'): str,
+                        Optional('priority_kbps'): int,
                         Optional('priority_levels'): int,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
@@ -1889,12 +1893,12 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['be_msec'] = int(m.groupdict()['be_msec'])
                 continue
 
-            # priority
+            # priority 1000000 kbps
             m = p10.match(line)
             if m:
                 class_map_dict['priority'] = True
                 if m.group('priority_kbps'):
-                    class_map_dict['priority_kbps'] = m.groupdict()['priority_kbps']
+                    class_map_dict['priority_kbps'] = int(m.groupdict()['priority_kbps'])
                 continue
 
             # priority level 1

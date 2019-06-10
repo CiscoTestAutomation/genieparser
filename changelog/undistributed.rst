@@ -6,15 +6,12 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                platform
---------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowRedundancyStates for:
-        show redundancy states
-
---------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
 * IOSXE
-    * Fix class ShowPolicyMapTypeSuperParser
-    * Fix class ShowPolicyMap
+    * Fix ShowPolicyMap to parser customer's output
+        fixed not parsing lines with kbps
+        added wred_type key in schema
+    * Fix ShowPolicyMapInterface
+        set priority level to default if not exist in output
+        moved child-policy under parent-policy
