@@ -1686,11 +1686,9 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             m = p2_2.match(line)
             if m:
                 address='dhcp_negotiated'
-                if 'ipv4' not in interface_dict[interface]:
-                    interface_dict[interface]['ipv4'] = {}
-                interface_dict[interface]['ipv4'][address] = {}
-                interface_dict[interface]['ipv4'][address]['ip'] = 'dhcp_negotiated'
-                interface_dict[interface]['ipv4'][address]['secondary'] = False
+                ipv4_dict = interface_dict[interface].setdefault('ipv4',{})
+                ipv4_dict.setdefault(address, {})
+                ipv4_dict[address]['ip'] = 'dhcp_negotiated'
                 continue
 
             # Broadcast address is 255.255.255.255

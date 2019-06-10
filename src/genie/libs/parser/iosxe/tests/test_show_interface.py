@@ -15143,8 +15143,7 @@ GigabitEthernet1 is up, line protocol is up
             'ipv4': {
                 'dhcp_negotiated': {
                     'broadcase_address': '255.255.255.255',
-                    'ip': 'dhcp_negotiated',
-                    'secondary': False}},
+                    'ip': 'dhcp_negotiated'}},
             'local_proxy_arp': False,
             'mtu': 1500,
             'network_address_translation': False,
