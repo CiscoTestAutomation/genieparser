@@ -9,12 +9,6 @@
                                 platform
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowRedundancyStates for:
-        show redundancy states
     * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
 
---------------------------------------------------------------------------------
-                                policy-map
---------------------------------------------------------------------------------
-* IOSXE
-    * Fix class ShowPolicyMapTypeSuperParser
+

@@ -67,7 +67,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name Ping_Option'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -89,7 +89,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name TELNET_Permit'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -111,7 +111,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name TACACS_Permit'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -133,7 +133,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name SNMP_Permit'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -155,7 +155,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name FTP_Permit'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -216,7 +216,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name ICMP_Permit1'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -238,7 +238,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name ICMP_Permit2'],
                                     'police': {
                                         'cir_bps': 12000000,
-                                        'bc_bytes': 150000,
+                                        'cir_bc_bytes': 150000,
                                         'conformed': {
                                             'packets': 4,
                                             'bytes': 482,
@@ -260,7 +260,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name NTP_Permit'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1500,
+                                        'cir_bc_bytes': 1500,
                                         'conformed': {
                                             'packets': 3,
                                             'bytes': 330,
@@ -282,7 +282,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name ALL_Permit'],
                                     'police': {
                                         'cir_bps': 200000,
-                                        'bc_bytes': 15000,
+                                        'cir_bc_bytes': 15000,
                                         'conformed': {
                                             'packets': 23,
                                             'bytes': 1548,
@@ -534,7 +534,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group 102'],
                                     'police': {
                                         'cir_bps': 64000,
-                                        'bc_bytes': 8000,
+                                        'cir_bc_bytes': 8000,
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
@@ -594,7 +594,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name copp-ftp'],
                                     'police': {
                                         'cir_bps': 10000000,
-                                        'bc_bytes': 312500,
+                                        'cir_be_bytes': 312500,
                                         'conformed': {
                                             'packets': 2234,
                                             'bytes': 223400,
@@ -627,7 +627,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group 102'],
                                     'police': {
                                         'cir_bps': 64000,
-                                        'bc_bytes': 8000,
+                                        'cir_bc_bytes': 8000,
                                         'conformed': {
                                             'packets': 1430,
                                             'bytes': 91520,
@@ -1546,7 +1546,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match_evaluation': 'match-any',
                                     'packets': 0,
                                     'police': {
-                                        'bc_bytes': 83619,
+                                        'cir_bc_bytes': 83619,
                                         'cir_bps': 445500,
                                         'conformed': {
                                             'actions': {"transmit": True},
@@ -1757,7 +1757,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['access-group name VLAN51_QoS'],
                                     'police': {
                                         'cir_bps': 8000,
-                                        'bc_bytes': 1000,
+                                        'cir_bc_bytes': 1000,
                                         'conformed': {
                                             'packets': 22,
                                             'bytes': 1494,
@@ -1823,7 +1823,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     'match': ['any'],
                                     'police': {
                                         'cir_bps': 200000,
-                                        'bc_bytes': 6250,
+                                        'cir_bc_bytes': 6250,
                                         'conformed': {
                                             'packets': 0,
                                             'bytes': 0,
@@ -1909,7 +1909,7 @@ class test_show_policy_map_type(unittest.TestCase):
                                     ],
                                     "police": {
                                         "cir_bps": 400000,
-                                        "bc_bytes": 400000,
+                                        "cir_bc_bytes": 400000,
                                         "conformed": {
                                             "packets": 0,
                                             "bytes": 0,
@@ -2008,6 +2008,8 @@ class test_show_policy_map_type(unittest.TestCase):
                             "class_map": {
                                 "IPP67": {
                                     "match_evaluation": "match-all",
+                                    "bandwidth_kbps": 234,
+                                    "bandwidth_percent": 50,
                                     "packets": 123,
                                     "bytes": 4567,
                                     "rate": {
@@ -2097,12 +2099,112 @@ class test_show_policy_map_type(unittest.TestCase):
           bandwidth 50% (234 kbps)
           '''}
 
-    def test_show_policy_map_control_plane_full18(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output18)
-        obj = ShowPolicyMapControlPlane(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output18)
+    golden_parsed_output19 = {'TenGigabitEthernet0/0/0.101': 
+        {'service_policy': 
+            {'input': 
+                {'policy_name': 
+                    {'L3VPNin': 
+                        {'class_map': 
+                            {'ARP_in': 
+                                {'bytes': 0,
+                                'match': ['protocol ' 'arp'],
+                                                   'match_evaluation': 'match-all',
+                                                   'packets': 0,
+                                                   'police': {'cir_bc_bytes': 125,
+                                                              'cir_bps': 100,
+                                                              'conformed': {'actions': {'transmit': True},
+                                                                            'bps': 0,
+                                                                            'bytes': 0,
+                                                                            'packets': 0},
+                                                              'exceeded': {'actions': {'drop': True},
+                                                                           'bps': 0,
+                                                                           'bytes': 0,
+                                                                           'packets': 0},
+                                                              'pir_be_bytes': 658,
+                                                              'pir_bps': 20000,
+                                                              'violated': {'actions': {'drop': True},
+                                                                           'bps': 0,
+                                                                           'bytes': 0,
+                                                                           'packets': 0}},
+                                                   'rate': {'drop_rate_bps': 0,
+                                                            'interval': 300,
+                                                            'offered_rate_bps': 0}}}}}}}}}
+
+    golden_output19 = {'execute.return_value':'''
+show policy-map interface te0/0/0.101
+ TenGigabitEthernet0/0/0.101
+
+  Service-policy input: L3VPNin
+
+    Class-map: ARP_in (match-all)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: protocol arp
+      police:
+          cir 100 bps, bc 125 bytes
+          pir 20000 bps, be 658 bytes
+        conformed 0 packets, 0 bytes; actions:
+          transmit
+        exceeded 0 packets, 0 bytes; actions:
+          drop
+        violated 0 packets, 0 bytes; actions:
+          drop
+        conformed 0000 bps, exceeded 0000 bps, violated 0000 bps
+          '''}
+
+    golden_parsed_output20 = {
+    "TenGigabitEthernet0/0/0.101": {
+        "service_policy": {
+            "input": {
+                "policy_name": {
+                    "L3VPNin": {
+                        "class_map": {
+                            "IPP11111": {
+                                "match_evaluation": "match-all",
+                                "bandwidth_percent": 4,
+                                "bandwidth_kbps": 536,
+                                "packets": 253,
+                                "bytes": 5656,
+                                "rate": {
+                                    "interval": 300,
+                                    "offered_rate_bps": 0,
+                                    "drop_rate_bps": 0
+                                },
+                                "match": [
+                                    "ip precedence 6  7"
+                                ],
+                                "queueing": True,
+                                "queue_limit_packets": "32",
+                                "queue_depth": 98,
+                                "total_drops": 666,
+                                "no_buffer_drops": 0,
+                                "pkts_output": 125,
+                                "bytes_output": 253654
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    golden_output20 = {'execute.return_value':'''
+show policy-map interface te0/0/0.101
+ TenGigabitEthernet0/0/0.101
+
+  Service-policy input: L3VPNin
+
+    Class-map: IPP11111 (match-all)
+      253 packets, 5656 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: ip precedence 6  7
+      Queueing
+      queue limit 32 packets
+      (queue depth/total drops/no-buffer drops) 98/666/0
+      (pkts output/bytes output) 125/253654
+      bandwidth 4% (536 kbps)
+          '''}
 
     def test_show_policy_map_control_plane_empty(self):
         self.maxDiff = None
@@ -2175,6 +2277,27 @@ class test_show_policy_map_type(unittest.TestCase):
         obj = ShowPolicyMapInterface(device=self.device)
         parsed_output = obj.parse(interface='GigabitEthernet0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output9)
+
+    def test_show_policy_map_interface_full6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output18)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output18)
+
+    def test_show_policy_map_interface_full7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output19)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output19)
+
+    def test_show_policy_map_interface_full8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output20)
+        obj = ShowPolicyMapInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output20)
 
     def test_show_policy_map_interface_output_full1(self):
         self.maxDiff = None
@@ -2276,7 +2399,7 @@ class test_show_policy_map(unittest.TestCase):
                     'class-default': {
                         'police': {
                             'cir_bps': 445500,
-                            'bc_bytes': 83619,
+                            'cir_bc_bytes': 83619,
                             'conform_action': ['transmit'],
                             'exceed_action': ['drop']}}}}}}
 
@@ -2300,8 +2423,8 @@ class test_show_policy_map(unittest.TestCase):
                     'class-default': {
                         'police': {
                             'cir_bps': 50000,
-                            'bc_bytes': 3000,
-                            'be_bytes': 3000,
+                            'cir_bc_bytes': 3000,
+                            'cir_be_bytes': 3000,
                             'conform_color': 'hipri-conform',
                             'conform_action': ['transmit'],
                             'exceed_action': ['transmit'],
@@ -2322,19 +2445,19 @@ class test_show_policy_map(unittest.TestCase):
                     'user1-acl-child': {
                         'police': {
                             'cir_bps': 10000,
-                            'bc_bytes': 1500,
+                            'cir_bc_bytes': 1500,
                             'conform_action': ['set-qos-transmit 5'],
                             'exceed_action': ['drop']}},
                     'user2-acl-child': {
                         'police': {
                             'cir_bps': 20000,
-                            'bc_bytes': 1500,
+                            'cir_bc_bytes': 1500,
                             'conform_action': ['set-qos-transmit 5'],
                             'exceed_action': ['drop']}},
                     'class-default': {
                         'police': {
                             'cir_bps': 50000,
-                            'bc_bytes': 1500,
+                            'cir_bc_bytes': 1500,
                             'conform_action': ['transmit'],
                             'exceed_action': ['drop']}}}}}}
 
@@ -2468,7 +2591,7 @@ class test_show_policy_map(unittest.TestCase):
                 'class': {
                     'cos1': {
                         'police': {
-                            'bc_bytes': 8000,
+                            'cir_bc_bytes': 8000,
                              'cir_bps': 200000,
                              'conform_action': ['transmit'],
                              'exceed_action': ['drop']},
@@ -2524,8 +2647,8 @@ class test_show_policy_map(unittest.TestCase):
                         'priority': True,
                         'police': {
                             'cir_bps': 8000,
-                            'bc_bytes': 9216,
-                            'be_bytes': 0,
+                            'cir_bc_bytes': 9216,
+                            'cir_be_bytes': 0,
                             'conform_action': ['transmit'],
                             'exceed_action': ['drop'],
                             'violate_action': ['drop']}},
@@ -2661,9 +2784,9 @@ class test_show_policy_map(unittest.TestCase):
                     'class-default': {
                         'police': {
                             'cir_bps': 1000000,
-                            'bc_bytes': 31250,
+                            'cir_bc_bytes': 31250,
                             'pir': 2000000,
-                            'be_bytes': 31250,
+                            'pir_be_bytes': 31250,
                             'conform_action': ['transmit'],
                             'exceed_action': ['set-prec-transmit 4', 'set-frde-transmit'],
                             'violate_action': ['set-prec-transmit 2', 'set-frde-transmit']}}}}}}

@@ -147,7 +147,11 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                     },
                                     Optional('police'): {
                                         Optional('cir_bps'): int,
-                                        Optional('bc_bytes'): int,
+                                        Optional('pir_bps'): int,
+                                        Optional('cir_bc_bytes'): int,
+                                        Optional('cir_be_bytes'): int,
+                                        Optional('pir_bc_bytes'): int,
+                                        Optional('pir_be_bytes'): int,
                                         Optional('police_bps'): int,
                                         Optional('police_limit'): int,
                                         Optional('extended_limit'): int,
@@ -283,15 +287,23 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p6 = re.compile(r'^police:+$')
 
         #  police:  cir 64000 bps, bc 8000 bytes
-        p6_1 = re.compile(r'^police: +cir (?P<cir_bps>(\d+)) bps, bc (?P<bc_bytes>(\d+)) bytes$')
+        p6_1 = re.compile(r'^police: +cir (?P<cir_bps>(\d+)) bps, bc (?P<cir_bc_bytes>(\d+)) bytes$')
 
         # cir 8000 bps, bc 1500 bytes
-        # cir 10000000 bps, be 312500 bytes
-        p7 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, (?P<key>(bc|be)) (?P<bc_bytes>(\d+)) bytes$')
+        p7 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +bc +(?P<cir_bc_bytes>(\d+)) bytes$')
 
         # 8000 bps, 1500 limit, 1500 extended limit
         p7_1 = re.compile(r'^(?P<police_bps>(\d+)) bps, +(?P<police_limit>(\d+)) limit, +'
                            '(?P<extended_limit>(\d+))(.*)$')
+
+        # cir 10000000 bps, be 312500 bytes
+        p7_2 = re.compile(r'^cir (?P<cir_bps>(\d+)) bps, +be +(?P<cir_be_bytes>(\d+)) bytes$')
+
+        # pir 20000 bps, be 658 bytes
+        p7_3 = re.compile(r'^pir (?P<pir_bps>(\d+)) bps, +be +(?P<pir_be_bytes>(\d+)) bytes$')
+
+        # pir 20000 bps, bc 658 bytes
+        p7_4 = re.compile(r'^pir (?P<pir_bps>(\d+)) bps, +bc +(?P<pir_bc_bytes>(\d+)) bytes$')
 
         # conformed 8 packets, 800 bytes; actions:
         p8 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
@@ -387,6 +399,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # bandwidth 1000 (kbps)
         p23 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(kbps\)$')
+
+        # bandwidth 5% (234 kbps)
+        p23_1 = re.compile(r'^bandwidth (?P<bandwidth_percent>(\d+))\% +\((?P<bandwidth_kbps>(\d+)) +kbps\)$')
 
         # exponential weight: 9
         # exponential weight:9
@@ -583,14 +598,14 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
                 continue
 
             # cir 8000 bps, bc 1500 bytes
             m = p7.match(line)
             if m:
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
                 continue
 
             # 8000 bps, 1500 limit, 1500 extended limit
@@ -599,6 +614,27 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 police_dict['police_bps'] = int(m.groupdict()['police_bps'])
                 police_dict['police_limit'] = int(m.groupdict()['police_limit'])
                 police_dict['extended_limit'] = int(m.groupdict()['extended_limit'])
+
+            # cir 10000000 bps, be 312500 bytes
+            m = p7_2.match(line)
+            if m:
+                police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
+                police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
+                continue
+
+            # pir 20000 bps, be 658 bytes
+            m = p7_3.match(line)
+            if m:
+                police_dict['pir_bps'] = int(m.groupdict()['pir_bps'])
+                police_dict['pir_be_bytes'] = int(m.groupdict()['pir_be_bytes'])
+                continue
+
+            # pir 20000 bps, bc 658 bytes
+            m = p7_4.match(line)
+            if m:
+                police_dict['pir_bps'] = int(m.groupdict()['pir_bps'])
+                police_dict['pir_bc_bytes'] = int(m.groupdict()['pir_bc_bytes'])
+                continue
 
             # conformed 8 packets, 800 bytes; actions:
             m = p8.match(line)
@@ -839,6 +875,13 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # bandwidth 1000 (kbps)
             m = p23.match(line)
             if m:
+                class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth_kbps'])
+                continue
+
+            # bandwidth 1000 (kbps)
+            m = p23_1.match(line)
+            if m:
+                class_map_dict['bandwidth_percent'] = int(m.groupdict()['bandwidth_percent'])
                 class_map_dict['bandwidth_kbps'] = int(m.groupdict()['bandwidth_kbps'])
                 continue
 
@@ -1213,8 +1256,8 @@ class ShowPolicyMapSchema(MetaParser):
                                 'kbps': int}},
                         Optional('police'): {
                             Optional('cir_bps'): int,
-                            Optional('bc_bytes'): int,
-                            Optional('be_bytes'): int,
+                            Optional('cir_bc_bytes'): int,
+                            Optional('cir_be_bytes'): int,
                             Optional('conform_color'): str,
                             Optional('conform_action'): list,
                             Optional('exceed_action'): list,
@@ -1222,6 +1265,8 @@ class ShowPolicyMapSchema(MetaParser):
                             Optional('service_policy'): str,
                             Optional('conform_burst'): int,
                             Optional('pir'): int,
+                            Optional('pir_bc_bytes'): int,
+                            Optional('pir_be_bytes'): int,
                             Optional('peak_burst'): int,
                             Optional('cir_percent'): int,
                             Optional('bc_ms'): int,
@@ -1320,20 +1365,20 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p2 = re.compile(r'^Class +(?P<class_map>([\w\-\s]+))$')
 
         # police 8000 9216 0
-        p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<bc_bytes>(\d+)) +(?P<be_bytes>(\d+))$')
+        p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<cir_bc_bytes>(\d+)) +(?P<cir_be_bytes>(\d+))$')
 
         # police cir percent 20 bc 300 ms pir percent 40 be 400 ms
         p2_1 = re.compile(r'^police +cir +percent +(?P<cir_percent>(\d+)) +bc +(?P<bc_ms>(\d+)) +ms +pir +percent +'
                            '(?P<pir_percent>(\d+)) +be +(?P<be_ms>(\d+)) ms$')
 
         # police cir 1000000 bc 31250 pir 2000000 be 31250
-        p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<be_bytes>(\d+))$')
+        p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<pir_be_bytes>(\d+))$')
 
         # police cir 445500 bc 83619
-        p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+))$')
+        p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+))$')
 
         # police cir 50000 bc 3000 be 3000
-        p3_0 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<bc_bytes>(\d+)) +be +(?P<be_bytes>(\d+))$')
+        p3_0 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+)) +be +(?P<cir_be_bytes>(\d+))$')
 
         # conform-action transmit
         p3_1 = re.compile(r'^conform-action +(?P<conform_action>([\w\-\s]+))$')
@@ -1478,8 +1523,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
-                police_dict['be_bytes'] = int(m.groupdict()['be_bytes'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
+                police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
                 continue
 
             #police cir percent 20 bc 300 ms pir percent 40 be 400 ms
@@ -1506,9 +1551,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
                 police_dict['pir'] = int(m.groupdict()['pir'])
-                police_dict['be_bytes'] = int(m.groupdict()['be_bytes'])
+                police_dict['pir_be_bytes'] = int(m.groupdict()['pir_be_bytes'])
                 continue
 
 
@@ -1521,7 +1566,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
                 continue
 
             # police cir 50000 bc 3000 be 3000
@@ -1533,8 +1578,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
                 police_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                police_dict['bc_bytes'] = int(m.groupdict()['bc_bytes'])
-                police_dict['be_bytes'] = int(m.groupdict()['be_bytes'])
+                police_dict['cir_bc_bytes'] = int(m.groupdict()['cir_bc_bytes'])
+                police_dict['cir_be_bytes'] = int(m.groupdict()['cir_be_bytes'])
                 continue
 
             # conform-action transmit
