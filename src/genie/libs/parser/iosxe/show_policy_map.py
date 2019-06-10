@@ -647,18 +647,20 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 group = m.groupdict()
                 service_policy = group['service_policy'].strip()
                 policy_name = group['policy_name'].strip()
+
                 # Set dict
                 service_policy_dict = top_level_dict.setdefault('service_policy', {}).\
                                                      setdefault(service_policy, {})
                 policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
                                                        setdefault(policy_name, {})
+                parent_policy_dict = policy_name_dict
                 continue
 
             # Service policy : child
             m = p1_1.match(line)
             if m:
                 policy_name = m.groupdict()['policy_name'].strip()
-                policy_name_dict = service_policy_dict.setdefault('policy_name', {}).\
+                policy_name_dict = parent_policy_dict.setdefault('child_policy_name', {}).\
                                                        setdefault(policy_name, {})
                 continue
 
@@ -1430,6 +1432,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('set'): str,
                         Optional('conform_burst'): int,
                         Optional('priority'): bool,
+                        Optional('priority_kbps'): str,
                         Optional('priority_levels'): int,
                         Optional('peak_burst'): int,
                         Optional('average_rate_traffic_shaping'): bool,
@@ -1443,8 +1446,7 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('random_detect'): {
                             Optional('exponential_weight'): int,
                             Optional('bandwidth_percent'): int,
-                            Optional('time_based'): str,
-                            Optional('packet_based'): str,
+                            Optional('wred_type'): str,
                             Optional('class_val'): {
                                 Any(): {
                                     'min_threshold': str,
@@ -1561,7 +1563,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p6 = re.compile(r'^priority +level +(?P<pri_level>(\d+)) +(?P<kb_per_sec>(\d+)) \(kb\/s\)$')
 
         # bandwidth 20000 (kb/s)
-        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb\/s\)$')
+        p7_0 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+)) \(kb[p/]s\)$')
 
         # bandwidth 100
         p7_1 = re.compile(r'^bandwidth +(?P<bandwidth>(\d+))$')
@@ -1600,7 +1602,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                          'be (?P<be_msec>(\d+)) \(msec\)$')
 
         # priority
-        p10 = re.compile(r'^priority$')
+        p10 = re.compile(r'^priority( +(?P<priority_kbps>\d+) +\(kbps\))?$')
 
         # priority level 1
         p10_1 = re.compile(r'^priority +level +(?P<priority_levels>(\d+))$')
@@ -1634,11 +1636,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                             '+exceed-action +(?P<exceed_action>([\w\-\s]+)) +violate-action +(?P<violate_action>(\w+))$')
 
         # time-based wred, exponential weight 9
-        p16 = re.compile(r'^time-based +(?P<time_based>(\w+)), +exponential +weight +(?P<exponential_weight>(\d+))$')
-        # packet-based wred, exponential weight 9
-        p16_1 = re.compile(
-            r'^packet-based +(?P<packet_based>(\w+)), +exponential +weight +('
-            r'?P<exponential_weight>(\d+))$')
+        p16 = re.compile(r'^(?P<wred_type>[\w-]+) +wred, +exponential +weight +(?P<exponential_weight>(\d+))$')
+
         # queue-limit 200 ms
         p17 = re.compile(r'^queue-limit +(?P<queue_limit_ms>(\d+)) ms$')
 
@@ -1875,6 +1874,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                     class_dict['max_threshold'] = group['max_threshold']
                     class_dict['mark_probability'] = group['mark_probability']
                 else:
+                    random_detect = class_map_dict.setdefault('random_detect', {})
                     class_dict = random_detect.setdefault('class_val', {}).setdefault(class_val, {})
                     class_dict['min_threshold'] = group['min_threshold']
                     class_dict['max_threshold'] = group['max_threshold']
@@ -1893,6 +1893,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             m = p10.match(line)
             if m:
                 class_map_dict['priority'] = True
+                if m.group('priority_kbps'):
+                    class_map_dict['priority_kbps'] = m.groupdict()['priority_kbps']
                 continue
 
             # priority level 1
@@ -1978,16 +1980,11 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             #  time-based wred, exponential weight 9
             m = p16.match(line)
             if m:
-                random_detect['time_based'] = m.groupdict()['time_based']
+                random_detect = class_map_dict.setdefault('random_detect', {})
+                random_detect['wred_type'] = m.groupdict()['wred_type']
                 random_detect['exponential_weight'] = int(m.groupdict()['exponential_weight'])
                 continue
-            #  packet-based wred, exponential weight 9
-            m = p16_1.match(line)
-            if m:
-                random_detect['packet_based'] = m.groupdict()['packet_based']
-                random_detect['exponential_weight'] = int(
-                    m.groupdict()['exponential_weight'])
-                continue
+
             # queue-limit 200 ms
             m = p17.match(line)
             if m:
