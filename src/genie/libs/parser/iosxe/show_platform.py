@@ -2891,7 +2891,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         #  (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
         p3_2 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
                          ' +wred: +(?P<wred>[\w\d]+),'
-                         ' +qlimit +\((?P<type>bytes|pkts) *\): +(?P<qlimit>\d+)$')
+                         ' +qlimit +\((?P<type>bytes|pkts +)\): +(?P<qlimit>\d+)$')
 
         #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
         p4 = re.compile(r'^parent_sid: +(?P<parent_sid>[\w\d]+),'
@@ -2941,7 +2941,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
 
         #       queue_depth (bytes): 0    
         #       queue_depth (pkts ): 0
-        p15 = re.compile(r'^queue_depth +\((?P<type>bytes|pkts) *\): +(?P<queue_depth>\d+)$')
+        p15 = re.compile(r'^queue_depth +\((?P<type>bytes|pkts +)\): +(?P<queue_depth>\d+)$')
 
         #       licensed throughput oversubscription drops:
         #                   (bytes): 0                   ,          (packets): 0  
@@ -2985,7 +2985,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                     ['cache_queue_id'] = group['cache_queue_id']
                 ret_dict[interface]['index'][index]['software_control_info']\
                     ['wred'] = group['wred']
-                if group['type'] == 'bytes':
+                if group['type'].strip() == 'bytes':
                     ret_dict[interface]['index'][index]['software_control_info']\
                         ['qlimit_bytes'] = int(group['qlimit'])
                 else:
@@ -3081,7 +3081,7 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                if group['type'] == 'bytes':
+                if group['type'].strip() == 'bytes':
                     ret_dict[interface]['index'][index]['statistics']\
                         ['queue_depth_bytes'] = int(group['queue_depth'])
                 else:
