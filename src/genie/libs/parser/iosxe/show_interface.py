@@ -1681,6 +1681,17 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 interface_dict[interface]['ipv4'][address]\
                     ['secondary'] = True
                 continue
+            # Internet address will be negotiated using DHCP
+            p2_2 = re.compile(r'^Internet +[A|a]ddress +will +be +negotiated +using +DHCP$')
+            m = p2_2.match(line)
+            if m:
+                address='dhcp_negotiated'
+                if 'ipv4' not in interface_dict[interface]:
+                    interface_dict[interface]['ipv4'] = {}
+                interface_dict[interface]['ipv4'][address] = {}
+                interface_dict[interface]['ipv4'][address]['ip'] = 'dhcp_negotiated'
+                interface_dict[interface]['ipv4'][address]['secondary'] = False
+                continue
 
             # Broadcast address is 255.255.255.255
             p3 = re.compile(r'^Broadcast +address +is +(?P<address>[\w\.\:]+)$')
