@@ -200,8 +200,9 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 
         # Clock is synchronized, stratum 1, reference is .LOCL.
         # Clock is synchronized, stratum 2, reference assoc id 1, reference is 192.0.2.1
-        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+),'
-                         '(?: +reference +assoc +id +(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
+        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+)( +\([\S\s]+\))?'
+            ', +stratum +(?P<stratum>\d+),(?: +reference +assoc +id +'
+            '(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
 
         # Clock is unsynchronized, stratum 16, no reference clock
         p1_1 = re.compile(r'^Clock +is +(?P<clock_state>\w+), +stratum +(?P<stratum>\d+), +no +reference +clock$')
