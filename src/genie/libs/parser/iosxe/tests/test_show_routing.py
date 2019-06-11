@@ -7,12 +7,13 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.iosxe.show_routing import ShowIpRoute, \
-                                                 ShowIpv6RouteUpdated,\
+from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
+                                                 ShowIpRoute,\
                                                  ShowIpRouteWord,\
-                                                 ShowIpv6RouteWord,\
+                                                 ShowIpv6RouteUpdated,\
                                                  ShowIpCef,\
-                                                 ShowIpv6Cef
+                                                 ShowIpv6Cef,\
+                                                 ShowIpv6RouteDistributor
 
 # ============================================
 # unit test for 'show ip route'
@@ -716,9 +717,118 @@ class test_show_ip_route(unittest.TestCase):
         L        10.12.7.38/32 is directly connected, Vlan101
         '''}
 
+    golden_parsed_output5 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "routes": {
+                            "10.1.1.0/24": {
+                                "active": True,
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "10.4.1.1",
+                                            "updated": "01:40:40"
+                                        }
+                                    }
+                                },
+                                "source_protocol": "bgp",
+                                "metric": 2219,
+                                "route_preference": 200,
+                                "source_protocol_codes": "B",
+                                "route": "10.1.1.0/24"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output5 = {'execute.return_value': '''
+          R1#show ip route bgp
+          IPv6 Routing Table - default - 5 entries
+          Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+                 B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+                 I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+                 EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+                 NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter
+                 OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1
+                 ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations
+                 ld - LISP dyn-eid, a - Application
+                10.225.0.0/24 is subnetted, 5 subnets
+          B        10.1.1.0 [200/2219] via 10.4.1.1, 01:40:40
+          '''}
+
+    golden_parsed_output6 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv6": {
+                        "routes": {
+                            "2001:2:2:2::2/128": {
+                                "active": True,
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "2001:DB8:1:1::2"
+                                        }
+                                    }
+                                },
+                                "source_protocol": "local_connected",
+                                "metric": 0,
+                                "route_preference": 200,
+                                "source_protocol_codes": "LC",
+                                "route": "2001:2:2:2::2/128"
+                            },
+                            "615:11:11:4::/64": {
+                                "active": True,
+                                "metric": 2219,
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "10.4.1.1",
+                                            "vrf": "default"
+                                        }
+                                    }
+                                },
+                                "route": "615:11:11:4::/64",
+                                "route_preference": 200,
+                                "source_protocol": "bgp",
+                                "source_protocol_codes": "B"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output6 = {'execute.return_value': '''
+          R1#show ipv6 route bgp
+          IPv6 Routing Table - default - 5 entries
+          Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+                 B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+                 I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+                 EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination
+                 NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter
+                 OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1
+                 ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations
+                 ld - LISP dyn-eid, a - Application
+        LC   2001:2:2:2::2/128 [200/0]
+               via 2001:DB8:1:1::2
+          B   615:11:11:4::/64 [200/2219]
+            via 10.4.1.1%default, indirectly connected
+          '''}
+
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
@@ -732,24 +842,37 @@ class test_show_ip_route(unittest.TestCase):
     def test_show_ip_route_2_with_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2_with_vrf)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
 
     def test_show_ip_route3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(vrf='OOB_Mgmt')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_ip_route4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
-        obj = ShowIpRoute(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        route_map_obj = ShowIpRouteDistributor(device=self.device)
+        parsed_output = route_map_obj.parse(protocol='bgp')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
+    def test_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        route_map_obj = ShowIpv6RouteDistributor(device=self.device)
+        parsed_output = route_map_obj.parse()
+        self.assertDictEqual(parsed_output, self.golden_parsed_output6)
 
 ###################################################
 # unit test for show ipv6 route updated
@@ -1042,17 +1165,23 @@ class test_show_ip_route_word(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpRouteWord(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route='192.168.154.0')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_route)
-        obj = ShowIpRouteWord(device=self.device)
+        obj = ShowIpRouteDistributor(device=self.device)
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_with_route)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='192.168.154.0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
@@ -1100,14 +1229,14 @@ class test_show_ipv6_route_word(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowIpv6RouteWord(device=self.device)
+        obj = ShowIpv6RouteDistributor(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(route='2000:2::4:1')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_with_ipv6_route)
-        obj = ShowIpv6RouteWord(device=self.device)
+        obj = ShowIpv6RouteDistributor(device=self.device)
         parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
@@ -1125,7 +1254,7 @@ class test_show_ip_cef(unittest.TestCase):
         R1#sh ip cef
         10.2.3.0/24
           nexthop 10.1.2.2 GigabitEthernet2.100
-          nexthop 10.1.3.3 GigabitEthernet3.100
+          next_hop 10.1.3.3 GigabitEthernet3.100
            '''}
 
     golden_parsed_output_1 = {

@@ -62,6 +62,7 @@ class ShowArp(ShowArpSchema):
                   show arp vrf <vrf> <WROD> """
 
     cli_command = ['show arp','show arp vrf {vrf}','show arp vrf {vrf} {intf_or_ip}','show arp {intf_or_ip}']
+    exclude = ['age']
 
     def cli(self, vrf='', intf_or_ip='', cmd=None, output=None):
         if output is None:
@@ -189,7 +190,7 @@ class ShowIpTrafficSchema(MetaParser):
             'arp_out_replies': int,
             'arp_out_proxy': int,
             'arp_out_reverse': int,
-            'arp_drops_input_full': int,
+            Optional('arp_drops_input_full'): int,
         },
         'ip_statistics': {
             'ip_rcvd_total': int,
@@ -648,6 +649,9 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         # EIGRP-IPv4 statistics:
         p59 = re.compile(r'^EIGRP-IPv4 +statistics:')
 
+        # IP-EIGRP statistics:
+        p59_1 = re.compile(r'^IP-EIGRP +statistics:')
+
         # Rcvd: 4612 total
         p60 = re.compile(r'^Rcvd: +(?P<eigrp_ipv4_received_total>\d+) +total$')
 
@@ -1102,6 +1106,12 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 continue
 
             m = p59.match(line)
+            if m:
+                ret_dict.setdefault('eigrp_ipv4_statistics', {})
+                location = 'eigrp_ipv4_statistics'
+                continue
+
+            m = p59_1.match(line)
             if m:
                 ret_dict.setdefault('eigrp_ipv4_statistics', {})
                 location = 'eigrp_ipv4_statistics'

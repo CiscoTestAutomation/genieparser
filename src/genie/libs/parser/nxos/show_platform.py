@@ -73,6 +73,13 @@ class ShowVersion(ShowVersionSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     cli_command = 'show version'
+    exclude = [
+        'seconds',
+        'minutes',
+        'hours',
+        'days',
+        'essor_board_id',
+        'reason']
 
     def cli(self,output=None):
         ''' parsing mechanism: cli
@@ -538,6 +545,10 @@ class ShowRedundancyStatusSchema(MetaParser):
 class ShowRedundancyStatus(ShowRedundancyStatusSchema):
     """Parser for show redundancy status"""
     cli_command = 'show redundancy status'
+    exclude = [
+        'active_supervisor_time',
+        'kernel_uptime',
+        'system_uptime']
 
     def cli(self, cmd='',output=None):
         if not cmd:
@@ -1047,6 +1058,12 @@ class Dir(DirSchema):
     """Parser for dir"""
 
     cli_command = 'dir'
+    exclude = [
+        'date',
+        'size',
+        'time',
+        'disk_free_space',
+        'disk_used_space']
 
     def cli(self,output=None):
         ''' parsing mechanism: cli
@@ -1124,6 +1141,8 @@ class ShowVdcDetail(ShowVdcDetailSchema):
     """Parser for show vdc detail"""
 
     cli_command = 'show vdc detail'
+    exclude = [
+        'uptime']
 
     def cli(self,output=None):
         ''' parsing mechanism: cli
@@ -1251,41 +1270,50 @@ class ShowVdcDetail(ShowVdcDetailSchema):
         return vdc_dict
 
 class ShowVdcCurrentSchema(MetaParser):
-    """Schema for show vdc current-vdc"""
-    schema = {'current_vdc':
-                {'id': str,
-                 'name': str}
-             }
+    '''Schema for:
+        * show vdc current-vdc
+    '''
+
+    schema = {
+        'current_vdc':
+            {'id': str,
+            'name': str,
+            }
+        }
 
 class ShowVdcCurrent(ShowVdcCurrentSchema):
-    """Parser for show vdc current-vdc"""
+    '''Parser for:
+        * show vdc current-vdc
+    '''
 
     cli_command = 'show vdc current-vdc'
 
-    def cli(self,output=None):
-        ''' parsing mechanism: cli
+    def cli(self, output=None):
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        '''
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        current_vdc_dict = {}
+        # Init
+        ret_dict = {}
+
+        # Current vdc is 1 - N95_1
+        p1 = re.compile(r'^Current +vdc +is +(?P<id>\d+) *- *(?P<name>\S+)$')
+
         for line in out.splitlines():
-            line = line.rstrip()
-            p1 = re.compile(r'^\s*Current +vdc +is +(?P<id>[0-9]+) +- +(?P<name>[a-zA-Z0-9]+)$')
+            line = line.strip()
+
+            # Current vdc is 1 - N95_1
             m = p1.match(line)
             if m:
-                if 'current_vdc' not in current_vdc_dict:
-                    current_vdc_dict['current_vdc'] = {}
-                current_vdc_dict['current_vdc']['id'] = m.groupdict()['id']
-                current_vdc_dict['current_vdc']['name'] = m.groupdict()['name']
+                group = m.groupdict()
+                curr_vdc_dict = ret_dict.setdefault('current_vdc', {})
+                curr_vdc_dict['id'] = group['id']
+                curr_vdc_dict['name'] = group['name']
                 continue
 
-        return current_vdc_dict
+        return ret_dict
 
 class ShowVdcMembershipStatusSchema(MetaParser):
     """Schema for show vdc membership status"""

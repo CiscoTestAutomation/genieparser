@@ -178,6 +178,16 @@ class ShowInterfaces(ShowInterfacesSchema):
                   show interfaces <interface>"""
 
     cli_command = ['show interfaces','show interfaces {interface}']
+    exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts', 
+        'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts', 
+        'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
+        'last_output', 'out_unknown_protocl_drops', 'last_input',
+        'input_queue_drops', 'out_interface_resets', 'rxload',
+        'txload', 'last_clear', 'in_crc_errors', 'in_errors',
+        'in_giants', 'unnumbered', 'mac_address', 'phys_address',
+        'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
+        'reliability']
+
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -886,6 +896,8 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
      show ip interface brief
      parser class implements detail parsing mechanisms for cli and yang output.
     """
+    exclude = ['method', '(Tunnel.*)']
+
     #*************************
     # schema - class variable
     #
@@ -972,6 +984,7 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = "show ip interface brief | include Vlan"
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -1590,6 +1603,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                   show ip interface <interface>"""
 
     cli_command = ['show ip interface','show ip interface {interface}']
+    exclude = ['unnumbered', 'address_determined_by', '(Tunnel.*)', 'joins', 'leaves']
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -1670,6 +1684,15 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     ['prefix_length'] = prefix_length
                 interface_dict[interface]['ipv4'][address]\
                     ['secondary'] = True
+                continue
+            # Internet address will be negotiated using DHCP
+            p2_2 = re.compile(r'^Internet +[A|a]ddress +will +be +negotiated +using +DHCP$')
+            m = p2_2.match(line)
+            if m:
+                address='dhcp_negotiated'
+                ipv4_dict = interface_dict[interface].setdefault('ipv4',{})
+                ipv4_dict.setdefault(address, {})
+                ipv4_dict[address]['ip'] = 'dhcp_negotiated'
                 continue
 
             # Broadcast address is 255.255.255.255
@@ -2770,6 +2793,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces <interface> accounting
     """
     cli_command = ['show interfaces {intf} accounting','show interfaces accounting']
+    exclude = ['pkts_in', 'pkts_out', 'chars_in', 'chars_out']
 
     def cli(self, intf=None,output=None):
         if output is None:

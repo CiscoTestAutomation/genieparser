@@ -2170,6 +2170,60 @@ class test_show_bgp_all_detail(unittest.TestCase):
         For address family: VPNv4 Flowspec
         '''}
 
+    golden_output3 = {'execute.return_value': '''
+    BGP routing table entry for 65000:1:1.1.1.1/32, version 2
+Paths: (1 available, best #1, table VRF1)
+  Advertised to update-groups:
+     1
+  Refresh Epoch 1
+  Local
+    0.0.0.0 (via vrf VRF1) from 0.0.0.0 (1.1.1.1)
+      Origin IGP, metric 0, localpref 100, weight 32768, valid, sourced, local, best
+      Extended Community: Cost:pre-bestpath:128:1280 0x8800:32768:0
+        0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    golden_parsed_output3 = {
+    'instance': {
+        'default': {
+            'vrf': {
+                'VRF1': {
+                    'address_family': {
+                        'vpnv4 unicast': {
+                        
+                            'prefixes': {
+                                '1.1.1.1/32': {
+                                    'table_version': '2',
+                                    'available_path': '1',
+                                    'best_path': '1',
+                                    'paths': '1 available, best #1, table VRF1',
+                                    'index': {
+                                        1: {
+                                            'next_hop': '0.0.0.0',
+                                            'gateway': '0.0.0.0',
+                                            'originator': '1.1.1.1',
+                                            'next_hop_via': 'vrf VRF1',
+                                            'localpref': 100,
+                                            'metric': 0,
+                                            'weight': '32768',
+                                            'origin_codes': 'i',
+                                            'status_codes': '*>',
+                                            'refresh_epoch': 1,
+                                            'ext_community': 'Cost:pre-bestpath:128:1280 0x8800:32768:0',
+                                            'route_info': 'Local',
+                                            'recipient_pathid': '0',
+                                            'transfer_pathid': '0x0',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_show_bgp_all_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllDetail(device=self.device)
@@ -2190,6 +2244,13 @@ class test_show_bgp_all_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+    def test_show_bgp_vrf_route_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllDetail(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', route='1.1.1.1')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
 # ============================
 # Unit test for:
 #   * 'show ip bgp all detail'
@@ -2209,7 +2270,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                 {'default_vrf': 'VRF100',
                                 'prefixes': {'192.168.111.0/24': {'available_path': '1',
                                                                  'best_path': '1',
-                                                                 'index': {1: {'evpn': {'ext_community': 'RT:65000:100'},
+                                                                 'index': {1: {'ext_community': 'RT:65000:100',
                                                                                'gateway': '0.0.0.0',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2234,7 +2295,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                                                  'table_version': '2'},
                                             '192.168.112.0/24': {'available_path': '1',
                                                                  'best_path': '1',
-                                                                 'index': {1: {'evpn': {'ext_community': 'RT:65000:100'},
+                                                                 'index': {1: {'ext_community': 'RT:65000:100',
                                                                                'gateway': '172.17.111.2',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2260,7 +2321,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             '192.168.121.0/24': {'available_path': '2',
                                                                  'best_path': '2',
                                                                  'index': {1: {'cluster_list': '10.2.2.2',
-                                                                               'evpn': {'ext_community': 'RT:65000:100'},
+                                                                               'ext_community': 'RT:65000:100',
                                                                                'gateway': '10.2.2.2',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2278,7 +2339,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                                                                'transfer_pathid': '0',
                                                                                'update_group': 1},
                                                                            2: {'cluster_list': '10.1.1.1',
-                                                                               'evpn': {'ext_community': 'RT:65000:100'},
+                                                                               'ext_community': 'RT:65000:100',
                                                                                'gateway': '10.1.1.1',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2304,7 +2365,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             '192.168.122.0/24': {'available_path': '2',
                                                                  'best_path': '2',
                                                                  'index': {1: {'cluster_list': '10.2.2.2',
-                                                                               'evpn': {'ext_community': 'RT:65000:100'},
+                                                                               'ext_community': 'RT:65000:100',
                                                                                'gateway': '10.2.2.2',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2322,7 +2383,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                                                                'transfer_pathid': '0',
                                                                                'update_group': 1},
                                                                            2: {'cluster_list': '10.1.1.1',
-                                                                               'evpn': {'ext_community': 'RT:65000:100'},
+                                                                               'ext_community': 'RT:65000:100',
                                                                                'gateway': '10.1.1.1',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2352,7 +2413,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                 {'default_vrf': 'VRF200',
                                 'prefixes': {'192.168.211.0/24': {'available_path': '1',
                                                                  'best_path': '1',
-                                                                 'index': {1: {'evpn': {'ext_community': 'RT:65000:200'},
+                                                                 'index': {1: {'ext_community': 'RT:65000:200',
                                                                                'gateway': '0.0.0.0',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2377,7 +2438,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                                                  'table_version': '4'},
                                             '192.168.212.0/24': {'available_path': '1',
                                                                  'best_path': '1',
-                                                                 'index': {1: {'evpn': {'ext_community': 'RT:65000:200'},
+                                                                 'index': {1: {'ext_community': 'RT:65000:200',
                                                                                'gateway': '172.17.211.2',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2403,7 +2464,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             '192.168.221.0/24': {'available_path': '2',
                                                                  'best_path': '2',
                                                                  'index': {1: {'cluster_list': '10.2.2.2',
-                                                                               'evpn': {'ext_community': 'RT:65000:200'},
+                                                                               'ext_community': 'RT:65000:200',
                                                                                'gateway': '10.2.2.2',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2421,7 +2482,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                                                                'transfer_pathid': '0',
                                                                                'update_group': 2},
                                                                            2: {'cluster_list': '10.1.1.1',
-                                                                               'evpn': {'ext_community': 'RT:65000:200'},
+                                                                               'ext_community': 'RT:65000:200',
                                                                                'gateway': '10.1.1.1',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2447,7 +2508,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             '192.168.222.0/24': {'available_path': '2',
                                                                  'best_path': '2',
                                                                  'index': {1: {'cluster_list': '10.2.2.2',
-                                                                               'evpn': {'ext_community': 'RT:65000:200'},
+                                                                               'ext_community': 'RT:65000:200',
                                                                                'gateway': '10.2.2.2',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2465,7 +2526,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                                                                'transfer_pathid': '0',
                                                                                'update_group': 2},
                                                                            2: {'cluster_list': '10.1.1.1',
-                                                                               'evpn': {'ext_community': 'RT:65000:200'},
+                                                                               'ext_community': 'RT:65000:200',
                                                                                'gateway': '10.1.1.1',
                                                                                'inaccessible': False,
                                                                                'localpref': 100,
@@ -2677,9 +2738,7 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             'metric': 0,
                                             'origin_codes': '?',
                                             'status_codes': '*>',
-                                            'evpn': {
-                                                'ext_community': 'RT:12:23',
-                                                },
+                                            'ext_community': 'RT:12:23',
                                             },
                                         2: {
                                             'next_hop': '10.13.13.13',
@@ -2690,10 +2749,8 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             'metric': 0,
                                             'origin_codes': '?',
                                             'status_codes': '* ',
-                                            'evpn': {
-                                                'ext_community': 'RT:12:23 ',
-                                                'recursive_via_connected': True,
-                                                },
+                                            'ext_community': 'RT:12:23 ',
+                                            'recursive_via_connected': True,
                                             },
                                         3: {
                                             'next_hop': '10.3.3.3',
@@ -2704,18 +2761,14 @@ class test_show_ip_bgp_all_detail(unittest.TestCase):
                                             'metric': 0,
                                             'origin_codes': '?',
                                             'status_codes': '* i',
-                                            'evpn': {
-                                                'ext_community': 'RT:12:23',
-                                                },
+                                            'ext_community': 'RT:12:23',
                                             },
                                         4: {
                                             'next_hop': '10.11.11.11',
                                             'gateway': '10.11.11.11',
                                             'originator': '10.1.0.1',
-                                            'evpn': {
-                                                'ext_community': 'RT:11:12 ',
-                                                'recursive_via_connected': True,
-                                                },
+                                            'ext_community': 'RT:11:12 ',
+                                            'recursive_via_connected': True,
                                             },
                                         },
                                     },
@@ -2802,8 +2855,7 @@ class test_show_bgp_detail(unittest.TestCase):
                                             {1: 
                                                 {'agi_version': 0,
                                                 'cluster_list': '0.0.0.61',
-                                                'evpn': 
-                                                    {'ext_community': 'RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500'},
+                                                'ext_community': 'RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500',
                                                 'gateway': '192.168.165.119',
                                                 'label_base': 16,
                                                 'localpref': 100,
@@ -2821,8 +2873,7 @@ class test_show_bgp_detail(unittest.TestCase):
                                             2: 
                                                 {'agi_version': 0,
                                                 'cluster_list': '0.0.0.61',
-                                                'evpn': 
-                                                    {'ext_community': 'RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500'},
+                                                'ext_community': 'RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500',
                                                 'gateway': '192.168.165.120',
                                                 'label_base': 16,
                                                 'localpref': 100,
@@ -2851,8 +2902,7 @@ class test_show_bgp_detail(unittest.TestCase):
                                         'index': 
                                             {1: 
                                                 {'agi_version': 0,
-                                                'evpn': 
-                                                    {'ext_community': 'RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500'},
+                                                'ext_community': 'RT:0:3051 RT:5918:3051 L2VPN L2:0x0:MTU-1500',
                                                 'gateway': '0.0.0.0',
                                                 'label_base': 1026,
                                                 'localpref': 100,
@@ -2935,6 +2985,7 @@ class test_show_bgp_detail(unittest.TestCase):
 # Unit test for:
 #   * 'show ip bgp {address_family} rd {rd} detail'
 #   * 'show ip bgp {address_family} vrf {vrf} detail'
+#   * 'show ip bgp {address_family} rd {rd} {route}'
 # ====================================================
 class test_show_ip_bgp_detail(unittest.TestCase):
 
@@ -2952,8 +3003,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                 'prefixes': 
                                     {'10.4.1.0/24': {'available_path': '1',
                                                    'best_path': '1',
-                                                   'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                           'RT:5918:50'},
+                                                   'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                  'gateway': '10.169.197.254',
                                                                  'localpref': 100,
                                                                  'metric': 0,
@@ -2981,8 +3031,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                    'table_version': '29454065'},
                                     '10.44.105.0/24': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                               'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                      'gateway': '10.169.197.254',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -3011,8 +3060,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                     '172.16.100.1/32': {'available_path': '1',
                                                         'best_path': '1',
                                                         'index': {1: {'community': '62000:1',
-                                                                      'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                                      'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3040,8 +3088,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454165'},
                                     '172.16.100.10/32': {'available_path': '1',
                                                          'best_path': '1',
-                                                         'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                 'RT:5918:50'},
+                                                         'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
@@ -3069,8 +3116,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                          'table_version': '29454074'},
                                     '172.16.100.11/32': {'available_path': '1',
                                                          'best_path': '1',
-                                                         'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                 'RT:5918:50'},
+                                                         'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
@@ -3098,8 +3144,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                          'table_version': '29454075'},
                                     '172.16.100.12/32': {'available_path': '1',
                                                          'best_path': '1',
-                                                         'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                 'RT:5918:50'},
+                                                         'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
@@ -3127,8 +3172,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                          'table_version': '29454076'},
                                     '172.16.100.13/32': {'available_path': '1',
                                                          'best_path': '1',
-                                                         'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                 'RT:5918:50'},
+                                                         'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                        'gateway': '10.169.197.254',
                                                                        'localpref': 100,
                                                                        'metric': 0,
@@ -3157,8 +3201,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                     '172.16.100.2/32': {'available_path': '1',
                                                         'best_path': '1',
                                                         'index': {1: {'community': '62000:2',
-                                                                      'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                                      'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3186,8 +3229,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454166'},
                                     '172.16.100.3/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3215,8 +3257,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454067'},
                                     '172.16.100.4/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3244,8 +3285,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454068'},
                                     '172.16.100.5/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3273,8 +3313,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454069'},
                                     '172.16.100.6/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3302,8 +3341,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454070'},
                                     '172.16.100.7/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3331,8 +3369,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454071'},
                                     '172.16.100.8/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3360,8 +3397,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '29454072'},
                                     '172.16.100.9/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'SoO:5918:999 '
-                                                                                                'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'SoO:5918:999 RT:5918:50',
                                                                       'gateway': '10.169.197.254',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3574,7 +3610,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                 'prefixes': 
                                     {'10.4.1.0/24': {'available_path': '1',
                                                     'best_path': '1',
-                                                    'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                    'index': {1: {'ext_community': 'RT:5918:50',
                                                                 'gateway': '192.168.10.253',
                                                                 'localpref': 100,
                                                                 'metric': 0,
@@ -3598,7 +3634,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                     'table_version': '16933597'},
                                     '10.44.105.0/24': {'available_path': '1',
                                                       'best_path': '1',
-                                                      'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                      'index': {1: {'ext_community': 'RT:5918:50',
                                                                     'gateway': '192.168.10.253',
                                                                     'localpref': 100,
                                                                     'metric': 0,
@@ -3622,7 +3658,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                       'table_version': '16933498'},
                                     '172.16.100.10/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3646,7 +3682,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933541'},
                                     '172.16.100.11/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3670,7 +3706,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933540'},
                                     '172.16.100.12/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3694,7 +3730,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933539'},
                                     '172.16.100.13/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3718,7 +3754,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933538'},
                                     '172.16.100.14/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3742,7 +3778,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933537'},
                                     '172.16.100.15/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3766,7 +3802,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933536'},
                                     '172.16.100.16/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3790,7 +3826,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933551'},
                                     '172.16.100.17/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3814,7 +3850,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933550'},
                                     '172.16.100.18/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3838,7 +3874,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933549'},
                                     '172.16.100.19/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3863,7 +3899,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                     '172.16.100.2/32': {'available_path': '1',
                                                        'best_path': '1',
                                                        'index': {1: {'community': '62000:2',
-                                                                     'evpn': {'ext_community': 'RT:5918:50'},
+                                                                     'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -3886,7 +3922,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933598'},
                                     '172.16.100.20/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3910,7 +3946,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933547'},
                                     '172.16.100.21/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3934,7 +3970,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933546'},
                                     '172.16.100.22/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3958,7 +3994,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933545'},
                                     '172.16.100.23/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -3982,7 +4018,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933544'},
                                     '172.16.100.24/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4006,7 +4042,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933559'},
                                     '172.16.100.25/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4030,7 +4066,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933558'},
                                     '172.16.100.26/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4054,7 +4090,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933557'},
                                     '172.16.100.27/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4078,7 +4114,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933556'},
                                     '172.16.100.28/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4102,7 +4138,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933555'},
                                     '172.16.100.29/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4126,7 +4162,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933554'},
                                     '172.16.100.3/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4150,7 +4186,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933535'},
                                     '172.16.100.30/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4174,7 +4210,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933553'},
                                     '172.16.100.31/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4198,7 +4234,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933552'},
                                     '172.16.100.32/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4222,7 +4258,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933506'},
                                     '172.16.100.33/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4246,7 +4282,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933505'},
                                     '172.16.100.34/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4270,7 +4306,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933504'},
                                     '172.16.100.35/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4294,7 +4330,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933503'},
                                     '172.16.100.36/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4318,7 +4354,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933502'},
                                     '172.16.100.37/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4342,7 +4378,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933501'},
                                     '172.16.100.38/32': {'available_path': '1',
                                                         'best_path': '1',
-                                                        'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                        'index': {1: {'ext_community': 'RT:5918:50',
                                                                       'gateway': '192.168.10.253',
                                                                       'localpref': 100,
                                                                       'metric': 0,
@@ -4366,7 +4402,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                         'table_version': '16933500'},
                                     '172.16.100.4/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4390,7 +4426,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933534'},
                                     '172.16.100.5/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4414,7 +4450,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933533'},
                                     '172.16.100.6/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4438,7 +4474,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933532'},
                                     '172.16.100.7/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4462,7 +4498,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933531'},
                                     '172.16.100.8/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4486,7 +4522,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
                                                        'table_version': '16933543'},
                                     '172.16.100.9/32': {'available_path': '1',
                                                        'best_path': '1',
-                                                       'index': {1: {'evpn': {'ext_community': 'RT:5918:50'},
+                                                       'index': {1: {'ext_community': 'RT:5918:50',
                                                                      'gateway': '192.168.10.253',
                                                                      'localpref': 100,
                                                                      'metric': 0,
@@ -4948,6 +4984,61 @@ class test_show_ip_bgp_detail(unittest.TestCase):
               rx pathid: 0, tx pathid: 0x0
         '''}
 
+    golden_output3 = {'execute.return_value':'''
+    BGP routing table entry for 9996:4093:11.11.11.11/32, version 6195
+Paths: (1 available, best #1, no table)
+  Advertised to update-groups:
+     17         18
+  Refresh Epoch 9
+  65555, (Received from a RR-client)
+    106.162.197.254 (metric 1002) (via default) from 106.162.197.254 (106.162.197.254)
+      Origin incomplete, metric 0, localpref 100, valid, internal, best
+      Community: 62000:1
+      Extended Community: RT:9996:4093
+      mpls labels in/out nolabel/584
+      rx pathid: 0, tx pathid: 0x0
+    '''}
+    golden_parsed_output3 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'vpnv4': {
+                                'prefixes': {
+                                    '11.11.11.11/32': {
+                                        'table_version': '6195',
+                                        'available_path': '1',
+                                        'best_path': '1',
+                                        'paths': '1 available, best #1, no table',
+                                        'index': {
+                                            1: {
+                                                'next_hop': '106.162.197.254',
+                                                'gateway': '106.162.197.254',
+                                                'originator': '106.162.197.254',
+                                                'next_hop_igp_metric': '1002',
+                                                'next_hop_via': 'default',
+                                                'localpref': 100,
+                                                'metric': 0,
+                                                'origin_codes': '?',
+                                                'status_codes': '*>',
+                                                'refresh_epoch': 9,
+                                                'route_info': '65555, (Received from a RR-client)',
+                                                'community': '62000:1',
+                                                'ext_community': 'RT:9996:4093',
+                                                'recipient_pathid': '0',
+                                                'transfer_pathid': '0x0',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
     def test_show_bgp_detail_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpDetail(device=self.device)
@@ -4968,14 +5059,23 @@ class test_show_ip_bgp_detail(unittest.TestCase):
         parsed_output = obj.parse(address_family='vpnv4', vrf='L3VPN-0050')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+    def test_show_bgp_all_detail_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpBgpDetail(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093',
+            route='11.11.11.11/32')
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
 
 #-------------------------------------------------------------------------------
 
 
-# ==========================
+# =========================================
 # Unit test for
 #   * 'show bgp all summary'
-# ==========================
+#   * 'show bgp vrf {vrf} all summary'
+# =========================================
 class test_show_bgp_all_summary(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -5821,7 +5921,120 @@ class test_show_bgp_all_summary(unittest.TestCase):
         2001:DB8:20:4:6::6
                 4          400      67      73       66    0    0 01:03:11        5
             '''}
+    golden_output3 = {'execute.return_value' : '''
+            For address family: IPv4 Unicast
 
+
+
+
+
+        For address family: VPNv4 Unicast
+
+        BGP router identifier 192.168.10.254, local AS number 9996
+
+        BGP table version is 189, main routing table version 189
+
+        25 network entries using 6400 bytes of memory
+
+        38 path entries using 5168 bytes of memory
+
+        110/106 BGP path/bestpath attribute entries using 32560 bytes of memory
+
+        1 BGP rrinfo entries using 40 bytes of memory
+
+        1 BGP AS-PATH entries using 24 bytes of memory
+
+        2 BGP community entries using 48 bytes of memory
+
+        102 BGP extended community entries using 3248 bytes of memory
+
+        0 BGP route-map cache entries using 0 bytes of memory
+
+        0 BGP filter-list cache entries using 0 bytes of memory
+
+        BGP using 47488 total bytes of memory
+
+        BGP activity 226/0 prefixes, 339/0 paths, scan interval 60 secs
+
+
+
+        Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+
+        192.168.10.253  4        65555      20      12      189    0    0 00:03:52       13
+
+
+
+        For address family: IPv4 Flowspec
+    '''}
+    golden_parsed_output3={
+    'bgp_id': 9996,
+    'vrf': {
+        'CE1test': {
+            'neighbor': {
+                '192.168.10.253': {
+                    'address_family': {
+                        'vpnv4 unicast': {
+                            'version': 4,
+                            'as': 65555,
+                            'msg_rcvd': 20,
+                            'msg_sent': 12,
+                            'tbl_ver': 189,
+                            'input_queue': 0,
+                            'output_queue': 0,
+                            'up_down': '00:03:52',
+                            'state_pfxrcd': '13',
+                            'route_identifier': '192.168.10.254',
+                            'local_as': 9996,
+                            'bgp_table_version': 189,
+                            'routing_table_version': 189,
+                            'attribute_entries': '110/106',
+                            'prefixes': {
+                                'total_entries': 25,
+                                'memory_usage': 6400,
+                                },
+                            'path': {
+                                'total_entries': 38,
+                                'memory_usage': 5168,
+                                },
+                            'total_memory': 47488,
+                            'activity_prefixes': '226/0',
+                            'activity_paths': '339/0',
+                            'scan_interval': 60,
+                            'cache_entries': {
+                                'route-map': {
+                                    'total_entries': 0,
+                                    'memory_usage': 0,
+                                    },
+                                'filter-list': {
+                                    'total_entries': 0,
+                                    'memory_usage': 0,
+                                    },
+                                },
+                            'entries': {
+                                'rrinfo': {
+                                    'total_entries': 1,
+                                    'memory_usage': 40,
+                                    },
+                                'AS-PATH': {
+                                    'total_entries': 1,
+                                    'memory_usage': 24,
+                                    },
+                                'community': {
+                                    'total_entries': 2,
+                                    'memory_usage': 48,
+                                    },
+                                },
+                            'community_entries': {
+                                'total_entries': 102,
+                                'memory_usage': 3248,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_show_bgp_all_summary_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_summary_obj = ShowBgpAllSummary(device=self.device1)
@@ -5842,6 +6055,12 @@ class test_show_bgp_all_summary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_show_bgp_vrf_all_summary_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpAllSummary(device=self.device)
+        parsed_output = obj.parse(vrf='CE1test')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =================================================
 # Unit test for
@@ -18710,6 +18929,81 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
          *>i 192.168.189.0        192.168.69.1                       0      0 i
         '''}
 
+    golden_parsed_output5 = {
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'2001:2:2:2::2':
+                        {'address_family':
+                            {'ipv6 unicast':
+                                {'bgp_table_version': 6,
+                                'local_router_id': '1.1.1.1',
+                                'routes':
+                                    {'2001:2:2:2::2/128':
+                                        {'index':
+                                            {1:
+                                                {'localprf': 100,
+                                                'metric': 0,
+                                                'next_hop': '2001:2:2:2::2',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': 'r>',
+                                                'weight': 0}}}}},
+                            'vpnv6 unicast':
+                                {'bgp_table_version': 6,
+                                'local_router_id': '1.1.1.1',
+                                'routes': {}},
+                            'vpnv6 unicast RD 65000:1':
+                                {'bgp_table_version': 6,
+                                'default_vrf': 'VRF1',
+                                'local_router_id': '1.1.1.1',
+                                'route_distinguisher': '65000:1',
+                                'routes':
+                                    {'2001:2:2:2::2/128':
+                                        {'index':
+                                            {1:
+                                                {'localprf': 100,
+                                                'metric': 0,
+                                                'next_hop': '2001:2:2:2::2',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': 'r>',
+                                                'weight': 0}}}}}}}}}}}
+
+    golden_output5 = {'execute.return_value': '''
+        show bgp all neighbors 2001:2:2:2::2 routes
+        For address family: IPv6 Unicast
+        BGP table version is 6, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        r>i  2001:2:2:2::2/128
+                              2001:2:2:2::2            0    100      0 i
+
+        Total number of prefixes 1
+
+        For address family: VPNv6 Unicast
+        BGP table version is 6, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 65000:1 (default for vrf VRF1)
+        r>i  2001:2:2:2::2/128
+                              2001:2:2:2::2            0    100      0 i
+
+        Total number of prefixes 1
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_routes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
@@ -18742,7 +19036,14 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
         self.device = Mock(**self.golden_output4)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='192.168.36.119', address_family='vpnv4 unicast')
-        self.assertEqual(parsed_output, self.golden_parsed_output4)    
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_bgp_vrf_all_neighbors_routes_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBgpAllNeighborsRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='2001:2:2:2::2')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # =================================================

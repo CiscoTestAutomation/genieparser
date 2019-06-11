@@ -160,6 +160,8 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
     """Parser for show protocols afi-all all"""
 
     cli_command = 'show protocols afi-all all'
+    exclude = ['last_update', 'current_state']
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
