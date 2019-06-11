@@ -11,3 +11,9 @@
 * IOSXE
     * Update ShowEnvironment to support: 
     	show environment | include {include}
+
+--------------------------------------------------------------------------------
+                                ARP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpTraffic to parser customer's output
