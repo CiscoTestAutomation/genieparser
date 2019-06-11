@@ -5,7 +5,13 @@ from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
-from genie.libs.parser.nxos.show_dot1x import ShowDot1xAllStatistics
+from genie.libs.parser.nxos.show_dot1x import ShowDot1xAllStatistics, \
+                                                ShowDot1xAllSummary
+
+
+#   ============================================    #
+#                    Statistics                     #
+#   ============================================    #
 
 class test_show_dot1x_all_statistics(unittest.TestCase):
     dev1 = Device(name='DeviceA')
@@ -81,7 +87,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
     '''
     }
 
-
+    # Tests
     def test_output(self):
         self.maxDiff = None
         self.dev1 = Mock(**self.output)
@@ -94,14 +100,109 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         self.dev1 = Mock(**self.output_2)
         obj = ShowDot1xAllStatistics(device=self.dev1)
         parsed = obj.parse()
-        print(parsed)
-    
+        self.assertEqual(parsed, self.parsed_output_2)
+
     def test_empty_output(self):
         self.dev2 = Mock(**self.empty_output)
         obj = ShowDot1xAllStatistics(device = self.dev2)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
+
+#   ============================================    #
+#                     Summary                       #
+#   ============================================    #
+
+class test_show_dot1x_all_summary(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value' : '       '}
+
+    parsed_output_1 = {
+        'Interfaces': {
+            'Ethernet102/1/6': {
+                'interface': 'Ethernet102/1/6',
+                'clients': {
+                    'client': '0E:BE:EF:3F:00:00',
+                    'pae': 'AUTH',
+                    'status': 'AUTHORIZED'
+                    }
+                },
+            'Ethernet1/1': {
+                'interface': 'Ethernet1/1',
+                'clients': {
+                    'client': 'none',
+                    'pae': 'AUTH',
+                    'status': 'AUTHORIZED'
+                }
+            }
+        }
+    }
+
+    output = {'execute.return_value' : '''
+               Interface     PAE              Client          Status
+    ------------------------------------------------------------------
+             Ethernet1/1    AUTH                none      AUTHORIZED
+
+               Interface     PAE              Client          Status
+    ------------------------------------------------------------------
+      Ethernet102/1/6    AUTH   0E:BE:EF:3F:00:00      AUTHORIZED
+    '''
+    }
+
+    parsed_output_2 = {
+        'Interfaces': {
+            'Ethernet5': {
+                'interface': 'Ethernet5',
+                'clients': {
+                    'client': '0e:be:00:4g:e0:00',
+                    'pae': 'SUPP',
+                    'status': 'UNAUTHORIZED'
+                    }
+                },
+            'Ethernet1/1': {
+                'interface': 'Ethernet1/1',
+                'clients': {
+                    'client': 'none',
+                    'pae': 'AUTH',
+                    'status': 'AUTHORIZED'
+                }
+            }
+        }
+    }
+
+    output_2 = {'execute.return_value' : '''
+               Interface     PAE              Client          Status
+    ------------------------------------------------------------------
+             Ethernet1/1    AUTH                none      AUTHORIZED
+
+               Interface     PAE              Client          Status
+    ------------------------------------------------------------------
+      Ethernet5    SUPP   0e:be:00:4g:e0:00      UNAUTHORIZED
+    '''
+    }
+
+    # Tests
+    def test_output_1(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.output)
+        obj = ShowDot1xAllSummary(device = self.dev1)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.parsed_output_1)
+
+    def test_output_2(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.output_2)
+        obj = ShowDot1xAllSummary(device = self.dev1)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.parsed_output_2)
+    
+    def test_empty_output(self):
+        self.dev2 = Mock(**self.empty_output)
+        obj = ShowDot1xAllSummary(device = self.dev2)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
 
 if __name__ == '__main__':
     unittest.main()
