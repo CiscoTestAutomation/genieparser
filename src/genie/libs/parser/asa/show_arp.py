@@ -21,15 +21,16 @@ class ShowArpSchema(MetaParser):
     """
 
     schema = {
-        'arp': {
+        'name': {
         	Any(): {
-                'name': str,
-            	'mac_address': str,
-            	'entry': str,
                 'ipv4': {
-                    Any(): { 
-                        Optional('ip'): str,
-                        Optional('prefix_length'): str
+                    'neighbors': {
+                        Any(): { 
+                            Optional('ip'): str,
+                            Optional('prefix_length'): str,
+                            'link_layer_address': str,
+                            'age': str
+                        }
                     }
                 }
             },
@@ -54,31 +55,37 @@ class ShowArp(ShowArpSchema):
             out = output
 
         ret_dict = {}
-        arp_id = 1
 
-        # pod100 172.16.100.254 0000.0c9f.f00b 318
-        p1 = re.compile(r'^(?P<name>[\w\S\.\-\(\)]+) +(?P<ip>[a-z0-9\.\w]+)'
-            '(\/(?P<prefix_length>[0-9]+))? +(?P<mac_address>[\w\.]+) +(?P<entry>[\-\w]+)$')
+        # outside 10.86.194.61 0011.2094.1d2b 2
+        # outside 10.86.194.1 001a.300c.8000 -
+        # outside 10.86.195.2 00d0.02a8.440a alias
+        # outside 10.86.195.3/24 00d0.02a8.440a -
+        p1 = re.compile(r'^(?P<name>\S+) +(?P<ip>\d+.\d+.\d+.\d+)'
+            '(\/(?P<prefix_length>[0-9]+))? +(?P<link_layer_address>\S+.\S+.\S+) '
+            '+(?P<age>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-             # pod100 172.16.100.254 0000.0c9f.f00b 318
+            # outside 10.86.194.61 0011.2094.1d2b 2
+            # outside 10.86.194.1 001a.300c.8000 -
+            # outside 10.86.195.2 00d0.02a8.440a alias
+            # outside 10.86.195.3/24 00d0.02a8.440a -
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                dict_arp = ret_dict.setdefault('arp', {}).setdefault(arp_id, {})
-                dict_arp.update({'name': groups['name']})
-                dict_arp.update({'mac_address': groups['mac_address']})
-                dict_arp.update({'entry': groups['entry']})
+                dict_name = ret_dict.setdefault('name', {}). \
+                setdefault(groups['name'], {}).setdefault('ipv4', {}). \
+                setdefault('neighbors', {})
                 ipv4 = groups['ip']
                 if groups['prefix_length']:
-                    address = groups['ip'] + '/' + groups['prefix_length']
-                dict_ipv4 = dict_arp.setdefault('ipv4', {}).setdefault(ipv4, {})
+                    ipv4 = groups['ip'] + '/' + groups['prefix_length']
+                dict_ipv4 = dict_name.setdefault(ipv4, {})
                 dict_ipv4.update({'ip': groups['ip']})
                 if groups['prefix_length']:
                     dict_ipv4.update({'prefix_length': groups['prefix_length']})
-                arp_id += 1   
+                dict_ipv4.update({'link_layer_address': groups['link_layer_address']})
+                dict_ipv4.update({'age': groups['age']})
                 continue
 
         return ret_dict
