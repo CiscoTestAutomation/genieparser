@@ -27,3 +27,8 @@
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
 
+--------------------------------------------------------------------------------
+                                interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInterfaceSwitchport to support custom interface argument
