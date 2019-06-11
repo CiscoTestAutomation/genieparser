@@ -4,3 +4,10 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
+
+
+------------------------------------------------------------------
+                            protocols
+------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpProtocols to fix parsing issue of unbound variable
