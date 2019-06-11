@@ -4,3 +4,12 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
+
+--------------------------------------------------------------------------------
+                                policy-map
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowPolicyMap
+        changed regex to support more patterns
+    * Fix ShowPolicyMapInterface
+        changed key for output with kbps

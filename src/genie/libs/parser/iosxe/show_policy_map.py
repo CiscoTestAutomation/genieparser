@@ -544,7 +544,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p22 = re.compile(r'^Bandwidth +(?P<bandwidth>(\d+)) .*$')
 
         # bandwidth 1000 (kbps)
-        p23 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(kbps\)$')
+        p23 = re.compile(r'^bandwidth (?P<bandwidth_kbps>(\d+)) \(?kbps\)?$')
 
         # bandwidth 5% (234 kbps)
         p23_1 = re.compile(r'^bandwidth (?P<bandwidth_percent>(\d+))\% +\((?P<bandwidth_kbps>(\d+)) +kbps\)$')
@@ -1444,6 +1444,8 @@ class ShowPolicyMapSchema(MetaParser):
                         Optional('cir_percent'): int,
                         Optional('bc_msec'): int,
                         Optional('be_msec'): int,
+                        Optional('be_bits'): int,
+                        Optional('bc_bits'): int,
                         Optional('cir_bps'): int,
                         Optional('cir_upper_bound_bps'): int,
                         Optional('cir_lower_bound_bps'): int,
@@ -1509,7 +1511,14 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         police_line = 0
         weight_line = None
 
-
+        unit_dict = {'%': 'percent',
+                     'bits': 'bits',
+                     'bps': 'bps',
+                     'b/s': 'bps',
+                     'bytes': 'bytes',
+                     'kbps': 'kbps',
+                     'kb/s': 'kbps',
+                     'msec': 'msec'}
         # Policy Map police-in
         p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\w\-]+))$')
         
@@ -1557,11 +1566,8 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         #cir upper-bound 2120000 (bps) cir lower-bound 1120000 (bps)
         p4_1 = re.compile(r'^cir +upper-bound +(?P<cir_upper_bound_bps>(\d+)) \(bps\) +cir +lower-bound +(?P<cir_lower_bound_bps>(\d+)) \(bps\)$')
 
-        # cir 1000000 (bps)
-        p5 = re.compile(r'^cir +(?P<cir_bps>(\d+)) \(bps\)$')
-
-        # cir 100%
-        p5_0 = re.compile(r'cir +(?P<cir_percent>(\d+))%$')
+        # cir 1000000 (bps) bc 10000000 (bits) be 1000000 (bits)
+        p5 = re.compile(r'^cir +(?P<cir>(\d+)) *\(?(?P<cir_unit>[\w%]+)\)?( +bc +(?P<bc>(\d+)) +\((?P<bc_unit>\w+)\))?( +be +(?P<be>(\d+)) +\((?P<be_unit>\w+)\))?$')
 
         # priority level 1 20000 (kb/s)
         p6 = re.compile(r'^priority +level +(?P<pri_level>(\d+)) +(?P<kb_per_sec>(\d+)) \(kb\/s\)$')
@@ -1790,16 +1796,17 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 class_map_dict['cir_lower_bound_bps'] = int(m.groupdict()['cir_lower_bound_bps'])
                 continue
 
-            # cir 1000000 (bps)
+            # cir 1000000 (bps) bc 10000000 (bits) be 1000000 (bits)
             m = p5.match(line)
             if m:
-                class_map_dict['cir_bps'] = int(m.groupdict()['cir_bps'])
-                continue
-
-            # cir 100%
-            m = p5_0.match(line)
-            if m:
-                class_map_dict['cir_percent'] = int(m.groupdict()['cir_percent'])
+                cir_unit=unit_dict[m.groupdict()['cir_unit']]
+                class_map_dict['cir'+'_'+cir_unit] = int(m.groupdict()['cir'])
+                if m.group('bc'):
+                    bc_unit = unit_dict[m.groupdict()['bc_unit']]
+                    class_map_dict['bc' + '_' + bc_unit] = int(m.groupdict()['bc'])
+                if m.group('be'):
+                    be_unit = unit_dict[m.groupdict()['be_unit']]
+                    class_map_dict['be' + '_' + be_unit] = int(m.groupdict()['be'])
                 continue
 
             # priority level 1 20000 (kb/s)
