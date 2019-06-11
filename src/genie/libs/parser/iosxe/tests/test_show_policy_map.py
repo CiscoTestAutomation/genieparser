@@ -3123,6 +3123,15 @@ class test_show_policy_map(unittest.TestCase):
           7       25               50               1/10
           queue-limit 100 packets
     '''}
+    golden_parsed_output13 = {
+        'policy_map': {
+            'parent-policy2': {
+                'class': {
+                    'class-default': {
+                        'average_rate_traffic_shaping': True,
+                        'bc_bits': 2000000,
+                        'be_bits': 300000,
+                        'cir_bps': 1000000}}}}}
 
     golden_output13 = {'execute.return_value':'''
         Policy Map parent-policy2
@@ -3228,7 +3237,7 @@ class test_show_policy_map(unittest.TestCase):
         self.device = Mock(**self.golden_output13)
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
-        import pprint; pprint.pprint(parsed_output)
-        # self.assertEqual(parsed_output, self.golden_parsed_output13)
+        self.assertEqual(parsed_output, self.golden_parsed_output13)
+
 if __name__ == '__main__':
     unittest.main()
