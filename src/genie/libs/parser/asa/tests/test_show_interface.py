@@ -328,32 +328,10 @@ class test_show_interface_ip_brief(unittest.TestCase):
 
     golden_parsed_output = {
         'interfaces': {
-            'Vlan1000': {
+            'Control0/0': {
 				'ipv4': {
-                    '172.16.100.251': { 
-                        'ip': '172.16.100.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            }
-        }
-    }
-
-    golden_output = {'execute.return_value': '''
-		DevNet-asa-sm-1/admin# show interface ip brief
-		Interface                  IP-Address      OK? Method Status                Protocol
-		Vlan1000                   172.16.100.251  YES CONFIG up                    up
-	'''}
-
-    golden_parsed_output_2 = {
-        'interfaces': {
-            'Vlan1160': {
-				'ipv4': {
-                    '172.16.232.251': { 
-                        'ip': '172.16.232.251'
+                    '127.0.1.1': { 
+                        'ip': '127.0.1.1'
                     },
                 },
                 'check': 'YES',
@@ -361,10 +339,10 @@ class test_show_interface_ip_brief(unittest.TestCase):
                 'link_status': 'up',
                 'line_protocol': 'up'
             },
-            'Vlan1161': {
+            'GigabitEthernet0/0': {
 				'ipv4': {
-                    '172.16.233.251': { 
-                        'ip': '172.16.233.251'
+                    '209.165.200.226': { 
+                        'ip': '209.165.200.226'
                     },
                 },
                 'check': 'YES',
@@ -372,254 +350,61 @@ class test_show_interface_ip_brief(unittest.TestCase):
                 'link_status': 'up',
                 'line_protocol': 'up'
             },
-            'Vlan1162': {
-				'ipv4': {
-                    '10.10.2.4': { 
-                        'ip': '10.10.2.4'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1163': {
-				'ipv4': {
-                    '172.16.234.251': { 
-                        'ip': '172.16.234.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1164': {
-				'ipv4': {
-                    '172.16.235.251': { 
-                        'ip': '172.16.235.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1165': {
-				'ipv4': {
-                    '172.16.236.251': { 
-                        'ip': '172.16.236.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1166': {
-				'ipv4': {
-                    '172.16.237.251': { 
-                        'ip': '172.16.237.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1167': {
-				'ipv4': {
-                    '172.16.238.251': { 
-                        'ip': '172.16.238.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1168': {
-				'ipv4': {
-                    '172.16.239.251': { 
-                        'ip': '172.16.239.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1169': {
-				'ipv4': {
-                    '172.16.240.251': { 
-                        'ip': '172.16.240.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1170': {
-				'ipv4': {
-                    '172.16.241.251': { 
-                        'ip': '172.16.241.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1171': {
-				'ipv4': {
-                    '172.16.242.251': { 
-                        'ip': '172.16.242.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1172': {
-				'ipv4': {
-                    '172.16.243.251': { 
-                        'ip': '172.16.243.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1173': {
-				'ipv4': {
-                    '172.16.244.251': { 
-                        'ip': '172.16.244.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1174': {
-				'ipv4': {
-                    '172.16.245.251': { 
-                        'ip': '172.16.245.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1175': {
-				'ipv4': {
-                    '172.16.246.251': { 
-                        'ip': '172.16.246.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1176': {
-				'ipv4': {
-                    '172.16.247.251': { 
-                        'ip': '172.16.247.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1177': {
-				'ipv4': {
-                    '172.16.248.251': { 
-                        'ip': '172.16.248.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan1178': {
-				'ipv4': {
-                    '172.16.249.251': { 
-                        'ip': '172.16.249.251'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'down',
-                'line_protocol': 'down'
-            },
-            'Vlan300': {
-				'ipv4': {
-                    '10.10.10.4': { 
-                        'ip': '10.10.10.4'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan400': {
-				'ipv4': {
-                    '10.110.10.230': { 
-                        'ip': '10.110.10.230'
-                    },
-                },
-                'check': 'YES',
-                'method': 'CONFIG',
-                'link_status': 'up',
-                'line_protocol': 'up'
-            },
-            'Vlan700': {
+            'GigabitEthernet0/1': {
 				'ipv4': {
                     'unnumbered': { 
                         'unnumbered_intf_ref': 'unassigned'
                     },
                 },
                 'check': 'YES',
-                'method': 'unset',
-                'link_status': 'up',
-                'line_protocol': 'up'
+                'method': 'unset admin',
+                'link_status': 'down',
+                'line_protocol': 'down'
+            },
+            'GigabitEthernet0/2': {
+				'ipv4': {
+                    '10.1.1.50': { 
+                        'ip': '10.1.1.50'
+                    },
+                },
+                'check': 'YES',
+                'method': 'manual admin',
+                'link_status': 'down',
+                'line_protocol': 'down'
+            },
+            'GigabitEthernet0/3': {
+				'ipv4': {
+                    '192.168.2.6': { 
+                        'ip': '192.168.2.6'
+                    },
+                },
+                'check': 'YES',
+                'method': 'DHCP admin',
+                'link_status': 'down',
+                'line_protocol': 'down'
+            },
+            'Management0/0': {
+				'ipv4': {
+                    '209.165.201.3': { 
+                        'ip': '209.165.201.3'
+                    },
+                },
+                'check': 'YES',
+                'method': 'CONFIG',
+                'link_status': 'up'
             }
         }
     }
 
-    golden_output_2 = {'execute.return_value': '''
-    	DevNet-asa-sm-1/admin# show interface ip brief
-		Interface                  IP-Address      OK? Method Status                Protocol
-		Vlan1160                   172.16.232.251  YES CONFIG up                    up
-		Vlan1161                   172.16.233.251  YES CONFIG up                    up
-		Vlan1162                   10.10.2.4       YES CONFIG up                    up
-		Vlan1163                   172.16.234.251  YES CONFIG up                    up
-		Vlan1164                   172.16.235.251  YES CONFIG up                    up
-		Vlan1165                   172.16.236.251  YES CONFIG up                    up
-		Vlan1166                   172.16.237.251  YES CONFIG up                    up
-		Vlan1167                   172.16.238.251  YES CONFIG up                    up
-		Vlan1168                   172.16.239.251  YES CONFIG up                    up
-		Vlan1169                   172.16.240.251  YES CONFIG up                    up
-		Vlan1170                   172.16.241.251  YES CONFIG up                    up
-		Vlan1171                   172.16.242.251  YES CONFIG up                    up
-		Vlan1172                   172.16.243.251  YES CONFIG up                    up
-		Vlan1173                   172.16.244.251  YES CONFIG up                    up
-		Vlan1174                   172.16.245.251  YES CONFIG up                    up
-		Vlan1175                   172.16.246.251  YES CONFIG up                    up
-		Vlan1176                   172.16.247.251  YES CONFIG up                    up
-		Vlan1177                   172.16.248.251  YES CONFIG up                    up
-		Vlan1178                   172.16.249.251  YES CONFIG down                  down
-		Vlan300                    10.10.10.4      YES CONFIG up                    up
-		Vlan400                    10.110.10.230   YES CONFIG up                    up
-		Vlan700                    unassigned      YES unset  up                    up
+    golden_output = {'execute.return_value': '''
+		ciscoasa# show interface ip brief
+		Interface IP-Address OK? Method Status Protocol
+		Control0/0 127.0.1.1 YES CONFIG up up
+		GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
+		GigabitEthernet0/1 unassigned YES unset admin down down
+		GigabitEthernet0/2 10.1.1.50 YES manual admin down down
+		GigabitEthernet0/3 192.168.2.6 YES DHCP admin down down
+		Management0/0 209.165.201.3 YES CONFIG up
 	'''}
 
     def test_empty(self):
@@ -634,13 +419,6 @@ class test_show_interface_ip_brief(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_golden_2(self):
-        self.device = Mock(**self.golden_output_2)
-        interface_obj = ShowInterfaceIpBrief(device=self.device)
-        parsed_output = interface_obj.parse()
-        self.maxDiff = None
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # =============================================
 # Parser for 'show interface detail'

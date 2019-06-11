@@ -126,11 +126,11 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
             if m:
                 groups = m.groupdict()
                 ipv4 = groups['ip']
-                if groups['prefix_length'] is not None:
+                if groups['prefix_length']:
                     address = groups['ip'] + '/' + groups['prefix_length']
                 dict_ipv4 = instance_dict.setdefault('ipv4', {}).setdefault(ipv4, {})
                 dict_ipv4.update({'ip': groups['ip']})
-                if groups['prefix_length'] is not None:
+                if groups['prefix_length']:
                     dict_ipv4.update({'prefix_length': groups['prefix_length']})                
                 instance_dict.update({'subnet': groups['subnet']})
                 continue
@@ -171,7 +171,7 @@ class ShowInterfaceIpBriefSchema(MetaParser):
                 'check': str,
                 'method': str,
                 'link_status': str,
-                'line_protocol': str
+                Optional('line_protocol'): str
                 },
             }
         }
@@ -194,16 +194,25 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
 
         ret_dict = {}
 
-        # Vlan1000 172.16.100.251 YES CONFIG up up
-        p1 = re.compile(r'^(?P<interface>\w+) +(?P<ip>[a-z0-9\.]+)'
-            '(\/(?P<prefix_length>[0-9]+))? '
-            '+(?P<check>\w+) +(?P<method>\w+) +(?P<link_status>up|down) '
-            '+(?P<line_protocol>up|down)$')
+        # Interface IP-Address OK? Method Status Protocol
+        # Control0/0 127.0.1.1 YES CONFIG up up
+        # GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
+        # GigabitEthernet0/1 unassigned YES unset admin down down
+        # GigabitEthernet0/2 10.1.1.50 YES manual admin down down
+        # GigabitEthernet0/3 192.168.2.6 YES DHCP admin down down
+        # Management0/0 209.165.201.3 YES CONFIG up
+        p1 = re.compile(r'^(?P<interface>.+) +(?P<ip>[a-z0-9\.]+)?(\/(?P<prefix_length>[0-9]+))? +(?P<check>\w+) +(?P<method>unset|CONFIG|unset admin|manual admin|DHCP admin|unset)+[\ ]?(?P<link_status>up|down)+[\ ]?(?P<line_protocol>up|down)?$')
 
         for line in out.splitlines():
             line = line.strip()
 
-        # Vlan1000 172.16.100.251 YES CONFIG up up
+            # Interface IP-Address OK? Method Status Protocol
+            # Control0/0 127.0.1.1 YES CONFIG up up
+            # GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
+            # GigabitEthernet0/1 unassigned YES unset admin down down
+            # GigabitEthernet0/2 10.1.1.50 YES manual admin down down
+            # GigabitEthernet0/3 192.168.2.6 YES DHCP admin down down
+            # Management0/0 209.165.201.3 YES CONFIG up
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -216,17 +225,18 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
                     dict_unnumbered.update({'unnumbered_intf_ref': groups['ip']})
                 else:
                     ipv4 = groups['ip']
-                    if groups['prefix_length'] is not None:
+                    if groups['prefix_length']:
                         address = groups['ip'] + '/' + groups['prefix_length']
                     dict_ipv4 = instance_dict.setdefault('ipv4', {}). \
                     setdefault(ipv4, {})
                     dict_ipv4.update({'ip': groups['ip']})
-                    if groups['prefix_length'] is not None:
+                    if groups['prefix_length']:
                         dict_ipv4.update({'prefix_length': groups['prefix_length']})
                 instance_dict.update({'check': groups['check']})
                 instance_dict.update({'method': groups['method']})
                 instance_dict.update({'link_status': groups['link_status']})
-                instance_dict.update({'line_protocol': groups['line_protocol']})
+                if groups['line_protocol']:
+                    instance_dict.update({'line_protocol': groups['line_protocol']})
                 continue
 
         return ret_dict
@@ -391,11 +401,11 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
             if m:
                 groups = m.groupdict()
                 ipv4 = groups['ip']
-                if groups['prefix_length'] is not None:
+                if groups['prefix_length']:
                     address = groups['ip'] + '/' + groups['prefix_length']
                 dict_ipv4 = instance_dict.setdefault('ipv4', {}).setdefault(ipv4, {})
                 dict_ipv4.update({'ip': groups['ip']})
-                if groups['prefix_length'] is not None:
+                if groups['prefix_length']:
                     dict_ipv4.update({'prefix_length': groups['prefix_length']})                
                 instance_dict.update({'subnet': groups['subnet']})
                 continue
