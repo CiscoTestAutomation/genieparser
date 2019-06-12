@@ -2155,7 +2155,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
     '''
 
     cli_command = ['show bgp {address_family} all summary',
-                   'show bgp summary',
+                   'show bgp all summary',
                    'show bgp vrf {vrf} all summary'
                    ]
     exclude = ['msg_sent', 'msg_rcvd', 'activity_paths', 'activity_prefixes',
