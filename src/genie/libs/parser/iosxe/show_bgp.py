@@ -4165,16 +4165,9 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
         # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|b|h|\*|\>|\s)+)'
-                           '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
-                           '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
-                           '[\.][0-9]+[\/]?[0-9]*)|([a-zA-Z0-9]+[\:]'
-                           '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                           '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
-                           '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                           '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)))'
-                           ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                           ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
-                           ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
+            '(?P<path_type>(i|e|c|l|a|r|I))?(\s+)?(?P<prefix>\S+) +(?P<next_hop>'
+            '[a-zA-Z0-9\.\:]+) +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+) +'
+            '(?P<origin_codes>(i|e|\?|\&|\|))$')
 
         #                     0.0.0.0               100      32768 i
         #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
