@@ -45,3 +45,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * fixed a bug in ShowBgpAllSummary not executing the right command
+    
+--------------------------------------------------------------------------------
+                                protocols
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpProtocols to fix parsing issue of unbound variable
