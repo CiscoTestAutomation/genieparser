@@ -32,3 +32,10 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
+
+
+--------------------------------------------------------------------------------
+                               VRF 
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowVrfDetail to support description
