@@ -10,10 +10,9 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                 Any, \
                                                 Optional
 
+# =============================================
 # Schema for 'show route'
 # =============================================
-
-
 class ShowRouteSchema(MetaParser):
     """Schema for
         * show route
@@ -112,7 +111,7 @@ class ShowRoute(ShowRouteSchema):
         # V 192.168.0.1 255.255.255.255
         #                      connected by VPN (advertised), admin
         p1 = re.compile(
-            r'^\s*(?P<code1>(?!is)(?!via)[\w\*\(\>\)\!]+)?(\ +)?'
+            r'^\s*(?P<code>(?!is)(?!via)[\w\*\(\>\)\!]+)?(\ +)?'
             '(?P<network>\d+.\d+.\d+.\d+)?( )?(?P<mac_address>\d+.\d+.\d+.\d+)?( )?'
             '(?P<vpn>connected by VPN [\(\)\S]+)?(is +directly +connected, )?'
             '(\[(?P<route_preference>[\d\/]+)\])?( )?(via )?'
@@ -134,8 +133,8 @@ class ShowRoute(ShowRouteSchema):
                 dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
                 setdefault('address_family', {}).setdefault('ipv4', {}). \
                 setdefault('routes', {})
-                if groups['code1']:
-                    source_protocol_codes = groups['code1'].strip()
+                if groups['code']:
+                    source_protocol_codes = groups['code'].strip()
                     for key,val in super().source_protocol_dict.items():
                         source_protocol_replaced = re.split \
                         ('\*|\(\!\)|\(\>\)',source_protocol_codes)[0].strip()
@@ -146,7 +145,7 @@ class ShowRoute(ShowRouteSchema):
                     dict_routes = dict_ipv4.setdefault(routes, {})
                     dict_routes.update({'active': True})
                     dict_routes.update({'route': routes})
-                    dict_routes.update({'source_protocol_codes': groups['code1']})
+                    dict_routes.update({'source_protocol_codes': groups['code']})
                     dict_routes.update({'source_protocol': source_protocol})
                     dict_routes.update({'mac_address': groups['mac_address']})
                     if groups['route_preference']:
