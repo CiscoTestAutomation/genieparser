@@ -1542,7 +1542,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                                  'best '
                                                  '#1, '
                                                  'table '
-                                                 'default',
+                                                 'default, RIB-failure(17)',
                                         'table_version': '4'},
                                     '10.1.1.0/24':
                                         {'available_path': '2',
@@ -1729,7 +1729,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
         For address family: IPv4 Unicast
 
         BGP routing table entry for 10.4.1.1/32, version 4
-        Paths: (1 available, best #1, table default)
+        Paths: (1 available, best #1, table default, RIB-failure(17))
         Advertised to update-groups:
            3         
         Refresh Epoch 1

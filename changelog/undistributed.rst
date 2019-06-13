@@ -45,6 +45,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * fixed a bug in ShowBgpAllSummary not executing the right command
+    * fixed a bug in ShowBgpAllDetail parsing same vrf twice
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
