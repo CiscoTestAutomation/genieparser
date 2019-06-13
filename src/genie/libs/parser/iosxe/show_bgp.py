@@ -849,7 +849,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Paths: (1 available, best #1, table VRF1)
         # Paths: (1 available, best #1, no table)
         # Paths: (1 available, best #1, table default, RIB-failure(17))
-        p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, +(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +(?P<vrf_id>\S+?)|no +table)),?(?: +(.*))?)\)')
+        p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, '
+                        r'+(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +('
+                        r'?P<vrf_id>\S+?)|no +table)),?(?: +(.*))?)\)')
 
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
