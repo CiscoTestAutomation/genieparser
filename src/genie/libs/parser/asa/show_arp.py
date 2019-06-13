@@ -21,20 +21,18 @@ class ShowArpSchema(MetaParser):
     """
 
     schema = {
-        'name': {
-        	Any(): {
-                'ipv4': {
-                    'neighbors': {
-                        Any(): { 
-                            Optional('ip'): str,
-                            Optional('prefix_length'): str,
-                            'link_layer_address': str,
-                            'age': str
-                        }
+    	Any(): {
+            'ipv4': {
+                'neighbors': {
+                    Any(): { 
+                        Optional('ip'): str,
+                        Optional('prefix_length'): str,
+                        'link_layer_address': str,
+                        'age': str
                     }
                 }
-            },
-        }
+            }
+        },
     }
 
 # =============================================
@@ -74,9 +72,8 @@ class ShowArp(ShowArpSchema):
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                dict_name = ret_dict.setdefault('name', {}). \
-                setdefault(groups['name'], {}).setdefault('ipv4', {}). \
-                setdefault('neighbors', {})
+                dict_name = ret_dict.setdefault(groups['name'], {}). \
+                setdefault('ipv4', {}).setdefault('neighbors', {})
                 ipv4 = groups['ip']
                 if groups['prefix_length']:
                     ipv4 = groups['ip'] + '/' + groups['prefix_length']
