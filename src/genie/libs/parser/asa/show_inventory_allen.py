@@ -12,7 +12,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any
 
-
+# =============================================
 # Schema for 'show inventory'
 # =============================================
 class ShowInventorySchema(MetaParser):
@@ -32,8 +32,6 @@ class ShowInventorySchema(MetaParser):
 # =============================================
 # Parser for 'show inventory'
 # =============================================
-
-
 class ShowInventory(ShowInventorySchema):
     """Parser for
         * show interface summary
@@ -58,7 +56,8 @@ class ShowInventory(ShowInventorySchema):
         # PID: ASA5555, VID: V01, SN: FGL170441BU
         # PID: ASA-PWR-AC, VID: N/A, SN: 2CS1AX
         # PID: N/A, VID: N/A, SN: MXA174201RR
-        p2 = re.compile(r'^PID: +(?P<pid>.+),+ VID: (?P<vid>.+), +SN: (?P<sn>.+)$')
+        p2 = re.compile(r'^PID: +(?P<pid>.+)( )?,+ VID: (?P<vid>.+)( )?, '
+            '+SN: (?P<sn>.+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -78,8 +77,12 @@ class ShowInventory(ShowInventorySchema):
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                dict_name.update({'pid': groups['pid']})
-                dict_name.update({'vid': groups['vid']})
+                pid = groups['pid']
+                pid = pid.replace(' ','')
+                vid = groups['vid']
+                vid = vid.replace(' ','')
+                dict_name.update({'pid': pid})
+                dict_name.update({'vid': vid})
                 dict_name.update({'sn': groups['sn']})
                 continue
 

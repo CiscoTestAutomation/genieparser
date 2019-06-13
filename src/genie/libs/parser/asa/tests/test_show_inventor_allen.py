@@ -34,6 +34,12 @@ class test_show_inventory(unittest.TestCase):
             'pid': 'N/A',
             'vid': 'N/A',
             'sn': 'MXA174201RR'
+        },
+        'module 100': {
+            'description': 'WS-SVC-ASASM-1 Adaptive Security Appliance Service Module',
+            'pid': 'WS-SVC-ASA-SM1',
+            'vid': 'V01',
+            'sn': 'SAL1234567Z'
         }
     }
 
@@ -47,6 +53,9 @@ class test_show_inventory(unittest.TestCase):
          
         Name: "Storage Device 1", DESCR: "Micron 128 GB SSD MLC, Model Number: C400-MTFDDAC128MAM"
         PID: N/A, VID: N/A, SN: MXA174201RR
+
+        Name: "module 100", DESCR: "WS-SVC-ASASM-1 Adaptive Security Appliance Service Module"
+        PID: WS-SVC-ASA-SM1    , VID: V01     , SN: SAL1234567Z
     '''}
 
     def test_empty(self):
