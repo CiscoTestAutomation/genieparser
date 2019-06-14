@@ -721,6 +721,246 @@ class test_show_ip_traffic(unittest.TestCase):
           Drop due to input queue full: 0
         '''}
 
+    golden_parsed_output3 = {
+        "ip_statistics": {
+            "ip_rcvd_total": 2823,
+            "ip_rcvd_local_destination": 2823,
+            "ip_rcvd_format_errors": 0,
+            "ip_rcvd_checksum_errors": 0,
+            "ip_rcvd_bad_hop": 0,
+            "ip_rcvd_unknwn_protocol": 0,
+            "ip_rcvd_not_gateway": 0,
+            "ip_rcvd_sec_failures": 0,
+            "ip_rcvd_bad_optns": 0,
+            "ip_rcvd_with_optns": 0,
+            "ip_opts_end": 0,
+            "ip_opts_nop": 0,
+            "ip_opts_basic_security": 0,
+            "ip_opts_loose_src_route": 0,
+            "ip_opts_timestamp": 0,
+            "ip_opts_extended_security": 0,
+            "ip_opts_record_route": 0,
+            "ip_opts_strm_id": 0,
+            "ip_opts_strct_src_route": 0,
+            "ip_opts_alert": 0,
+            "ip_opts_cipso": 0,
+            "ip_opts_ump": 0,
+            "ip_opts_other": 0,
+            "ip_frags_reassembled": 0,
+            "ip_frags_timeouts": 0,
+            "ip_frags_no_reassembled": 0,
+            "ip_frags_fragmented": 0,
+            "ip_frags_fragments": 0,
+            "ip_frags_no_fragmented": 0,
+            "ip_bcast_received": 0,
+            "ip_bcast_sent": 0,
+            "ip_mcast_received": 78,
+            "ip_mcast_sent": 75,
+            "ip_sent_generated": 2799,
+            "ip_sent_forwarded": 0,
+            "ip_drop_encap_failed": 1,
+            "ip_drop_unresolved": 0,
+            "ip_drop_no_adj": 0,
+            "ip_drop_no_route": 0,
+            "ip_drop_unicast_rpf": 0,
+            "ip_drop_forced_drop": 0,
+            "ip_drop_opts_denied": 0
+        },
+        "icmp_statistics": {
+            "icmp_received_format_errors": 0,
+            "icmp_received_checksum_errors": 0,
+            "icmp_received_redirects": 0,
+            "icmp_received_unreachable": 0,
+            "icmp_received_echo": 0,
+            "icmp_received_echo_reply": 0,
+            "icmp_received_mask_requests": 0,
+            "icmp_received_mask_replies": 0,
+            "icmp_received_quench": 0,
+            "icmp_received_parameter": 0,
+            "icmp_received_timestamp": 0,
+            "icmp_received_info_request": 0,
+            "icmp_received_other": 0,
+            "icmp_received_irdp_solicitations": 0,
+            "icmp_received_irdp_advertisements": 0,
+            "icmp_sent_redirects": 0,
+            "icmp_sent_unreachable": 0,
+            "icmp_sent_echo": 0,
+            "icmp_sent_echo_reply": 0,
+            "icmp_sent_mask_requests": 0,
+            "icmp_sent_mask_replies": 0,
+            "icmp_sent_quench": 0,
+            "icmp_sent_timestamp": 0,
+            "icmp_sent_info_reply": 0,
+            "icmp_sent_time_exceeded": 0,
+            "icmp_sent_parameter_problem": 0,
+            "icmp_sent_irdp_solicitations": 0,
+            "icmp_sent_irdp_advertisements": 0
+        },
+        "tcp_statistics": {
+            "tcp_received_total": 2739,
+            "tcp_received_checksum_errors": 0,
+            "tcp_received_no_port": 2,
+            "tcp_sent_total": 2718
+        },
+        "bgp_statistics": {
+            "bgp_received_total": 0,
+            "bgp_received_opens": 0,
+            "bgp_received_notifications": 0,
+            "bgp_received_updates": 0,
+            "bgp_received_keepalives": 0,
+            "bgp_received_route_refresh": 0,
+            "bgp_received_unrecognized": 0,
+            "bgp_sent_total": 0,
+            "bgp_sent_opens": 0,
+            "bgp_sent_notifications": 0,
+            "bgp_sent_updates": 0,
+            "bgp_sent_keepalives": 0,
+            "bgp_sent_route_refresh": 0
+        },
+        "eigrp_ipv4_statistics": {
+            "eigrp_ipv4_received_total": 0,
+            "eigrp_ipv4_sent_total": 0
+        },
+        "pimv2_statistics": {
+            "pimv2_total": "0/0",
+            "pimv2_checksum_errors": 0,
+            "pimv2_format_errors": 0,
+            "pimv2_registers": "0/0",
+            "pimv2_non_rp": 0,
+            "pimv2_non_sm_group": 0,
+            "pimv2_registers_stops": "0/0",
+            "pimv2_hellos": "0/0",
+            "pimv2_join_prunes": "0/0",
+            "pimv2_asserts": "0/0",
+            "pimv2_grafts": "0/0",
+            "pimv2_bootstraps": "0/0",
+            "pimv2_candidate_rp_advs": "0/0",
+            "pimv2_queue_drops": 0,
+            "pimv2_state_refresh": "0/0"
+        },
+        "igmp_statistics": {
+            "igmp_total": "0/0",
+            "igmp_format_errors": "0/0",
+            "igmp_checksum_errors": "0/0",
+            "igmp_host_queries": "0/0",
+            "igmp_host_reports": "0/0",
+            "igmp_host_leaves": "0/0",
+            "igmp_dvmrp": "0/0",
+            "igmp_pim": "0/0",
+            "igmp_queue_drops": 0
+        },
+        "udp_statistics": {
+            "udp_received_total": 0,
+            "udp_received_udp_checksum_errors": 0,
+            "udp_received_no_port": 0,
+            "udp_sent_total": 0,
+            "udp_sent_fwd_broadcasts": 0
+        },
+        "ospf_statistics": {
+            "ospf_received_total": 84,
+            "ospf_received_checksum_errors": 0,
+            "ospf_received_hello": 74,
+            "ospf_received_database_desc": 3,
+            "ospf_received_link_state_req": 1,
+            "ospf_received_lnk_st_updates": 5,
+            "ospf_received_lnk_st_acks": 1,
+            "ospf_sent_total": 82,
+            "ospf_sent_hello": 74,
+            "ospf_sent_database_desc": 4,
+            "ospf_sent_lnk_st_acks": 2,
+            "ospf_sent_lnk_st_updates": 2
+        },
+        "arp_statistics": {
+            "arp_in_requests": 40,
+            "arp_in_replies": 4,
+            "arp_in_reverse": 0,
+            "arp_in_other": 0,
+            "arp_out_requests": 1,
+            "arp_out_replies": 4,
+            "arp_out_proxy": 0,
+            "arp_out_reverse": 0
+        }
+    }
+
+    golden_output3 = {'execute.return_value': '''
+        show ip traffic
+        IP statistics:
+          Rcvd:  2823 total, 2823 local destination
+                 0 format errors, 0 checksum errors, 0 bad hop count
+                 0 unknown protocol, 0 not a gateway
+                 0 security failures, 0 bad options, 0 with options
+          Opts:  0 end, 0 nop, 0 basic security, 0 loose source route
+                 0 timestamp, 0 extended security, 0 record route
+                 0 stream ID, 0 strict source route, 0 alert, 0 cipso, 0 ump
+                 0 other
+          Frags: 0 reassembled, 0 timeouts, 0 couldn't reassemble
+                 0 fragmented, 0 fragments, 0 couldn't fragment
+          Bcast: 0 received, 0 sent
+          Mcast: 78 received, 75 sent
+          Sent:  2799 generated, 0 forwarded
+          Drop:  1 encapsulation failed, 0 unresolved, 0 no adjacency
+                 0 no route, 0 unicast RPF, 0 forced drop
+                 0 options denied
+          Drop:  0 packets with source IP address zero
+          Drop:  0 packets with internal loop back IP address
+                 0 physical broadcast
+
+        ICMP statistics:
+          Rcvd: 0 format errors, 0 checksum errors, 0 redirects, 0 unreachable
+                0 echo, 0 echo reply, 0 mask requests, 0 mask replies, 0 quench
+                0 parameter, 0 timestamp, 0 info request, 0 other
+                0 irdp solicitations, 0 irdp advertisements
+          Sent: 0 redirects, 0 unreachable, 0 echo, 0 echo reply
+                0 mask requests, 0 mask replies, 0 quench, 0 timestamp
+                0 info reply, 0 time exceeded, 0 parameter problem
+                0 irdp solicitations, 0 irdp advertisements
+
+        TCP statistics:
+          Rcvd: 2739 total, 0 checksum errors, 2 no port
+          Sent: 2718 total
+
+        BGP statistics:
+          Rcvd: 0 total, 0 opens, 0 notifications, 0 updates
+                0 keepalives, 0 route-refresh, 0 unrecognized
+          Sent: 0 total, 0 opens, 0 notifications, 0 updates
+                0 keepalives, 0 route-refresh
+
+        IP-EIGRP statistics:
+          Rcvd: 0 total
+          Sent: 0 total
+
+        PIMv2 statistics: Sent/Received
+          Total: 0/0, 0 checksum errors, 0 format errors
+          Registers: 0/0 (0 non-rp, 0 non-sm-group), Register Stops: 0/0,  Hellos: 0/0
+          Join/Prunes: 0/0, Asserts: 0/0, grafts: 0/0
+          Bootstraps: 0/0, Candidate_RP_Advertisements: 0/0
+          Queue drops: 0
+          State-Refresh: 0/0
+
+        IGMP statistics: Sent/Received
+          Total: 0/0, Format errors: 0/0, Checksum errors: 0/0
+          Host Queries: 0/0, Host Reports: 0/0, Host Leaves: 0/0 
+          DVMRP: 0/0, PIM: 0/0
+          Queue drops: 0
+
+        UDP statistics:
+          Rcvd: 0 total, 0 checksum errors, 0 no port
+          Sent: 0 total, 0 forwarded broadcasts
+
+        OSPF statistics:
+          Rcvd: 84 total, 0 checksum errors
+            74 hello, 3 database desc, 1 link state req
+            5 link state updates, 1 link state acks
+
+          Sent: 82 total
+            74 hello, 4 database desc, 1 link state req
+            2 link state updates, 2 link state acks
+
+        ARP statistics:
+          Rcvd: 40 requests, 4 replies, 0 reverse, 0 other
+          Sent: 1 requests, 4 replies (0 proxy), 0 reverse
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpTraffic(device=self.device)
@@ -740,6 +980,13 @@ class test_show_ip_traffic(unittest.TestCase):
         obj = ShowIpTraffic(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpTraffic(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 # =================================================
