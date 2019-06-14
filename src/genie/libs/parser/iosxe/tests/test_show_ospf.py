@@ -1040,6 +1040,57 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                             'name': 'Base',
                                                             'shutdown': False}}}}}}}}}}}}}
 
+    golden_parsed_output3 = {'vrf': {'default': {'address_family': {'ipv4': {'instance': {'9996': {'areas': {'0.0.0.8': {'interfaces': {'GigabitEthernet2': {'attached': 'network '
+                                                                                                                                             'statement',
+                                                                                                                                 'bdr_ip_addr': '106.162.197.94',
+                                                                                                                                 'bdr_router_id': '106.162.197.254',
+                                                                                                                                 'bfd': {'enable': False},
+                                                                                                                                 'cost': 1000,
+                                                                                                                                 'dead_interval': 40,
+                                                                                                                                 'demand_circuit': False,
+                                                                                                                                 'dr_ip_addr': '106.162.197.93',
+                                                                                                                                 'dr_router_id': '106.162.197.252',
+                                                                                                                                 'enable': True,
+                                                                                                                                 'flood_queue_length': 0,
+                                                                                                                                 'graceful_restart': {'cisco': {'helper': True,
+                                                                                                                                                                'type': 'cisco'},
+                                                                                                                                                      'ietf': {'helper': True,
+                                                                                                                                                               'type': 'ietf'}},
+                                                                                                                                 'hello_interval': 10,
+                                                                                                                                 'hello_timer': '00:00:06',
+                                                                                                                                 'index': '1/1/1',
+                                                                                                                                 'interface_id': 8,
+                                                                                                                                 'interface_type': 'broadcast',
+                                                                                                                                 'ip_address': '106.162.197.94/30',
+                                                                                                                                 'ipfrr_candidate': True,
+                                                                                                                                 'ipfrr_protected': True,
+                                                                                                                                 'last_flood_scan_length': 3,
+                                                                                                                                 'last_flood_scan_time_msec': 0,
+                                                                                                                                 'line_protocol': True,
+                                                                                                                                 'lls': True,
+                                                                                                                                 'max_flood_scan_length': 10,
+                                                                                                                                 'max_flood_scan_time_msec': 1,
+                                                                                                                                 'name': 'GigabitEthernet2',
+                                                                                                                                 'neighbors': {'106.162.197.252': {'dr_router_id': '106.162.197.252'}},
+                                                                                                                                 'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                                                                                                 'oob_resync_timeout': 40,
+                                                                                                                                 'passive': False,
+                                                                                                                                 'priority': 1,
+                                                                                                                                 'retransmit_interval': 5,
+                                                                                                                                 'router_id': '106.162.197.254',
+                                                                                                                                 'state': 'bdr',
+                                                                                                                                 'statistics': {'adj_nbr_count': 1,
+                                                                                                                                                'nbr_count': 1,
+                                                                                                                                                'num_nbrs_suppress_hello': 0},
+                                                                                                                                 'ti_lfa_protected': False,
+                                                                                                                                 'topology': {0: {'cost': 1000,
+                                                                                                                                                  'disabled': False,
+                                                                                                                                                  'name': 'Base',
+                                                                                                                                                  'shutdown': False}},
+                                                                                                                                 'transmit_delay': 1,
+                                                                                                                                 'wait_interval': 40}}}}}}}}}}}
+
+
     def test_show_ip_ospf_interface_full1(self):
         
         self.maxDiff = None
@@ -1338,6 +1389,74 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         obj = ShowIpOspfInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_ip_ospf_interface_full3(self):
+
+        self.maxDiff = None
+
+        raw1='''\
+            PE1#show ip ospf interface GigabitEthernet2
+            Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
+            Time source is NTP, 04:44:14.272 JST Sat Jun 15 2019
+
+            GigabitEthernet2 is up, line protocol is up 
+              Internet Address 106.162.197.94/30, Interface ID 8, Area 8
+              Attached via Network Statement
+              Process ID 9996, Router ID 106.162.197.254, Network Type BROADCAST, Cost: 1000
+              Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1000      no          no            Base
+              Transmit Delay is 1 sec, State BDR, Priority 1
+              Designated Router (ID) 106.162.197.252, Interface address 106.162.197.93
+              Backup Designated router (ID) 106.162.197.254, Interface address 106.162.197.94
+              Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:06
+              Supports Link-local Signaling (LLS)
+              Cisco NSF helper support enabled
+              IETF NSF helper support enabled
+              Can be protected by per-prefix Loop-Free FastReroute
+              Can be used for per-prefix Loop-Free FastReroute repair paths
+              Not Protected by per-prefix TI-LFA
+              Index 1/1/1, flood queue length 0
+              Next 0x0(0)/0x0(0)/0x0(0)
+              Last flood scan length is 3, maximum is 10
+              Last flood scan time is 0 msec, maximum is 1 msec
+              Neighbor Count is 1, Adjacent neighbor count is 1 
+                Adjacent with neighbor 106.162.197.252  (Designated Router)
+              Suppress hello for 0 neighbor(s)
+        '''
+
+        raw2='''\
+         PE1#show running-config | section router ospf 9996
+         router ospf 9996
+         router-id 106.162.197.254
+         max-metric router-lsa on-startup 300
+         auto-cost reference-bandwidth 2488
+         timers throttle spf 500 3000 3000
+         network 8.8.8.0 0.0.0.255 area 8
+         network 106.162.197.4 0.0.0.3 area 8
+         network 106.162.197.88 0.0.0.3 area 8
+         network 106.162.197.92 0.0.0.3 area 8
+         network 106.162.197.96 0.0.0.3 area 8
+         network 106.162.197.254 0.0.0.0 area 8
+         mpls ldp sync
+         action 50 cli command "router ospf 9996"
+        '''
+
+        def mapper(key):
+            return self.outputs[key]
+
+        self.outputs = {}
+        self.outputs['show ip ospf interface GigabitEthernet2'] = raw1
+        self.outputs['show running-config | section router ospf 9996'] = raw2        
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfInterface(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet2')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
 
     def test_show_ip_ospf_interface_empty(self):
         self.maxDiff = None
