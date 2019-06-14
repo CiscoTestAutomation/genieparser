@@ -24,8 +24,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod10',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -51,8 +51,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'admin-out',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -66,8 +66,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod10-in',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -82,15 +82,15 @@ class test_show_interface_summary(unittest.TestCase):
                 'config_status': False,
                 'config_issue': 'nameif',
                 'name': '',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
             },
             'Vlan600': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'adminTEST',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -104,8 +104,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod1',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -119,8 +119,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod2',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -134,8 +134,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod3',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -149,8 +149,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod4',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -164,8 +164,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod5',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -179,8 +179,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod6',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -194,8 +194,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod7',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -209,8 +209,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod8',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -224,8 +224,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod9',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -239,8 +239,8 @@ class test_show_interface_summary(unittest.TestCase):
                 'interface_state': False,
                 'config_status': True,
                 'name': 'pod249',
-                'link_status': 'down',
-                'line_protocol': 'down',
+                'link_status': False,
+                'line_protocol': False,
                 'mac_address': '124a.b12b.02ac',
                 'mtu': 1500,
 				'ipv4': {
@@ -430,7 +430,6 @@ class test_show_interface_ip_brief(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-		ciscoasa# show interface ip brief
 		Interface IP-Address OK? Method Status Protocol
 		Control0/0 127.0.1.1 YES CONFIG up up
 		GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
