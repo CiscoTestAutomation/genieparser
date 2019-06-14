@@ -4125,6 +4125,8 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             vrf = 'default'
             af_default = None
         elif vrf_type == 'vrf':
+            if vrf != 'all':
+                input_vrf = vrf
             vrf = None
             if address_family == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
@@ -4193,10 +4195,18 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                              ' *(?P<vrf_state>[a-zA-Z]+)$')
             m = p4.match(line)
             if m:
+                if not vrf:
+                    vrf_dict = bgp_instance_summary_dict['instance'][instance].setdefault('vrf', {}).setdefault(input_vrf,{})
+                    if vrf_type == 'vrf' and af_default:
+                        address_family = af_default
+                        vrf_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                    vrf = input_vrf
+                else:
+                    vrf_dict = bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]
                 bgp_vrf = m.groupdict()['bgp_vrf'].lower()
                 vrf_state = m.groupdict()['vrf_state'].lower()
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['bgp_vrf'] = bgp_vrf
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['vrf_state'] = vrf_state
+                vrf_dict['address_family'][address_family]['bgp_vrf'] = bgp_vrf
+                vrf_dict['address_family'][address_family]['vrf_state'] = vrf_state
                 continue
 
             # BGP Route Distinguisher: 200:1
@@ -4503,18 +4513,18 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         assert vrf_type in ['all', 'vrf']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            if output is None:
-                if vrf_type == 'all':
-                    out = self.device.execute(
-                        self.cli_command[0].format(instance=instance,
-                                                   address_family=address_family,
-                                                   vrf_type=vrf_type))
-                else:
-                    out = self.device.execute(
-                        self.cli_command[1].format(instance=instance,
-                                                   address_family=address_family,
-                                                   vrf_type=vrf_type,
-                                                   vrf=vrf))
+
+            if vrf_type == 'all':
+                out = self.device.execute(
+                    self.cli_command[0].format(instance=instance,
+                                               address_family=address_family,
+                                               vrf_type=vrf_type))
+            else:
+                out = self.device.execute(
+                    self.cli_command[1].format(instance=instance,
+                                               address_family=address_family,
+                                               vrf_type=vrf_type,
+                                               vrf=vrf))
         else:
             out = output
 
@@ -4524,6 +4534,8 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             vrf = 'default'
             af_default = None
         elif vrf_type == 'vrf':
+            if vrf != 'all':
+                input_vrf = vrf
             vrf = None
             if address_family == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
@@ -4602,12 +4614,22 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                              ' *(?P<vrf_state>[a-zA-Z]+)$')
             m = p4.match(line)
             if m:
+                # if no vrf key, set it to be the user input
+                if not vrf:
+                    vrf_dict = bgp_instance_all_all_dict['instance'][instance].setdefault('vrf', {}).setdefault(input_vrf,{})
+                    if vrf_type == 'vrf' and af_default:
+                        address_family = af_default
+                        original_address_family = address_family
+                        vrf_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                    vrf=input_vrf
+                else:
+                    vrf_dict = bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]
                 bgp_vrf = m.groupdict()['bgp_vrf'].lower()
                 vrf_state = m.groupdict()['vrf_state'].lower()
-                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][address_family]['bgp_vrf'] = bgp_vrf
-                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
-                ['address_family'][address_family]['vrf_state'] = vrf_state
+
+                vrf_dict['address_family'][address_family]['bgp_vrf'] = bgp_vrf
+
+                vrf_dict['address_family'][address_family]['vrf_state'] = vrf_state
                 continue
 
             # VRF ID: 0x60000001    
