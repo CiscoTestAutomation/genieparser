@@ -115,9 +115,11 @@ class ShowDot1xAllSummarySchema(MetaParser):
             Any(): {
                 'interface': str,
                 'clients': {
-                    'client': str,
-                    'pae': str,
-                    'status': str,
+                Any() : {
+                        'client': str,
+                        'pae': str,
+                        'status': str,
+                    }
                 }
             }
         }
@@ -154,9 +156,11 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
                 interfaces_dict.setdefault(intf, {}).setdefault('interface', intf)
                 clients = interfaces_dict.setdefault(intf, {}).setdefault('clients', {})
 
-                clients.update({'client': m.groupdict()['client']})
-                clients.update({'pae': m.groupdict()['pae']})
-                clients.update({'status': m.groupdict()['status']})
+                client_mac = m.groupdict()['client']
+                client_dict = clients.setdefault(client_mac, {})
+                client_dict.setdefault('client', client_mac)
+                client_dict.update({'pae': m.groupdict()['pae']})
+                client_dict.update({'status': m.groupdict()['status']})
                 continue
 
         return ret_dict
@@ -188,6 +192,7 @@ class ShowDot1xAllDetailsSchema(MetaParser):
                 Optional ('re_authentication'): bool,
                 Optional ('re_auth_max'): int,
                 Optional ('mac-auth-bypass'): bool,
+                Optional('port_status') : str,
                 Optional ('timeout'): {
                     Optional ('auth_period'): int,
                     Optional ('held_period'): int,
@@ -211,15 +216,16 @@ class ShowDot1xAllDetailsSchema(MetaParser):
                     },
                 },
                 Optional('clients') : {
-                    Optional('auth_method'): str, 
-                    Optional('client'): str,
-                    Optional('status') : str,
-                    Optional('session'): {
-                        Optional('reauth_action'): str,
-                        Optional('auth_by') : str,
-                        Optional('session_id'): str,
-                        Optional('auth_sm_state'): str,
-                        Optional('auth_bend_sm_state'): str,
+                    Any() : {
+                        Optional('client'): str,
+                        Optional('auth_method'): str, 
+                        Optional('session'): {
+                            Optional('reauth_action'): str,
+                            Optional('auth_by') : str,
+                            Optional('session_id'): str,
+                            Optional('auth_sm_state'): str,
+                            Optional('auth_bend_sm_state'): str,
+                        }
                     }
                 }
             }
@@ -240,7 +246,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
         else:
             out = output
         
-        dict = {}
+        ret_dict = {}
 
         p1 = re.compile(r'^Sysauthcontrol +(?P<SysControl>\w+)$')
         p2 = re.compile(r'^Dot1x +Protocol +Version +(?P<version>\d+)$')
@@ -255,14 +261,14 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             if m:
                 sysControl = m.groupdict()['SysControl']
                 bool = True if sysControl.lower() == 'enabled' else False
-                dict.setdefault("system_auth_control", bool)
+                ret_dict.setdefault("system_auth_control", bool)
                 continue
 
             # Dot1x Protocol Version 2
             m = p2.match(line)
             if m:
                 version = m.groupdict()['version']
-                dict.setdefault("version", int(version))
+                ret_dict.setdefault("version", int(version))
                 continue
             
             # Dot1x Info for Ethernet1/2
@@ -270,8 +276,8 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             m = p3.match(line)
             if m:
                 intf = m.groupdict()['intf']
-                dict.setdefault("interfaces", {}).setdefault(intf, {}).setdefault('interface', intf)
-                intf_dict = dict.setdefault("interfaces", {}).setdefault(intf, {})
+                ret_dict.setdefault("interfaces", {}).setdefault(intf, {}).setdefault('interface', intf)
+                intf_dict = ret_dict.setdefault("interfaces", {}).setdefault(intf, {})
                 continue
 
             m = p4.match(line)
@@ -311,6 +317,10 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
                 elif key.lower() == 'reauthentication':
                     bool = True if val == 'enabled' else False
                     intf_dict.setdefault('re_authentication', bool)
+
+                # Port Status = AUTHORIZED
+                elif key.lower() == 'port status':
+                    intf_dict.setdefault('port_status', val)
                 
                 # HostMode = SINGLE HOST
                 elif key.lower() == 'hostmode':
@@ -388,42 +398,38 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
 
                 # Supplicant = 54:BE:EF:E5:00:00
                 elif key.lower() == 'supplicant':
-                    intf_dict.setdefault('clients', {}).setdefault('client', val)
+                    client_dict = intf_dict.setdefault('clients', {}).setdefault(val, {})
+                    client_dict['client'] = val
 
                 # Authentication Method = EAP
                 elif key.lower() == 'authentication method':
-                    intf_dict.setdefault('clients', {}).setdefault('auth_method', val)
-
-                # Port Status = AUTHORIZED
-                elif key.lower() == 'port status':
-                    intf_dict.setdefault('clients', {}).setdefault('status', val)
+                    client_dict.setdefault('auth_method', val)
 
             ### Session ###
                         
                 # ReAuthAction = Reauthenticate
                 elif key.lower() == 'reauthaction':
                     # if 'session' not in intf_dict: 
-                    session_dict = intf_dict.setdefault('clients', {}).setdefault('session', {})
+                    session_dict = client_dict.setdefault('session', {})
                     session_dict.setdefault('reauth_action', val)
 
                 # Authenticated By = Remote Server
                 elif key.lower() == 'authenticated by':
-                    session_dict = intf_dict.setdefault('clients', {}).setdefault('session', {})
+                    session_dict = client_dict.setdefault('session', {})
                     session_dict.setdefault('auth_by', val)
 
                 elif key.lower() == 'session id':
-                    session_dict = intf_dict.setdefault('clients', {}).setdefault('session', {})
+                    session_dict = client_dict.setdefault('session', {})
                     session_dict.setdefault('session_id', val)
 
                 # Auth SM State = AUTHENTICATED
                 elif key.lower() == 'auth sm state':
-                    session_dict = intf_dict.setdefault('clients', {}).setdefault('session', {})
+                    session_dict = client_dict.setdefault('session', {})
                     session_dict.setdefault('auth_sm_state', val)
 
                 # Auth BEND SM State = IDLE
                 elif key.lower() == 'auth bend sm state':
-                    session_dict = intf_dict.setdefault('clients', {}).setdefault('session', {})
+                    session_dict = client_dict.setdefault('session', {})
                     session_dict.setdefault('auth_bend_sm_state', val)
-                continue
             
-        return dict
+        return ret_dict

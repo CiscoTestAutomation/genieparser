@@ -122,17 +122,21 @@ class test_show_dot1x_all_summary(unittest.TestCase):
             'Ethernet102/1/6': {
                 'interface': 'Ethernet102/1/6',
                 'clients': {
-                    'client': '0E:BE:EF:3F:00:00',
-                    'pae': 'AUTH',
-                    'status': 'AUTHORIZED'
+                    '0E:BE:EF:3F:00:00': {
+                        'client': '0E:BE:EF:3F:00:00',
+                        'pae': 'AUTH',
+                        'status': 'AUTHORIZED'
                     }
-                },
+                }
+            },
             'Ethernet1/1': {
                 'interface': 'Ethernet1/1',
                 'clients': {
-                    'client': 'none',
-                    'pae': 'AUTH',
-                    'status': 'AUTHORIZED'
+                    'none' : {
+                        'client': 'none',
+                        'pae': 'AUTH',
+                        'status': 'AUTHORIZED'
+                    }
                 }
             }
         }
@@ -153,17 +157,21 @@ class test_show_dot1x_all_summary(unittest.TestCase):
             'Ethernet5': {
                 'interface': 'Ethernet5',
                 'clients': {
-                    'client': '0e:be:00:4g:e0:00',
-                    'pae': 'SUPP',
-                    'status': 'UNAUTHORIZED'
+                    '0e:be:00:4g:e0:00': {
+                        'client': '0e:be:00:4g:e0:00',
+                        'pae': 'SUPP',
+                        'status': 'UNAUTHORIZED'
                     }
-                },
+                }
+            },
             'Ethernet1/1': {
                 'interface': 'Ethernet1/1',
                 'clients': {
-                    'client': 'none',
-                    'pae': 'AUTH',
-                    'status': 'AUTHORIZED'
+                    'none': {
+                        'client': 'none',
+                        'pae': 'AUTH',
+                        'status': 'AUTHORIZED'
+                    }
                 }
             }
         }
@@ -230,9 +238,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
                 're_auth_max': 2,
                 'max_req': 2,
                 'mac-auth-bypass': False,
-                'clients': {
-                    'status': 'authorized'
-                }
+                'port_status': 'authorized'
             },
             'Ethernet1/2': {
                 'interface': 'Ethernet1/2',
@@ -253,16 +259,18 @@ class test_show_dot1x_all_details(unittest.TestCase):
                 'max_req': 3,
                 'mac-auth-bypass': False,
                 'clients': {
-                    'client': '54:be:ef:e5:00:00',
-                    'session': {
-                        'auth_sm_state': 'authenticated',
-                        'auth_bend_sm_state': 'idle',
-                        'auth_by': 'remote server',
-                        'reauth_action': 'reauthenticate'
+                    '54:be:ef:e5:00:00' : {
+                        'client': '54:be:ef:e5:00:00',
+                        'session': {
+                            'auth_sm_state': 'authenticated',
+                            'auth_bend_sm_state': 'idle',
+                            'auth_by': 'remote server',
+                            'reauth_action': 'reauthenticate'
+                        },
+                        'auth_method': 'eap'
                     },
-                    'status': 'authorized',
-                    'auth_method': 'eap'
-                }
+                },
+                'port_status': 'authorized'
             }
         }
     }
@@ -323,6 +331,46 @@ class test_show_dot1x_all_details(unittest.TestCase):
                  TimeToNextReauth = 17
     '''}
 
+
+    parsed_output_2 = {
+        'system_auth_control': False,
+        'version': 3,
+        'interfaces': {
+            'Ethernet1/2': {
+                'interface': 'Ethernet1/2',
+                'pae': 'authenticator',
+                'port_control': 'not auto',
+                'host_mode': 'double host',
+                're_authentication': False,
+                'timeout': {
+                    'quiet_period': 59,
+                    'server_timeout': 29,
+                    'supp_timeout': 29,
+                    'tx_period': 29,
+                    'ratelimit_period': 1,
+                    're_auth_period': 59,
+                    'time_to_next_reauth': 16
+                },
+                're_auth_max': 1,
+                'max_req': 2,
+                'mac-auth-bypass': True,
+                'clients': {
+                    '53:ab:de:d4:11:11' : {
+                        'client': '53:ab:de:d4:11:11',
+                        'session': {
+                            'auth_sm_state':'authenticated',
+                            'auth_bend_sm_state': 'idle',
+                            'auth_by': 'remote',
+                            'reauth_action': 'reauthenticate'
+                        },
+                        'auth_method': 'eap'
+                    },
+                },
+                'port_status': 'authorized'
+            }
+        }
+    }
+
     output_2 = {'execute.return_value':'''
                    Sysauthcontrol Disabled
            Dot1x Protocol Version 3 
@@ -355,43 +403,6 @@ class test_show_dot1x_all_details(unittest.TestCase):
                      ReAuthAction = reauthenticate
                  TimeToNextReauth = 16
     '''}
-
-    parsed_output_2 = {
-        'system_auth_control': False,
-        'version': 3,
-        'interfaces': {
-            'Ethernet1/2': {
-                'interface': 'Ethernet1/2',
-                'pae': 'authenticator',
-                'port_control': 'not auto',
-                'host_mode': 'double host',
-                're_authentication': False,
-                'timeout': {
-                    'quiet_period': 59,
-                    'server_timeout': 29,
-                    'supp_timeout': 29,
-                    'tx_period': 29,
-                    'ratelimit_period': 1,
-                    're_auth_period': 59,
-                    'time_to_next_reauth': 16
-                },
-                're_auth_max': 1,
-                'max_req': 2,
-                'mac-auth-bypass': True,
-                'clients': {
-                    'client': '53:ab:de:d4:11:11',
-                    'session': {
-                        'auth_sm_state': 'authenticated',
-                        'auth_bend_sm_state': 'idle',
-                        'auth_by': 'remote',
-                        'reauth_action': 'reauthenticate'
-                    },
-                    'status': 'authorized',
-                    'auth_method': 'eap'
-                }
-            }
-        }
-    }
 
     empty_output = {'execute.return_value' : '          '}
 
