@@ -1764,8 +1764,13 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             if ('all summary' in cmd and 
                 output != '% RD does not match the default RD of any VRF'):
 
-                commands_list = ['show run | sec address-family ipv4 vrf',
-                                 'show run | sec address-family ipv6 vrf']
+                if 'vpnv4' in address_family:
+                    commands_list = ['show run | sec address-family ipv4 vrf']
+                elif 'vpnv6' in address_family:
+                    commands_list = ['show run | sec address-family ipv6 vrf']
+                else:
+                    commands_list = ['show run | sec address-family ipv4 vrf',
+                                     'show run | sec address-family ipv6 vrf']
                 
                 for command in commands_list:
                     out_vrf = self.device.execute(command)
