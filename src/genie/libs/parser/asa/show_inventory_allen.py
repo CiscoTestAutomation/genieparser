@@ -53,9 +53,9 @@ class ShowInventory(ShowInventorySchema):
         p1 = re.compile(
             r'^Name: +"+(?P<name>.+)"+,* +DESCR:+ "+(?P<description>.+)+"$')
 
-        # PID: ASA5555, VID: V01, SN: FGL170441BU
-        # PID: ASA-PWR-AC, VID: N/A, SN: 2CS1AX
-        # PID: N/A, VID: N/A, SN: MXA174201RR
+        # PID: ASA5555, VID: V01, SN: AAAAA11111
+        # PID: AAA-AAA-AAA, VID: N/A, SN: AAA111
+        # PID: N/A, VID: N/A, SN: AAAAA11111
         p2 = re.compile(r'^PID: +(?P<pid>.+)( )?,+ VID: (?P<vid>.+)( )?, '
             '+SN: (?P<sn>.+)$')
 
@@ -71,9 +71,9 @@ class ShowInventory(ShowInventorySchema):
                 dict_name.update({'description': groups['description']})
                 continue
 
-            # PID: ASA5555, VID: V01, SN: FGL170441BU
-            # PID: ASA-PWR-AC, VID: N/A, SN: 2CS1AX
-            # PID: N/A, VID: N/A, SN: MXA174201RR
+            # PID: ASA5555, VID: V01, SN: AAAAA11111
+            # PID: AAA-AAA-AAA, VID: N/A, SN: AAA111
+            # PID: N/A, VID: N/A, SN: AAAAA11111
             m = p2.match(line)
             if m:
                 groups = m.groupdict()

@@ -21,41 +21,41 @@ class test_show_inventory(unittest.TestCase):
             'description': 'ASA 5555-X with SW, 8 GE Data, 1 GE Mgmt',
             'pid': 'ASA5555',
             'vid': 'V01',
-            'sn': 'FGL170441BU'
+            'sn': 'AAAAA11111'
         },
         'power supply 1': {
             'description': 'ASA 5545-X/5555-X AC Power Supply',
-            'pid': 'ASA-PWR-AC',
+            'pid': 'AAA-AAA-AAA',
             'vid': 'N/A',
-            'sn': '2CS1AX'
+            'sn': 'AAA111'
         },
         'Storage Device 1': {
-            'description': 'Micron 128 GB SSD MLC, Model Number: C400-MTFDDAC128MAM',
+            'description': 'Micron 128 GB SSD MLC, Model Number: C11111-AAAAAAAA',
             'pid': 'N/A',
             'vid': 'N/A',
-            'sn': 'MXA174201RR'
+            'sn': 'AAAAA11111'
         },
         'module 100': {
             'description': 'WS-SVC-ASASM-1 Adaptive Security Appliance Service Module',
-            'pid': 'WS-SVC-ASA-SM1',
+            'pid': 'AA-AAA-111-111',
             'vid': 'V01',
-            'sn': 'SAL1234567Z'
+            'sn': 'AAAAA11111'
         }
     }
 
     golden_output = {'execute.return_value': '''
         ciscoasa> show inventory
         Name: "Chassis", DESCR: "ASA 5555-X with SW, 8 GE Data, 1 GE Mgmt"
-        PID: ASA5555, VID: V01, SN: FGL170441BU
+        PID: ASA5555, VID: V01, SN: AAAAA11111
          
         Name: "power supply 1", DESCR: "ASA 5545-X/5555-X AC Power Supply"
-        PID: ASA-PWR-AC, VID: N/A, SN: 2CS1AX
+        PID: AAA-AAA-AAA, VID: N/A, SN: AAA111
          
-        Name: "Storage Device 1", DESCR: "Micron 128 GB SSD MLC, Model Number: C400-MTFDDAC128MAM"
-        PID: N/A, VID: N/A, SN: MXA174201RR
+        Name: "Storage Device 1", DESCR: "Micron 128 GB SSD MLC, Model Number: C11111-AAAAAAAA"
+        PID: N/A, VID: N/A, SN: AAAAA11111
 
         Name: "module 100", DESCR: "WS-SVC-ASASM-1 Adaptive Security Appliance Service Module"
-        PID: WS-SVC-ASA-SM1    , VID: V01     , SN: SAL1234567Z
+        PID: AA-AAA-111-111    , VID: V01     , SN: AAAAA11111
     '''}
 
     def test_empty(self):
