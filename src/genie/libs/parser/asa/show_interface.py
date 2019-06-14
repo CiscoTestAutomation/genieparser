@@ -1,11 +1,10 @@
 ''' show_interface.py
 
-ASA parserr for the following show commands:
+Parser for the following show commands:
     * show interface summary
     * show interface ip brief
     * show interface details
 '''
-
 
 # Python
 import re
@@ -13,7 +12,6 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
-
 
 # =============================================
 # Schema for 'show interface summary'
@@ -203,7 +201,9 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
         # GigabitEthernet0/2 10.10.1.1 YES manual admin down down
         # GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
         # Management0/0 10.10.1.1 YES CONFIG up
-        p1 = re.compile(r'^(?P<interface>\S+) *(?P<ip>unassigned|\d+.\d+.\d+.\d+)?(\/(?P<prefix_length>[0-9]+))? *(?P<check>\w+) *(?P<method>\S* ?\S*?) *(?P<link_status>\w+) *(?P<line_protocol>\w+)?$')
+        p1 = re.compile(r'^(?P<interface>\S+) *(?P<ip>unassigned|\d+.\d+.\d+.\d+)?'
+            '(\/(?P<prefix_length>[0-9]+))? *(?P<check>\w+) *(?P<method>\S* ?\S*?) *'
+            '(?P<link_status>\w+) *(?P<line_protocol>\w+)?$')
 
         for line in out.splitlines():
             line = line.strip()
