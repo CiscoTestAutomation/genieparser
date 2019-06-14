@@ -1,9 +1,8 @@
 ''' show_inventory.py
 
-ASA parserr for the following show commands:
+Parser for the following show commands:
     * show inventory
 '''
-
 
 # Python
 import re
