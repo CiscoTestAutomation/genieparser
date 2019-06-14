@@ -65,18 +65,20 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
         ret_dict = {}
 
         # Interface Vlan100 "pod10", is up, line protocol is up
-        p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +(?P<link_status>\w+), +line +protocol +is +(?P<line_protocol>\w+)$')
+        p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +'
+            '(?P<link_status>\w+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
-        # MAC address 124a.b12b.02ac, MTU 1500
+        # MAC address aa11.bb22.cc33, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
-        # IP address 192.12.12.254, subnet mask 255.255.255.0
+        # IP address 10.10.10.1, subnet mask 255.255.255.0
         p3 = re.compile(r'^IP +address +(?P<ip>[a-z0-9\.]+)'
             '(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
             '+(?P<subnet>[\w\.]+)$')
 
         # Available but not configured via nameif
-        p4 = re.compile(r'^(?P<interface_state>Available) +but +(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
+        p4 = re.compile(r'^(?P<interface_state>Available) +but +'
+            '(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -88,42 +90,32 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                 interface = groups['interface']
                 instance_dict = ret_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
-                instance_dict.update({'name': groups['name']})
-                
-                
+                instance_dict.update({'name': groups['name']})            
                 link_status = groups['link_status'].lower()
                 if 'up' in link_status:
                     instance_dict.update({'link_status': True})
                 if 'down' in link_status:
                     instance_dict.update({'link_status': False})
-
-                
-
-                if groups['line_protocol'].lower() == 'up':
+                line_protocol = groups['line_protocol'].lower()
+                if 'up' in line_protocol:
                     instance_dict.update({'line_protocol': True})
-                if groups['line_protocol'].lower() == 'down':
+                if 'down' in line_protocol:
                     instance_dict.update({'line_protocol': False})
-
-                if groups['name'] != '' \
-                and groups['link_status'].lower() == 'up' \
-                and groups['line_protocol'].lower() == 'up':
+                if groups['name'] != '' and link_status == 'up' \
+                and line_protocol == 'up':
                     instance_dict.update({'interface_state': True, \
-                        'config_status': True})
-                
-                if groups['name'] != '' \
-                and groups['link_status'].lower() == 'down' \
-                and groups['line_protocol'].lower() == 'down':
+                        'config_status': True})                
+                if groups['name'] != '' and link_status == 'down' \
+                and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': True})
-
-                if groups['name'] == '' \
-                and groups['link_status'].lower() == 'down' \
-                and groups['line_protocol'].lower() == 'down':
+                if groups['name'] == '' and link_status == 'down' \
+                and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': False})
                 continue
 
-            # MAC address 124a.b12b.02ac, MTU 1500
+            # MAC address 11aa.22bb.33cc, MTU 1500
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -131,7 +123,7 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                 instance_dict.update({'mtu': int(groups['mtu'])})
                 continue
 
-            # IP address 192.12.12.254, subnet mask 255.255.255.0
+            # IP address 10.10.1.1, subnet mask 255.255.255.0
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -205,24 +197,24 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
         ret_dict = {}
 
         # Interface IP-Address OK? Method Status Protocol
-        # Control0/0 127.0.1.1 YES CONFIG up up
-        # GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
+        # Control0/0 10.10.1.1 YES CONFIG up up
+        # GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
         # GigabitEthernet0/1 unassigned YES unset admin down down
-        # GigabitEthernet0/2 10.1.1.50 YES manual admin down down
-        # GigabitEthernet0/3 192.168.2.6 YES DHCP admin down down
-        # Management0/0 209.165.201.3 YES CONFIG up
+        # GigabitEthernet0/2 10.10.1.1 YES manual admin down down
+        # GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
+        # Management0/0 10.10.1.1 YES CONFIG up
         p1 = re.compile(r'^(?P<interface>\S+) *(?P<ip>unassigned|\d+.\d+.\d+.\d+)?(\/(?P<prefix_length>[0-9]+))? *(?P<check>\w+) *(?P<method>\S* ?\S*?) *(?P<link_status>\w+) *(?P<line_protocol>\w+)?$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # Interface IP-Address OK? Method Status Protocol
-            # Control0/0 127.0.1.1 YES CONFIG up up
-            # GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
+            # Control0/0 10.10.1.1 YES CONFIG up up
+            # GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
             # GigabitEthernet0/1 unassigned YES unset admin down down
-            # GigabitEthernet0/2 10.1.1.50 YES manual admin down down
-            # GigabitEthernet0/3 192.168.2.6 YES DHCP admin down down
-            # Management0/0 209.165.201.3 YES CONFIG up
+            # GigabitEthernet0/2 10.10.1.1 YES manual admin down down
+            # GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
+            # Management0/0 10.10.1.1 YES CONFIG up
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -266,8 +258,8 @@ class ShowInterfaceDetailSchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                'link_status': str,
-                'line_protocol': str,
+                'link_status': bool,
+                'line_protocol': bool,
                 Optional('name'): str,
                 Optional('mac_address'): str,
                 Optional('mtu'): int,
@@ -323,22 +315,20 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         ret_dict = {}
 
         # Interface Vlan300 "admin-out", is up, line protocol is up
-        p1 = re.compile(r'^Interface +(?P<interface>\w+) ' \
-            '+"(?P<name>[\w\-\+\/\_]*)", +is +(?P<link_status>up|down), ' \
-            '+line +protocol +is +(?P<line_protocol>up|down)$')
+        p1 = re.compile(r'^Interface +(?P<interface>\S+) +"(?P<name>\S*)", +is +'
+            '(?P<link_status>\w+), +line +protocol +is +(?P<line_protocol>\w+)$')
 
-        # MAC address 124a.b12b.02ac, MTU 1500
+        # MAC address aa11.bb22.cc33, MTU 1500
         p2 = re.compile(r'^MAC address +(?P<mac_address>[\w\.]+), +MTU +(?P<mtu>\d+)$')
 
-        # IP address 10.10.10.12, subnet mask 255.255.255.0
+        # IP address 10.10.10.1, subnet mask 255.255.255.0
         p3 = re.compile(r'^IP +address +(?P<ip>[a-z0-9\.]+)'
             '(\/(?P<prefix_length>[0-9]+))?, +subnet +mask '
             '+(?P<subnet>[\w\.]+)$')
 
         # Available but not configured via nameif
-        p4 = re.compile(r'^(?P<interface_state>Available) +but '
-            '+(?P<config_status>not +configured) +via '
-            '+(?P<config_issue>[\w\-\+\/\_]*)$')
+        p4 = re.compile(r'^(?P<interface_state>Available) +but +'
+            '(?P<config_status>not +configured) +via +(?P<config_issue>\S*)$')
 
         # 889007666 packets input, 785740327549 bytes
         p5 = re.compile(r'^(?P<packets_input>\d+) +packets +input, '
@@ -384,27 +374,33 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
                 instance_dict = ret_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
                 instance_dict.update({'name': groups['name']})
-                instance_dict.update({'link_status': groups['link_status']})
-                instance_dict.update(
-                    {'line_protocol': groups['line_protocol']})
+                link_status = groups['link_status'].lower()
+                if 'up' in link_status:
+                    instance_dict.update({'link_status': True})
+                if 'down' in link_status:
+                    instance_dict.update({'link_status': False})
+                line_protocol = groups['line_protocol'].lower()
+                if 'up' in line_protocol:
+                    instance_dict.update({'line_protocol': True})
+                if 'down' in line_protocol:
+                    instance_dict.update({'line_protocol': False})
                 if groups['name'] != '' \
-                and groups['link_status'] == 'up' \
-                and groups['line_protocol'] == 'up':
+                and link_status == 'up' \
+                and line_protocol == 'up':
                     instance_dict.update({'interface_state': True, \
                         'config_status': True})
-                if groups['name'] != '' \
-                and groups['link_status'] == 'down' \
-                and groups['line_protocol'] == 'down':
+                if groups['name'] != '' and link_status == 'down' \
+                and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': True})
-                if groups['name'] == '' \
-                and groups['link_status'] == 'down' \
-                and groups['line_protocol'] == 'down':
+                if groups['name'] == '' 
+                and link_status == 'down' \
+                and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': False})
                 continue
 
-            # MAC address 124a.b12b.02ac, MTU 1500
+            # MAC address aa11.bb22.cc33, MTU 1500
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -412,7 +408,7 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
                 instance_dict.update({'mtu': int(groups['mtu'])})
                 continue
 
-            # IP address 10.10.10.12, subnet mask 255.255.255.0
+            # IP address 10.10.10.1, subnet mask 255.255.255.0
             m = p3.match(line)
             if m:
                 groups = m.groupdict()

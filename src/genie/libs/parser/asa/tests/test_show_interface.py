@@ -26,11 +26,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod10',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '192.12.12.254': { 
-                        'ip': '192.12.12.254'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -41,8 +41,8 @@ class test_show_interface_summary(unittest.TestCase):
     golden_output = {'execute.return_value': '''
 		ciscoasa/admin# show interface summary
 		Interface Vlan100 "pod10", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 192.12.12.254, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 	'''}
 
     golden_parsed_output_2 = {
@@ -53,11 +53,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'admin-out',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '10.10.10.12': { 
-                        'ip': '10.10.10.12'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -68,11 +68,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod10-in',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '10.100.10.128': { 
-                        'ip': '10.100.10.128'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -91,11 +91,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'adminTEST',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '168.10.2.1': { 
-                        'ip': '168.10.2.1'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -106,11 +106,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod1',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '168.16.10.255': { 
-                        'ip': '168.16.10.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -121,11 +121,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod2',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.12.255': { 
-                        'ip': '172.8.12.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -136,11 +136,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod3',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.13.255': { 
-                        'ip': '172.8.13.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -151,11 +151,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod4',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.14.255': { 
-                        'ip': '172.8.14.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -166,11 +166,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod5',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.15.255': { 
-                        'ip': '172.8.15.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -181,11 +181,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod6',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.16.255': { 
-                        'ip': '172.8.16.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -196,11 +196,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod7',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.17.255': { 
-                        'ip': '172.8.17.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -211,11 +211,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod8',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.18.255': { 
-                        'ip': '172.8.18.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -226,11 +226,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod9',
                 'link_status': True,
                 'line_protocol': True,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '172.8.19.255': { 
-                        'ip': '172.8.19.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -241,11 +241,11 @@ class test_show_interface_summary(unittest.TestCase):
                 'name': 'pod249',
                 'link_status': False,
                 'line_protocol': False,
-                'mac_address': '124a.b12b.02ac',
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
 				'ipv4': {
-                    '192.12.24.255': { 
-                        'ip': '192.12.24.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0'
@@ -256,46 +256,46 @@ class test_show_interface_summary(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
     	ciscoasa/admin# show interface summary
 		Interface Vlan300 "admin-out", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 10.10.10.12, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan400 "pod10-in", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 10.100.10.128, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan500 "", is up, line protocol is up
 			Available but not configured via nameif
 		Interface Vlan600 "adminTEST", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 168.10.2.1, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan700 "pod1", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 168.16.10.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan902 "pod2", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.12.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan900 "pod3", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.13.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1000 "pod4", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.14.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1100 "pod5", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.15.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1200 "pod6", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.16.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1300 "pod7", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.17.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1400 "pod8", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.18.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1500 "pod9", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 172.8.19.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		Interface Vlan1600 "pod249", is down, line protocol is down
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 192.12.24.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 	'''}
 
     def test_empty(self):
@@ -330,8 +330,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
         'interfaces': {
             'Control0/0': {
 				'ipv4': {
-                    '127.0.1.1': { 
-                        'ip': '127.0.1.1'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -341,8 +341,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
             },
             'GigabitEthernet0/0': {
 				'ipv4': {
-                    '209.165.200.226': { 
-                        'ip': '209.165.200.226'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -363,8 +363,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
             },
             'GigabitEthernet0/2': {
 				'ipv4': {
-                    '10.1.1.50': { 
-                        'ip': '10.1.1.50'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -374,8 +374,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
             },
             'GigabitEthernet0/3': {
 				'ipv4': {
-                    '192.168.2.6': { 
-                        'ip': '192.168.2.6'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -385,8 +385,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
             },
             'Management0/0': {
 				'ipv4': {
-                    '209.165.201.3': { 
-                        'ip': '209.165.201.3'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -395,8 +395,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
             },
             'Vlan150': {
 				'ipv4': {
-                    '192.12.12.254': { 
-                        'ip': '192.12.12.254'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -406,8 +406,8 @@ class test_show_interface_ip_brief(unittest.TestCase):
             },
             'Vlan160': {
 				'ipv4': {
-                    '192.12.24.255': { 
-                        'ip': '192.12.24.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'check': 'YES',
@@ -431,14 +431,14 @@ class test_show_interface_ip_brief(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
 		Interface IP-Address OK? Method Status Protocol
-		Control0/0 127.0.1.1 YES CONFIG up up
-		GigabitEthernet0/0 209.165.200.226 YES CONFIG up up
+		Control0/0 10.10.1.1 YES CONFIG up up
+		GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
 		GigabitEthernet0/1 unassigned YES unset admin down down
-		GigabitEthernet0/2 10.1.1.50 YES manual admin down down
-		GigabitEthernet0/3 192.168.2.6 YES DHCP admin down down
-		Management0/0 209.165.201.3 YES CONFIG up
-		Vlan150                   192.12.12.254  YES CONFIG up                    up
-		Vlan160                   192.12.24.255  YES CONFIG down                  down
+		GigabitEthernet0/2 10.10.1.1 YES manual admin down down
+		GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
+		Management0/0 10.10.1.1 YES CONFIG up
+		Vlan150                   10.10.1.1  YES CONFIG up                    up
+		Vlan160                   10.10.1.1  YES CONFIG down                  down
 		Vlan170                    unassigned      YES unset  up                    up
 	'''}
 
@@ -469,13 +469,13 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod248',
-                'link_status': 'up',
-                'line_protocol': 'up',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': True,
+                'line_protocol': True,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '168.8.242.255': { 
-                        'ip': '168.8.242.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -504,8 +504,8 @@ class test_show_interface_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
     	DevNet-asa-sm-1/admin# show interface detail
 		Interface Vlan5000 "pod248", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 168.8.242.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "pod248":
 			34354322 packets input, 32443242111 bytes
 			92739172 packets output, 4309803982 bytes
@@ -525,13 +525,13 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': False,
                 'config_status': True,
                 'name': 'pod555',
-                'link_status': 'down',
-                'line_protocol': 'down',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': False,
+                'line_protocol': False,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '192.12.24.255': { 
-                        'ip': '192.12.24.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -560,8 +560,8 @@ class test_show_interface_detail(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
     	DevNet-asa-sm-1/admin# show interface detail
 		Interface Vlan6000 "pod555", is down, line protocol is down
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 192.12.24.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "pod555":
 			0 packets input, 0 bytes
 			0 packets output, 0 bytes
@@ -581,13 +581,13 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'admin-out',
-                'link_status': 'up',
-                'line_protocol': 'up',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': True,
+                'line_protocol': True,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '10.10.10.12': { 
-                        'ip': '10.10.10.12'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -614,13 +614,13 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod10-in',
-                'link_status': 'up',
-                'line_protocol': 'up',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': True,
+                'line_protocol': True,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '10.100.10.128': { 
-                        'ip': '10.100.10.128'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -647,21 +647,21 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': False,
                 'name': '',
-                'link_status': 'up',
-                'line_protocol': 'up',
+                'link_status': True,
+                'line_protocol': True,
                 'config_issue': 'nameif'
             },
             'Vlan600': {
                 'interface_state': True,
                 'config_status': True,
                 'name': 'adminTEST',
-                'link_status': 'up',
-                'line_protocol': 'up',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': True,
+                'line_protocol': True,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '168.10.2.1': { 
-                        'ip': '168.10.2.1'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -688,13 +688,13 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': True,
                 'config_status': True,
                 'name': 'pod1',
-                'link_status': 'up',
-                'line_protocol': 'up',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': True,
+                'line_protocol': True,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '168.16.10.255': { 
-                        'ip': '168.16.10.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -721,13 +721,13 @@ class test_show_interface_detail(unittest.TestCase):
                 'interface_state': False,
                 'config_status': True,
                 'name': 'pod249',
-                'link_status': 'down',
-                'line_protocol': 'down',
-                'mac_address': '124a.b12b.02ac',
+                'link_status': False,
+                'line_protocol': False,
+                'mac_address': 'aa11.bb22.cc33',
                 'mtu': 1500,
                 'ipv4': {
-                    '192.12.24.255': { 
-                        'ip': '192.12.24.255'
+                    '10.10.1.1': { 
+                        'ip': '10.10.1.1'
                     },
                 },
                 'subnet': '255.255.255.0',
@@ -756,8 +756,8 @@ class test_show_interface_detail(unittest.TestCase):
     golden_output_3 = {'execute.return_value': '''
     	ciscoasa/admin# show interface detail
 		Interface Vlan300 "admin-out", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 10.10.10.12, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "admin-out":
 			889007666 packets input, 785740327549 bytes
 			621453837 packets output, 428046938178 bytes
@@ -770,8 +770,8 @@ class test_show_interface_detail(unittest.TestCase):
 			Interface vlan config status is active
 			Interface vlan state is UP
 		Interface Vlan400 "pod10-in", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 10.100.10.128, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "pod10-in":
 			1286035 packets input, 100030768 bytes
 			1 packets output, 28 bytes
@@ -786,8 +786,8 @@ class test_show_interface_detail(unittest.TestCase):
 		Interface Vlan500 "", is up, line protocol is up
 			Available but not configured via nameif
 		Interface Vlan600 "adminTEST", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 168.10.2.1, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "adminTEST":
 			1212307 packets input, 96880666 bytes
 			1 packets output, 28 bytes
@@ -800,8 +800,8 @@ class test_show_interface_detail(unittest.TestCase):
 			Interface vlan config status is active
 			Interface vlan state is UP
 		Interface Vlan700 "pod1", is up, line protocol is up
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 168.16.10.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "pod1":
 			7299914 packets input, 6411442725 bytes
 			2862092 packets output, 118819269 bytes
@@ -814,8 +814,8 @@ class test_show_interface_detail(unittest.TestCase):
 			Interface vlan config status is active
 			Interface vlan state is UP
 		Interface Vlan1600 "pod249", is down, line protocol is down
-			MAC address 124a.b12b.02ac, MTU 1500
-			IP address 192.12.24.255, subnet mask 255.255.255.0
+			MAC address aa11.bb22.cc33, MTU 1500
+			IP address 10.10.1.1, subnet mask 255.255.255.0
 		  Traffic Statistics for "pod249":
 			0 packets input, 0 bytes
 			0 packets output, 0 bytes
