@@ -10,4 +10,4 @@
 --------------------------------------------------------------------------------
 * ASA
     * Added ShowInventory for:
-      show interface inventory
+      show inventory
