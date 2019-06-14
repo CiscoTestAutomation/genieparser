@@ -1,6 +1,6 @@
 ''' show_route.py
 
-ASA parserr for the following show commands:
+Parser for the following show commands:
     * show route
 '''
 
@@ -120,13 +120,13 @@ class ShowRoute(ShowRouteSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
-            #                    via 10.16.251.2, pod1000
-            # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-            # L 192.16.168.251 255.255.255.255 is directly connected, pod2000
-            #                                  is directly connected, pod2002
-            # V 192.168.0.1 255.255.255.255
-            #                      connected by VPN (advertised), admin
+            # S* 10.10.1.1 0.0.0.0 via 20.20.2.2, outside
+            #                    via 20.20.2.2, pod1000
+            # S 10.10.1.1 0.0.0.0 [10/5] via 20.20.2.2, outside
+            # L 10.10.1.1 255.255.255.255 is directly connected, pod2000
+            #                                 is directly connected, pod2002
+            # V        10.10.1.1 255.255.255.255
+            #                         connected by VPN (advertised), admin
             m = p1.match(line)
             if m:
                 groups = m.groupdict()

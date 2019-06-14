@@ -1,20 +1,18 @@
 import unittest
 from unittest.mock import Mock
 
-# ATS
 from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.asa.show_route import ShowRoute
 
 # ============================================
-# unit test for 'show ip route'
+# unit test for 'show route'
 # =============================================
-class test_show_ip_route(unittest.TestCase):
+class test_show_route(unittest.TestCase):
     '''
-       unit test for show ip route
+       unit test for show route
     '''
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -35,12 +33,12 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '10.16.251.1',
+                                            'next_hop': '20.20.2.2',
                                             'outgoing_interface': 'outside'
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '10.16.251.2',
+                                            'next_hop': '20.20.2.2',
                                             'outgoing_interface': 'pod1000'
                                         }
                                     }
@@ -58,25 +56,25 @@ class test_show_ip_route(unittest.TestCase):
                                     'next_hop_list': {
                                         1: {
                                             'index': 1,
-                                            'next_hop': '10.16.255.1',
+                                            'next_hop': '20.20.2.2',
                                             'outgoing_interface': 'outside'
                                         },
                                         2: {
                                             'index': 2,
-                                            'next_hop': '10.16.255.2',
+                                            'next_hop': '20.20.2.2',
                                             'outgoing_interface': 'pod1001'
                                         },
                                         3: {
                                             'index': 3,
-                                            'next_hop': '10.16.255.3',
+                                            'next_hop': '20.20.2.2',
                                             'outgoing_interface': 'pod1002'
                                         }
                                     }
                                 }
                             },
-                            '127.1.0.0': {
+                            '10.10.1.1': {
                                 'active': True,
-                                'route': '127.1.0.0',
+                                'route': '10.10.1.1',
                                 'mac_address': '255.255.0.0',
                                 'source_protocol_codes': 'C',
                                 'source_protocol': 'connected',
@@ -88,9 +86,9 @@ class test_show_ip_route(unittest.TestCase):
                                     }
                                 }
                             },
-                            '10.86.168.0': {
+                            '10.10.1.1': {
                                 'active': True,
-                                'route': '10.86.168.0',
+                                'route': '10.10.1.1',
                                 'mac_address': '255.255.254.0',
                                 'source_protocol_codes': 'C',
                                 'source_protocol': 'connected',
@@ -102,9 +100,9 @@ class test_show_ip_route(unittest.TestCase):
                                     }
                                 }
                             },
-                            '192.16.168.251': {
+                            '10.10.1.1': {
                                 'active': True,
-                                'route': '192.16.168.251',
+                                'route': '10.10.1.1',
                                 'mac_address': '255.255.255.255',
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -119,9 +117,9 @@ class test_show_ip_route(unittest.TestCase):
                                     }
                                 }
                             },
-                            '192.168.0.1': {            
+                            '10.10.1.1': {            
                                 'active': True,
-                                'route': '192.168.0.1',
+                                'route': '10.10.1.1',
                                 'mac_address': '255.255.255.255',
                                 'source_protocol_codes': 'V',
                                 'source_protocol': 'vpn',
@@ -133,9 +131,9 @@ class test_show_ip_route(unittest.TestCase):
                                     }
                                 }
                             },
-                            '172.10.16.251': {
+                            '10.10.1.1': {
                                 'active': True,
-                                'route': '172.10.16.251',
+                                'route': '10.10.1.1',
                                 'mac_address': '255.255.255.255',
                                 'source_protocol_codes': 'L',
                                 'source_protocol': 'local',
@@ -147,9 +145,9 @@ class test_show_ip_route(unittest.TestCase):
                                     }
                                 }
                             },
-                            '172.10.16.255': {
+                            '10.10.1.1.255': {
                                 'active': True,
-                                'route': '172.10.16.255',
+                                'route': '10.10.1.1.255',
                                 'mac_address': '255.255.255.0',
                                 'source_protocol_codes': 'C',
                                 'source_protocol': 'connected',
@@ -171,30 +169,30 @@ class test_show_ip_route(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         ciscoasa/admin(config)# show route
          
-        Codes: L - Local, C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
-        D - EIGRP, E - EGP, EX - EIGRP external, O - OSPF, I - IGRP, IA - OSPF inter area
-        N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
-        E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
-        i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
-        * - candidate default, su - IS-IS summary, U - per-user static route, o - ODR
-        P - periodic downloaded static route, + - replicated route
+        Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+               D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+               N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+               E1 - OSPF external type 1, E2 - OSPF external type 2, V - VPN
+               i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+               ia - IS-IS, * - candidate default, U - per-user static route
+               o - ODR, P - periodic downloaded static route, + - replicated route
          
-        Gateway of last resort is 10.16.251.1 to network 0.0.0.0
+        Gateway of last resort is 20.20.2.2 to network 0.0.0.0
         
 
-        S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
-                           via 10.16.251.2, pod1000
-        S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
-                                via 10.16.255.2, pod1001
-                                via 10.16.255.3, pod1002
-        C 127.1.0.0 255.255.0.0 is directly connected, _internal_loopback
-        C 10.86.168.0 255.255.254.0 is directly connected, outside
-        L 192.16.168.251 255.255.255.255 is directly connected, pod2000
+        S* 10.10.1.1 0.0.0.0 via 20.20.2.2, outside
+                           via 20.20.2.2, pod1000
+        S 10.10.1.1 0.0.0.0 [10/5] via 20.20.2.2, outside
+                                via 20.20.2.2, pod1001
+                                via 20.20.2.2, pod1002
+        C 10.10.1.1 255.255.0.0 is directly connected, _internal_loopback
+        C 10.10.1.1 255.255.254.0 is directly connected, outside
+        L 10.10.1.1 255.255.255.255 is directly connected, pod2000
                                         is directly connected, pod2002
-        V        192.168.0.1 255.255.255.255
+        V        10.10.1.1 255.255.255.255
                                 connected by VPN (advertised), admin
-        L        172.10.16.251 255.255.255.255 is directly connected, pod2500
-        C        172.10.16.255 255.255.255.0 
+        L        10.10.1.1 255.255.255.255 is directly connected, pod2500
+        C        10.10.1.1.255 255.255.255.0 
                                 is directly connected, pod3000
           '''}
 
