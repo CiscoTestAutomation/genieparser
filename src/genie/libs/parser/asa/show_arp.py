@@ -54,10 +54,10 @@ class ShowArp(ShowArpSchema):
 
         ret_dict = {}
 
-        # outside 10.86.194.61 0011.2094.1d2b 2
-        # outside 10.86.194.1 001a.300c.8000 -
-        # outside 10.86.195.2 00d0.02a8.440a alias
-        # outside 10.86.195.3/24 00d0.02a8.440a -
+        # outside 10.10.1.1 aa11.bb22.cc33 2
+        # outside 10.10.1.1 aa11.bb22.cc33 -
+        # outside 10.10.1.1 aa11.bb22.cc33 alias
+        # outside 10.10.1.1/1 aa11.bb22.cc33 -
         p1 = re.compile(r'^(?P<name>\S+) +(?P<ip>\d+.\d+.\d+.\d+)'
             '(\/(?P<prefix_length>[0-9]+))? +(?P<link_layer_address>\S+.\S+.\S+) '
             '+(?P<age>\S+)$')
@@ -65,10 +65,10 @@ class ShowArp(ShowArpSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # outside 10.86.194.61 0011.2094.1d2b 2
-            # outside 10.86.194.1 001a.300c.8000 -
-            # outside 10.86.195.2 00d0.02a8.440a alias
-            # outside 10.86.195.3/24 00d0.02a8.440a -
+            # outside 10.10.1.1 aa11.bb22.cc33 2
+            # outside 10.10.1.1 aa11.bb22.cc33 -
+            # outside 10.10.1.1 aa11.bb22.cc33 alias
+            # outside 10.10.1.1/1 aa11.bb22.cc33 -
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
