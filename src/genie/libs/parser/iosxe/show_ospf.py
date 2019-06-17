@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * show ip ospf
     * show ip ospf interface
+    * show ip ospf interface {interface}
     * show ip ospf sham-links
     * show ip ospf virtual-links
     * show ip ospf neighbor detail
@@ -1161,11 +1162,13 @@ class ShowIpOspf(ShowIpOspfSchema):
 # ============================
 # Schema for:
 #   * 'show ip ospf interface'
+#   * 'show ip ospf interface {interface}''
 # ============================
 class ShowIpOspfInterfaceSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf interface'
+        * 'show ip ospf interface {interface}'
     '''
 
     schema = {
@@ -1423,17 +1426,24 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
     ''' Parser for:
         * 'show ip ospf interface'
+        * 'show ip ospf interface {interface}''
     '''
 
-    cli_command = 'show ip ospf interface'
+    cli_command = ['show ip ospf interface {interface}',
+                   'show ip ospf interface']
     exclude = ['hello_timer', 'dead_timer',
         'bdr_ip_addr', 'bdr_router_id', 'last_flood_scan_length',
         'last_flood_scan_time_msec', 
         'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
 
 
-    def cli(self):
-        out = self.device.execute(self.cli_command)
+    def cli(self, interface=''):
+        if interface:
+            cmd = self.cli_command[0].format(interface=interface)
+        else:
+            cmd = self.cli_command[1]
+
+        out = self.device.execute(cmd)
 
         # Init vars
         ret_dict = {}
