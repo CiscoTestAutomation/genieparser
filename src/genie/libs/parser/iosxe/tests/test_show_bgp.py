@@ -2171,13 +2171,13 @@ class test_show_bgp_all_detail(unittest.TestCase):
         '''}
 
     golden_output3 = {'execute.return_value': '''
-    BGP routing table entry for 65000:1:1.1.1.1/32, version 2
+    BGP routing table entry for 65000:1:10.4.1.1/32, version 2
 Paths: (1 available, best #1, table VRF1)
   Advertised to update-groups:
      1
   Refresh Epoch 1
   Local
-    0.0.0.0 (via vrf VRF1) from 0.0.0.0 (1.1.1.1)
+    0.0.0.0 (via vrf VRF1) from 0.0.0.0 (10.4.1.1)
       Origin IGP, metric 0, localpref 100, weight 32768, valid, sourced, local, best
       Extended Community: Cost:pre-bestpath:128:1280 0x8800:32768:0
         0x8801:100:32 0x8802:65280:256 0x8803:65281:1514 0x8806:0:16843009
@@ -2192,7 +2192,7 @@ Paths: (1 available, best #1, table VRF1)
                         'vpnv4 unicast': {
                         
                             'prefixes': {
-                                '1.1.1.1/32': {
+                                '10.4.1.1/32': {
                                     'table_version': '2',
                                     'available_path': '1',
                                     'best_path': '1',
@@ -2201,7 +2201,7 @@ Paths: (1 available, best #1, table VRF1)
                                         1: {
                                             'next_hop': '0.0.0.0',
                                             'gateway': '0.0.0.0',
-                                            'originator': '1.1.1.1',
+                                            'originator': '10.4.1.1',
                                             'next_hop_via': 'vrf VRF1',
                                             'localpref': 100,
                                             'metric': 0,
@@ -2248,7 +2248,7 @@ Paths: (1 available, best #1, table VRF1)
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllDetail(device=self.device)
-        parsed_output = obj.parse(vrf='VRF1', route='1.1.1.1')
+        parsed_output = obj.parse(vrf='VRF1', route='10.4.1.1')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 # ============================
@@ -4991,7 +4991,7 @@ Paths: (1 available, best #1, no table)
      17         18
   Refresh Epoch 9
   65555, (Received from a RR-client)
-    106.162.197.254 (metric 1002) (via default) from 106.162.197.254 (106.162.197.254)
+    10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
       Origin incomplete, metric 0, localpref 100, valid, internal, best
       Community: 62000:1
       Extended Community: RT:9996:4093
@@ -5013,9 +5013,9 @@ Paths: (1 available, best #1, no table)
                                         'paths': '1 available, best #1, no table',
                                         'index': {
                                             1: {
-                                                'next_hop': '106.162.197.254',
-                                                'gateway': '106.162.197.254',
-                                                'originator': '106.162.197.254',
+                                                'next_hop': '10.169.197.254',
+                                                'gateway': '10.169.197.254',
+                                                'originator': '10.169.197.254',
                                                 'next_hop_igp_metric': '1002',
                                                 'next_hop_via': 'default',
                                                 'localpref': 100,
@@ -5969,7 +5969,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
     golden_parsed_output3={
     'bgp_id': 9996,
     'vrf': {
-        'CE1test': {
+        'VRF1': {
             'neighbor': {
                 '192.168.10.253': {
                     'address_family': {
@@ -6059,7 +6059,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowBgpAllSummary(device=self.device)
-        parsed_output = obj.parse(vrf='CE1test')
+        parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =================================================
@@ -6330,7 +6330,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {'bgp_id': 9996,
-            'vrf': {'CE1test': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
+            'vrf': {'VRF1': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
                                                                                   'activity_prefixes': '226/0',
                                                                                   'as': 65555,
                                                                                   'attribute_entries': '106/104',
@@ -6354,7 +6354,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                            'total_entries': 189},
                                                                                   'prefixes': {'memory_usage': 32256,
                                                                                                'total_entries': 126},
-                                                                                  'route_identifier': '106.162.197.254',
+                                                                                  'route_identifier': '10.169.197.254',
                                                                                   'routing_table_version': 263,
                                                                                   'scan_interval': 60,
                                                                                   'state_pfxrcd': 'Idle',
@@ -6362,1607 +6362,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                   'total_memory': 92688,
                                                                                   'up_down': 'never',
                                                                                   'version': 4}}}}},
-         'L3VPN-0101': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60001,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0102': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60002,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0103': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60003,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0104': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60004,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0105': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60005,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0106': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60006,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0107': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60007,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0108': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60008,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0109': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60009,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0110': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60010,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0111': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60011,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0112': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60012,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0113': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60013,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0114': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60014,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0115': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60015,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0116': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60016,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0117': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60017,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0118': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60018,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0119': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60019,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0120': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60020,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0121': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60021,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0122': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60022,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0123': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60023,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0124': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60024,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0125': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60025,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0126': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60026,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0127': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60027,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0128': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60028,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0129': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60029,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0130': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60030,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0131': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60031,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0132': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60032,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0133': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60033,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0134': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60034,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0135': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60035,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0136': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60036,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0137': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60037,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0138': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60038,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0139': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60039,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0140': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60040,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0141': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60041,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0142': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60042,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0143': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60043,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0144': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60044,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0145': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60045,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0146': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60046,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Idle',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0147': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60047,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0148': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60048,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0149': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60049,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'L3VPN-0150': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                     'activity_prefixes': '226/0',
-                                                                                     'as': 60050,
-                                                                                     'attribute_entries': '106/104',
-                                                                                     'bgp_table_version': 263,
-                                                                                     'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                       'total_entries': 0},
-                                                                                                       'route-map': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0}},
-                                                                                     'community_entries': {'memory_usage': 3248,
-                                                                                                           'total_entries': 102},
-                                                                                     'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                             'total_entries': 2},
-                                                                                                 'rrinfo': {'memory_usage': 40,
-                                                                                                            'total_entries': 1}},
-                                                                                     'input_queue': 0,
-                                                                                     'local_as': 9996,
-                                                                                     'msg_rcvd': 0,
-                                                                                     'msg_sent': 0,
-                                                                                     'output_queue': 0,
-                                                                                     'path': {'memory_usage': 25704,
-                                                                                              'total_entries': 189},
-                                                                                     'prefixes': {'memory_usage': 32256,
-                                                                                                  'total_entries': 126},
-                                                                                     'route_identifier': '106.162.197.254',
-                                                                                     'routing_table_version': 263,
-                                                                                     'scan_interval': 60,
-                                                                                     'state_pfxrcd': 'Active',
-                                                                                     'tbl_ver': 1,
-                                                                                     'total_memory': 92688,
-                                                                                     'up_down': 'never',
-                                                                                     'version': 4}}}}},
-         'default': {'neighbor': {'202.239.165.119': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
+         'default': {'neighbor': {'192.168.36.119': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
                                                                                    'activity_prefixes': '226/0',
                                                                                    'as': 9996,
                                                                                    'attribute_entries': '106/104',
@@ -7986,7 +6386,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                             'total_entries': 189},
                                                                                    'prefixes': {'memory_usage': 32256,
                                                                                                 'total_entries': 126},
-                                                                                   'route_identifier': '106.162.197.254',
+                                                                                   'route_identifier': '10.169.197.254',
                                                                                    'routing_table_version': 263,
                                                                                    'scan_interval': 60,
                                                                                    'state_pfxrcd': '62',
@@ -7994,7 +6394,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                    'total_memory': 92688,
                                                                                    'up_down': '3d05h',
                                                                                    'version': 4}}},
-                                  '202.239.165.120': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
+                                  '192.168.36.120': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
                                                                                    'activity_prefixes': '226/0',
                                                                                    'as': 9996,
                                                                                    'attribute_entries': '106/104',
@@ -8018,7 +6418,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                             'total_entries': 189},
                                                                                    'prefixes': {'memory_usage': 32256,
                                                                                                 'total_entries': 126},
-                                                                                   'route_identifier': '106.162.197.254',
+                                                                                   'route_identifier': '10.169.197.254',
                                                                                    'routing_table_version': 263,
                                                                                    'scan_interval': 60,
                                                                                    'state_pfxrcd': '62',
@@ -8047,7 +6447,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             return self.outputs[key]
 
         raw1 = '''\
-         address-family ipv4 vrf CE1test
+         address-family ipv4 vrf VRF1
           bgp router-id 192.168.10.254
           redistribute connected
           redistribute static
@@ -8055,371 +6455,14 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
           neighbor 192.168.10.253 timers 30 90 15
           neighbor 192.168.10.253 activate
           neighbor 192.168.10.253 as-override
-          neighbor 192.168.10.253 route-map prepend in
-         address-family ipv4 vrf L3VPN-0051
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 65555
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0101
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60001
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0102
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60002
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0103
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60003
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0104
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60004
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0105
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60005
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0106
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60006
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0107
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60007
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0108
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60008
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0109
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60009
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0110
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60010
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0111
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60011
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0112
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60012
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0113
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60013
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0114
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60014
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0115
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60015
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0116
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60016
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0117
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60017
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0118
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60018
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0119
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60019
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0120
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60020
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0121
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60021
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0122
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60022
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0123
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60023
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0124
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60024
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0125
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60025
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0126
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60026
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0127
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60027
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0128
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60028
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0129
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60029
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0130
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60030
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0131
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60031
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0132
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60032
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0133
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60033
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0134
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60034
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0135
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60035
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0136
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60036
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0137
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60037
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0138
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60038
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0139
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60039
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0140
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60040
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0141
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60041
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0142
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60042
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0143
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60043
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0144
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60044
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0145
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60045
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0146
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60046
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0147
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60047
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0148
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60048
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0149
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60049
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
-         address-family ipv4 vrf L3VPN-0150
-          bgp router-id 192.168.10.254
-          redistribute connected
-          redistribute static
-          neighbor 192.168.10.253 remote-as 60050
-          neighbor 192.168.10.253 timers 30 90 15
-          neighbor 192.168.10.253 activate
+          neighbor 192.168.10.253 route-map prepend in         
         '''
 
         golden_output2 = '''\
             PE1#show ip bgp vpnv4 all summary
             Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
             Time source is NTP, 05:46:49.882 JST Tue May 28 2019
-            BGP router identifier 106.162.197.254, local AS number 9996
+            BGP router identifier 10.169.197.254, local AS number 9996
             BGP table version is 263, main routing table version 263
             126 network entries using 32256 bytes of memory
             189 path entries using 25704 bytes of memory
@@ -8434,59 +6477,9 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
 
             Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
             192.168.10.253  4        65555   10112   10107      263    0    0 3d05h          13
-            192.168.10.253  4        65555       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60001       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60002       0       0        1    0    0 never    Active
-            192.168.10.253  4        60003       0       0        1    0    0 never    Active
-            192.168.10.253  4        60004       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60005       0       0        1    0    0 never    Active
-            192.168.10.253  4        60006       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60007       0       0        1    0    0 never    Active
-            192.168.10.253  4        60008       0       0        1    0    0 never    Active
-            192.168.10.253  4        60009       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60010       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60011       0       0        1    0    0 never    Active
-            192.168.10.253  4        60012       0       0        1    0    0 never    Active
-            192.168.10.253  4        60013       0       0        1    0    0 never    Active
-            192.168.10.253  4        60014       0       0        1    0    0 never    Active
-            192.168.10.253  4        60015       0       0        1    0    0 never    Active
-            192.168.10.253  4        60016       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60017       0       0        1    0    0 never    Active
-            192.168.10.253  4        60018       0       0        1    0    0 never    Active
-            192.168.10.253  4        60019       0       0        1    0    0 never    Active
-            192.168.10.253  4        60020       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60021       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60022       0       0        1    0    0 never    Active
-            192.168.10.253  4        60023       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60024       0       0        1    0    0 never    Active
-            192.168.10.253  4        60025       0       0        1    0    0 never    Active
-            192.168.10.253  4        60026       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60027       0       0        1    0    0 never    Active
-            192.168.10.253  4        60028       0       0        1    0    0 never    Active
-            192.168.10.253  4        60029       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60030       0       0        1    0    0 never    Active
-            192.168.10.253  4        60031       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60032       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60033       0       0        1    0    0 never    Active
-            192.168.10.253  4        60034       0       0        1    0    0 never    Active
-            192.168.10.253  4        60035       0       0        1    0    0 never    Active
-            192.168.10.253  4        60036       0       0        1    0    0 never    Active
-            192.168.10.253  4        60037       0       0        1    0    0 never    Active
-            192.168.10.253  4        60038       0       0        1    0    0 never    Active
-            192.168.10.253  4        60039       0       0        1    0    0 never    Active
-            192.168.10.253  4        60040       0       0        1    0    0 never    Active
-            192.168.10.253  4        60041       0       0        1    0    0 never    Active
-            192.168.10.253  4        60042       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60043       0       0        1    0    0 never    Active
-            192.168.10.253  4        60044       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60045       0       0        1    0    0 never    Active
-            192.168.10.253  4        60046       0       0        1    0    0 never    Idle
-            192.168.10.253  4        60047       0       0        1    0    0 never    Active
-            192.168.10.253  4        60048       0       0        1    0    0 never    Active
-            192.168.10.253  4        60049       0       0        1    0    0 never    Active
-            192.168.10.253  4        60050       0       0        1    0    0 never    Active
-            202.239.165.119 4         9996   10293   10213      263    0    0 3d05h          62
-            202.239.165.120 4         9996    9930    9826      263    0    0 3d02h          62
+            192.168.10.253  4        65555       0       0        1    0    0 never    Idle           
+            192.168.36.119 4         9996   10293   10213      263    0    0 3d05h          62
+            192.168.36.120 4         9996    9930    9826      263    0    0 3d02h          62
         '''
 
         self.outputs = {}
@@ -8511,7 +6504,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             [2019-06-05 09:46:16,345] +++ R1_xe: executing command 'show ip bgp all summary' +++
             show ip bgp all summary
             For address family: IPv4 Unicast
-            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP router identifier 10.4.1.1, local AS number 65000
             BGP table version is 4, main routing table version 4
             3 network entries using 744 bytes of memory
             3 path entries using 408 bytes of memory
@@ -8523,11 +6516,11 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             BGP activity 12/0 prefixes, 12/0 paths, scan interval 60 secs
 
             Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-            2.2.2.2         4        65000   30178   33211        4    0    0 2w6d            1
-            3.3.3.3         4        65000   30182   33227        4    0    0 2w6d            1
+            10.16.2.2         4        65000   30178   33211        4    0    0 2w6d            1
+            10.36.3.3         4        65000   30182   33227        4    0    0 2w6d            1
 
             For address family: IPv6 Unicast
-            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP router identifier 10.4.1.1, local AS number 65000
             BGP table version is 5, main routing table version 5
             3 network entries using 816 bytes of memory
             3 path entries using 456 bytes of memory
@@ -8543,7 +6536,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             2001:3:3:3::3   4        65000   30182   33196        5    0    0 2w6d            1
 
             For address family: VPNv4 Unicast
-            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP router identifier 10.4.1.1, local AS number 65000
             BGP table version is 4, main routing table version 4
             3 network entries using 768 bytes of memory
             3 path entries using 408 bytes of memory
@@ -8555,11 +6548,11 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             BGP activity 12/0 prefixes, 12/0 paths, scan interval 60 secs
 
             Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-            2.2.2.2         4        65000   30178   33215        4    0    0 2w6d            1
-            3.3.3.3         4        65000   30182   33221        4    0    0 2w6d            1
+            10.16.2.2         4        65000   30178   33215        4    0    0 2w6d            1
+            10.36.3.3         4        65000   30182   33221        4    0    0 2w6d            1
 
             For address family: VPNv6 Unicast
-            BGP router identifier 1.1.1.1, local AS number 65000
+            BGP router identifier 10.4.1.1, local AS number 65000
             BGP table version is 5, main routing table version 5
             3 network entries using 840 bytes of memory
             3 path entries using 468 bytes of memory
@@ -8579,17 +6572,17 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             [2019-06-05 09:46:59,306] +++ R1_xe: executing command 'show run | sec address-family ipv4 vrf' +++
             show run | sec address-family ipv4 vrf
              address-family ipv4 vrf VRF1
-              network 1.0.0.0
+              network 10.1.0.0
               network 10.0.0.0
               no auto-summary
              address-family ipv4 vrf VRF1
-              network 1.1.1.1 mask 255.255.255.255
-              neighbor 2.2.2.2 remote-as 65000
-              neighbor 2.2.2.2 update-source Loopback300
-              neighbor 2.2.2.2 activate
-              neighbor 3.3.3.3 remote-as 65000
-              neighbor 3.3.3.3 update-source Loopback300
-              neighbor 3.3.3.3 activate
+              network 10.4.1.1 mask 255.255.255.255
+              neighbor 10.16.2.2 remote-as 65000
+              neighbor 10.16.2.2 update-source Loopback300
+              neighbor 10.16.2.2 activate
+              neighbor 10.36.3.3 remote-as 65000
+              neighbor 10.36.3.3 update-source Loopback300
+              neighbor 10.36.3.3 activate
         '''
 
         raw3='''
@@ -8607,7 +6600,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         '''
 
         parsed_output3 = {'bgp_id': 65000,
-            'vrf': {'VRF1': {'neighbor': {'2.2.2.2': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
+            'vrf': {'VRF1': {'neighbor': {'10.16.2.2': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
                                                                                 'activity_prefixes': '12/0',
                                                                                 'as': 65000,
                                                                                 'attribute_entries': '3/3',
@@ -8627,7 +6620,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                          'total_entries': 3},
                                                                                 'prefixes': {'memory_usage': 768,
                                                                                              'total_entries': 3},
-                                                                                'route_identifier': '1.1.1.1',
+                                                                                'route_identifier': '10.4.1.1',
                                                                                 'routing_table_version': 4,
                                                                                 'scan_interval': 60,
                                                                                 'state_pfxrcd': '1',
@@ -8655,7 +6648,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                                'total_entries': 3},
                                                                                       'prefixes': {'memory_usage': 840,
                                                                                                    'total_entries': 3},
-                                                                                      'route_identifier': '1.1.1.1',
+                                                                                      'route_identifier': '10.4.1.1',
                                                                                       'routing_table_version': 5,
                                                                                       'scan_interval': 60,
                                                                                       'state_pfxrcd': '1',
@@ -8683,7 +6676,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                                'total_entries': 3},
                                                                                       'prefixes': {'memory_usage': 840,
                                                                                                    'total_entries': 3},
-                                                                                      'route_identifier': '1.1.1.1',
+                                                                                      'route_identifier': '10.4.1.1',
                                                                                       'routing_table_version': 5,
                                                                                       'scan_interval': 60,
                                                                                       'state_pfxrcd': '1',
@@ -8691,7 +6684,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                       'total_memory': 2696,
                                                                                       'up_down': '2w6d',
                                                                                       'version': 4}}},
-                               '3.3.3.3': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
+                               '10.36.3.3': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
                                                                                 'activity_prefixes': '12/0',
                                                                                 'as': 65000,
                                                                                 'attribute_entries': '3/3',
@@ -8711,7 +6704,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                          'total_entries': 3},
                                                                                 'prefixes': {'memory_usage': 768,
                                                                                              'total_entries': 3},
-                                                                                'route_identifier': '1.1.1.1',
+                                                                                'route_identifier': '10.4.1.1',
                                                                                 'routing_table_version': 4,
                                                                                 'scan_interval': 60,
                                                                                 'state_pfxrcd': '1',
@@ -8719,7 +6712,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                 'total_memory': 2564,
                                                                                 'up_down': '2w6d',
                                                                                 'version': 4}}}}},
-         'default': {'neighbor': {'2.2.2.2': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
+         'default': {'neighbor': {'10.16.2.2': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
                                                                                   'activity_prefixes': '12/0',
                                                                                   'as': 65000,
                                                                                   'attribute_entries': '3/3',
@@ -8739,7 +6732,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                            'total_entries': 3},
                                                                                   'prefixes': {'memory_usage': 744,
                                                                                                'total_entries': 3},
-                                                                                  'route_identifier': '1.1.1.1',
+                                                                                  'route_identifier': '10.4.1.1',
                                                                                   'routing_table_version': 4,
                                                                                   'scan_interval': 60,
                                                                                   'state_pfxrcd': '1',
@@ -8767,7 +6760,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                                  'total_entries': 3},
                                                                                         'prefixes': {'memory_usage': 816,
                                                                                                      'total_entries': 3},
-                                                                                        'route_identifier': '1.1.1.1',
+                                                                                        'route_identifier': '10.4.1.1',
                                                                                         'routing_table_version': 5,
                                                                                         'scan_interval': 60,
                                                                                         'state_pfxrcd': '1',
@@ -8795,7 +6788,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                                  'total_entries': 3},
                                                                                         'prefixes': {'memory_usage': 816,
                                                                                                      'total_entries': 3},
-                                                                                        'route_identifier': '1.1.1.1',
+                                                                                        'route_identifier': '10.4.1.1',
                                                                                         'routing_table_version': 5,
                                                                                         'scan_interval': 60,
                                                                                         'state_pfxrcd': '1',
@@ -8803,7 +6796,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                         'total_memory': 2612,
                                                                                         'up_down': '2w6d',
                                                                                         'version': 4}}},
-                                  '3.3.3.3': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
+                                  '10.36.3.3': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
                                                                                   'activity_prefixes': '12/0',
                                                                                   'as': 65000,
                                                                                   'attribute_entries': '3/3',
@@ -8823,7 +6816,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                            'total_entries': 3},
                                                                                   'prefixes': {'memory_usage': 744,
                                                                                                'total_entries': 3},
-                                                                                  'route_identifier': '1.1.1.1',
+                                                                                  'route_identifier': '10.4.1.1',
                                                                                   'routing_table_version': 4,
                                                                                   'scan_interval': 60,
                                                                                   'state_pfxrcd': '1',
@@ -8930,7 +6923,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
     golden_parsed_output2 = {
         'bgp_id': 9996, 
         'vrf': {
-            'CE1test': {
+            'VRF1': {
                 'neighbor': {
                     '192.168.10.253': {
                         'address_family': {
@@ -8980,7 +6973,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
     golden_parsed_output3 = {
         'bgp_id': 9996,
         'vrf': {
-            'CE1test': {
+            'VRF1': {
                 'neighbor': {
                     '192.168.10.253': {
                         'address_family': {
@@ -9071,59 +7064,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
             Time source is NTP, 23:19:19.766 JST Mon Jun 3 2019
 
               Name                             Default RD            Protocols   Interfaces
-              CE1test                          9996:4093             ipv4        Gi8.4093
-              L3VPN-0051                       9996:51               ipv4        Gi8.51
-              L3VPN-0101                       9996:101              ipv4        Gi8.101
-              L3VPN-0102                       9996:102              ipv4        Gi8.102
-              L3VPN-0103                       9996:103              ipv4        Gi8.103
-              L3VPN-0104                       9996:104              ipv4        Gi8.104
-              L3VPN-0105                       9996:105              ipv4        Gi8.105
-              L3VPN-0106                       9996:106              ipv4        Gi8.106
-              L3VPN-0107                       9996:107              ipv4        Gi8.107
-              L3VPN-0108                       9996:108              ipv4        Gi8.108
-              L3VPN-0109                       9996:109              ipv4        Gi8.109
-              L3VPN-0110                       9996:110              ipv4        Gi8.110
-              L3VPN-0111                       9996:111              ipv4        Gi8.111
-              L3VPN-0112                       9996:112              ipv4        Gi8.112
-              L3VPN-0113                       9996:113              ipv4        Gi8.113
-              L3VPN-0114                       9996:114              ipv4        Gi8.114
-              L3VPN-0115                       9996:115              ipv4        Gi8.115
-              L3VPN-0116                       9996:116              ipv4        Gi8.116
-              L3VPN-0117                       9996:117              ipv4        Gi8.117
-              L3VPN-0118                       9996:118              ipv4        Gi8.118
-              L3VPN-0119                       9996:119              ipv4        Gi8.119
-              L3VPN-0120                       9996:120              ipv4        Gi8.120
-              L3VPN-0121                       9996:121              ipv4        Gi8.121
-              L3VPN-0122                       9996:122              ipv4        Gi8.122
-              L3VPN-0123                       9996:123              ipv4        Gi8.123
-              L3VPN-0124                       9996:124              ipv4        Gi8.124
-              L3VPN-0125                       9996:125              ipv4        Gi8.125
-              L3VPN-0126                       9996:126              ipv4        Gi8.126
-              L3VPN-0127                       9996:127              ipv4        Gi8.127
-              L3VPN-0128                       9996:128              ipv4        Gi8.128
-              L3VPN-0129                       9996:129              ipv4        Gi8.129
-              L3VPN-0130                       9996:130              ipv4        Gi8.130
-              L3VPN-0131                       9996:131              ipv4        Gi8.131
-              L3VPN-0132                       9996:132              ipv4        Gi8.132
-              L3VPN-0133                       9996:133              ipv4        Gi8.133
-              L3VPN-0134                       9996:134              ipv4        Gi8.134
-              L3VPN-0135                       9996:135              ipv4        Gi8.135
-              L3VPN-0136                       9996:136              ipv4        Gi8.136
-              L3VPN-0137                       9996:137              ipv4        Gi8.137
-              L3VPN-0138                       9996:138              ipv4        Gi8.138
-              L3VPN-0139                       9996:139              ipv4        Gi8.139
-              L3VPN-0140                       9996:140              ipv4        Gi8.140
-              L3VPN-0141                       9996:141              ipv4        Gi8.141
-              L3VPN-0142                       9996:142              ipv4        Gi8.142
-              L3VPN-0143                       9996:143              ipv4        Gi8.143
-              L3VPN-0144                       9996:144              ipv4        Gi8.144
-              L3VPN-0145                       9996:145              ipv4        Gi8.145
-              L3VPN-0146                       9996:146              ipv4        Gi8.146
-              L3VPN-0147                       9996:147              ipv4        Gi8.147
-              L3VPN-0148                       9996:148              ipv4        Gi8.148
-              L3VPN-0149                       9996:149              ipv4        Gi8.149
-              L3VPN-0150                       9996:150              ipv4        Gi8.150
-              Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+              VRF1                          9996:4093             ipv4        Gi8.4093              
         '''
 
         self.outputs = {}
@@ -9168,59 +7109,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
             Time source is NTP, 23:19:19.766 JST Mon Jun 3 2019
 
               Name                             Default RD            Protocols   Interfaces
-              CE1test                          9996:4093             ipv4        Gi8.4093
-              L3VPN-0051                       9996:51               ipv4        Gi8.51
-              L3VPN-0101                       9996:101              ipv4        Gi8.101
-              L3VPN-0102                       9996:102              ipv4        Gi8.102
-              L3VPN-0103                       9996:103              ipv4        Gi8.103
-              L3VPN-0104                       9996:104              ipv4        Gi8.104
-              L3VPN-0105                       9996:105              ipv4        Gi8.105
-              L3VPN-0106                       9996:106              ipv4        Gi8.106
-              L3VPN-0107                       9996:107              ipv4        Gi8.107
-              L3VPN-0108                       9996:108              ipv4        Gi8.108
-              L3VPN-0109                       9996:109              ipv4        Gi8.109
-              L3VPN-0110                       9996:110              ipv4        Gi8.110
-              L3VPN-0111                       9996:111              ipv4        Gi8.111
-              L3VPN-0112                       9996:112              ipv4        Gi8.112
-              L3VPN-0113                       9996:113              ipv4        Gi8.113
-              L3VPN-0114                       9996:114              ipv4        Gi8.114
-              L3VPN-0115                       9996:115              ipv4        Gi8.115
-              L3VPN-0116                       9996:116              ipv4        Gi8.116
-              L3VPN-0117                       9996:117              ipv4        Gi8.117
-              L3VPN-0118                       9996:118              ipv4        Gi8.118
-              L3VPN-0119                       9996:119              ipv4        Gi8.119
-              L3VPN-0120                       9996:120              ipv4        Gi8.120
-              L3VPN-0121                       9996:121              ipv4        Gi8.121
-              L3VPN-0122                       9996:122              ipv4        Gi8.122
-              L3VPN-0123                       9996:123              ipv4        Gi8.123
-              L3VPN-0124                       9996:124              ipv4        Gi8.124
-              L3VPN-0125                       9996:125              ipv4        Gi8.125
-              L3VPN-0126                       9996:126              ipv4        Gi8.126
-              L3VPN-0127                       9996:127              ipv4        Gi8.127
-              L3VPN-0128                       9996:128              ipv4        Gi8.128
-              L3VPN-0129                       9996:129              ipv4        Gi8.129
-              L3VPN-0130                       9996:130              ipv4        Gi8.130
-              L3VPN-0131                       9996:131              ipv4        Gi8.131
-              L3VPN-0132                       9996:132              ipv4        Gi8.132
-              L3VPN-0133                       9996:133              ipv4        Gi8.133
-              L3VPN-0134                       9996:134              ipv4        Gi8.134
-              L3VPN-0135                       9996:135              ipv4        Gi8.135
-              L3VPN-0136                       9996:136              ipv4        Gi8.136
-              L3VPN-0137                       9996:137              ipv4        Gi8.137
-              L3VPN-0138                       9996:138              ipv4        Gi8.138
-              L3VPN-0139                       9996:139              ipv4        Gi8.139
-              L3VPN-0140                       9996:140              ipv4        Gi8.140
-              L3VPN-0141                       9996:141              ipv4        Gi8.141
-              L3VPN-0142                       9996:142              ipv4        Gi8.142
-              L3VPN-0143                       9996:143              ipv4        Gi8.143
-              L3VPN-0144                       9996:144              ipv4        Gi8.144
-              L3VPN-0145                       9996:145              ipv4        Gi8.145
-              L3VPN-0146                       9996:146              ipv4        Gi8.146
-              L3VPN-0147                       9996:147              ipv4        Gi8.147
-              L3VPN-0148                       9996:148              ipv4        Gi8.148
-              L3VPN-0149                       9996:149              ipv4        Gi8.149
-              L3VPN-0150                       9996:150              ipv4        Gi8.150
-              Mgmt-intf                        <not set>             ipv4,ipv6   Gi1
+              VRF1                          9996:4093             ipv4        Gi8.4093              
         '''
 
         self.outputs = {}
