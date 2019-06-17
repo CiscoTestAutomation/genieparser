@@ -6672,7 +6672,7 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpBgpTemplatePeerPolicySchema):
     
         p15 = re.compile(r'^\s*soo +(?P<soo>[\w\:\d]+)$')
     
-        p15 = re.compile(r'^\s*Inherited policies:$')
+        p16 = re.compile(r'^\s*Inherited policies:$')
 
         # Init vars
         parsed_dict = {}
@@ -6859,7 +6859,7 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpBgpTemplatePeerPolicySchema):
                     parsed_dict['peer_policy'][template_id]['soo'] = soo
                 continue
             # Inherited policies:
-            m = p15.match(line)
+            m = p16.match(line)
             if m:
                 if 'inherited_policies' not in parsed_dict['peer_policy'][template_id]:
                     parsed_dict['peer_policy'][template_id]['inherited_policies'] = {}
