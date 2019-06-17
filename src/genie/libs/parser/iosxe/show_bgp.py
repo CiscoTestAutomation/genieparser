@@ -100,6 +100,7 @@ IOSXE parsers for the following show commands:
     * show bgp vrf {vrf} {route}
     * show bgp {address_family} vrf {vrf} {route}
     * show ip bgp {address_family} rd {rd} {route}
+    * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
 '''
 
 # Python
@@ -851,9 +852,9 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Paths: (1 available, best #1, table VRF1)
         # Paths: (1 available, best #1, no table)
         # Paths: (1 available, best #1, table default, RIB-failure(17))
-        p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, +'
-                         '(no +best +path|best +\#(?P<best_path>[0-9]+))\,?'
-                         '(?: +(table +(?P<vrf_id>(\S+))|no +table),?)?(?: +(.*))?)\)')
+        p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, '
+                        r'+(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +('
+                        r'?P<vrf_id>\S+?)|no +table)),?(?: +(.*))?)\)')
 
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
@@ -4164,6 +4165,7 @@ class ShowBgpNeighborsAdvertisedRoutesSchema(MetaParser):
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes'
 # ==============================================================================
 class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRoutesSchema):
 
@@ -4177,6 +4179,7 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         * 'show ip bgp neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes'
     '''
 
     def cli(self, neighbor, address_family='', output=None):
@@ -4239,17 +4242,11 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
         # *>r10.16.2.0/24         0.0.0.0               4444        100      32768 ?
         # *>i10.49.0.0/16         10.106.101.1                        100          0 10 20 30 40 50 60 70 80 90 i
         # *>i10.4.2.0/24         10.106.102.4                        100          0 {62112 33492 4872 41787 13166 50081 21461 58376 29755 1135} i
+        # *>i  172.32.0.0/24    202.239.165.220          0    100      0 ?
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|b|h|\*|\>|\s)+)'
-                           '(?P<path_type>(i|e|c|l|a|r|I))?(\s)?'
-                           '(?P<prefix>(([0-9]+[\.][0-9]+[\.][0-9]+'
-                           '[\.][0-9]+[\/]?[0-9]*)|([a-zA-Z0-9]+[\:]'
-                           '[a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                           '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)|'
-                           '([a-zA-Z0-9]+[\:][a-zA-Z0-9]+[\:]'
-                           '[a-zA-Z0-9]+[\:][\:][\/][0-9]+)))'
-                           ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                           ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
-                           ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
+            '(?P<path_type>(i|e|c|l|a|r|I))?(\s+)?(?P<prefix>\S+) +(?P<next_hop>'
+            '[a-zA-Z0-9\.\:]+) +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+) +'
+            '(?P<origin_codes>(i|e|\?|\&|\|))$')
 
         #                     0.0.0.0               100      32768 i
         #                     10.106.101.1            4444       100 0 3 10 20 30 40 50 60 70 80 90 i
@@ -4702,6 +4699,7 @@ class ShowIpBgpAllNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSupe
 #   * 'show ip bgp neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
 #   * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+#   * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes'
 # =================================================================================
 class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperParser, ShowBgpNeighborsAdvertisedRoutesSchema):
 
@@ -4709,20 +4707,25 @@ class ShowIpBgpNeighborsAdvertisedRoutes(ShowBgpNeighborsAdvertisedRoutesSuperPa
         * 'show ip bgp neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} neighbors {neighbor} advertised-routes'
         * 'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+        * 'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes'
     '''
 
     cli_command = ['show ip bgp {address_family} neighbors {neighbor} advertised-routes',
                    'show ip bgp neighbors {neighbor} advertised-routes',
-                   'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes'
+                   'show ip bgp {address_family} rd {rd} neighbors {neighbor} advertised-routes',
+                   'show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes'
                    ]
 
-    def cli(self, neighbor='', rd='', address_family='', output=None):
+    def cli(self, neighbor='', rd='', vrf='', address_family='', output=None):
 
         if output is None:
             # Build command
             if address_family and neighbor and rd:
                 cmd = self.cli_command[2].format(address_family=address_family,
-                    rd=rd,neighbor=neighbor)
+                    rd=rd, neighbor=neighbor)
+            elif address_family and neighbor and vrf:
+                cmd = self.cli_command[3].format(address_family=address_family,
+                    vrf=vrf, neighbor=neighbor)
             elif address_family and neighbor:
                 cmd = self.cli_command[0].format(address_family=address_family,
                                                  neighbor=neighbor)
@@ -5469,7 +5472,8 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         # *>i[2]:[77][7,0][10.69.9.9,1,151587081][10.135.1.1,22][10.106.101.1,10.76.1.30]/616
         # *>iaaaa:1::/113       ::ffff:10.106.101.1
         # *>i  20::/64          ::FFFF:192.168.51.1
-        p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+        # r>i  2001:2:2:2::2/128
+        p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
                          '(?P<path_type>(i|e|c|l|a|r|I))? *'
                          '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                          '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')

@@ -1542,7 +1542,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
                                                  'best '
                                                  '#1, '
                                                  'table '
-                                                 'default',
+                                                 'default, RIB-failure(17)',
                                         'table_version': '4'},
                                     '10.1.1.0/24':
                                         {'available_path': '2',
@@ -1729,7 +1729,7 @@ class test_show_bgp_all_detail(unittest.TestCase):
         For address family: IPv4 Unicast
 
         BGP routing table entry for 10.4.1.1/32, version 4
-        Paths: (1 available, best #1, table default)
+        Paths: (1 available, best #1, table default, RIB-failure(17))
         Advertised to update-groups:
            3         
         Refresh Epoch 1
@@ -19617,6 +19617,81 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
          *>i 192.168.189.0        192.168.69.1                       0      0 i
         '''}
 
+    golden_parsed_output5 = {
+        'vrf':
+            {'default':
+                {'neighbor':
+                    {'2001:2:2:2::2':
+                        {'address_family':
+                            {'ipv6 unicast':
+                                {'bgp_table_version': 6,
+                                'local_router_id': '1.1.1.1',
+                                'routes':
+                                    {'2001:2:2:2::2/128':
+                                        {'index':
+                                            {1:
+                                                {'localprf': 100,
+                                                'metric': 0,
+                                                'next_hop': '2001:2:2:2::2',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': 'r>',
+                                                'weight': 0}}}}},
+                            'vpnv6 unicast':
+                                {'bgp_table_version': 6,
+                                'local_router_id': '1.1.1.1',
+                                'routes': {}},
+                            'vpnv6 unicast RD 65000:1':
+                                {'bgp_table_version': 6,
+                                'default_vrf': 'VRF1',
+                                'local_router_id': '1.1.1.1',
+                                'route_distinguisher': '65000:1',
+                                'routes':
+                                    {'2001:2:2:2::2/128':
+                                        {'index':
+                                            {1:
+                                                {'localprf': 100,
+                                                'metric': 0,
+                                                'next_hop': '2001:2:2:2::2',
+                                                'origin_codes': 'i',
+                                                'path_type': 'i',
+                                                'status_codes': 'r>',
+                                                'weight': 0}}}}}}}}}}}
+
+    golden_output5 = {'execute.return_value': '''
+        show bgp all neighbors 2001:2:2:2::2 routes
+        For address family: IPv6 Unicast
+        BGP table version is 6, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        r>i  2001:2:2:2::2/128
+                              2001:2:2:2::2            0    100      0 i
+
+        Total number of prefixes 1
+
+        For address family: VPNv6 Unicast
+        BGP table version is 6, local router ID is 1.1.1.1
+        Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+                      r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+                      x best-external, a additional-path, c RIB-compressed,
+                      t secondary path, L long-lived-stale,
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        RPKI validation codes: V valid, I invalid, N Not found
+
+             Network          Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 65000:1 (default for vrf VRF1)
+        r>i  2001:2:2:2::2/128
+                              2001:2:2:2::2            0    100      0 i
+
+        Total number of prefixes 1
+        '''}
+
     def test_show_bgp_vrf_all_neighbors_routes_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
@@ -19649,7 +19724,14 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
         self.device = Mock(**self.golden_output4)
         obj = ShowBgpAllNeighborsRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='192.168.36.119', address_family='vpnv4 unicast')
-        self.assertEqual(parsed_output, self.golden_parsed_output4)    
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_show_bgp_vrf_all_neighbors_routes_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = ShowBgpAllNeighborsRoutes(device=self.device)
+        parsed_output = obj.parse(neighbor='2001:2:2:2::2')
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 # =================================================

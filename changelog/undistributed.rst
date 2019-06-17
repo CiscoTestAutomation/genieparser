@@ -6,26 +6,49 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
-                                logging
+                                policy-map
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowLogging for:
-    	show logging
-    	show logging | include {Word}
-    
+    * Fix ShowPolicyMap
+        changed regex to support more patterns
+    * Fix ShowPolicyMapInterface
+        changed key for output with kbps
+
 --------------------------------------------------------------------------------
-                                BGP
+                                platform
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowIpBgpDetail for:
-        show ip bgp {address_family} rd {rd} {route}
-    * Updated ShowIpBgpAllDetail for:
-        show ip bgp {address_family} vrf {vrf} {route}
-    * Updated parser for ShowBgpAllDetail:
-        show bgp vrf {vrf} {route}
-        show bgp {address_family} vrf {vrf} {route}
-    * Updated ShowBgpDetailSuperParser for:
-        better handling of extended community
+    * Update ShowEnvironment to support: 
+        show environment | include {include}
+
+--------------------------------------------------------------------------------
+                                ARP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpTraffic to parser customer's output
+
+--------------------------------------------------------------------------------
+                                interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInterfaceSwitchport to support custom interface argument
+
+
+--------------------------------------------------------------------------------
+                               VRF 
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowVrfDetail to support description
+
+--------------------------------------------------------------------------------
+                               BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * fixed a bug in ShowBgpAllSummary not executing the right command
+    * fixed regex in ShowBgpAllDetail
+    * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
+        show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
+    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -34,49 +57,9 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
-
-
+    
 --------------------------------------------------------------------------------
-                                Routing
---------------------------------------------------------------------------------
-* IOSXE
-    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
-* IOS
-    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
-
---------------------------------------------------------------------------------
-                                OSPF
+                                protocols
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowIpOspf for more varied router-LSAs
-    * Updated ShowIpOspfDatabaseRouter to parse TOS metrics
-
---------------------------------------------------------------------------------
-                                   interface
---------------------------------------------------------------------------------
-* IOSXR
-    * Updated ShowIpv4VrfAllInterface to support custom vrf
-        * show ipv4 vrf {vrf} interface
-    * Updated ShowIpv6VrfAllInterface to support custom vrf
-        * show ipv6 vrf {vrf} interface
-
---------------------------------------------------------------------------------
-                                Platform
---------------------------------------------------------------------------------
-* IOSXE
-    * Updates ShowVersion to make last_reload_reason an optional key
-
---------------------------------------------------------------------------------
-                                  SPT
---------------------------------------------------------------------------------
-* IOSXR
-    * Add ShowSpanningTreeMst for:
-        show spanning-tree mst <mst_id>
-    * Add ShowSpanningTreeMstag for:
-        show spanning-tree mstag <mag_domain>
-    * Add ShowSpanningTreePvrst for:
-        show spanning-tree pvrst <pvst_id>
-    * Add ShowSpanningTreePvrsTag for:
-        show spanning-tree pvrstag <pvrstag_domain>
-    * Add ShowSpanningTreePvsTag for:
-        show spanning-tree pvstag <pvstag_domain>
+    * Updated ShowIpProtocols to fix parsing issue of unbound variable
