@@ -26,6 +26,15 @@
         show bgp {address_family} vrf {vrf} {route}
     * Updated ShowBgpDetailSuperParser for:
         better handling of extended community
+    * Updated ShowBgpSummary for:
+        Support for more VRF values
+    * Updated ShowBgpAllSummary for:
+        Support for more VRF values
+    * Updated ShowIpBgpSummary for:
+        Support for more VRF values
+    * Updates ShowIpBgpAllSummary for:
+        Support for more VRF values
+
 
 --------------------------------------------------------------------------------
                                 Routing
