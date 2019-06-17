@@ -24,7 +24,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Update ShowEnvironment to support: 
-    	show environment | include {include}
+        show environment | include {include}
 
 --------------------------------------------------------------------------------
                                 ARP
@@ -54,6 +54,14 @@
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
+    * Updated ShowBgpSummary for:
+        Support for more VRF values
+    * Updated ShowBgpAllSummary for:
+        Support for more VRF values
+    * Updated ShowIpBgpSummary for:
+        Support for more VRF values
+    * Updates ShowIpBgpAllSummary for:
+        Support for more VRF values
     
 --------------------------------------------------------------------------------
                                 protocols
