@@ -115,6 +115,7 @@ class ShowVrfDetailSchema(MetaParser):
     schema = {
         Any(): {
             Optional('vrf_id'):  int,
+            Optional('description'):  str,
             Optional('route_distinguisher'): str,
             Optional('vpn_id'): str,
             Optional('interfaces'): list,
@@ -244,7 +245,10 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
 
         # VRF label allocation mode: per-prefix
         p11 = re.compile(r'^VRF +label +allocation +mode: +(?P<mode>[\w\s\-]+)$')
-
+        
+        # Description: desc
+        p12 = re.compile(r'^Description: +(?P<desc>[\S\s]+)$')
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -437,6 +441,12 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                     vrf_label_dict.update({'allocation_mode': groups['mode']})
                 continue
 
+            # Description: desc
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf_dict.update({'description': groups['desc']})
+                continue
         return result_dict
 
 
