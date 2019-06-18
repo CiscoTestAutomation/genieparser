@@ -1,6 +1,6 @@
 ''' show_route.py
 
-Parser for the following show commands:
+ASA parserr for the following show commands:
     * show route
 '''
 
@@ -24,7 +24,8 @@ class ShowRouteSchema(MetaParser):
                     'ipv4': {
                         Optional('routes'): {
                             Any(): {
-                                Optional('mac_address'): str,
+                                'candidate_default': bool,
+                                Optional('subnet'): str,
                                 Optional('route'): str,
                                 Optional('active'): bool,
                                 Optional('route_preference'): int,
@@ -32,16 +33,16 @@ class ShowRouteSchema(MetaParser):
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_codes'): str,
                                 Optional('next_hop'): {
-                                    Optional('outgoing_interface'): {
+                                    Optional('outgoing_interface_name'): {
                                         Any(): {  # interface  if there is no next_hop
-                                            Optional('outgoing_interface'): str
+                                            Optional('outgoing_interface_name'): str
                                         },
                                     },
                                     Optional('next_hop_list'): {
                                         Any(): {  # index
                                             Optional('index'): int,
                                             Optional('next_hop'): str,
-                                            Optional('outgoing_interface'): str
+                                            Optional('outgoing_interface_name'): str
                                         },
                                     },
                                 },
@@ -111,8 +112,9 @@ class ShowRoute(ShowRouteSchema):
         # V 192.168.0.1 255.255.255.255
         #                      connected by VPN (advertised), admin
         p1 = re.compile(
+            r'^\s*(?P<code1>(?!is)(?!via)[\w\*\(\>\)\!]+)?(\ +)?'
             r'^\s*(?P<code>(?!is)(?!via)[\w\*\(\>\)\!]+)?(\ +)?'
-            '(?P<network>\d+.\d+.\d+.\d+)?( )?(?P<mac_address>\d+.\d+.\d+.\d+)?( )?'
+            '(?P<network>\d+.\d+.\d+.\d+)?( )?(?P<subnet>\d+.\d+.\d+.\d+)?( )?'
             '(?P<vpn>connected by VPN [\(\)\S]+)?(is +directly +connected, )?'
             '(\[(?P<route_preference>[\d\/]+)\])?( )?(via )?'
             '(?P<next_hop>\d+.\d+.\d+.\d+)?,?( )?(?P<interface>[\S]+)?$')
@@ -120,13 +122,13 @@ class ShowRoute(ShowRouteSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # S* 10.10.1.1 0.0.0.0 via 20.20.2.2, outside
-            #                    via 20.20.2.2, pod1000
-            # S 10.10.1.1 0.0.0.0 [10/5] via 20.20.2.2, outside
-            # L 10.10.1.1 255.255.255.255 is directly connected, pod2000
-            #                                 is directly connected, pod2002
-            # V        10.10.1.1 255.255.255.255
-            #                         connected by VPN (advertised), admin
+            # S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
+            #                    via 10.16.251.2, pod1000
+            # S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
+            # L 192.16.168.251 255.255.255.255 is directly connected, pod2000
+            #                                  is directly connected, pod2002
+            # V 192.168.0.1 255.255.255.255
+            #                      connected by VPN (advertised), admin
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -142,12 +144,18 @@ class ShowRoute(ShowRouteSchema):
                             source_protocol = key
                 if groups['network']:
                     routes = groups['network']
-                    dict_routes = dict_ipv4.setdefault(routes, {})
+                    subnet = groups['subnet']
+                    prefix_length = str(sum(bin(int(x)).count('1') for x in subnet.split('.')))
+                    combined_ip = routes + '/' + prefix_length                    
+                    dict_routes = dict_ipv4.setdefault(combined_ip, {})
                     dict_routes.update({'active': True})
-                    dict_routes.update({'route': routes})
+                    dict_routes.update({'route': combined_ip})
                     dict_routes.update({'source_protocol_codes': groups['code']})
                     dict_routes.update({'source_protocol': source_protocol})
-                    dict_routes.update({'mac_address': groups['mac_address']})
+                    if '*' in groups['code']:
+                        dict_routes.update({'candidate_default': True})
+                    else:
+                        dict_routes.update({'candidate_default': False})
                     if groups['route_preference']:
                         routepreference = groups['route_preference']                        
                         if '/' in routepreference:
@@ -158,24 +166,24 @@ class ShowRoute(ShowRouteSchema):
                         else:
                             dict_routes.update({'route_preference': route_preference})
                 if groups['network'] is None and groups['interface']:
-                    dict_routes = dict_ipv4.setdefault(routes, {})
+                    dict_routes = dict_ipv4.setdefault(combined_ip, {})
                 if groups['interface']:
                     if groups['next_hop'] is None:
-                        outgoing_interface = groups['interface']
+                        outgoing_interface_name = groups['interface']
                         dict_via = dict_routes.setdefault('next_hop', {}). \
-                        setdefault('outgoing_interface', {}). \
-                        setdefault(outgoing_interface, {})
-                        dict_via.update({'outgoing_interface': outgoing_interface})
+                        setdefault('outgoing_interface_name', {}). \
+                        setdefault(outgoing_interface_name, {})
+                        dict_via.update({'outgoing_interface_name': outgoing_interface_name})
                     if groups['next_hop']:
                         if groups['network'] and groups['next_hop']:
                             index = 1
                         next_hop = groups['next_hop']
-                        outgoing_interface = groups['interface']
+                        outgoing_interface_name = groups['interface']
                         dict_next_hop = dict_routes.setdefault('next_hop', {}). \
                         setdefault('next_hop_list', {}).setdefault(index, {})
                         dict_next_hop.update({'index': index})
                         dict_next_hop.update({'next_hop': next_hop})
-                        dict_next_hop.update({'outgoing_interface': outgoing_interface})
+                        dict_next_hop.update({'outgoing_interface_name': outgoing_interface_name})
                         index += 1
             continue
 
