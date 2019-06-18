@@ -5197,6 +5197,7 @@ class ShowIpOspfMaxMetricSchema(MetaParser):
                                                 Optional('unset_reason'): str,
                                                 Optional('unset_time'): str,
                                                 Optional('unset_time_elapsed'): str,
+                                                Optional('time_remaining'): str,
                                                 },
                                             },
                                         },
@@ -5251,7 +5252,8 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
                          ' +(?P<time_elapsed>(\S+))$')
 
         # Originating router-LSAs with maximum metric
-        p4_1 = re.compile(r'^Originating +router-LSAs +with +maximum +metric$')
+        # Originating router-LSAs with maximum metric, Time remaining: 00:03:55
+        p4_1 = re.compile(r'^Originating +router-LSAs +with +maximum +metric(, +Time +remaining: +(?P<time_remaining>([\d\:]+)))?$')
 
         # Router is not originating router-LSAs with maximum metric
         p4_2 = re.compile(r'^Router +is +not +originating +router-LSAs +with'
@@ -5312,11 +5314,14 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
                 continue
 
             # Originating router-LSAs with maximum metric
+            # Originating router-LSAs with maximum metric, Time remaining: 00:03:55
             m = p4_1.match(line)
             if m:
                 rtr_lsa_dict = mtid_dict.\
                                     setdefault('router_lsa_max_metric', {}).\
                                     setdefault(True, {})
+                if m.groupdict()['time_remaining']:
+                    rtr_lsa_dict['time_remaining'] = m.groupdict()['time_remaining']
                 continue
 
             # Router is not originating router-LSAs with maximum metric
