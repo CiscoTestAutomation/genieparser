@@ -1173,11 +1173,15 @@ class ShowInterfacesSwitchportSchema(MetaParser):
 class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
     """parser for show interfaces switchport"""
 
-    cli_command = 'show interfaces switchport'
+    cli_command = ['show interfaces switchport','show interfaces {interface} switchport']
 
-    def cli(self,output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1680,6 +1684,15 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     ['prefix_length'] = prefix_length
                 interface_dict[interface]['ipv4'][address]\
                     ['secondary'] = True
+                continue
+            # Internet address will be negotiated using DHCP
+            p2_2 = re.compile(r'^Internet +[A|a]ddress +will +be +negotiated +using +DHCP$')
+            m = p2_2.match(line)
+            if m:
+                address='dhcp_negotiated'
+                ipv4_dict = interface_dict[interface].setdefault('ipv4',{})
+                ipv4_dict.setdefault(address, {})
+                ipv4_dict[address]['ip'] = 'dhcp_negotiated'
                 continue
 
             # Broadcast address is 255.255.255.255
