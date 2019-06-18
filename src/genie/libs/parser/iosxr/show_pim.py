@@ -166,6 +166,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
     """
 
     cli_command = 'show pim vrf {vrf} {af} interface detail'
+    exclude = ['hello_expiration', 'address', 'primary_address']
 
     def cli(self, vrf='default', af='ipv4', output=None):
         if output is None:
@@ -373,6 +374,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
     """
 
     cli_command = 'show pim vrf {vrf} {af} rpf summary'
+    exclude = ['rib_convergence_time_left']
 
     def cli(self, vrf='default', af='ipv4', output=None):
         if output is None:

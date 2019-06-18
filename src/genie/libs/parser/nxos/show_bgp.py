@@ -175,6 +175,17 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
     """
     cli_command = 'show bgp process vrf all'
     xml_command = 'show bgp process vrf all | xml'
+    exclude = [
+      'bgp_pid'
+      'hwm_attr_entries',
+      'bgp_protocol_started_reason',
+      'aggregate_label',
+      'bgp_paths_per_hwm_attr',
+      'bytes_used',
+      'num_attr_entries',
+      'router_id',
+      'paths',
+      'routes']
 
     def cli(self,output=None):
         if output is None:
@@ -1690,6 +1701,12 @@ class ShowBgpVrfAllAll(ShowBgpVrfAllAllSchema):
     """Parser for show bgp vrf all all"""
 
     cli_command = 'show bgp vrf all all'
+    exclude = [
+      'bgp_table_version',
+      'status_codes',
+      'local_router_id',
+      'path_type',
+      'weight']
 
     def cli(self, output=None):
         if output is None:
@@ -2298,6 +2315,26 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         parser class - implements detail parsing mechanisms for cli and yang output.
         """
     cli_command = 'show bgp vrf {vrf} all neighbors'
+    exclude = [
+      'up_time',
+      'retry_time',
+      'bgp_table_version',
+      'bgp_negotiated_keepalive_timers',
+      'bgp_session_transport',
+      'bgp_neighbor_counters',
+      'bgp_negotiated_capabilities',
+      'graceful_restart_paramters',
+      'path',
+      'received_messages',
+      'neighbor_version',
+      'third_party_nexthop',
+      'peer_index',
+      'sent_messages',
+      'sent_notifications',
+      'received_notifications',
+      'msg_sent',
+      'tbl_ver',
+      'msg_rcvd']
 
     def cli(self, vrf, output=None):
         if output is None:
@@ -3202,6 +3239,14 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     """Parser for show bgp vrf all all nexthop-database"""
 
     cli_command = 'show bgp vrf all all nexthop-database'
+    exclude = [
+      'nexthop_last_resolved',
+      'rnh_epoch',
+      'metric_next_advertise',
+      'resolve_time',
+      'flags',
+      'rib_route',
+      'refcount']
 
     def cli(self, cmd = "", output=None):
         if output is None:
@@ -3436,6 +3481,20 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
     cli_command = 'show bgp vrf {vrf} all summary'
     xml_command = 'show bgp vrf {vrf} all summary | xml'
+    exclude = [
+      'tbl_ver',
+      'up_down',
+      'bgp_table_version',
+      'state_pfxrcd',
+      'memory_usage',
+      'msg_rcvd',
+      'msg_sent',
+      'nexthop_last_resolved',
+      'attribute_entries',
+      'route_identifier',
+      'clusterlist_entries',
+      'total_entries',
+      'as_path_entries']
 
     def cli(self, vrf='all',output=None):
         if output is None:
@@ -7246,6 +7305,7 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
 
     cli_command = 'show bgp all dampening flap-statistics'
     xml_command = 'show bgp all dampening flap-statistics | xml'
+    exclude = ['duration']
 
     def cli(self,output=None):
         if output is None:
@@ -7624,6 +7684,15 @@ class ShowBgpAllNexthopDatabase(ShowBgpVrfAllAllNextHopDatabase):
 
     cli_command = 'show bgp all nexthop-database'
     xml_command = 'show bgp all nexthop-database | xml'
+    exclude = [
+    'resolve_time',
+    'rnh_epoch',
+    'flags',
+    'metric_next_advertise',
+    'refcount',
+    'igp_cost',
+    'igp_preference',
+    'current_penalty']
 
     def cli(self,output=None):
         return super().cli(cmd=self.cli_command,output=output)
@@ -8924,6 +8993,11 @@ class ShowBgpPolicyStatisticsRedistribute(ShowBgpPolicyStatisticsParser):
 
     xml_command = ['show bgp vrf {vrf} {address_family} policy statistics redistribute', \
                    'show bgp {address_family} policy statistics redistribute']
+    exclude = [
+      'compare_count',
+      'total_reject_count',
+      'match_count',
+      'total_accept_count']
     def cli(self, address_family, vrf='',output=None):
         if output is None:
             if vrf:
@@ -9444,6 +9518,8 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
 
     cli_command = ['show bgp {address_family} labels vrf {vrf}','show bgp {address_family} labels']
     xml_command = ['show bgp {address_family} labels vrf {vrf} | xml','show bgp {address_family} labels | xml']
+    exclude = [
+      'table_version']
 
     def cli(self, address_family, vrf='',output=None):
         assert address_family in ['ipv4 unicast', 'ipv4 multicast',
@@ -9923,6 +9999,21 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         show bgp l2vpn evpn summary"""
 
     cli_command = 'show bgp l2vpn evpn summary'
+    exclude = [
+      'msgrecvd',
+      'msgsent', 
+      'neighbortableversion',
+      'time',
+      'tableversion',
+      'bytesclusterlist',
+      'numberclusterlist',
+      'bytesattrs',
+      'memoryused',
+      'numberattrs',
+      'totalnetworks',
+      'totalpaths',
+      'prefixreceived',
+      'capablepeers']
 
     def cli(self,output=None):
         if output is None:
@@ -10124,6 +10215,10 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         show bgp l2vpn evpn route-type <3>
         show bgp l2vpn evpn route-type <4>"""
     cli_command = 'show bgp l2vpn evpn route-type {route_type}'
+    exclude = [
+      'prefixversion',
+      'Extcommunity',
+      'prefixversion']
 
     def cli(self,route_type,output=None):
         if not route_type:
@@ -10518,6 +10613,36 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         show bgp l2vpn evpn neighbors"""
 
     cli_command = 'show bgp l2vpn evpn neighbors'
+    exclude = [
+      'bytesrecvd',
+      'bytessent',
+      'connsdropped',
+      'connsestablished',
+      'elapsedtime',
+      'keepalive',
+      'keepaliverecvd',
+      'keepalivesent',
+      'lastread',
+      'lastwrite',
+      'localport',
+      'msgrecvd',
+      'msgsent',
+      'notificationssent',
+      'opensrecvd',
+      'openssent',
+      'neighbortableversion',
+      'tableversion',
+      'updatesrecvd',
+      'updatessent',
+      'fd',
+      'capabilitiesrecvd',
+      'capabilitiessent',
+      'remoteport',
+      'resetreason',
+      'resettime',
+      'rtrefreshsent',
+      'rtrefreshrecvd',
+      'retry']
 
     def cli(self,output=None):
         if output is None:
@@ -11081,6 +11206,9 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
 
     cli_command = ['show bgp ipv4 mvpn route-type {route_type} vrf {vrf}','show bgp ipv4 mvpn route-type {route_type}',\
                    'show bgp ipv4 mvpn']
+    exclude = [
+      'path'
+      'table_version']
 
     def cli(self, route_type="",vrf="",cmd="",output=None):
         if output is None:
@@ -11314,6 +11442,9 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         show bgp ipv4 mvpn sa-ad detail vrf <vrf>
         show bgp ipv4 mvpn sa-ad detail vrf all"""
     cli_command = ['show bgp ipv4 mvpn sa-ad detail vrf {vrf}','show bgp ipv4 mvpn sa-ad detail']
+    exclude = [
+      'prefixversion', 
+      'bestpathnr']
 
     def cli(self,vrf="",output=None):
         if output is None:

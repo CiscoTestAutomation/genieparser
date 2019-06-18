@@ -58,6 +58,8 @@ class ShowIpArp(ShowIpArpSchema):
 		show ip arp vrf all
 	"""
 	cli_command = ['show ip arp', 'show ip arp vrf {vrf}']
+	exclude = [
+	'Age']
 
 	def cli(self, vrf='', output=None):
 		if vrf:

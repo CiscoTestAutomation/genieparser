@@ -104,6 +104,18 @@ class ShowIpMsdpPeerVrf(ShowIpMsdpPeerVrfSchema):
        show ip msdp peer vrf <vrf>"""
 
     cli_command = ['show ip msdp peer vrf {vrf}', 'show ip msdp peer']
+    exclude = [
+        'last_message_received',
+        'keepalive',
+        'elapsed_time',
+        'reset_reason',
+        'connection_attempts',
+        'discontinuity_time',
+        'established_transitions',
+        'local',
+        'received',
+        'sent',
+        'rpf_failure']
 
     def cli(self,vrf="", output=None):
         if vrf and vrf !='default':
@@ -431,6 +443,9 @@ class ShowIpMsdpSaCacheDetailVrf(ShowIpMsdpSaCacheDetailVrfSchema):
        show ip msdp sa-cache detail vrf <vrf>"""
 
     cli_command = ['show ip msdp sa-cache detail vrf {vrf}','show ip msdp sa-cache detail']
+    exclude = [
+        'expire',
+        'up_time']
 
     def cli(self,vrf="",output=None):
         if vrf and vrf !='default':
@@ -726,6 +741,9 @@ class ShowIpMsdpSummary(ShowIpMsdpSummarySchema):
         show ip msdp summary vrf <vrf>"""
 
     cli_command = ['show ip msdp summary vrf {vrf}','show ip msdp summary']
+    exclude = [
+        'elapsed_time',
+        'last_message_received']
 
     def cli(self, vrf='', output=None):
 

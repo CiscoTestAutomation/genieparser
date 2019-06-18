@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
 
     * show ip ospf
     * show ip ospf interface
+    * show ip ospf interface {interface}
     * show ip ospf sham-links
     * show ip ospf virtual-links
     * show ip ospf neighbor detail
@@ -96,15 +97,15 @@ class ShowIpOspfSchema(MetaParser):
                                 Optional('stub_router'):
                                     {Optional('always'): 
                                         {'always': bool,
-                                        'include_stub': bool,
-                                        'summary_lsa': bool,
-                                        'external_lsa': bool,
+                                        Optional('include_stub'): bool,
+                                        Optional('summary_lsa'): bool,
+                                        Optional('external_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa_metric'): int,
                                         Optional('state'): str},
                                     Optional('on_startup'): 
                                         {'on_startup': int,
-                                        'include_stub': bool,
+                                        Optional('include_stub'): bool,
                                         Optional('summary_lsa'): bool,
                                         Optional('summary_lsa_metric'): int,
                                         Optional('external_lsa'): bool,
@@ -505,11 +506,12 @@ class ShowIpOspf(ShowIpOspfSchema):
                     continue
 
             # Condition: always State: active
+            # Condition: always, State: active
             # Condition: on start-up for 5 seconds, State: inactive
             # Condition: on startup for 300 seconds, State: inactive
             p14_2 = re.compile(r'^Condition:'
                                ' +(?P<condition>(always|on \S+))'
-                               '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
+                               '(?: +for +(?P<seconds>(\d+)) +seconds)?,?'
                                ' +State: +(?P<state>(\S+))$')
             m = p14_2.match(line)
             if m:
@@ -1160,11 +1162,13 @@ class ShowIpOspf(ShowIpOspfSchema):
 # ============================
 # Schema for:
 #   * 'show ip ospf interface'
+#   * 'show ip ospf interface {interface}''
 # ============================
 class ShowIpOspfInterfaceSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf interface'
+        * 'show ip ospf interface {interface}'
     '''
 
     schema = {
@@ -1422,12 +1426,24 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
     ''' Parser for:
         * 'show ip ospf interface'
+        * 'show ip ospf interface {interface}''
     '''
 
-    cli_command = 'show ip ospf interface'
+    cli_command = ['show ip ospf interface {interface}',
+                   'show ip ospf interface']
+    exclude = ['hello_timer', 'dead_timer',
+        'bdr_ip_addr', 'bdr_router_id', 'last_flood_scan_length',
+        'last_flood_scan_time_msec', 
+        'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
 
-    def cli(self):
-        out = self.device.execute(self.cli_command)
+
+    def cli(self, interface=''):
+        if interface:
+            cmd = self.cli_command[0].format(interface=interface)
+        else:
+            cmd = self.cli_command[1]
+
+        out = self.device.execute(cmd)
 
         # Init vars
         ret_dict = {}
@@ -2777,6 +2793,11 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
     '''
 
     cli_command = 'show ip ospf neighbor detail'
+    exclude = ['hello_timer', 'dead_timer', 'bdr_ip_addr',
+        'bdr_router_id', 'index', 'last_retrans_max_scan_length',
+        'last_retrans_max_scan_time_msec', 'total_retransmission',
+        'uptime', 'last_retrans_scan_length', 'last_retrans_scan_time_msec']
+
 
     def cli(self, output=None):
 
@@ -3850,6 +3871,14 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 db_dict['links'][link_id]['num_mtid_metrics'] = \
                     int(m.groupdict()['num'])
                 continue
+                
+            # Number of TOS metrics: 0
+            p21_2 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
+            m = p21_2.match(line)
+            if m:
+                db_dict['links'][link_id]['num_tos_metrics'] = \
+                    int(m.groupdict()['num'])
+                continue
 
             # Opaque Type: 1
             p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))(?: +\((Traffic Engineering)\))?$')
@@ -4140,7 +4169,8 @@ class ShowIpOspfDatabaseRouterSchema(MetaParser):
                                                                                 {'link_id': str,
                                                                                 'link_data': str,
                                                                                 'type': str,
-                                                                                'num_mtid_metrics': int,
+                                                                                Optional('num_mtid_metrics'): int,
+                                                                                Optional('num_tos_metrics'): int,
                                                                                 'topologies': 
                                                                                     {Any(): 
                                                                                         {'mt_id': int,
@@ -4180,6 +4210,8 @@ class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabas
     '''
 
     cli_command = 'show ip ospf database router'
+    exclude = ['age', 'seq_num', 'checksum', 'links']
+
 
     def cli(self, output=None):
 
@@ -4349,6 +4381,7 @@ class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatab
     '''
 
     cli_command = 'show ip ospf database network'
+    exclude = ['age', 'seq_num', 'checksum', 'lsas']
 
     def cli(self, output=None):
 
@@ -4433,6 +4466,8 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
     '''
 
     cli_command = 'show ip ospf database summary'
+    exclude = ['age', 'seq_num', 'checksum']
+
 
     def cli(self, output=None):
 
@@ -5162,6 +5197,7 @@ class ShowIpOspfMaxMetricSchema(MetaParser):
                                                 Optional('unset_reason'): str,
                                                 Optional('unset_time'): str,
                                                 Optional('unset_time_elapsed'): str,
+                                                Optional('time_remaining'): str,
                                                 },
                                             },
                                         },
@@ -5216,7 +5252,8 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
                          ' +(?P<time_elapsed>(\S+))$')
 
         # Originating router-LSAs with maximum metric
-        p4_1 = re.compile(r'^Originating +router-LSAs +with +maximum +metric$')
+        # Originating router-LSAs with maximum metric, Time remaining: 00:03:55
+        p4_1 = re.compile(r'^Originating +router-LSAs +with +maximum +metric(, +Time +remaining: +(?P<time_remaining>([\d\:]+)))?$')
 
         # Router is not originating router-LSAs with maximum metric
         p4_2 = re.compile(r'^Router +is +not +originating +router-LSAs +with'
@@ -5277,11 +5314,14 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
                 continue
 
             # Originating router-LSAs with maximum metric
+            # Originating router-LSAs with maximum metric, Time remaining: 00:03:55
             m = p4_1.match(line)
             if m:
                 rtr_lsa_dict = mtid_dict.\
                                     setdefault('router_lsa_max_metric', {}).\
                                     setdefault(True, {})
+                if m.groupdict()['time_remaining']:
+                    rtr_lsa_dict['time_remaining'] = m.groupdict()['time_remaining']
                 continue
 
             # Router is not originating router-LSAs with maximum metric

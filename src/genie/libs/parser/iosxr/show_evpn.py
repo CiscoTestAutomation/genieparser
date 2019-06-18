@@ -72,6 +72,7 @@ class ShowEvpnEviDetail(MetaParser):
 
 class ShowEvpnEviMac(MetaParser):
     """Parser class for 'show evpn evi mac' CLI."""
+    exclude = ['entries']
 
     # TODO schema
 

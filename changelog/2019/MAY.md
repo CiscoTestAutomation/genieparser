@@ -1,3 +1,142 @@
+| Module                  |      Version           |
+| ------------------------|:----------------------:|
+| ``genie.libs.parser``   |      19.5.2b2          |
+
+--------------------------------------------------------------------------------
+                                policy-map
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowPolicyMap to parser customer's output
+        fixed not parsing lines with kbps
+        added wred_type key in schema
+    * Fix ShowPolicyMapInterface
+        set priority level to default if not exist in output
+        moved child-policy under parent-policy
+
+--------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed a bug in ShowRedundancy where ParserOutputEmptyException is nor raised
+    * Update ShowPlatformHardware to support qlimit/queue depth in bytes and pkts
+
+--------------------------------------------------------------------------------
+                                interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed a bug in ShowIpInterface to handle dhcp negtiated address
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowNtpStatus to support refid after adding leap second
+
+
+| Module                  |      Version           |
+| ------------------------|:----------------------:|
+| ``genie.libs.parser``   |      19.5.2b1          |
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix class ShowBgpAllNeighborsRoutes
+
+--------------------------------------------------------------------------------
+                                platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowRedundancyStates for:
+        show redundancy states
+
+--------------------------------------------------------------------------------
+                                policy-map
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix class ShowPolicyMapTypeSuperParser
+    * Fix class ShowPolicyMap
+
+--------------------------------------------------------------------------------
+                            running-configuration
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowRunPolicyMap for:
+        show run policy-map {name}
+
+
+| Module                  | Version                |
+| ------------------------|:----------------------:|
+| ``genie.libs.parser``   | 19.5.1b0 & 19.5.2b0    |
+
+--------------------------------------------------------------------------------
+                                logging
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowLogging for:
+      show logging
+      show logging | include {Word}
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpBgpDetail for:
+        show ip bgp {address_family} rd {rd} {route}
+    * Updated ShowIpBgpAllDetail for:
+        show ip bgp {address_family} vrf {vrf} {route}
+    * Updated parser for ShowBgpAllDetail:
+        show bgp vrf {vrf} {route}
+        show bgp {address_family} vrf {vrf} {route}
+    * Updated ShowBgpDetailSuperParser for:
+        better handling of extended community
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+* IOS
+    * added ShowIpRouteDistributor and ShowIpv6RouteDistributor class
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspf for more varied router-LSAs
+    * Updated ShowIpOspfDatabaseRouter to parse TOS metrics
+
+--------------------------------------------------------------------------------
+                                   interface
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowIpv4VrfAllInterface to support custom vrf
+        * show ipv4 vrf {vrf} interface
+    * Updated ShowIpv6VrfAllInterface to support custom vrf
+        * show ipv6 vrf {vrf} interface
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updates ShowVersion to make last_reload_reason an optional key
+
+--------------------------------------------------------------------------------
+                                  SPT
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowSpanningTreeMst for:
+        show spanning-tree mst {mst_id}
+    * Add ShowSpanningTreeMstag for:
+        show spanning-tree mstag {mag_domain}
+    * Add ShowSpanningTreePvrst for:
+        show spanning-tree pvrst {pvst_id}
+    * Add ShowSpanningTreePvrsTag for:
+        show spanning-tree pvrstag {pvrstag_domain}
+    * Add ShowSpanningTreePvsTag for:
+        show spanning-tree pvstag {pvstag_domain}
+
+
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   | 19.5.1        |
