@@ -2549,12 +2549,13 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
 
 
 class ShowEnvironmentSchema(MetaParser):
-    """Schema for show environment"""
+    """Schema for show environment
+                  show environment | include {include} """
 
     schema = {
-        'critical_larams': int,
-        'major_alarms': int,
-        'minor_alarms': int,
+        Optional('critical_larams'): int,
+        Optional('major_alarms'): int,
+        Optional('minor_alarms'): int,
         'slot': {
             Any(): {
                 'sensor': {
@@ -2569,13 +2570,18 @@ class ShowEnvironmentSchema(MetaParser):
 
 
 class ShowEnvironment(ShowEnvironmentSchema):
-    """Parser for show environment"""
+    """Parser for show environment
+                  show environment | include {include} """
 
-    cli_command = 'show environment'
+    cli_command = ['show environment', 'show environment | include {include}']
 
-    def cli(self, output=None):
+    def cli(self, include='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2796,7 +2802,8 @@ class ShowVersionRp(ShowVersionRpSchema):
 
 
 class ShowPlatformHardwareSchema(MetaParser):
-    """Schema for show platform hardware qfp active infrastructure bqs queue output default all"""
+    """Schema for show platform hardware qfp active infrastructure bqs queue output default all
+        show platform hardware qfp active infrastructure bqs queue output default interface {interface}"""
 
     schema = {
         Any(): {
@@ -2808,7 +2815,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                     'software_control_info': {
                         'cache_queue_id': str,
                         'wred': str,
-                        'qlimit_bytes': int,
+                        Optional('qlimit_bytes'): int,
+                        Optional('qlimit_pkts'): int,
                         'parent_sid': str,
                         'debug_name': str,
                         'sw_flags': str,
@@ -2832,7 +2840,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'tail_drops_packets': int,
                         'total_enqs_bytes': int,
                         'total_enqs_packets': int,
-                        'queue_depth_bytes': int,
+                        Optional('queue_depth_bytes'): int,
+                        Optional('queue_depth_pkts'): int,
                         'lic_throughput_oversub_drops_bytes': int,
                         'lic_throughput_oversub_drops_packets': int,
                     }
@@ -2843,14 +2852,20 @@ class ShowPlatformHardwareSchema(MetaParser):
 
 
 class ShowPlatformHardware(ShowPlatformHardwareSchema):
-    """Parser for show platform hardware qfp active infrastructure bqs queue output default all"""
+    """Parser for show platform hardware qfp active infrastructure bqs queue output default all
+        show platform hardware qfp active infrastructure bqs queue output default interface {interface}"""
 
-    cli_command = 'show platform hardware qfp active infrastructure bqs queue output default all'
+    cli_command = ['show platform hardware qfp active infrastructure bqs queue output default all',
+        'show platform hardware qfp active infrastructure bqs queue output default interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2875,12 +2890,14 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                          ' +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$')
 
         #       Software Control Info:
-        p3_1 = re.compile(r'^Software Control Info:$')
+        #  PARQ Software Control Info:
+        p3_1 = re.compile(r'^(PARQ +)?Software Control Info:$')
 
-        #       (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+        #  (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+        #  (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
         p3_2 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
                          ' +wred: +(?P<wred>[\w\d]+),'
-                         ' +qlimit +\(bytes\): +(?P<qlimit_bytes>\d+)$')
+                         ' +qlimit +\((?P<type>bytes|pkts +)\): +(?P<qlimit>\d+)$')
 
         #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
         p4 = re.compile(r'^parent_sid: +(?P<parent_sid>[\w\d]+),'
@@ -2929,7 +2946,8 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                          ' +\(packets\): +(?P<total_enqs_packets>\d+)$')  
 
         #       queue_depth (bytes): 0    
-        p15 = re.compile(r'^queue_depth +\(bytes\): +(?P<queue_depth_bytes>\d+)$')  
+        #       queue_depth (pkts ): 0
+        p15 = re.compile(r'^queue_depth +\((?P<type>bytes|pkts +)\): +(?P<queue_depth>\d+)$')
 
         #       licensed throughput oversubscription drops:
         #                   (bytes): 0                   ,          (packets): 0  
@@ -2973,8 +2991,12 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                     ['cache_queue_id'] = group['cache_queue_id']
                 ret_dict[interface]['index'][index]['software_control_info']\
                     ['wred'] = group['wred']
-                ret_dict[interface]['index'][index]['software_control_info']\
-                    ['qlimit_bytes'] = int(group['qlimit_bytes'])
+                if group['type'].strip() == 'bytes':
+                    ret_dict[interface]['index'][index]['software_control_info']\
+                        ['qlimit_bytes'] = int(group['qlimit'])
+                else:
+                    ret_dict[interface]['index'][index]['software_control_info']\
+                        ['qlimit_pkts'] = int(group['qlimit'])
                 continue
 
             m = p4.match(line)
@@ -3065,8 +3087,12 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['statistics']\
-                    ['queue_depth_bytes'] = int(group['queue_depth_bytes'])
+                if group['type'].strip() == 'bytes':
+                    ret_dict[interface]['index'][index]['statistics']\
+                        ['queue_depth_bytes'] = int(group['queue_depth'])
+                else:
+                    ret_dict[interface]['index'][index]['statistics']\
+                        ['queue_depth_pkts'] = int(group['queue_depth'])
                 continue
 
             m = p16.match(line)

@@ -15120,6 +15120,93 @@ GigabitEthernet1 is up, line protocol is up
             "ip_flow_switching": False
         }
     }
+    golden_parsed_output2 = {
+        'GigabitEthernet1': {
+            'bgp_policy_mapping': False,
+            'directed_broadcast_forwarding': False,
+            'enabled': False,
+            'icmp': {
+                'mask_replies': 'never sent',
+                'redirects': 'always sent',
+                'unreachables': 'always sent'},
+            'input_features': ['MCI Check'],
+            'ip_access_violation_accounting': False,
+            'ip_cef_switching': True,
+            'ip_cef_switching_turbo_vector': True,
+            'ip_fast_switching': True,
+            'ip_flow_switching': False,
+            'ip_multicast_distributed_fast_switching': False,
+            'ip_multicast_fast_switching': True,
+            'ip_null_turbo_vector': True,
+            'ip_output_packet_accounting': False,
+            'ip_route_cache_flags': ['CEF', 'Fast'],
+            'ipv4': {
+                'dhcp_negotiated': {
+                    'broadcase_address': '255.255.255.255',
+                    'ip': 'dhcp_negotiated'}},
+            'local_proxy_arp': False,
+            'mtu': 1500,
+            'network_address_translation': False,
+            'oper_status': 'down',
+            'policy_routing': False,
+            'probe_proxy_name_replies': False,
+            'proxy_arp': True,
+            'router_discovery': False,
+            'rtp_ip_header_compression': False,
+            'sevurity_level': 'default',
+            'split_horizon': True,
+            'tcp_ip_header_compression': False,
+            'unicast_routing_topologies': {
+                'topology': {
+                    'base': {
+                        'status': 'down'}}},
+            'wccp': {
+                'redirect_exclude': False,
+                'redirect_inbound': False,
+                'redirect_outbound': False}}}
+
+    golden_output2 = {'execute.return_value': '''
+GigabitEthernet1 is administratively down, line protocol is down
+  Internet address will be negotiated using DHCP
+  Broadcast address is 255.255.255.255
+  MTU is 1500 bytes
+  Helper address is not set
+  Directed broadcast forwarding is disabled
+  Outgoing Common access list is not set 
+  Outgoing access list is not set
+  Inbound Common access list is not set 
+  Inbound  access list is not set
+  Proxy ARP is enabled
+  Local Proxy ARP is disabled
+  Security level is default
+  Split horizon is enabled
+  ICMP redirects are always sent
+  ICMP unreachables are always sent
+  ICMP mask replies are never sent
+  IP fast switching is enabled
+  IP Flow switching is disabled
+  IP CEF switching is enabled
+  IP CEF switching turbo vector
+  IP Null turbo vector
+  Associated unicast routing topologies:
+        Topology "base", operation state is DOWN
+  IP multicast fast switching is enabled
+  IP multicast distributed fast switching is disabled
+  IP route-cache flags are Fast, CEF
+  Router Discovery is disabled
+  IP output packet accounting is disabled
+  IP access violation accounting is disabled
+  TCP/IP header compression is disabled
+  RTP/IP header compression is disabled
+  Probe proxy name replies are disabled
+  Policy routing is disabled
+  Network address translation is disabled
+  BGP Policy Mapping is disabled
+  Input features: MCI Check
+  IPv4 WCCP Redirect outbound is disabled
+  IPv4 WCCP Redirect inbound is disabled
+  IPv4 WCCP Redirect exclude is disabled
+  '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -15133,6 +15220,13 @@ GigabitEthernet1 is up, line protocol is up
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        interface_obj = ShowIpInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_interface_golden(self):
         self.device = Mock(**self.golden_interface_output)
