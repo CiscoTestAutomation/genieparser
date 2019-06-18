@@ -99,11 +99,11 @@ class ShowInterfaceSummary(ShowInterfaceSummarySchema):
                     instance_dict.update({'line_protocol': True})
                 if 'down' in line_protocol:
                     instance_dict.update({'line_protocol': False})
-                if groups['name'] != '' and link_status == 'up' \
+                if groups['name'] and link_status == 'up' \
                 and line_protocol == 'up':
                     instance_dict.update({'interface_state': True, \
                         'config_status': True})                
-                if groups['name'] != '' and link_status == 'down' \
+                if groups['name'] and link_status == 'down' \
                 and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': True})
@@ -194,7 +194,6 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
 
         ret_dict = {}
 
-        # Interface IP-Address OK? Method Status Protocol
         # Control0/0 10.10.1.1 YES CONFIG up up
         # GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
         # GigabitEthernet0/1 unassigned YES unset admin down down
@@ -208,7 +207,6 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Interface IP-Address OK? Method Status Protocol
             # Control0/0 10.10.1.1 YES CONFIG up up
             # GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
             # GigabitEthernet0/1 unassigned YES unset admin down down
@@ -347,7 +345,7 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         # Interface config status is active
         # Interface config status is not active
         p9 = re.compile(r'^Interface +config +status +is '
-            '+(?P<interface_config_status>[\w\ ]+)$')
+            '+(?P<interface_config_status>[\S\s]+)$')
 
         # Interface state is active
         # Interface state is not active           
@@ -356,12 +354,12 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
         # Interface vlan config status is active
         # Interface vlan config status is not active
         p11 = re.compile(r'^Interface +vlan +config +status +is '
-            '+(?P<interface_vlan_config_status>[\w\ ]+)$')
+            '+(?P<interface_vlan_config_status>[\S\s]+)$')
 
         # Interface vlan state is UP
         # Interface vlan state is DOWN (down in system space)
         p12 = re.compile(r'^Interface +vlan +state +is +'
-            '(?P<interface_vlan_state>\w+)+([\w\(\)\ ]+)?$')
+            '(?P<interface_vlan_state>\w+)+([\S\s]+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -384,16 +382,16 @@ class ShowInterfaceDetail(ShowInterfaceDetailSchema):
                     instance_dict.update({'line_protocol': True})
                 if 'down' in line_protocol:
                     instance_dict.update({'line_protocol': False})
-                if groups['name'] != '' \
+                if groups['name'] \
                 and link_status == 'up' \
                 and line_protocol == 'up':
                     instance_dict.update({'interface_state': True, \
                         'config_status': True})
-                if groups['name'] != '' and link_status == 'down' \
+                if groups['name'] and link_status == 'down' \
                 and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
                         'config_status': True})
-                if groups['name'] == '' 
+                if groups['name'] == '' \
                 and link_status == 'down' \
                 and line_protocol == 'down':
                     instance_dict.update({'interface_state': False, \
