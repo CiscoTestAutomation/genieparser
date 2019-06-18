@@ -145,7 +145,8 @@ class ShowRoute(ShowRouteSchema):
                 if groups['network']:
                     routes = groups['network']
                     subnet = groups['subnet']
-                    prefix_length = str(sum(bin(int(x)).count('1') for x in subnet.split('.')))
+                    prefix_length =  \
+                    str(sum(bin(int(x)).count('1') for x in subnet.split('.')))
                     combined_ip = routes + '/' + prefix_length                    
                     dict_routes = dict_ipv4.setdefault(combined_ip, {})
                     dict_routes.update({'active': True})
@@ -173,7 +174,8 @@ class ShowRoute(ShowRouteSchema):
                         dict_via = dict_routes.setdefault('next_hop', {}). \
                         setdefault('outgoing_interface_name', {}). \
                         setdefault(outgoing_interface_name, {})
-                        dict_via.update({'outgoing_interface_name': outgoing_interface_name})
+                        dict_via.update \
+                        ({'outgoing_interface_name': outgoing_interface_name})
                     if groups['next_hop']:
                         if groups['network'] and groups['next_hop']:
                             index = 1
@@ -183,7 +185,8 @@ class ShowRoute(ShowRouteSchema):
                         setdefault('next_hop_list', {}).setdefault(index, {})
                         dict_next_hop.update({'index': index})
                         dict_next_hop.update({'next_hop': next_hop})
-                        dict_next_hop.update({'outgoing_interface_name': outgoing_interface_name})
+                        dict_next_hop.update \
+                        ({'outgoing_interface_name': outgoing_interface_name})
                         index += 1
             continue
 
