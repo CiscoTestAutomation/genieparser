@@ -2549,12 +2549,13 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
 
 
 class ShowEnvironmentSchema(MetaParser):
-    """Schema for show environment"""
+    """Schema for show environment
+                  show environment | include {include} """
 
     schema = {
-        'critical_larams': int,
-        'major_alarms': int,
-        'minor_alarms': int,
+        Optional('critical_larams'): int,
+        Optional('major_alarms'): int,
+        Optional('minor_alarms'): int,
         'slot': {
             Any(): {
                 'sensor': {
@@ -2569,13 +2570,18 @@ class ShowEnvironmentSchema(MetaParser):
 
 
 class ShowEnvironment(ShowEnvironmentSchema):
-    """Parser for show environment"""
+    """Parser for show environment
+                  show environment | include {include} """
 
-    cli_command = 'show environment'
+    cli_command = ['show environment', 'show environment | include {include}']
 
-    def cli(self, output=None):
+    def cli(self, include='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
