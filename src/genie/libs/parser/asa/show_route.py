@@ -91,7 +91,7 @@ class ShowRoute(ShowRouteSchema):
         * show route
     """
 
-    cli_command = 'show interface summary'
+    cli_command = 'show route'
 
     def cli(self, output=None):
         if output is None:
