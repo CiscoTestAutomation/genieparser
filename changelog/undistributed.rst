@@ -41,7 +41,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
-
+* ASA
+    * Added ShowInterfaceSummary for:
+      show interface summary
+    * Added ShowInterfaceIpBrief for:
+      show interface ip brief
+    * Added ShowInterfaceDetail for:
+      show interface detail
 
 --------------------------------------------------------------------------------
                                VRF
@@ -72,6 +78,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpProtocols to fix parsing issue of unbound variable
+
+--------------------------------------------------------------------------------
+                                inventory
+--------------------------------------------------------------------------------
+* ASA
+    * Added ShowInventory for:
+        show inventory
 
 --------------------------------------------------------------------------------
                                 Route
