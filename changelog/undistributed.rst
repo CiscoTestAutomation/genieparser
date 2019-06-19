@@ -33,6 +33,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
+    * Update ShowArp to support global static table
 * ASA
     * Added ShowArp for:
         show arp
