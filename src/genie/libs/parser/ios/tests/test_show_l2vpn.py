@@ -1028,43 +1028,49 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'service_instance': {
-            1: {
-                'encapsulation': 'dot1q 200-300 vlan protocol type 0x8100',
-                'l2protocol_drop': True,
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    'bytes_out': 0,
+    'service_instance': {
+        1: {
+            'associated_interface': {
+                'Ethernet0/0': {
+                    'type': 'Dynamic',
+                    'intiators': 'unclassified vlan',
+                    'control_policy': 'ABC',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'ce_vlans': '10-20',
                     },
-                'associated_interface': 'Ethernet0/0',
-                'intiators': 'unclassified vlan',
-                'ce_vlans': '',
-                'type': 'L2Context',
-                'associated_evc': '',
-                'control_policy': 'ABC',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'state': 'Up',
-                },
-            2: {
-                'l2protocol_drop': True,
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    'bytes_out': 0,
-                    },
-                'associated_interface': 'Ethernet0/0',
-                'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
-                'ce_vlans': '10-20',
-                'type': 'Dynamic',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'state': 'Up',
                 },
             },
-        }
+        2: {
+            'associated_interface': {
+                'Ethernet0/0': {
+                    'type': 'Dynamic',
+                    'intiators': 'unclassified vlan',
+                    'control_policy': 'ABC',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'ce_vlans': '10-20',
+                    },
+                },
+            },
+        },
+    }
 
     golden_output = {'execute.return_value': '''\
     Device# show ethernet service instance detail
@@ -1103,16 +1109,18 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_2 = {
     'service_instance': {
         400: {
-            'associated_interface': 'Ethernet1/3',
-            'ce_vlans': '30',
-            'l2protocol_drop': False,
-            'associated_evc': '50',
-            'state': 'AdminDown',
-            'efp_statistics': {
-                'pkts_out': 0,
-                'bytes_in': 0,
-                'bytes_out': 0,
-                'pkts_in': 0,
+            'associated_interface': {
+                'Ethernet1/3': {
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    },
                 },
             },
         },
@@ -1135,54 +1143,64 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_interface = {
     'service_instance': {
         1: {
-            'intiators': 'unclassified vlan',
-            'state': 'Up',
-            'l2protocol_drop': True,
-            'type': 'L2Context',
-            'encapsulation': 'dot1q 200-300 vlan protocol type 0x8100',
-            'associated_evc': '',
-            'efp_statistics': {
-                'pkts_in': 0,
-                'bytes_in': 0,
-                'bytes_out': 0,
-                'pkts_out': 0,
+            'associated_interface': {
+                'Ethernet0/0': {
+                    'type': 'static',
+                    'intiators': 'unclassified vlan',
+                    'control_policy': 'ABC',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'ce_vlans': '10-20',
+                    },
                 },
-            'control_policy': 'ABC',
-            'associated_interface': 'Ethernet0/0',
-            'dot1q_tunnel_ethertype': '0x8100',
-            'ce_vlans': '',
             },
         2: {
-            'state': 'Up',
-            'l2protocol_drop': True,
-            'type': 'Dynamic',
-            'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
-            'associated_evc': '',
-            'efp_statistics': {
-                'pkts_in': 0,
-                'bytes_in': 0,
-                'bytes_out': 0,
-                'pkts_out': 0,
+            'associated_interface': {
+                'Ethernet0/0': {
+                    'type': 'static',
+                    'intiators': 'unclassified vlan',
+                    'control_policy': 'ABC',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'ce_vlans': '10-20',
+                    },
                 },
-            'dot1q_tunnel_ethertype': '0x8100',
-            'associated_interface': 'Ethernet0/0',
-            'ce_vlans': '10-20',
             },
         3: {
-            'state': 'Up',
-            'l2protocol_drop': True,
-            'type': 'static',
-            'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
-            'associated_evc': '',
-            'efp_statistics': {
-                'pkts_in': 0,
-                'bytes_in': 0,
-                'bytes_out': 0,
-                'pkts_out': 0,
+            'associated_interface': {
+                'Ethernet0/0': {
+                    'type': 'static',
+                    'intiators': 'unclassified vlan',
+                    'control_policy': 'ABC',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'ce_vlans': '10-20',
+                    },
                 },
-            'dot1q_tunnel_ethertype': '0x8100',
-            'associated_interface': 'Ethernet0/0',
-            'ce_vlans': '10-20',
             },
         },
     }

@@ -241,29 +241,28 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
     schema = {
         'service_instance': {
             Any(): {
-                Optional('type'): str,
-                Optional('description'): str,
-                'associated_interface': str,
-                Optional('associated_evc'): str,
-                Optional('l2protocol_drop'): bool,
-                Optional('ce_vlans'): str,
-                Optional('encapsulation'): str,
-                Optional('rewrite'): str,
-                Optional('control_policy'): str,
-                Optional('intiators'): str,
-                Optional('dot1q_tunnel_ethertype'): str,
-                'state': str,
-                Optional('efp_statistics'): {
-                    'pkts_in': int,
-                    'pkts_out': int,
-                    'bytes_in': int,
-                    'bytes_out': int,
-                },
-                Optional('micro_block_type'): {
-                    Any():{
-                        'type': {
+                'associated_interface': {
+                    Any(): {
+                        Optional('type'): str,
+                        Optional('description'): str,
+                        Optional('associated_evc'): str,
+                        Optional('l2protocol_drop'): bool,
+                        Optional('ce_vlans'): str,
+                        Optional('encapsulation'): str,
+                        Optional('rewrite'): str,
+                        Optional('control_policy'): str,
+                        Optional('intiators'): str,
+                        Optional('dot1q_tunnel_ethertype'): str,
+                        Optional('state'): str,
+                        Optional('efp_statistics'): {
+                            'pkts_in': int,
+                            'pkts_out': int,
+                            'bytes_in': int,
+                            'bytes_out': int,
+                        },
+                        Optional('micro_block_type'): {
                             Any(): {
-                                Any(): Any()
+                                Any(): list
                             }
                         }
                     }
@@ -298,7 +297,8 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
 
         # initial return dictionary
         ret_dict = {}
-
+        sub_dict = {}
+        final_dict = {}
         # initial regexp pattern
         # Service Instance ID: 2051
         p1 = re.compile(r'^Service +Instance +ID: +(?P<service_id>\d+)$')
@@ -352,153 +352,193 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
             '(?P<associated_interface>\S+) +(?P<state>\w+)( +(?P<vlans>\S+))?$')
 
         # Microblock type: Storm-Control
-        p17 = re.compile(r'^Microblock +type: +(?P<micro_block_type>\S+)$')
+        p17 = re.compile(r'^Microblock +type: +(?P<micro_block_type>[\S ]+)$')
 
-        micro_block_found = False
+        # storm-control unicast cir 8001
+        # storm-control broadcast cir 8001
+        # storm-control multicast cir 8001
+        p18 = re.compile(r'^(?P<key>storm-control +\S+ +\S+) +(?P<val>\d+)$')
+
+        # Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+        p19 = re.compile(r'^Load +for +\w+ +\w+: [\S ]+$')
+
+        # Bridge-domain: 12-1900
+        # L2 Multicast GID: 9
+        p20 = re.compile(r'^(?P<key>[\S+ ]+): +(?P<val>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
-
+            
+            # Service Instance ID: 2051
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                service_id = int(group['service_id'])
-                final_dict = ret_dict.setdefault('service_instance', {}).\
-                    setdefault(service_id, {})
-                final_dict['l2protocol_drop'] = False
-                final_dict['ce_vlans'] = ''
-                final_dict['associated_evc'] = ''
+                service_instance_id = int(group['service_id'])
+                # final_dict = ret_dict.setdefault('service_instance', {}).\
+                #     setdefault(service_id, {})
+                # final_dict['l2protocol_drop'] = False
+                # final_dict['ce_vlans'] = ''
+                # final_dict['associated_evc'] = ''
                 continue
-
+            
+            # Service Instance Type: Static
+            # Service instance type: L2Context
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['type'] = group['service_instance_type']
+                sub_dict['type'] = group['service_instance_type']
                 continue
 
+            # Description: xxx
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['description'] = group['description']
+                sub_dict['description'] = group['description']
                 continue
 
+            # Associated Interface: GigabitEthernet0/0/3
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['associated_interface'] = group['associated_interface']
+                final_dict = ret_dict.setdefault('service_instance', {}).\
+                    setdefault(service_instance_id, {}).\
+                    setdefault('associated_interface', {}).\
+                    setdefault(group['associated_interface'], sub_dict)
+                
                 continue
 
+            # Associated EVC: 
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['associated_evc'] = group['associated_evc']
+                sub_dict['associated_evc'] = group['associated_evc']
                 continue
 
+            # L2protocol drop
             m = p6.match(line)
             if m:
-                final_dict['l2protocol_drop'] = True
+                sub_dict['l2protocol_drop'] = True
                 continue
 
+            # CE-Vlans: 10-20
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['ce_vlans'] = group['vlans']
+                sub_dict['ce_vlans'] = group['vlans']
                 continue
 
+            # Encapsulation: dot1q 2051 vlan protocol type 0x8100
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['encapsulation'] = group['encapsulation']
+                sub_dict['encapsulation'] = group['encapsulation']
                 continue
 
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['rewrite'] = group['rewrite']
+                sub_dict['rewrite'] = group['rewrite']
                 continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['dot1q_tunnel_ethertype'] = group['dot1q_tunnel_ethertype']
+                sub_dict['dot1q_tunnel_ethertype'] = group['dot1q_tunnel_ethertype']
                 continue
 
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['state'] = group['state']
+                sub_dict['state'] = group['state']
                 continue
 
             m = p12.match(line)
             if m:
-                final_dict.setdefault('efp_statistics', {})
+                sub_dict.setdefault('efp_statistics', {})
                 continue
 
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['efp_statistics'].update({k: \
+                sub_dict['efp_statistics'].update({k: \
                     int(v) for k, v in group.items()})
                 continue
 
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['intiators'] = group['intiators']
+                sub_dict['intiators'] = group['intiators']
                 continue
 
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                final_dict['control_policy'] = group['control_policy']
+                sub_dict['control_policy'] = group['control_policy']
                 continue
 
+            # 1   Static GigabitEthernet0/0/3       Up
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                service_id = int(group['service_id'])
+                service_instance_id = int(group['service_id'])
+                
                 final_dict = ret_dict.setdefault('service_instance', {}).\
-                    setdefault(service_id, {})
-                final_dict['l2protocol_drop'] = False
-                final_dict['associated_evc'] = ''
-                final_dict['state'] = group['state']
-                final_dict['type'] = group['service_instance_type']
-                final_dict['associated_interface'] = group['associated_interface']
-                final_dict['ce_vlans'] = '' if not group['vlans'] else group['vlans'] 
+                    setdefault(service_instance_id, {}).\
+                    setdefault('associated_interface', {}).\
+                    setdefault(group['associated_interface'], sub_dict)
+
+                sub_dict['l2protocol_drop'] = False
+                sub_dict['associated_evc'] = ''
+                sub_dict['state'] = group['state']
+                sub_dict['type'] = group['service_instance_type']
+                sub_dict['ce_vlans'] = '' if not group['vlans'] else group['vlans'] 
 
                 continue
             
             # Microblock type: Storm-Control
             m = p17.match(line)
             if m and service_instance_id and interface:
-                final_dict = ret_dict.setdefault('service_instance', {}).\
-                    setdefault(int(service_instance_id), {})
-                final_dict['l2protocol_drop'] = False
-                final_dict['ce_vlans'] = ''
-                final_dict['associated_evc'] = ''
-                final_dict['associated_interface'] = interface
-                final_dict['state'] = 'Up'
+                if not final_dict:
+                    final_dict = ret_dict.setdefault('service_instance', {}).\
+                        setdefault(service_instance_id, {}).\
+                        setdefault('associated_interface', {}).\
+                        setdefault(interface, sub_dict)
+
                 group = m.groupdict()
-                micro_block_type = group['micro_block_type'].lower()
-                micro_block_dict = final_dict.setdefault('micro_block_type', {}).\
-                    setdefault(micro_block_type.replace('-', '_').replace(' ', '_'), {}).\
-                    setdefault('type', {})
-                micro_block_found = True
+                micro_block_type = group['micro_block_type']
+                micro_block_dict = sub_dict.setdefault('micro_block_type', {}).\
+                    setdefault(micro_block_type, {})
                 continue
             
-            if micro_block_found:
-                # storm-control unicast cir 8000
-                p18 = re.compile(r'{} +(?P<type>\S+) +(?P<sub_type>\S+) +(?P<sub_type_value>\d+)'.\
-                    format(micro_block_type.lower()))
-                
-                m = p18.match(line)
-                if m:
-                    group = m.groupdict()
-                    micro_block_dict.setdefault(group['type'], {}).\
-                        setdefault(group['sub_type'], int(group['sub_type_value']))
-                else:
-                    micro_block_found = False
+            # storm-control unicast cir 8001
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().replace(' ', '_').\
+                    replace('-', '_')
+                storm_control_list =  micro_block_dict.setdefault(key, [])
+                storm_control_list.append(int(group['val']))
                 continue
+
+            # Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
+            m = p19.match(line)
+            if m:
+                continue
+            # Bridge-domain: 12-1900
+            # L2 Multicast GID: 9
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().replace(' ', '_').\
+                    replace('-', '_')
+                micro_block_list = micro_block_dict.setdefault(key, [])
+                val = group['val']
+                try:
+                    micro_block_list.append(int(val))
+                except ValueError:
+                    micro_block_list.append(val)
+                continue
+
         return ret_dict
 
 class ShowEthernetServiceInstance(ShowEthernetServiceInstanceDetail):
