@@ -809,6 +809,39 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
             },
         },
     }
+    golden_output_id_interface_2 = {
+        'execute.return_value': '''
+        Service Instance ID: 100
+        L2 ACL (inbound): test-acl
+        Associated Interface: Gig3/0/1
+        Associated EVC: test
+        L2protocol drop
+        CEVlans:
+        Interface Dot1q Tunnel Ethertype: 0x8100
+        State: Up
+        L2 ACL permit count: 10255
+        L2 ACL deny count: 53
+        '''
+    }
+    golden_parsed_output_id_interface_2 = {
+    'service_instance': {
+        100: {
+            'associated_interface': {
+                'Gig3/0/1': {
+                    'l2_acl': {
+                        'inbound': 'test-acl',
+                        'permit_count': 10255,
+                        'deny_count': 53,
+                        },
+                    'associated_evc': 'test',
+                    'l2protocol_drop': True,
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    },
+                },
+            },
+        },
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -836,6 +869,13 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
         parsed_output = platform_obj.parse(service_instance_id=4000,interface='GigabitEthernet 0/0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output_id_interface)
+
+    def test_golden_id_interface_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_id_interface_2)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(service_instance_id=100,interface='gig2/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_id_interface_2)
 
 class test_show_ethernet_service_instance(unittest.TestCase):
 

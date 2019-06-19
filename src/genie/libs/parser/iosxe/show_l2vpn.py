@@ -264,7 +264,12 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
                             Any(): {
                                 Any(): list
                             }
-                        }
+                        },
+                        Optional('l2_acl'): {
+                            Optional('inbound'): str,
+                            Optional('permit_count'): int,
+                            Optional('deny_count'): int,
+                        },
                     }
                 }
             },
@@ -362,9 +367,16 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
         # Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
         p19 = re.compile(r'^Load +for +\w+ +\w+: [\S ]+$')
 
+        # L2 ACL (inbound): test-acl
+        p20 = re.compile(r'^L2 +ACL +\((?P<key>\w+)\): +(?P<val>\S+)$')
+        
+        # L2 ACL permit count: 10255
+        # L2 ACL deny count: 53
+        p21 = re.compile(r'^L2 +ACL +(?P<key>(permit|deny) +count): +(?P<val>\d+)$')
+        
         # Bridge-domain: 12-1900
         # L2 Multicast GID: 9
-        p20 = re.compile(r'^(?P<key>[\S+ ]+): +(?P<val>\S+)$')
+        p22 = re.compile(r'^(?P<key>[\S+ ]+): +(?P<val>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -524,9 +536,29 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
             m = p19.match(line)
             if m:
                 continue
+            
+            # L2 ACL (inbound): test-acl
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict.setdefault('l2_acl', {}).\
+                    setdefault(group['key'], group['val'])
+                continue
+
+            # L2 ACL permit count: 10255
+            # L2 ACL deny count: 53
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().replace(' ', '_').\
+                    replace('-', '_')
+                sub_dict.setdefault('l2_acl', {}).\
+                    setdefault(key, int(group['val']))
+                continue
+
             # Bridge-domain: 12-1900
             # L2 Multicast GID: 9
-            m = p20.match(line)
+            m = p22.match(line)
             if m:
                 group = m.groupdict()
                 key = group['key'].lower().replace(' ', '_').\
