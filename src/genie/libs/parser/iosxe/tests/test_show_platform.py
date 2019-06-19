@@ -5386,6 +5386,34 @@ class test_show_env(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output2 = {
+        "slot": {
+            "P6": {
+                "sensor": {
+                    "Temp: FC PWM1": {
+                        "state": "Fan Speed 45%",
+                        "reading": "25 Celsius"
+                    }
+                }
+            },
+            "P7": {
+                "sensor": {
+                    "Temp: FC PWM1": {
+                        "state": "Fan Speed 45%",
+                        "reading": "25 Celsius"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        show environment | include Fan Speed
+        P6    Temp: FC PWM1    Fan Speed 45%    25 Celsius
+        P7    Temp: FC PWM1    Fan Speed 45%    25 Celsius
+    '''}
+
+    
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowEnvironment(device=self.dev)
@@ -5398,6 +5426,13 @@ class test_show_env(unittest.TestCase):
         obj = ShowEnvironment(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output2)
+        obj = ShowEnvironment(device=self.dev)
+        parsed_output = obj.parse(include='Fan Speed')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 class test_show_processes_cpu(unittest.TestCase):
 
@@ -14634,12 +14669,85 @@ class test_show_platform_hardware(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output_interface = {
+        "GigabitEthernet4": {
+            "if_h": 9,
+            "index": {
+                "0": {
+                    "queue_id": "0x70",
+                    "name": "GigabitEthernet4",
+                    "software_control_info": {
+                        "cache_queue_id": "0x00000070",
+                        "wred": "0xe73cfde0",
+                        "qlimit_pkts": 418,
+                        "parent_sid": "0x8d",
+                        "debug_name": "GigabitEthernet4",
+                        "sw_flags": "0x08000011",
+                        "sw_state": "0x00000c01",
+                        "port_uidb": 65527,
+                        "orig_min": 0,
+                        "min": 105000000,
+                        "min_qos": 0,
+                        "min_dflt": 0,
+                        "orig_max": 0,
+                        "max": 0,
+                        "max_qos": 0,
+                        "max_dflt": 0,
+                        "share": 1,
+                        "plevel": 0,
+                        "priority": 65535,
+                        "defer_obj_refcnt": 0
+                    },
+                    "statistics": {
+                        "tail_drops_bytes": 0,
+                        "tail_drops_packets": 0,
+                        "total_enqs_bytes": 108648448,
+                        "total_enqs_packets": 1697632,
+                        "queue_depth_pkts": 0,
+                        "lic_throughput_oversub_drops_bytes": 0,
+                        "lic_throughput_oversub_drops_packets": 0
+                    }
+                }
+            }
+        }
+    }
+    
+    golden_output_interface = {'execute.return_value': '''
+        Interface: GigabitEthernet4 QFP: 0.0 if_h: 9 Num Queues/Schedules: 1
+          Queue specifics:
+            Index 0 (Queue ID:0x70, Name: GigabitEthernet4)
+            PARQ Software Control Info:
+              (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
+              parent_sid: 0x8d, debug_name: GigabitEthernet4
+              sw_flags: 0x08000011, sw_state: 0x00000c01, port_uidb: 65527
+              orig_min  : 0                   ,      min: 105000000           
+              min_qos   : 0                   , min_dflt: 0                   
+              orig_max  : 0                   ,      max: 0                   
+              max_qos   : 0                   , max_dflt: 0                   
+              share     : 1
+              plevel    : 0, priority: 65535
+              defer_obj_refcnt: 0
+            Statistics:
+              tail drops  (bytes): 0                   ,          (packets): 0                   
+              total enqs  (bytes): 108648448           ,          (packets): 1697632             
+              queue_depth (pkts ): 0                   
+              licensed throughput oversubscription drops:
+                          (bytes): 0                   ,          (packets): 0     
+    '''}
+
     def test_golden_active(self):
         self.device = Mock(**self.golden_output_active)
         obj = ShowPlatformHardware(device=self.device)
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_active)
+
+    def test_golden_interface(self):
+        self.device = Mock(**self.golden_output_interface)
+        obj = ShowPlatformHardware(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet4')
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
