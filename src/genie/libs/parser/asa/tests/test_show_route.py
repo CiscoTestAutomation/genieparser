@@ -29,7 +29,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'candidate_default': True,
                                 'active': True,
                                 'route': '0.0.0.0/0',
-                                'source_protocol_codes': 'S*',
+                                'source_protocol_codes': 'S',
                                 'source_protocol': 'static',
                                 'next_hop': {
                                     'next_hop_list': {
