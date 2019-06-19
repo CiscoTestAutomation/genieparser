@@ -3781,7 +3781,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                    'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} advertised-routes',
                    'show bgp instance {instance} {vrf_type} {vrf} neighbors {neighbor} advertised-routes']
 
-    def cli(self, vrf_type, neighbor='', vrf='all', instance='all', address_family='', output=None):
+    def cli(self, vrf_type='all', neighbor='', vrf='all', instance='all', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
@@ -4129,7 +4129,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         'nsr_initial_initsync_version', 'nsr_initial_init_ver_status',
         'nsr_issu_sync_group_versions', 'standbyver']
 
-    def cli(self, vrf_type, address_family='', instance='all', vrf='all', output=None):
+    def cli(self, vrf_type='all', address_family='', instance='all', vrf='all', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
