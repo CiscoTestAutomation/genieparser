@@ -1450,71 +1450,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
     '''
     }
 
-    golden_output_storm_control = {'execute.return_value':'''
-    Port maximum number of service instances: 8000
-    Service Instance 151, Interface GigabitEthernet8
-       Pkts In   Bytes In   Pkts Out  Bytes Out
-             0          0          0          0
-    StormControl Discard Pkts:    <--- this section
-       Broadcast            Multicast            Unknown Unicast
-       default:0            default:0            default:0           
-       cos 0:0              cos 0:0              cos 0:0           
-       cos 1:0              cos 1:0              cos 1:0           
-       cos 2:0              cos 2:0              cos 2:0           
-       cos 3:0              cos 3:0              cos 3:0           
-       cos 4:0              cos 4:0              cos 4:0           
-       cos 5:0              cos 5:0              cos 5:0           
-       cos 6:0              cos 6:0              cos 6:0           
-       cos 7:0              cos 7:0              cos 7:0           
-
-    '''}
-    golden_parsed_output_storm_control = {
-    'max_num_of_service_instances': 8000,
-    'service_instance': {
-        151: {
-            'interface': 'GigabitEthernet8',
-            'pkts_in': 0,
-            'bytes_in': 0,
-            'pkts_out': 0,
-            'bytes_out': 0,
-            'storm_control_discard_pkts': {
-                'broadcast': {
-                    'default': 0,
-                    'cos 0': 0,
-                    'cos 1': 0,
-                    'cos 2': 0,
-                    'cos 3': 0,
-                    'cos 4': 0,
-                    'cos 5': 0,
-                    'cos 6': 0,
-                    'cos 7': 0,
-                    },
-                'multicast': {
-                    'default': 0,
-                    'cos 0': 0,
-                    'cos 1': 0,
-                    'cos 2': 0,
-                    'cos 3': 0,
-                    'cos 4': 0,
-                    'cos 5': 0,
-                    'cos 6': 0,
-                    'cos 7': 0,
-                    },
-                'unknown_unicast': {
-                    'default': 0,
-                    'cos 0': 0,
-                    'cos 1': 0,
-                    'cos 2': 0,
-                    'cos 3': 0,
-                    'cos 4': 0,
-                    'cos 5': 0,
-                    'cos 6': 0,
-                    'cos 7': 0,
-                    },
-                },
-            },
-        },
-    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
@@ -1541,17 +1476,6 @@ class test_show_ethernet_service_instance_stats(unittest.TestCase):
         platform_obj = ShowEthernetServiceInstanceStats(device=self.device)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_shrinked)
-
-    def test_golden_storm_control(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_storm_control)
-        platform_obj = ShowEthernetServiceInstanceStats(
-            device=self.device,
-            service_instance_id=151,
-            interface='gi8')
-        parsed_output = platform_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_storm_control)
-
 
 class test_show_ethernet_service_instance_summary(unittest.TestCase):
 
