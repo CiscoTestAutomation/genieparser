@@ -7,12 +7,13 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
-from genie.libs.parser.ios.show_routing import ShowIpRouteDistributor, ShowIpv6RouteDistributor, ShowIpv6RouteUpdated
+from genie.libs.parser.ios.show_routing import ShowIpRouteDistributor, ShowIpv6RouteDistributor, ShowIpv6RouteUpdated, ShowIpRouteSummary
 
 from genie.libs.parser.iosxe.tests.test_show_routing import \
                         test_show_ip_route as test_show_ip_route_iosxe,\
                         test_show_ipv6_route_updated as test_show_ipv6_route_updated_iosxe,\
-                        test_show_ipv6_route_word as test_show_ipv6_route_word_iosxe
+                        test_show_ipv6_route_word as test_show_ipv6_route_word_iosxe,\
+                        test_show_ip_route_summary as test_show_ip_route_summary_iosxe
 
 # ============================================
 # unit test for 'show ip route'
@@ -148,6 +149,27 @@ class test_show_ipv6_route_word(test_show_ipv6_route_word_iosxe):
         obj = ShowIpv6RouteDistributor(device=self.device)
         parsed_output = obj.parse(route='2000:2::4:1')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
+
+
+###################################################
+# unit test for show ip route summary
+####################################################
+class test_show_ip_route_summary(test_show_ip_route_summary_iosxe):
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpRouteSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpRouteSummary(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+
 
 if __name__ == '__main__':
     unittest.main()

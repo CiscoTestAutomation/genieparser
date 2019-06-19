@@ -85,3 +85,14 @@ Inventory
 * ASA
     * Added ShowInventory for:
         show inventory
+--------------------------------------------------------------------------------
+                            routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+* IOS
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary

@@ -1599,3 +1599,289 @@ class ShowIpv6Cef(ShowIpCef):
             output = output
 
         return super().cli(cmd=cmd, vrf=vrf, prefix=prefix, output=output)
+
+# ====================================================
+#  schema for show ip route summary
+# ====================================================
+class ShowIpRouteSummarySchema(MetaParser):
+    """Schema for show ip route summary
+                  show ip route vrf <vrf> summary
+    """
+    schema = {
+        'vrf':{
+        Any():{
+            'vrf_id': str,
+            'maximum_paths': int,
+            'total_route_source': {
+                'networks': int,
+                'subnets': int,
+                'replicates': int,
+                'overhead': int,
+                'memory_bytes': int,
+            },
+            'route_source': {
+                'connected': {
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                'static': {
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                'internal': {
+                    'networks': int,
+                    'memory_bytes': int,
+                },
+                Optional('application'): {
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                Optional('ospf'): {
+                    'instance': str,
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                    'intra_area': int,
+                    'inter_area': int,
+                    'external_1': int,
+                    'external_2': int,
+                    'nssa_external_1': int,
+                    'nssa_external_2': int,
+                },
+                Optional('isis'): {
+                    'instance': str,
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                    'level_1': int,
+                    'level_2': int,
+                    'inter_area': int,
+                },
+                Optional('eigrp'): {
+                    'instance': str,
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                Optional('rip'): {
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                },
+                Optional('bgp'): {
+                    'instance': str,
+                    'networks': int,
+                    'subnets': int,
+                    'replicates': int,
+                    'overhead': int,
+                    'memory_bytes': int,
+                    'external': int,
+                    'internal': int,
+                    'local': int,
+                },
+
+            }
+
+        }
+    }
+    }
+
+# ====================================================
+#  parser for show ip route summary
+# ====================================================
+"""Parser for show ip route summary
+                  show ip route vrf <vrf> summary
+    """
+class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+
+    cli_command = ['show ip route summary', 'show ip route vrf {vrf} summary']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # IP routing table name is default (0x0)
+        p1 = re.compile(r'^IP +routing +table +name +is +(?P<vrf>\w+) +\((?P<vrf_id>\w+)\)$')
+        # IP routing table maximum-paths is 32
+        p2 = re.compile(r'^IP +routing +table +maximum-paths +is +(?P<max_path>[\d]+)$')
+        # application     0           0           0           0           0
+        p3 = re.compile(r'^application +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        # connected       0           17          0           1632        5168
+        p4 = re.compile(r'^connected +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        # static          0           0           0           0           0
+        p5 = re.compile(r'^static +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        # ospf 2          0           1           0           96          308
+        p6 = re.compile(r'^ospf +(?P<instance>\w+) +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
+        p7 = re.compile(r'^Intra-area: +(?P<intra_area>\d+) +Inter-area: +(?P<inter_area>\d+) +External-1: +(?P<external_1>\d+) +External-2: +(?P<external_2>\d+)$')
+        #   NSSA External-1: 0 NSSA External-2: 0
+        p8 = re.compile(r'^NSSA +External-1: +(?P<nssa_external_1>\d+) +NSSA +External-2: +(?P<nssa_external_2>\d+)$')
+        # isis test1      0           1           0           96          304
+        p9 = re.compile(r'^isis +(?P<instance>\w+) +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        #   Level 1: 1 Level 2: 0 Inter-area: 0
+        p9_1 = re.compile(r'^Level +1: +(?P<level_1>\d+) +Level +2: +(?P<level_2>\d+) +Inter-area: +(?P<inter_area>\d+)$')
+        # eigrp 100       0           3           0           672         912
+        p10 = re.compile(r'^eigrp +(?P<instance>\w+) +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        # rip             0           1           0           192         304
+        p11 = re.compile(r'^rip +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        # bgp 65000       0           0           0           0           0
+        p12 = re.compile(r'^bgp +(?P<instance>\w+) +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+        #   External: 0 Internal: 0 Local: 0
+        p13 = re.compile(r'^External: +(?P<external>\d+) +Internal: +(?P<internal>\d+) +Local: +(?P<local>\d+)$')
+        # internal        4                                               2936
+        p14 = re.compile(r'^internal +(?P<networks>\d+) +(?P<memory_bytes>\d+)$')
+        # Total           4           23          0           2688        9932
+        p15 = re.compile(r'^Total +(?P<networks>\d+) +(?P<subnets>\d+) +(?P<replicates>\d+) +(?P<overhead>\d+) +(?P<memory_bytes>\d+)$')
+
+
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            # IP routing table name is default (0x0)
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+                vrf_dict['vrf_id'] = m.groupdict()['vrf_id']
+                vrf_rs_dict = vrf_dict.setdefault('route_source', {})
+                continue
+            # IP routing table maximum-paths is 32
+            m = p2.match(line)
+            if m:
+                vrf_dict['maximum_paths'] = int(m.groupdict()['max_path'])
+                continue
+            # application     0           0           0           0           0
+            m = p3.match(line)
+            if m:
+                group = {k:int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('application', {})
+                vrf_rs_dict['application'].update(group)
+                continue
+            # connected       0           17          0           1632        5168
+            m = p4.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('connected', {})
+                vrf_rs_dict['connected'].update(group)
+                continue
+            # static          0           0           0           0           0
+            m = p5.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('static', {})
+                vrf_rs_dict['static'].update(group)
+                continue
+            # ospf 2          0           1           0           96          308
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_rs_dict.setdefault('ospf', {})
+                vrf_rs_dict['ospf']['instance'] = group['instance']
+                group.pop('instance')
+                group = {k: int(v) for k, v in group.items()}
+                vrf_rs_dict['ospf'].update(group)
+                continue
+            # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
+            m = p7.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('ospf', {})
+                vrf_rs_dict['ospf'].update(group)
+                continue
+            #   NSSA External-1: 0 NSSA External-2: 0
+            m = p8.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('ospf', {})
+                vrf_rs_dict['ospf'].update(group)
+                continue
+            # isis test1      0           1           0           96          304
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_rs_dict.setdefault('isis', {})
+                vrf_rs_dict['isis']['instance'] = group['instance']
+                group.pop('instance')
+                group = {k: int(v) for k, v in group.items()}
+                vrf_rs_dict['isis'].update(group)
+                continue
+            #   Level 1: 1 Level 2: 0 Inter-area: 0
+            m = p9_1.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('isis', {})
+                vrf_rs_dict['isis'].update(group)
+                continue
+            # eigrp 100       0           3           0           672         912
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_rs_dict.setdefault('eigrp', {})
+                vrf_rs_dict['eigrp']['instance'] = group['instance']
+                group.pop('instance')
+                group = {k: int(v) for k, v in group.items()}
+                vrf_rs_dict['eigrp'].update(group)
+                continue
+            # rip             0           1           0           192         304
+            m = p11.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('rip', {})
+                vrf_rs_dict['rip'].update(group)
+                continue
+            # bgp 65000       0           0           0           0           0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_rs_dict.setdefault('bgp', {})
+                vrf_rs_dict['bgp']['instance'] = group['instance']
+                group.pop('instance')
+                group = {k: int(v) for k, v in group.items()}
+                vrf_rs_dict['bgp'].update(group)
+                continue
+            #   External: 0 Internal: 0 Local: 0
+            m = p13.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('bgp', {})
+                vrf_rs_dict['bgp'].update(group)
+                continue
+            # internal        4                                               2936
+            m = p14.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('internal', {})
+                vrf_rs_dict['internal'].update(group)
+                continue
+            # Total           4           23          0           2688        9932
+            m = p15.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_dict.setdefault('total_route_source', {})
+                vrf_dict['total_route_source'].update(group)
+                continue
+        return ret_dict
+
