@@ -727,6 +727,19 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
       show etherchannel summary"""
 
     cli_command = 'show etherchannel summary'
+    exclude = ['current_time', 'last_read', 'last_write',
+        'retrans', 'keepalives', 'total', 'value', 'retransmit', 
+        'total_data', 'with_data', 'krtt', 'receive_idletime', 
+        'sent_idletime', 'sndnxt', 'snduna', 'sndwnd', 'uptime',
+        'ackhold', 'delrcvwnd', 'rcvnxt', 'receive_idletime', 
+        'rcvwnd', 'updates', 'down_time', 'last_reset', 
+        'notifications', 'opens', 'route_refresh', 'total',
+        'updates', 'up_time', 'rtto', 'rtv', 'srtt', 'pmtuager',
+        'min_rtt', 'max_rtt', 'dropped', 'established', 
+        'reset_reason', 'irs', 'iss', 'tcp_semaphore', 
+        'foreign_port', 'status_flags', 'local_port', 
+        'keepalive', 'out_of_order']
+
 
     def cli(self,output=None):
         if output is None:

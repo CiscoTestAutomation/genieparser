@@ -75,7 +75,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
     """Parser for show ip routing vrf all
                 show ip routing vrf <vrf>"""
     cli_command = ['show routing {ip} vrf all', 'show routing vrf all', 'show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']
-
+    exclude = ['uptime']
     def cli(self, ip='', vrf='', output=None):
         if ip and vrf:
             cmd = self.cli_command[2].format(ip=ip, vrf=vrf)
@@ -262,6 +262,9 @@ class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
     """Parser for show ipv6 routing vrf all,
             show ipv6 routing vrf <vrf>"""
 
+    exclude = [
+        'uptime']
+
     def cli(self, vrf='', output=None):
         return super().cli(ip='ipv6', vrf=vrf, output=output)
 
@@ -341,6 +344,8 @@ class ShowIpRoute(ShowIpRouteSchema):
        show ip route vrf {vrf}
        show ip route vrf all"""
     cli_command = ['show ip route', 'show ip route vrf {vrf}']
+    exclude = [
+        'updated']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -579,6 +584,12 @@ class ShowIpv6Route(ShowIpRoute):
        show ipv6 route vrf all"""
 
     cli_command = ['show ipv6 route vrf {vrf}', 'show ipv6 route']
+    exclude = [
+        'updated',
+        'metric',
+        'next_hop',
+        'outgoing_interface',
+        'incoming_interface']
 
     def cli(self, vrf='', output=None):
         if vrf:

@@ -82,6 +82,8 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
     Parser for 'show ip igmp vrf <WORD> interface'
     """
     cli_command = ['show ip igmp vrf {vrf} interface','show ip igmp interface']
+    exclude = ['joins', 'leaves']
+
 
     def cli(self, vrf='',output=None):
         if output is None:
@@ -405,6 +407,8 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
     Parser for 'show ip igmp groups detail'
     Parser for 'show ip igmp vrf <WORD> groups detail'
     """
+    exclude = ['expire', 'up_time', 'ast_reporter']
+
 
     # internal function to do the key creation wehn the key is assign first
     def build_pre_define_key(self, key_value_dict):

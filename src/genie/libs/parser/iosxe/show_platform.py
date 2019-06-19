@@ -48,7 +48,7 @@ class ShowVersionSchema(MetaParser):
                     Optional('uptime_this_cp'): str,
                     Optional('system_restarted_at'): str,
                     'system_image': str,
-                    'last_reload_reason': str,
+                    Optional('last_reload_reason'): str,
                     Optional('license_type'): str,
                     Optional('license_level'): str,
                     Optional('next_reload_license_level'): str,
@@ -106,6 +106,8 @@ class ShowVersion(ShowVersionSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show version'
+    exclude = ['system_restarted_at', 'uptime_this_cp', 'uptime']
+
 
     def cli(self,output=None):
         """parsing mechanism: cli
@@ -609,6 +611,8 @@ class Dir(DirSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
     cli_command = 'dir'
+    exclude = ['last_modified_date', 'bytes_free', 'files']
+
 
     def cli(self, output=None):
         """parsing mechanism: cli
@@ -708,6 +712,8 @@ class ShowRedundancy(ShowRedundancySchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show redundancy'
+    exclude = ['available_system_uptime', 'uptime_in_curr_state']
+
 
     def cli(self,output=None):
         """parsing mechanism: cli
@@ -722,8 +728,6 @@ class ShowRedundancy(ShowRedundancySchema):
             out = output
 
         redundancy_dict = {}
-        if out:
-            redundancy_dict['red_sys_info'] = {}
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -732,6 +736,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 r'\s*[Aa]vailable +[Ss]ystem +[Uu]ptime +\= +(?P<available_system_uptime>.+)$')
             m = p1.match(line)
             if m:
+                redundancy_dict.setdefault('red_sys_info', {})
                 redundancy_dict['red_sys_info']['available_system_uptime'] = \
                     m.groupdict()['available_system_uptime']
                 continue
@@ -891,6 +896,192 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
         return redundancy_dict
+
+
+class ShowRedundancyStatesSchema(MetaParser):
+    """Schema for show redundancy states """
+    schema = {
+                'my_state': str,
+                'peer_state': str,
+                'mode': str,
+                'unit': str,
+                'unit_id': int,
+                'redundancy_mode_operational': str,
+                'redundancy_mode_configured': str,
+                'redundancy_state': str,
+                'maintenance_mode': str,
+                'manual_swact': str,
+                Optional('manual_swact_reason'): str,
+                'communications': str,
+                Optional('communications_reason'): str,
+                'client_count': int,
+                'client_notification_tmr_msec': int,
+                'rf_debug_mask': str,
+            }
+
+
+class ShowRedundancyStates(ShowRedundancyStatesSchema):
+    """ Parser for show redundancy states """
+
+    cli_command = 'show redundancy states'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+         
+        # my state = 13 -ACTIVE
+        p1 = re.compile(r'^my +state += +(?P<my_state>[\s\S]+)$')
+
+        # peer state = 8  -STANDBY HOT
+        p2 = re.compile(r'^peer +state += +(?P<peer_state>[\s\S]+)$')
+
+        # Mode = Duplex
+        p3 = re.compile(r'^Mode += +(?P<mode>[\w]+)$')
+
+        # Unit = Primary
+        p4 = re.compile(r'^Unit += +(?P<unit>[\w]+)$')
+
+        # Unit ID = 48
+        p5 = re.compile(r'^Unit +ID += +(?P<unit_id>[\d]+)$')
+
+        # Redundancy Mode (Operational) = sso
+        p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +'
+                         '(?P<redundancy_mode_operational>[\S]+)$')
+
+        # Redundancy Mode (Configured)  = sso
+        p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +'
+                         '(?P<redundancy_mode_configured>[\S]+)$')
+
+        # Redundancy State              = sso
+        p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
+
+        # Maintenance Mode = Disabled
+        p9 = re.compile(r'^Maintenance +Mode += +(?P<maintenance_mode>[\w]+)$')
+
+        # Manual Swact = enabled
+        # Manual Swact = disabled (system is simplex (no peer unit))
+        p10 = re.compile(r'^Manual +Swact += +(?P<manual_swact>[\w]+)'
+                          '( +\((?P<manual_swact_reason>.*)\))?$')
+
+        # Communications = Up
+        # Communications = Down      Reason: Simplex mode
+        p11 = re.compile(r'^Communications += +(?P<communications>[\w]+)'
+                          '( +Reason: +(?P<communications_reason>[\s\S]+))?$')
+
+        # client count = 76
+        p12 = re.compile(r'^client +count += +(?P<client_count>[\d]+)$')
+
+        # client_notification_TMR = 30000 milliseconds
+        p13 = re.compile(r'^client_notification_TMR += +'
+                          '(?P<client_notification_tmr_msec>[\d]+) +milliseconds$')
+
+        # RF debug mask = 0x0
+        p14 = re.compile(r'^RF +debug +mask += +(?P<rf_debug_mask>[\w]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # my state = 13 -ACTIVE 
+            m = p1.match(line)
+            if m:
+                ret_dict['my_state'] = m.groupdict()['my_state']
+                continue
+
+            # peer state = 1  -DISABLED 
+            m = p2.match(line)
+            if m:
+                ret_dict['peer_state'] = m.groupdict()['peer_state']
+                continue
+
+            # Mode = Simplex
+            m = p3.match(line)
+            if m:
+                ret_dict['mode'] = m.groupdict()['mode']
+                continue
+
+            # Unit = Primary
+            m = p4.match(line)
+            if m:
+                ret_dict['unit'] = m.groupdict()['unit']
+                continue
+
+            # Unit ID = 48
+            m = p5.match(line)
+            if m:
+                ret_dict['unit_id'] = int(m.groupdict()['unit_id'])
+                continue
+
+            # Redundancy Mode (Operational) = Non-redundant
+            m = p6.match(line)
+            if m:
+                ret_dict['redundancy_mode_operational'] = \
+                        m.groupdict()['redundancy_mode_operational']
+                continue
+
+            # Redundancy Mode (Configured)  = Non-redundant
+            m = p7.match(line)
+            if m:
+                ret_dict['redundancy_mode_configured'] = \
+                        m.groupdict()['redundancy_mode_configured']
+                continue
+
+            # Redundancy State              = sso
+            m = p8.match(line)
+            if m:
+                ret_dict['redundancy_state'] = m.groupdict()['redundancy_state']
+                continue
+
+            # Maintenance Mode = Disabled
+            m = p9.match(line)
+            if m:
+                ret_dict['maintenance_mode'] = m.groupdict()['maintenance_mode']
+                continue
+
+            # Manual Swact = enabled
+            m = p10.match(line)
+            if m:
+                ret_dict['manual_swact'] = m.groupdict()['manual_swact']
+                reason = m.groupdict()['manual_swact_reason']
+                if reason:
+                    ret_dict['manual_swact_reason'] = reason
+                continue
+
+            # Communications = Up
+            m = p11.match(line)
+            if m:
+                ret_dict['communications'] = m.groupdict()['communications']
+                reason = m.groupdict()['communications_reason']
+                if reason:
+                    ret_dict['communications_reason'] = reason 
+                continue
+
+            # client count = 76
+            m = p12.match(line)
+            if m:
+                ret_dict['client_count'] = int(m.groupdict()['client_count'])
+                continue
+
+            # client_notification_TMR = 30000 milliseconds
+            m = p13.match(line)
+            if m:
+                ret_dict['client_notification_tmr_msec'] = int(
+                    m.groupdict()['client_notification_tmr_msec'])
+                continue
+
+            # RF debug mask = 0x0 
+            m = p14.match(line)
+            if m:
+                ret_dict['rf_debug_mask'] = m.groupdict()['rf_debug_mask']
+                continue
+
+        return ret_dict
 
 
 # =====================
@@ -1285,6 +1476,7 @@ class ShowPlatform(ShowPlatformSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show platform'
+    exclude = ['insert_time']
 
     def cli(self, output=None):
         """parsing mechanism: cli
@@ -2083,6 +2275,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
     """Parser for show platform software status control-processor brief"""
 
     cli_command = 'show platform software status control-processor brief'
+    exclude = ['idle', 'system', 'user', '1_min', '5_min', '15_min', 'free', 'used', 'sirq', 'waiting', 'committed']
 
     def cli(self, output=None):
         if output is None:
@@ -2356,12 +2549,13 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
 
 
 class ShowEnvironmentSchema(MetaParser):
-    """Schema for show environment"""
+    """Schema for show environment
+                  show environment | include {include} """
 
     schema = {
-        'critical_larams': int,
-        'major_alarms': int,
-        'minor_alarms': int,
+        Optional('critical_larams'): int,
+        Optional('major_alarms'): int,
+        Optional('minor_alarms'): int,
         'slot': {
             Any(): {
                 'sensor': {
@@ -2376,13 +2570,18 @@ class ShowEnvironmentSchema(MetaParser):
 
 
 class ShowEnvironment(ShowEnvironmentSchema):
-    """Parser for show environment"""
+    """Parser for show environment
+                  show environment | include {include} """
 
-    cli_command = 'show environment'
+    cli_command = ['show environment', 'show environment | include {include}']
 
-    def cli(self, output=None):
+    def cli(self, include='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2603,7 +2802,8 @@ class ShowVersionRp(ShowVersionRpSchema):
 
 
 class ShowPlatformHardwareSchema(MetaParser):
-    """Schema for show platform hardware qfp active infrastructure bqs queue output default all"""
+    """Schema for show platform hardware qfp active infrastructure bqs queue output default all
+        show platform hardware qfp active infrastructure bqs queue output default interface {interface}"""
 
     schema = {
         Any(): {
@@ -2615,7 +2815,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                     'software_control_info': {
                         'cache_queue_id': str,
                         'wred': str,
-                        'qlimit_bytes': int,
+                        Optional('qlimit_bytes'): int,
+                        Optional('qlimit_pkts'): int,
                         'parent_sid': str,
                         'debug_name': str,
                         'sw_flags': str,
@@ -2639,7 +2840,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'tail_drops_packets': int,
                         'total_enqs_bytes': int,
                         'total_enqs_packets': int,
-                        'queue_depth_bytes': int,
+                        Optional('queue_depth_bytes'): int,
+                        Optional('queue_depth_pkts'): int,
                         'lic_throughput_oversub_drops_bytes': int,
                         'lic_throughput_oversub_drops_packets': int,
                     }
@@ -2650,14 +2852,20 @@ class ShowPlatformHardwareSchema(MetaParser):
 
 
 class ShowPlatformHardware(ShowPlatformHardwareSchema):
-    """Parser for show platform hardware qfp active infrastructure bqs queue output default all"""
+    """Parser for show platform hardware qfp active infrastructure bqs queue output default all
+        show platform hardware qfp active infrastructure bqs queue output default interface {interface}"""
 
-    cli_command = 'show platform hardware qfp active infrastructure bqs queue output default all'
+    cli_command = ['show platform hardware qfp active infrastructure bqs queue output default all',
+        'show platform hardware qfp active infrastructure bqs queue output default interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -2682,12 +2890,14 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                          ' +Name: +(?P<interf_name>[\w\d\/\.\-\:]+)\)$')
 
         #       Software Control Info:
-        p3_1 = re.compile(r'^Software Control Info:$')
+        #  PARQ Software Control Info:
+        p3_1 = re.compile(r'^(PARQ +)?Software Control Info:$')
 
-        #       (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+        #  (cache) queue id: 0x000000a6, wred: 0x88b16ac2, qlimit (bytes): 3281312
+        #  (cache) queue id: 0x00000070, wred: 0xe73cfde0, qlimit (pkts ): 418
         p3_2 = re.compile(r'^\(cache\) +queue +id: +(?P<cache_queue_id>[\w\d]+),'
                          ' +wred: +(?P<wred>[\w\d]+),'
-                         ' +qlimit +\(bytes\): +(?P<qlimit_bytes>\d+)$')
+                         ' +qlimit +\((?P<type>bytes|pkts +)\): +(?P<qlimit>\d+)$')
 
         #       parent_sid: 0x284, debug_name: GigabitEthernet1/0/7
         p4 = re.compile(r'^parent_sid: +(?P<parent_sid>[\w\d]+),'
@@ -2736,7 +2946,8 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                          ' +\(packets\): +(?P<total_enqs_packets>\d+)$')  
 
         #       queue_depth (bytes): 0    
-        p15 = re.compile(r'^queue_depth +\(bytes\): +(?P<queue_depth_bytes>\d+)$')  
+        #       queue_depth (pkts ): 0
+        p15 = re.compile(r'^queue_depth +\((?P<type>bytes|pkts +)\): +(?P<queue_depth>\d+)$')
 
         #       licensed throughput oversubscription drops:
         #                   (bytes): 0                   ,          (packets): 0  
@@ -2780,8 +2991,12 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
                     ['cache_queue_id'] = group['cache_queue_id']
                 ret_dict[interface]['index'][index]['software_control_info']\
                     ['wred'] = group['wred']
-                ret_dict[interface]['index'][index]['software_control_info']\
-                    ['qlimit_bytes'] = int(group['qlimit_bytes'])
+                if group['type'].strip() == 'bytes':
+                    ret_dict[interface]['index'][index]['software_control_info']\
+                        ['qlimit_bytes'] = int(group['qlimit'])
+                else:
+                    ret_dict[interface]['index'][index]['software_control_info']\
+                        ['qlimit_pkts'] = int(group['qlimit'])
                 continue
 
             m = p4.match(line)
@@ -2872,8 +3087,12 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[interface]['index'][index]['statistics']\
-                    ['queue_depth_bytes'] = int(group['queue_depth_bytes'])
+                if group['type'].strip() == 'bytes':
+                    ret_dict[interface]['index'][index]['statistics']\
+                        ['queue_depth_bytes'] = int(group['queue_depth'])
+                else:
+                    ret_dict[interface]['index'][index]['statistics']\
+                        ['queue_depth_pkts'] = int(group['queue_depth'])
                 continue
 
             m = p16.match(line)

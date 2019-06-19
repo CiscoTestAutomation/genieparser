@@ -82,6 +82,7 @@ class ShowLispSession(ShowLispSessionSchema):
     ''' Parser for "show lisp session"'''
 
     cli_command = 'show lisp session'
+    exclude = ['time']
 
     def cli(self, output=None):
         if output is None:
@@ -1538,6 +1539,7 @@ class ShowLispServiceMapCache(ShowLispServiceMapCacheSchema):
     '''Parser for "show lisp all instance-id <instance_id> <service> map-cache"'''
 
     cli_command = 'show lisp all instance-id {instance_id} {service} map-cache'
+    exclude = ['creation_time']
 
     def cli(self, service, instance_id, output=None):
 
@@ -3065,6 +3067,7 @@ class ShowLispServiceStatistics(ShowLispServiceStatisticsSchema):
     '''Parser for "show lisp all instance-id <instance_id> <service> statistics"'''
 
     cli_command = 'show lisp all instance-id {instance_id} {service} statistics'
+    exclude = ['map_register_records_out']
 
     def cli(self, service, instance_id, output=None):
         if output is None:

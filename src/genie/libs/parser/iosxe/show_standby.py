@@ -382,6 +382,8 @@ class ShowStandbyAll(ShowStandbyAllSchema):
     # parsing mechanisms (cli(), yang(), xml()).
 
     cli_command = 'show standby all'
+    exclude = ['next_hello_sent', 'last_state_change', 'standby_expires_in',
+        'statistics', 'num_state_changes', 'active_expires_in']
 
     def cli(self, output=None):
         if output is None:
