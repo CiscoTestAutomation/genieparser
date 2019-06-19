@@ -59,8 +59,8 @@ class ShowContext(ShowContextSchema):
         #                                         Vlan1050,Vlan1051,
         #                                         Vlan1082,Vlan1083...
         p1 = re.compile(
-            r'^(?P<name>(?!,)|\S+) *(?P<class>(?!,)|\S+) *(?P<interface>\S+) *'
-            '(?P<mode>(?!,)|\S+) *(?P<url>(?!,)|\S+)$')
+            r'^(?P<name>(?!,)|\S+)\s*(?P<class>(?!,)|\S+)\s*(?P<interface>\S+)\s*'
+            '(?P<mode>(?!,)|\S+)\s*(?P<url>(?!,)|\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -162,31 +162,31 @@ class ShowContextDetail(ShowContextDetailSchema):
         # Context "pod1", has been created
         # Context "null", is a system resource
         p1 = re.compile(
-            r'^Context +\"(?P<name>\S+)\",* (?P<condition>.*)$')
+            r'^Context +\"(?P<name>\S+)\",*\s(?P<condition>.*)$')
 
         # Config URL: disk0:/pod-context/pod1
         # Config URL: ... null ...
         p2 = re.compile(
-            r'^Config+ URL:+ (?P<url>.*)$')
+            r'^Config\s*URL:\s*(?P<url>.*)$')
 
         # Real Interfaces: Vlan100, Vlan200
         # Real Interfaces:
         p3 = re.compile(
-            r'^Real+ Interfaces: *(?P<real_interfaces>.*)$')
+            r'^Real\s*Interfaces:\s*(?P<real_interfaces>.*)$')
 
         # Mapped Interfaces: Vlan100, Vlan200
         # Mapped Interfaces:
         p4 = re.compile(
-            r'^Mapped+ Interfaces: *(?P<mapped_interfaces>.*)$')
+            r'^Mapped\s*Interfaces:\s*(?P<mapped_interfaces>.*)$')
 
         #  Vlan993, Vlan994, Vlan995, Vlan996, Vlan997, Vlan998, Vlan999
         p5 = re.compile(
-            r'^(?P<interfaces>(\S+,)? *(\S+,)? *(\S+,)? *(\S+,)? *(\S+,)? *(\S+,)? *'
-            '(\S+,)? *(\S+,)? *(\S+,)? *(\S+,)? *(\S+,)? *(\S+,)? *(\S+)? *)$')
+            r'^(?P<interfaces>(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*'
+            '(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+)?\s*)$')
         
         # Class: default, Flags: 0x00000111, ID: 1
         p6 = re.compile(
-            r'^Class: *(?P<class>\S+), *Flags: *(?P<flags>\S+), *ID: *(?P<id>\d+)$')
+            r'^Class: *(?P<class>\S+),\s*Flags:\s*(?P<flags>\S+),\s*ID:\s*(?P<id>\d+)$')
 
 
         for line in out.splitlines():
