@@ -6,7 +6,7 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.asa.show_inventory_allen import ShowInventory
+from genie.libs.parser.asa.show_inventory import ShowInventory
 
 # =============================================
 # Parser for 'show inventory'
