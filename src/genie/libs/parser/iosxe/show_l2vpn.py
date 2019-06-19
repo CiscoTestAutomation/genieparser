@@ -386,11 +386,6 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
             if m:
                 group = m.groupdict()
                 service_instance_id = int(group['service_id'])
-                # final_dict = ret_dict.setdefault('service_instance', {}).\
-                #     setdefault(service_id, {})
-                # final_dict['l2protocol_drop'] = False
-                # final_dict['ce_vlans'] = ''
-                # final_dict['associated_evc'] = ''
                 continue
             
             # Service Instance Type: Static
