@@ -949,7 +949,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                                                  "protocol" ],
                                               index=[0])
 
-            # Building the schema out o fthe parsergen output
+            # Building the schema out of the parsergen output
             if res.entries:
                 for intf, intf_dict in res.entries.items():
                     intf = Common.convert_intf_name(intf)
