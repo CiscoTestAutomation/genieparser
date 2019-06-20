@@ -2473,7 +2473,7 @@ class test_show_bgp_instance_all_vrf_all_process_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpInstanceProcessDetail(device=self.device)
-        parsed_output = obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        parsed_output = obj.parse(vrf_type='vrf', address_family='ipv6 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
@@ -5267,7 +5267,7 @@ class test_show_bgp_instance_all_vrf_all_neighbors_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowBgpInstanceNeighborsDetail(device=self.device)
-        parsed_output = obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        parsed_output = obj.parse(vrf_type='vrf', address_family='ipv6 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
@@ -6673,7 +6673,7 @@ class test_show_bgp_instance_all_vrf_all_summary(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         bgp_instance_summary_obj = ShowBgpInstanceSummary(device=self.device)
-        parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf', af_type='ipv6 unicast')
+        parsed_output = bgp_instance_summary_obj.parse(vrf_type='vrf', address_family='ipv6 unicast')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 # =============================================

@@ -92,7 +92,7 @@
     * Updated ShowIpProtocols to fix parsing issue of unbound variable
 
 --------------------------------------------------------------------------------
-                                inventory
+                                Inventory
 --------------------------------------------------------------------------------
 * ASA
     * Added ShowInventory for:
@@ -110,6 +110,10 @@
         show ip route vrf {vrf} summary
         show ip route summary
 
+* ASA
+    * Added ShowRoute for:
+      show route
+
 --------------------------------------------------------------------------------
                                 L2VPN
 --------------------------------------------------------------------------------
@@ -121,10 +125,3 @@
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
-
---------------------------------------------------------------------------------
-                                Route
---------------------------------------------------------------------------------
-* ASA
-    * Added ShowRoute for:
-      show route

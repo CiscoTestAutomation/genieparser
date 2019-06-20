@@ -64,7 +64,6 @@ def get_parser(command, device):
         for token in lookup._tokens:
             if token in data:
                 data = data[token]
-
         try:
             return _find_parser_cls(device, data), kwargs
         except KeyError:
@@ -100,7 +99,7 @@ def _find_command(command, data, device):
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
-            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) if word == 'vrf' or word == 'rd' else '(?P<{p}>.*)'.format(p=word)
+            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) if word == 'vrf' or word == 'rd' or word == 'instance' or word=='vrf_type' else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
         # Convert | to \|
@@ -108,6 +107,9 @@ def _find_command(command, data, device):
 
         match = re.match(reg, command)
         if match:
+            if device.os not in data[key].keys():
+                continue
+
             # Found a match!
             lookup = Lookup.from_device(device, packages={'parser':parser})
             # Check if all the tokens exists; take the farthest one
