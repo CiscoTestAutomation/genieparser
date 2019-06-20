@@ -245,5 +245,13 @@ class test_show_bfd(unittest.TestCase):
     parsed_output = obj.parse(client='ospf')
     self.assertEqual(parsed_output,self.golden_parsed_output_client_osf_details)
 
+  def test_golden_interface_details(self):
+    self.device = Mock(**self.golden_output)
+    obj = ShowBfdNeighborsDetails(device=self.device)
+    parsed_output = obj.parse(interface='GigabitEthernet0/0/0')
+    self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+
 if __name__ == '__main__':
 		unittest.main()
