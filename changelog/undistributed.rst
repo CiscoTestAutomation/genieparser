@@ -101,9 +101,7 @@ Inventory
 --------------------------------------------------------------------------------
 * ASA
     * Added ShowInventory for:
-<<<<<<< HEAD
         show inventory
-=======
         show inventory
 
 --------------------------------------------------------------------------------
@@ -117,4 +115,3 @@ Inventory
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
->>>>>>> 8bac28b5ca2679305ba0ab2e59c8cbafc6bfec17
