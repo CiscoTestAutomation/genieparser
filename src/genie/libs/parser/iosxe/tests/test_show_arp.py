@@ -20,120 +20,189 @@ from genie.libs.parser.iosxe.show_arp import ShowArp, ShowIpArpSummary,\
 # Parser for 'show arp [vrf <WORD>] <WROD>'
 # ============================================
 class test_show_arp(unittest.TestCase):
-		
-		device = Device(name='aDevice')
-		empty_output = {'execute.return_value': ''}
-		
-		golden_parsed_output = {
-			'interfaces': {
-				'Vlan100': {
-					'ipv4': {
-						'neighbors': {
-							'192.168.234.1': {
-								'age': '-',
-                              	'ip': '192.168.234.1',
-                             	'link_layer_address': '58bf.eab6.2f51',
-                              	'origin': 'static',
-                              	'protocol': 'Internet',
-                              	'type': 'ARPA'},
-               				'192.168.234.2': {'age': '29',
-                              	'ip': '192.168.234.2',
-                              	'link_layer_address': '3820.5672.fc51',
-                              	'origin': 'dynamic',
-                              	'protocol': 'Internet',
-                              	'type': 'ARPA'}
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'interfaces': {
+            'Vlan100': {
+                'ipv4': {
+                    'neighbors': {
+                        '192.168.234.1': {
+                            'age': '-',
+                            'ip': '192.168.234.1',
+                            'link_layer_address': '58bf.eab6.2f51',
+                            'origin': 'static',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'
+                        },
+                        '192.168.234.2': {'age': '29',
+                            'ip': '192.168.234.2',
+                            'link_layer_address': '3820.5672.fc51',
+                            'origin': 'dynamic',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'
                         }
                     }
-                },
-                'Vlan200': {
-                	'ipv4': {
-                		'neighbors': {
-                			'192.168.70.1': {
-                				'age': '-',
-                              	'ip': '192.168.70.1',
-                              	'link_layer_address': '58bf.eab6.2f62',
-                              	'origin': 'static',
-                              	'protocol': 'Internet',
-                              	'type': 'ARPA'}
+                }
+            },
+            'Vlan200': {
+                'ipv4': {
+                    'neighbors': {
+                        '192.168.70.1': {
+                            'age': '-',
+                            'ip': '192.168.70.1',
+                            'link_layer_address': '58bf.eab6.2f62',
+                            'origin': 'static',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'
                         }
                     }
                 }
             }
         }
+    }
 
-		golden_output = {'execute.return_value': '''\
-				Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-				Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
-				Internet  192.168.234.2          29   3820.5672.fc51  ARPA   Vlan100
-				Internet  192.168.70.1            -   58bf.eab6.2f62  ARPA   Vlan200
-		'''}
-		
-		golden_parsed_output_1 = {
-			'interfaces': {
-				'GigabitEthernet0/0': {
-					'ipv4': {
-						'neighbors': {
-							'10.1.18.1': {
-								'age': '45',
-                                'ip': '10.1.18.1',
-                                'link_layer_address': '0012.7f57.ac80',
-                                'origin': 'dynamic',
-                                'protocol': 'Internet',
-                                'type': 'ARPA'},
-		                  	'10.1.18.122': {
-		                  		'age': '-',
-                              	'ip': '10.1.18.122',
-                              	'link_layer_address': '58bf.eab6.2f00',
-                              	'origin': 'static',
-                              	'protocol': 'Internet',
-                              	'type': 'ARPA'},
-		                  	'10.1.18.13': {
-		                  		'age': '142',
-                             	'ip': '10.1.18.13',
-                             	'link_layer_address': '00b0.c215.441d',
-                             	'origin': 'dynamic',
-                             	'protocol': 'Internet',
-                             	'type': 'ARPA'},
-		                  	'10.1.18.254': {
-		                  		'age': '247',
-                              	'ip': '10.1.18.254',
-                              	'link_layer_address': '5cf3.fc25.ab76',
-                              	'origin': 'dynamic',
-                              	'protocol': 'Internet',
-                              	'type': 'ARPA'}
-                        }
+    golden_output = {'execute.return_value': '''
+        Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+        Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
+        Internet  192.168.234.2          29   3820.5672.fc51  ARPA   Vlan100
+        Internet  192.168.70.1            -   58bf.eab6.2f62  ARPA   Vlan200
+    '''}
+    
+    golden_parsed_output_1 = {
+        'interfaces': {
+            'GigabitEthernet0/0': {
+                'ipv4': {
+                    'neighbors': {
+                        '10.1.18.1': {
+                            'age': '45',
+                            'ip': '10.1.18.1',
+                            'link_layer_address': '0012.7f57.ac80',
+                            'origin': 'dynamic',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'},
+                        '10.1.18.122': {
+                            'age': '-',
+                            'ip': '10.1.18.122',
+                            'link_layer_address': '58bf.eab6.2f00',
+                            'origin': 'static',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'},
+                        '10.1.18.13': {
+                            'age': '142',
+                            'ip': '10.1.18.13',
+                            'link_layer_address': '00b0.c215.441d',
+                            'origin': 'dynamic',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'},
+                        '10.1.18.254': {
+                            'age': '247',
+                            'ip': '10.1.18.254',
+                            'link_layer_address': '5cf3.fc25.ab76',
+                            'origin': 'dynamic',
+                            'protocol': 'Internet',
+                            'type': 'ARPA'}
                     }
                 }
             }
         }
+    }
 
-		golden_output_1 = {'execute.return_value': '''\
-				Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-				Internet  10.1.18.122             -   58bf.eab6.2f00  ARPA   GigabitEthernet0/0
-				Internet  10.1.18.1              45   0012.7f57.ac80  ARPA   GigabitEthernet0/0
-				Internet  10.1.18.13            142   00b0.c215.441d  ARPA   GigabitEthernet0/0
-				Internet  10.1.18.254           247   5cf3.fc25.ab76  ARPA   GigabitEthernet0/0
+    golden_output_1 = {'execute.return_value': '''
+        Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+        Internet  10.1.18.122             -   58bf.eab6.2f00  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.1              45   0012.7f57.ac80  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.13            142   00b0.c215.441d  ARPA   GigabitEthernet0/0
+        Internet  10.1.18.254           247   5cf3.fc25.ab76  ARPA   GigabitEthernet0/0
+    '''}
 
-		'''}
+    golden_parsed_output_2 = {
+        "global_static_table": {
+            "106.162.197.93": {
+                "ip_address": "106.162.197.93",
+                "mac_address": "fa16.3e95.2218",
+                "encap_type": "ARPA",
+                "age": "-",
+                "protocol": "Internet"
+            }
+        },
+        "interfaces": {
+            "GigabitEthernet2": {
+                "ipv4": {
+                    "neighbors": {
+                        "106.162.197.94": {
+                            "ip": "106.162.197.94",
+                            "link_layer_address": "fa16.3e0b.9fd6",
+                            "type": "ARPA",
+                            "origin": "static",
+                            "age": "-",
+                            "protocol": "Internet"
+                        }
+                    }
+                }
+            },
+            "GigabitEthernet4": {
+                "ipv4": {
+                    "neighbors": {
+                        "106.162.197.97": {
+                            "ip": "106.162.197.97",
+                            "link_layer_address": "fa16.3e07.3ea1",
+                            "type": "ARPA",
+                            "origin": "dynamic",
+                            "age": "18",
+                            "protocol": "Internet"
+                        },
+                        "106.162.197.98": {
+                            "ip": "106.162.197.98",
+                            "link_layer_address": "fa16.3e4c.517e",
+                            "type": "ARPA",
+                            "origin": "static",
+                            "age": "-",
+                            "protocol": "Internet"
+                        }
+                    }
+                }
+            },
+        },
+    }
 
+    golden_output_2 = {'execute.return_value': '''
+        PE1#show arp
+        Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+        Time source is NTP, 00:41:33.830 JST Thu Jun 20 2019
 
-		def test_empty(self):
-				self.device1 = Mock(**self.empty_output)
-				obj = ShowArp(device=self.device1)
-				with self.assertRaises(SchemaEmptyParserError):
-						parsed_output = obj.parse()
+        Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+        Internet  106.162.197.93          -   fa16.3e95.2218  ARPA  
+        Internet  106.162.197.94          -   fa16.3e0b.9fd6  ARPA   GigabitEthernet2
+        Internet  106.162.197.97         18   fa16.3e07.3ea1  ARPA   GigabitEthernet4
+        Internet  106.162.197.98          -   fa16.3e4c.517e  ARPA   GigabitEthernet4  
+    '''}
 
-		def test_golden(self):
-				self.device = Mock(**self.golden_output)
-				obj = ShowArp(device=self.device)
-				parsed_output = obj.parse()
-				self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowArp(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
-		def test_golden_1(self):
-				self.device = Mock(**self.golden_output_1)
-				obj = ShowArp(device=self.device)
-				parsed_output = obj.parse(vrf='Mgmt-vrf', intf_or_ip='GigabitEthernet0/0')
-				self.assertEqual(parsed_output,self.golden_parsed_output_1)
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowArp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowArp(device=self.device)
+        parsed_output = obj.parse(vrf='Mgmt-vrf', intf_or_ip='GigabitEthernet0/0')
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowArp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 #=========================================================
 # Unit test for show ip arp

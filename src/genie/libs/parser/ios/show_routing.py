@@ -9,7 +9,8 @@ from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor as ShowI
                                                  ShowIpv6Route as ShowIpv6Route_iosxe,\
                                                  ShowIpv6RouteUpdated as ShowIpv6RouteUpdated_iosxe,\
                                                  ShowIpRouteWord as ShowIpRouteWord_iosxe,\
-                                                 ShowIpv6RouteWord as ShowIpv6RouteWord_iosxe
+                                                 ShowIpv6RouteWord as ShowIpv6RouteWord_iosxe,\
+                                                 ShowIpRouteSummary as ShowIpRouteSummary_iosxe
 
 class ShowIpRouteDistributor(ShowIpRouteDistributor_iosxe):
     """distributor class for show ip route"""
@@ -50,4 +51,10 @@ class ShowIpv6RouteWord(ShowIpv6RouteWord_iosxe):
     """Parser for :
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
+    pass
+
+class ShowIpRouteSummary(ShowIpRouteSummary_iosxe):
+    """Parser for :
+       show ip route summary
+       show ip route vrf <vrf> summary"""
     pass

@@ -6,6 +6,12 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpInterfaceBrief short name issue
+
+--------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
 * IOSXE
@@ -33,6 +39,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
+    * Update ShowArp to support global static table
 * ASA
     * Added ShowArp for:
         show arp
@@ -64,6 +71,11 @@
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
+* IOSXR
+    * Updated ShowBgpInstanceProcessDetail, ShowBgpInstanceNeighborsDetail,
+        ShowBgpInstanceNeighborsAdvertisedRoutes, ShowBgpInstanceNeighborsReceivedRoutes,
+        ShowBgpInstanceNeighborsRoutes, ShowBgpInstanceSummary, and ShowBgpInstanceAllAll
+        to support custom {vrf}, {instance}, and {neighbor}
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -85,3 +97,28 @@ Inventory
 * ASA
     * Added ShowInventory for:
         show inventory
+
+--------------------------------------------------------------------------------
+                            routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+* IOS
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+
+--------------------------------------------------------------------------------
+                                L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowEthernetServiceInstanceStats for:
+        show ethernet service instance id {service_instance_id} interface {interface} stats
+    * Added ShowEthernetServiceInstance for:
+        show ethernet service instance
+    * Updated ShowEthernetServiceInstanceDetailSchema
+    * Added ShowEthernetServiceInstanceDetail for:
+        show ethernet service instance id {service_instance_id} interface {interface} detail
+
