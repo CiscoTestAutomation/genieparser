@@ -407,7 +407,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output = {
     'service_instance': {
         2051: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/3': {
                     'type': 'Static',
                     'description': 'xxx',
@@ -428,7 +428,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         2052: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/3': {
                     'type': 'Static',
                     'description': 'xxx',
@@ -449,7 +449,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         2053: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/3': {
                     'type': 'Static',
                     'description': 'xxx',
@@ -470,7 +470,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         2054: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/3': {
                     'type': 'Static',
                     'description': 'xxx',
@@ -491,7 +491,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         2055: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/3': {
                     'type': 'Static',
                     'description': 'xxx',
@@ -512,7 +512,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         400: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/2': {
                     'type': 'Static',
                     'description': 'xxx',
@@ -629,7 +629,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_interface = {
         'service_instance': {
             1: {
-                'associated_interface': {
+                'interfaces': {
                     'Ethernet0/0': {
                         'type': 'static',
                         'intiators': 'unclassified vlan',
@@ -649,7 +649,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                     },
                 },
             2: {
-                'associated_interface': {
+                'interfaces': {
                     'Ethernet0/0': {
                         'type': 'static',
                         'intiators': 'unclassified vlan',
@@ -669,7 +669,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                     },
                 },
             3: {
-                'associated_interface': {
+                'interfaces': {
                     'Ethernet0/0': {
                         'type': 'static',
                         'intiators': 'unclassified vlan',
@@ -775,7 +775,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_id_interface = {
     'service_instance': {
         4000: {
-            'associated_interface': {
+            'interfaces': {
                 'GigabitEthernet0/0/0': {
                     'type': 'Trunk',
                     'l2protocol_drop': True,
@@ -791,17 +791,17 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                         },
                     'micro_block_type': {
                         'Bridge-domain': {
-                            'bridge_domain': ['2-21'],
+                            'bridge_domain': '2-21',
                             },
                         'L2Mcast': {
-                            'l2_multicast_gid': [9],
+                            'l2_multicast_gid': 9,
                             },
                         'dhcp_snoop': {
-                            'l2_multicast_gid': [9],
+                            'l2_multicast_gid': 9,
                             },
                         'PPPoE IA UBLOCK': {
-                            'enable': [0],
-                            'format_type': [0],
+                            'enable': 0,
+                            'format_type': 0,
                             },
                         },
                     },
@@ -826,7 +826,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_id_interface_2 = {
     'service_instance': {
         100: {
-            'associated_interface': {
+            'interfaces': {
                 'Gig3/0/1': {
                     'l2_acl': {
                         'inbound': 'test-acl',
@@ -843,6 +843,29 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         },
     }
 
+    golden_output_storm_control = {'execute.return_value':'''
+     Microblock type: Storm-Control
+        storm-control unicast cir 8005
+        storm-control broadcast cir 8005
+        storm-control multicast cir 8005
+    '''}
+    golden_parsed_output_storm_control = {
+    'service_instance': {
+        151: {
+            'interfaces': {
+                'gi8': {
+                    'micro_block_type': {
+                        'Storm-Control': {
+                            'storm_control_unicast_cir': '8005',
+                            'storm_control_broadcast_cir': '8005',
+                            'storm_control_multicast_cir': '8005',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
@@ -877,6 +900,13 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         parsed_output = platform_obj.parse(service_instance_id=100,interface='gig2/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output_id_interface_2)
 
+    def test_golden_storm_control(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_storm_control)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(service_instance_id=151,interface='gi8')
+        self.assertEqual(parsed_output, self.golden_parsed_output_storm_control)
+
 class test_show_ethernet_service_instance(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -893,31 +923,22 @@ class test_show_ethernet_service_instance(unittest.TestCase):
     golden_parsed_output_1 = {
     'service_instance': {
         501: {
-            'associated_interface': {
+            'interfaces': {
                 'TenGigabitEthernet0/3/0': {
-                    'l2protocol_drop': False,
-                    'associated_evc': '',
                     'state': 'Up',
                     'type': 'Static',
-                    'ce_vlans': '',
                     },
                 'TenGigabitEthernet0/1/0': {
-                    'l2protocol_drop': False,
-                    'associated_evc': '',
                     'state': 'Up',
                     'type': 'Static',
-                    'ce_vlans': '',
                     },
                 },
             },
         502: {
-            'associated_interface': {
+            'interfaces': {
                 'TenGigabitEthernet0/3/0': {
-                    'l2protocol_drop': False,
-                    'associated_evc': '',
                     'state': 'Up',
                     'type': 'Static',
-                    'ce_vlans': '',
                     },
                 },
             },

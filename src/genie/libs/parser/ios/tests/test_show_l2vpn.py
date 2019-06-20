@@ -1030,7 +1030,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output = {
     'service_instance': {
         1: {
-            'associated_interface': {
+            'interfaces': {
                 'Ethernet0/0': {
                     'type': 'Dynamic',
                     'intiators': 'unclassified vlan',
@@ -1050,7 +1050,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         2: {
-            'associated_interface': {
+            'interfaces': {
                 'Ethernet0/0': {
                     'type': 'Dynamic',
                     'intiators': 'unclassified vlan',
@@ -1109,7 +1109,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_2 = {
     'service_instance': {
         400: {
-            'associated_interface': {
+            'interfaces': {
                 'Ethernet1/3': {
                     'associated_evc': '50',
                     'ce_vlans': '30',
@@ -1143,7 +1143,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_interface = {
     'service_instance': {
         1: {
-            'associated_interface': {
+            'interfaces': {
                 'Ethernet0/0': {
                     'type': 'static',
                     'intiators': 'unclassified vlan',
@@ -1163,7 +1163,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         2: {
-            'associated_interface': {
+            'interfaces': {
                 'Ethernet0/0': {
                     'type': 'static',
                     'intiators': 'unclassified vlan',
@@ -1183,7 +1183,7 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
                 },
             },
         3: {
-            'associated_interface': {
+            'interfaces': {
                 'Ethernet0/0': {
                     'type': 'static',
                     'intiators': 'unclassified vlan',

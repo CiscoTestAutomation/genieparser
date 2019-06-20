@@ -241,7 +241,7 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
     schema = {
         'service_instance': {
             Any(): {
-                'associated_interface': {
+                'interfaces': {
                     Any(): {
                         Optional('type'): str,
                         Optional('description'): str,
@@ -262,7 +262,7 @@ class ShowEthernetServiceInstanceDetailSchema(MetaParser):
                         },
                         Optional('micro_block_type'): {
                             Any(): {
-                                Any(): list
+                                Any(): Any()
                             }
                         },
                         Optional('l2_acl'): {
@@ -409,7 +409,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 group = m.groupdict()
                 final_dict = ret_dict.setdefault('service_instance', {}).\
                     setdefault(service_instance_id, {}).\
-                    setdefault('associated_interface', {}).\
+                    setdefault('interfaces', {}).\
                     setdefault(group['associated_interface'], sub_dict)
                 
                 continue
@@ -491,14 +491,12 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 
                 final_dict = ret_dict.setdefault('service_instance', {}).\
                     setdefault(service_instance_id, {}).\
-                    setdefault('associated_interface', {}).\
+                    setdefault('interfaces', {}).\
                     setdefault(group['associated_interface'], sub_dict)
-
-                sub_dict['l2protocol_drop'] = False
-                sub_dict['associated_evc'] = ''
                 sub_dict['state'] = group['state']
                 sub_dict['type'] = group['service_instance_type']
-                sub_dict['ce_vlans'] = '' if not group['vlans'] else group['vlans'] 
+                if group['vlans']:
+                    sub_dict['ce_vlans'] = group['vlans'] 
 
                 continue
             
@@ -508,7 +506,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 if not final_dict:
                     final_dict = ret_dict.setdefault('service_instance', {}).\
                         setdefault(service_instance_id, {}).\
-                        setdefault('associated_interface', {}).\
+                        setdefault('interfaces', {}).\
                         setdefault(interface, sub_dict)
 
                 group = m.groupdict()
@@ -523,8 +521,8 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 group = m.groupdict()
                 key = group['key'].lower().replace(' ', '_').\
                     replace('-', '_')
-                storm_control_list =  micro_block_dict.setdefault(key, [])
-                storm_control_list.append(int(group['val']))
+                storm_control_list =  micro_block_dict.\
+                    setdefault(key, group['val'])
                 continue
 
             # Load for five secs: 2%/0%; one minute: 5%; five minutes: 4%
@@ -558,12 +556,11 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                 group = m.groupdict()
                 key = group['key'].lower().replace(' ', '_').\
                     replace('-', '_')
-                micro_block_list = micro_block_dict.setdefault(key, [])
                 val = group['val']
                 try:
-                    micro_block_list.append(int(val))
+                    micro_block_dict.update({key : int(val)})
                 except ValueError:
-                    micro_block_list.append(val)
+                    micro_block_dict.update({key : val})
                 continue
 
         return ret_dict
