@@ -2321,7 +2321,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         show bgp vrf <vrf> all neighbors
         parser class - implements detail parsing mechanisms for cli and yang output.
         """
-    cli_command = 'show bgp vrf {vrf} {address_family} neighbors {neighbor}'
+    cli_command = ['show bgp vrf {vrf} {address_family} neighbors','show bgp vrf {vrf} {address_family} neighbors {neighbor}']
     exclude = [
       'up_time',
       'retry_time',
@@ -2345,9 +2345,13 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
     def cli(self, vrf='all', address_family='all', neighbor='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf,
+            if neighbor:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf,
                                                               address_family=address_family,
                                                               neighbor=neighbor))
+            else:
+                out = self.device.execute(self.cli_command[0].format(vrf=vrf,
+                                                              address_family=address_family))
         else:
             out = output
 
