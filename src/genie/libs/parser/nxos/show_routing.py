@@ -72,8 +72,8 @@ class ShowRoutingVrfAllSchema(MetaParser):
 
 
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
-    """Parser for show ip routing vrf all
-                show ip routing vrf <vrf>"""
+    """Parser for show routing ip vrf all
+                show routing ip vrf <vrf>"""
     cli_command = ['show routing {ip} vrf all', 'show routing vrf all', 'show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']
     exclude = ['uptime']
     def cli(self, ip='', vrf='', output=None):
@@ -275,8 +275,8 @@ class ShowRouting(ShowRoutingVrfAll):
 
 
 class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
-    """Parser for show ipv6 routing vrf all,
-            show  routing ipv6 vrf <vrf>"""
+    """Parser for show routing ipv6 vrf all,
+            show routing ipv6 vrf <vrf>"""
 
     exclude = [
         'uptime']
