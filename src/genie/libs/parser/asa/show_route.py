@@ -180,7 +180,7 @@ class ShowRoute(ShowRouteSchema):
                                 dict_routes.update({'metric': metric})
                             else:
                                 dict_routes.update \
-                                ({'route_preference': route_preference})
+                                ({'route_preference': int(routepreference)})
                         if groups['next_hop']:
                             if groups['network'] and groups['next_hop']:
                                 index = 1
@@ -252,7 +252,7 @@ class ShowRoute(ShowRouteSchema):
                                 dict_routes.update({'metric': metric})
                             else:
                                 dict_routes.update \
-                                ({'route_preference': route_preference})                
+                                ({'route_preference': int(routepreference)})            
                         outgoing_interface_name = groups['name']
                         dict_via = dict_routes.setdefault('next_hop', {}). \
                         setdefault('outgoing_interface_name', {}). \
@@ -315,7 +315,7 @@ class ShowRoute(ShowRouteSchema):
                                 dict_routes.update({'metric': metric})
                             else:
                                 dict_routes.update \
-                                ({'route_preference': route_preference})
+                                ({'route_preference': int(routepreference)})
                 continue
 
         return ret_dict

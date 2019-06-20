@@ -31,6 +31,7 @@ class test_show_ip_route(unittest.TestCase):
                                 'route': '0.0.0.0/0',
                                 'source_protocol_codes': 'S',
                                 'source_protocol': 'static',
+                                'route_preference': 10, 
                                 'next_hop': {
                                     'next_hop_list': {
                                         1: {
@@ -182,7 +183,7 @@ class test_show_ip_route(unittest.TestCase):
         Gateway of last resort is 10.16.251.1 to network 0.0.0.0
         
 
-        S* 0.0.0.0 0.0.0.0 via 10.16.251.1, outside
+        S* 0.0.0.0 0.0.0.0 [10] via 10.16.251.1, outside
                            via 10.16.251.2, pod1000
         S 0.0.0.1 0.0.0.0 [10/5] via 10.16.255.1, outside
                                 via 10.16.255.2, pod1001
@@ -198,7 +199,7 @@ class test_show_ip_route(unittest.TestCase):
                                 is directly connected, pod3000
           '''}
 
-    def test_empty_1(self):
+    def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRoute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
