@@ -949,12 +949,13 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                                                  "protocol" ],
                                               index=[0])
 
-            # Building the schema out o fthe parsergen output
+            # Building the schema out of the parsergen output
             if res.entries:
-                for intf in res.entries:
-                    del res.entries[intf]['Interface']
+                for intf, intf_dict in res.entries.items():
+                    intf = Common.convert_intf_name(intf)
+                    del intf_dict['Interface']
+                    parsed_dict.setdefault('interface', {}).update({intf: intf_dict})
 
-                parsed_dict['interface'] = res.entries
         return (parsed_dict)
 
     def yang(self):

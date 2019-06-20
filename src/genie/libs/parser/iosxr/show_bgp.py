@@ -988,8 +988,8 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
             },
         }
 
-class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
 
+class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
     """Parser for:
         show bgp instance all all all process detail
         show bgp instance all vrf all process detail
@@ -1001,35 +1001,49 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
         - vrf_type
 
     """
-    cli_command = ['show bgp instance all {vrf_type} all process detail',
-        'show bgp instance all {vrf_type} all {af_type} process detail']
-    exclude = ['alloc', 'free', 'sent_notifications', 'bgp_table_version',
-        'main_table_version', 'table_version_synced_to_rib', 'table_version_acked_by_rib',
-        'triggers', 'tbl_ver', 'ver', 'node', 'total_prefixes_scanned', 'sent_updates',
-        'allocated', 'freed', 'received_updates', 'num_of_scan_segments', 'state',
-        'restart_count', 'memory_used', 'number']
+    cli_command = ['show bgp instance {instance} all all process detail',
+                   'show bgp instance {instance} {vrf_type} {vrf} process detail',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} process detail']
 
-    def cli(self, vrf_type, af_type='',output=None):
+    exclude = ['alloc', 'free', 'sent_notifications', 'bgp_table_version',
+               'main_table_version', 'table_version_synced_to_rib',
+               'table_version_acked_by_rib',
+               'triggers', 'tbl_ver', 'ver', 'node', 'total_prefixes_scanned',
+               'sent_updates',
+               'allocated', 'freed', 'received_updates', 'num_of_scan_segments', 'state',
+               'restart_count', 'memory_used', 'number']
+
+    def cli(self, vrf_type='all', instance='all', vrf='all', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            if vrf_type and af_type:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            if vrf_type == 'all':
+                out = self.device.execute(self.cli_command[0].format(instance=instance))
             else:
-                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
+                if address_family:
+                    out = self.device.execute(
+                        self.cli_command[2].format(instance=instance,
+                                                   address_family=address_family,
+                                                   vrf_type=vrf_type,
+                                                   vrf=vrf))
+                else:
+                    out = self.device.execute(
+                        self.cli_command[1].format(instance=instance,
+                                                   vrf_type=vrf_type,
+                                                   vrf=vrf))
         else:
             out = output
 
         # Init dict
         ret_dict = {}
-        
+
         # Seperate message logging pool and bmp pool
         flag = None
-        
+
         # Init vars
         vrf = 'default'
-        
+        instance = 'default'
         for line in out.splitlines():
             line = line.strip()
 
@@ -1056,6 +1070,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             p1_1 = re.compile(r'^\s*VRF: +(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p1_1.match(line)
             if m:
+                ret_dict.setdefault('instance', {}).setdefault(instance, {})
                 vrf = str(m.groupdict()['vrf'])
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
@@ -1065,17 +1080,41 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 flag = None
 
                 # Init key values to default - overwritten below if configured
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['always_compare_med'] = False
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bestpath_compare_routerid'] = False
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bestpath_cost_community_ignore'] = False
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bestpath_med_missing_at_worst'] = False
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['enforce_first_as'] = False
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['fast_external_fallover'] = False
+                continue
+            # BGP Process Information: VRF VRF1
+            p1_1_1 = re.compile(r'^BGP +Process +Information: +VRF +(?P<vrf>[\w_]+)$')
+            m = p1_1_1.match(line)
+            if m:
+                vrf = str(m.groupdict()['vrf'])
+                ret_dict.setdefault('instance', {}).setdefault(instance, {}).setdefault(
+                    'vrf', {}).setdefault(vrf, {})
+                # seperate message logging pool and bmp pool
+                flag = None
+
+                # Init key values to default - overwritten below if configured
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['always_compare_med'] = False
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['bestpath_compare_routerid'] = False
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['bestpath_cost_community_ignore'] = False
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['bestpath_med_missing_at_worst'] = False
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['enforce_first_as'] = False
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['fast_external_fallover'] = False
                 continue
 
@@ -1086,27 +1125,30 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
 
-                ret_dict['instance'][instance]['vrf'][vrf]['route_distinguisher'] = route_distinguisher
+                ret_dict['instance'][instance]['vrf'][vrf][
+                    'route_distinguisher'] = route_distinguisher
                 continue
-            
+
             # BGP is operating in STANDALONE mode
             p2 = re.compile(r'BGP *is *operating *in *'
-                             '(?P<operation_mode>\w+) *mode$')
+                            '(?P<operation_mode>\w+) *mode$')
             m = p2.match(line)
             if m:
                 operation_mode = m.groupdict()['operation_mode'].lower()
-
-                ret_dict['instance'][instance]['vrf'][vrf]['operation_mode'] = operation_mode
+                ret_dict.setdefault('instance', {}).setdefault(instance, {}).setdefault(
+                    'vrf', {}).setdefault(vrf, {})
+                ret_dict['instance'][instance]['vrf'][vrf][
+                    'operation_mode'] = operation_mode
                 continue
 
             # Autonomous System number format: ASPLAIN
             p3 = re.compile(r'^Autonomous *System *number *format: *'
-                             '(?P<as_format>[a-zA-Z]+)$')
+                            '(?P<as_format>[a-zA-Z]+)$')
             m = p3.match(line)
             if m:
                 as_format = m.groupdict()['as_format']
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['as_system_number_format'] = as_format
                 continue
 
@@ -1116,40 +1158,40 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 as_number = int(m.groupdict()['as_number'])
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['as_number'] = as_number
                 continue
 
             # Router ID: 10.4.1.1 (manually configured)
             p5 = re.compile(r'^Router *ID: *(?P<router_id>[\w\.\:]+) *'
-                             '(\([\w\s]+\))?$')
+                            '(\([\w\s]+\))?$')
             m = p5.match(line)
             if m:
                 router_id = m.groupdict()['router_id']
-                
-                ret_dict['instance'][instance]['vrf'][vrf]\
+
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['router_id'] = router_id
                 continue
 
             # Default Cluster ID: 10.4.1.1
             # Default Cluster ID: 10 (manually configured)
             p6_1 = re.compile(r'^Default *Cluster *ID: *'
-                             '(?P<default_cluster_id>[\w\.\:]+) *'
-                             '(\([\w\s\:\.\,]+\))?$')
+                              '(?P<default_cluster_id>[\w\.\:]+) *'
+                              '(\([\w\s\:\.\,]+\))?$')
             m = p6_1.match(line)
             if m:
                 default_cluster_id = m.groupdict()['default_cluster_id']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['default_cluster_id'] = default_cluster_id
                 continue
 
             # Active Cluster IDs:  10.4.1.1
             p6_2 = re.compile(r'^Active *Cluster *IDs: *'
-                             '(?P<active_cluster_id>[\w\.\:]+)$')
+                              '(?P<active_cluster_id>[\w\.\:]+)$')
             m = p6_2.match(line)
             if m:
                 active_cluster_id = m.groupdict()['active_cluster_id']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['active_cluster_id'] = active_cluster_id
                 continue
 
@@ -1157,7 +1199,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             p7_1 = re.compile(r'^Always compare MED is enabled$')
             m = p7_1.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['always_compare_med'] = True
                 continue
 
@@ -1165,7 +1207,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             p7_2 = re.compile(r'^Comparing router ID for eBGP paths$')
             m = p7_2.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bestpath_compare_routerid'] = True
                 continue
 
@@ -1173,7 +1215,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             p7_4 = re.compile(r'^Treating missing MED as worst$')
             m = p7_4.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bestpath_med_missing_at_worst'] = True
                 continue
 
@@ -1181,57 +1223,57 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             p8 = re.compile(r'^Fast +external +fallover +enabled$')
             m = p8.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['fast_external_fallover'] = True
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['fast_external_fallover'] = True
                 continue
 
-            #Platform RLIMIT max: 2147483648 bytes
+            # Platform RLIMIT max: 2147483648 bytes
             p9 = re.compile(r'^Platform *RLIMIT *max: *'
-                             '(?P<platform_rlimit_max>[0-9\,]+) *bytes$')
+                            '(?P<platform_rlimit_max>[0-9\,]+) *bytes$')
             m = p9.match(line)
             if m:
                 platform_rlimit_max = int(m.groupdict()['platform_rlimit_max'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['platform_rlimit_max'] = platform_rlimit_max 
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['platform_rlimit_max'] = platform_rlimit_max
                 continue
 
-            #Maximum limit for BMP buffer size: 409 MB
+            # Maximum limit for BMP buffer size: 409 MB
             p10 = re.compile(r'^Maximum +limit +for +BMP +buffer +size: *'
-                              '(?P<size>[a-zA-Z0-9]+) *MB$')
+                             '(?P<size>[a-zA-Z0-9]+) *MB$')
             m = p10.match(line)
             if m:
                 size = int(m.groupdict()['size'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['max_limit_for_bmp_buffer_size'] = size
                 continue
 
-            #Default value for BMP buffer size: 307 MB
+            # Default value for BMP buffer size: 307 MB
             p11 = re.compile(r'^Default *value *for *BMP *buffer *size: *'
-                              '(?P<size>[a-zA-Z0-9]+) *MB$')
+                             '(?P<size>[a-zA-Z0-9]+) *MB$')
             m = p11.match(line)
             if m:
                 size = int(m.groupdict()['size'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['default_value_for_bmp_buffer_size'] = size
                 continue
 
-            #Current limit for BMP buffer size: 307 MB
+            # Current limit for BMP buffer size: 307 MB
             p12 = re.compile(r'^Current *limit *for *BMP *buffer *size: *'
-                              '(?P<size>[a-zA-Z0-9]+) *MB$')
+                             '(?P<size>[a-zA-Z0-9]+) *MB$')
             m = p12.match(line)
             if m:
                 size = int(m.groupdict()['size'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['current_limit_for_bmp_buffer_size'] = size
                 continue
 
-            #Current utilization of BMP buffer limit: 0 B
+            # Current utilization of BMP buffer limit: 0 B
             p13 = re.compile(r'^Current *utilization *of *BMP *buffer *'
-                              'limit: *(?P<limit>[a-zA-Z0-9]+) *B$')
+                             'limit: *(?P<limit>[a-zA-Z0-9]+) *B$')
             m = p13.match(line)
             if m:
                 limit = int(m.groupdict()['limit'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['current_utilization_of_bmp_buffer_limit'] = limit
                 continue
 
@@ -1241,10 +1283,10 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 nbr_logging = m.groupdict()['nbr_logging']
                 if nbr_logging == 'enabled':
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['log_neighbor_changes'] = True
                 else:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['log_neighbor_changes'] = False
                 continue
 
@@ -1254,29 +1296,29 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 as_enabled = m.groupdict()['as_enabled']
                 if as_enabled == 'enabled':
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['enforce_first_as'] = True
                 else:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['enforce_first_as'] = False
                 continue
 
-            #Default local preference: 100
+            # Default local preference: 100
             p16 = re.compile(r'^Default *local *preference: *'
-                              '(?P<preference>[0-9]+)$')
+                             '(?P<preference>[0-9]+)$')
             m = p16.match(line)
             if m:
                 default_local_preference = int(m.groupdict()['preference'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['default_local_preference'] = default_local_preference
                 continue
 
-            #Default keepalive: 60
+            # Default keepalive: 60
             p17 = re.compile(r'^Default *keepalive: *(?P<keepalive>[0-9]+)$')
             m = p17.match(line)
             if m:
                 default_keepalive = int(m.groupdict()['keepalive'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['default_keepalive'] = default_keepalive
                 continue
 
@@ -1286,64 +1328,64 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 status = m.groupdict()['status']
                 if status == 'enabled':
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['non_stop_routing'] = True
                 else:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['non_stop_routing'] = False
                 continue
-            
-            #Update delay: 120
+
+            # Update delay: 120
             p19 = re.compile(r'^Update *delay: *(?P<update_delay>[0-9]+)$')
             m = p19.match(line)
             if m:
                 update_delay = int(m.groupdict()['update_delay'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['update_delay'] = update_delay
                 continue
 
-            #Generic scan interval: 60 
+            # Generic scan interval: 60
             p20 = re.compile(r'^Generic *scan *interval: *'
-                              '(?P<scan_interval>[0-9]+)$')
+                             '(?P<scan_interval>[0-9]+)$')
             m = p20.match(line)
             if m:
                 scan_interval = int(m.groupdict()['scan_interval'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['generic_scan_interval'] = scan_interval
                 continue
 
-            #BGP Speaker process: 0, Node: node0_0_CPU0
+            # BGP Speaker process: 0, Node: node0_0_CPU0
             p21 = re.compile(r'^BGP *Speaker *process: *'
-                              '(?P<speaker>\w+), +Node: +(?P<node>\w+)$')
+                             '(?P<speaker>\w+), +Node: +(?P<node>\w+)$')
             m = p21.match(line)
             if m:
                 speaker = int(m.groupdict()['speaker'])
                 node = m.groupdict()['node']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bgp_speaker_process'] = speaker
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['node'] = node
                 continue
 
-            #Restart count: 1
-            p22 =  re.compile(r'^Restart *count: *(?P<restart_count>[0-9]+)$')
+            # Restart count: 1
+            p22 = re.compile(r'^Restart *count: *(?P<restart_count>[0-9]+)$')
             m = p22.match(line)
             if m:
                 restart_count = int(m.groupdict()['restart_count'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['restart_count'] = restart_count
-                continue 
+                continue
 
-            #                            Total           Nbrs Estab/Cfg
+                #                            Total           Nbrs Estab/Cfg
             # Default vrfs:              1               2/2
             # Non-Default vrfs:          2               4/4
             p23 = re.compile(r'^(?P<vrf_info>[\w\-]+) +VRFs: +'
-                              '(?P<total>[0-9]+) +'
-                              '(?P<nbrs_estab>[0-9]+)/(?P<cfg>[0-9]+)$')
+                             '(?P<total>[0-9]+) +'
+                             '(?P<nbrs_estab>[0-9]+)/(?P<cfg>[0-9]+)$')
             m = p23.match(line)
             if m:
-                if 'vrf_info' not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    :
+                if 'vrf_info' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        :
                     ret_dict['instance'][instance]['vrf'][vrf]['vrf_info'] = {}
 
                 vrf_info = str(m.groupdict()['vrf_info']).lower()
@@ -1351,26 +1393,26 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 total = int(m.groupdict()['total'])
                 nbrs_estab = int(m.groupdict()['nbrs_estab'])
                 cfg = int(m.groupdict()['cfg'])
-                if vrf_info not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['vrf_info']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if vrf_info not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['vrf_info']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['vrf_info'][vrf_info] = {}
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['vrf_info'][vrf_info]['total'] = total
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['vrf_info'][vrf_info]['nbrs_estab'] = nbrs_estab
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['vrf_info'][vrf_info]['cfg'] = cfg
                 continue
 
-            #                            Alloc           Free          
+            #                            Alloc           Free
             # Pool 200:                  0               0
 
             # Message logging pool summary:
             #                            Alloc           Free
             # BMP pool summary:
-            #                            Alloc           Free          
+            #                            Alloc           Free
             # Pool 100:                  0               0
 
             if re.compile(r'Message +logging +pool +summary:$').match(line):
@@ -1380,131 +1422,131 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 flag = 'bmp'
 
             p26 = re.compile(r'^Pool +(?P<pool>\w+): +(?P<alloc>\d+) +'
-                              '(?P<free>\d+)$')
+                             '(?P<free>\d+)$')
             m = p26.match(line)
 
             if m and flag == 'message':
-                if 'message_logging_pool_summary' not in ret_dict['instance']\
-                    [instance]['vrf'][vrf]:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if 'message_logging_pool_summary' not in ret_dict['instance'] \
+                        [instance]['vrf'][vrf]:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['message_logging_pool_summary'] = {}
 
                 pool = str(m.groupdict()['pool']).lower()
                 alloc = int(m.groupdict()['alloc'])
                 free = int(m.groupdict()['free'])
 
-                if pool not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['message_logging_pool_summary']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if pool not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['message_logging_pool_summary']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['message_logging_pool_summary'][pool] = {}
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['message_logging_pool_summary'][pool]['alloc'] = alloc
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['message_logging_pool_summary'][pool]['free'] = free
                 continue
             elif m and flag == 'bmp':
-                if 'bmp_pool_summary' not in ret_dict['instance'][instance]\
+                if 'bmp_pool_summary' not in ret_dict['instance'][instance] \
                         ['vrf'][vrf]:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['bmp_pool_summary'] = {}
 
                 pool = str(m.groupdict()['pool']).lower()
                 alloc = int(m.groupdict()['alloc'])
                 free = int(m.groupdict()['free'])
 
-                if pool not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['bmp_pool_summary']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if pool not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['bmp_pool_summary']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['bmp_pool_summary'][pool] = {}
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bmp_pool_summary'][pool]['alloc'] = alloc
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['bmp_pool_summary'][pool]['free'] = free
                 continue
             elif m and not flag:
-                if 'pool' not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    :
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if 'pool' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        :
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['pool'] = {}
 
                 pool = str(m.groupdict()['pool']).lower()
                 alloc = int(m.groupdict()['alloc'])
                 free = int(m.groupdict()['free'])
 
-                if pool not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['pool']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if pool not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['pool']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['pool'][pool] = {}
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['pool'][pool]['alloc'] = alloc
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['pool'][pool]['free'] = free
                 continue
 
             #                            Sent            Received
-            # Updates:                   14              24              
-            # Notifications:             1               0   
+            # Updates:                   14              24
+            # Notifications:             1               0
             p24_1 = re.compile(r'^Updates:'
-                              ' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
+                               ' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
             m = p24_1.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['sent_updates'] = int(m.groupdict()['sent'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['received_updates'] = int(m.groupdict()['received'])
                 continue
 
             #                            Sent            Received
-            # Updates:                   14              24              
-            # Notifications:             1               0   
+            # Updates:                   14              24
+            # Notifications:             1               0
             p24_2 = re.compile(r'^Notifications:'
-                              ' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
+                               ' *(?P<sent>[0-9]+) *(?P<received>[0-9]+)$')
             m = p24_2.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['sent_notifications'] = int(m.groupdict()['sent'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['received_notifications'] = int(m.groupdict()['received'])
                 continue
 
             #                           Number          Memory Used
-            # Attributes:                6               912             
-            # AS Paths:                  6               480             
-            # Communities:               0               0               
-            # Extended communities:      6               480             
-            # PMSI Tunnel attr:          0               0               
-            # RIBRNH Tunnel attr:        0               0               
-            # PPMP attr:                 0               0               
-            # Tunnel Encap attr:         0               0               
-            # PE distinguisher labels:   0               0               
-            # Route Reflector Entries:   4               320             
-            # Nexthop Entries:           32              12800      
-            
+            # Attributes:                6               912
+            # AS Paths:                  6               480
+            # Communities:               0               0
+            # Extended communities:      6               480
+            # PMSI Tunnel attr:          0               0
+            # RIBRNH Tunnel attr:        0               0
+            # PPMP attr:                 0               0
+            # Tunnel Encap attr:         0               0
+            # PE distinguisher labels:   0               0
+            # Route Reflector Entries:   4               320
+            # Nexthop Entries:           32              12800
+
             p25 = re.compile(r'^(?P<att>[\w\s]+): +(?P<number>[0-9]+) +'
-                              '(?P<memory_used>[0-9]+)$')
+                             '(?P<memory_used>[0-9]+)$')
             m = p25.match(line)
             if m and not flag:
-                if 'att' not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    :
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if 'att' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        :
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['att'] = {}
 
                 att = str(m.groupdict()['att']).lower()
-                att = att.replace(" ","_")
+                att = att.replace(" ", "_")
                 number = int(m.groupdict()['number'])
                 memory_used = int(m.groupdict()['memory_used'])
 
-                if att not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['att']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if att not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['att']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['att'][att] = {}
 
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['att'][att]['number'] = number
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['att'][att]['memory_used'] = memory_used
                 continue
 
@@ -1515,38 +1557,38 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 af = str(m.groupdict()['af']).lower()
                 af.strip()
                 if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'] = {}
-                if af not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if af not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af] = {}
                 continue
 
             # VRF VRF1 Address family: IPv6 Unicast
             # VRF a Address family: IPv4 Unicast (Table inactive)
             p29_1 = re.compile(r'^VRF +(?P<current_vrf>(\S+)) +Address +family:'
-                                ' +(?P<af>[a-zA-Z0-9\s\-\_]+)'
-                                '(?: +\(Table +(?P<table_state>[a-z]+)\))?$')
+                               ' +(?P<af>[a-zA-Z0-9\s\-\_]+)'
+                               '(?: +\(Table +(?P<table_state>[a-z]+)\))?$')
             m = p29_1.match(line)
             if m:
                 af = str(m.groupdict()['af']).lower()
                 af.strip()
                 current_vrf = str(m.groupdict()['current_vrf']).lower()
                 table_state = str(m.groupdict()['table_state'])
-                
-                if 'address_family' not in ret_dict['instance'][instance]\
-                    ['vrf'][vrf]:
-                    ret_dict['instance'][instance]['vrf']\
+
+                if 'address_family' not in ret_dict['instance'][instance] \
+                        ['vrf'][vrf]:
+                    ret_dict['instance'][instance]['vrf'] \
                         [vrf]['address_family'] = {}
-                if af not in ret_dict['instance'][instance]['vrf']\
-                    [vrf]['address_family']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if af not in ret_dict['instance'][instance]['vrf'] \
+                        [vrf]['address_family']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af] = {}
-                ret_dict['instance'][instance]['vrf'][vrf]['address_family']\
-                        [af]['current_vrf'] = current_vrf
-                ret_dict['instance'][instance]['vrf'][vrf]['address_family']\
-                        [af]['table_state'] = table_state
+                ret_dict['instance'][instance]['vrf'][vrf]['address_family'] \
+                    [af]['current_vrf'] = current_vrf
+                ret_dict['instance'][instance]['vrf'][vrf]['address_family'] \
+                    [af]['table_state'] = table_state
                 continue
 
             # Dampening is not enabled
@@ -1555,10 +1597,10 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 dampening = m.groupdict()['dampening'].lower()
                 if 'not enabled' in dampening:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['dampening'] = False
-                else:                    
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                else:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['dampening'] = True
                 continue
 
@@ -1566,15 +1608,16 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             p31 = re.compile(r'^Client +reflection +is +enabled +in +global +config$')
             m = p31.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['client_to_client_reflection'] = True
                 continue
 
             # Client reflection is not enabled in global config
-            p31_1 = re.compile(r'^Client +reflection +is +not +enabled +in +global +config$')
+            p31_1 = re.compile(
+                r'^Client +reflection +is +not +enabled +in +global +config$')
             m = p31_1.match(line)
             if m:
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['client_to_client_reflection'] = False
                 continue
 
@@ -1584,40 +1627,40 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             if m:
                 dynamic_med = m.groupdict()['dynamic_med'].lower()
                 if status == 'enabled':
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['dynamic_med'] = True
                 else:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['dynamic_med'] = False
                 continue
 
             # Dynamic MED interval : 10 minutes
             p33 = re.compile(r'^Dynamic *MED *interval *: *'
-                              '(?P<interval>[a-zA-Z0-9\s]+)$')
+                             '(?P<interval>[a-zA-Z0-9\s]+)$')
             m = p33.match(line)
             if m:
                 interval = m.groupdict()['interval']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['dynamic_med_int'] = interval
                 continue
 
             # Dynamic MED Timer : Not Running
             p34 = re.compile(r'^Dynamic *MED *Timer *: *'
-                              '(?P<dynamic_med_timer>[a-zA-Z0-9\s]+)$')
+                             '(?P<dynamic_med_timer>[a-zA-Z0-9\s]+)$')
             m = p34.match(line)
             if m:
                 timer = m.groupdict()['dynamic_med_timer']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['dynamic_med_timer'] = timer
                 continue
 
             # Dynamic MED Periodic Timer : Not Running
             p35 = re.compile(r'^Dynamic *MED *Periodic *Timer *: *'
-                              '(?P<timer>[a-zA-Z0-9\s]+)$')
+                             '(?P<timer>[a-zA-Z0-9\s]+)$')
             m = p35.match(line)
             if m:
                 timer = m.groupdict()['timer']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['dynamic_med_periodic_timer'] = timer
                 continue
 
@@ -1626,99 +1669,100 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p36.match(line)
             if m:
                 scan_interval = m.groupdict()['scan_interval']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['scan_interval'] = scan_interval
                 continue
 
             # Total prefixes scanned: 40
             p37 = re.compile(r'^Total *prefixes *scanned: *'
-                              '(?P<scan>[a-zA-Z0-9\s]+)$')
+                             '(?P<scan>[a-zA-Z0-9\s]+)$')
             m = p37.match(line)
             if m:
                 scan = m.groupdict()['scan']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['total_prefixes_scanned'] = scan
                 continue
 
             # Prefixes scanned per segment: 100000
             p38 = re.compile(r'^Prefixes *scanned *per *segment: *'
-                              '(?P<prefix_scan>[a-zA-Z0-9\s]+)$')
+                             '(?P<prefix_scan>[a-zA-Z0-9\s]+)$')
             m = p38.match(line)
             if m:
                 prefix_scan = m.groupdict()['prefix_scan']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['prefix_scanned_per_segment'] = prefix_scan
                 continue
 
             # Number of scan segments: 1
             p39 = re.compile(r'^Number *of *scan *segments: *'
-                              '(?P<num_of_scan_segments>[a-zA-Z0-9\s]+)$')
+                             '(?P<num_of_scan_segments>[a-zA-Z0-9\s]+)$')
             m = p39.match(line)
             if m:
                 ret = m.groupdict()['num_of_scan_segments']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['num_of_scan_segments'] = ret
                 continue
 
             # Nexthop resolution minimum prefix-length: 0 (not configured)
             p40 = re.compile(r'^Nexthop *resolution *minimum *prefix\-length: *'
-                              '(?P<length>[\w\s\(\)]+)$')
+                             '(?P<length>[\w\s\(\)]+)$')
             m = p40.match(line)
             if m:
                 length = m.groupdict()['length']
-                ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][af]['nexthop_resolution_minimum_prefix_length'] = length
+                ret_dict['instance'][instance]['vrf'][vrf] \
+                    ['address_family'][af][
+                    'nexthop_resolution_minimum_prefix_length'] = length
                 continue
-            
+
             # Main Table Version: 43
             p41 = re.compile(r'^Main *Table *Version: *(?P<main_tab_ver>[\w\s]+)$')
             m = p41.match(line)
             if m:
                 main_tab_ver = m.groupdict()['main_tab_ver']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['main_table_version'] = main_tab_ver
                 continue
-            
+
             # Table version synced to RIB: 43
             p42 = re.compile(r'^Table *version *synced *to *RIB: *'
-                              '(?P<rib>[a-zA-Z0-9\s]+)$')
+                             '(?P<rib>[a-zA-Z0-9\s]+)$')
             m = p42.match(line)
             if m:
                 rib = m.groupdict()['rib']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['table_version_synced_to_rib'] = rib
                 continue
 
             # Table version acked by RIB: 0
             p43 = re.compile(r'^Table *version *acked *by *RIB: *'
-                              '(?P<rib>[a-zA-Z0-9\s]+)$')
+                             '(?P<rib>[a-zA-Z0-9\s]+)$')
             m = p43.match(line)
             if m:
                 rib = m.groupdict()['rib']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['table_version_acked_by_rib'] = rib
                 continue
 
             # RIB has not converged: version 0
             p44 = re.compile(r'^RIB *has *not *converged: *'
-                              '(?P<rib>[a-zA-Z0-9\s]+)$')
+                             '(?P<rib>[a-zA-Z0-9\s]+)$')
             m = p44.match(line)
             if m:
                 rib = m.groupdict()['rib']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['rib_has_not_converged'] = rib
                 continue
 
             # RIB table prefix-limit reached ?  [No], version 0
             p45 = re.compile(r'^RIB *table *prefix\-limit *reached +\? *'
-                              '\[(?P<rib>\w+)\], +version +(?P<ver>\d+)$')
+                             '\[(?P<rib>\w+)\], +version +(?P<ver>\d+)$')
             m = p45.match(line)
             if m:
                 rib = m.groupdict()['rib'].lower()
                 ver = m.groupdict()['ver']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['rib_table_prefix_limit_reached'] = rib
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['rib_table_prefix_limit_ver'] = ver
                 continue
 
@@ -1727,7 +1771,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p45.match(line)
             if m:
                 status = m.groupdict()['status'].lower()
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['permanent_network'] = status
                 continue
 
@@ -1736,7 +1780,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p46.match(line)
             if m:
                 state = m.groupdict()['state'].lower()
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['state'] = state
                 continue
 
@@ -1745,7 +1789,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p47.match(line)
             if m:
                 tab_ver = m.groupdict()['tab_ver']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['bgp_table_version'] = tab_ver
                 continue
 
@@ -1754,17 +1798,17 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p48.match(line)
             if m:
                 attr = str(m.groupdict()['attr'])
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['attribute_download'] = attr
                 continue
 
             # Label retention timer value 5 mins
             p49 = re.compile(r'^Label *retention *timer *value *'
-                              '(?P<timer>[a-zA-Z0-9\s]+)$')
+                             '(?P<timer>[a-zA-Z0-9\s]+)$')
             m = p49.match(line)
             if m:
                 timer = m.groupdict()['timer']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['label_retention_timer_value'] = timer
                 continue
 
@@ -1773,24 +1817,24 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             m = p50.match(line)
             if m:
                 ent = m.groupdict()['ent']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['soft_reconfig_entries'] = ent
                 continue
-            
+
             # Table bit-field size : 1 Chunk element size : 3
             p51 = re.compile(r'^Table *bit\-field *size *: *'
-                              '(?P<size>[0-9\s]+) *Chunk *element *size *: *'
-                              '(?P<elememt_size>\d+)$')
+                             '(?P<size>[0-9\s]+) *Chunk *element *size *: *'
+                             '(?P<elememt_size>\d+)$')
             m = p51.match(line)
             if m:
                 table_bit_field_size = m.groupdict()['size']
                 chunk_elememt_size = m.groupdict()['elememt_size']
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['table_bit_field_size'] = table_bit_field_size
-                ret_dict['instance'][instance]['vrf'][vrf]\
+                ret_dict['instance'][instance]['vrf'][vrf] \
                     ['address_family'][af]['chunk_elememt_size'] = chunk_elememt_size
                 continue
-        
+
             #                    Last 8 Triggers       Ver         Tbl Ver     Trig TID  
 
             # Label Thread       Jun 28 19:10:16.427   43          43          3         
@@ -1804,49 +1848,47 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
             #                    Total triggers: 17
 
             p52 = re.compile(r'^(?P<thread>\w+\s\w+) *'
-                              '(?P<trigger>\w+\s\d+\s[\d\:\.]+) +(?P<ver>[0-9]+) +'
-                              '(?P<tbl_ver>[0-9]+) +(?P<trig_tid>[0-9]+)$')
+                             '(?P<trigger>\w+\s\d+\s[\d\:\.]+) +(?P<ver>[0-9]+) +'
+                             '(?P<tbl_ver>[0-9]+) +(?P<trig_tid>[0-9]+)$')
             m = p52.match(line)
             if m:
-                if 'thread' not in  ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][af]:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if 'thread' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['thread'] = {}
 
                 thread = m.groupdict()['thread'].lower().strip()
-                if thread not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][af]['thread']:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if thread not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['thread'][thread] = {}
 
-                if 'triggers' not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][af]['thread'][thread]:
-                    ret_dict['instance'][instance]['vrf'][vrf]\
+                if 'triggers' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread'][thread]:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
                         ['address_family'][af]['thread'][thread]['triggers'] = {}
 
                 trigger = m.groupdict()['trigger']
-                if trigger not in ret_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][af]['thread'][thread]['triggers']:
+                if trigger not in ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread'][thread]['triggers']:
+                    ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread'][thread]['triggers'] \
+                        [trigger] = {}
 
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['thread'][thread]['triggers']\
-                            [trigger] = {}
+                    ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread'][thread]['triggers'] \
+                        [trigger]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
 
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['thread'][thread]['triggers']\
-                            [trigger]['tbl_ver'] = int(m.groupdict()['tbl_ver'])
+                    ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread'][thread]['triggers'] \
+                        [trigger]['ver'] = int(m.groupdict()['ver'])
 
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['thread'][thread]['triggers']\
-                            [trigger]['ver'] = int(m.groupdict()['ver'])
-
-                    ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['thread'][thread]['triggers']\
-                            [trigger]['trig_tid'] = int(m.groupdict()['trig_tid'])
+                    ret_dict['instance'][instance]['vrf'][vrf] \
+                        ['address_family'][af]['thread'][thread]['triggers'] \
+                        [trigger]['trig_tid'] = int(m.groupdict()['trig_tid'])
                 continue
 
-
-            #                       Allocated       Freed         
+            #                       Allocated       Freed
             # Remote Prefixes:      10              0
             # Remote Path-elems:    10              0
 
@@ -1860,7 +1902,7 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 flag = 'number'
 
             p53 = re.compile(r'^(?P<remote>[\w\s\-]+): *(?P<v1>\d+) *'
-                              '(?P<v2>[0-9]+)$')
+                             '(?P<v2>[0-9]+)$')
             m = p53.match(line)
             if m and flag == 'allocated':
                 try:
@@ -1868,24 +1910,24 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 except Exception:
                     continue
                 else:
-                    if 'remote_local' not in  ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]:
-                        ret_dict['instance'][instance]['vrf'][vrf]\
+                    if 'remote_local' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]:
+                        ret_dict['instance'][instance]['vrf'][vrf] \
                             ['address_family'][af]['remote_local'] = {}
 
                     remote = m.groupdict()['remote'].lower()
-                    if remote not in ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['remote_local']:
-                        ret_dict['instance'][instance]['vrf'][vrf]\
+                    if remote not in ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]['remote_local']:
+                        ret_dict['instance'][instance]['vrf'][vrf] \
                             ['address_family'][af]['remote_local'][remote] = {}
 
-                        ret_dict['instance'][instance]['vrf'][vrf]\
-                            ['address_family'][af]['remote_local'][remote]\
-                                ['allocated'] = int(m.groupdict()['v1'])
+                        ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]['remote_local'][remote] \
+                            ['allocated'] = int(m.groupdict()['v1'])
 
-                        ret_dict['instance'][instance]['vrf'][vrf]\
-                            ['address_family'][af]['remote_local'][remote]\
-                                ['freed'] = int(m.groupdict()['v2'])
+                        ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]['remote_local'][remote] \
+                            ['freed'] = int(m.groupdict()['v2'])
                     flag = None
                 continue
             elif m and flag == 'number':
@@ -1894,31 +1936,30 @@ class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
                 except Exception:
                     continue
                 else:
-                    if 'prefixes_path' not in  ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]:
-                        ret_dict['instance'][instance]['vrf'][vrf]\
+                    if 'prefixes_path' not in ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]:
+                        ret_dict['instance'][instance]['vrf'][vrf] \
                             ['address_family'][af]['prefixes_path'] = {}
 
                     path = m.groupdict()['remote'].lower()
-                    if path not in ret_dict['instance'][instance]['vrf'][vrf]\
-                        ['address_family'][af]['prefixes_path']:
-                        ret_dict['instance'][instance]['vrf'][vrf]\
+                    if path not in ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]['prefixes_path']:
+                        ret_dict['instance'][instance]['vrf'][vrf] \
                             ['address_family'][af]['prefixes_path'][path] = {}
 
-                        ret_dict['instance'][instance]['vrf'][vrf]\
-                            ['address_family'][af]['prefixes_path'][path]\
-                                ['number'] = int(m.groupdict()['v1'])
+                        ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]['prefixes_path'][path] \
+                            ['number'] = int(m.groupdict()['v1'])
 
-                        ret_dict['instance'][instance]['vrf'][vrf]\
-                            ['address_family'][af]['prefixes_path'][path]\
-                                ['mem_used'] = int(m.groupdict()['v2'])
+                        ret_dict['instance'][instance]['vrf'][vrf] \
+                            ['address_family'][af]['prefixes_path'][path] \
+                            ['mem_used'] = int(m.groupdict()['v2'])
                     flag = None
                 continue
 
         return ret_dict
 
-
-    def yang(self, vrf_type , af_type=''):
+    def yang(self, vrf_type, af_type=''):
 
         if not vrf_type in ['all', 'vrf']:
             raise Exception("Variable 'vrf_type' can only be 'all' or 'vrf'")
@@ -2180,13 +2221,19 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         show bgp instance all vrf all neighbors detail
         show bgp instance all vrf all ipv4 unicast neighbors detail
         show bgp instance all vrf all ipv6 unicast neighbors detail
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> detail
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    
-    cli_command = ['show bgp instance all {vrf_type} all neighbors detail',
-        'show bgp instance all {vrf_type} all {af_type} neighbors detail']
+
+    cli_command = ['show bgp instance {instance} all all neighbors detail',
+        'show bgp instance {instance} all all neighbors {neighbor} detail',
+        'show bgp instance {instance} {vrf_type} {vrf} neighbors {neighbor} detail',
+        'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} detail',
+       'show bgp instance {instance} {vrf_type} {vrf} neighbors detail',
+       'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors detail']
+
     exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 
         'nsr_initial_initsync_version', 'filter_group', 'last_ack_version', 'neighbor_version',
         'prefix_advertised', 'prefix_withdrawn', 'update_group', 'attempted', 'keepalives', 
@@ -2203,16 +2250,40 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         , 'cummulative_no_no_policy', 'route_refresh_request_sent']
 
         
-    def cli(self, vrf_type, af_type='', output=None):
-
+    def cli(self, vrf_type='all', vrf='all', instance='all', neighbor='', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
-
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            if vrf_type and af_type:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+            if vrf_type == 'all':
+                if neighbor:
+                    out = self.device.execute(self.cli_command[1].format(instance=instance,
+                                                                         neighbor=neighbor))
+                else:
+                    out = self.device.execute(self.cli_command[0].format(instance=instance))
+
             else:
-                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
+                if address_family:
+                    if neighbor:
+                        out = self.device.execute(self.cli_command[3].format(vrf_type=vrf_type,
+                                                                     instance=instance,
+                                                                     neighbor=neighbor,
+                                                                     vrf=vrf,
+                                                                     address_family=address_family))
+                    else:
+                        out = self.device.execute(self.cli_command[5].format(vrf_type=vrf_type,
+                                                       instance=instance,
+                                                       address_family=address_family,
+                                                                             vrf=vrf))
+                else:
+                    if neighbor:
+                        out = self.device.execute(self.cli_command[2].format(vrf_type=vrf_type,
+                                                   instance=instance,
+                                                   neighbor=neighbor,
+                                                   vrf=vrf))
+                    else:
+                        out = self.device.execute(self.cli_command[4].format(vrf_type=vrf_type,
+                                                   instance=instance,
+                                                   vrf=vrf))
         else:
             out = output
         # Init variables
@@ -2261,6 +2332,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
                 vrf = str(m.groupdict()['vrf'])
+                ret_dict.setdefault('instance',{}).setdefault(instance,{})
                 # Set vrf
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
@@ -3108,7 +3180,9 @@ class ShowBgpInstanceNeighborsReceivedRoutesSchema(MetaParser):
         show bgp instance all all all neighbors <neighbor> received routes
         show bgp instance all vrf all neighbors <neighbor> received routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
-        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes"""
+        show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> received routes
+"""
 
     schema = {'instance':
                 {Any():
@@ -3165,20 +3239,41 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         show bgp instance all vrf all neighbors <neighbor> received routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> received routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> received routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> received routes
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
+    cli_command = ['show bgp instance {instance} all all neighbors {neighbor} {route_type}',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} {route_type}',
+                   'show bgp instance {instance} {vrf_type} {vrf} neighbors {neighbor} {route_type}']
 
-    def cli(self, neighbor, vrf_type, af_type='', route_type='received routes', output=None):
+    def cli(self, vrf_type='all', neighbor='', vrf='all', instance='all', address_family='', route_type='received routes', output=None):
 
         assert vrf_type in ['all', 'vrf']
         assert route_type in ['received routes', 'routes']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route=route_type))
+            if vrf_type == 'all':
+                out = self.device.execute(self.cli_command[0].format(instance=instance,
+                                                                         neighbor=neighbor,
+                                                                         route_type=route_type))
+            else:
+                if address_family:
+                    out = self.device.execute(self.cli_command[1].format(instance=instance,
+                                                                         neighbor=neighbor,
+                                                                         address_family=address_family,
+                                                                         vrf_type=vrf_type,
+                                                                         vrf=vrf,
+                                                                         route_type=route_type))
+                else:
+                    out = self.device.execute(self.cli_command[2].format(instance=instance,
+                                                                         neighbor=neighbor,
+                                                                         vrf_type=vrf_type,
+                                                                         vrf=vrf,
+                                                                         route_type=route_type))
+
         else:
             out = output
 
@@ -3192,7 +3287,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             af = ''
         elif vrf_type == 'vrf':
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af = 'vpnv6 unicast'
             else:
                 af = 'vpnv4 unicast'
@@ -3224,7 +3319,7 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
             if m:
                 vrf = m.groupdict()['vrf']
                 state = m.groupdict()['state'].lower()
-
+                ret_dict.setdefault('instance', {}).setdefault(instance, {})
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
                 if vrf not in ret_dict['instance'][instance]['vrf']:
@@ -3631,6 +3726,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutesSchema(MetaParser):
         show bgp instance all vrf all neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> advertised-routes
+
     """
 
     schema = {'instance':
@@ -3675,35 +3772,49 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         show bgp instance all vrf all neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv4 unicast neighbors <neighbor> advertised-routes
         show bgp instance all vrf all ipv6 unicast neighbors <neighbor> advertised-routes
+        show bgp instance <instance> vrf <vrf> <address_family> neighbors <neighbor> advertised-routes
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} advertised-routes'
+    cli_command = ['show bgp instance {instance} all all neighbors {neighbor} advertised-routes',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} neighbors {neighbor} advertised-routes',
+                   'show bgp instance {instance} {vrf_type} {vrf} neighbors {neighbor} advertised-routes']
 
-    def cli(self, neighbor, vrf_type, af_type='', output=None):
-
+    def cli(self, vrf_type='all', neighbor='', vrf='all', instance='all', address_family='', output=None):
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            out = self.device.execute(self.cli_command. \
-                                      format(neighbor=neighbor, af_type=af_type, vrf_type=vrf_type))
+            if vrf_type == 'all':
+                out = self.device.execute(self.cli_command[0].format(instance=instance,
+                                                                  neighbor=neighbor))
+            else:
+                if address_family:
+                    out = self.device.execute(self.cli_command[1].format(instance=instance,
+                                                                  neighbor=neighbor,
+                                                                  address_family=address_family,
+                                                                  vrf_type=vrf_type, vrf=vrf))
+                else:
+                    out = self.device.execute(self.cli_command[2].format(instance=instance,
+                                                                  neighbor=neighbor,
+                                                                  vrf_type=vrf_type, vrf=vrf))
         else:
             out = output
 
         ret_dict = {}
-        address_family = None
 
         if vrf_type == 'all':
             vrf = 'default'
             af = ''
         elif vrf_type == 'vrf':
+            if vrf != 'all':
+                input_vrf = vrf
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af = 'vpnv6 unicast'
             else:
                 af = 'vpnv4 unicast'
-
+        address_family = None
         for line in out.splitlines():
             line = line.strip()
 
@@ -3724,6 +3835,7 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
             p2 = re.compile(r'^VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
             m = p2.match(line)
             if m:
+                ret_dict.setdefault('instance', {}).setdefault(instance, {})
                 vrf = m.groupdict()['vrf']
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
@@ -3751,6 +3863,9 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
                 rd = m.groupdict()['route_distinguisher']
                 addr = (address_family or af) + ' RD ' + rd
                 default_vrf = m.groupdict()['default_vrf']
+                if not vrf:
+                    ret_dict.setdefault('instance', {}).setdefault(instance, {}).setdefault('vrf', {}).setdefault(input_vrf, {})
+                    vrf=input_vrf
                 if 'address_family' not in ret_dict['instance'][instance]['vrf'][vrf]:
                     ret_dict['instance'][instance]['vrf'][vrf]['address_family'] = {}
                 if address_family not in ret_dict['instance'][instance]['vrf'][vrf]['address_family']:
@@ -3898,21 +4013,23 @@ class ShowBgpInstanceNeighborsRoutesSchema(MetaParser):
             },
         }
 
-class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema):
+class ShowBgpInstanceNeighborsRoutes(ShowBgpInstanceNeighborsRoutesSchema, ShowBgpInstanceNeighborsReceivedRoutes):
     
     """ Parser for:
         show bgp instance all all all neighbors <WORD> routes
         show bgp instance all vrf all neighbors <WORD> routes
+        show bgp instance <instance> vrf <vrf> neighbors <WORD> routes
+        show bgp instance <instance> all all neighbors <WORD> routes
         show bgp instance all vrf all ipv4 unicast neighbors <WORD> routes
         show bgp instance all vrf all ipv6 unicast neighbors <WORD> routes
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} neighbors {neighbor} {route}'
-    def cli(self, neighbor, vrf_type, af_type='',output=None):
-        return ShowBgpInstanceNeighborsReceivedRoutes.cli(
-            self, neighbor=neighbor, vrf_type=vrf_type, af_type=af_type, route_type='routes',output=output)
+
+    def cli(self, vrf_type='all', neighbor='', vrf='all', instance='all', address_family='', route_type='routes', output=None):
+        return super().cli(neighbor=neighbor, vrf_type=vrf_type, address_family=address_family,
+            route_type='routes', vrf=vrf, instance=instance, output=output)
 
 
 # ====================================================
@@ -3996,23 +4113,40 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         show bgp instance all vrf all summary
         show bgp instance all vrf all ipv4 unicast summary
         show bgp instance all vrf all ipv6 unicast summary
+        show bgp instance <instance> all all summary
+        show bgp instance <instance> vrf <vrf> <address_family> summary
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
     """
-    cli_command = 'show bgp instance all {vrf_type} all {af_type} summary'
+
+    cli_command = ['show bgp instance {instance} all all summary',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family} summary',
+                   'show bgp instance {instance} {vrf_type} {vrf} summary']
+
     exclude = ['bgp_table_version', 'brib_rib', 'importver', 'labelver', 'rcvtblver',
         'sendtblver', 'rd_version', 'msg_rcvd', 'msg_sent', 'tbl_ver', 'up_down',
         'nsr_initial_initsync_version', 'nsr_initial_init_ver_status',
         'nsr_issu_sync_group_versions', 'standbyver']
 
-    def cli(self, vrf_type, af_type='',output=None):
+    def cli(self, vrf_type='all', address_family='', instance='all', vrf='all', output=None):
 
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            out = self.device.execute(self.cli_command. \
-                                          format(af_type=af_type, vrf_type=vrf_type))
+            if vrf_type == 'all':
+                out = self.device.execute(self.cli_command[0].format(instance=instance,
+                                                                     vrf_type=vrf_type))
+            else:
+                if address_family:
+                    out = self.device.execute(self.cli_command[1].format(instance=instance,
+                                                                     address_family=address_family,
+                                                                     vrf_type=vrf_type,
+                                                                     vrf=vrf))
+                else:
+                    out = self.device.execute(self.cli_command[2].format(instance=instance,
+                                                                     vrf_type=vrf_type,
+                                                                     vrf=vrf))
         else:
             out = output
 
@@ -4024,8 +4158,10 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             vrf = 'default'
             af_default = None
         elif vrf_type == 'vrf':
+            if vrf != 'all':
+                input_vrf = vrf
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
             else:
                 af_default = 'vpnv4 unicast'
@@ -4092,10 +4228,18 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                              ' *(?P<vrf_state>[a-zA-Z]+)$')
             m = p4.match(line)
             if m:
+                if not vrf:
+                    vrf_dict = bgp_instance_summary_dict.setdefault('instance', {}).setdefault(instance, {}).setdefault('vrf', {}).setdefault(input_vrf,{})
+                    if vrf_type == 'vrf' and af_default:
+                        address_family = af_default
+                        vrf_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                    vrf = input_vrf
+                else:
+                    vrf_dict = bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]
                 bgp_vrf = m.groupdict()['bgp_vrf'].lower()
                 vrf_state = m.groupdict()['vrf_state'].lower()
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['bgp_vrf'] = bgp_vrf
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['vrf_state'] = vrf_state
+                vrf_dict['address_family'][address_family]['bgp_vrf'] = bgp_vrf
+                vrf_dict['address_family'][address_family]['vrf_state'] = vrf_state
                 continue
 
             # BGP Route Distinguisher: 200:1
@@ -4385,24 +4529,38 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         show bgp instance all vrf all
         show bgp instance all vrf all ipv4 unicast
         show bgp instance all vrf all ipv6 unicast
+        show bgp instance <instance> all all
+        show bgp instance <instance> vrf <vrf> <address_family>
         For checking any output with the parser ,below mandatory keys have to be in cli command.
 
         - vrf_type
 
     """
-    cli_command = ['show bgp instance all {vrf_type} all',
-                   'show bgp instance all {vrf_type} all {af_type}']
+    cli_command = ['show bgp instance {instance} all all',
+                   'show bgp instance {instance} {vrf_type} {vrf}',
+                   'show bgp instance {instance} {vrf_type} {vrf} {address_family}']
+
     exclude = ['bgp_table_version', 'rd_version', 'nsr_initial_init_ver_status', 'nsr_initial_initsync_version']
 
-    def cli(self, vrf_type, af_type='',output=None):
-
+    def cli(self, vrf_type='all', address_family='',instance='all', vrf='all', output=None):
         assert vrf_type in ['all', 'vrf']
-        assert af_type in ['', 'ipv4 unicast', 'ipv6 unicast']
+        assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
         if output is None:
-            if af_type:
-                out = self.device.execute(self.cli_command[1].format(vrf_type=vrf_type, af_type=af_type))
+
+            if vrf_type == 'all':
+                out = self.device.execute(
+                    self.cli_command[0].format(instance=instance))
             else:
-                out = self.device.execute(self.cli_command[0].format(vrf_type=vrf_type))
+                if address_family:
+
+                    out = self.device.execute(self.cli_command[2].format(instance=instance,
+                                                   address_family=address_family,
+                                                   vrf_type=vrf_type,
+                                                   vrf=vrf))
+                else:
+                    out = self.device.execute(self.cli_command[1].format(instance=instance,
+                                                   vrf_type=vrf_type,
+                                                   vrf=vrf))
         else:
             out = output
 
@@ -4412,8 +4570,10 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
             vrf = 'default'
             af_default = None
         elif vrf_type == 'vrf':
+            if vrf != 'all':
+                input_vrf = vrf
             vrf = None
-            if af_type == 'ipv6 unicast':
+            if address_family == 'ipv6 unicast':
                 af_default = 'vpnv6 unicast'
             else:
                 af_default = 'vpnv4 unicast'
@@ -4490,12 +4650,23 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
                              ' *(?P<vrf_state>[a-zA-Z]+)$')
             m = p4.match(line)
             if m:
+                # if no vrf key, set it to be the user input
+                if not vrf:
+                    bgp_instance_all_all_dict.setdefault('instance', {})
+                    vrf_dict = bgp_instance_all_all_dict['instance'][instance].setdefault('vrf', {}).setdefault(input_vrf,{})
+                    if vrf_type == 'vrf' and af_default:
+                        address_family = af_default
+                        original_address_family = address_family
+                        vrf_dict.setdefault('address_family', {}).setdefault(address_family, {})
+                    vrf=input_vrf
+                else:
+                    vrf_dict = bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]
                 bgp_vrf = m.groupdict()['bgp_vrf'].lower()
                 vrf_state = m.groupdict()['vrf_state'].lower()
-                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
-                    ['address_family'][address_family]['bgp_vrf'] = bgp_vrf
-                bgp_instance_all_all_dict['instance'][instance]['vrf'][vrf]\
-                ['address_family'][address_family]['vrf_state'] = vrf_state
+
+                vrf_dict['address_family'][address_family]['bgp_vrf'] = bgp_vrf
+
+                vrf_dict['address_family'][address_family]['vrf_state'] = vrf_state
                 continue
 
             # VRF ID: 0x60000001    
