@@ -992,7 +992,7 @@ class ShowBgpInstanceProcessDetailSchema(MetaParser):
         }
 
 class ShowBgpInstanceProcessDetail(ShowBgpInstanceProcessDetailSchema):
-
+    
     """Parser for:
         show bgp instance all all all process detail
         show bgp instance all vrf all process detail

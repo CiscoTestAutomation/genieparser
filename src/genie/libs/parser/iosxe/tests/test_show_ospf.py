@@ -6706,12 +6706,50 @@ class test_show_ip_ospf_max_metric(unittest.TestCase):
          Router is not originating router-LSAs with maximum metric
         '''}
 
+    golden_parsed_output2 = {'vrf': {'default': 
+        {'address_family': 
+            {'ipv4': 
+                {'instance': 
+                    {'1111': 
+                        {'base_topology_mtid': 
+                            {'0': 
+                                {'router_lsa_max_metric': 
+                                    {True: 
+                                        {'condition': 'on '
+                                          'startup '
+                                          'for '
+                                          '300 '
+                                          'seconds',
+                                         'state': 'active',
+                                         'time_remaining': '00:03:55'}},
+                                  'start_time': '00:02:24.554',
+                                  'time_elapsed': '00:01:04.061'}},
+                           'router_id': '1.1.1.1'}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        show ip ospf max-metric
+        Load for five secs: 3%/0%; one minute: 3%; five minutes: 1%
+        Time source is NTP, *07:52:19.838 JST Tue Jun 18 2019
+        OSPF Router with ID (1.1.1.1) (Process ID 1111)
+        Base Topology (MTID 0)
+        Start time: 00:02:24.554, Time elapsed: 00:01:04.061
+        Originating router-LSAs with maximum metric, Time remaining: 00:03:55
+        Condition: on startup for 300 seconds, State: active
+        '''}
+
     def test_show_ip_ospf_max_metric_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfMaxMetric(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_max_metric_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfMaxMetric(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ip_ospf_max_metric_empty(self):
         self.maxDiff = None
