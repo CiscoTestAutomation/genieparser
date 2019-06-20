@@ -24,11 +24,7 @@ class ShowContextSchema(MetaParser):
             'class': str,
             'mode': str,
             'url': str,
-            'interfaces': {
-                Any(): {
-                    'interface': str
-                }
-            }
+            'interfaces': list
         }
     }
 
@@ -55,12 +51,14 @@ class ShowContext(ShowContextSchema):
         # pod1             default              Vlan100,Vlan200      Routed       disk0:/pod-context/pod1
         # pod2             111                  Vlan300,Vlan400      Routed       disk0:/pod-context/pod2
         # *admin            default              Vlan1000,Vlan1001,   Routed       disk0:/pod-context/admin.cfg
-        #                                         Vlan1030,Vlan1031,
-        #                                         Vlan1050,Vlan1051,
-        #                                         Vlan1082,Vlan1083...
         p1 = re.compile(
-            r'^(?P<name>(?!,)|\S+)\s*(?P<class>(?!,)|\S+)\s*(?P<interface>\S+)\s*'
-            '(?P<mode>(?!,)|\S+)\s*(?P<url>(?!,)|\S+)$')
+            r'^(?P<name>\S+)\s+(?P<class>\S+)\s+(?P<interface>\S+)\s+'
+            '(?P<mode>(?!Contexts:)\S+)\s+(?P<url>\S+)$')
+
+        # Vlan1030,Vlan1031,
+        # Vlan1082,Vlan1083...
+        p2 = re.compile(
+            r'^(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -68,9 +66,6 @@ class ShowContext(ShowContextSchema):
             # pod1             default              Vlan100,Vlan200      Routed       disk0:/pod-context/pod1
             # pod2             111                  Vlan300,Vlan400      Routed       disk0:/pod-context/pod2
             # *admin            default              Vlan1000,Vlan1001,   Routed       disk0:/pod-context/admin.cfg
-            #                                         Vlan1030,Vlan1031,
-            #                                         Vlan1050,Vlan1051,
-            #                                         Vlan1082,Vlan1083...
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -86,27 +81,32 @@ class ShowContext(ShowContextSchema):
                     dict_name.update({'class': groups['class']})
                     dict_name.update({'mode': groups['mode']})
                     dict_name.update({'url': groups['url']})
-                    dict_intefaces = dict_name.setdefault('interfaces', {})
                     interfaces = groups['interface']
                     if interfaces[-1] == ',':
                         interfaces = interfaces[:-1]
                     splitted_interface = interfaces.split(',')
                     for interface in splitted_interface:
-                        dict_interface = dict_intefaces.setdefault(interface, {})
-                        dict_interface.update({'interface': interface})
-                else:
-                    dict_name = ret_dict.setdefault(name, {})
-                    dict_intefaces = dict_name.setdefault('interfaces', {})
-                    interfaces = groups['interface']
-                    if interfaces[-1] == ',':
-                        interfaces = interfaces[:-1]
-                    if interfaces[-3:] == '...':
-                        interfaces = interfaces[:-3]
-                    splitted_interface = interfaces.split(',')
-                    for interface in splitted_interface:
-                        dict_interface = dict_intefaces.setdefault(interface, {})
-                        dict_interface.update({'interface': interface})
-            continue
+                        dict_intefaces = dict_name.setdefault('interfaces', []) \
+                        .append(interface)
+                continue
+
+            # Vlan1030,Vlan1031,
+            # Vlan1082,Vlan1083...
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                dict_name = ret_dict.setdefault(name, {})
+
+                interfaces = groups['interface']
+                if interfaces[-1] == ',':
+                    interfaces = interfaces[:-1]
+                if interfaces[-3:] == '...':
+                    interfaces = interfaces[:-3]
+                splitted_interface = interfaces.split(',')
+                for interface in splitted_interface:
+                    dict_intefaces = dict_name.setdefault('interfaces', []) \
+                    .append(interface)
+                continue
 
         return ret_dict
 
@@ -125,16 +125,8 @@ class ShowContextDetailSchema(MetaParser):
             'context_created': bool,
             Optional('url'): str,
             Optional('interfaces'): {
-                Optional('real_interfaces'): {
-                    Any(): {
-                        'real_interface': str
-                    }
-                },
-                Optional('mapped_interfaces'): {
-                    Any(): {
-                        'mapped_interface': str
-                    }
-                }
+                Optional('real_interfaces'): list,
+                Optional('mapped_interfaces'): list
             }
         }
     }
@@ -181,13 +173,13 @@ class ShowContextDetail(ShowContextDetailSchema):
 
         #  Vlan993, Vlan994, Vlan995, Vlan996, Vlan997, Vlan998, Vlan999
         p5 = re.compile(
-            r'^(?P<interfaces>(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*'
-            '(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+)?\s*)$')
+            r'^(?P<interfaces>(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)'
+            '?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+,)?\s*(\S+)'
+            '?\s*)$')
         
         # Class: default, Flags: 0x00000111, ID: 1
         p6 = re.compile(
             r'^Class: *(?P<class>\S+),\s*Flags:\s*(?P<flags>\S+),\s*ID:\s*(?P<id>\d+)$')
-
 
         for line in out.splitlines():
             line = line.strip()
@@ -228,16 +220,15 @@ class ShowContextDetail(ShowContextDetailSchema):
                 if groups['real_interfaces']:
                     interfaces_sort = 'real_interfaces'
                     interface_sort = 'real_interface'
-                    dict_real_interfaces = dict_name.setdefault('interfaces', {}). \
-                    setdefault(interfaces_sort, {})
                     interfaces = groups['real_interfaces']
                     if interfaces[-1] == ',':
                         interfaces = interfaces[:-1]
                     interfaces = interfaces.replace(' ','')
                     splitted_interface = interfaces.split(',')
                     for interface in splitted_interface:
-                        dict_interface = dict_real_interfaces.setdefault(interface, {})
-                        dict_interface.update({'real_interface': interface})
+                        dict_real_interfaces = dict_name.setdefault('interfaces', {}). \
+                        setdefault(interfaces_sort, []).append(interface)
+
                 continue
 
             # Mapped Interfaces: Vlan100, Vlan200
@@ -248,16 +239,14 @@ class ShowContextDetail(ShowContextDetailSchema):
                 if groups['mapped_interfaces']:
                     interfaces_sort = 'mapped_interfaces'
                     interface_sort = 'mapped_interface'
-                    dict_real_interfaces = dict_name.setdefault('interfaces', {}). \
-                    setdefault(interfaces_sort, {})
                     interfaces = groups['mapped_interfaces']
                     if interfaces[-1] == ',':
                         interfaces = interfaces[:-1]
                     interfaces = interfaces.replace(' ','')
                     splitted_interface = interfaces.split(',')
                     for interface in splitted_interface:
-                        dict_interface = dict_real_interfaces.setdefault(interface, {})
-                        dict_interface.update({'mapped_interface': interface})
+                        dict_real_interfaces = dict_name.setdefault('interfaces', {}). \
+                        setdefault(interfaces_sort, []).append(interface)
                 continue
 
             #  Vlan993, Vlan994, Vlan995, Vlan996, Vlan997, Vlan998, Vlan999
@@ -265,16 +254,14 @@ class ShowContextDetail(ShowContextDetailSchema):
             if m:
                 groups = m.groupdict()
                 if groups['interfaces']:
-                    dict_real_interfaces = dict_name.setdefault('interfaces', {}). \
-                    setdefault(interfaces_sort, {})
                     interfaces = groups['interfaces']
                     if interfaces[-1] == ',':
                         interfaces = interfaces[:-1]
                     interfaces = interfaces.replace(' ','')
                     splitted_interface = interfaces.split(',')
                     for interface in splitted_interface:
-                        dict_interface = dict_real_interfaces.setdefault(interface, {})
-                        dict_interface.update({interface_sort: interface})
+                        dict_real_interfaces = dict_name.setdefault('interfaces', {}). \
+                        setdefault(interfaces_sort, []).append(interface)
                 continue
 
             # Class: default, Flags: 0x00000111, ID: 1
