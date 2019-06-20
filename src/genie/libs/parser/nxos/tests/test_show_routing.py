@@ -10,7 +10,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # nxos show_routing
 from genie.libs.parser.nxos.show_routing import ShowRoutingVrfAll, ShowRoutingIpv6VrfAll,\
-                                     ShowIpRoute, ShowIpv6Route
+                                     ShowIpRoute, ShowIpv6Route, ShowRouting
 
 # =====================================
 #  Unit test for 'show routing vrf all'
@@ -974,6 +974,98 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+# ===========================================
+#  Unit test for 'show routing'
+# ===========================================
+class test_show_routing(unittest.TestCase):
+    '''Unit test for show routing'''
+
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4 unicast':
+                        {'bgp_distance_extern_as': 20,
+                        'bgp_distance_internal_as': 200,
+                        'ip':
+                            {'10.106.0.0/8':
+                                {'ubest_num': '1',
+                                'mbest_num': '0',
+                                'best_route':
+                                    {'unicast':
+                                        {'nexthop':
+                                            {'vrf default':
+                                                {'protocol':
+                                                    {'bgp':
+                                                        {'uptime': '18:11:28',
+                                                        'preference': '20',
+                                                        'metric': '0',
+                                                        'protocol_id': '333',
+                                                        'attribute': 'external',
+                                                        'tag': '333',
+                                                        'interface': 'Null0'}}}}}}},
+                            '10.16.1.0/24':
+                                {'ubest_num': '1',
+                                'mbest_num': '0',
+                                'best_route':
+                                    {'unicast':
+                                        {'nexthop':
+                                            {'fec1::1002':
+                                                {'protocol':
+                                                    {'bgp':
+                                                        {'uptime': '15:57:39',
+                                                        'preference': '200',
+                                                        'metric': '4444',
+                                                        'protocol_id': '333',
+                                                        'attribute': 'internal',
+                                                        'route_table': 'default',
+                                                        'tag': '333',
+                                                        'interface': 'Ethernet1/1'}}}}}}},
+                            '10.106.0.5/8':
+                                {'ubest_num': '1',
+                                'mbest_num': '0',
+                                'best_route':
+                                    {'unicast':
+                                        {'nexthop':
+                                            {'Null0':
+                                                {'protocol':
+                                                    {'static':
+                                                        {'uptime': '18:47:42',
+                                                        'preference': '1',
+                                                        'metric': '0'}}}}}}}}}}}}}
+
+    golden_output = {'execute.return_value': '''
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+
+        10.106.0.0/8, ubest/mbest: 1/0
+            *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
+        10.16.1.0/24, ubest/mbest: 1/0
+            *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
+        10.106.0.5/8, ubest/mbest: 1/0
+            *via Null0, [1/0], 18:47:42, static
+
+        '''
+                     }
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        bgp_obj = ShowRouting(device=self.device)
+        parsed_output = bgp_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_obj = ShowRouting(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_obj.parse()
 
 # ============================================
 # Unit tests for:
