@@ -80,16 +80,13 @@
     * Updated ShowIpProtocols to fix parsing issue of unbound variable
 
 --------------------------------------------------------------------------------
-<<<<<<< HEAD
                                     STP
 --------------------------------------------------------------------------------
 * NXOS
         * Added ShowSpanningTreeMstDetails to show_stp parser
         * Added ShowSpanningTreeDetails, ShowSpanningTreeSummary and addressed ShowSpanningTreeMstDetails comments
-=======
 Inventory
 --------------------------------------------------------------------------------
 * ASA
     * Added ShowInventory for:
         show inventory
->>>>>>> b77a911e7dcf0180b608e67787cfa8a4307131dd

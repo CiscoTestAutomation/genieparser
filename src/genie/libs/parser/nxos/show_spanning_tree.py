@@ -120,7 +120,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                         ' +\sport\s+id\s+(?P<d_bridge_port_id>\d+(\.\d+)*)$')
             
         p9_1 = re.compile(r'^Timers\:\s+message\s+expires\s+in\s+'
-                        '(?P<expire_message_time>\d+)\s+sec,\s+forward'
+                        '(?P<message_expires_in>\d+)\s+sec,\s+forward'
                         '\s+delay\s+(?P<forward_delay>\d+),\s+forward'
                         '\s+transitions\s+(?P<forward_transitions>\d+)$')
 
@@ -209,9 +209,8 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             m = p9_1.match(line)
             if m:
                 timer_dict = intf_dict.setdefault('timers', {})
-                timer_dict['message_expires_in'] = int(m.groupdict()['expire_message_time'])
-                timer_dict['forward_delay'] = int(m.groupdict()['forward_delay'])
-                timer_dict['forward_transitions'] = int(m.groupdict()['forward_transitions'])
+                group = m.groupdict()
+                timer_dict.update({k: int(v) for k,v in group.items()})
                 continue
             
             # Bpdus sent 113, received 0
@@ -301,9 +300,9 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         p11 = re.compile(r'^(?P<mode_name>\w+) *\s+(?P<blocking>\d+) '
                         '*\s+(?P<listening>\d+) *\s+(?P<learning>\d+) '
                         '*\s+(?P<forwarding>\d+) *\s+(?P<stp_active>\d+)$')
-        p12 = re.compile(r'^\d+\s+\w+ *\s+(?P<tot_blockings>\d+) '
-                        '*\s+(?P<tot_listening>\d+) *\s+(?P<tot_learning>\d+) '
-                        '*\s+(?P<tot_forwarding>\d+) *\s+(?P<tot_stp_active>\d+)$')
+        p12 = re.compile(r'^\d+\s+\w+ *\s+(?P<blockings>\d+) '
+                        '*\s+(?P<listenings>\d+) *\s+(?P<learnings>\d+) '
+                        '*\s+(?P<forwardings>\d+) *\s+(?P<stp_actives>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -321,35 +320,35 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             
             m = p3.match(line)
             if m:
-                bool = True if 'enabled' in line.lower() else False
-                ret_dict['port_type_default'] = bool
+                availability = True if 'enabled' in line.lower() else False
+                ret_dict['port_type_default'] = availability
                 continue
 
             m = p4.match(line)
             if m:
                 bpdu_type = m.groupdict()['bpdu_bool'].lower()
                 if 'guard' in line.lower():
-                    bool = True if 'enabled' in bpdu_type else False
-                    ret_dict['bpdu_guard'] = bool
+                    availability = True if 'enabled' in bpdu_type else False
+                    ret_dict['bpdu_guard'] = availability
             
                 bpdu_type = m.groupdict()['bpdu_bool'].lower()
                 if 'filter' in line.lower():
-                    bool = True if 'enabled' in bpdu_type else False
-                    ret_dict['bpdu_filter'] = bool
+                    availability = True if 'enabled' in bpdu_type else False
+                    ret_dict['bpdu_filter'] = availability
                 continue
 
             m = p5.match(line)
             if m:
                 bridge_assurance = m.groupdict()['bridge_assurance']
-                bool = True if 'enabled' in bridge_assurance else False
-                ret_dict['bridge_assurance'] = bool
+                availability = True if 'enabled' in bridge_assurance else False
+                ret_dict['bridge_assurance'] = availability
                 continue
 
             m = p6.match(line)
             if m:
                 loop_guard = m.groupdict()['loop_guard']
-                bool = True if 'enabled' in loop_guard else False
-                ret_dict['loop_guard'] = bool
+                availability = True if 'enabled' in loop_guard else False
+                ret_dict['loop_guard'] = availability
                 continue
 
             m = p7.match(line)
@@ -362,41 +361,35 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             m = p8.match(line)
             if m:
                 pvst_simulation = m.groupdict()['pvst_simulation']
-                bool = True if 'enabled' in line else False
-                ret_dict['pvst_simulation'] = bool
+                availability = True if 'enabled' in line else False
+                ret_dict['pvst_simulation'] = availability
                 continue
             
             m = p9.match(line)
             if m:
                 vpc_peer_switch = m.groupdict()['vpc_peer_switch']
-                bool = True if 'enabled' in line else False
-                ret_dict['vpc_peer_switch'] = bool
+                availability = True if 'enabled' in line else False
+                ret_dict['vpc_peer_switch'] = availability
                 continue
 
             m = p10.match(line)
             if m:
                 stp_lite = m.groupdict()['stp_lite']
-                bool = True if 'enabled' in line else False
-                ret_dict['stp_lite'] = bool
+                availability = True if 'enabled' in line else False
+                ret_dict['stp_lite'] = availability
                 continue
 
             m = p11.match(line)
             if m:
                 mode_name_dict = mode_dict.setdefault(m.groupdict()['mode_name'], {})
-                mode_name_dict['blocking'] = int(m.groupdict()['blocking'])
-                mode_name_dict['listening'] = int(m.groupdict()['listening'])
-                mode_name_dict['learning'] = int(m.groupdict()['learning'])
-                mode_name_dict['forwarding'] = int(m.groupdict()['forwarding'])
-                mode_name_dict['stp_active'] = int(m.groupdict()['stp_active'])
+                group = m.groupdict()
+                mode_name_dict.update({k: int(v) for k,v in group.items() if 'mode_name' not in k})
                 continue
             m = p12.match(line)
             if m:
                 stats_dict = ret_dict.setdefault('total_statistics', {})
-                stats_dict['blockings'] = int(m.groupdict()['tot_blockings'])
-                stats_dict['listenings'] = int(m.groupdict()['tot_listening'])
-                stats_dict['learnings'] = int(m.groupdict()['tot_learning'])
-                stats_dict['forwardings'] = int(m.groupdict()['tot_forwarding'])
-                stats_dict['stp_actives'] = int(m.groupdict()['tot_stp_active'])
+                group = m.groupdict()
+                stats_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
         return ret_dict
@@ -594,26 +587,24 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             #   Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
             m = p2.match(line)
             if m:
-                inst_dict['bridge_priority'] = int(m.groupdict()['bridge_priority'])
-                inst_dict['bridge_sysid'] = int(m.groupdict()['bridge_sysid'])
-                inst_dict['bridge_address'] =  m.groupdict()['bridge_address']
+                group = m.groupdict()
+                inst_dict.update({k: int(v) if 'bridge_address' not in k else v for k,v in group.items()})
                 continue
 
             #   Configured hello time 10, max age 40, forward delay 30
             m = p3.match(line)
             if m:
-                domain_dict['hello_time'] = int(m.groupdict()['hello_time'])
-                domain_dict['max_age'] = int(m.groupdict()['max_age'])
-                domain_dict['forwarding_delay'] = int(m.groupdict()['forwarding_delay'])
+                group = m.groupdict()
+                domain_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # Topology change flag not set, detected flag not set
             m = p4.match(line)
             if m:
-                bool = False if 'topology change flag not set' in line.lower() else True
-                inst_dict['topology_change_flag'] =  bool
-                bool = False if 'detected flag not set' in line.lower() else True
-                inst_dict['topology_detected_flag'] = bool
+                availability = False if 'topology change flag not set' in line.lower() else True
+                inst_dict['topology_change_flag'] =  availability
+                availability = False if 'detected flag not set' in line.lower() else True
+                inst_dict['topology_detected_flag'] = availability
                 continue
             
             # Number of topology changes 0 last change occurred 142:22:13 ago
@@ -716,8 +707,8 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             # PVST Simulation is enabled by default
             m = p17.match(line)
             if m:
-                bool = True if 'enabled' in line.lower() else False
-                intf_dict['pvst_simulation'] = bool
+                availability = True if 'enabled' in line.lower() else False
+                intf_dict['pvst_simulation'] = availability
                 continue
 
             # BPDU: sent 110, received 0
