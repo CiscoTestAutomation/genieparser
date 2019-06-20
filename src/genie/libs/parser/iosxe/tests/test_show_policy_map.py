@@ -2220,7 +2220,7 @@ show policy-map interface te0/0/0.101
                                 'child-policy': {
                                     'class_map': {
                                         'band-policy': {
-                                            'bandwidth': '110000 kbps',
+                                            'bandwidth_kbps': 110000,
                                             'bytes': 0,
                                             'bytes_output': 0,
                                             'match': ['none'],
@@ -2270,8 +2270,7 @@ show policy-map interface te0/0/0.101
                                                      'interval': 300,
                                                      'offered_rate_bps': 0}},
                                         'test-cir': {
-                                            'bandwidth': '600000 '
-                                                         'kbps',
+                                            'bandwidth_kbps': 600000,
                                             'bytes': 0,
                                             'bytes_output': 0,
                                             'match': ['none'],
@@ -3124,6 +3123,23 @@ class test_show_policy_map(unittest.TestCase):
           7       25               50               1/10
           queue-limit 100 packets
     '''}
+    golden_parsed_output13 = {
+        'policy_map': {
+            'parent-policy2': {
+                'class': {
+                    'class-default': {
+                        'average_rate_traffic_shaping': True,
+                        'bc_bits': 2000000,
+                        'be_bits': 300000,
+                        'cir_bps': 1000000}}}}}
+
+    golden_output13 = {'execute.return_value':'''
+        Policy Map parent-policy2
+            Class class-default
+              Average Rate Traffic Shaping
+              cir 1000000 (bps) bc 2000000 (bits) be 300000 (bits)
+
+    '''}
 
     def test_show_policy_map_empty(self):
         self.maxDiff = None
@@ -3215,6 +3231,13 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output12)
+
+    def test_show_policy_map_golden13(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output13)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output13)
 
 if __name__ == '__main__':
     unittest.main()

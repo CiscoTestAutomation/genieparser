@@ -11,7 +11,8 @@ from genie.libs.parser.iosxe.show_l2vpn import ShowBridgeDomain, \
                                                ShowEthernetServiceInstanceStats, \
                                                ShowEthernetServiceInstanceSummary, \
                                                ShowL2vpnVfi, \
-                                               ShowL2vpnServiceAll
+                                               ShowL2vpnServiceAll, \
+                                               ShowEthernetServiceInstance
 
 
 class test_show_bridge_domain(unittest.TestCase):
@@ -404,112 +405,135 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'service_instance': {
-            400: {
-                'l2protocol_drop': False,
-                'associated_interface': 'GigabitEthernet0/0/2',
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'bytes_out': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
+    'service_instance': {
+        2051: {
+            'interfaces': {
+                'GigabitEthernet0/0/3': {
+                    'type': 'Static',
+                    'description': 'xxx',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                    'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
                     },
-                'associated_evc': '50',
-                'ce_vlans': '30',
-                'state': 'AdminDown',
-                },
-            2051: {
-                'l2protocol_drop': True,
-                'associated_interface': 'GigabitEthernet0/0/3',
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'bytes_out': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    },
-                'description': 'xxx',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'encapsulation': 'dot1q 2051 vlan protocol type 0x8100',
-                'state': 'Up',
-                'rewrite': 'egress tag translate 1-to-1 dot1q 2051 vlan-type 0x8100',
-                'ce_vlans': '',
-                'type': 'Static',
-                },
-            2052: {
-                'l2protocol_drop': True,
-                'associated_interface': 'GigabitEthernet0/0/3',
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'bytes_out': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    },
-                'description': 'xxx',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'encapsulation': 'dot1q 2052 vlan protocol type 0x8100',
-                'state': 'Up',
-                'rewrite': 'egress tag translate 1-to-1 dot1q 2052 vlan-type 0x8100',
-                'ce_vlans': '',
-                'type': 'Static',
-                },
-            2053: {
-                'l2protocol_drop': True,
-                'associated_interface': 'GigabitEthernet0/0/3',
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'bytes_out': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    },
-                'description': 'xxx',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'encapsulation': 'dot1q 2053 vlan protocol type 0x8100',
-                'state': 'Up',
-                'rewrite': 'egress tag translate 1-to-1 dot1q 2053 vlan-type 0x8100',
-                'ce_vlans': '',
-                'type': 'Static',
-                },
-            2054: {
-                'l2protocol_drop': True,
-                'associated_interface': 'GigabitEthernet0/0/3',
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'bytes_out': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    },
-                'description': 'xxx',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'encapsulation': 'dot1q 2054 vlan protocol type 0x8100',
-                'state': 'Up',
-                'rewrite': 'egress tag translate 1-to-1 dot1q 2054 vlan-type 0x8100',
-                'ce_vlans': '',
-                'type': 'Static',
-                },
-            2055: {
-                'l2protocol_drop': True,
-                'associated_interface': 'GigabitEthernet0/0/3',
-                'efp_statistics': {
-                    'bytes_in': 0,
-                    'bytes_out': 0,
-                    'pkts_in': 0,
-                    'pkts_out': 0,
-                    },
-                'description': 'xxx',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
-                'state': 'Up',
-                'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
-                'ce_vlans': '',
-                'type': 'Static',
                 },
             },
-        }
+        2052: {
+            'interfaces': {
+                'GigabitEthernet0/0/3': {
+                    'type': 'Static',
+                    'description': 'xxx',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                    'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
+                    },
+                },
+            },
+        2053: {
+            'interfaces': {
+                'GigabitEthernet0/0/3': {
+                    'type': 'Static',
+                    'description': 'xxx',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                    'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
+                    },
+                },
+            },
+        2054: {
+            'interfaces': {
+                'GigabitEthernet0/0/3': {
+                    'type': 'Static',
+                    'description': 'xxx',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                    'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
+                    },
+                },
+            },
+        2055: {
+            'interfaces': {
+                'GigabitEthernet0/0/3': {
+                    'type': 'Static',
+                    'description': 'xxx',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                    'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
+                    },
+                },
+            },
+        400: {
+            'interfaces': {
+                'GigabitEthernet0/0/2': {
+                    'type': 'Static',
+                    'description': 'xxx',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2055 vlan protocol type 0x8100',
+                    'rewrite': 'egress tag translate 1-to-1 dot1q 2055 vlan-type 0x8100',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'AdminDown',
+                    'efp_statistics': {
+                        'pkts_in': 0,
+                        'bytes_in': 0,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'associated_evc': '50',
+                    'ce_vlans': '30',
+                    },
+                },
+            },
+        },
+    }
 
     golden_output = {'execute.return_value': '''\
         Router#show ethernet service instance detail
@@ -605,54 +629,64 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     golden_parsed_output_interface = {
         'service_instance': {
             1: {
-                'type': 'L2Context',
-                'ce_vlans': '',
-                'l2protocol_drop': True,
-                'efp_statistics': {
-                    'pkts_in': 0,
-                    'bytes_in': 0,
-                    'pkts_out': 0,
-                    'bytes_out': 0,
+                'interfaces': {
+                    'Ethernet0/0': {
+                        'type': 'static',
+                        'intiators': 'unclassified vlan',
+                        'control_policy': 'ABC',
+                        'l2protocol_drop': True,
+                        'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                        'dot1q_tunnel_ethertype': '0x8100',
+                        'state': 'Up',
+                        'efp_statistics': {
+                            'pkts_in': 0,
+                            'bytes_in': 0,
+                            'pkts_out': 0,
+                            'bytes_out': 0,
+                            },
+                        'ce_vlans': '10-20',
+                        },
                     },
-                'encapsulation': 'dot1q 200-300 vlan protocol type 0x8100',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'state': 'Up',
-                'associated_interface': 'Ethernet0/0',
-                'control_policy': 'ABC',
-                'intiators': 'unclassified vlan',
                 },
             2: {
-                'type': 'Dynamic',
-                'ce_vlans': '10-20',
-                'l2protocol_drop': True,
-                'efp_statistics': {
-                    'pkts_in': 0,
-                    'bytes_in': 0,
-                    'pkts_out': 0,
-                    'bytes_out': 0,
+                'interfaces': {
+                    'Ethernet0/0': {
+                        'type': 'static',
+                        'intiators': 'unclassified vlan',
+                        'control_policy': 'ABC',
+                        'l2protocol_drop': True,
+                        'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                        'dot1q_tunnel_ethertype': '0x8100',
+                        'state': 'Up',
+                        'efp_statistics': {
+                            'pkts_in': 0,
+                            'bytes_in': 0,
+                            'pkts_out': 0,
+                            'bytes_out': 0,
+                            },
+                        'ce_vlans': '10-20',
+                        },
                     },
-                'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'state': 'Up',
-                'associated_interface': 'Ethernet0/0',
                 },
             3: {
-                'type': 'static',
-                'ce_vlans': '10-20',
-                'l2protocol_drop': True,
-                'efp_statistics': {
-                    'pkts_in': 0,
-                    'bytes_in': 0,
-                    'pkts_out': 0,
-                    'bytes_out': 0,
+                'interfaces': {
+                    'Ethernet0/0': {
+                        'type': 'static',
+                        'intiators': 'unclassified vlan',
+                        'control_policy': 'ABC',
+                        'l2protocol_drop': True,
+                        'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
+                        'dot1q_tunnel_ethertype': '0x8100',
+                        'state': 'Up',
+                        'efp_statistics': {
+                            'pkts_in': 0,
+                            'bytes_in': 0,
+                            'pkts_out': 0,
+                            'bytes_out': 0,
+                            },
+                        'ce_vlans': '10-20',
+                        },
                     },
-                'encapsulation': 'dot1q 201 vlan protocol type 0x8100',
-                'associated_evc': '',
-                'dot1q_tunnel_ethertype': '0x8100',
-                'state': 'Up',
-                'associated_interface': 'Ethernet0/0',
                 },
             },
         }
@@ -704,6 +738,134 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
     '''
     }
 
+    golden_output_id_interface = {'execute.return_value' : '''
+        Device#show ethernet service  instance id 4000 int GigabitEthernet 0/0/0 detail
+        Service Instance ID: 4000
+        Service Instance Type: Trunk
+        Associated Interface: GigabitEthernet0/0/0
+        Associated EVC: 
+        L2protocol drop
+        CE-Vlans:                                                                        
+        Encapsulation: dot1q 2-21 vlan protocol type 0x8100
+        Rewrite: ingress tag pop 1 symmetric
+        Interface Dot1q Tunnel Ethertype: 0x8100
+        State: Up
+        EFP Statistics:
+           Pkts In   Bytes In   Pkts Out  Bytes Out
+        2810511074 191114753032          0          0
+        EFP Microblocks:
+        ****************
+        Microblock type: Bridge-domain
+        Bridge-domain: 2-21
+
+        Microblock type: L2Mcast
+        L2 Multicast GID: 9
+
+        Microblock type: dhcp_snoop
+        L2 Multicast GID: 9
+
+        Microblock type: PPPoE IA UBLOCK
+        PPPoE IA info
+        Enable: 0
+        Format Type: 0 
+        cricuit id:  
+        remote id:
+    '''}
+
+    golden_parsed_output_id_interface = {
+    'service_instance': {
+        4000: {
+            'interfaces': {
+                'GigabitEthernet0/0/0': {
+                    'type': 'Trunk',
+                    'l2protocol_drop': True,
+                    'encapsulation': 'dot1q 2-21 vlan protocol type 0x8100',
+                    'rewrite': 'ingress tag pop 1 symmetric',
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    'efp_statistics': {
+                        'pkts_in': 2810511074,
+                        'bytes_in': 191114753032,
+                        'pkts_out': 0,
+                        'bytes_out': 0,
+                        },
+                    'micro_block_type': {
+                        'Bridge-domain': {
+                            'bridge_domain': '2-21',
+                            },
+                        'L2Mcast': {
+                            'l2_multicast_gid': 9,
+                            },
+                        'dhcp_snoop': {
+                            'l2_multicast_gid': 9,
+                            },
+                        'PPPoE IA UBLOCK': {
+                            'enable': 0,
+                            'format_type': 0,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output_id_interface_2 = {
+        'execute.return_value': '''
+        Service Instance ID: 100
+        L2 ACL (inbound): test-acl
+        Associated Interface: Gig3/0/1
+        Associated EVC: test
+        L2protocol drop
+        CEVlans:
+        Interface Dot1q Tunnel Ethertype: 0x8100
+        State: Up
+        L2 ACL permit count: 10255
+        L2 ACL deny count: 53
+        '''
+    }
+    golden_parsed_output_id_interface_2 = {
+    'service_instance': {
+        100: {
+            'interfaces': {
+                'Gig3/0/1': {
+                    'l2_acl': {
+                        'inbound': 'test-acl',
+                        'permit_count': 10255,
+                        'deny_count': 53,
+                        },
+                    'associated_evc': 'test',
+                    'l2protocol_drop': True,
+                    'dot1q_tunnel_ethertype': '0x8100',
+                    'state': 'Up',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_storm_control = {'execute.return_value':'''
+     Microblock type: Storm-Control
+        storm-control unicast cir 8005
+        storm-control broadcast cir 8005
+        storm-control multicast cir 8005
+    '''}
+    golden_parsed_output_storm_control = {
+    'service_instance': {
+        151: {
+            'interfaces': {
+                'gi8': {
+                    'micro_block_type': {
+                        'Storm-Control': {
+                            'storm_control_unicast_cir': '8005',
+                            'storm_control_broadcast_cir': '8005',
+                            'storm_control_multicast_cir': '8005',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
@@ -724,6 +886,76 @@ class test_show_ethernet_service_instance_detail(unittest.TestCase):
         parsed_output = platform_obj.parse(interface='ethernet 0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output_interface)
 
+    def test_golden_id_interface(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_id_interface)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(service_instance_id=4000,interface='GigabitEthernet 0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_id_interface)
+
+    def test_golden_id_interface_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_id_interface_2)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(service_instance_id=100,interface='gig2/0/1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_id_interface_2)
+
+    def test_golden_storm_control(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_storm_control)
+        platform_obj = ShowEthernetServiceInstanceDetail(device=self.device)
+        parsed_output = platform_obj.parse(service_instance_id=151,interface='gi8')
+        self.assertEqual(parsed_output, self.golden_parsed_output_storm_control)
+
+class test_show_ethernet_service_instance(unittest.TestCase):
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    golden_output_1 = {'execute.return_value': '''
+
+        Id    Type    Interface                     State     CE-Vlans
+        501   Static  TenGigabitEthernet0/3/0       Up
+        501   Static  TenGigabitEthernet0/1/0       Up 
+        502   Static  TenGigabitEthernet0/3/0       Up
+    '''}
+
+    golden_parsed_output_1 = {
+    'service_instance': {
+        501: {
+            'interfaces': {
+                'TenGigabitEthernet0/3/0': {
+                    'state': 'Up',
+                    'type': 'Static',
+                    },
+                'TenGigabitEthernet0/1/0': {
+                    'state': 'Up',
+                    'type': 'Static',
+                    },
+                },
+            },
+        502: {
+            'interfaces': {
+                'TenGigabitEthernet0/3/0': {
+                    'state': 'Up',
+                    'type': 'Static',
+                    },
+                },
+            },
+        },
+    }
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        platform_obj = ShowEthernetServiceInstance(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = platform_obj.parse()    
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        platform_obj = ShowEthernetServiceInstance(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 class test_show_ethernet_service_instance_stats(unittest.TestCase):
 
