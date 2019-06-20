@@ -260,7 +260,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
 
 class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
     """Parser for show ipv6 routing vrf all,
-            show ipv6 routing vrf <vrf>"""
+            show  routing ipv6 vrf <vrf>"""
 
     exclude = [
         'uptime']

@@ -1021,8 +1021,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
     """Parser for show ip interface vrf all
         show ip interface vrf <vrf>
-        show ip interface <intf> vrf all
-        show ip interface <intf> vrf <vrf>"""
+        show ip interface <interface> vrf all
+        show ip interface <interface> vrf <vrf>"""
 
     cli_command = ['show ip interface {interface} vrf {vrf}', 'show ip interface {interface} vrf all',
                    'show ip interface vrf {vrf}', 'show ip interface vrf all']
@@ -2027,8 +2027,8 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
 class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
     """Parser for show ipv6 interface vrf all
         show ipv6 interface vrf <vrf>
-        show ipv6 interface <intf> vrf all
-        show ipv6 interface <intf> vrf <vrf>"""
+        show ipv6 interface <interface> vrf all
+        show ipv6 interface <interface> vrf <vrf>"""
 
     cli_command = ['show ipv6 interface {interface} vrf {vrf}', 'show ipv6 interface {interface} vrf all',
                    'show ipv6 interface vrf {vrf}', 'show ipv6 interface vrf all']
