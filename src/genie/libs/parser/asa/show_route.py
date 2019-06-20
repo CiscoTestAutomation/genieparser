@@ -1,6 +1,6 @@
 ''' show_route.py
 
-ASA parserr for the following show commands:
+Parser for the following show commands:
     * show route
 '''
 
@@ -27,7 +27,7 @@ class ShowRouteSchema(MetaParser):
                             Any(): {
                                 'candidate_default': bool,
                                 Optional('subnet'): str,
-                                Optional('route'): str,
+                                'route': str,
                                 Optional('active'): bool,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
@@ -160,7 +160,7 @@ class ShowRoute(ShowRouteSchema):
                         routes = groups['network']
                         subnet = groups['subnet']
                         prefix_length = str(IPAddress(subnet).netmask_bits())
-                        combined_ip = routes+'/'+prefix_length                    
+                        combined_ip = routes+'/'+prefix_length
                         dict_routes = dict_ipv4.setdefault(combined_ip, {})
                         dict_routes.update({'active': True})
                         dict_routes.update({'route': combined_ip})
