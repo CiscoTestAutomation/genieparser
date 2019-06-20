@@ -64,6 +64,11 @@
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
+* IOSXR
+    * Updated ShowBgpInstanceProcessDetail, ShowBgpInstanceNeighborsDetail,
+        ShowBgpInstanceNeighborsAdvertisedRoutes, ShowBgpInstanceNeighborsReceivedRoutes,
+        ShowBgpInstanceNeighborsRoutes, ShowBgpInstanceSummary, and ShowBgpInstanceAllAll
+        to support custom {vrf}, {instance}, and {neighbor}
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
