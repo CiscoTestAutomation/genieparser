@@ -6,6 +6,13 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
+    * Enhanced ShowIpOspfMaxMetric to support different outputs
+
+--------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
 * IOSXE
@@ -18,24 +25,32 @@
                                 platform
 --------------------------------------------------------------------------------
 * IOSXE
-    * Update ShowEnvironment to support: 
-    	show environment | include {include}
+    * Update ShowEnvironment to support:
+        show environment | include {include}
 
 --------------------------------------------------------------------------------
                                 ARP
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
-
+* ASA
+    * Added ShowArp for:
+        show arp
 --------------------------------------------------------------------------------
                                 interface
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
-
+* ASA
+    * Added ShowInterfaceSummary for:
+      show interface summary
+    * Added ShowInterfaceIpBrief for:
+      show interface ip brief
+    * Added ShowInterfaceDetail for:
+      show interface detail
 
 --------------------------------------------------------------------------------
-                               VRF 
+                               VRF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowVrfDetail to support description
@@ -54,8 +69,24 @@
         ShowBgpInstanceNeighborsAdvertisedRoutes, ShowBgpInstanceNeighborsReceivedRoutes,
         ShowBgpInstanceNeighborsRoutes, ShowBgpInstanceSummary, and ShowBgpInstanceAllAll
         to support custom {vrf}, {instance}, and {neighbor}
+    * Updated ShowBgpSummary for:
+        Support for more VRF values
+    * Updated ShowBgpAllSummary for:
+        Support for more VRF values
+    * Updated ShowIpBgpSummary for:
+        Support for more VRF values
+    * Updates ShowIpBgpAllSummary for:
+        Support for more VRF values
+
 --------------------------------------------------------------------------------
                                 protocols
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpProtocols to fix parsing issue of unbound variable
+
+--------------------------------------------------------------------------------
+Inventory
+--------------------------------------------------------------------------------
+* ASA
+    * Added ShowInventory for:
+        show inventory

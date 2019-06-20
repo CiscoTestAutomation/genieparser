@@ -85,7 +85,7 @@ class Traceroute(TracerouteSchema):
                            ' +(?P<traceroute>\S+), +timeout +is'
                            ' +(?P<timeout>(\d+)) +seconds$')
 
-        # Tracing the route to www.kddi.com (10.36.3.3)
+        # Tracing the route to www.cisco.com (10.36.3.3)
         p1_3 = re.compile(r'^Tracing +the +route +to +(?P<name_of_address>\S+)'
                            ' \(+(?P<traceroute>\S+)\)$')
 
@@ -157,7 +157,7 @@ class Traceroute(TracerouteSchema):
 
                 continue
 
-            # Tracing the route to www.kddi.com (10.36.3.3)
+            # Tracing the route to www.cisco.com (10.36.3.3)
             m = p1_3.match(line)
             if m:
                 group = m.groupdict()
