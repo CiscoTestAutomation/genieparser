@@ -3257,7 +3257,7 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
       'rib_route',
       'refcount']
 
-    def cli(self, vrf='', address_family='', cmd = "", output=None):
+    def cli(self, vrf='all', address_family='all', cmd = "", output=None):
         if output is None:
             if not cmd:
                 cmd= self.cli_command.format(vrf=vrf, address_family=address_family)

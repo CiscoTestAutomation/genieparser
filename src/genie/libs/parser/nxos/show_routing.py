@@ -73,15 +73,15 @@ class ShowRoutingVrfAllSchema(MetaParser):
 
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
     """Parser for show ip routing vrf all"""
-    cli_command = ['show routing {ip} vrf all', 'show routing vrf all']
+    cli_command = ['show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']
     exclude = [
         'uptime']
 
-    def cli(self, ip='',output=None):
+    def cli(self, ip='', vrf='all', output=None):
         if ip:
-            cmd = self.cli_command[0].format(ip=ip)
+            cmd = self.cli_command[0].format(ip=ip, vrf=vrf)
         else:
-            cmd = self.cli_command[1]
+            cmd = self.cli_command[1].format(vrf=vrf)
 
         # excute command to get output
         if output is None:
