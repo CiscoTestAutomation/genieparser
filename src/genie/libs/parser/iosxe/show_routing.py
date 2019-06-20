@@ -1599,3 +1599,179 @@ class ShowIpv6Cef(ShowIpCef):
             output = output
 
         return super().cli(cmd=cmd, vrf=vrf, prefix=prefix, output=output)
+
+# ====================================================
+#  schema for show ip route summary
+# ====================================================
+class ShowIpRouteSummarySchema(MetaParser):
+    """Schema for show ip route summary
+                  show ip route vrf <vrf> summary
+    """
+    schema = {
+        'vrf':{
+        Any():{
+            'vrf_id': str,
+            'maximum_paths': int,
+            'total_route_source': {
+                'networks': int,
+                'subnets': int,
+                'replicates': int,
+                'overhead': int,
+                'memory_bytes': int,
+            },
+            'route_source': {
+                Any(): {
+
+                        Any(): {
+                            'networks': int,
+                            'subnets': int,
+                            'replicates': int,
+                            'overhead': int,
+                            'memory_bytes': int,
+                            Optional('intra_area'): int,
+                            Optional('inter_area'): int,
+                            Optional('external_1'): int,
+                            Optional('external_2'): int,
+                            Optional('nssa_external_1'): int,
+                            Optional('nssa_external_2'): int,
+                            Optional('level_1'): int,
+                            Optional('level_2'): int,
+                            Optional('external'): int,
+                            Optional('internal'): int,
+                            Optional('local'): int,
+
+                    },
+                    Optional('networks'): int,
+                    Optional('subnets'): int,
+                    Optional('replicates'): int,
+                    Optional('overhead'): int,
+                    Optional('memory_bytes'): int,
+                    Optional('intra_area'): int,
+                    Optional('inter_area'): int,
+                    Optional('external_1'): int,
+                    Optional('external_2'): int,
+                    Optional('nssa_external_1'): int,
+                    Optional('nssa_external_2'): int,
+                    Optional('level_1'): int,
+                    Optional('level_2'): int,
+                    Optional('external'): int,
+                    Optional('internal'): int,
+                    Optional('local'): int,
+                },
+
+            }
+
+        }
+    }
+    }
+
+# ====================================================
+#  parser for show ip route summary
+# ====================================================
+"""Parser for show ip route summary
+                  show ip route vrf <vrf> summary
+    """
+class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+
+    cli_command = ['show ip route summary', 'show ip route vrf {vrf} summary']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # IP routing table name is default (0x0)
+        p1 = re.compile(r'^IP +routing +table +name +is +(?P<vrf>\w+) +\((?P<vrf_id>\w+)\)$')
+        # IP routing table maximum-paths is 32
+        p2 = re.compile(r'^IP +routing +table +maximum-paths +is +(?P<max_path>[\d]+)$')
+        # application     0           0           0           0           0
+        p3 = re.compile(
+            r'^(?P<protocol>\w+) +(?P<instance>\w+)*? *(?P<networks>\d+) +('
+            r'?P<subnets>\d+)? +(?P<replicates>\d+)? +(?P<overhead>\d+)? +('
+            r'?P<memory_bytes>\d+)$')
+        # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
+        p7 = re.compile(
+            r'^Intra-area: +(?P<intra_area>\d+) +Inter-area: +(?P<inter_area>\d+) '
+            r'+External-1: +(?P<external_1>\d+) +External-2: +(?P<external_2>\d+)$')
+        #   NSSA External-1: 0 NSSA External-2: 0
+        p8 = re.compile(
+            r'^NSSA +External-1: +(?P<nssa_external_1>\d+) +NSSA +External-2: +('
+            r'?P<nssa_external_2>\d+)$')
+        #   Level 1: 1 Level 2: 0 Inter-area: 0
+        p9_1 = re.compile(
+            r'^Level +1: +(?P<level_1>\d+) +Level +2: +(?P<level_2>\d+) +Inter-area: +('
+            r'?P<inter_area>\d+)$')
+        #   External: 0 Internal: 0 Local: 0
+        p13 = re.compile(
+            r'^External: +(?P<external>\d+) +Internal: +(?P<internal>\d+) +Local: +(?P<local>\d+)$')
+
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            # IP routing table name is default (0x0)
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+                vrf_dict['vrf_id'] = m.groupdict()['vrf_id']
+                vrf_rs_dict = vrf_dict.setdefault('route_source', {})
+                continue
+            # IP routing table maximum-paths is 32
+            m = p2.match(line)
+            if m:
+                vrf_dict['maximum_paths'] = int(m.groupdict()['max_path'])
+                continue
+            # application     0           0           0           0           0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                protocol = group.pop('protocol')
+                instance = group.pop('instance')
+                if protocol == 'Total':
+                    protocol_dict = vrf_dict.setdefault('total_route_source', {})
+                else:
+                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                if instance is not None:
+                    inst_dict = protocol_dict.setdefault(instance, {})
+                    inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                else:
+                    group = {k: int(v) for k, v in group.items() if v is not None}
+                    protocol_dict.update(group)
+                continue
+            # Intra-area: 1 Inter-area: 0 External-1: 0 External-2: 0
+            m = p7.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('ospf', {})
+                vrf_rs_dict['ospf'][instance].update(group)
+                continue
+            #   NSSA External-1: 0 NSSA External-2: 0
+            m = p8.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('ospf', {})
+                vrf_rs_dict['ospf'][instance].update(group)
+                continue
+
+            #   Level 1: 1 Level 2: 0 Inter-area: 0
+            m = p9_1.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('isis', {})
+                vrf_rs_dict['isis'][instance].update(group)
+                continue
+
+            #   External: 0 Internal: 0 Local: 0
+            m = p13.match(line)
+            if m:
+                group = {k: int(v) for k, v in m.groupdict().items()}
+                vrf_rs_dict.setdefault('bgp', {})
+                vrf_rs_dict['bgp'][instance].update(group)
+                continue
+        return ret_dict
+

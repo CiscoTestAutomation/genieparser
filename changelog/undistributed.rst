@@ -99,6 +99,18 @@ Inventory
         show inventory
 
 --------------------------------------------------------------------------------
+                            routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+* IOS
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+
+--------------------------------------------------------------------------------
                                 L2VPN
 --------------------------------------------------------------------------------
 * IOSXE
@@ -109,3 +121,4 @@ Inventory
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
+
