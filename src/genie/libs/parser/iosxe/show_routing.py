@@ -1621,7 +1621,7 @@ class ShowIpRouteSummarySchema(MetaParser):
             },
             'route_source': {
                 Any(): {
-                    Optional('instance'): {
+
                         Any(): {
                             'networks': int,
                             'subnets': int,
@@ -1639,7 +1639,7 @@ class ShowIpRouteSummarySchema(MetaParser):
                             Optional('external'): int,
                             Optional('internal'): int,
                             Optional('local'): int,
-                        }
+
                     },
                     Optional('networks'): int,
                     Optional('subnets'): int,
@@ -1737,7 +1737,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 else:
                     protocol_dict = vrf_rs_dict.setdefault(protocol, {})
                 if instance is not None:
-                    inst_dict = protocol_dict.setdefault('instance', {}).setdefault(instance, {})
+                    inst_dict = protocol_dict.setdefault(instance, {})
                     inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 else:
                     group = {k: int(v) for k, v in group.items() if v is not None}
@@ -1748,14 +1748,14 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 group = {k: int(v) for k, v in m.groupdict().items()}
                 vrf_rs_dict.setdefault('ospf', {})
-                vrf_rs_dict['ospf']['instance'][instance].update(group)
+                vrf_rs_dict['ospf'][instance].update(group)
                 continue
             #   NSSA External-1: 0 NSSA External-2: 0
             m = p8.match(line)
             if m:
                 group = {k: int(v) for k, v in m.groupdict().items()}
                 vrf_rs_dict.setdefault('ospf', {})
-                vrf_rs_dict['ospf']['instance'][instance].update(group)
+                vrf_rs_dict['ospf'][instance].update(group)
                 continue
 
             #   Level 1: 1 Level 2: 0 Inter-area: 0
@@ -1763,7 +1763,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 group = {k: int(v) for k, v in m.groupdict().items()}
                 vrf_rs_dict.setdefault('isis', {})
-                vrf_rs_dict['isis']['instance'][instance].update(group)
+                vrf_rs_dict['isis'][instance].update(group)
                 continue
 
             #   External: 0 Internal: 0 Local: 0
@@ -1771,7 +1771,7 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
             if m:
                 group = {k: int(v) for k, v in m.groupdict().items()}
                 vrf_rs_dict.setdefault('bgp', {})
-                vrf_rs_dict['bgp']['instance'][instance].update(group)
+                vrf_rs_dict['bgp'][instance].update(group)
                 continue
         return ret_dict
 

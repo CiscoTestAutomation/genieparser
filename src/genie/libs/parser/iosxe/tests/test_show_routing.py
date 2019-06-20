@@ -1695,43 +1695,43 @@ Total           4           23          0           2688        9932
                         'memory_bytes': 0,
                     },
                     'ospf': {
-                        'instance': {
-                            '2': {
-                                'networks': 0,
-                                'subnets': 1,
-                                'replicates': 0,
-                                'overhead': 96,
-                                'memory_bytes': 308,
-                                'intra_area': 1,
-                                'inter_area': 0,
-                                'external_1': 0,
-                                'external_2': 0,
-                                'nssa_external_1': 0,
-                                'nssa_external_2': 0,
-                            }
+
+                        '2': {
+                            'networks': 0,
+                            'subnets': 1,
+                            'replicates': 0,
+                            'overhead': 96,
+                            'memory_bytes': 308,
+                            'intra_area': 1,
+                            'inter_area': 0,
+                            'external_1': 0,
+                            'external_2': 0,
+                            'nssa_external_1': 0,
+                            'nssa_external_2': 0,
                         }
+
                     },
                     'isis': {
-                        'instance': {
-                            'test1': {
-                                'networks': 0,
-                                'subnets': 1,
-                                'replicates': 0,
-                                'overhead': 96,
-                                'memory_bytes': 304,
-                                'level_1': 1,
-                                'level_2': 0,
-                                'inter_area': 0,
-                            }}},
+
+                        'test1': {
+                            'networks': 0,
+                            'subnets': 1,
+                            'replicates': 0,
+                            'overhead': 96,
+                            'memory_bytes': 304,
+                            'level_1': 1,
+                            'level_2': 0,
+                            'inter_area': 0,
+                        }},
                     'eigrp': {
-                        'instance': {
-                            '100': {
-                                'networks': 0,
-                                'subnets': 3,
-                                'replicates': 0,
-                                'overhead': 672,
-                                'memory_bytes': 912,
-                            }}},
+
+                        '100': {
+                            'networks': 0,
+                            'subnets': 3,
+                            'replicates': 0,
+                            'overhead': 672,
+                            'memory_bytes': 912,
+                        }},
                     'rip': {
                         'networks': 0,
                         'subnets': 1,
@@ -1740,17 +1740,17 @@ Total           4           23          0           2688        9932
                         'memory_bytes': 304,
                     },
                     'bgp': {
-                        'instance': {
-                            '65000': {
-                                'networks': 0,
-                                'subnets': 0,
-                                'replicates': 0,
-                                'overhead': 0,
-                                'memory_bytes': 0,
-                                'external': 0,
-                                'internal': 0,
-                                'local': 0,
-                            }}},
+
+                        '65000': {
+                            'networks': 0,
+                            'subnets': 0,
+                            'replicates': 0,
+                            'overhead': 0,
+                            'memory_bytes': 0,
+                            'external': 0,
+                            'internal': 0,
+                            'local': 0,
+                        }},
 
                 }
             }
