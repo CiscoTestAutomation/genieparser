@@ -77,4 +77,5 @@
                                     STP
 --------------------------------------------------------------------------------
 * NXOS
-        * Added ShowSpanningTreeDetails to show_stp parser
+        * Added ShowSpanningTreeMstDetails to show_stp parser
+        * Added ShowSpanningTreeDetails, ShowSpanningTreeSummary and addressed ShowSpanningTreeMstDetails comments
