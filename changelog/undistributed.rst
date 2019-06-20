@@ -85,3 +85,10 @@ Inventory
 * ASA
     * Added ShowInventory for:
         show inventory
+
+--------------------------------------------------------------------------------
+                                    BFD
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBfdNeighborsDetails to add:
+        show bfd neighbors interface {interface} details

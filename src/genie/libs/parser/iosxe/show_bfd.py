@@ -21,12 +21,14 @@ from genie.libs.parser.utils.common import Common
 # Parser for the following show commands:
 # 	* 'show bfd neighbors details'
 #	* 'show bfd neighbors client {client} details'
+#   * 'show bfd neighbors interface {interface} details'
 # ==============================================================
 class ShowBfdNeighborsDetailsSchema(MetaParser):
 	"""
 	Schema for the following show commands:
 		* show bfd neighbors details
 		* show bfd neighbors client {client} details
+        * show bfd neighbors interface {interface} details
 	"""
 
 	schema = {
@@ -120,16 +122,20 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 	""" Parser for the following commands:
 			* 'show bfd neighbors details'
 			* 'show bfd neighbors client {client} details'
+            * 'show bfd neighbors interface {interface} details'
 	"""
 	
 	cli_command = ['show bfd neighbors details',
-		'show bfd neighbors client {client} details']
+		'show bfd neighbors client {client} details',
+        'show bfd neighbors interface {interface} details']
 
-	def cli(self, client='', output= None):
+	def cli(self, client='', interface=None, output= None):
 		if output is None:
 			#execute command to get output
 			if client:
 				out = self.device.execute(self.cli_command[1].format(client=client))
+			elif interface:
+				out = self.device.execute(self.cli_command[2].format(interface=interface))
 			else:
 				out = self.device.execute(self.cli_command[0])
 		else:
