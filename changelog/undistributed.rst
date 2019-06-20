@@ -90,3 +90,15 @@ Inventory
 * ASA
     * Added ShowInventory for:
         show inventory
+
+--------------------------------------------------------------------------------
+                                L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowEthernetServiceInstanceStats for:
+        show ethernet service instance id {service_instance_id} interface {interface} stats
+    * Added ShowEthernetServiceInstance for:
+        show ethernet service instance
+    * Updated ShowEthernetServiceInstanceDetailSchema
+    * Added ShowEthernetServiceInstanceDetail for:
+        show ethernet service instance id {service_instance_id} interface {interface} detail
