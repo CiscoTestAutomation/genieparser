@@ -8,6 +8,8 @@ IOSXE parsers for the following show commands:
     * show ip ospf sham-links
     * show ip ospf virtual-links
     * show ip ospf neighbor detail
+    * show ip ospf neighbor
+    * show ip ospf neighbor {interface}
     * show ip ospf database
     * show ip ospf database router
     * show ip ospf database network
@@ -6043,11 +6045,13 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
 # ===========================
 # Schema for:
 #   * 'show ip ospf neighbor'
+#   * 'show ip ospf neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighborSchema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf neighbor'
+        * 'show ip ospf neighbor {interface}'
     '''
 
     schema = {
@@ -6069,20 +6073,29 @@ class ShowIpOspfNeighborSchema(MetaParser):
 # ===========================
 # Parser for:
 #   * 'show ip ospf neighbor'
+#   * 'show ip ospf neighbor {interface}'
 # ===========================
 class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
 
     ''' Parser for:
         * 'show ip ospf neighbor'
+        * 'show ip ospf neighbor {interface}'
     '''
 
-    cli_command = 'show ip ospf neighbor'
+    cli_command = [
+        'show ip ospf neighbor {interface}',
+        'show ip ospf neighbor']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
