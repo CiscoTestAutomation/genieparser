@@ -46,13 +46,13 @@ class ShowContext(ShowContextSchema):
             out = output
 
         ret_dict = {}
-        name = ''
+        context_name = ''
 
         # pod1             default              Vlan100,Vlan200      Routed       disk0:/pod-context/pod1
         # pod2             111                  Vlan300,Vlan400      Routed       disk0:/pod-context/pod2
         # *admin            default              Vlan1000,Vlan1001,   Routed       disk0:/pod-context/admin.cfg
         p1 = re.compile(
-            r'^(?P<name>\S+)\s+(?P<class>\S+)\s+(?P<interface>\S+)\s+'
+            r'^(?P<context_name>\S+)\s+(?P<class>\S+)\s+(?P<interface>\S+)\s+'
             '(?P<mode>(?!Contexts:)\S+)\s+(?P<url>\S+)$')
 
         # Vlan1030,Vlan1031,
@@ -69,14 +69,14 @@ class ShowContext(ShowContextSchema):
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                if groups['name']:
-                    if '*' in groups['name'][0]:
-                        name = groups['name'][1:]
-                        dict_name = ret_dict.setdefault(name, {})
+                if groups['context_name']:
+                    if '*' in groups['context_name'][0]:
+                        context_name = groups['context_name'][1:]
+                        dict_name = ret_dict.setdefault(context_name, {})
                         dict_name.update({'candidate_default': True})
                     else: 
-                        name = groups['name']
-                        dict_name = ret_dict.setdefault(name, {})
+                        context_name = groups['context_name']
+                        dict_name = ret_dict.setdefault(context_name, {})
                         dict_name.update({'candidate_default': False})
                     dict_name.update({'class': groups['class']})
                     dict_name.update({'mode': groups['mode']})
@@ -95,7 +95,7 @@ class ShowContext(ShowContextSchema):
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                dict_name = ret_dict.setdefault(name, {})
+                dict_name = ret_dict.setdefault(context_name, {})
 
                 interfaces = groups['interface']
                 if interfaces[-1] == ',':
@@ -149,12 +149,12 @@ class ShowContextDetail(ShowContextDetailSchema):
             out = output
 
         ret_dict = dict_name = {}
-        name = interfaces_sort = ''
+        context_name = interfaces_sort = ''
 
         # Context "pod1", has been created
         # Context "null", is a system resource
         p1 = re.compile(
-            r'^Context +\"(?P<name>\S+)\",*\s(?P<condition>.*)$')
+            r'^Context +\"(?P<context_name>\S+)\",*\s(?P<condition>.*)$')
 
         # Config URL: disk0:/pod-context/pod1
         # Config URL: ... null ...
@@ -189,15 +189,15 @@ class ShowContextDetail(ShowContextDetailSchema):
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                if groups['name']:
-                    name = groups['name']                         
-                    dict_name = ret_dict.setdefault(name, {})
+                if groups['context_name']:
+                    context_name = groups['context_name']                         
+                    dict_name = ret_dict.setdefault(context_name, {})
                     if 'created' in groups['condition']:
                         dict_name.update({'context_created': True})
                     else:
                         dict_name.update({'context_created': False})
                 else:
-                    dict_name = ret_dict.setdefault(name, {})
+                    dict_name = ret_dict.setdefault(context_name, {})
                 continue
 
             # Config URL: disk0:/pod-context/pod1
@@ -205,11 +205,8 @@ class ShowContextDetail(ShowContextDetailSchema):
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                if '... null ...' in groups['url']:
-                    url = None
-                else:
-                    url = groups['url']
-                    dict_name.update({'url': url})
+                url = groups['url']
+                dict_name.update({'url': url})
                 continue
 
             # Real Interfaces: Vlan100, Vlan200

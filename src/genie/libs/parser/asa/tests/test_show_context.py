@@ -105,7 +105,8 @@ class test_show_context_detail(unittest.TestCase):
             'context_created': False,
             'id': 4,
             'flags': '0x00000114',
-            'class': 'default'
+            'class': 'default',
+            'url': '... null ...'
         },
         'admin': {
             'context_created': True,
