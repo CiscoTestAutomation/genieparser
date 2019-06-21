@@ -176,7 +176,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         parser class - implements detail parsing mechanisms for cli,xml and yang output.
     """
     cli_command = ['show bgp process vrf all', 'show bgp process vrf {vrf}']
-    xml_command = 'show bgp process vrf all | xml'
+    xml_command = ['show bgp process vrf all | xml', 'show bgp process vrf {vrf} | xml']
     exclude = [
       'bgp_pid'
       'hwm_attr_entries',
@@ -786,9 +786,12 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
         return parsed_dict
 
-    def xml(self,output=None):
+    def xml(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.xml_command)
+            if vrf:
+                out = self.device.execute(self.xml_command[1].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.xml_command[0])
         else:
             out = output
 
@@ -1048,7 +1051,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                                                                                     
         return etree_dict
 
-    def yang(self):
+    def yang(self, vrf=''):
         # Initialize empty dictionary
         map_dict = {}
 
@@ -1062,25 +1065,48 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         map_dict['bgp_pid'] = yang_dict['bgp_pid']
 
         # vrf
-        for vrf in yang_dict['vrf']:
-            if 'vrf' not in map_dict:
-                map_dict['vrf'] = {}
-            if vrf not in map_dict['vrf']:
-                map_dict['vrf'][vrf] = {}
-            for vrf_attr_key in yang_dict['vrf'][vrf]:
-                # Set router_id
-                if vrf_attr_key == 'router_id':
-                    map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
-                # Set address_family
-                if vrf_attr_key == 'address_family':
-                    map_dict['vrf'][vrf][vrf_attr_key] = yang_dict['vrf'][vrf][vrf_attr_key]
-                if vrf_attr_key == 'neighbor':
-                    for nbr in yang_dict['vrf'][vrf]['neighbor']:
-                        for key in yang_dict['vrf'][vrf]['neighbor'][nbr]:
-                            # Set cluster_id
-                            if key == 'route_reflector_cluster_id':
-                                cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf]['neighbor'][nbr]['route_reflector_cluster_id'])
-                                map_dict['vrf'][vrf]['cluster_id'] = cluster_id
+        if vrf:
+            for vrf_name in yang_dict['vrf']:
+                if 'vrf' not in map_dict:
+                    map_dict['vrf'] = {}
+                if vrf_name == vrf:
+                    if vrf_name not in map_dict['vrf']:
+                        map_dict['vrf'][vrf_name] = {}
+                    for vrf_attr_key in yang_dict['vrf'][vrf_name]:
+                        # Set router_id
+                        if vrf_attr_key == 'router_id':
+                            map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
+                        # Set address_family
+                        if vrf_attr_key == 'address_family':
+                            map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
+                        if vrf_attr_key == 'neighbor':
+                            for nbr in yang_dict['vrf'][vrf_name]['neighbor']:
+                                for key in yang_dict['vrf'][vrf_name]['neighbor'][nbr]:
+                                    # Set cluster_id
+                                    if key == 'route_reflector_cluster_id':
+                                        cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf_name]['neighbor'][nbr]['route_reflector_cluster_id'])
+                                        map_dict['vrf'][vrf_name]['cluster_id'] = cluster_id
+
+        else:
+            for vrf_name in yang_dict['vrf']:
+                if 'vrf' not in map_dict:
+                    map_dict['vrf'] = {}
+                if vrf_name not in map_dict['vrf']:
+                    map_dict['vrf'][vrf_name] = {}
+                for vrf_attr_key in yang_dict['vrf'][vrf_name]:
+                    # Set router_id
+                    if vrf_attr_key == 'router_id':
+                        map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
+                    # Set address_family
+                    if vrf_attr_key == 'address_family':
+                        map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
+                    if vrf_attr_key == 'neighbor':
+                        for nbr in yang_dict['vrf'][vrf_name]['neighbor']:
+                            for key in yang_dict['vrf'][vrf_name]['neighbor'][nbr]:
+                                # Set cluster_id
+                                if key == 'route_reflector_cluster_id':
+                                    cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf_name]['neighbor'][nbr]['route_reflector_cluster_id'])
+                                    map_dict['vrf'][vrf_name]['cluster_id'] = cluster_id
 
         # Return to caller
         return map_dict
@@ -3179,7 +3205,7 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
 
         return parsed_dict
 
-    def yang(self, vrf):
+    def yang(self, vrf, address_family='', neighbor=''):
         # Initialize empty dictionary
         map_dict = {}
 
