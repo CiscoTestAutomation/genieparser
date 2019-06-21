@@ -25,6 +25,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
+    * Updated ShowIpOspfNeighbor to support command  'show ip ospf neighbor {interface}'
     * Enhanced ShowIpOspfMaxMetric to support different outputs
 
 
