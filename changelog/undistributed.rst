@@ -5,6 +5,12 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+                                   Dot1x
+-----------------------------------------------------------------------------
+* NXOS
+        * Added show_dot1x_Summary and modified show_dot1x_Statistics parsers
+        * Added all_details and test_all_details & adressed show_dot1x comments
+        * Modification to show_Dot1x schema and adressed show_dot1x comments
 --------------------------------------------------------------------------------
                                    Routing
 --------------------------------------------------------------------------------
@@ -20,12 +26,13 @@
 * IOSXE
     * Fix ShowIpInterfaceBrief short name issue
 
---------------------------------------------------------------------------------
-                                OSPF
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------
+                                   OSPF
+----------------------------------------------------------------------------
+* OSPF
+        * Optimized parser by moving all regex outside of for loop
 * IOSXE
     * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
-    * Enhanced ShowIpOspfMaxMetric to support different outputs
 
 
 --------------------------------------------------------------------------------
@@ -41,7 +48,7 @@
                                 platform
 --------------------------------------------------------------------------------
 * IOSXE
-    * Update ShowEnvironment to support:
+    * Update ShowEnvironment to support: 
         show environment | include {include}
 
 --------------------------------------------------------------------------------
@@ -49,15 +56,14 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
-    * Update ShowArp to support global static table
-* ASA
-    * Added ShowArp for:
-        show arp
+
 --------------------------------------------------------------------------------
                                 interface
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
+
+=======
 * NXOS
     * Updated ShowInterface
         * added show interface {interface} to support custom interface
@@ -84,7 +90,7 @@
       show interface detail
 
 --------------------------------------------------------------------------------
-                               VRF
+                               VRF 
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowVrfDetail to support description
@@ -98,11 +104,6 @@
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
-* IOSXR
-    * Updated ShowBgpInstanceProcessDetail, ShowBgpInstanceNeighborsDetail,
-        ShowBgpInstanceNeighborsAdvertisedRoutes, ShowBgpInstanceNeighborsReceivedRoutes,
-        ShowBgpInstanceNeighborsRoutes, ShowBgpInstanceSummary, and ShowBgpInstanceAllAll
-        to support custom {vrf}, {instance}, and {neighbor}
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -111,6 +112,8 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+
+* Optimized parser by moving all regex outside of for loop
 
 --------------------------------------------------------------------------------
                                 protocols
@@ -157,3 +160,4 @@
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
+>>>>>>> c8f99a805e77043b9089b6ca15489626ca0933a7
