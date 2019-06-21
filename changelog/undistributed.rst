@@ -6,11 +6,27 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                   Routing
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRoutingVrfAll
+        * added show routing vrf {vrf} to support custom vrf
+    * Updated ShowRoutingIpv6VrfAll
+        * added show ipv6 routing vrf {vrf} to support custom vrf
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpInterfaceBrief short name issue
+
+--------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
     * Enhanced ShowIpOspfMaxMetric to support different outputs
+
 
 --------------------------------------------------------------------------------
                                 policy-map
@@ -33,6 +49,7 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
+    * Update ShowArp to support global static table
 * ASA
     * Added ShowArp for:
         show arp
@@ -41,6 +58,23 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
+* NXOS
+    * Updated ShowInterface
+        * added show interface {interface} to support custom interface
+    * Updated ShowIpInterfaceVrfAll
+        * added show ip interface vrf {vrf},
+                show ip interface {intf} vrf all,
+                show ip interface {intf} vrf {vrf} to support custom interface and vrf
+    * Updated ShowVrfAllInterface
+        * added show vrf {vrf} interface {interface},
+                show vrf {vrf} interface,
+                show vrf all interface {interface} to support custom interface and vrf
+    * Updated ShowInterfaceSwitchport
+        * added show interface {interface} switchport to support custom interface
+    * Updated ShowIpv6InterfaceVrfAll
+        * added show ipv6 interface vrf {vrf},
+                show ipv6 interface {intf} vrf all,
+                show ipv6 interface {intf} vrf {vrf} to support custom interface and vrf
 * ASA
     * Added ShowInterfaceSummary for:
       show interface summary
@@ -64,6 +98,11 @@
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
+* IOSXR
+    * Updated ShowBgpInstanceProcessDetail, ShowBgpInstanceNeighborsDetail,
+        ShowBgpInstanceNeighborsAdvertisedRoutes, ShowBgpInstanceNeighborsReceivedRoutes,
+        ShowBgpInstanceNeighborsRoutes, ShowBgpInstanceSummary, and ShowBgpInstanceAllAll
+        to support custom {vrf}, {instance}, and {neighbor}
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -80,11 +119,44 @@
     * Updated ShowIpProtocols to fix parsing issue of unbound variable
 
 --------------------------------------------------------------------------------
-Inventory
+                                Inventory
 --------------------------------------------------------------------------------
 * ASA
     * Added ShowInventory for:
         show inventory
+
+--------------------------------------------------------------------------------
+                            routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+* IOS
+    * added ShowIpRouteSummary:
+        show ip route vrf {vrf} summary
+        show ip route summary
+
+* NXOS
+    * Updated ShowRoutingVrfAll to support custom vrf
+    * added ShowRouting for:
+        show routing
+        show routing {ip}
+
+* ASA
+    * Added ShowRoute for:
+      show route
+--------------------------------------------------------------------------------
+                                L2VPN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowEthernetServiceInstanceStats for:
+        show ethernet service instance id {service_instance_id} interface {interface} stats
+    * Added ShowEthernetServiceInstance for:
+        show ethernet service instance
+    * Updated ShowEthernetServiceInstanceDetailSchema
+    * Added ShowEthernetServiceInstanceDetail for:
+        show ethernet service instance id {service_instance_id} interface {interface} detail
 
 --------------------------------------------------------------------------------
                                 context

@@ -36,7 +36,16 @@ class ShowArpSchema(MetaParser):
     """
 
     schema = {
-        'interfaces': {
+        Optional('global_static_table'): {
+            Any(): {
+                'ip_address': str,
+                'mac_address': str,
+                'encap_type': str,
+                'age': str,
+                'protocol': str,
+            },
+        },
+        Optional('interfaces'): {
             Any(): {
                 'ipv4': {
                     'neighbors': {     
@@ -79,9 +88,10 @@ class ShowArp(ShowArpSchema):
         else:
             out = output
 
-        # initial regexp pattern
+        # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
+        # Internet  106.162.197.93          -   fa16.3e95.2218  ARPA
         p1 = re.compile(r'^(?P<protocol>\w+) +(?P<address>[\d\.\:]+) +(?P<age>[\d\-]+) +'
-                         '(?P<mac>[\w\.]+) +(?P<type>\w+) +(?P<interface>[\w\.\/\-]+)$')
+                         '(?P<mac>[\w\.]+) +(?P<type>\w+)( +(?P<interface>[\w\.\/\-]+))?$')
         # initial variables
         ret_dict = {}
 
@@ -89,24 +99,32 @@ class ShowArp(ShowArpSchema):
             line = line.strip()
 
             # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
+            # Internet  106.162.197.93          -   fa16.3e95.2218  ARPA
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 address = group['address']
                 interface = group['interface']
-                final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
-                    interface, {}).setdefault('ipv4', {}).setdefault(
-                    'neighbors', {}).setdefault(address, {})
-                
-                final_dict['ip'] = address
-                final_dict['link_layer_address'] = group['mac']
-                final_dict['age'] = group['age']
-                if group['age'] == '-':
-                    final_dict['origin'] = 'static'
+                if interface:
+                    final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
+                        interface, {}).setdefault('ipv4', {}).setdefault(
+                        'neighbors', {}).setdefault(address, {})
+                    
+                    final_dict['ip'] = address
+                    final_dict['link_layer_address'] = group['mac']
+                    final_dict['type'] = group['type']
+                    if group['age'] == '-':
+                        final_dict['origin'] = 'static'
+                    else:
+                        final_dict['origin'] = 'dynamic'
                 else:
-                    final_dict['origin'] = 'dynamic'
+                    final_dict = ret_dict.setdefault(
+                        'global_static_table', {}).setdefault(address, {})
+                    final_dict['ip_address'] = address
+                    final_dict['mac_address'] = group['mac']
+                    final_dict['encap_type'] = group['type']
 
-                final_dict['type'] = group['type']
+                final_dict['age'] = group['age']
                 final_dict['protocol'] = group['protocol']
                 continue
 
