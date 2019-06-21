@@ -9,12 +9,14 @@ from genie.libs.parser.nxos.show_spanning_tree import ShowSpanningTreeMst,\
                                                         ShowSpanningTreeSummary,\
                                                             ShowSpanningTreeDetail
 
-class testShowSpanningTreedetails(unittest.TestCase):
+class testShowSpanningTreeMst(unittest.TestCase):
     dev1 = Device(name = 'deviceA')
     dev2 = Device(name = 'deviceB')
 
     output_1 = {'execute.return_value' : 
         '''
+           P1# show spanning-tree mst detail  
+
                 ##### MST0    vlans mapped:   1-399,501-4094
             Bridge        address 0023.04ee.be14  priority      32768 (32768 sysid 0)
             Root          this switch for the CIST
@@ -42,17 +44,23 @@ class testShowSpanningTreedetails(unittest.TestCase):
                         'bridge_address': '0023.04ee.be14',
                         'bridge_priority': 32768,
                         'sys_id': 0,
-                        'root': 'CIST',
+                        'root_for_cist' : 'this switch',
+                        'regional_root': 'this switch',
                         'interfaces': {
-                            'Po30': {
-                                'name': 'po30',
+                            'port-channel30': {
+                                'name': 'port-channel30',
                                 'port_state': 'broken',
-                                'port_num': '128.4125',
+                                'port_id': '128.4125',
                                 'port_priority': 128,
-                                'cost': 500,
+                                'port_cost': 500,
+                                'bridge_assurance_inconsistent': True,
+                                'vpc_peer_link_inconsistent': True,
                                 'designated_root_address': '0023.04ee.be14',
                                 'designated_root_priority': 32768,
-                                'designated_cost': 0,
+                                'designated_root_cost': 0,
+                                'designated_regional_root_address': '0023.04ee.be14',
+                                'designated_regional_root_priority': 32768,
+                                'designated_regional_root_cost': 0,
                                 'designated_bridge_address': '4055.3926.d8c1',
                                 'designated_bridge_priority': 61440,
                                 'designated_bridge_port_id': '128.4125',
@@ -66,22 +74,22 @@ class testShowSpanningTreedetails(unittest.TestCase):
                                     'bpdu_recieved': 0
                                 }
                             }
+                        },
+                        'operational': {
+                            'domain': 'operational',
+                            'hello_time': 10,
+                            'forwarding_delay': 30,
+                            'max_age': 40,
+                            'hold_count': 6
+                        },
+                        'configured': {
+                            'domain': 'configured',
+                            'hello_time': 10,
+                            'forwarding_delay': 30,
+                            'max_age': 40,
+                            'max_hop': 255
                         }
                     }
-                },
-                'operational': {
-                    'domain': 'operational',
-                    'hello_time': 10,
-                    'forwarding_delay': 30,
-                    'max_age': 40,
-                    'hold_count': 6
-                },
-                'configured': {
-                    'domain': 'configured',
-                    'hello_time': 10,
-                    'forwarding_delay': 30,
-                    'max_age': 40,
-                    'max_hop': 255
                 }
             }
         }
@@ -89,6 +97,8 @@ class testShowSpanningTreedetails(unittest.TestCase):
 
     output_2 = {'execute.return_value' : 
         '''
+            P1# show spanning-tree mst detail 
+
                 ##### MST0    vlans mapped:   1-399,501-4094
             Bridge        address 0023.04ee.be14  priority      32768 (32768 sysid 0)
             Root          this switch for the CIST
@@ -115,17 +125,22 @@ class testShowSpanningTreedetails(unittest.TestCase):
                         'bridge_address': '0023.04ee.be14',
                         'bridge_priority': 32768,
                         'sys_id': 0,
-                        'root': 'CIST',
+                        'root_for_cist' : 'this switch',
                         'interfaces': {
-                            'Po25': {
-                                'name': 'po25',
+                            'port-channel25': {
+                                'name': 'port-channel25',
                                 'port_state': 'broken',
-                                'port_num': '128.4125',
+                                'port_id': '128.4125',
                                 'port_priority': 128,
-                                'cost': 500,
+                                'port_cost': 500,
+                                'bridge_assurance_inconsistent': True,
+                                'vpc_peer_link_inconsistent': True,
                                 'designated_root_address': '0023.04ee.be14',
                                 'designated_root_priority': 32768,
-                                'designated_cost': 0,
+                                'designated_root_cost': 0,
+                                'designated_regional_root_address': '0023.04ee.be14',
+                                'designated_regional_root_priority': 32768,
+                                'designated_regional_root_cost': 0,
                                 'designated_bridge_address': '4055.3926.d8c1',
                                 'designated_bridge_priority': 61440,
                                 'designated_bridge_port_id': '128.4125',
@@ -139,22 +154,22 @@ class testShowSpanningTreedetails(unittest.TestCase):
                                     'bpdu_recieved': 0
                                 }
                             }
+                        },
+                        'operational': {
+                            'domain': 'operational',
+                            'hello_time': 5,
+                            'forwarding_delay': 20,
+                            'max_age': 30,
+                            'hold_count': 12
+                        },
+                        'configured': {
+                            'domain': 'configured',
+                            'hello_time': 10,
+                            'forwarding_delay': 30,
+                            'max_age': 40,
+                            'max_hop': 255
                         }
                     }
-                },
-                'operational': {
-                    'domain': 'operational',
-                    'hello_time': 5,
-                    'forwarding_delay': 20,
-                    'max_age': 30,
-                    'hold_count': 12
-                },
-                'configured': {
-                    'domain': 'configured',
-                    'hello_time': 10,
-                    'forwarding_delay': 30,
-                    'max_age': 40,
-                    'max_hop': 255
                 }
             }
         }
@@ -187,6 +202,8 @@ class testShowSpanningTreeSummary(unittest.TestCase):
     dev2 = Device(name = 'deviceB')
 
     golden_output_mstp = {'execute.return_value' : '''
+        P1# show spanning-tree summary 
+
         Switch is in mst mode (IEEE Standard)
         Root bridge for: MST0000
         Port Type Default                        is disable
@@ -240,6 +257,8 @@ class testShowSpanningTreeSummary(unittest.TestCase):
     }
 
     golden_output_mstp_2 = {'execute.return_value' : '''
+        P1# show spanning-tree summary 
+
         Switch is in mst mode (IEEE Standard)
         Root bridge for: MST0000
         Port Type Default                        is disable
@@ -330,6 +349,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
     empty_output = {'execute.return_value' : '          '}
 
     golden_output_1 = {'execute.return_value': '''
+        P1# show spanning-tree detail
+
          MST0000 is executing the mstp compatible Spanning Tree protocol
       Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
       Configured hello time 10, max age 40, forward delay 30
@@ -412,6 +433,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
     }
     
     golden_output_2 = {'execute.return_value' : '''
+        P1# show spanning-tree detail
+
          MST0000 is executing the mstp compatible Spanning Tree protocol
       Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
       Configured hello time 10, max age 40, forward delay 30

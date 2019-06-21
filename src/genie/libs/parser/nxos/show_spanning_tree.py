@@ -1,7 +1,7 @@
 '''show_spanning_tree.py
 
 NXOS parsers for the following show commands:
-    * show spanning-­tree detail
+    * show spanning-tree detail
     * show spanning-tree mst detail
     * show spanning-tree summary
 '''
@@ -11,6 +11,10 @@ NXOS parsers for the following show commands:
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
+
+#   ============================================    #
+#                    mst detail                     #
+#   ============================================    #
 
 class ShowSpanningTreeMstSchema(MetaParser):
     '''Schema for:
@@ -26,28 +30,31 @@ class ShowSpanningTreeMstSchema(MetaParser):
                     'bridge_priority': int,
                     'bridge_address': str,
                     Optional('sys_id'): int,
-                    Optional('root'): str,
+                    Optional('root_for_cist'): str,
+                    Optional('regional_root'): str,
                     Optional('hold_time'): int,
                     Optional('topology_changes'): int,
                     Optional('time_since_topology_change'): str,
                     'interfaces': {
                         Any () :{
                             'name': str,
-                            'cost': int,
+                            'port_cost': int,
                             'port_priority' : int,
-                            'port_num': str,
+                            'port_id': str,
                             'port_state' : str,
+                            'bridge_assurance_inconsistent': bool,
+                            'vpc_peer_link_inconsistent' : bool,
                             'designated_root_priority': int,
                             'designated_root_address': str,
-                            'designated_cost': int,
+                            'designated_root_cost': int,
                             'designated_bridge_priority': int,
                             'designated_bridge_address': str,
                             'designated_bridge_port_id': str,
+                            'designated_regional_root_cost': int,
+                            'designated_regional_root_priority': int,
+                            'designated_regional_root_address': str,
                             Optional('broken_reason'): str,
                             Optional('designated_port_num'): str,
-                            Optional('designated_regional_root_cost'): int,
-                            Optional('designated_regional_root_priority'): int,
-                            Optional('designated_regional_root_address'): str,
                             Optional('timers') :{
                                 'forward_transitions': int,
                                 'forward_delay': int,
@@ -58,25 +65,21 @@ class ShowSpanningTreeMstSchema(MetaParser):
                                 'bpdu_recieved' : int,
                             }
                         }
-                    }
+                    },
+                    Any() : { 
+                        'domain': str,
+                        'hello_time': int,
+                        'max_age': int,
+                        'forwarding_delay': int,
+                        Optional('name'): str,
+                        Optional('max_hop'): int,
+                        Optional('hold_count'): int,
+                    },
                 }
-            },
-            Any() : { 
-                'domain': str,
-                'hello_time': int,
-                'max_age': int,
-                'forwarding_delay': int,
-                Optional('name'): str,
-                Optional('max_hop'): int,
-                Optional('hold_count'): int,
-            },
+            }
         }
     }
 
-
-#   ============================================    #
-#                    mst detail                     #
-#   ============================================    #
 
 class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
     '''Parser for:
@@ -98,14 +101,18 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                         ' +\spriority +\s(?P<b_priority>\d+)\s+\(\d+\s+sysid'
                         '\s+(?P<b_sysid>\d+)\)$')
 
-        p3_1 = re.compile(r'Root +\sthis\s+switch\s+for\s+the\s+(?P<root>\w+)')
+        p3_1 = re.compile(r'^Root +\s(?P<switch>\w+\s+\w+)\s+for\s+the\s+(?P<root>\w+)$')
+        
+        p3_2= re.compile(r'^Regional\s+Root\s(?P<switch>\w+\s+\w+)$')
 
         p4_1 = re.compile(r'^(?P<mst_domain>\w+) +\shello\s+time\s+'
                         '(?P<hello_time>\d+),\s+forward\s+delay\s+'
                         '(?P<forward_delay>\d+),\s+max\s+age\s+(?P<max_age>\d+), '
                         '((txholdcount|max hops))\ *\s(?P<holdcount_or_maxhops>\d+)$')
 
-        p5_1 = re.compile(r'^(?P<port_channel>\w+)\sof\s+\w+\s+is\s+(?P<port_state>\w+)')
+        p5_1 = re.compile(r'^(?P<port_channel>\w+)\sof\s+\w+\s+is\s+(?P<port_state>\w+)\s+'
+                        '\(Bridge Assurance\s+(?P<bridge_assurance_inconsistent>\w+), '
+                        'VPC Peer-link\s+(?P<vpc_peer_link_inconsistent>\w+)$')
 
         p6_1 = re.compile(r'^Port\s+info +\sport\s+id +\s(?P<port_id>\d+\.*\d+)'
                         ' +\spriority +\s(?P<port_priority>\d+)'
@@ -114,6 +121,9 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
         p7_1 = re.compile(r'^Designated\s+root +\saddress\s+(?P<d_root_address>'
                         '\w+\.\w+\.\w+) +\spriority +\s(?P<d_priority>\d+)'
                         ' +\scost +\s(?P<d_cost>\d+)$')
+
+        p7_2 = re.compile(r'Design.\s+regional\s+root\s+address\s+(?P<designated_regional_root_address>\w+\.\w+\.\w+) '
+                        '+\spriority +\s(?P<designated_regional_root_priority>\d+) +\scost +\s(?P<designated_regional_root_cost>\d+)')
 
         p8_1 = re.compile(r'^Designated\s+bridge +\saddress\s+(?P<d_bridge_address>'
                         '\w+\.\w+\.\w+) +\spriority +\s(?P<d_bridge_priority>\d+)'
@@ -152,7 +162,13 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             # Root          this switch for the CIST
             m = p3_1.match(line)
             if m:
-                instances_dict['root'] = m.groupdict()['root']
+                instances_dict['root_for_cist'] = m.groupdict()['switch']
+                continue
+
+            # Regional Root this switch
+            m = p3_2.match(line)
+            if m:
+                instances_dict['regional_root'] = m.groupdict()['switch']
                 continue
 
             # Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
@@ -160,11 +176,12 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             m = p4_1.match(line)
             if m:
                 domain = m.groupdict()['mst_domain']
-                domain_dict = ret_dict.setdefault('mstp', {}).setdefault(domain.lower(), {})
+                domain_dict = instances_dict.setdefault(domain.lower(), {})
                 domain_dict['domain'] = domain.lower()
                 domain_dict['hello_time'] = int(m.groupdict()['hello_time'])
                 domain_dict['forwarding_delay'] = int(m.groupdict()['forward_delay'])
                 domain_dict['max_age'] = int(m.groupdict()['max_age'])
+
                 if 'txholdcount' in line:
                     domain_dict['hold_count'] = int(m.groupdict()['holdcount_or_maxhops'])
                     continue
@@ -175,18 +192,26 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             # Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsistent)str
             m = p5_1.match(line)
             if m:
-                intf = m.groupdict()['port_channel']
+                port_number = re.findall(r'\d+', m.groupdict()['port_channel'])
+                intf = 'port-channel' + port_number[0]
+
                 intf_dict = instances_dict.setdefault('interfaces', {}).setdefault(intf, {})
-                intf_dict['name'] = m.groupdict()['port_channel'].lower()
+                intf_dict['name'] = intf
                 intf_dict['port_state'] = m.groupdict()['port_state']
+
+                bridge_consistency = True if 'inconsistent' in m.groupdict()['bridge_assurance_inconsistent'].lower() else False
+                intf_dict['bridge_assurance_inconsistent'] = bridge_consistency
+                bridge_consistency = True if 'inconsisten' in m.groupdict()['vpc_peer_link_inconsistent'].lower() else False
+                intf_dict['vpc_peer_link_inconsistent'] = bridge_consistency
+
                 continue
 
             # Port info             port id       128.4125  priority    128  cost   500      
             m = p6_1.match(line)
             if m:
-                intf_dict['port_num'] = m.groupdict()['port_id']
+                intf_dict['port_id'] = m.groupdict()['port_id']
                 intf_dict['port_priority'] = int(m.groupdict()['port_priority'])
-                intf_dict['cost'] = int(m.groupdict()['port_cost'])
+                intf_dict['port_cost'] = int(m.groupdict()['port_cost'])
                 continue
 
             # Designated root       address 0023.04ee.be14  priority  32768  cost   0        
@@ -194,7 +219,14 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             if m:
                 intf_dict['designated_root_address'] = m.groupdict()['d_root_address']
                 intf_dict['designated_root_priority'] = int(m.groupdict()['d_priority'])
-                intf_dict['designated_cost'] = int(m.groupdict()['d_cost'])
+                intf_dict['designated_root_cost'] = int(m.groupdict()['d_cost'])
+                continue
+
+            m = p7_2.match(line)
+            if m:
+                intf_dict['designated_regional_root_address'] = m.groupdict()['designated_regional_root_address']
+                intf_dict['designated_regional_root_priority'] = int(m.groupdict()['designated_regional_root_priority'])
+                intf_dict['designated_regional_root_cost'] = int(m.groupdict()['designated_regional_root_cost'])
                 continue
 
             # Designated bridge     address 4055.3926.d8c1  priority  61440  port id 128.4125
