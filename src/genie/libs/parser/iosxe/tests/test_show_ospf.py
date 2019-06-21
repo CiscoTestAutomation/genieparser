@@ -7888,8 +7888,8 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
       'interfaces': {
         'GigabitEthernet4': {
           'neighbors': {
-            '2.2.2.2': {
-              'address': '106.162.197.97',
+            '10.16.2.2': {
+              'address': '10.169.197.97',
               'dead_time': '00:00:32',
               'priority': 0,
               'state': 'FULL/  -'}}}}}
@@ -7897,7 +7897,7 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
     golden_output2 = {'execute.return_value':'''
       PE1#show ip ospf neighbor GigabitEthernet4
       Neighbor ID     Pri   State           Dead Time   Address         Interface
-      2.2.2.2           0   FULL/  -        00:00:32    106.162.197.97  GigabitEthernet4
+      10.16.2.2           0   FULL/  -        00:00:32    10.169.197.97  GigabitEthernet4
     '''}
 
     def test_show_ip_ospf_neighbor_empty(self):
