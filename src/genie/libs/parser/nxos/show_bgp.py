@@ -2353,7 +2353,9 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
         show bgp vrf <vrf> all neighbors
         parser class - implements detail parsing mechanisms for cli and yang output.
         """
-    cli_command = ['show bgp vrf {vrf} {address_family} neighbors','show bgp vrf {vrf} {address_family} neighbors {neighbor}']
+    cli_command = ['show bgp vrf {vrf} {address_family} neighbors',
+                   'show bgp vrf {vrf} {address_family} neighbors {neighbor}',
+                   'show bgp vrf {vrf} all neighbors']
     exclude = [
       'up_time',
       'retry_time',
@@ -2382,8 +2384,11 @@ class ShowBgpVrfAllNeighbors(ShowBgpVrfAllNeighborsSchema):
                                                               address_family=address_family,
                                                               neighbor=neighbor))
             else:
-                out = self.device.execute(self.cli_command[0].format(vrf=vrf,
+                if address_family:
+                    out = self.device.execute(self.cli_command[0].format(vrf=vrf,
                                                               address_family=address_family))
+                else:
+                    out = self.device.execute(self.cli_command[0].format(vrf=vrf))
         else:
             out = output
 
@@ -3284,7 +3289,7 @@ class ShowBgpVrfAllAllNextHopDatabaseSchema(MetaParser):
 class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     """Parser for show bgp vrf all all nexthop-database"""
 
-    cli_command = 'show bgp vrf {vrf} {address_family} nexthop-database'
+    cli_command = ['show bgp vrf all all nexthop-database', 'show bgp vrf {vrf} {address_family} nexthop-database']
     exclude = [
       'nexthop_last_resolved',
       'rnh_epoch',
@@ -3297,7 +3302,10 @@ class ShowBgpVrfAllAllNextHopDatabase(ShowBgpVrfAllAllNextHopDatabaseSchema):
     def cli(self, vrf='all', address_family='all', cmd = "", output=None):
         if output is None:
             if not cmd:
-                cmd= self.cli_command.format(vrf=vrf, address_family=address_family)
+                if address_family != 'all' or vrf != 'all':
+                    cmd = self.cli_command[1].format(vrf=vrf, address_family=address_family)
+                else:
+                    cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -3525,7 +3533,10 @@ class ShowBgpVrfAllAllSummarySchema(MetaParser):
 class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
     """Parser for show bgp vrf <WORD> all summary"""
 
-    cli_command = 'show bgp vrf {vrf} {address_family} summary'
+    cli_command = [ 'show bgp vrf all all summary',
+                    'show bgp vrf {vrf} all summary',
+                    'show bgp vrf {vrf} {address_family} summary']
+
     xml_command = 'show bgp vrf {vrf} all summary | xml'
     exclude = [
       'tbl_ver',
@@ -3544,8 +3555,15 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
     def cli(self, vrf='all', address_family='all', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf,
-                                                              address_family=address_family))
+            if address_family == 'all':
+                if vrf == 'all':
+                    out = self.device.execute(self.cli_command[0])
+
+                else:
+                    out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[2].format(vrf=vrf,
+                                                                     address_family=address_family))
         else:
             out = output
         
@@ -3853,7 +3871,7 @@ class ShowBgpVrfAllAllSummary(ShowBgpVrfAllAllSummarySchema):
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                       expect_command=self.cli_command.format(vrf=vrf,
+                                       expect_command=self.cli_command[2].format(vrf=vrf,
                                                                               address_family=address_family))
 
         # find Vrf root
@@ -4183,12 +4201,16 @@ class ShowBgpVrfAllAllDampeningParametersSchema(MetaParser):
 class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSchema):
     """Parser for 'show bgp vrf <WROD> all dampening parameters"""
 
-    cli_command = 'show bgp vrf {vrf} {address_family} dampening parameters'
+    cli_command = ['show bgp vrf {vrf} all dampening parameters',
+                   'show bgp vrf {vrf} {address_family} dampening parameters']
     xml_command = 'show bgp vrf {vrf} all dampening parameters | xml'
 
     def cli(self, vrf='all', address_family='all', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf, address_family=address_family))
+            if address_family == 'all':
+                out = self.device.execute(self.cli_command[0].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf, address_family=address_family))
         else:
             out = output
 
@@ -4330,7 +4352,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                       expect_command=self.cli_command.format(vrf=vrf,
+                                       expect_command=self.cli_command[2].format(vrf=vrf,
                                                                               address_family=address_family))
 
         root = Common.retrieve_xml_child(
@@ -4562,14 +4584,20 @@ class ShowBgpVrfAllNeighborsAdvertisedRoutesSchema(MetaParser):
 class ShowBgpVrfAllNeighborsAdvertisedRoutes(ShowBgpVrfAllNeighborsAdvertisedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> advertised-routes"""
 
-    cli_command = 'show bgp vrf {vrf} {address_family} neighbors {neighbor} advertised-routes'
+    cli_command = ['show bgp vrf {vrf} all neighbors {neighbor} advertised-routes',
+                   'show bgp vrf {vrf} {address_family} neighbors {neighbor} advertised-routes']
 
-    def cli(self, neighbor, vrf='', address_family='all', output=None):
-        if not vrf:
+    def cli(self, neighbor, vrf='all', address_family='all', output=None):
+        if vrf == 'all':
             vrf = 'default'
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf,
+            if address_family == 'all':
+
+                out = self.device.execute(
+                        self.cli_command[0].format(neighbor=neighbor, vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf,
                                                               address_family=address_family,
                                                               neighbor=neighbor))
         else:
@@ -5028,13 +5056,23 @@ class ShowBgpVrfAllNeighborsRoutesSchema(MetaParser):
 class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> routes"""
 
-    cli_command = 'show bgp vrf {vrf} {address_family} neighbors {neighbor} routes'
+    cli_command = ['show bgp vrf {vrf} all neighbors {neighbor} routes',
+                   'show bgp vrf {vrf} {address_family} neighbors {neighbor} routes']
 
     def cli(self, neighbor, vrf='all', address_family='all', output=None):
+        if vrf == 'all':
+            vrf = 'default'
+
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf,
-                                                              address_family=address_family,
-                                                              neighbor=neighbor))
+            if address_family == 'all':
+
+                out = self.device.execute(
+                        self.cli_command[0].format(neighbor=neighbor, vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf,
+                                                                     address_family=address_family,
+                                                                     neighbor=neighbor))
+
         else:
             out = output
         
@@ -5080,7 +5118,7 @@ class ShowBgpVrfAllNeighborsRoutes(ShowBgpVrfAllNeighborsRoutesSchema):
                             '(?: +\(((VRF +(?P<default_vrf>\S+))|'
                             '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)))\))?$')
         # Init vars
-        data_on_nextline =  False
+        data_on_nextline = False
         index = 1
         bgp_table_version = local_router_id = ''
 
@@ -5468,13 +5506,20 @@ class ShowBgpVrfAllNeighborsReceivedRoutesSchema(MetaParser):
 class ShowBgpVrfAllNeighborsReceivedRoutes(ShowBgpVrfAllNeighborsReceivedRoutesSchema):
     """Parser for show bgp vrf <vrf> all neighbors <neighbor> received-routes"""
 
-    cli_command = 'show bgp vrf {vrf} {address_family} neighbors {neighbor} received-routes'
+    cli_command =['show bgp vrf {vrf} all neighbors {neighbor} received-routes',
+                  'show bgp vrf {vrf} {address_family} neighbors {neighbor} received-routes']
 
     def cli(self, neighbor, vrf='all', address_family='all', output=None):
+        if vrf == 'all':
+            vrf = 'default'
         if output is None:
-            out = self.device.execute(self.cli_command.format(vrf=vrf,
-                                                              address_family=address_family,
-                                                              neighbor=neighbor))
+            if address_family == 'all':
+                out = self.device.execute(
+                        self.cli_command[0].format(neighbor=neighbor, vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf,
+                                                                     address_family=address_family,
+                                                                     neighbor=neighbor))
         else:
             out = output
         
