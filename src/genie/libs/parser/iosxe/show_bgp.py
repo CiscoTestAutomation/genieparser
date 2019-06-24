@@ -2188,7 +2188,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    'show bgp {address_family} summary',
                    'show bgp summary'
                    ]
-    exclude  ['msg_rcvd', 'msg_sent', 'up_down']
+    exclude = ['msg_rcvd', 'msg_sent', 'up_down']
 
     def cli(self, address_family='', vrf='', rd='', output=None):
 
