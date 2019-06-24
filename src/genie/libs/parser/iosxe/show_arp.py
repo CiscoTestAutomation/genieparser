@@ -380,6 +380,14 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         parser class - implements detail parsing mechanisms for cli,xml and yang output.
     """
     cli_command = 'show ip traffic'
+    exclude = ['bgp_received_keepalives' , 'bgp_received_total', 'bgp_sent_keepalives', 'bgp_sent_total' ,
+                'eigrp_ipv4_received_total' , 'eigrp_ipv4_sent_total', 'icmp_received_echo', 'icmp_sent_echo_reply',
+                'igmp_host_queries', 'igmp_host_reports', 'igmp_total', 'ip_bcast_received', 'ip_bcast_sent', 'ip_mcast_received',
+                'ip_mcast_sent', 'ip_opts_alert', 'ip_rcvd_format_errors', 'ip_rcvd_local_destination', 'ip_rcvd_total' ,
+                'ip_rcvd_with_optns', 'ip_sent_generated', 'ospf_received_hello', 'ospf_received_lnk_st_acks', 'ospf_received_lnk_st_updates'
+                'ospf_received_total' , 'ospf_sent_hello' , 'ospf_sent_lnk_st_acks', 'ospf_sent_lnk_st_updates', 'ospf_sent_total', 'pimv2_bootstraps',
+                'pimv2_candidate_rp_advs', 'pimv2_hellos', 'pimv2_registers', 'pimv2_registers_stops', 'pimv2_total', 'tcp_received_no_port', 'tcp_received_total', 
+                'tcp_sent_total', 'udp_received_no_port', 'udp_received_total', 'udp_sent_total']
     def cli(self,output=None):
         if output is None:
             # excute command to get output

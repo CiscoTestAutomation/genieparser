@@ -2878,6 +2878,7 @@ class ShowInterfacesStats(ShowInterfacesStatsSchema):
         show interfaces stats"""
 
     cli_command = ['show interfaces stats' ,'show interfaces {interface} stats']
+    exclude = ['chars_in' , 'chars_out', 'pkts_in', 'pkts_out']
 
     def cli(self, interface="", output=None):
         if output is None:

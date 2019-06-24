@@ -837,6 +837,7 @@ class ShowIpRipRouteVrfAll(ShowIpRipRouteVrfAllSchema):
 
     cli_command = ["show ip rip route",
                    "show ip rip route vrf {vrf}"]
+    exclude = ['expire_time']
 
     def cli(self, vrf='', output=None):
         cmd = ""
@@ -1125,6 +1126,7 @@ class ShowIpv6RipRouteVrfAll(ShowIpRipRouteVrfAll):
 
     cli_command = ["show ipv6 rip route",
                    "show ipv6 rip route vrf {vrf}"]
+    exclude = ['expire_time']
 
     address_family = "ipv6"
 

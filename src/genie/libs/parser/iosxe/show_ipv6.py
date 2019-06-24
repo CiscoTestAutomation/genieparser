@@ -58,6 +58,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
 
     cli_command = ['show ipv6 neighbors vrf {vrf}',
                    'show ipv6 neighbors']
+    exclude = ['age' , 'neighbor_state']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -115,6 +116,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
 
     cli_command = ['show ipv6 neighbors vrf {vrf} detail',
                    'show ipv6 neighbors detail']
+    exclude = ['age']
 
     def cli(self, vrf='', output=None):
         if output is None:

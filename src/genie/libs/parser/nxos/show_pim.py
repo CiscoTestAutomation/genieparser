@@ -2251,6 +2251,7 @@ class ShowIpPimRoute(ShowIpPimRouteSchema):
         show ip pim route
         show ip pim route vrf <vrf>"""
     cli_command = ['show ip pim route','show ip pim route vrf {vrf}']
+    exclude = ['expiration', 'timeout_interval']
 
     def cli(self, vrf="",output=None):
         if output is None:

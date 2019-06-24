@@ -43,6 +43,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
     """Parser for show isis neighbors"""
 
     cli_command = 'show isis neighbors'
+    exclude = ['holdtime']
 
     def cli(self, output=None):
         if output is None:
@@ -179,6 +180,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
     """Parser for show isis lsp-log"""
 
     cli_command = 'show isis lsp-log'
+    exclude = ['when']
 
     def cli(self, output=None):
         if output is None:
@@ -288,6 +290,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
     """Parser for show isis database detail"""
 
     cli_command = 'show isis database detail'
+    exclude = ['lsp_holdtime' , 'lsp_checksum', 'lsp_sequence_num']
 
     def cli(self, output=None):
         if output is None:

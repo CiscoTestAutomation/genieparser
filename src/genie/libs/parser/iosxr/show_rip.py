@@ -73,6 +73,7 @@ class ShowRip(ShowRipSchema):
         show rip vrf {vrf}"""
 
     cli_command = ['show rip', 'show rip vrf {vrf}']
+    exclude = ['until_next_update']
 
     def cli(self, vrf="", output=None):
         if vrf:

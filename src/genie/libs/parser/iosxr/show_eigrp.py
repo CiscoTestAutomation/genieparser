@@ -564,6 +564,7 @@ class ShowEigrpIpv6NeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
                                    ShowEigrpNeighborsDetailSchema):
     cli_command = ['show eigrp ipv6 vrf {vrf} neighbors detail', 
                    'show eigrp ipv6 neighbors detail', ]
+    exclude = ['age']
 
     def cli(self, vrf='all', output=None):
         if output is None:

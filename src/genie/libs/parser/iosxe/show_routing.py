@@ -183,6 +183,7 @@ class ShowIpRoute(ShowIpRouteSchema):
     # not using name 'cli_command' because dont want find_parsers() to discover them
     command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {protocol}',
                    'show ip route', 'show ip route {protocol}']
+    exclude = ['updated']
     IP_VER='ipv4'
 
     def cli(self, vrf="", protocol='', output=None):

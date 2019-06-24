@@ -9132,6 +9132,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
     cli_command = ['show bgp sessions vrf {vrf}','show bgp sessions']
     xml_command = ['show bgp sessions vrf {vrf} | xml','show bgp sessions | xml']
+    exclude = ['last_flap' , 'last_read', 'last_write']
 
     def cli(self, vrf='',output=None):
         if output is None:

@@ -119,7 +119,7 @@ class ShowLacpCounters(ShowLacpCountersSchema):
       show lacp counters"""
 
     cli_command = ['show lacp {channel_group} counters', 'show lacp counters']
-
+    exclude = ['lacp_in_pkts' , 'lacp_out_pkts']
     def cli(self, channel_group="",output=None):
         if output is None:
             if channel_group:
@@ -337,6 +337,7 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
       show lacp neighbor"""
 
     cli_command = ['show lacp {channel_group} neighbor', 'show lacp neighbor']
+    exclude = ['age']
 
     def cli(self, channel_group="", output=None):
         if output is None:

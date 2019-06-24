@@ -79,6 +79,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
                   show clns interface {interface}"""
 
     cli_command = ['show clns interface {interface}','show clns interface']
+    exclude = ['next_esh_ish_in', 'next_is_is_lan_hello_in']
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -532,6 +533,8 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
     """Parser for show clns neighbors detail"""
 
     cli_command = 'show clns neighbors detail'
+
+    exclude = ['holdtime', 'uptime', 'chars_in', 'chars_out', 'pkts_in', 'pkts_out']
 
     def cli(self,output=None):
         if output is None:

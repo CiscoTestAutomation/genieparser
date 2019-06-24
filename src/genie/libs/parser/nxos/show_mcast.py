@@ -66,7 +66,18 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
         'oil_count',
         'outgoing_interface_list',
         'flags',
-        'incoming_interface_list']
+        'incoming_interface_list',
+        'flags',
+        'incoming_interface_list',
+        'Null',
+        'rpf_nbr',
+        'oil_count',
+        'outgoing_interface_list',
+        'Ethernet1/1.415',
+        'oil_flags',
+        'oil_uptime',
+        'uptime',
+        '1.1.1.1/32']
 
     def cli(self, output=None):
         if output is None:
