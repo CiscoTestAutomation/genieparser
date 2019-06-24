@@ -1,0 +1,18 @@
+{
+    "python.pythonPath": "C:\\Users\\payadoll\\AppData\\Local\\Programs\\Python\\Python37\\python.exe",
+    "python.envFile": "~/development/pyats/source env.sh",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pyTestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pyTestArgs": [
+        "tests"
+    ],
+    "python.testing.promptToConfigure": false
+}
