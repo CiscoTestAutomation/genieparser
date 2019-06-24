@@ -49,7 +49,7 @@
                                 platform
 --------------------------------------------------------------------------------
 * IOSXE
-    * Update ShowEnvironment to support: 
+    * Update ShowEnvironment to support:
         show environment | include {include}
 
 --------------------------------------------------------------------------------
@@ -90,7 +90,7 @@
       show interface detail
 
 --------------------------------------------------------------------------------
-                               VRF 
+                               VRF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowVrfDetail to support description
@@ -160,3 +160,12 @@
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
+
+--------------------------------------------------------------------------------
+                                context
+--------------------------------------------------------------------------------
+* ASA
+    * Added ShowContext for:
+      show context
+    * Added ShowContextDetail for:
+      show context detail
