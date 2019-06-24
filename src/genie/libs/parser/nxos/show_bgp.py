@@ -4352,7 +4352,7 @@ class ShowBgpVrfAllAllDampeningParameters(ShowBgpVrfAllAllDampeningParametersSch
 
         # compare cli command
         Common.compose_compare_command(root=root, namespace=namespace,
-                                       expect_command=self.cli_command[2].format(vrf=vrf,
+                                       expect_command=self.cli_command[1].format(vrf=vrf,
                                                                               address_family=address_family))
 
         root = Common.retrieve_xml_child(
