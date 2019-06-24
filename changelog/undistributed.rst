@@ -169,3 +169,10 @@
       show context
     * Added ShowContextDetail for:
       show context detail
+      
+--------------------------------------------------------------------------------
+                                    BFD
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBfdNeighborsDetails to add:
+        show bfd neighbors interface {interface} details
