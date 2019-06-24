@@ -112,6 +112,12 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+* NXOS
+    * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
+        ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
+        ShowBgpVrfAllAllDampeningParameters, ShowBgpVrfAllNeighborsAdvertisedRoutes,
+        ShowBgpVrfAllNeighborsRoutes, ShowBgpVrfAllNeighborsReceivedRoutes
+        to support custom vrf, address_family and neighbor
 
 * Optimized parser by moving all regex outside of for loop
 
