@@ -176,13 +176,3 @@
 * IOSXE
     * Updated ShowBfdNeighborsDetails to add:
         show bfd neighbors interface {interface} details
-
---------------------------------------------------------------------------------
-                              VIRTUAL-SERVICE
---------------------------------------------------------------------------------
-* NXOS
-    * Added ShowVirtualServiceGlobal for "show virtual-service global"
-    * Added ShowVirtualServiceList for "show virtual-service list"
-    * Added ShowVirtualServiceCore for "show virtual-service core [name {name}]"
-    * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
-    * Added ShowGuestshell for "show guestshell"
