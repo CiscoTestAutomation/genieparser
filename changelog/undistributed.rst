@@ -33,8 +33,9 @@
         * Optimized parser by moving all regex outside of for loop
 * IOSXE
     * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
-
-
+    * Updated ShowIpOspfNeighbor for:
+        * show ip ospf neighbor {interface}
+    * Enhanced ShowIpOspfMaxMetric to support different outputs
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -63,7 +64,6 @@
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
 
-=======
 * NXOS
     * Updated ShowInterface
         * added show interface {interface} to support custom interface
