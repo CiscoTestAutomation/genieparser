@@ -11,17 +11,6 @@
         * Added show_dot1x_Summary and modified show_dot1x_Statistics parsers
         * Added all_details and test_all_details & adressed show_dot1x comments
         * Modification to show_Dot1x schema and adressed show_dot1x comments
-
---------------------------------------------------------------------------------
-                              VIRTUAL-SERVICE
---------------------------------------------------------------------------------
-* NXOS
-    * Added ShowVirtualServiceGlobal for "show virtual-service global"
-    * Added ShowVirtualServiceList for "show virtual-service list"
-    * Added ShowVirtualServiceCore for "show virtual-service core [name {name}]"
-    * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
-    * Added ShowGuestshell for "show guestshell"
-
 --------------------------------------------------------------------------------
                                    Routing
 --------------------------------------------------------------------------------
