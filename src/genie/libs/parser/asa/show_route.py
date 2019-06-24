@@ -159,7 +159,7 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
-                        if '0.0.0.0' in subnet:
+                        if '0.0.0.0' == subnet:
                             prefix_length = str(0)
                         else:
                             prefix_length = str(IPAddress(subnet).netmask_bits())
@@ -234,7 +234,7 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
-                        if '0.0.0.0' in subnet:
+                        if '0.0.0.0' == subnet:
                             prefix_length = str(0)
                         else:
                             prefix_length = str(IPAddress(subnet).netmask_bits())
@@ -300,7 +300,7 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
-                        if '0.0.0.0' in subnet:
+                        if '0.0.0.0' == subnet:
                             prefix_length = str(0)
                         else:
                             prefix_length = str(IPAddress(subnet).netmask_bits())
