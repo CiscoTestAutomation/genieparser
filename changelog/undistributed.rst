@@ -33,8 +33,9 @@
         * Optimized parser by moving all regex outside of for loop
 * IOSXE
     * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
-
-
+    * Updated ShowIpOspfNeighbor for:
+        * show ip ospf neighbor {interface}
+    * Enhanced ShowIpOspfMaxMetric to support different outputs
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -48,7 +49,7 @@
                                 platform
 --------------------------------------------------------------------------------
 * IOSXE
-    * Update ShowEnvironment to support: 
+    * Update ShowEnvironment to support:
         show environment | include {include}
 
 --------------------------------------------------------------------------------
@@ -63,7 +64,6 @@
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
 
-=======
 * NXOS
     * Updated ShowInterface
         * added show interface {interface} to support custom interface
@@ -90,7 +90,7 @@
       show interface detail
 
 --------------------------------------------------------------------------------
-                               VRF 
+                               VRF
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowVrfDetail to support description
@@ -160,4 +160,19 @@
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
->>>>>>> c8f99a805e77043b9089b6ca15489626ca0933a7
+
+--------------------------------------------------------------------------------
+                                context
+--------------------------------------------------------------------------------
+* ASA
+    * Added ShowContext for:
+      show context
+    * Added ShowContextDetail for:
+      show context detail
+      
+--------------------------------------------------------------------------------
+                                    BFD
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBfdNeighborsDetails to add:
+        show bfd neighbors interface {interface} details
