@@ -242,7 +242,8 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
 class ShowEigrpIpv4Neighbors(ShowEigrpNeighborsSuperParser,
                              ShowEigrpNeighborsSchema):
     cli_command = ['show eigrp ipv4 vrf {vrf} neighbors',
-                   'show eigrp ipv4 neighbors', ]
+                   'show eigrp ipv4 neighbors']
+    exclude = ['dead_time', 'hold']
 
     def cli(self, vrf='all', output=None):
         if output is None:
@@ -262,7 +263,8 @@ class ShowEigrpIpv4Neighbors(ShowEigrpNeighborsSuperParser,
 class ShowEigrpIpv6Neighbors(ShowEigrpNeighborsSuperParser,
                              ShowEigrpNeighborsSchema):
     cli_command = ['show eigrp ipv6 vrf {vrf} neighbors',
-                   'show eigrp ipv6 neighbors', ]
+                   'show eigrp ipv6 neighbors']
+    exclude = ['hold']
 
     def cli(self, vrf='all', output=None):
         if output is None:
@@ -544,6 +546,7 @@ class ShowEigrpIpv4NeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
 
     cli_command = ['show eigrp ipv4 vrf {vrf} neighbors detail',
                    'show eigrp ipv4 neighbors detail', ]
+    exclude = ['hold']
 
     def cli(self, vrf='all', output=None):
         if output is None:
@@ -564,7 +567,7 @@ class ShowEigrpIpv6NeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
                                    ShowEigrpNeighborsDetailSchema):
     cli_command = ['show eigrp ipv6 vrf {vrf} neighbors detail', 
                    'show eigrp ipv6 neighbors detail', ]
-    exclude = ['age']
+    exclude = ['hold']
 
     def cli(self, vrf='all', output=None):
         if output is None:

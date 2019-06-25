@@ -2281,7 +2281,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    'show ip bgp summary',
                    ]
 
-    exclude = ['msg_rcvd' , 'msg_sent', 'up_down']
+    exclude = ['msg_rcvd', 'msg_sent', 'up_down']
     
     def cli(self, address_family='', vrf='', rd='', output=None):
 
@@ -3989,8 +3989,7 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
 
     exclude = ['current_time', 'last_read', 'last_write', 'up_time', 'ackhold' , 'retrans', 'keepalives', 'total', 'total_data', 
                     'value', 'with_data', 'delrcvwnd', 'rcvnxt', 'rcvwnd', 'receive_idletime' , 'sent_idletime', 'sndnxt', 'snduna',
-                    'uptime'
-                ]
+                    'uptime']
 
     def cli(self, neighbor='', address_family='', output=None):
 

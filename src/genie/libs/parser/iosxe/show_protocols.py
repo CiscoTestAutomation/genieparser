@@ -1101,7 +1101,7 @@ class ShowIpProtocolsSectionRip(ShowIpProtocols):
        """
 
     cli_command = ["show ip protocols | sec rip", "show ip protocols vrf {vrf} | sec rip"]
-    exclude = ['network']
+    exclude = ['network','next_update']
 
     def cli(self, vrf="", cmd ="",output=None):
         if vrf:

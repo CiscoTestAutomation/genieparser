@@ -3352,7 +3352,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
     '''
 
     cli_command = 'show ip ospf database'
-    exclude = ['age' , 'checksum', 'seq_num']
+    exclude = ['age']
 
     def cli(self, output=None):
 
@@ -6361,7 +6361,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     '''
 
     cli_command = 'show ip ospf database router self-originate'
-    exclude = ['age' , 'checksum', 'seq_num']
+    exclude = ['age' , 'checksum', 'seq_num', 'dead_time']
 
     def cli(self, output=None):
 

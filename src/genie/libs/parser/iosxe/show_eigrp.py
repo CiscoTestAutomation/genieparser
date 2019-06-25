@@ -278,7 +278,7 @@ class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSche
 
     cli_command = ['show ip eigrp vrf {vrf} neighbors',
                    'show ip eigrp neighbors',]
-    exclude = ['uptime']
+    exclude = ['uptime' , 'hold']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -630,7 +630,7 @@ class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
 
     cli_command = ['show ip eigrp vrf {vrf} neighbors detail',
                    'show ip eigrp neighbors detail',]
-    exclude = ['uptime']
+    exclude = ['uptime', 'hold']
 
     def cli(self, vrf='', output=None):
         if output is None:

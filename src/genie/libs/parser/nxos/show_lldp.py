@@ -430,7 +430,7 @@ class ShowLldpTrafficSchema(MetaParser):
 class ShowLldpTraffic(ShowLldpTrafficSchema):
     """parser ofr show lldp traffic"""
     cli_command = 'show lldp traffic'
-    exclude = ['total_frames_discarded' , 'total_frames_received', 'total_frames_transmitted']
+    exclude = ['total_frames_received', 'total_frames_transmitted']
 
     def cli(self, output=None):
         if output is None:

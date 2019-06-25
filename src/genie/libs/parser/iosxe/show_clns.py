@@ -79,7 +79,7 @@ class ShowClnsInterface(ShowClnsInterfaceSchema):
                   show clns interface {interface}"""
 
     cli_command = ['show clns interface {interface}','show clns interface']
-    exclude = ['next_esh_ish_in', 'next_is_is_lan_hello_in']
+    exclude = ['next_esh_ish_in', 'next_is_is_lan_hello_in', 'next_is_is_lan_hello_in_ms']
 
     def cli(self,interface="",output=None):
         if output is None:

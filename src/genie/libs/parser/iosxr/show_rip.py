@@ -521,6 +521,7 @@ class ShowRipDatabase(ShowRipDatabaseSchema):
         show rip vrf {vrf} database"""
 
     cli_command = ['show rip database', 'show rip vrf {vrf} database']
+    exclude = ['up_time']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -706,6 +707,7 @@ class ShowRipInterface(ShowRipInterfaceSchema):
         show rip vrf {vrf} interface"""
 
     cli_command = ['show rip interface', 'show rip vrf {vrf} interface']
+    exclude = ['uptime', 'total_packets_received']
 
     def cli(self, vrf='', output=None):
         if vrf:
