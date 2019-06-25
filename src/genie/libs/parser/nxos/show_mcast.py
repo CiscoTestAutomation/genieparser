@@ -62,11 +62,13 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
     cli_command = 'show ip mroute vrf all'
     exclude = [
-        'uptime',
+        'flags',
+        'incoming_interface_list',
         'oil_count',
         'outgoing_interface_list',
-        'flags',
-        'incoming_interface_list']
+        'oil_flags',
+        'oil_uptime',
+        'uptime']
 
     def cli(self, output=None):
         if output is None:

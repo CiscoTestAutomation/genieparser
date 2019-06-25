@@ -45,6 +45,7 @@ class ShowLoggingLogfile(ShowLoggingLogfileSchema):
     cli_command = ['show logging logfile | include {include}',
                    'show logging logfile',
                    ]
+    exclude = ['logs']
 
     def cli(self, include='', output=None):
 

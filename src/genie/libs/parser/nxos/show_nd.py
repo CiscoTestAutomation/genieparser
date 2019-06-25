@@ -647,6 +647,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         show ipv6 routers vrf <vrf>"""
 
     cli_command = ['show ipv6 routers vrf {vrf}','show ipv6 routers']
+    exclude = ['last_update']
 
     def cli(self, vrf="", output=None):
         if vrf:

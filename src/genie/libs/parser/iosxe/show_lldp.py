@@ -339,6 +339,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 class ShowLldpNeighborsDetail(ShowLldpEntry):
     '''Parser for show lldp neighbors detail'''
     cli_command = 'show lldp neighbors detail'
+    exclude = ['time_remaining']
+
     def cli(self,output=None):
         if output is None:
             show_output = self.device.execute(self.cli_command)
@@ -364,6 +366,7 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
     """Parser for show lldp traffic"""
 
     cli_command = 'show lldp traffic'
+    exclude = ['frame_in' , 'frame_out', 'tlv_discard', 'tlv_unknown']
 
     def cli(self,output=None):
         if output is None:

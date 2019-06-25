@@ -3642,6 +3642,7 @@ class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRoute
     """
 
     cli_command = 'show ospf vrf all-inclusive database router'
+    exclude = ['age']
 
     def cli(self,output=None):
         return super().cli(cmd=self.cli_command, db_type='router',output=output)

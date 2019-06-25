@@ -2188,6 +2188,7 @@ class ShowBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    'show bgp {address_family} summary',
                    'show bgp summary'
                    ]
+    exclude = ['msg_rcvd', 'msg_sent', 'up_down']
 
     def cli(self, address_family='', vrf='', rd='', output=None):
 
@@ -2280,6 +2281,8 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    'show ip bgp summary',
                    ]
 
+    exclude = ['msg_rcvd', 'msg_sent', 'up_down']
+    
     def cli(self, address_family='', vrf='', rd='', output=None):
 
         if output is None:
@@ -2320,6 +2323,7 @@ class ShowIpBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    'show ip bgp all summary',
                    ]
 
+    exclude = ['msg_rcvd', 'msg_sent', 'up_down']
     def cli(self, address_family='', output=None):
 
         if output is None:
@@ -3909,6 +3913,9 @@ class ShowBgpNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema):
                    'show bgp neighbors',
                    ]
 
+    exclude = ['current_time','last_read', 'last_write', 'up_time', 'ackhold', 'retrans',
+                'keepalives', 'total', 'total_data', 'value', 'with_data', 'delrcvwnd', 'rcvnxt',
+                'rcvwnd', 'receive_idletime' , 'sent_idletime', 'sndnxt' , 'snduna', 'uptime']
     def cli(self, neighbor='', address_family='', vrf='', output=None):
 
         # Restricted address families
@@ -3980,6 +3987,10 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
                    'show ip bgp {address_family} all neighbors {neighbor}',
                    ]
 
+    exclude = ['current_time', 'last_read', 'last_write', 'up_time', 'ackhold' , 'retrans', 'keepalives', 'total', 'total_data', 
+                    'value', 'with_data', 'delrcvwnd', 'rcvnxt', 'rcvwnd', 'receive_idletime' , 'sent_idletime', 'sndnxt', 'snduna',
+                    'uptime']
+
     def cli(self, neighbor='', address_family='', output=None):
 
         # Restricted address families
@@ -4040,6 +4051,9 @@ class ShowIpBgpNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema):
                    'show ip bgp neighbors {neighbor}',
                    'show ip bgp neighbors',
                    ]
+    excude = ['current_time' , 'last_read' , 'last_write', 'up_time', 'ackhold', 'retrans', 'keepalives', 
+                'total', 'total_data' , 'value', 'with_data', 'delrcvwnd', 'rcvnxt', 'rcvwnd'
+                'receive_idletime', 'sent_idletime', 'sndnxt', 'snduna', 'uptime']
 
     def cli(self, neighbor='', address_family='', vrf='', output=None):
 

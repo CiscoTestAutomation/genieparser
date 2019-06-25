@@ -58,8 +58,7 @@ class ShowIpArp(ShowIpArpSchema):
 		show ip arp vrf all
 	"""
 	cli_command = ['show ip arp', 'show ip arp vrf {vrf}']
-	exclude = [
-	'Age']
+	exclude = ['age']
 
 	def cli(self, vrf='', output=None):
 		if vrf:
@@ -193,6 +192,7 @@ class ShowIpArpDetailVrfAll(ShowIpArpDetailVrfAllSchema):
 				'RO': 'Re-Originated Peer Sync Entry'}
 
 	cli_command = ['show ip arp detail vrf {vrf}', 'show ip arp detail']
+	exclude = ['age']
 
 	def cli(self, vrf=None, output=None):
 

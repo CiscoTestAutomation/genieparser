@@ -78,6 +78,7 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
     '''
 
     cli_command = ['show mld vrf {vrf} summary internal','show mld summary internal']
+    exclude = ['last_query' ,'last_report', 'last_reporter', 'expire']
 
     def cli(self, vrf = '', output = None):
         if output is None:
@@ -285,6 +286,7 @@ class ShowMldInterface(ShowMldInterfaceSchema):
     '''
 
     cli_command = ['show mld vrf {vrf} interface','show mld interface']
+    exclude = ['time_elapsed_since_last_query_sent' , 'time_elapsed_since_last_report_received']
 
     def cli(self, vrf = '', output = None):
         if output is None:
