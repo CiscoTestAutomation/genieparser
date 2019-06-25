@@ -6295,14 +6295,10 @@ class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
         * 'show ip ospf neighbor {interface}'
     '''
 
-<<<<<<< Updated upstream
     cli_command = [
         'show ip ospf neighbor {interface}',
         'show ip ospf neighbor']
-=======
-    cli_command = 'show ip ospf neighbor'
     exclude = ['dead_time']
->>>>>>> Stashed changes
 
     def cli(self, interface='', output=None):
 
