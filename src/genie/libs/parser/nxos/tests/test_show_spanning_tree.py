@@ -47,8 +47,8 @@ class testShowSpanningTreeMst(unittest.TestCase):
                         'root_for_cist' : 'this switch',
                         'regional_root': 'this switch',
                         'interfaces': {
-                            'port-channel30': {
-                                'name': 'port-channel30',
+                            'Port-channel30': {
+                                'name': 'Port-channel30',
                                 'port_state': 'broken',
                                 'port_id': '128.4125',
                                 'port_priority': 128,
@@ -127,8 +127,8 @@ class testShowSpanningTreeMst(unittest.TestCase):
                         'sys_id': 0,
                         'root_for_cist' : 'this switch',
                         'interfaces': {
-                            'port-channel25': {
-                                'name': 'port-channel25',
+                            'Port-channel25': {
+                                'name': 'Port-channel25',
                                 'port_state': 'broken',
                                 'port_id': '128.4125',
                                 'port_priority': 128,

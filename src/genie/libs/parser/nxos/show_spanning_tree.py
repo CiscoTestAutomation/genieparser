@@ -193,7 +193,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             # Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsistent)str
             m = p5_1.match(line)
             if m:
-                intf = Common.convert_intf_name(m.groupdict()['port_channel']).lower()
+                intf = Common.convert_intf_name(m.groupdict()['port_channel'])
                 intf_dict = instances_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 intf_dict['name'] = intf
                 intf_dict['port_state'] = m.groupdict()['port_state']
