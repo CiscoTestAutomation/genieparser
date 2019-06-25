@@ -11344,7 +11344,7 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         #                       Next Hop            Metric     LocPrf     Weight Path
         #                       10.196.7.7                           100          0 i
         # *>i                   10.196.7.7                           100          0 i
-        #                       4.4.4.4                                        0 200 100 i
+        #                       10.64.4.4                                        0 200 100 i
         #                       0.0.0.0                  0        100      32768 ?
         p6 = re.compile(
             r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?(?P<typecode>('
