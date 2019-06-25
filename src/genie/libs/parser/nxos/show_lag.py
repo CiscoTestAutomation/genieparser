@@ -98,6 +98,7 @@ class ShowLacpCounters(ShowLacpCountersSchema):
     """Parser for: show lacp counters"""
 
     cli_command = 'show lacp counters'
+    exclude = ['lacp_in_pkts' , 'lacp_out_pkts']
 
     def cli(self, output=None):
         if output is None:
@@ -200,6 +201,7 @@ class ShowLacpNeighborSchema(MetaParser):
 class ShowLacpNeighbor(ShowLacpNeighborSchema):
     """parser for: show lacp neighbor"""
     cli_command = 'show lacp neighbor'
+    exclude = ['age']
 
     def cli(self, output=None):
         if output is None:

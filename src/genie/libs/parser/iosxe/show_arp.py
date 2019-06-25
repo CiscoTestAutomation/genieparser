@@ -36,7 +36,16 @@ class ShowArpSchema(MetaParser):
     """
 
     schema = {
-        'interfaces': {
+        Optional('global_static_table'): {
+            Any(): {
+                'ip_address': str,
+                'mac_address': str,
+                'encap_type': str,
+                'age': str,
+                'protocol': str,
+            },
+        },
+        Optional('interfaces'): {
             Any(): {
                 'ipv4': {
                     'neighbors': {     
@@ -79,9 +88,10 @@ class ShowArp(ShowArpSchema):
         else:
             out = output
 
-        # initial regexp pattern
+        # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
+        # Internet  10.169.197.93          -   fa16.3e95.2218  ARPA
         p1 = re.compile(r'^(?P<protocol>\w+) +(?P<address>[\d\.\:]+) +(?P<age>[\d\-]+) +'
-                         '(?P<mac>[\w\.]+) +(?P<type>\w+) +(?P<interface>[\w\.\/\-]+)$')
+                         '(?P<mac>[\w\.]+) +(?P<type>\w+)( +(?P<interface>[\w\.\/\-]+))?$')
         # initial variables
         ret_dict = {}
 
@@ -89,24 +99,32 @@ class ShowArp(ShowArpSchema):
             line = line.strip()
 
             # Internet  192.168.234.1           -   58bf.eab6.2f51  ARPA   Vlan100
+            # Internet  10.169.197.93          -   fa16.3e95.2218  ARPA
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 address = group['address']
                 interface = group['interface']
-                final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
-                    interface, {}).setdefault('ipv4', {}).setdefault(
-                    'neighbors', {}).setdefault(address, {})
-                
-                final_dict['ip'] = address
-                final_dict['link_layer_address'] = group['mac']
-                final_dict['age'] = group['age']
-                if group['age'] == '-':
-                    final_dict['origin'] = 'static'
+                if interface:
+                    final_dict = ret_dict.setdefault('interfaces', {}).setdefault(
+                        interface, {}).setdefault('ipv4', {}).setdefault(
+                        'neighbors', {}).setdefault(address, {})
+                    
+                    final_dict['ip'] = address
+                    final_dict['link_layer_address'] = group['mac']
+                    final_dict['type'] = group['type']
+                    if group['age'] == '-':
+                        final_dict['origin'] = 'static'
+                    else:
+                        final_dict['origin'] = 'dynamic'
                 else:
-                    final_dict['origin'] = 'dynamic'
+                    final_dict = ret_dict.setdefault(
+                        'global_static_table', {}).setdefault(address, {})
+                    final_dict['ip_address'] = address
+                    final_dict['mac_address'] = group['mac']
+                    final_dict['encap_type'] = group['type']
 
-                final_dict['type'] = group['type']
+                final_dict['age'] = group['age']
                 final_dict['protocol'] = group['protocol']
                 continue
 
@@ -190,7 +208,7 @@ class ShowIpTrafficSchema(MetaParser):
             'arp_out_replies': int,
             'arp_out_proxy': int,
             'arp_out_reverse': int,
-            'arp_drops_input_full': int,
+            Optional('arp_drops_input_full'): int,
         },
         'ip_statistics': {
             'ip_rcvd_total': int,
@@ -362,6 +380,14 @@ class ShowIpTraffic(ShowIpTrafficSchema):
         parser class - implements detail parsing mechanisms for cli,xml and yang output.
     """
     cli_command = 'show ip traffic'
+    exclude = ['bgp_received_keepalives' , 'bgp_received_total', 'bgp_sent_keepalives', 'bgp_sent_total' ,
+                'eigrp_ipv4_received_total' , 'eigrp_ipv4_sent_total', 'icmp_received_echo', 'icmp_sent_echo_reply',
+                'igmp_host_queries', 'igmp_host_reports', 'igmp_total', 'ip_bcast_received', 'ip_bcast_sent', 'ip_mcast_received',
+                'ip_mcast_sent', 'ip_opts_alert', 'ip_rcvd_format_errors', 'ip_rcvd_local_destination', 'ip_rcvd_total' ,
+                'ip_rcvd_with_optns', 'ip_sent_generated', 'ospf_received_hello', 'ospf_received_lnk_st_acks', 'ospf_received_lnk_st_updates'
+                'ospf_received_total' , 'ospf_sent_hello' , 'ospf_sent_lnk_st_acks', 'ospf_sent_lnk_st_updates', 'ospf_sent_total', 'pimv2_bootstraps',
+                'pimv2_candidate_rp_advs', 'pimv2_hellos', 'pimv2_registers', 'pimv2_registers_stops', 'pimv2_total', 'tcp_received_no_port', 'tcp_received_total', 
+                'tcp_sent_total', 'udp_received_no_port', 'udp_received_total', 'udp_sent_total']
     def cli(self,output=None):
         if output is None:
             # excute command to get output
@@ -648,6 +674,9 @@ class ShowIpTraffic(ShowIpTrafficSchema):
 
         # EIGRP-IPv4 statistics:
         p59 = re.compile(r'^EIGRP-IPv4 +statistics:')
+
+        # IP-EIGRP statistics:
+        p59_1 = re.compile(r'^IP-EIGRP +statistics:')
 
         # Rcvd: 4612 total
         p60 = re.compile(r'^Rcvd: +(?P<eigrp_ipv4_received_total>\d+) +total$')
@@ -1103,6 +1132,12 @@ class ShowIpTraffic(ShowIpTrafficSchema):
                 continue
 
             m = p59.match(line)
+            if m:
+                ret_dict.setdefault('eigrp_ipv4_statistics', {})
+                location = 'eigrp_ipv4_statistics'
+                continue
+
+            m = p59_1.match(line)
             if m:
                 ret_dict.setdefault('eigrp_ipv4_statistics', {})
                 location = 'eigrp_ipv4_statistics'

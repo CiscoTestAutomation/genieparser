@@ -88,6 +88,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeerSchema):
 
     cli_command = ['show ip msdp vrf {vrf} peer',
                    'show ip msdp peer']
+    exclude = ['elapsed_time' , 'data_message', 'sa_message']
 
     def cli(self, vrf='', output=None):
         if output is None:

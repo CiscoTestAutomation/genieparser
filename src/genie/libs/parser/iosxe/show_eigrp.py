@@ -278,6 +278,7 @@ class ShowIpEigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSche
 
     cli_command = ['show ip eigrp vrf {vrf} neighbors',
                    'show ip eigrp neighbors',]
+    exclude = ['uptime' , 'hold']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -302,6 +303,7 @@ class ShowIpv6EigrpNeighbors(ShowEigrpNeighborsSuperParser, ShowEigrpNeighborsSc
 
     cli_command = ['show ipv6 eigrp vrf {vrf} neighbors',
                    'show ipv6 eigrp neighbors',]
+    exclude = ['hold' , 'uptime']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -628,6 +630,7 @@ class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
 
     cli_command = ['show ip eigrp vrf {vrf} neighbors detail',
                    'show ip eigrp neighbors detail',]
+    exclude = ['uptime', 'hold']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -649,6 +652,7 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
     #   'show ipv6 eigrp neighbors detail'    
 
     cli_command = 'show ipv6 eigrp neighbors detail'
+    exclude = ['hold' , 'uptime']
 
     def cli(self, output=None):
         if output is None:            

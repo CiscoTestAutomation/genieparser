@@ -467,7 +467,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
     cli_command = ['show ip igmp interface vrf {vrf}', 'show ip igmp interface']
     exclude = [
-        'next_query_sent_in'
+        'next_query_sent_in',
         'v2_queries',
         'v2_reports',
         'v2_leaves',
@@ -475,7 +475,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
         'pim_dr',
         'received',
         'sent',
-        'expires']
+        'expires',
+        'next_query_sent_in'
+        ]
 
     def cli(self, vrf='', output=None):
 

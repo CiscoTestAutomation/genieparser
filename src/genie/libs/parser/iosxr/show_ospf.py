@@ -249,12 +249,73 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
         # Mapping dict
         bool_dict = {'up': True, 'down': False, 'unknown': False}
 
+        p1 = re.compile(r'^Interfaces +for +OSPF +(?P<instance>(\S+))'
+                            '(?:, +VRF +(?P<vrf>(\S+)))?$')
+        p2 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
+                            ' +(?P<enable>(unknown|up|down)), +line +protocol'
+                            ' +is +(?P<line_protocol>(up|down))$')
+        p3 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
+                            ' +Area +(?P<area>(\S+))'
+                            '(, +(?P<dummy>.+))?$')
+        p4 = re.compile(r'^Process +ID +(?P<pid>(\S+))'
+                            '(?:, +VRF +(?P<vrf>(\S+)))?'
+                            ', +Router +ID +(?P<router_id>(\S+))'
+                            ', +Network +Type +(?P<interface_type>(\S+))'
+                            '(?:, +Cost: +(?P<cost>(\d+))( \([A-Z\-]+\))?)?$')
+        p5 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+)) +sec,'
+                            ' +State +(?P<state>(\S+)),'
+                            '(?: +Priority +(?P<priority>(\d+)),)?'
+                            ' +MTU +(?P<mtu>(\d+)),'
+                            ' +MaxPktSz +(?P<max_pkt_sz>(\d+))$')
+        p6 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
+                            ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
+                            ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
+        p7 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
+                            ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
+                            ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
+        p8 = re.compile(r'^Timer +intervals +configured,'
+                            ' +Hello +(?P<hello>(\d+)),'
+                            ' +Dead +(?P<dead>(\d+)),'
+                            ' +Wait +(?P<wait>(\d+)),'
+                            ' +Retransmit +(?P<retransmit>(\d+))$')
+        p9_1 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
+        p9_2 = re.compile(r'^No +Hellos +\(Passive +interface\)$')
+        p10 = re.compile(r'^Index +(?P<index>(\S+)),'
+                            ' +flood +queue +length +(?P<length>(\d+))$')
+        p22 = re.compile(r'^Next +(?P<next>(\S+))$')
+        p11 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)),'
+                            ' +maximum +is +(?P<max>(\d+))$')
+        p12 = re.compile(r'^Last +flood +scan +time +is +(?P<time1>(\d+))'
+                            ' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
+        p13 = re.compile(r'^LS +Ack +List: +(?P<ls_ack_list>(\S+)) +length'
+                            ' +(?P<num>(\d+)), +high +water +mark'
+                            ' +(?P<num2>(\d+))$')
+        p14 = re.compile(r'^Neighbor +Count +is +(?P<nbr_count>(\d+)),'
+                            ' +Adjacent +neighbor +count +is'
+                            ' +(?P<adj_nbr_count>(\d+))$')
+        p15_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                            ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
+        p15_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                            ' +\((D|d)esignated +(R|r)outer\)$')
+        p15_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                            ' +\(Hello suppressed\)$')
+        p16 = re.compile(r'^Suppress +hello +for +(?P<sup>(\d+))'
+                            ' +neighbor\(s\)$')
+        p17 = re.compile(r'^Multi-area +interface +Count +is'
+                            ' +(?P<count>(\d+))$')
+        p18 = re.compile(r'^Configured as demand circuit\.$')
+        p19 = re.compile(r'^Run as demand circuit\.$')
+        p20 = re.compile(r'^DoNotAge +LSA +not +allowed +\(Number +of'
+                            ' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
+        p21 = re.compile(r'^BFD enabled'
+                            '(?:, +BFD +interval +(?P<interval>(\d+)) +msec)?'
+                            '(?:, +BFD +multiplier +(?P<multi>(\d+)))?'
+                            '(?:, +Mode: +(?P<mode>(\S+)))?$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # Interfaces for OSPF 1, VRF VRF1
-            p1 = re.compile(r'^Interfaces +for +OSPF +(?P<instance>(\S+))'
-                             '(?:, +VRF +(?P<vrf>(\S+)))?$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['instance'])
@@ -282,9 +343,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             # Loopback1 is administratively down, line protocol is down
             # OSPF_SL0 is unknown, line protocol is up
             # OSPF_VL0 is unknown, line protocol is up
-            p2 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
-                             ' +(?P<enable>(unknown|up|down)), +line +protocol'
-                             ' +is +(?P<line_protocol>(up|down))$')
             m = p2.match(line)
             if m:
                 interface = str(m.groupdict()['interface'])
@@ -309,9 +367,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
 
             # Internet Address 10.2.3.3/24, Area 0
             # Internet Address 192.168.205.1/32, Area 1, SID 0, Strict-SPF SID 0
-            p3 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
-                             ' +Area +(?P<area>(\S+))'
-                             '(, +(?P<dummy>.+))?$')
             m = p3.match(line)
             if m:
                 ip_address = str(m.groupdict()['address'])
@@ -324,11 +379,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             # Process ID 1, Router ID 10.36.3.3, Network Type BROADCAST, Cost: 1
             # Process ID 1, VRF VRF1, Router ID 10.36.3.3, Network Type SHAM_LINK, Cost: 111
             # Process ID 1, VRF VRF501, Router ID 192.168.111.1, Network Type BROADCAST, Cost: 1 (RSVP-TE)
-            p4 = re.compile(r'^Process +ID +(?P<pid>(\S+))'
-                             '(?:, +VRF +(?P<vrf>(\S+)))?'
-                             ', +Router +ID +(?P<router_id>(\S+))'
-                             ', +Network +Type +(?P<interface_type>(\S+))'
-                             '(?:, +Cost: +(?P<cost>(\d+))( \([A-Z\-]+\))?)?$')
             m = p4.match(line)
             if m:
                 pid = str(m.groupdict()['pid'])
@@ -454,11 +504,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
-            p5 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+)) +sec,'
-                             ' +State +(?P<state>(\S+)),'
-                             '(?: +Priority +(?P<priority>(\d+)),)?'
-                             ' +MTU +(?P<mtu>(\d+)),'
-                             ' +MaxPktSz +(?P<max_pkt_sz>(\d+))$')
             m = p5.match(line)
             if m:
                 sub_dict['transmit_delay'] = int(m.groupdict()['delay'])
@@ -472,9 +517,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Designated Router (ID) 10.36.3.3, Interface address 10.2.3.3
-            p6 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
-                             ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
-                             ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
             m = p6.match(line)
             if m:
                 sub_dict['dr_router_id'] = str(m.groupdict()['dr_router_id'])
@@ -482,9 +524,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Backup Designated router (ID) 10.16.2.2, Interface address 10.2.3.2
-            p7 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
-                             ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
-                             ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
             m = p7.match(line)
             if m:
                 sub_dict['bdr_router_id'] = str(m.groupdict()['bdr_router_id'])
@@ -492,11 +531,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            p8 = re.compile(r'^Timer +intervals +configured,'
-                             ' +Hello +(?P<hello>(\d+)),'
-                             ' +Dead +(?P<dead>(\d+)),'
-                             ' +Wait +(?P<wait>(\d+)),'
-                             ' +Retransmit +(?P<retransmit>(\d+))$')
             m = p8.match(line)
             if m:
                 sub_dict['hello_interval'] = int(m.groupdict()['hello'])
@@ -506,7 +540,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Hello due in 00:00:07:587
-            p9_1 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
             m = p9_1.match(line)
             if m:
                 sub_dict['passive'] = False
@@ -514,15 +547,12 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # No Hellos (Passive interface)
-            p9_2 = re.compile(r'^No +Hellos +\(Passive +interface\)$')
             m = p9_2.match(line)
             if m:
                 sub_dict['passive'] = True
                 continue
 
             # Index 2/2, flood queue length 0
-            p10 = re.compile(r'^Index +(?P<index>(\S+)),'
-                               ' +flood +queue +length +(?P<length>(\d+))$')
             m = p10.match(line)
             if m:
                 sub_dict['index'] = str(m.groupdict()['index'])
@@ -530,15 +560,12 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Next 0(0)/0(0)
-            p11 = re.compile(r'^Next +(?P<next>(\S+))$')
-            m = p11.match(line)
+            m = p22.match(line)
             if m:
                 sub_dict['next'] = str(m.groupdict()['next'])
                 continue
 
             # Last flood scan length is 1, maximum is 3
-            p11 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)),'
-                              ' +maximum +is +(?P<max>(\d+))$')
             m = p11.match(line)
             if m:
                 sub_dict['last_flood_scan_length'] = int(m.groupdict()['num'])
@@ -546,8 +573,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Last flood scan time is 0 msec, maximum is 0 msec
-            p12 = re.compile(r'^Last +flood +scan +time +is +(?P<time1>(\d+))'
-                              ' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
             m = p12.match(line)
             if m:
                 sub_dict['last_flood_scan_time_msec'] = \
@@ -557,9 +582,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # LS Ack List: current length 0, high water mark 7
-            p13 = re.compile(r'^LS +Ack +List: +(?P<ls_ack_list>(\S+)) +length'
-                              ' +(?P<num>(\d+)), +high +water +mark'
-                              ' +(?P<num2>(\d+))$')
             m = p13.match(line)
             if m:
                 sub_dict['ls_ack_list'] = str(m.groupdict()['ls_ack_list'])
@@ -568,9 +590,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Neighbor Count is 1, Adjacent neighbor count is 1
-            p14 = re.compile(r'^Neighbor +Count +is +(?P<nbr_count>(\d+)),'
-                              ' +Adjacent +neighbor +count +is'
-                              ' +(?P<adj_nbr_count>(\d+))$')
             m = p14.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -582,8 +601,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Adjacent with neighbor 10.16.2.2  (Backup Designated Router)
-            p15_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                              ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
             m = p15_1.match(line)
             if m:
                 neighbor = str(m.groupdict()['nbr'])
@@ -595,8 +612,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Adjacent with neighbor 10.36.3.3  (Designated Router)
-            p15_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                              ' +\((D|d)esignated +(R|r)outer\)$')
             m = p15_2.match(line)
             if m:
                 neighbor = str(m.groupdict()['nbr'])
@@ -608,8 +623,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Adjacent with neighbor 10.64.4.4  (Hello suppressed)
-            p15_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                              ' +\(Hello suppressed\)$')
             m = p15_3.match(line)
             if m:
                 neighbor = str(m.groupdict()['nbr'])
@@ -620,8 +633,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Suppress hello for 0 neighbor(s)
-            p16 = re.compile(r'^Suppress +hello +for +(?P<sup>(\d+))'
-                              ' +neighbor\(s\)$')
             m = p16.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -631,8 +642,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Multi-area interface Count is 0
-            p17 = re.compile(r'^Multi-area +interface +Count +is'
-                              ' +(?P<count>(\d+))$')
             m = p17.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -642,22 +651,18 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # Configured as demand circuit.
-            p18 = re.compile(r'^Configured as demand circuit\.$')
             m = p18.match(line)
             if m:
                 sub_dict['demand_circuit'] = True
                 continue
 
             # Run as demand circuit.
-            p19 = re.compile(r'^Run as demand circuit\.$')
             m = p19.match(line)
             if m:
                 sub_dict['demand_circuit'] = True
                 continue
 
             # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-            p20 = re.compile(r'^DoNotAge +LSA +not +allowed +\(Number +of'
-                              ' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
             m = p20.match(line)
             if m:
                 sub_dict['donotage_lsa'] = False
@@ -665,10 +670,6 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 continue
 
             # BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
-            p21 = re.compile(r'^BFD enabled'
-                              '(?:, +BFD +interval +(?P<interval>(\d+)) +msec)?'
-                              '(?:, +BFD +multiplier +(?P<multi>(\d+)))?'
-                              '(?:, +Mode: +(?P<mode>(\S+)))?$')
             m = p21.match(line)
             if m:
                 sub_dict['bfd']['enable'] = True
@@ -797,13 +798,43 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
 
+        p1 = re.compile(r'^Neighbors +for +OSPF +(?P<instance>(\S+))'
+                            '(?:, +VRF +(?P<vrf>(\S+)))?$')
+        p2 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
+                            ' +address +(?P<address>(\S+))$')
+        p3 = re.compile(r'^In +the +area +(?P<area>\S+) +via +interface'
+                            ' +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$')
+        p4 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\d+)),'
+                            ' +State +is +(?P<state>(\S+)),'
+                            ' +(?P<num>(\d+)) +state +changes$')
+        p5 = re.compile(r'^DR +is +(?P<dr_ip_addr>(\S+))'
+                            ' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
+        p6_1 = re.compile(r'^Options +is +(?P<options>(\S+))$')
+        p6_2 = re.compile(r'^LLS +Options +is +(?P<lls_options>(.*))$')
+        p7 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
+        p8 = re.compile(r'^Neighbor +is +up +for +(?P<uptime>(\S+))$')
+        p9 = re.compile(r'^Number +of +DBD +retrans +during +last'
+                            ' +exchange +(?P<dbd_retrans>(\d+))$')
+        p10 = re.compile(r'^Index +(?P<index>(\S+)) +retransmission +queue'
+                            ' +length +(?P<ql>(\d+)), +number +of'
+                            ' +retransmission +(?P<num_retrans>(\d+))$')
+        p11 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
+        p12 = re.compile(r'^Last +retransmission +scan +length +is'
+                            ' +(?P<num1>(\d+)), +maximum +is'
+                            ' +(?P<num2>(\d+))$')
+        p13 = re.compile(r'^Last +retransmission +scan +time +is'
+                            ' +(?P<num1>(\d+)) +msec, +maximum +is'
+                            ' +(?P<num2>(\d+)) +msec$')
+        p14 = re.compile(r'^LS +Ack +list: +(?P<ls_ack_list>(\S+))'
+                            ' +pending +(?P<pending>(\d+)), +high +water'
+                            ' +mark +(?P<mark>(\d+))$')
+        p15 = re.compile(r'^Total +neighbor +count: +(?P<num>(\d+))$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # Neighbors for OSPF 1
             # Neighbors for OSPF 1, VRF VRF1
-            p1 = re.compile(r'^Neighbors +for +OSPF +(?P<instance>(\S+))'
-                             '(?:, +VRF +(?P<vrf>(\S+)))?$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['instance'])
@@ -828,8 +859,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                     continue
 
             # Neighbor 10.16.2.2, interface address 10.2.3.2
-            p2 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
-                             ' +address +(?P<address>(\S+))$')
             m = p2.match(line)
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
@@ -838,8 +867,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
 
             # In the area 0 via interface GigabitEthernet0/0/0/2
             # In the area 0.0.0.0 via interface GigabitEthernet0/0/0/0 , BFD enabled, Mode: Default
-            p3 = re.compile(r'^In +the +area +(?P<area>\S+) +via +interface'
-                             ' +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), +Mode: (?P<mode>\w+))?$')
             m = p3.match(line)
             if m:
                 area = str(m.groupdict()['area'])
@@ -929,9 +956,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # Neighbor priority is 1, State is FULL, 6 state changes
-            p4 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\d+)),'
-                             ' +State +is +(?P<state>(\S+)),'
-                             ' +(?P<num>(\d+)) +state +changes$')
             m = p4.match(line)
             if m:
                 sub_dict['priority'] = int(m.groupdict()['priority'])
@@ -945,8 +969,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # DR is 10.2.3.3 BDR is 10.2.3.2
-            p5 = re.compile(r'^DR +is +(?P<dr_ip_addr>(\S+))'
-                             ' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
             m = p5.match(line)
             if m:
                 sub_dict['dr_ip_addr'] = str(m.groupdict()['dr_ip_addr'])
@@ -954,36 +976,30 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # Options is 0x42
-            p6_1 = re.compile(r'^Options +is +(?P<options>(\S+))$')
             m = p6_1.match(line)
             if m:
                 sub_dict['options'] = str(m.groupdict()['options'])
                 continue
 
             # LLS Options is 0x1 (LR)
-            p6_2 = re.compile(r'^LLS +Options +is +(?P<lls_options>(.*))$')
             m = p6_2.match(line)
             if m:
                 sub_dict['lls_options'] = str(m.groupdict()['lls_options'])
                 continue
 
             # Dead timer due in 00:00:38
-            p7 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
             m = p7.match(line)
             if m:
                 sub_dict['dead_timer'] = str(m.groupdict()['dead_timer'])
                 continue
 
             # Neighbor is up for 08:22:07
-            p8 = re.compile(r'^Neighbor +is +up +for +(?P<uptime>(\S+))$')
             m = p8.match(line)
             if m:
                 sub_dict['neighbor_uptime'] = str(m.groupdict()['uptime'])
                 continue
 
             # Number of DBD retrans during last exchange 0
-            p9 = re.compile(r'^Number +of +DBD +retrans +during +last'
-                             ' +exchange +(?P<dbd_retrans>(\d+))$')
             m = p9.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -993,9 +1009,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # Index 1/1, retransmission queue length 0, number of retransmission 0
-            p10 = re.compile(r'^Index +(?P<index>(\S+)) +retransmission +queue'
-                             ' +length +(?P<ql>(\d+)), +number +of'
-                             ' +retransmission +(?P<num_retrans>(\d+))$')
             m = p10.match(line)
             if m:
                 sub_dict['index'] = str(m.groupdict()['index'])
@@ -1008,7 +1021,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # First 0(0)/0(0) Next 0(0)/0(0)
-            p11 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
             m = p11.match(line)
             if m:
                 sub_dict['first'] = str(m.groupdict()['first'])
@@ -1016,9 +1028,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # Last retransmission scan length is 0, maximum is 0
-            p12 = re.compile(r'^Last +retransmission +scan +length +is'
-                              ' +(?P<num1>(\d+)), +maximum +is'
-                              ' +(?P<num2>(\d+))$')
             m = p12.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -1030,9 +1039,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # Last retransmission scan time is 0 msec, maximum is 0 msec
-            p13 = re.compile(r'^Last +retransmission +scan +time +is'
-                              ' +(?P<num1>(\d+)) +msec, +maximum +is'
-                              ' +(?P<num2>(\d+)) +msec$')
             m = p13.match(line)
             if m:
                 if 'statistics' not in sub_dict:
@@ -1044,9 +1050,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # LS Ack list: NSR-sync pending 0, high water mark 0
-            p14 = re.compile(r'^LS +Ack +list: +(?P<ls_ack_list>(\S+))'
-                              ' +pending +(?P<pending>(\d+)), +high +water'
-                              ' +mark +(?P<mark>(\d+))$')
             m = p14.match(line)
             if m:
                 sub_dict['ls_ack_list'] = str(m.groupdict()['ls_ack_list'])
@@ -1055,7 +1058,6 @@ class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetai
                 continue
 
             # Total neighbor count: 2
-            p15 = re.compile(r'^Total +neighbor +count: +(?P<num>(\d+))$')
             m = p15.match(line)
             if m:
                 ret_dict['vrf'][vrf]['address_family'][af]['instance']\
@@ -1253,15 +1255,131 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
         # Init vars
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
+        p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
+                            ' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
+                            ' +with +ID +(?P<router_id>(\S+))$')
+        p2 = re.compile(r'^Role *: +(?P<role>([a-zA-z0-9\s]+))$')
+        p3 = re.compile(r'^NSR +\(Non-stop routing\) +is +(?P<nsr>(\S+))$')
+        p3_1 = re.compile(r'^Supports +only +single +TOS(TOS0) routes$')
+        p3_2 = re.compile(r'^Supports +opaque +LSA$')
+        p4 = re.compile(r'^Redistributing +External +Routes +from,$')
+        p4_1 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
+                            ' +mapped +to +(?P<metric>(\d+)))?$')
+        p4_2 = re.compile(r'^(?P<prot>(bgp|isis)) +(?P<pid>(\d+))(?: +with'
+                            ' +metric +mapped +to +(?P<metric>(\d+)))?$')
+        p4_3 = re.compile(r'^Maximum +number +of +redistributed +prefixes'
+                            ' +(?P<num_prefix>(\d+))'
+                            '(?: +\((?P<warn>(warning-only))\))?')
+        p4_4 = re.compile(r'^Threshold +for +warning +message'
+                            ' +(?P<thld>(\d+))\%$')
+        p5_0 = re.compile(r'^It +is +an'
+                            '(?: +(?P<abr>(area border)))?'
+                            '(?: +and)?'
+                            '(?: +(?P<asbr>(autonomous system boundary)))?'
+                            ' +router$')
+        p5_1 = re.compile(r'^Router +is +not +originating +router-LSAs'
+                            ' +with +maximum +metric$')
+        p5_2 = re.compile(r'^Originating +router-LSAs +with +maximum'
+                            ' +metric$')
+        p5_3 = re.compile(r'^Condition:'
+                            ' +(?P<condition>(always|on switch-over|on start-up|on proc-restart))'
+                            '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
+                            ' +State: +(?P<state>(\S+))$')
+        p5_4 = re.compile(r'^Advertise +stub +links +with +maximum +metric'
+                            ' +in +router\-LSAs$')
+        p5_5 = re.compile(r'^Advertise +summary\-LSAs +with +metric'
+                            ' +(?P<metric>(\d+))$')
+        p5_6 = re.compile(r'^^Advertise +external\-LSAs +with +metric'
+                            ' +(?P<metric>(\d+))$')
+        p6 = re.compile(r'^Initial +SPF +schedule +delay +(?P<time>(\S+))'
+                            ' +msecs$')
+        p7 = re.compile(r'^Minimum +hold +time +between +two +consecutive'
+                            ' +SPFs +(?P<time>(\S+)) +msecs$')
+        p8 = re.compile(r'^Maximum +wait +time +between +two +consecutive'
+                            ' +SPFs +(?P<time>(\S+)) +msecs$')
+        p9 = re.compile(r'^Initial +LSA +throttle +delay +(?P<time>(\S+))'
+                            ' +msecs$')
+        p10 = re.compile(r'^Minimum +hold +time +for +LSA +throttle'
+                            ' +(?P<time>(\S+)) +msecs$')
+        p11 = re.compile(r'^Maximum +wait +time +for +LSA +throttle'
+                            ' +(?P<time>(\S+)) +msecs$')
+        p12 = re.compile(r'^Minimum +LSA +interval +(?P<interval>(\S+))'
+                            ' +msecs. +Minimum +LSA +arrival'
+                            ' +(?P<arrival>(\S+)) +msecs$')
+        p13 = re.compile(r'^LSA +refresh +interval +(?P<refresh>(\S+))'
+                            ' +seconds$')
+        p14 = re.compile(r'^Flood +pacing +interval +(?P<flood>(\d+))'
+                            ' +msecs\. +Retransmission +pacing +interval'
+                            ' +(?P<retransmission>(\d+)) +msecs$')
+        p15 = re.compile(r'^Adjacency +stagger +(?P<adj>(\S+)); +initial'
+                            ' +\(per +area\): +(?P<init>(\d+)),'
+                            ' +maximum: +(?P<max>(\d+))$')
+        p16 = re.compile(r'^Number +of +neighbors +forming:'
+                            ' +(?P<form>(\d+)), +(?P<full>(\d+)) +full$')
+        p17 = re.compile(r'^Maximum +number +of +configured +interfaces'
+                            ' +(?P<max>(\d+))$')
+        p18 = re.compile(r'^Number +of +external +LSA +(?P<ext>(\d+))\.'
+                            ' +Checksum +Sum +(?P<checksum>(\S+))$')
+        p19 = re.compile(r'^Number +of +opaque +AS +LSA +(?P<opq>(\d+))\.'
+                            ' +Checksum +Sum +(?P<checksum>(\S+))$')
+        p20 = re.compile(r'^Number +of +DCbitless +external +and +opaque'
+                            ' +AS +LSA +(?P<num>(\d+))$')
+        p21 = re.compile(r'^Number +of +DoNotAge +external +and +opaque'
+                            ' +AS +LSA +(?P<num>(\d+))$')
+        p22 = re.compile(r'^Number +of +areas +in +this +router +is'
+                            ' +(?P<total_areas>(\d+))\. +(?P<normal>(\d+))'
+                            ' +normal +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+))'
+                            ' +nssa$')
+        p23 = re.compile(r'^External +flood +list +length +(?P<num>(\d+))$')
+        p43 = re.compile(r'^LDP +Sync +(?P<sync>(Enabled|Disabled)),'
+                            ' +Sync +Status: +(?P<status>(.*))$')
+        p25 = re.compile(r'^LSD +(?P<lsd>([a-zA-Z\,\s]+)), +revision'
+                            ' +(?P<revision>(\d+))$')
+        p26 = re.compile(r'^Segment +Routing +Global +Block +default'
+                            ' +\((?P<sr_block>([0-9\-]+))\),'
+                            ' +(?P<status>(.*))$')
+        p27 = re.compile(r'^Strict-SPF +capability +is +(?P<state>(\S+))$')
+        p28_1 = re.compile(r'^Area +(?P<area>(\S+))(?: +(inactive|\(Inactive\)))?$')
+        p28_2 = re.compile(r'^It +is +a +(?P<area_type>(\S+)) +area'
+                            '(?:, +(?P<summary>(no +summary +LSA +in +this'
+                            ' +area)))?$')
+        p28_3 = re.compile(r'^generates +stub +default +route +with +cost'
+                            ' +(?P<default_cost>(\d+))$')
+        p28_4 = re.compile(r'^Perform +(?P<trans>(\S+)) +LSA +translation$')
+        p28_5 = re.compile(r'^Area ranges are$')
+        p28_6 = re.compile(r'^(?P<prefix>([0-9\.\/]+)) +Passive'
+                            ' +(?P<advertise>(Advertise|DoNotAdvertise))$')
+        p29 = re.compile(r'^Number +of +interfaces +in +this +area +is'
+                            ' +(?P<num_intf>(\d+))$')
+        p30 = re.compile(r'^Area +has +RRR +enabled, +topology +version'
+                            ' +(?P<topo_version>(\d+))$')
+        p31 = re.compile(r'^SPF +algorithm +executed +(?P<count>(\d+))'
+                            ' +times$')
+        p32 = re.compile(r'^Number +of +LSA +(?P<lsa_count>(\d+))\.'
+                            ' +Checksum +Sum +(?P<checksum_sum>(\S+))$')
+        p33 = re.compile(r'^Number +of opaque +link +LSA'
+                            ' +(?P<opaque_count>(\d+))\. +Checksum +Sum'
+                            ' +(?P<checksum_sum>(\S+))$')
+        p34 = re.compile(r'^Number +of +DCbitless +LSA +(?P<count>(\d+))$')
+        p35 = re.compile(r'^Number +of +indication +LSA +(?P<count>(\d+))$')
+        p36 = re.compile(r'^Number +of +DoNotAge +LSA +(?P<count>(\d+))$')
+        p37 = re.compile(r'^Flood +list +length +(?P<len>(\d+))$')
+        p38 = re.compile(r'^Number +of +LFA +enabled +interfaces'
+                            ' +(?P<count>(\d+)), +LFA +revision'
+                            ' +(?P<revision>(\d+))$')
+        p39 = re.compile(r'^Number +of +Per +Prefix +LFA +enabled'
+                            ' +interfaces +(?P<count>(\d+))$')
+        p40 = re.compile(r'^Number +of +neighbors +forming +in +staggered'
+                            ' +mode +(?P<mode>(\d+)), +(?P<full>(\d+)) +full$')
+        p41 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
+                            ' +allowed +(?P<max_lsa>(\d+))$')
+        p42 = re.compile(r'^Non-Stop +Forwarding +enabled$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # Routing Process "ospf 1" with ID 10.36.3.3
             # VRF VRF1 in Routing Process "ospf 1" with ID 10.36.3.3
-            p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
-                             ' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
-                             ' +with +ID +(?P<router_id>(\S+))$')
             m = p1.match(line)
             if m:
                 instance = str(m.groupdict()['instance'])
@@ -1294,14 +1412,12 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Role: Primary Active
-            p2 = re.compile(r'^Role *: +(?P<role>([a-zA-z0-9\s]+))$')
             m = p2.match(line)
             if m:
                 sub_dict['role'] = str(m.groupdict()['role']).lower()
                 continue
 
             # NSR (Non-stop routing) is Enabled
-            p3 = re.compile(r'^NSR +\(Non-stop routing\) +is +(?P<nsr>(\S+))$')
             m = p3.match(line)
             if m:
                 nsr = str(m.groupdict()['nsr']).lower()
@@ -1314,21 +1430,18 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     continue
 
             # Supports only single TOS(TOS0) routes
-            p3_1 = re.compile(r'^Supports +only +single +TOS(TOS0) routes$')
             m = p3_1.match(line)
             if m:
                 # Not sure what the key is
                 continue
 
             # Supports opaque LSA
-            p3_2 = re.compile(r'^Supports +opaque +LSA$')
             m = p3_2.match(line)
             if m:
                 # Not sure what the key is
                 continue
 
             # Redistributing External Routes from,
-            p4 = re.compile(r'^Redistributing +External +Routes +from,$')
             m = p4.match(line)
             if m:
                 if 'redistribution' not in sub_dict:
@@ -1339,8 +1452,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # connected with metric mapped to 10
             # static
             # static with metric mapped to 10
-            p4_1 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
-                               ' +mapped +to +(?P<metric>(\d+)))?$')
             m = p4_1.match(line)
             if m:
                 the_type = str(m.groupdict()['type'])
@@ -1354,8 +1465,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # bgp 100 with metric mapped to 111
             # isis 10 with metric mapped to 3333
-            p4_2 = re.compile(r'^(?P<prot>(bgp|isis)) +(?P<pid>(\d+))(?: +with'
-                               ' +metric +mapped +to +(?P<metric>(\d+)))?$')
             m = p4_2.match(line)
             if m:
                 prot = str(m.groupdict()['prot'])
@@ -1374,9 +1483,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # Maximum number of redistributed prefixes 4000
             # Maximum number of redistributed prefixes 3000 (warning-only)
-            p4_3 = re.compile(r'^Maximum +number +of +redistributed +prefixes'
-                               ' +(?P<num_prefix>(\d+))'
-                               '(?: +\((?P<warn>(warning-only))\))?')
             m = p4_3.match(line)
             if m:
                 if 'max_prefix' not in sub_dict['redistribution']:
@@ -1390,8 +1496,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     continue
 
             # Threshold for warning message 70%
-            p4_4 = re.compile(r'^Threshold +for +warning +message'
-                               ' +(?P<thld>(\d+))\%$')
             m = p4_4.match(line)
             if m:
                 if 'max_prefix' not in sub_dict['redistribution']:
@@ -1403,11 +1507,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # It is an area border router
             # It is an autonomous system boundary router
             # It is an area border and autonomous system boundary router
-            p5_0 = re.compile(r'^It +is +an'
-                               '(?: +(?P<abr>(area border)))?'
-                               '(?: +and)?'
-                               '(?: +(?P<asbr>(autonomous system boundary)))?'
-                               ' +router$')
             m = p5_0.match(line)
             if m:
                 if 'flags' not in sub_dict:
@@ -1419,8 +1518,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Router is not originating router-LSAs with maximum metric
-            p5_1 = re.compile(r'^Router +is +not +originating +router-LSAs'
-                               ' +with +maximum +metric$')
             m = p5_1.match(line)
             if m:
                 if 'stub_router' not in sub_dict:
@@ -1435,8 +1532,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Originating router-LSAs with maximum metric
-            p5_2 = re.compile(r'^Originating +router-LSAs +with +maximum'
-                               ' +metric$')
             m = p5_2.match(line)
             if m:
                 if 'stub_router' not in sub_dict:
@@ -1447,10 +1542,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Condition: on switch-over for 10 seconds, State: inactive
             # Condition: on start-up for 5 seconds, State: inactive
             # Condition: on proc-restart for 900 seconds, State: inactive
-            p5_3 = re.compile(r'^Condition:'
-                               ' +(?P<condition>(always|on switch-over|on start-up|on proc-restart))'
-                               '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
-                               ' +State: +(?P<state>(\S+))$')
             m = p5_3.match(line)
             if m:
                 condition = str(m.groupdict()['condition']).lower().replace("-", "")
@@ -1470,16 +1561,12 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Advertise stub links with maximum metric in router-LSAs
-            p5_4 = re.compile(r'^Advertise +stub +links +with +maximum +metric'
-                               ' +in +router\-LSAs$')
             m = p5_4.match(line)
             if m:
                 sub_dict['stub_router'][condition]['include_stub'] = True
                 continue
 
             # Advertise summary-LSAs with metric 16711680
-            p5_5 = re.compile(r'^Advertise +summary\-LSAs +with +metric'
-                               ' +(?P<metric>(\d+))$')
             m = p5_5.match(line)
             if m:
                 sub_dict['stub_router'][condition]['summary_lsa'] = True
@@ -1488,8 +1575,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Advertise external-LSAs with metric 16711680
-            p5_6 = re.compile(r'^^Advertise +external\-LSAs +with +metric'
-                               ' +(?P<metric>(\d+))$')
             m = p5_6.match(line)
             if m:
                 sub_dict['stub_router'][condition]['external_lsa'] = True
@@ -1498,8 +1583,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Initial SPF schedule delay 50 msecs
-            p6 = re.compile(r'^Initial +SPF +schedule +delay +(?P<time>(\S+))'
-                             ' +msecs$')
             m = p6.match(line)
             if m:
                 start = int(float(m.groupdict()['time']))
@@ -1513,8 +1596,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Minimum hold time between two consecutive SPFs 200 msecs
-            p7 = re.compile(r'^Minimum +hold +time +between +two +consecutive'
-                             ' +SPFs +(?P<time>(\S+)) +msecs$')
             m = p7.match(line)
             if m:
                 hold = int(float(m.groupdict()['time']))
@@ -1528,8 +1609,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Maximum wait time between two consecutive SPFs 5000 msecs
-            p8 = re.compile(r'^Maximum +wait +time +between +two +consecutive'
-                             ' +SPFs +(?P<time>(\S+)) +msecs$')
             m = p8.match(line)
             if m:
                 maximum = int(float(m.groupdict()['time']))
@@ -1543,8 +1622,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Initial LSA throttle delay 50 msecs
-            p9 = re.compile(r'^Initial +LSA +throttle +delay +(?P<time>(\S+))'
-                             ' +msecs$')
             m = p9.match(line)
             if m:
                 start = int(float(m.groupdict()['time']))
@@ -1558,8 +1635,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Minimum hold time for LSA throttle 200 msecs
-            p10 = re.compile(r'^Minimum +hold +time +for +LSA +throttle'
-                              ' +(?P<time>(\S+)) +msecs$')
             m = p10.match(line)
             if m:
                 hold = int(float(m.groupdict()['time']))
@@ -1573,8 +1648,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Maximum wait time for LSA throttle 5000 msecs
-            p11 = re.compile(r'^Maximum +wait +time +for +LSA +throttle'
-                              ' +(?P<time>(\S+)) +msecs$')
             m = p11.match(line)
             if m:
                 maximum = int(float(m.groupdict()['time']))
@@ -1588,9 +1661,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Minimum LSA interval 200 msecs. Minimum LSA arrival 100 msecs
-            p12 = re.compile(r'^Minimum +LSA +interval +(?P<interval>(\S+))'
-                              ' +msecs. +Minimum +LSA +arrival'
-                              ' +(?P<arrival>(\S+)) +msecs$')
             m = p12.match(line)
             if m:
                 sub_dict['spf_control']['throttle']['lsa']['interval'] = \
@@ -1600,8 +1670,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # LSA refresh interval 1800 seconds
-            p13 = re.compile(r'^LSA +refresh +interval +(?P<refresh>(\S+))'
-                              ' +seconds$')
             m = p13.match(line)
             if m:
                 sub_dict['spf_control']['throttle']['lsa']\
@@ -1609,9 +1677,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Flood pacing interval 33 msecs. Retransmission pacing interval 66 msecs
-            p14 = re.compile(r'^Flood +pacing +interval +(?P<flood>(\d+))'
-                              ' +msecs\. +Retransmission +pacing +interval'
-                              ' +(?P<retransmission>(\d+)) +msecs$')
             m = p14.match(line)
             if m:
                 sub_dict['flood_pacing_interval_msec'] = \
@@ -1621,9 +1686,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Adjacency stagger enabled; initial (per area): 2, maximum: 64
-            p15 = re.compile(r'^Adjacency +stagger +(?P<adj>(\S+)); +initial'
-                              ' +\(per +area\): +(?P<init>(\d+)),'
-                              ' +maximum: +(?P<max>(\d+))$')
             m = p15.match(line)
             if m:
                 if 'adjacency_stagger' not in sub_dict:
@@ -1639,8 +1701,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of neighbors forming: 0, 2 full
-            p16 = re.compile(r'^Number +of +neighbors +forming:'
-                              ' +(?P<form>(\d+)), +(?P<full>(\d+)) +full$')
             m = p16.match(line)
             if m:
                 if 'adjacency_stagger' not in sub_dict:
@@ -1652,16 +1712,12 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Maximum number of configured interfaces 1024
-            p17 = re.compile(r'^Maximum +number +of +configured +interfaces'
-                              ' +(?P<max>(\d+))$')
             m = p17.match(line)
             if m:
                 sub_dict['maximum_interfaces'] = int(m.groupdict()['max'])
                 continue
 
             # Number of external LSA 1. Checksum Sum 0x00607f
-            p18 = re.compile(r'^Number +of +external +LSA +(?P<ext>(\d+))\.'
-                              ' +Checksum +Sum +(?P<checksum>(\S+))$')
             m = p18.match(line)
             if m:
                 if 'numbers' not in sub_dict:
@@ -1672,8 +1728,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of opaque AS LSA 0. Checksum Sum 00000000
-            p19 = re.compile(r'^Number +of +opaque +AS +LSA +(?P<opq>(\d+))\.'
-                              ' +Checksum +Sum +(?P<checksum>(\S+))$')
             m = p19.match(line)
             if m:
                 if 'numbers' not in sub_dict:
@@ -1684,8 +1738,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of DCbitless external and opaque AS LSA 0
-            p20 = re.compile(r'^Number +of +DCbitless +external +and +opaque'
-                              ' +AS +LSA +(?P<num>(\d+))$')
             m = p20.match(line)
             if m:
                 if 'numbers' not in sub_dict:
@@ -1694,8 +1746,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of DoNotAge external and opaque AS LSA 0
-            p21 = re.compile(r'^Number +of +DoNotAge +external +and +opaque'
-                              ' +AS +LSA +(?P<num>(\d+))$')
             m = p21.match(line)
             if m:
                 if 'numbers' not in sub_dict:
@@ -1704,10 +1754,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
-            p22 = re.compile(r'^Number +of +areas +in +this +router +is'
-                              ' +(?P<total_areas>(\d+))\. +(?P<normal>(\d+))'
-                              ' +normal +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+))'
-                              ' +nssa$')
             m = p22.match(line)
             if m:
                 sub_dict['total_areas'] = int(m.groupdict()['total_areas'])
@@ -1717,7 +1763,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # External flood list length 0
-            p23 = re.compile(r'^External +flood +list +length +(?P<num>(\d+))$')
             m = p23.match(line)
             if m:
                 sub_dict['external_flood_list_length'] = int(m.groupdict()['num'])
@@ -1734,9 +1779,7 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # LDP Sync Enabled, Sync Status: Not Achieved
-            p25 = re.compile(r'^LDP +Sync +(?P<sync>(Enabled|Disabled)),'
-                              ' +Sync +Status: +(?P<status>(.*))$')
-            m = p25.match(line)
+            m = p43.match(line)
             if m:
                 if 'mpls' not in sub_dict:
                     sub_dict['mpls'] = {}
@@ -1751,8 +1794,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # LSD connected, registered, bound, revision 1
-            p25 = re.compile(r'^LSD +(?P<lsd>([a-zA-Z\,\s]+)), +revision'
-                              ' +(?P<revision>(\d+))$')
             m = p25.match(line)
             if m:
                 sub_dict['lsd_state'] = str(m.groupdict()['lsd'])
@@ -1760,9 +1801,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Segment Routing Global Block default (16000-23999), not allocated
-            p26 = re.compile(r'^Segment +Routing +Global +Block +default'
-                              ' +\((?P<sr_block>([0-9\-]+))\),'
-                              ' +(?P<status>(.*))$')
             m = p26.match(line)
             if m:
                 sub_dict['segment_routing_global_block_default'] = \
@@ -1772,7 +1810,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Strict-SPF capability is enabled
-            p27 = re.compile(r'^Strict-SPF +capability +is +(?P<state>(\S+))$')
             m = p27.match(line)
             if m:
                 if 'enabled' in m.groupdict()['state']:
@@ -1784,7 +1821,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # Area BACKBONE(0)
             # Area 1
             # Area BACKBONE(0) (Inactive)
-            p28_1 = re.compile(r'^Area +(?P<area>(\S+))(?: +(inactive|\(Inactive\)))?$')
             m = p28_1.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
@@ -1812,9 +1848,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
             # It is a stub area
             # It is a stub area, no summary LSA in this area
             # It is a NSSA area
-            p28_2 = re.compile(r'^It +is +a +(?P<area_type>(\S+)) +area'
-                                '(?:, +(?P<summary>(no +summary +LSA +in +this'
-                                ' +area)))?$')
             m = p28_2.match(line)
             if m:
                 area_type = str(m.groupdict()['area_type']).lower()
@@ -1828,8 +1861,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # generates stub default route with cost 111
             # generates stub default route with cost 222
-            p28_3 = re.compile(r'^generates +stub +default +route +with +cost'
-                                ' +(?P<default_cost>(\d+))$')
             m = p28_3.match(line)
             if m:
                 sub_dict['areas'][area]['default_cost'] = \
@@ -1837,7 +1868,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Perform type-7/type-5 LSA translation
-            p28_4 = re.compile(r'^Perform +(?P<trans>(\S+)) +LSA +translation$')
             m = p28_4.match(line)
             if m:
                 sub_dict['areas'][area]['lsa_translation'] = \
@@ -1845,7 +1875,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Area ranges are
-            p28_5 = re.compile(r'^Area ranges are$')
             m = p28_5.match(line)
             if m:
                 if 'ranges' not in sub_dict['areas'][area]:
@@ -1854,8 +1883,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
 
             # 10.16.2.0/24 Passive Advertise
             # 10.4.0.0/16 Passive DoNotAdvertise 
-            p28_6 = re.compile(r'^(?P<prefix>([0-9\.\/]+)) +Passive'
-                                ' +(?P<advertise>(Advertise|DoNotAdvertise))$')
             m = p28_6.match(line)
             if m:
                 prefix = str(m.groupdict()['prefix'])
@@ -1871,8 +1898,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                     continue
 
             # Number of interfaces in this area is 3
-            p29 = re.compile(r'^Number +of +interfaces +in +this +area +is'
-                              ' +(?P<num_intf>(\d+))$')
             m = p29.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1882,8 +1907,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Area has RRR enabled, topology version 15
-            p30 = re.compile(r'^Area +has +RRR +enabled, +topology +version'
-                              ' +(?P<topo_version>(\d+))$')
             m = p30.match(line)
             if m:
                 sub_dict['areas'][area]['rrr_enabled'] = True
@@ -1892,8 +1915,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # SPF algorithm executed 26 times
-            p31 = re.compile(r'^SPF +algorithm +executed +(?P<count>(\d+))'
-                              ' +times$')
             m = p31.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1903,8 +1924,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of LSA 19.  Checksum Sum 0x0a2fb5
-            p32 = re.compile(r'^Number +of +LSA +(?P<lsa_count>(\d+))\.'
-                              ' +Checksum +Sum +(?P<checksum_sum>(\S+))$')
             m = p32.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1917,9 +1936,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of opaque link LSA 0.  Checksum Sum 00000000
-            p33 = re.compile(r'^Number +of opaque +link +LSA'
-                              ' +(?P<opaque_count>(\d+))\. +Checksum +Sum'
-                              ' +(?P<checksum_sum>(\S+))$')
             m = p33.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1933,7 +1949,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of DCbitless LSA 5
-            p34 = re.compile(r'^Number +of +DCbitless +LSA +(?P<count>(\d+))$')
             m = p34.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1943,7 +1958,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of indication LSA 0
-            p35 = re.compile(r'^Number +of +indication +LSA +(?P<count>(\d+))$')
             m = p35.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1953,7 +1967,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of DoNotAge LSA 0
-            p36 = re.compile(r'^Number +of +DoNotAge +LSA +(?P<count>(\d+))$')
             m = p36.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1963,7 +1976,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Flood list length 0
-            p37 = re.compile(r'^Flood +list +length +(?P<len>(\d+))$')
             m = p37.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1973,9 +1985,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of LFA enabled interfaces 0, LFA revision 0
-            p38 = re.compile(r'^Number +of +LFA +enabled +interfaces'
-                              ' +(?P<count>(\d+)), +LFA +revision'
-                              ' +(?P<revision>(\d+))$')
             m = p38.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1987,8 +1996,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of Per Prefix LFA enabled interfaces 0
-            p39 = re.compile(r'^Number +of +Per +Prefix +LFA +enabled'
-                              ' +interfaces +(?P<count>(\d+))$')
             m = p39.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -1999,8 +2006,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Number of neighbors forming in staggered mode 0, 2 full
-            p40 = re.compile(r'^Number +of +neighbors +forming +in +staggered'
-                              ' +mode +(?P<mode>(\d+)), +(?P<full>(\d+)) +full$')
             m = p40.match(line)
             if m:
                 if 'statistics' not in sub_dict['areas'][area]:
@@ -2012,8 +2017,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
 
             # Maximum number of non self-generated LSA allowed 123
-            p41 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
-                              ' +allowed +(?P<max_lsa>(\d+))$')
             m = p41.match(line)
             if m:
                 if 'database_control' not in sub_dict:
@@ -2023,7 +2026,6 @@ class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
                 continue
         
             # Non-Stop Forwarding enabled
-            p42 = re.compile(r'^Non-Stop +Forwarding +enabled$')
             m = p42.match(line)
             if m:
                 # Execute command on device
@@ -2570,12 +2572,36 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
         ret_dict = {}
         af = 'ipv4'
 
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                            ' +\(Process +ID +(?P<instance>(\S+))\)$')
+        p2_1 = re.compile(r'^Area +(?P<area>(\S+)) +has'
+                            ' +(?P<total_links>(\d+)) +MPLS +TE links\.'
+                            ' +Area +instance +is +(?P<instance>(\d+))\.$')
+        p2_2 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not'
+                            ' +initialized$')
+        p3 = re.compile(r'^Link +is +associated +with +fragment'
+                            ' +(?P<fragment>(\d+))\. +Link +instance +is'
+                            ' +(?P<link_instance>(\d+))$')
+        p4 = re.compile(r'^Link +connected +to +(?P<net>(\S+)) +network$')
+        p5 = re.compile(r'^Link +ID *: +(?P<link_id>(\S+))$')
+        p6 = re.compile(r'^Interface +Address *: +(?P<address>(\S+))$')
+        p7 = re.compile(r'^Admin +Metric *: +TE *: +(?P<metric>(\d+))$')
+        p8 = re.compile(r'^Maximum +bandwidth *: +(?P<max_band>(\d+))$')
+        p9 = re.compile(r'^Maximum +global +pool +reservable +bandwidth *:'
+                            ' +(?P<max_reserve_band>(\d+))$')
+        p15 = re.compile(r'^Number +of +Priority *: +(?P<priority>(\d+))$')
+        p10 = re.compile(r'^Priority +(?P<priority1>(\d+)) *: +(?P<band1>(\d+))'
+                            ' *Priority +(?P<priority2>(\d+)) *: +(?P<band2>(\d+))$')
+        p11 = re.compile(r'^Out +Interface +ID *: +(?P<out_id>(\d+))$')
+        p12 = re.compile(r'^Affinity +Bit *: +(?P<affinity>(\d+))$')
+        p13 = re.compile(r'^Extended +Admin +Group *: +(?P<eag>(\d+))$')
+        p14 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]:'
+                            ' +(?P<value>(\d+))$')
+
         for line in out.splitlines():
             line = line.strip()
 
             # OSPF Router with ID (10.36.3.3) (Process ID 1)
-            p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                             ' +\(Process +ID +(?P<instance>(\S+))\)$')
             m = p1.match(line)
             if m:
                 vrf = 'default'
@@ -2609,9 +2635,6 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Area 0 has 2 MPLS TE links. Area instance is 2.
-            p2_1 = re.compile(r'^Area +(?P<area>(\S+)) +has'
-                               ' +(?P<total_links>(\d+)) +MPLS +TE links\.'
-                               ' +Area +instance +is +(?P<instance>(\d+))\.$')
             m = p2_1.match(line)
             if m:
                 area = str(m.groupdict()['area'])
@@ -2646,8 +2669,6 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
 
             # Area 1 MPLS TE not initialized
             # Area 0.0.0.0 MPLS TE not initialized
-            p2_2 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not'
-                               ' +initialized$')
             m = p2_2.match(line)
             if m:
                 area = str(m.groupdict()['area'])
@@ -2679,9 +2700,6 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Link is associated with fragment 1. Link instance is 2
-            p3 = re.compile(r'^Link +is +associated +with +fragment'
-                             ' +(?P<fragment>(\d+))\. +Link +instance +is'
-                             ' +(?P<link_instance>(\d+))$')
             m = p3.match(line)
             if m:
                 fragment = int(m.groupdict()['fragment'])
@@ -2698,28 +2716,24 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Link connected to Broadcast network
-            p4 = re.compile(r'^Link +connected +to +(?P<net>(\S+)) +network$')
             m = p4.match(line)
             if m:
                 link_dict['network_type'] = str(m.groupdict()['net']).lower()
                 continue
 
             # Link ID : 10.3.4.4
-            p5 = re.compile(r'^Link +ID *: +(?P<link_id>(\S+))$')
             m = p5.match(line)
             if m:
                 link_dict['link_id'] = str(m.groupdict()['link_id'])
                 continue
 
             # Interface Address : 10.3.4.3
-            p6 = re.compile(r'^Interface +Address *: +(?P<address>(\S+))$')
             m = p6.match(line)
             if m:
                 link_dict['interface_address'] = str(m.groupdict()['address'])
                 continue
 
             # Admin Metric : TE: 1
-            p7 = re.compile(r'^Admin +Metric *: +TE *: +(?P<metric>(\d+))$')
             m = p7.match(line)
             if m:
                 link_dict['te_admin_metric'] = int(m.groupdict()['metric'])
@@ -2728,15 +2742,12 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
             # (all bandwidths in bytes/sec)
 
             # Maximum bandwidth : 125000000
-            p8 = re.compile(r'^Maximum +bandwidth *: +(?P<max_band>(\d+))$')
             m = p8.match(line)
             if m:
                 link_dict['maximum_bandwidth'] = int(m.groupdict()['max_band'])
                 continue
 
             # Maximum global pool reservable bandwidth : 93750000
-            p9 = re.compile(r'^Maximum +global +pool +reservable +bandwidth *:'
-                             ' +(?P<max_reserve_band>(\d+))$')
             m = p9.match(line)
             if m:
                 link_dict['maximum_reservable_bandwidth'] = \
@@ -2744,8 +2755,7 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Number of Priority : 8
-            p9 = re.compile(r'^Number +of +Priority *: +(?P<priority>(\d+))$')
-            m = p9.match(line)
+            m = p15.match(line)
             if m:
                 link_dict['total_priority'] = int(m.groupdict()['priority'])
                 continue
@@ -2756,8 +2766,6 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
             # Priority 2 :             93750000  Priority 3 :           93750000
             # Priority 4 :             93750000  Priority 5 :           93750000
             # Priority 6 :             93750000  Priority 7 :           93750000
-            p10 = re.compile(r'^Priority +(?P<priority1>(\d+)) *: +(?P<band1>(\d+))'
-                              ' *Priority +(?P<priority2>(\d+)) *: +(?P<band2>(\d+))$')
             m = p10.match(line)
             if m:
                 priority1 = str(m.groupdict()['priority1'])
@@ -2785,21 +2793,18 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
                 continue
 
             # Out Interface ID : 4
-            p11 = re.compile(r'^Out +Interface +ID *: +(?P<out_id>(\d+))$')
             m = p11.match(line)
             if m:
                 link_dict['out_interface_id'] = int(m.groupdict()['out_id'])
                 continue
 
             # Affinity Bit : 0
-            p12 = re.compile(r'^Affinity +Bit *: +(?P<affinity>(\d+))$')
             m = p12.match(line)
             if m:
                 link_dict['affinity_bit'] = int(m.groupdict()['affinity'])
                 continue
 
             # Extended Admin Group : 8
-            p13 = re.compile(r'^Extended +Admin +Group *: +(?P<eag>(\d+))$')
             m = p13.match(line)
             if m:
                 link_dict['total_extended_admin_group'] = \
@@ -2808,8 +2813,6 @@ class ShowOspfMplsTrafficEngLink(ShowOspfMplsTrafficEngLinkSchema):
 
             # EAG[0]: 0
             # EAG[1]: 0
-            p14 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]:'
-                              ' +(?P<value>(\d+))$')
             m = p14.match(line)
             if m:
                 group_num = int(m.groupdict()['group_num'])
@@ -2858,15 +2861,78 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             'opaque': 10,
             }
 
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                            ' +\(Process +ID +(?P<instance>(\S+))'
+                            '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+        p2 = re.compile(r'^(?P<lsa_type_name>(.*)) +Link +States'
+                            '(?: +\(Area +(?P<area>(\S+))\))?$')
+        p3_1 = re.compile(r'^Routing +Bit +Set +on +this +LSA$')
+        p3_2 = re.compile(r'^LS +age: +(?P<age>(\d+))$')
+        p4 = re.compile(r'^Options:(?: +(?P<option>([a-zA-Z0-9]+)))?'
+                        '(?: *\((?P<option_desc>(.*))\))?$')
+        p5_1 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
+        p5_2 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
+                            '(?: +\(.*\))?$')
+        p6 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
+        p7 = re.compile(r'^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$')
+        p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
+        p9 = re.compile(r'^Length: +(?P<length>(\d+))$')
+        p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
+        p11_1 = re.compile(r'^Metric +Type: +2 +\(.*\)$')
+        p11_2 = re.compile(r'^Metric +Type: +1 +\(.*\)$')
+        p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))(?:(\s+|\t+)Metric(?:s)?:'
+                            ' +(?P<metric>(\d+)))?$')
+        p13 = re.compile(r'^Metric: +(?P<metric>(\d+))$')
+        p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
+        p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\d+))$')
+        p16 = re.compile(r'^Attached +Router: +(?P<att_router>(\S+))$')
+        p17 = re.compile(r'^Number +of +(l|L)inks: +(?P<num>(\d+))$')
+        p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
+        p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
+        p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
+                            ' +(?P<link_id>(\S+))$')
+        p19_2 = re.compile(r'^\(Link +ID\) +(D|d)esignated +(R|r)outer'
+                            ' +(a|A)ddress: +(?P<link_id>(\S+))$')
+        p19_3 = re.compile(r'^\(Link +ID\) +(N|n)eighboring +(R|r)outer'
+                            ' +(I|d)D: +(?P<link_id>(\S+))$')
+        p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'
+                            ' +(?P<link_data>(\S+))$')
+        p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
+                            ' +(?P<link_data>(\S+))$')
+        p21 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
+        p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))$')
+        p23 = re.compile(r'^Opaque +ID: +(?P<id>(\d+))$')
+        p24 = re.compile(r'^Fragment +number: +(?P<num>(\d+))$')
+        p25 = re.compile(r'^MPLS +TE +router +ID *: +(?P<mpls>(\S+))$')
+        p26_1 = re.compile(r'^AS +Boundary +Router$')
+        p26_2 = re.compile(r'^Area +Border +Router$')
+        p27 = re.compile(r'^Link +connected +to +(?P<link>(.*))$')
+        p28 = re.compile(r'^Link +ID *: +(?P<id>(\S+))$')
+        p29 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
+        p30 = re.compile(r'^Admin +Metric *: +(?P<te_metric>(\d+))$')
+        p31 = re.compile(r'^Maximum +(B|b)andwidth *:'
+                            ' +(?P<max_band>(\d+))$')
+        p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth'
+                            '(?: +global)? *: +(?P<max_res_band>(\d+))$')
+        p33 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
+        p33_1 = re.compile(r'^IGP +Metric *: +(?P<igp_metric>(\d+))$')
+        p33_2 = re.compile(r'^Number +of +Priority *: +(?P<num>(\d+))$')
+        p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
+                            ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                            ' *: +(?P<band2>(\d+)))?$')
+        p35 = re.compile(r'^Unknown +Sub-TLV *: +Type += +(?P<type>(\d+)),'
+                            ' +Length += +(?P<length>(\d+))'
+                            ' +Value += +(?P<value>(.*))$')
+        p36 = re.compile(r'^Extended +Administrative +Group *: +Length *:'
+                            ' +(?P<eag_length>(\d+))$')
+        p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
+            
         for line in out.splitlines():
             line = line.strip()
 
             # OSPF Router with ID (10.36.3.3) (Process ID 1)
             # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
             # OSPF Router with ID (10.4.1.1) (Process ID mpls1)
-            p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                             ' +\(Process +ID +(?P<instance>(\S+))'
-                             '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
             m = p1.match(line)
             if m:
                 router_id = str(m.groupdict()['router_id'])
@@ -2897,8 +2963,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             # Summary Net Link States (Area 0.0.0.0)
             # Type-5 AS External Link States
             # Type-10 Opaque Link Area Link States (Area 0)
-            p2 = re.compile(r'^(?P<lsa_type_name>(.*)) +Link +States'
-                             '(?: +\(Area +(?P<area>(\S+))\))?$')
             m = p2.match(line)
             if m:
                 lsa_type = lsa_type_mapping[db_type]
@@ -2947,14 +3011,12 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Routing Bit Set on this LSA
-            p3_1 = re.compile(r'^Routing +Bit +Set +on +this +LSA$')
             m = p3_1.match(line)
             if m:
                 routing_bit_enable = True
                 continue
 
             # LS age: 1565
-            p3_2 = re.compile(r'^LS +age: +(?P<age>(\d+))$')
             m = p3_2.match(line)
             if m:
                 age = int(m.groupdict()['age'])
@@ -2962,8 +3024,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # Options: 0x20 (No TOS-capability, DC)
             # Options: (No TOS-capability, DC)
-            p4 = re.compile(r'^Options:(?: +(?P<option>([a-zA-Z0-9]+)))?'
-                            '(?: *\((?P<option_desc>(.*))\))?$')
             m = p4.match(line)
             if m:
                 option = str(m.groupdict()['option'])
@@ -2971,7 +3031,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # LS Type: Type-5 AS-External
-            p5_1 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
             m = p5_1.match(line)
             if m:
                 lsa_type = lsa_type_mapping[db_type]
@@ -2981,15 +3040,12 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             # Link State ID: 10.94.44.44 (Network address)
             # Link State ID: 10.1.2.1 (Designated Router address)
             # Link State ID: 10.1.2.1 (address of Designated Router)
-            p5_2 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))'
-                             '(?: +\(.*\))?$')
             m = p5_2.match(line)
             if m:
                 lsa_id = str(m.groupdict()['lsa_id'])
                 continue
 
             # Advertising Router: 10.64.4.4
-            p6 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
             m = p6.match(line)
             if m:
                 adv_router = str(m.groupdict()['adv_router'])
@@ -3083,28 +3139,24 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     pass
 
             # LS Seq Number: 0x80000002
-            p7 = re.compile(r'^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$')
             m = p7.match(line)
             if m:
                 header_dict['seq_num'] = str(m.groupdict()['ls_seq_num'])
                 continue
 
             # Checksum: 0x7d61
-            p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
             m = p8.match(line)
             if m:
                 header_dict['checksum'] = str(m.groupdict()['checksum'])
                 continue
 
             # Length: 36
-            p9 = re.compile(r'^Length: +(?P<length>(\d+))$')
             m = p9.match(line)
             if m:
                 header_dict['length'] = int(m.groupdict()['length'])
                 continue
 
             # Network Mask: /32
-            p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
             m = p10.match(line)
             if m:
                 dummy = '{}/{}'.format('0.0.0.0', m.groupdict()['net_mask'])
@@ -3113,14 +3165,12 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # Metric Type: 2 (Larger than any link state path)
             # Metric Type: 2 (Larger than any link state path)
-            p11_1 = re.compile(r'^Metric +Type: +2 +\(.*\)$')
             m = p11_1.match(line)
             if m:
                 db_topo_dict['flags'] = "E"
                 continue
 
             # Metric Type: 1 (Comparable directly to link state metric)
-            p11_2 = re.compile(r'^Metric +Type: +1 +\(.*\)$')
             m = p11_2.match(line)
             if m:
                 # Do nothing
@@ -3128,8 +3178,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # TOS: 0
             # TOS: 0 Metric: 1
-            p12 = re.compile(r'^TOS:? +(?P<tos>(\d+))(?:(\s+|\t+)Metric(?:s)?:'
-                              ' +(?P<metric>(\d+)))?$')
             m = p12.match(line)
             if m:
                 if db_type == 'router':
@@ -3147,28 +3195,24 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                         continue
 
             # Metric: 20
-            p13 = re.compile(r'^Metric: +(?P<metric>(\d+))$')
             m = p13.match(line)
             if m:
                 db_topo_dict['metric'] = int(m.groupdict()['metric'])
                 continue
 
             # Forward Address: 0.0.0.0
-            p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
             m = p14.match(line)
             if m:
                 db_topo_dict['forwarding_address'] = str(m.groupdict()['addr'])
                 continue
 
             # External Route Tag: 0
-            p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\d+))$')
             m = p15.match(line)
             if m:
                 db_topo_dict['external_route_tag'] = int(m.groupdict()['tag'])
                 continue
 
             # Attached Router: 10.84.66.66
-            p16 = re.compile(r'^Attached +Router: +(?P<att_router>(\S+))$')
             m = p16.match(line)
             if m:
                 attached_router = str(m.groupdict()['att_router'])
@@ -3180,29 +3224,24 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # Number of links: 3
             # Number of Links: 3
-            p17 = re.compile(r'^Number +of +(l|L)inks: +(?P<num>(\d+))$')
             m = p17.match(line)
             if m:
                 db_dict['num_of_links'] = int(m.groupdict()['num'])
                 continue
 
             # Link connected to: a Stub Network
-            p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
             m = p18.match(line)
             if m:
                 link_type = str(m.groupdict()['type']).lower()
                 continue
 
             # Link connected to: another Router (point-to-point)
-            p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
             m = p18_1.match(line)
             if m:
                 link_type = str(m.groupdict()['type']).lower()
                 continue
 
             # (Link ID) Network/subnet number: 10.4.1.1
-            p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
-                                ' +(?P<link_id>(\S+))$')
             m = p19_1.match(line)
             if m:
                 link_id = str(m.groupdict()['link_id'])
@@ -3229,8 +3268,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # (Link ID) Designated Router address: 10.166.7.6
-            p19_2 = re.compile(r'^\(Link +ID\) +(D|d)esignated +(R|r)outer'
-                                ' +(a|A)ddress: +(?P<link_id>(\S+))$')
             m = p19_2.match(line)
             if m:
                 link_id = str(m.groupdict()['link_id'])
@@ -3257,8 +3294,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # (Link ID) Neighboring Router ID: 10.151.22.22
-            p19_3 = re.compile(r'^\(Link +ID\) +(N|n)eighboring +(R|r)outer'
-                                ' +(I|d)D: +(?P<link_id>(\S+))$')
             m = p19_3.match(line)
             if m:
                 link_id = str(m.groupdict()['link_id'])
@@ -3285,8 +3320,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # (Link Data) Network Mask: 255.255.255.255
-            p20_1 = re.compile(r'^\(Link +Data\) +Network +Mask:'
-                                ' +(?P<link_data>(\S+))$')
             m = p20_1.match(line)
             if m:
                 db_dict['links'][link_id]['link_data'] = \
@@ -3294,8 +3327,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # (Link Data) Router Interface address: 10.166.7.6
-            p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
-                                ' +(?P<link_data>(\S+))$')
             m = p20_2.match(line)
             if m:
                 db_dict['links'][link_id]['link_data'] = \
@@ -3303,7 +3334,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Number of TOS metrics: 0
-            p21 = re.compile(r'^Number +of +TOS +metrics: +(?P<num>(\d+))$')
             m = p21.match(line)
             if m:
                 db_dict['links'][link_id]['num_tos_metrics'] = \
@@ -3311,49 +3341,42 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Opaque Type: 1
-            p22 = re.compile(r'^Opaque +Type: +(?P<type>(\d+))$')
             m = p22.match(line)
             if m:
                 opaque_type = int(m.groupdict()['type'])
                 continue
             
             # Opaque ID: 38
-            p23 = re.compile(r'^Opaque +ID: +(?P<id>(\d+))$')
             m = p23.match(line)
             if m:
                 opaque_id = int(m.groupdict()['id'])
                 continue
 
             # Fragment number: 0
-            p24 = re.compile(r'^Fragment +number: +(?P<num>(\d+))$')
             m = p24.match(line)
             if m:
                 header_dict['fragment_number'] = int(m.groupdict()['num'])
                 continue
 
             # MPLS TE router ID : 10.4.1.1
-            p25 = re.compile(r'^MPLS +TE +router +ID *: +(?P<mpls>(\S+))$')
             m = p25.match(line)
             if m:
                 header_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
                 continue
 
             # AS Boundary Router
-            p26_1 = re.compile(r'^AS +Boundary +Router$')
             m = p26_1.match(line)
             if m:
                 header_dict['as_boundary_router'] = True
                 continue
 
             # Area Border Router
-            p26_2 = re.compile(r'^Area +Border +Router$')
             m = p26_2.match(line)
             if m:
                 header_dict['area_border_router'] = True
                 continue
 
             # Link connected to Broadcast network
-            p27 = re.compile(r'^Link +connected +to +(?P<link>(.*))$')
             m = p27.match(line)
             if m:
                 link_tlv_counter += 1
@@ -3384,7 +3407,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Link ID : 10.1.4.4
-            p28 = re.compile(r'^Link +ID *: +(?P<id>(\S+))$')
             m = p28.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['link_id'] = \
@@ -3392,7 +3414,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Interface Address : 10.1.4.1
-            p29 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
             m = p29.match(line)
             if m:
                 addr = str(m.groupdict()['addr'])
@@ -3407,7 +3428,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     continue
 
             # Admin Metric : 1
-            p30 = re.compile(r'^Admin +Metric *: +(?P<te_metric>(\d+))$')
             m = p30.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['te_metric'] = \
@@ -3416,8 +3436,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # Maximum Bandwidth : 125000000
             # Maximum bandwidth : 125000000
-            p31 = re.compile(r'^Maximum +(B|b)andwidth *:'
-                              ' +(?P<max_band>(\d+))$')
             m = p31.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['max_bandwidth'] = \
@@ -3426,8 +3444,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
 
             # Maximum reservable bandwidth : 93750000
             # Maximum reservable bandwidth global: 93750000
-            p32 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth'
-                              '(?: +global)? *: +(?P<max_res_band>(\d+))$')
             m = p32.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]\
@@ -3436,7 +3452,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Affinity Bit : 0x0
-            p33 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
             m = p33.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['admin_group'] = \
@@ -3444,7 +3459,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # IGP Metric : 1
-            p33_1 = re.compile(r'^IGP +Metric *: +(?P<igp_metric>(\d+))$')
             m = p33_1.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['igp_metric'] = \
@@ -3452,7 +3466,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Number of Priority : 8
-            p33_2 = re.compile(r'^Number +of +Priority *: +(?P<num>(\d+))$')
             m = p33_2.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['total_priority'] = \
@@ -3460,9 +3473,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
             
             # Priority 0 : 93750000    Priority 1 : 93750000
-            p34 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
-                              ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
-                              ' *: +(?P<band2>(\d+)))?$')
             m = p34.match(line)
             if m:
                 value1 = str(m.groupdict()['num1']) + ' ' + \
@@ -3496,9 +3506,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     continue
 
             # Unknown Sub-TLV   :  Type = 32770, Length = 4 Value = 00 00 00 01
-            p35 = re.compile(r'^Unknown +Sub-TLV *: +Type += +(?P<type>(\d+)),'
-                              ' +Length += +(?P<length>(\d+))'
-                              ' +Value += +(?P<value>(.*))$')
             m = p35.match(line)
             if m:
                 unknown_tlvs_counter += 1
@@ -3517,8 +3524,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # Extended Administrative Group : Length: 8
-            p36 = re.compile(r'^Extended +Administrative +Group *: +Length *:'
-                              ' +(?P<eag_length>(\d+))$')
             m = p36.match(line)
             if m:
                 if 'extended_admin_group' not in db_dict['link_tlvs']\
@@ -3530,7 +3535,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 continue
 
             # EAG[0]: 0
-            p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
             m = p37.match(line)
             if m:
                 group_num = int(m.groupdict()['group_num'])
@@ -3638,6 +3642,7 @@ class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRoute
     """
 
     cli_command = 'show ospf vrf all-inclusive database router'
+    exclude = ['age']
 
     def cli(self,output=None):
         return super().cli(cmd=self.cli_command, db_type='router',output=output)

@@ -1253,7 +1253,7 @@ class test_show_redundancy(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
     PE1#show redundancy states 
     Load for five secs: 2%/0%; one minute: 1%; five minutes: 1%
-    Time source is NTP, 05:47:45.686 JST Thu Jun 6 2019
+    Time source is NTP, 05:47:45.686 EST Thu Jun 6 2019
            my state = 13 -ACTIVE 
          peer state = 1  -DISABLED 
                Mode = Simplex
@@ -5386,6 +5386,34 @@ class test_show_env(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output2 = {
+        "slot": {
+            "P6": {
+                "sensor": {
+                    "Temp: FC PWM1": {
+                        "state": "Fan Speed 45%",
+                        "reading": "25 Celsius"
+                    }
+                }
+            },
+            "P7": {
+                "sensor": {
+                    "Temp: FC PWM1": {
+                        "state": "Fan Speed 45%",
+                        "reading": "25 Celsius"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        show environment | include Fan Speed
+        P6    Temp: FC PWM1    Fan Speed 45%    25 Celsius
+        P7    Temp: FC PWM1    Fan Speed 45%    25 Celsius
+    '''}
+
+    
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowEnvironment(device=self.dev)
@@ -5398,6 +5426,13 @@ class test_show_env(unittest.TestCase):
         obj = ShowEnvironment(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output2)
+        obj = ShowEnvironment(device=self.dev)
+        parsed_output = obj.parse(include='Fan Speed')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 class test_show_processes_cpu(unittest.TestCase):
 

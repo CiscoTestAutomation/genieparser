@@ -143,9 +143,9 @@ class ShowInterfaceSchema(MetaParser):
 # Parser for 'show interface'
 # ===========================
 class ShowInterface(ShowInterfaceSchema):
-    """Parser for show interface"""
+    """Parser for show interface, show interface <interface>"""
 
-    cli_command = 'show interface'
+    cli_command = ['show interface', 'show interface {interface}']
     exclude = [
       'in_unicast_pkts',
       'out_unicast_pkts',
@@ -178,9 +178,13 @@ class ShowInterface(ShowInterfaceSchema):
       'in_crc_errors',
       'reliability']
 
-    def cli(self, output=None):
+    def cli(self, interface="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1014,45 +1018,57 @@ class ShowIpInterfaceVrfAllSchema(MetaParser):
 # Parser for 'show interface vrf all'
 # ===================================
 class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
-    """Parser for show ip interface vrf all"""
 
-    cli_command = 'show ip interface vrf all'
+    """Parser for show ip interface vrf all
+        show ip interface vrf <vrf>
+        show ip interface <interface> vrf all
+        show ip interface <interface> vrf <vrf>"""
+
+    cli_command = ['show ip interface {interface} vrf {vrf}', 'show ip interface {interface} vrf all',
+                   'show ip interface vrf {vrf}', 'show ip interface vrf all']
     exclude = [
-        'multicast_bytes_consumed',
-        'multicast_bytes_received',
-        'unicast_bytes_consumed',
-        'unicast_packets_consumed',
-        'unicast_bytes_originated',
-        'unicast_packets_originated',
-        'unicast_bytes_received',
-        'unicast_bytes_sent',
-        'unicast_packets_received',
-        'unicast_packets_sent',
-        'multicast_packets_consumed',
-        'multicast_packets_received',
-        'multicast_bytes_originated',
-        'multicast_bytes_sent',
-        'multicast_packets_originated',
-        'multicast_packets_sent',
-        'broadcast_bytes_consumed',
-        'broadcast_bytes_received',
-        'broadcast_packets_consumed',
-        'broadcast_packets_received',
-        'multicast_groups',
-        'int_stat_last_reset',
-        'unicast_bytes_forwarded',
-        'unicast_packets_forwarded',
-        'oil_uptime',
-        'iod',
-        '(tunnel.*)',
-        'multicast_groups_address']
-
-    def cli(self, output=None):
+            'multicast_bytes_consumed',
+            'multicast_bytes_received',
+            'unicast_bytes_consumed',
+            'unicast_packets_consumed',
+            'unicast_bytes_originated',
+            'unicast_packets_originated',
+            'unicast_bytes_received',
+            'unicast_bytes_sent',
+            'unicast_packets_received',
+            'unicast_packets_sent',
+            'multicast_packets_consumed',
+            'multicast_packets_received',
+            'multicast_bytes_originated',
+            'multicast_bytes_sent',
+            'multicast_packets_originated',
+            'multicast_packets_sent',
+            'broadcast_bytes_consumed',
+            'broadcast_bytes_received',
+            'broadcast_packets_consumed',
+            'broadcast_packets_received',
+            'multicast_groups',
+            'int_stat_last_reset',
+            'unicast_bytes_forwarded',
+            'unicast_packets_forwarded',
+            'oil_uptime',
+            'iod',
+            '(tunnel.*)',
+            'multicast_groups_address']
+    def cli(self, interface='', vrf='', output=None):
+        if interface and vrf:
+            cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+        elif interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        elif vrf:
+            cmd = self.cli_command[2].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[3]
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
-
+        del interface # delete this to prevent use from below due to scope
         ip_interface_vrf_all_dict = {}
         temp_intf = []
 
@@ -1642,15 +1658,28 @@ class ShowVrfAllInterfaceSchema(MetaParser):
 # Parser for 'show vrf all interface'
 # ===================================
 class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
-    """Parser for show vrf all interface"""
+    """Parser for show vrf all interface
+                show vrf <vrf> interface <interface>
+                show vrf <vrf> interface
+                show vrf all interface <interface>"""
 
-    cli_command = 'show vrf all interface'
+    cli_command = ['show vrf {vrf} interface {interface}',
+                   'show vrf all interface {interface}',
+                   'show vrf {vrf} interface', 'show vrf all interface']
     exclude = [
         '(Null.*)']
 
-    def cli(self, output=None):
+    def cli(self, interface='', vrf='', output=None):
+        if interface and vrf:
+            cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+        elif interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        elif vrf:
+            cmd = self.cli_command[2].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[3]
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1700,23 +1729,23 @@ class ShowInterfaceSwitchportSchema(MetaParser):
     schema = {
         Any():
             {'switchport_status': str,
-             'switchport_monitor': str,
-             'switchport_mode': str,
-             'access_vlan': int,
+             Optional('switchport_monitor'): str,
+             Optional('switchport_mode'): str,
+             Optional('access_vlan'): int,
              'switchport_enable': bool,
              Optional('access_vlan_mode'): str,
-             'native_vlan': int,
+             Optional('native_vlan'): int,
              Optional('native_vlan_mode'): str,
-             'trunk_vlans': str,
-             'admin_priv_vlan_primary_host_assoc': str,
-             'admin_priv_vlan_secondary_host_assoc': str,
-             'admin_priv_vlan_primary_mapping': str,
-             'admin_priv_vlan_secondary_mapping': str,
-             'admin_priv_vlan_trunk_native_vlan': str,
-             'admin_priv_vlan_trunk_encapsulation': str,
-             'admin_priv_vlan_trunk_normal_vlans': str,
-             'admin_priv_vlan_trunk_private_vlans': str,
-             'operational_private_vlan': str
+             Optional('trunk_vlans'): str,
+             Optional('admin_priv_vlan_primary_host_assoc'): str,
+             Optional('admin_priv_vlan_secondary_host_assoc'): str,
+             Optional('admin_priv_vlan_primary_mapping'): str,
+             Optional('admin_priv_vlan_secondary_mapping'): str,
+             Optional('admin_priv_vlan_trunk_native_vlan'): str,
+             Optional('admin_priv_vlan_trunk_encapsulation'): str,
+             Optional('admin_priv_vlan_trunk_normal_vlans'): str,
+             Optional('admin_priv_vlan_trunk_private_vlans'): str,
+             Optional('operational_private_vlan'): str
             },
         }
                     
@@ -1724,13 +1753,18 @@ class ShowInterfaceSwitchportSchema(MetaParser):
 # Parser for 'show interface switchport'
 # ======================================
 class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
-    """Parser for show interface switchport"""
+    """Parser for show interface switchport
+                show interface <interface> switchport"""
 
-    cli_command ='show interface switchport'
+    cli_command =['show interface switchport', 'show interface {interface} switchport']
 
-    def cli(self, output=None):
+    def cli(self, interface="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1991,10 +2025,14 @@ class ShowIpv6InterfaceVrfAllSchema(MetaParser):
 # Parser for 'show ipv6 interface vrf all'
 # ========================================
 class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
-    """Parser for ipv6 interface vrf all"""
+    """Parser for show ipv6 interface vrf all
+        show ipv6 interface vrf <vrf>
+        show ipv6 interface <interface> vrf all
+        show ipv6 interface <interface> vrf <vrf>"""
 
-    cli_command = 'show ipv6 interface vrf all'
-    exclude  = [
+    cli_command = ['show ipv6 interface {interface} vrf {vrf}', 'show ipv6 interface {interface} vrf all',
+                   'show ipv6 interface vrf {vrf}', 'show ipv6 interface vrf all']
+    exclude = [
         'multicast_bytes_consumed',
         'multicast_packets_consumed',
         'multicast_bytes_originated',
@@ -2010,12 +2048,20 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
         'unicast_packets_forwarded',
         'ipv6_link_local']
 
-    def cli(self, output=None):
+    def cli(self, interface='', vrf='', output=None):
+        if interface and vrf:
+            cmd = self.cli_command[0].format(interface=interface, vrf=vrf)
+        elif interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        elif vrf:
+            cmd = self.cli_command[2].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[3]
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
-
+        del interface
         # Init variables
         ipv6_interface_dict = {}
         ipv6_addresses = None

@@ -261,7 +261,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
     ''' Parser for "show ip protocols" '''
 
     cli_command = ['show ip protocols','show ip protocols vrf {vrf}']
-    exclude = ['last_update']
+    exclude = ['last_update', ' network' , 'next_update']
 
     def cli(self, vrf="" ,cmd="",output=None):
 
@@ -343,7 +343,7 @@ class ShowIpProtocols(ShowIpProtocolsSchema):
         # GigabitEthernet2
         # GigabitEthernet1
         # TenGigabitEthernet0/0/26
-        p7 = re.compile(r"^(?P<interface>(Lo.*|Gi.*|Ten.*|.*(SL|VL).*))$")
+        p7 = re.compile(r"^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*))$")
 
 
         # Gateway         Distance      Last Update
@@ -1101,6 +1101,7 @@ class ShowIpProtocolsSectionRip(ShowIpProtocols):
        """
 
     cli_command = ["show ip protocols | sec rip", "show ip protocols vrf {vrf} | sec rip"]
+    exclude = ['network','next_update']
 
     def cli(self, vrf="", cmd ="",output=None):
         if vrf:

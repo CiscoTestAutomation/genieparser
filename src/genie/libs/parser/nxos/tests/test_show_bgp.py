@@ -29668,10 +29668,11 @@ class test_show_bgp_l2vpn_evpn_neighbors_advertised_routes(unittest.TestCase):
             parsed_output = obj.parse(neighbor='10.64.4.4')
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes(device=self.device)
         parsed_output = obj.parse(neighbor='10.64.4.4')
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertDictEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
