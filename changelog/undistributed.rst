@@ -5,6 +5,12 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+                                   Dot1x
+-----------------------------------------------------------------------------
+* NXOS
+        * Added show_dot1x_Summary and modified show_dot1x_Statistics parsers
+        * Added all_details and test_all_details & adressed show_dot1x comments
+        * Modification to show_Dot1x schema and adressed show_dot1x comments
 --------------------------------------------------------------------------------
                                    Routing
 --------------------------------------------------------------------------------
@@ -20,14 +26,16 @@
 * IOSXE
     * Fix ShowIpInterfaceBrief short name issue
 
---------------------------------------------------------------------------------
-                                OSPF
---------------------------------------------------------------------------------
+----------------------------------------------------------------------------
+                                   OSPF
+----------------------------------------------------------------------------
+* OSPF
+        * Optimized parser by moving all regex outside of for loop
 * IOSXE
     * Updated ShowIpOspfInterface to support command 'show ip ospf interface {interface}'
+    * Updated ShowIpOspfNeighbor for:
+        * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
-
-
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -49,15 +57,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
-    * Update ShowArp to support global static table
-* ASA
-    * Added ShowArp for:
-        show arp
+
 --------------------------------------------------------------------------------
                                 interface
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowInterfaceSwitchport to support custom interface argument
+
 * NXOS
     * Updated ShowInterface
         * added show interface {interface} to support custom interface
@@ -98,11 +104,6 @@
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
-* IOSXR
-    * Updated ShowBgpInstanceProcessDetail, ShowBgpInstanceNeighborsDetail,
-        ShowBgpInstanceNeighborsAdvertisedRoutes, ShowBgpInstanceNeighborsReceivedRoutes,
-        ShowBgpInstanceNeighborsRoutes, ShowBgpInstanceSummary, and ShowBgpInstanceAllAll
-        to support custom {vrf}, {instance}, and {neighbor}
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -111,6 +112,14 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+* NXOS
+    * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
+        ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
+        ShowBgpVrfAllAllDampeningParameters, ShowBgpVrfAllNeighborsAdvertisedRoutes,
+        ShowBgpVrfAllNeighborsRoutes, ShowBgpVrfAllNeighborsReceivedRoutes
+        to support custom vrf, address_family and neighbor
+
+* Optimized parser by moving all regex outside of for loop
 
 --------------------------------------------------------------------------------
                                 protocols
@@ -163,3 +172,30 @@
     * Updated ShowEthernetServiceInstanceDetailSchema
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
+
+--------------------------------------------------------------------------------
+                                context
+--------------------------------------------------------------------------------
+* ASA
+    * Added ShowContext for:
+      show context
+    * Added ShowContextDetail for:
+      show context detail
+      
+--------------------------------------------------------------------------------
+                                    BFD
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBfdNeighborsDetails to add:
+        show bfd neighbors interface {interface} details
+
+--------------------------------------------------------------------------------
+                              VIRTUAL-SERVICE
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVirtualServiceGlobal for "show virtual-service global"
+    * Added ShowVirtualServiceList for "show virtual-service list"
+    * Added ShowVirtualServiceCore for "show virtual-service core [name {name}]"
+    * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
+    * Added ShowGuestshell for "show guestshell"
+

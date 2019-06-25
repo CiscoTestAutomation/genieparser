@@ -7817,11 +7817,16 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
 
 
 # ============================================
-# Unit test for 'show ip ospf neighbor '
+# Unit test for:
+#   'show ip ospf neighbor '
+#   'show ip ospf neighbor {interface}'
 # ============================================
 class test_show_ip_ospf_neighbor(unittest.TestCase):
 
-    '''Unit test for "show ip ospf neighbor" '''
+    '''Unit test for:
+      "show ip ospf neighbor" 
+      "show ip ospf neighbor {interface}"
+    '''
 
     device = Device(name='aDevice')
 
@@ -7879,6 +7884,22 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
         Router#
         '''}
 
+    golden_parsed_output2 = {
+      'interfaces': {
+        'GigabitEthernet4': {
+          'neighbors': {
+            '10.16.2.2': {
+              'address': '10.169.197.97',
+              'dead_time': '00:00:32',
+              'priority': 0,
+              'state': 'FULL/  -'}}}}}
+
+    golden_output2 = {'execute.return_value':'''
+      PE1#show ip ospf neighbor GigabitEthernet4
+      Neighbor ID     Pri   State           Dead Time   Address         Interface
+      10.16.2.2           0   FULL/  -        00:00:32    10.169.197.97  GigabitEthernet4
+    '''}
+
     def test_show_ip_ospf_neighbor_empty(self):
         self.maxDiff= None
         self.device = Mock(**self.empty_output)
@@ -7892,6 +7913,13 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
         obj=ShowIpOspfNeighbor(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ip_ospf_neighbor_full2(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output2)
+        obj=ShowIpOspfNeighbor(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet4')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ===========================================================

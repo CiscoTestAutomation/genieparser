@@ -35,7 +35,7 @@ class ShowRouteSchema(MetaParser):
                                 Optional('source_protocol_codes'): str,
                                 Optional('next_hop'): {
                                     Optional('outgoing_interface_name'): {
-                                        Any(): {  # name for interface if there is no next_hop
+                                        Any(): {  # context_name for interface if there is no next_hop
                                             Optional('outgoing_interface_name'): str
                                         },
                                     },
@@ -111,29 +111,29 @@ class ShowRoute(ShowRouteSchema):
             r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
             '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
             '(?P<route_check>[\S]*)\s*(?P<next_hop>\d+.\d+.\d+.\d+),\s*'
-            '(?P<name>[\S\s]+)$')
+            '(?P<context_name>[\S\s]+)$')
 
         # via 10.16.251.2, pod1000
         p2 = re.compile(
             r'^(?P<network>\d+.\d+.\d+.\d+)?\s*?(?P<route_check>[\S\s]*)\s'
-            '(?P<next_hop>\d+.\d+.\d+.\d+),\s*(?P<name>[\S\s]+)$')
+            '(?P<next_hop>\d+.\d+.\d+.\d+),\s*(?P<context_name>[\S\s]+)$')
 
         # C 10.10.1.2 255.255.254.0 is directly connected, outside
         p3 = re.compile(
             r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
             '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
-            '(?P<route_check>[\S\s]*)\s*,\s*(?P<name>[\S\s]+)$')
+            '(?P<route_check>[\S\s]*)\s*,\s*(?P<context_name>[\S\s]+)$')
 
         # is directly connected, pod2002
         # connected by VPN (advertised), admin
         p4 = re.compile(
-            r'^(?P<route_check>[\S\s]*),\s*(?P<name>[\S\s]+)$')
+            r'^(?P<route_check>[\S\s]*),\s*(?P<context_name>[\S\s]+)$')
 
         # V 10.10.1.4 255.255.255.255
         p5 = re.compile(
             r'^\s*(?P<code>(?!is)(?!via)[\w\*]+)\s*(?P<network>\d+.\d+.\d+.\d+)\s*'
             '(?P<subnet>\d+.\d+.\d+.\d+)\s*(\[(?P<route_preference>[\d\/]+)\])?\s*'
-            '(?P<name>\S+)?$')
+            '(?P<context_name>\S+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -159,7 +159,10 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
-                        prefix_length = str(IPAddress(subnet).netmask_bits())
+                        if '0.0.0.0' == subnet:
+                            prefix_length = str(0)
+                        else:
+                            prefix_length = str(IPAddress(subnet).netmask_bits())
                         combined_ip = routes+'/'+prefix_length
                         dict_routes = dict_ipv4.setdefault(combined_ip, {})
                         dict_routes.update({'active': True})
@@ -185,7 +188,7 @@ class ShowRoute(ShowRouteSchema):
                             if groups['network'] and groups['next_hop']:
                                 index = 1
                             next_hop = groups['next_hop']
-                            outgoing_interface_name = groups['name']
+                            outgoing_interface_name = groups['context_name']
                             dict_next_hop = dict_routes.setdefault('next_hop', {}). \
                             setdefault('next_hop_list', {}).setdefault(index, {})
                             dict_next_hop.update({'index': index})
@@ -203,7 +206,7 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network'] and groups['next_hop']:
                         index = 1
                     next_hop = groups['next_hop']
-                    outgoing_interface_name = groups['name']
+                    outgoing_interface_name = groups['context_name']
                     dict_next_hop = dict_routes.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}).setdefault(index, {})
                     dict_next_hop.update({'index': index})
@@ -231,7 +234,10 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
-                        prefix_length = str(IPAddress(subnet).netmask_bits())
+                        if '0.0.0.0' == subnet:
+                            prefix_length = str(0)
+                        else:
+                            prefix_length = str(IPAddress(subnet).netmask_bits())
                         combined_ip = routes+'/'+prefix_length                    
                         dict_routes = dict_ipv4.setdefault(combined_ip, {})
                         dict_routes.update({'active': True})
@@ -253,7 +259,7 @@ class ShowRoute(ShowRouteSchema):
                             else:
                                 dict_routes.update \
                                 ({'route_preference': int(routepreference)})            
-                        outgoing_interface_name = groups['name']
+                        outgoing_interface_name = groups['context_name']
                         dict_via = dict_routes.setdefault('next_hop', {}). \
                         setdefault('outgoing_interface_name', {}). \
                         setdefault(outgoing_interface_name, {})
@@ -268,7 +274,7 @@ class ShowRoute(ShowRouteSchema):
                 groups = m.groupdict()
                 if 'is directly' in groups['route_check'] or 'connected by' \
                 in groups['route_check']:
-                    outgoing_interface_name = groups['name']
+                    outgoing_interface_name = groups['context_name']
                     dict_via = dict_routes.setdefault('next_hop', {}). \
                     setdefault('outgoing_interface_name', {}). \
                     setdefault(outgoing_interface_name, {})
@@ -283,7 +289,7 @@ class ShowRoute(ShowRouteSchema):
                 dict_ipv4 = ret_dict.setdefault('vrf', {}).setdefault('default', {}). \
                 setdefault('address_family', {}).setdefault('ipv4', {}). \
                 setdefault('routes', {})
-                if groups['network'] and groups['name'] is None:
+                if groups['network'] and groups['context_name'] is None:
                     if groups['code']:
                         source_protocol_codes = groups['code'].strip()
                         for key, val in super().source_protocol_dict.items():
@@ -294,7 +300,10 @@ class ShowRoute(ShowRouteSchema):
                     if groups['network']:
                         routes = groups['network']
                         subnet = groups['subnet']
-                        prefix_length = str(IPAddress(subnet).netmask_bits())
+                        if '0.0.0.0' == subnet:
+                            prefix_length = str(0)
+                        else:
+                            prefix_length = str(IPAddress(subnet).netmask_bits())
                         combined_ip = routes+'/'+prefix_length                    
                         dict_routes = dict_ipv4.setdefault(combined_ip, {})
                         dict_routes.update({'active': True})
