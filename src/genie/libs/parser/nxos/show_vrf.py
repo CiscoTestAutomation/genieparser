@@ -35,12 +35,14 @@ class ShowVrfSchema(MetaParser):
 class ShowVrf(ShowVrfSchema):
     """Parser for show vrf"""
 
-    cli_command = 'show vrf'
+    cli_command = ['show vrf', 'show vrf {vrf}']
 
-    def cli(self, output=None):
-
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
