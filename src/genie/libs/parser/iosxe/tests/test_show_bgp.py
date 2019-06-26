@@ -4985,7 +4985,7 @@ class test_show_ip_bgp_detail(unittest.TestCase):
         '''}
 
     golden_output3 = {'execute.return_value':'''
-    BGP routing table entry for 9996:4093:11.11.11.11/32, version 6195
+    BGP routing table entry for 65109:4093:10.229.11.11/32, version 6195
 Paths: (1 available, best #1, no table)
   Advertised to update-groups:
      17         18
@@ -4994,7 +4994,7 @@ Paths: (1 available, best #1, no table)
     10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
       Origin incomplete, metric 0, localpref 100, valid, internal, best
       Community: 62000:1
-      Extended Community: RT:9996:4093
+      Extended Community: RT:65109:4093
       mpls labels in/out nolabel/584
       rx pathid: 0, tx pathid: 0x0
     '''}
@@ -5006,7 +5006,7 @@ Paths: (1 available, best #1, no table)
                         'address_family': {
                             'vpnv4': {
                                 'prefixes': {
-                                    '11.11.11.11/32': {
+                                    '10.229.11.11/32': {
                                         'table_version': '6195',
                                         'available_path': '1',
                                         'best_path': '1',
@@ -5025,7 +5025,7 @@ Paths: (1 available, best #1, no table)
                                                 'refresh_epoch': 9,
                                                 'route_info': '65555, (Received from a RR-client)',
                                                 'community': '62000:1',
-                                                'ext_community': 'RT:9996:4093',
+                                                'ext_community': 'RT:65109:4093',
                                                 'recipient_pathid': '0',
                                                 'transfer_pathid': '0x0',
                                                 },
@@ -5063,8 +5063,8 @@ Paths: (1 available, best #1, no table)
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowIpBgpDetail(device=self.device)
-        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093',
-            route='11.11.11.11/32')
+        parsed_output = obj.parse(address_family='vpnv4', rd='65109:4093',
+            route='10.229.11.11/32')
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
 
@@ -5930,7 +5930,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
 
         For address family: VPNv4 Unicast
 
-        BGP router identifier 192.168.10.254, local AS number 9996
+        BGP router identifier 192.168.10.254, local AS number 65109
 
         BGP table version is 189, main routing table version 189
 
@@ -5967,7 +5967,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
         For address family: IPv4 Flowspec
     '''}
     golden_parsed_output3={
-    'bgp_id': 9996,
+    'bgp_id': 65109,
     'vrf': {
         'VRF1': {
             'neighbor': {
@@ -5984,7 +5984,7 @@ class test_show_bgp_all_summary(unittest.TestCase):
                             'up_down': '00:03:52',
                             'state_pfxrcd': '13',
                             'route_identifier': '192.168.10.254',
-                            'local_as': 9996,
+                            'local_as': 65109,
                             'bgp_table_version': 189,
                             'routing_table_version': 189,
                             'attribute_entries': '110/106',
@@ -6329,7 +6329,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         192.168.10.253  4        60103       0       0        1    0    0 never    Idle
         '''}
 
-    golden_parsed_output2 = {'bgp_id': 9996,
+    golden_parsed_output2 = {'bgp_id': 65109,
             'vrf': {'VRF1': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
                                                                                   'activity_prefixes': '226/0',
                                                                                   'as': 65555,
@@ -6346,7 +6346,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                               'rrinfo': {'memory_usage': 40,
                                                                                                          'total_entries': 1}},
                                                                                   'input_queue': 0,
-                                                                                  'local_as': 9996,
+                                                                                  'local_as': 65109,
                                                                                   'msg_rcvd': 0,
                                                                                   'msg_sent': 0,
                                                                                   'output_queue': 0,
@@ -6364,7 +6364,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                   'version': 4}}}}},
          'default': {'neighbor': {'192.168.36.119': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
                                                                                    'activity_prefixes': '226/0',
-                                                                                   'as': 9996,
+                                                                                   'as': 65109,
                                                                                    'attribute_entries': '106/104',
                                                                                    'bgp_table_version': 263,
                                                                                    'cache_entries': {'filter-list': {'memory_usage': 0,
@@ -6378,7 +6378,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                                'rrinfo': {'memory_usage': 40,
                                                                                                           'total_entries': 1}},
                                                                                    'input_queue': 0,
-                                                                                   'local_as': 9996,
+                                                                                   'local_as': 65109,
                                                                                    'msg_rcvd': 10293,
                                                                                    'msg_sent': 10213,
                                                                                    'output_queue': 0,
@@ -6396,7 +6396,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                    'version': 4}}},
                                   '192.168.36.120': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
                                                                                    'activity_prefixes': '226/0',
-                                                                                   'as': 9996,
+                                                                                   'as': 65109,
                                                                                    'attribute_entries': '106/104',
                                                                                    'bgp_table_version': 263,
                                                                                    'cache_entries': {'filter-list': {'memory_usage': 0,
@@ -6410,7 +6410,7 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
                                                                                                'rrinfo': {'memory_usage': 40,
                                                                                                           'total_entries': 1}},
                                                                                    'input_queue': 0,
-                                                                                   'local_as': 9996,
+                                                                                   'local_as': 65109,
                                                                                    'msg_rcvd': 9930,
                                                                                    'msg_sent': 9826,
                                                                                    'output_queue': 0,
@@ -6461,8 +6461,8 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         golden_output2 = '''\
             PE1#show ip bgp vpnv4 all summary
             Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-            Time source is NTP, 05:46:49.882 JST Tue May 28 2019
-            BGP router identifier 10.169.197.254, local AS number 9996
+            Time source is NTP, 05:46:49.882 EST Tue May 28 2019
+            BGP router identifier 10.169.197.254, local AS number 65109
             BGP table version is 263, main routing table version 263
             126 network entries using 32256 bytes of memory
             189 path entries using 25704 bytes of memory
@@ -6478,8 +6478,8 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
             Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
             192.168.10.253  4        65555   10112   10107      263    0    0 3d05h          13
             192.168.10.253  4        65555       0       0        1    0    0 never    Idle           
-            192.168.36.119 4         9996   10293   10213      263    0    0 3d05h          62
-            192.168.36.120 4         9996    9930    9826      263    0    0 3d02h          62
+            192.168.36.119 4         65109   10293   10213      263    0    0 3d05h          62
+            192.168.36.120 4         65109    9930    9826      263    0    0 3d02h          62
         '''
 
         self.outputs = {}
@@ -6921,7 +6921,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'bgp_id': 9996, 
+        'bgp_id': 65109, 
         'vrf': {
             'VRF1': {
                 'neighbor': {
@@ -6938,7 +6938,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
                                 'up_down': '3d01h', 
                                 'state_pfxrcd': '13', 
                                 'route_identifier': '192.168.10.254', 
-                                'local_as': 9996, 
+                                'local_as': 65109, 
                                 'bgp_table_version': 250, 
                                 'routing_table_version': 250, 
                                 'attribute_entries': '105/104', 
@@ -6971,7 +6971,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
 
 
     golden_parsed_output3 = {
-        'bgp_id': 9996,
+        'bgp_id': 65109,
         'vrf': {
             'VRF1': {
                 'neighbor': {
@@ -7001,7 +7001,7 @@ class test_show_ip_bgp_summary(unittest.TestCase):
                                         'memory_usage': 40,
                                         'total_entries': 1}},
                                 'input_queue': 0,
-                                'local_as': 9996,
+                                'local_as': 65109,
                                 'msg_rcvd': 9694,
                                 'msg_sent': 9698,
                                 'output_queue': 0,
@@ -7038,10 +7038,10 @@ class test_show_ip_bgp_summary(unittest.TestCase):
             return self.outputs[key]
 
         raw1 = '''/
-            PE1#show ip bgp vpnv4 rd 9996:4093 summary 
+            PE1#show ip bgp vpnv4 rd 65109:4093 summary 
             Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-            Time source is NTP, 23:18:11.225 JST Mon Jun 3 2019
-            BGP router identifier 192.168.10.254, local AS number 9996
+            Time source is NTP, 23:18:11.225 EST Mon Jun 3 2019
+            BGP router identifier 192.168.10.254, local AS number 65109
             BGP table version is 250, main routing table version 250
             25 network entries using 6400 bytes of memory
             38 path entries using 5168 bytes of memory
@@ -7061,21 +7061,21 @@ class test_show_ip_bgp_summary(unittest.TestCase):
         raw2 = '''
             show vrf
             Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-            Time source is NTP, 23:19:19.766 JST Mon Jun 3 2019
+            Time source is NTP, 23:19:19.766 EST Mon Jun 3 2019
 
               Name                             Default RD            Protocols   Interfaces
-              VRF1                          9996:4093             ipv4        Gi8.4093              
+              VRF1                          65109:4093             ipv4        Gi8.4093              
         '''
 
         self.outputs = {}
         self.maxDiff = None
         self.outputs['show vrf'] = raw2
-        self.outputs['show ip bgp vpnv4 rd 9996:4093 summary'] = raw1
+        self.outputs['show ip bgp vpnv4 rd 65109:4093 summary'] = raw1
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
         obj = ShowIpBgpSummary(device=self.device)
-        parsed_output = obj.parse(address_family='vpnv4', rd='9996:4093')
+        parsed_output = obj.parse(address_family='vpnv4', rd='65109:4093')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ip_bgp_summary_golden3(self):
@@ -7083,10 +7083,10 @@ class test_show_ip_bgp_summary(unittest.TestCase):
             return self.outputs[key]
 
         raw1 = '''/
-            PE1#show bgp vpnv4 unicast rd 9996:4093 summary
+            PE1#show bgp vpnv4 unicast rd 65109:4093 summary
             Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-            Time source is NTP, 00:07:47.856 JST Tue Jun 4 2019
-            BGP router identifier 192.168.10.254, local AS number 9996
+            Time source is NTP, 00:07:47.856 EST Tue Jun 4 2019
+            BGP router identifier 192.168.10.254, local AS number 65109
             BGP table version is 250, main routing table version 250
             25 network entries using 6400 bytes of memory
             38 path entries using 5168 bytes of memory
@@ -7106,21 +7106,21 @@ class test_show_ip_bgp_summary(unittest.TestCase):
         raw2 = '''
             show vrf
             Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-            Time source is NTP, 23:19:19.766 JST Mon Jun 3 2019
+            Time source is NTP, 23:19:19.766 EST Mon Jun 3 2019
 
               Name                             Default RD            Protocols   Interfaces
-              VRF1                          9996:4093             ipv4        Gi8.4093              
+              VRF1                          65109:4093             ipv4        Gi8.4093              
         '''
 
         self.outputs = {}
         self.maxDiff = None
         self.outputs['show vrf'] = raw2
-        self.outputs['show bgp vpnv4 unicast rd 9996:4093 summary'] = raw1
+        self.outputs['show bgp vpnv4 unicast rd 65109:4093 summary'] = raw1
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
         obj = ShowBgpSummary(device=self.device)
-        parsed_output = obj.parse(address_family='vpnv4 unicast', rd='9996:4093')
+        parsed_output = obj.parse(address_family='vpnv4 unicast', rd='65109:4093')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
@@ -19625,7 +19625,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                         {'address_family':
                             {'ipv6 unicast':
                                 {'bgp_table_version': 6,
-                                'local_router_id': '1.1.1.1',
+                                'local_router_id': '10.4.1.1',
                                 'routes':
                                     {'2001:2:2:2::2/128':
                                         {'index':
@@ -19639,12 +19639,12 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
                                                 'weight': 0}}}}},
                             'vpnv6 unicast':
                                 {'bgp_table_version': 6,
-                                'local_router_id': '1.1.1.1',
+                                'local_router_id': '10.4.1.1',
                                 'routes': {}},
                             'vpnv6 unicast RD 65000:1':
                                 {'bgp_table_version': 6,
                                 'default_vrf': 'VRF1',
-                                'local_router_id': '1.1.1.1',
+                                'local_router_id': '10.4.1.1',
                                 'route_distinguisher': '65000:1',
                                 'routes':
                                     {'2001:2:2:2::2/128':
@@ -19661,7 +19661,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
     golden_output5 = {'execute.return_value': '''
         show bgp all neighbors 2001:2:2:2::2 routes
         For address family: IPv6 Unicast
-        BGP table version is 6, local router ID is 1.1.1.1
+        BGP table version is 6, local router ID is 10.4.1.1
         Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
                       r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
                       x best-external, a additional-path, c RIB-compressed,
@@ -19676,7 +19676,7 @@ class test_show_bgp_all_neighbors_routes(unittest.TestCase):
         Total number of prefixes 1
 
         For address family: VPNv6 Unicast
-        BGP table version is 6, local router ID is 1.1.1.1
+        BGP table version is 6, local router ID is 10.4.1.1
         Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
                       r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
                       x best-external, a additional-path, c RIB-compressed,

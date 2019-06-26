@@ -40,13 +40,13 @@ class test_show_logging(unittest.TestCase):
             "Trap logging: level informational, 478 message lines logged",
             "Logging Source-Interface:       VRF Name:",
             "Log Buffer (4096 bytes):",
-            "Jun  5 05:09:30.838 JST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000",
-            "Jun  5 05:10:36.839 JST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000",
-            "Jun  5 05:10:59.519 JST: %SYS-5-CONFIG_I: Configured from console by cisco on console",
-            "Jun  5 05:11:04.626 JST: Rollback:Acquired Configuration lock.",
-            "Jun  5 05:11:04.626 JST: %SYS-5-CONFIG_R: Config Replace is Done",
-            "Jun  5 05:11:14.115 JST: Rollback:Acquired Configuration lock.",
-            "Jun  5 05:11:14.115 JST: %SYS-5-CONFIG_R: Config Replace is Done"
+            "Jun  5 05:09:30.838 EST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000",
+            "Jun  5 05:10:36.839 EST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000",
+            "Jun  5 05:10:59.519 EST: %SYS-5-CONFIG_I: Configured from console by cisco on console",
+            "Jun  5 05:11:04.626 EST: Rollback:Acquired Configuration lock.",
+            "Jun  5 05:11:04.626 EST: %SYS-5-CONFIG_R: Config Replace is Done",
+            "Jun  5 05:11:14.115 EST: Rollback:Acquired Configuration lock.",
+            "Jun  5 05:11:14.115 EST: %SYS-5-CONFIG_R: Config Replace is Done"
         ]
     }
 
@@ -72,25 +72,25 @@ class test_show_logging(unittest.TestCase):
                 Logging Source-Interface:       VRF Name:
 
         Log Buffer (4096 bytes):
-        Jun  5 05:09:30.838 JST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000
-        Jun  5 05:10:36.839 JST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000
-        Jun  5 05:10:59.519 JST: %SYS-5-CONFIG_I: Configured from console by cisco on console
-        Jun  5 05:11:04.626 JST: Rollback:Acquired Configuration lock.
-        Jun  5 05:11:04.626 JST: %SYS-5-CONFIG_R: Config Replace is Done
-        Jun  5 05:11:14.115 JST: Rollback:Acquired Configuration lock.
-        Jun  5 05:11:14.115 JST: %SYS-5-CONFIG_R: Config Replace is Done
+        Jun  5 05:09:30.838 EST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000
+        Jun  5 05:10:36.839 EST: %IP-4-DUPADDR: Duplicate address 172.16.1.216 on GigabitEthernet1, sourced by 5e00.8006.0000
+        Jun  5 05:10:59.519 EST: %SYS-5-CONFIG_I: Configured from console by cisco on console
+        Jun  5 05:11:04.626 EST: Rollback:Acquired Configuration lock.
+        Jun  5 05:11:04.626 EST: %SYS-5-CONFIG_R: Config Replace is Done
+        Jun  5 05:11:14.115 EST: Rollback:Acquired Configuration lock.
+        Jun  5 05:11:14.115 EST: %SYS-5-CONFIG_R: Config Replace is Done
         '''}
 
     golden_parsed_output_2 = {
         "logs": [
-            "Jun  5 05:11:04.626 JST: Rollback:Acquired Configuration lock.",
-            "Jun  5 05:11:14.115 JST: Rollback:Acquired Configuration lock."
+            "Jun  5 05:11:04.626 EST: Rollback:Acquired Configuration lock.",
+            "Jun  5 05:11:14.115 EST: Rollback:Acquired Configuration lock."
         ]
     }
 
     golden_output_2 = {'execute.return_value': '''
-        Jun  5 05:11:04.626 JST: Rollback:Acquired Configuration lock.
-        Jun  5 05:11:14.115 JST: Rollback:Acquired Configuration lock.
+        Jun  5 05:11:04.626 EST: Rollback:Acquired Configuration lock.
+        Jun  5 05:11:14.115 EST: Rollback:Acquired Configuration lock.
         '''}
 
     def test_show_logging_empty(self):

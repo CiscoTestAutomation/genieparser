@@ -171,6 +171,7 @@ class ShowIpOspf(ShowIpOspfSchema):
         show ip ospf vrf <vrf>"""
 
     cli_command = ['show ip ospf vrf {vrf}', 'show ip ospf']
+    exclude = ['existed']
 
     def cli(self, vrf='', output=None):
         if vrf:

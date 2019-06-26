@@ -40,6 +40,8 @@ class ShowCdpNeighborsSchema(MetaParser):
 # ================================
 class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
+    exclude = ['hold_time']
+
     cli_command = 'show cdp neighbors'
 
     def cli(self, output=None):
@@ -152,6 +154,8 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
 # =======================================
 class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
     cli_command = 'show cdp neighbors detail'
+
+    exclude = ['hold_time']
 
     def cli(self, output=None):
 

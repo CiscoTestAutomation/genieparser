@@ -57,6 +57,7 @@ class ShowIpRipDatabase(ShowIpRipDatabaseSchema):
            """
 
     cli_command = ["show ip rip database", "show ip rip database vrf {vrf}"]
+    exclude = ['expire_time']
 
     def cli(self, vrf="", output=None):
         if output is None:
@@ -241,6 +242,7 @@ class ShowIpv6Rip(ShowIpv6RipSchema):
            show ipv6 rip vrf {vrf}"""
 
     cli_command = ["show ipv6 rip","show ipv6 rip vrf {vrf}"]
+    exclude = ['periodic_updates']
 
     def cli(self, vrf="", output=None):
         if output is None:
@@ -480,6 +482,7 @@ class ShowIpv6RipDatabase(ShowIpv6RipDatabaseSchema):
            """
 
     cli_command = ["show ipv6 rip database", "show ipv6 rip vrf {vrf} database"]
+    exclude = ['expire_time']
 
     def cli(self, vrf="", output=None):
         if output is None:

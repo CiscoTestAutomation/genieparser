@@ -2381,6 +2381,8 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                   show processes cpu sorted <1min|5min|5sec> | include <WORD>"""
 
     cli_command = 'show processes cpu sorted'
+    exclude = ['five_min_cpu' , 'five_sec_cpu_total', 'nonzero_cpu_processes', 'zero_cpu_processes',
+                'five_sec_cpu', 'invoked', 'one_min_cpu', 'runtime', 'usecs', 'pid', 'process', ]
 
     def cli(self, sort_time='', key_word='', output=None):
 
@@ -2479,6 +2481,8 @@ class ShowProcessesCpuPlatform(ShowProcessesCpuPlatformSchema):
     """Parser for show processes cpu platform"""
 
     cli_command = 'show processes cpu platform'
+    exclude = ['five_min_cpu' , 'nonzero_cpu_processes', 'zero_cpu_processes' , 'invoked',
+                'runtime', 'usecs', 'five_sec_cpu', 'one_min_cpu']
 
     def cli(self, output=None):
         if output is None:
@@ -2697,6 +2701,7 @@ class ShowVersionRp(ShowVersionRpSchema):
                   show version RP standby [running|provisioned|installed]"""
 
     cli_command = ['show version RP {rp} {status}']
+    exclude = ['total_enqs_bytes' , 'total_enqs_packets']
 
     def cli(self, rp='active', status='running', output=None):
 
@@ -4614,6 +4619,7 @@ class ShowProcessesCpuHistory(ShowProcessesCpuHistorySchema):
     """Parser for show processes cpu history"""
     
     cli_command = 'show processes cpu history'
+    exclude = ['maximum' , 'average']
 
     def cli(self, output=None):
 

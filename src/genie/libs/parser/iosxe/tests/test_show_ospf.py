@@ -1046,7 +1046,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'instance': {
-                            '9996': {
+                            '65109': {
                                 'areas': {
                                     '0.0.0.8': {
                                         'interfaces': {
@@ -1413,12 +1413,12 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         raw1='''\
             PE1#show ip ospf interface GigabitEthernet2
             Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
-            Time source is NTP, 04:44:14.272 JST Sat Jun 15 2019
+            Time source is NTP, 04:44:14.272 EST Sat Jun 15 2019
 
             GigabitEthernet2 is up, line protocol is up 
               Internet Address 10.169.197.94/30, Interface ID 8, Area 8
               Attached via Network Statement
-              Process ID 9996, Router ID 10.169.197.254, Network Type BROADCAST, Cost: 1000
+              Process ID 65109, Router ID 10.169.197.254, Network Type BROADCAST, Cost: 1000
               Topology-MTID    Cost    Disabled    Shutdown      Topology Name
                     0           1000      no          no            Base
               Transmit Delay is 1 sec, State BDR, Priority 1
@@ -1443,8 +1443,8 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         '''
 
         raw2='''\
-         PE1#show running-config | section router ospf 9996
-         router ospf 9996
+         PE1#show running-config | section router ospf 65109
+         router ospf 65109
          router-id 10.169.197.254
          max-metric router-lsa on-startup 300
          auto-cost reference-bandwidth 2488
@@ -1456,7 +1456,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
          network 10.169.197.96 0.0.0.3 area 8
          network 10.169.197.254 0.0.0.0 area 8
          mpls ldp sync
-         action 50 cli command "router ospf 9996"
+         action 50 cli command "router ospf 65109"
         '''
 
         def mapper(key):
@@ -1464,7 +1464,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
 
         self.outputs = {}
         self.outputs['show ip ospf interface GigabitEthernet2'] = raw1
-        self.outputs['show running-config | section router ospf 9996'] = raw2        
+        self.outputs['show running-config | section router ospf 65109'] = raw2        
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
@@ -6724,13 +6724,13 @@ class test_show_ip_ospf_max_metric(unittest.TestCase):
                                          'time_remaining': '00:03:55'}},
                                   'start_time': '00:02:24.554',
                                   'time_elapsed': '00:01:04.061'}},
-                           'router_id': '1.1.1.1'}}}}}}}
+                           'router_id': '10.4.1.1'}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         show ip ospf max-metric
         Load for five secs: 3%/0%; one minute: 3%; five minutes: 1%
-        Time source is NTP, *07:52:19.838 JST Tue Jun 18 2019
-        OSPF Router with ID (1.1.1.1) (Process ID 1111)
+        Time source is NTP, *07:52:19.838 EST Tue Jun 18 2019
+        OSPF Router with ID (10.4.1.1) (Process ID 1111)
         Base Topology (MTID 0)
         Start time: 00:02:24.554, Time elapsed: 00:01:04.061
         Originating router-LSAs with maximum metric, Time remaining: 00:03:55
@@ -7939,7 +7939,7 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'instance': {
-                            '9996': {
+                            '65109': {
                                 'areas': {
                                     '0.0.0.8': {
                                         'database': {
@@ -8025,10 +8025,10 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
 
     golden_output = {'execute.return_value':'''
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 00:59:52.329 JST Thu May 30 2019
+        Time source is NTP, 00:59:52.329 EST Thu May 30 2019
 
 
-                    OSPF Router with ID (10.169.197.254) (Process ID 9996)
+                    OSPF Router with ID (10.169.197.254) (Process ID 65109)
 
                         Router Link States (Area 8)
 

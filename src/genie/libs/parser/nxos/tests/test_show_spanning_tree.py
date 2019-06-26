@@ -402,8 +402,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                     },
                     'root_of_the_spanning_tree': True,
                     'interfaces': {
-                        'port-channel30': {
-                            'name': 'port-channel30',
+                        'Port-channel30': {
+                            'name': 'Port-channel30',
                             'bridge_assurance_inconsistent': True,
                             'vpc_peer_link_inconsistent': True,
                             'port_num': 4125,
@@ -508,8 +508,8 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                     },
                     'root_of_the_spanning_tree': True,
                     'interfaces': {
-                        'port-channel30': {
-                            'name': 'port-channel30',
+                        'Port-channel30': {
+                            'name': 'Port-channel30',
                             'bridge_assurance_inconsistent': True,
                             'vpc_peer_link_inconsistent': True,
                             'port_num': 4125,

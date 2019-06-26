@@ -1253,7 +1253,7 @@ class test_show_redundancy(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
     PE1#show redundancy states 
     Load for five secs: 2%/0%; one minute: 1%; five minutes: 1%
-    Time source is NTP, 05:47:45.686 JST Thu Jun 6 2019
+    Time source is NTP, 05:47:45.686 EST Thu Jun 6 2019
            my state = 13 -ACTIVE 
          peer state = 1  -DISABLED 
                Mode = Simplex

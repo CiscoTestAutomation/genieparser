@@ -687,7 +687,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             # Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken
             m = p9.match(line)
             if m:
-                port_name = m.groupdict()['name']
+                port_name = Common.convert_intf_name(m.groupdict()['name'])
                 intf_dict = inst_dict.setdefault('interfaces', {}).setdefault(port_name, {})
                 intf_dict['name'] = port_name
                 intf_dict['port_num'] = int(m.groupdict()['port_num'])
