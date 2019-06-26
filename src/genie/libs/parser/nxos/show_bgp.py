@@ -178,7 +178,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
     cli_command = ['show bgp process vrf all', 'show bgp process vrf {vrf}']
     xml_command = ['show bgp process vrf all | xml', 'show bgp process vrf {vrf} | xml']
     exclude = [
-      'bgp_pid'
+      'bgp_pid',
       'hwm_attr_entries',
       'bgp_protocol_started_reason',
       'aggregate_label',
