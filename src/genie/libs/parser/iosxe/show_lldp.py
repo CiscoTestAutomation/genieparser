@@ -235,29 +235,25 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
             m = p5_1.match(line)
             if m:
-                item = nei_dict['system_description'] + m.groupdict()['msg'] + '\n'
-                nei_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
             # Technical Support: http://www.cisco.com/techsupport 
             m = p5_2.match(line)
             if m:
-                item = nei_dict['system_description'] + m.groupdict()['msg'] + '\n'
-                nei_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
             m = p5_3.match(line)
             if m:
-                item = nei_dict['system_description'] + m.groupdict()['msg'] + '\n'
-                nei_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
             # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
             m = p5_4.match(line)
             if m:
-                item = nei_dict['system_description'] + m.groupdict()['msg']
-                nei_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg']
                 continue
 
             # Time remaining: 112 seconds

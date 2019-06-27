@@ -11,3 +11,9 @@
 * NXOS
     * Bugfix for ShowRunningConfigBgp
     * Bugfix for exclude keys in ShowBgpProcessVrfAll
+
+--------------------------------------------------------------------------------
+                                lldp
+--------------------------------------------------------------------------------
+* IOSXE
+    * Bugfix for ShowLldpEntry
