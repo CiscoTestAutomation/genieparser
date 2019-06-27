@@ -11,7 +11,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 class ShowDot1xAllStatisticsSchema(MetaParser):
     # string here not needed
     ''' Schema for: 
-            Show dot1x all statistics
+            show dot1x all statistics
     '''
     schema = {
         'interfaces': {
@@ -173,7 +173,7 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
 # Schema class
 class ShowDot1xAllDetailsSchema(MetaParser):
     '''Schema for:
-            Show dot1x all details
+            show dot1x all details
     '''
     schema = {
         'system_auth_control': bool,
@@ -238,7 +238,7 @@ class ShowDot1xAllDetails(ShowDot1xAllDetailsSchema):
             show dot1x all details
     '''
 
-    cli_command = 'Show dot1x all details'
+    cli_command = 'show dot1x all details'
 
     def cli(self, output=None):
         if output is None:  # if no input as second arg
