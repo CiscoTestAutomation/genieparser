@@ -229,7 +229,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             # System Description: 
             m = p5.match(line)
             if m:
-                nei_dict.setdefault('system_description', '')
+                nei_dict.update({'system_description': ''})
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
