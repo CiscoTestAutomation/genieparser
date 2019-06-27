@@ -260,7 +260,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 nei_dict['system_description'] = item
                 continue
 
-            # Time remaining: 112 seconds d
+            # Time remaining: 112 seconds
             m = p6.match(line)
             if m:
                 nei_dict['time_remaining'] = int(m.groupdict()['time_remaining'])

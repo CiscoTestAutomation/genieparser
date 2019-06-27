@@ -48,7 +48,7 @@ class test_show_lldp(unittest.TestCase):
 
 class test_show_lldp_entry(unittest.TestCase):
     dev1 = Device(name='empty')
-    dev_c3850 = Device(name='c3850') d
+    dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output = {
