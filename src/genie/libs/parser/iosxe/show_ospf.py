@@ -219,6 +219,7 @@ class ShowIpOspf(ShowIpOspfSchema):
     '''
 
     cli_command = 'show ip ospf'
+    exclude = ['area_scope_lsa_cksum_sum' , ]
 
     def cli(self, output=None):
         if output is None:
@@ -3351,6 +3352,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
     '''
 
     cli_command = 'show ip ospf database'
+    exclude = ['age']
 
     def cli(self, output=None):
 
@@ -6296,6 +6298,7 @@ class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
     cli_command = [
         'show ip ospf neighbor {interface}',
         'show ip ospf neighbor']
+    exclude = ['dead_time']
 
     def cli(self, interface='', output=None):
 
@@ -6354,6 +6357,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     '''
 
     cli_command = 'show ip ospf database router self-originate'
+    exclude = ['age' , 'checksum', 'seq_num', 'dead_time']
 
     def cli(self, output=None):
 

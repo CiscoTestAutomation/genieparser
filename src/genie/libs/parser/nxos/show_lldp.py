@@ -218,6 +218,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                         'S': 'station_only',
                         'O': 'other'}
     cli_command = 'show lldp neighbors detail'
+    exclude = ['time_remaining']
 
     def cli(self, output=None):
         if output is None:
@@ -429,6 +430,7 @@ class ShowLldpTrafficSchema(MetaParser):
 class ShowLldpTraffic(ShowLldpTrafficSchema):
     """parser ofr show lldp traffic"""
     cli_command = 'show lldp traffic'
+    exclude = ['total_frames_received', 'total_frames_transmitted']
 
     def cli(self, output=None):
         if output is None:

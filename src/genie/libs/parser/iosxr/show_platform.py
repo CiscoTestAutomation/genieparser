@@ -1292,7 +1292,7 @@ class DirSchema(MetaParser):
 class Dir(DirSchema):
     """Parser for dir"""
     cli_command = 'dir'
-    exclude = ['size', 'time', 'total_free_bytes']
+    exclude = ['size', 'time', 'total_free_bytes', 'date', 'index']
 
     def cli(self, output=None):
         if output is None:

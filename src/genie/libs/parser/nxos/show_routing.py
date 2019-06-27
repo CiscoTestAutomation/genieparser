@@ -72,6 +72,7 @@ class ShowRoutingVrfAllSchema(MetaParser):
 
 
 class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
+
     """Parser for show routing ip vrf all
                 show routing ip vrf <vrf>"""
     cli_command = ['show routing {ip} vrf all', 'show routing vrf all', 'show routing {ip} vrf {vrf}', 'show routing vrf {vrf}']

@@ -475,7 +475,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
         'pim_dr',
         'received',
         'sent',
-        'expires']
+        'expires',
+        'next_query_sent_in'
+        ]
 
     def cli(self, vrf='', output=None):
 

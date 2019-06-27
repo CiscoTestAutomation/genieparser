@@ -333,6 +333,7 @@ class ShowNtpStatus(ShowNtpStatusSchema):
 	"""Parser for: show ntp status"""
 
 	cli_command = 'show ntp status'
+	exclude = ['rootdispersion']
 
 	def cli(self,output=None):
 		if output is None:

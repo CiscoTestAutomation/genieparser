@@ -120,8 +120,8 @@ class test_show_arp(unittest.TestCase):
 
     golden_parsed_output_2 = {
         "global_static_table": {
-            "106.162.197.93": {
-                "ip_address": "106.162.197.93",
+            "10.169.197.93": {
+                "ip_address": "10.169.197.93",
                 "mac_address": "fa16.3e95.2218",
                 "encap_type": "ARPA",
                 "age": "-",
@@ -132,8 +132,8 @@ class test_show_arp(unittest.TestCase):
             "GigabitEthernet2": {
                 "ipv4": {
                     "neighbors": {
-                        "106.162.197.94": {
-                            "ip": "106.162.197.94",
+                        "10.169.197.94": {
+                            "ip": "10.169.197.94",
                             "link_layer_address": "fa16.3e0b.9fd6",
                             "type": "ARPA",
                             "origin": "static",
@@ -146,16 +146,16 @@ class test_show_arp(unittest.TestCase):
             "GigabitEthernet4": {
                 "ipv4": {
                     "neighbors": {
-                        "106.162.197.97": {
-                            "ip": "106.162.197.97",
+                        "10.169.197.97": {
+                            "ip": "10.169.197.97",
                             "link_layer_address": "fa16.3e07.3ea1",
                             "type": "ARPA",
                             "origin": "dynamic",
                             "age": "18",
                             "protocol": "Internet"
                         },
-                        "106.162.197.98": {
-                            "ip": "106.162.197.98",
+                        "10.169.197.98": {
+                            "ip": "10.169.197.98",
                             "link_layer_address": "fa16.3e4c.517e",
                             "type": "ARPA",
                             "origin": "static",
@@ -171,13 +171,13 @@ class test_show_arp(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         PE1#show arp
         Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
-        Time source is NTP, 00:41:33.830 JST Thu Jun 20 2019
+        Time source is NTP, 00:41:33.830 EST Thu Jun 20 2019
 
         Protocol  Address          Age (min)  Hardware Addr   Type   Interface
-        Internet  106.162.197.93          -   fa16.3e95.2218  ARPA  
-        Internet  106.162.197.94          -   fa16.3e0b.9fd6  ARPA   GigabitEthernet2
-        Internet  106.162.197.97         18   fa16.3e07.3ea1  ARPA   GigabitEthernet4
-        Internet  106.162.197.98          -   fa16.3e4c.517e  ARPA   GigabitEthernet4  
+        Internet  10.169.197.93          -   fa16.3e95.2218  ARPA  
+        Internet  10.169.197.94          -   fa16.3e0b.9fd6  ARPA   GigabitEthernet2
+        Internet  10.169.197.97         18   fa16.3e07.3ea1  ARPA   GigabitEthernet4
+        Internet  10.169.197.98          -   fa16.3e4c.517e  ARPA   GigabitEthernet4  
     '''}
 
     def test_empty(self):
