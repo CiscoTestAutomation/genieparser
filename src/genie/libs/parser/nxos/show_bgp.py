@@ -178,7 +178,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
     cli_command = ['show bgp process vrf all', 'show bgp process vrf {vrf}']
     xml_command = ['show bgp process vrf all | xml', 'show bgp process vrf {vrf} | xml']
     exclude = [
-      'bgp_pid'
+      'bgp_pid',
       'hwm_attr_entries',
       'bgp_protocol_started_reason',
       'aggregate_label',
@@ -6896,10 +6896,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #   transport connection-mode <nbr_transport_connection_mode>
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
                         m = p56.match(line)
                         if m:
-                            str(m.groupdict()['nbr_transport_connection_mode'])
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
+                                str(m.groupdict()['nbr_transport_connection_mode'])
                             continue
 
                         # peer-type fabric-external
