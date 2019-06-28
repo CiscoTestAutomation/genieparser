@@ -33,10 +33,7 @@ class ShowMacAddressTableSchema(MetaParser):
                             'mac_address': str,
                             Optional('drop'): {
                                 'drop': bool,
-                                'entry_type': str,
-                                Optional('entry'): str,
-                                Optional('learn'): str,
-                                Optional('age'): int,
+                                'entry_type': str
                             },
                             Optional('interfaces'): {
                                 Any(): {
@@ -74,9 +71,9 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
         # initial regexp pattern
         p1 = re.compile(r'^Total +Mac +Addresses +for +this +criterion: +(?P<val>\d+)$')
         p2 = re.compile(r'^(?P<entry>\*)?\s*?(?P<vlan>\S+) +(?P<mac>\S+\.\S+\.\S+) +'
-            '(?P<entry_type>\S+) +(?P<learn>Yes|No+)? +(?P<age>[\d\-]+)? +'
+            '(?P<entry_type>\S+) +(?P<learn>\w+)? +(?P<age>[\d\-]+)? +'
             '(?P<intfs>[\S\s]+)$')
-        p3 = re.compile(r'^(?P<intfs>(?!---)\S+)$')
+        p3 = re.compile(r'^(?P<intfs>[\w\/\,]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -84,7 +81,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
             # Total Mac Addresses for this criterion: 93
             m = p1.match(line)
             if m:
-                ret_dict['total_mac_addresses'] = int(m.groupdict()['val'])
+                ret_dict.update({'total_mac_addresses': int(m.groupdict()['val'])})
                 continue
 
             # 10    aaaa.bbbb.cccc    STATIC      Gi1/0/8 Gi1/0/9
@@ -98,52 +95,38 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                 group = m.groupdict()
                 mac = group['mac']
                 vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
-                else group['vlan'].lower()
+                                          else group['vlan'].lower()
                 intfs = group['intfs'].strip()
-                if ',' in intfs:
-                    intfs = intfs.replace(',', ' ')
                 vlan_dict = ret_dict.setdefault('mac_table', {}) \
                 .setdefault('vlans', {}).setdefault(str(vlan), {})
                 vlan_dict['vlan'] = vlan
                 mac_dict = vlan_dict.setdefault('mac_addresses', {}) \
-                .setdefault(mac, {})
-                mac_dict['mac_address'] = mac
+                                    .setdefault(mac, {})
+                mac_dict.update({'mac_address': mac})
 
                 if 'drop' in intfs.lower():
                     drop_dict = mac_dict.setdefault('drop', {})
-                    drop_dict['drop'] = True
-                    drop_dict['entry_type'] = group['entry_type'].lower()
-                    if group['entry'] == '*':
-                        entry = '*'
-                        drop_dict['entry'] = entry
-                    if group['learn']:
-                        learn = group['learn']
-                        drop_dict['learn'] = learn
-                    if group['age']:
-                        if group['age'].isdigit():
-                            age = int(group['age'])
-                            drop_dict['age'] = age
-                        else:
-                            age = None
+                    drop_dict.update({'drop': True})
+                    drop_dict.update({'entry_type': group['entry_type'].lower()})
                     continue
 
-                for intf in intfs.split():
+                for intf in intfs.split(','):
                     intf = Common.convert_intf_name(intf)
                     intf_dict = mac_dict.setdefault('interfaces', {}) \
-                    .setdefault(intf, {})
-                    intf_dict['interface'] = intf
+                                        .setdefault(intf, {})
+                    intf_dict.update({'interface': intf})
                     entry_type = group['entry_type'].lower()
-                    intf_dict['entry_type'] = entry_type
+                    intf_dict.update({'entry_type': entry_type})
                     if group['entry'] == '*':
                         entry = '*'
-                        intf_dict['entry'] = entry
+                        intf_dict.update({'entry': entry})
                     if group['learn']:
                         learn = group['learn']
-                        intf_dict['learn'] = learn
+                        intf_dict.update({'learn': learn})
                     if group['age']:
                         if group['age'].isdigit():
                             age = int(group['age'])
-                            intf_dict['age'] = age
+                            intf_dict.update({'age': age})
                         else:
                             age = None
                 continue
@@ -154,33 +137,25 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
             if m:
                 group = m.groupdict()
                 intfs = group['intfs'].strip()
-                if ',' in intfs:
-                    intfs = intfs.replace(',', ' ')
 
                 if 'drop' in intfs.lower():
                     drop_dict = mac_dict.setdefault('drop', {})
-                    drop_dict['drop'] = True
-                    drop_dict['entry_type'] = entry_type
-                    if entry:
-                        drop_dict['entry'] = entry
-                    if learn:
-                        drop_dict['learn'] = learn
-                    if age:
-                        drop_dict['age'] = age
+                    drop_dict.update({'drop': True})
+                    drop_dict.update({'entry_type': entry_type})
                     continue
 
-                for intf in intfs.split():
+                for intf in intfs.split(','):
                     intf = Common.convert_intf_name(intf)
                     intf_dict = mac_dict.setdefault('interfaces', {}) \
-                    .setdefault(intf, {})
-                    intf_dict['interface'] = intf
-                    intf_dict['entry_type'] = entry_type
+                                        .setdefault(intf, {})
+                    intf_dict.update({'interface': intf})
+                    intf_dict.update({'entry_type': entry_type})
                     if entry:
-                        intf_dict['entry'] = entry
+                        intf_dict.update({'entry': entry})
                     if learn:
-                        intf_dict['learn'] = learn
+                        intf_dict.update({'learn': learn})
                     if age:
-                        intf_dict['age'] = age
+                        intf_dict.update({'age': age})
                 continue
 
         return ret_dict
@@ -223,7 +198,7 @@ class ShowMacAddressTableAgingTime(ShowMacAddressTableAgingTimeSchema):
             # Global Aging Time:    0
             m = p1.match(line)
             if m:
-                ret_dict['mac_aging_time'] = int(m.groupdict()['time'])
+                ret_dict.update({'mac_aging_time': int(m.groupdict()['time'])})
                 continue
 
             # Vlan    Aging Time
@@ -237,8 +212,8 @@ class ShowMacAddressTableAgingTime(ShowMacAddressTableAgingTimeSchema):
 
                 vlan_dict = ret_dict.setdefault('vlans', {}) \
                 .setdefault(str(vlan), {})
-                vlan_dict['vlan'] = vlan
-                vlan_dict['mac_aging_time'] = int(m.groupdict()['time'])
+                vlan_dict.update({'vlan': vlan})
+                vlan_dict.update({'mac_aging_time': int(m.groupdict()['time'])})
                 continue
 
         return ret_dict
@@ -292,9 +267,9 @@ class ShowMacAddressTableLearning(ShowMacAddressTableLearningSchema):
                     except Exception:
                         vlan = vlan.lower()
                     ret_dict.setdefault('vlans', {}).setdefault(str(vlan), {}) \
-                    .setdefault('mac_learning', False)
+                                                    .setdefault('mac_learning', False)
                     ret_dict.setdefault('vlans', {}).setdefault(str(vlan), {}) \
-                    .setdefault('vlan', vlan)
+                                                    .setdefault('vlan', vlan)
                 continue
 
         return ret_dict
