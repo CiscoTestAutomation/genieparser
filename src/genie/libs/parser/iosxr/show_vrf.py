@@ -106,7 +106,7 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 vrf_dict[vrf]['interfaces'] = []
                 continue
             #   GigabitEthernet0/0/0/0.390
-            p4_1 = re.compile(r'^(?P<intf>[\w]+\s*[\d\/\.\-]+)')
+            p4_1 = re.compile(r'^(?P<intf>[\w]+\s*[\d\/\.\-]+)$')
             m = p4_1.match(line)
             if m:
                 intf = m.groupdict()['intf']
