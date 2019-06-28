@@ -16,4 +16,10 @@
                                 lldp
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated "system_description" for showLldpEntry
+    * Updated "system_description" for ShowLldpEntry
+
+--------------------------------------------------------------------------------
+                                fdb
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added "entry", "learn", and "age" for ShowMacAddressTable
