@@ -143,6 +143,8 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             out = output
         # initial return dictionary
         ret_dict = {}
+        item = ''
+        sub_dict = {}
 
         # initial regexp pattern
         p1 = re.compile(r'^Local +Intf: +(?P<intf>[\w\/\.\-]+)$')
@@ -154,11 +156,11 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p4 = re.compile(r'^System +Name: +(?P<name>\S+)$')
 
-        p5 = re.compile(r'^System +Description:$')
+        p5 = re.compile(r'^System +Description:.*$')
         p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
-        p5_2 = re.compile(r'^(?P<msg>Copyright.*)$')
-        p5_3 = re.compile(r'^(?P<msg>Compile.*)$')
-        p5_4 = re.compile(r'^(?P<msg>Technical Support.*)$')
+        p5_2 = re.compile(r'^(?P<msg>Technical Support.*)$')
+        p5_3 = re.compile(r'^(?P<msg>Copyright.*)$')
+        p5_4 = re.compile(r'^(?P<msg>Compile.*)$')
 
         p6 = re.compile(r'^Time +remaining: +(?P<time_remaining>\w+) +seconds$')
 
@@ -224,39 +226,34 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 nei_dict.update(sub_dict)
                 continue
 
-
             # System Description: 
             m = p5.match(line)
             if m:
-                sub_dict['system_description'] = ''
+                nei_dict.update({'system_description': ''})
                 continue
 
             # Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)
             m = p5_1.match(line)
             if m:
-                item = sub_dict.get('system_description', '') + m.groupdict()['msg'] + '\n'
-                sub_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
             # Technical Support: http://www.cisco.com/techsupport 
-            m = p5_4.match(line)
+            m = p5_2.match(line)
             if m:
-                item = sub_dict.get('system_description', '') + m.groupdict()['msg'] + '\n'
-                sub_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
-            m = p5_2.match(line)
+            m = p5_3.match(line)
             if m:
-                item = sub_dict.get('system_description', '') + m.groupdict()['msg'] + '\n'
-                sub_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg'] + '\n'
                 continue
 
             # Compiled Thu 21-Jul-11 01:23 by prod_rel_team
-            m = p5_3.match(line)
+            m = p5_4.match(line)
             if m:
-                item = sub_dict.get('system_description', '') + m.groupdict()['msg']
-                sub_dict['system_description'] = item
+                nei_dict['system_description'] += m.groupdict()['msg']
                 continue
 
             # Time remaining: 112 seconds
