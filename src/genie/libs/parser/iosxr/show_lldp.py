@@ -76,7 +76,7 @@ class ShowLldpEntrySchema(MetaParser):
     """Schema for show lldp entry *"""
     schema = {
         'total_entries': int,
-        'interfaces': {
+        Optional('interfaces'): {
             Any(): {
                 'port_id': {
                     Any(): {

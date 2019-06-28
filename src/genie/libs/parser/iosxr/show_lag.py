@@ -89,7 +89,7 @@ class ShowBundleSchema(MetaParser):
                     Optional('locality_threshold'): str,
                 },
                 'lacp': {
-                    'lacp': str,
+                    Optional('lacp'): str,
                     Optional('flap_suppression_timer'): str,
                     Optional('cisco_extensions'): str,
                     Optional('non_revertive'): str,
@@ -124,7 +124,7 @@ class ShowBundleSchema(MetaParser):
                     Optional('preferred_multiple'): int,
                     Optional('destination_address'): str,
                 },
-                'port': {
+                Optional('port'): {
                     Any(): {
                         'interface': str,
                         'device': str,
@@ -390,6 +390,8 @@ class ShowBundle(ShowBundleSchema):
             m = p11_1.match(line)
             if m:
                 group = m.groupdict()
+                if 'lacp' not in bundle_dict:
+                    lacp_dict = bundle_dict.setdefault('lacp', {})
                 lacp_dict.update({'flap_suppression_timer': group['flap_suppression_timer']})
                 continue
 
