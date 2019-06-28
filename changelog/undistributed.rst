@@ -16,4 +16,4 @@
                                 lldp
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added "system_description" for showLldpEntry
+    * Updated "system_description" for showLldpEntry
