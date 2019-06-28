@@ -63,6 +63,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                 'chassis_id': '843d.c638.b980',
                                 'port_id': 'GigabitEthernet1/0/4',
                                 'port_description': 'GigabitEthernet1/0/4',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'system_name': 'R5',
                                 'time_remaining': 112,
                                 'capabilities': {
@@ -98,6 +99,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                 'port_id': 'GigabitEthernet1/0/2',
                                 'port_description': 'GigabitEthernet1/0/2',
                                 'system_name': 'R5',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'time_remaining': 111,
                                 'capabilities': {
                                     'mac_bridge': {
@@ -131,6 +133,7 @@ class test_show_lldp_entry(unittest.TestCase):
                                 'chassis_id': '843d.c638.b980',
                                 'port_id': 'GigabitEthernet1/0/3',
                                 'port_description': 'GigabitEthernet1/0/3',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'system_name': 'R5',
                                 'time_remaining': 108,
                                 'capabilities': {
@@ -162,6 +165,7 @@ class test_show_lldp_entry(unittest.TestCase):
                         'neighbors': {
                             'R5': {
                                 'neighbor_id': 'R5',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'chassis_id': '843d.c638.b980',
                                 'port_id': 'GigabitEthernet1/0/1',
                                 'port_description': 'GigabitEthernet1/0/1',
@@ -344,6 +348,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                                 'chassis_id': '843d.c638.b980',
                                 'port_id': 'GigabitEthernet1/0/4',
                                 'port_description': 'GigabitEthernet1/0/4',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'system_name': 'R5',
                                 'time_remaining': 101,
                                 'capabilities': {
@@ -378,6 +383,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                                 'chassis_id': '843d.c638.b980',
                                 'port_id': 'GigabitEthernet1/0/2',
                                 'port_description': 'GigabitEthernet1/0/2',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'system_name': 'R5',
                                 'time_remaining': 99,
                                 'capabilities': {
@@ -413,6 +419,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                                 'port_id': 'GigabitEthernet1/0/3',
                                 'port_description': 'GigabitEthernet1/0/3',
                                 'system_name': 'R5',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'time_remaining': 94,
                                 'capabilities': {
                                     'mac_bridge': {
@@ -447,6 +454,7 @@ class test_show_lldp_neighbor_detail(unittest.TestCase):
                                 'port_id': 'GigabitEthernet1/0/1',
                                 'port_description': 'GigabitEthernet1/0/1',
                                 'system_name': 'R5',
+                                'system_description': 'Cisco IOS Software, C3750E Software (C3750E-UNIVERSALK9-M), Version 12.2(58)SE2, RELEASE SOFTWARE (fc1)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2011 by Cisco Systems, Inc.\nCompiled Thu 21-Jul-11 01:23 by prod_rel_team',
                                 'time_remaining': 98,
                                 'capabilities': {
                                     'mac_bridge': {

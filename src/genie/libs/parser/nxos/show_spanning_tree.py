@@ -185,10 +185,9 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 
                 if 'txholdcount' in line:
                     domain_dict['hold_count'] = int(m.groupdict()['holdcount_or_maxhops'])
-                    continue
                 elif 'max hops' in line:
                     domain_dict['max_hop'] = int(m.groupdict()['holdcount_or_maxhops'])
-                    continue
+                continue
 
             # Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsistent)str
             m = p5_1.match(line)
@@ -697,9 +696,11 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             #ce Inconsistent, VPC Peer-link Inconsistent)
             m = p9_1.match(line)
             if m:
-                consistency_bool = True if 'inconsistent' in m.groupdict()['bridge_assurance_inconsistent'].lower() else False
+                consistency_bool = True if 'inconsistent' in m.groupdict()\
+                                            ['bridge_assurance_inconsistent'].lower() else False
                 intf_dict['bridge_assurance_inconsistent'] = consistency_bool
-                consistency_bool = True if 'inconsistent' in m.groupdict()['vpc_peer_link_inconsistent'].lower() else False
+                consistency_bool = True if 'inconsistent' in m.groupdict()\
+                                            ['vpc_peer_link_inconsistent'].lower() else False
                 intf_dict['vpc_peer_link_inconsistent'] = consistency_bool
                 continue
 
