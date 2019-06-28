@@ -15,7 +15,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 # Libs
 from genie.libs.parser.utils.common import Common
@@ -336,7 +336,7 @@ class ShowIpEigrpNeighborsDetailSchema(MetaParser):
                         Any(): {
                             'name': str,
                             'named_mode': bool,
-                            'eigrp_interface': {
+                            Optional('eigrp_interface'): {
                                 Any(): {
                                     'eigrp_nbr': {
                                         Any(): {
