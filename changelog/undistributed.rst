@@ -16,4 +16,4 @@
                                 VRF
 --------------------------------------------------------------------------------
 * IOSXR
-    * fixed bug in ShowVrfAll detail only parsing one interfaces
+    * fixed showVrfAll to cover more interfaces
