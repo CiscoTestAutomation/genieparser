@@ -11,3 +11,9 @@
 * NXOS
     * Bugfix for ShowRunningConfigBgp
     * Bugfix for exclude keys in ShowBgpProcessVrfAll
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXR
+    * fixed bug in ShowVrfAll detail only parsing one interfaces
