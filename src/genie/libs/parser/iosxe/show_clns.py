@@ -691,7 +691,9 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
         p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
         # System Id       Interface     State  Type Priority  Circuit Id         Format
         # R7              Gi4           Up     L2   64        R2.01              Phase V
-        p2 = re.compile(r'^(?P<system_id>[\w\.]+)\s+(?P<interface>\S+)\s+(?P<state>\w+)\s+(?P<type>\w+)\s+(?P<priority>\d+)(\/\d+)*\s+(?P<circuit_id>[\w\.]+)\s+(?P<format>[\S\s]+)$')
+        p2 = re.compile(r'^(?P<system_id>[\w\.]+)\s+(?P<interface>\S+)\s+'
+                        '(?P<state>\w+)\s+(?P<type>\w+)\s+(?P<priority>\d+)'
+                        '(\/\d+)*\s+(?P<circuit_id>[\w\.]+)\s+(?P<format>[\S\s]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  10.229.7.7*
