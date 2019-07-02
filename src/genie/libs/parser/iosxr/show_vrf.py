@@ -59,7 +59,6 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
         # Init vars
         vrf_dict = {}
         af_dict = {}
-        intf_conf = False
         rt_type = None
 
         for line in out.splitlines():
@@ -104,16 +103,14 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
             p4 = re.compile(r'^Interfaces:$')
             m = p4.match(line)
             if m:
-                intf_conf = True
                 vrf_dict[vrf]['interfaces'] = []
                 continue
-
-            p4_1 = re.compile(r'^(?P<intf>[\w\s\/\.\-]+)$')
+            #   GigabitEthernet0/0/0/0.390
+            p4_1 = re.compile(r'^(?P<intf>[\w]+\s*[\d\/\.\-]+)$')
             m = p4_1.match(line)
-            if m and intf_conf:
-                intfs = m.groupdict()['intf'].split()
-                vrf_dict[vrf]['interfaces'].extend(intfs)
-                intf_conf = False
+            if m:
+                intf = m.groupdict()['intf']
+                vrf_dict[vrf]['interfaces'].append(intf)
                 continue
 
             # Address family IPV4 Unicast
@@ -196,7 +193,7 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
                 if 'route_policy' not in af_dict:
                     af_dict['route_policy'] = {}
                 af_dict['route_policy']['export'] = m.groupdict()['route_map']
-                continue        
+                continue
 
         return vrf_dict
 

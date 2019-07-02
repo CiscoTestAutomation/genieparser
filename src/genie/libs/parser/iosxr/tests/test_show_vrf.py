@@ -71,7 +71,13 @@ class test_show_vrf_all_detail(unittest.TestCase):
             },
             "route_distinguisher": "200:1",
             "interfaces": [
-                 "GigabitEthernet0/0/0/1"
+                 'GigabitEthernet0/0/0/1',
+                 'GigabitEthernet0/0/0/0.415',
+                 'GigabitEthernet0/0/0/0.420',
+                 'GigabitEthernet0/0/0/1.390',
+                 'GigabitEthernet0/0/0/1.410',
+                 'GigabitEthernet0/0/0/1.415',
+                 'GigabitEthernet0/0/0/1.420'
             ]
             },
         "VRF2": {
@@ -109,6 +115,12 @@ class test_show_vrf_all_detail(unittest.TestCase):
         Description not set
         Interfaces:
           GigabitEthernet0/0/0/1
+          GigabitEthernet0/0/0/0.415
+          GigabitEthernet0/0/0/0.420
+          GigabitEthernet0/0/0/1.390
+          GigabitEthernet0/0/0/1.410
+          GigabitEthernet0/0/0/1.415
+          GigabitEthernet0/0/0/1.420
         Address family IPV4 Unicast
           Import VPN route-target communities:
             RT:200:1
