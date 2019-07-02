@@ -160,18 +160,18 @@ class test_show_mac_address_table(unittest.TestCase):
     '''
     }
 
-    # def test_empty(self):
-    #     self.dev1 = Mock(**self.empty_output)
-    #     obj = ShowMacAddressTable(device=self.dev1)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed_output = obj.parse()
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowMacAddressTable(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
 
-    # def test_golden(self):
-    #     self.maxDiff = None
-    #     self.dev_c3850 = Mock(**self.golden_output)
-    #     obj = ShowMacAddressTable(device=self.dev_c3850)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output)
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output)
+        obj = ShowMacAddressTable(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_mac_address_table_2(unittest.TestCase):

@@ -110,7 +110,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                     drop_dict.update({'entry_type': group['entry_type'].lower()})
                     continue
 
-                for intf in intfs.split(','):
+                for intf in intfs.replace(' ',',').split(','):
                     intf = Common.convert_intf_name(intf)
                     intf_dict = mac_dict.setdefault('interfaces', {}) \
                                         .setdefault(intf, {})
