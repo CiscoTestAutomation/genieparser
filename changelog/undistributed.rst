@@ -57,7 +57,6 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
-    * Updated "system_description" for ShowLldpEntry
 
 --------------------------------------------------------------------------------
                                 interface
@@ -205,3 +204,6 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Added "entry", "learn", and "age" for ShowMacAddressTable
+
+* NXOS
+    * Updated for ShowMacAddressTableBase to fix parsing issue with vPC Peer-Link(R) in Port
