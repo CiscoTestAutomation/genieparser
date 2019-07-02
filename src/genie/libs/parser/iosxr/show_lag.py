@@ -390,8 +390,7 @@ class ShowBundle(ShowBundleSchema):
             m = p11_1.match(line)
             if m:
                 group = m.groupdict()
-                if 'lacp' not in bundle_dict:
-                    lacp_dict = bundle_dict.setdefault('lacp', {})
+                lacp_dict = bundle_dict.setdefault('lacp', {})
                 lacp_dict.update({'flap_suppression_timer': group['flap_suppression_timer']})
                 continue
 

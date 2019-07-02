@@ -2455,7 +2455,7 @@ class ShowProcessesCpuPlatformSchema(MetaParser):
             'cpu_util_five_secs': str,
             'cpu_util_one_min': str,
             'cpu_util_five_min': str,
-            'core': {
+            Optional('core'): {
                 Any(): {
                     'core_cpu_util_five_secs': str,
                     'core_cpu_util_one_min': str,

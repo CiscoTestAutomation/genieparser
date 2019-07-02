@@ -740,7 +740,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                type_dict.update({'area_address': group['area_address'].split()})                    
+                type_dict.update({'area_address': group['area_address'].split()})
                 continue
 
             # IP Address(es):  10.229.7.7*
