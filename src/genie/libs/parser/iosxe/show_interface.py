@@ -1460,7 +1460,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Trunking VLANs Enabled: 200-211
-            # Trunking VLANs Enabled: 100-110,100-120,200
+            # Trunking VLANs Enabled: 100,101,110-120,121,130,170,180,
             p21 =  re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-\,\s]+)$')
             m = p21.match(line)
             if m:
@@ -1468,8 +1468,8 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()
                 continue
 
-            # 100,111,222,300-30,500-55,
-            # 1111,2222,3333
+            # 333-355,366-400,540,601-605,606,607,
+            # 1111,1113,1200-1234,1400-1456,1567
             p21_1 = re.compile(r'^(?P<trunk_vlans>[\d\,\-]+)$')
             m = p21_1.match(line)
             if m:
@@ -2917,15 +2917,4 @@ class ShowInterfacesStats(ShowInterfacesStatsSchema):
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
-                path_dict = result_dict.setdefault(interface, {}).setdefault('switching_path', {})
-                continue
-
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                path = group.pop('path').replace(" ", "_").replace("-", "_").lower()
-                tmp_dict = path_dict.setdefault(path, {})
-                tmp_dict.update({k: int(v) for k, v in group.items()})
-                continue
-
-        return result_dict
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
