@@ -25,6 +25,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpInterfaceBrief short name issue
+    * Fix ShowInterfacesSwitchport
+        changed 'trun_vlan' schema type to support multiple values
 
 ----------------------------------------------------------------------------
                                    OSPF
@@ -36,6 +38,9 @@
     * Updated ShowIpOspfNeighbor for:
         * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
+* NXOS
+    * Fix ShowIpOspf
+        added inserting key to avoid missing key error without duplicate output
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -181,7 +186,7 @@
       show context
     * Added ShowContextDetail for:
       show context detail
-      
+
 --------------------------------------------------------------------------------
                                     BFD
 --------------------------------------------------------------------------------
@@ -198,4 +203,3 @@
     * Added ShowVirtualServiceCore for "show virtual-service core [name {name}]"
     * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
     * Added ShowGuestshell for "show guestshell"
-
