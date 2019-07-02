@@ -301,7 +301,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
               },
               "switchport_mode": "trunk",
               "unknown_multicast_blocked": False,
-              "trunk_vlans": "100-110,100-120,200100,111,222,300-30,500-55,1111,2222,3333",
+              "trunk_vlans": "100-110,100-120,200,100,111,222,300-30,500-55,1111,2222,3333",
               "operational_mode": "down",
               "pruning_vlans": "2-1001",
               "port_channel": {
@@ -425,7 +425,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
         Administrative private-vlan trunk associations: none
         Administrative private-vlan trunk mappings: none
         Operational private-vlan: none
-        Trunking VLANs Enabled: 100-110,100-120,200
+        Trunking VLANs Enabled: 100-110,100-120,200,
                 100,111,222,300-30,500-55,
                 1111,2222,3333
         Pruning VLANs Enabled: 2-1001
