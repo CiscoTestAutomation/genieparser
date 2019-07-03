@@ -650,7 +650,7 @@ class ShowClnsIsNeighborsDetailSchema(MetaParser):
     schema = {
         'tag': {
             Any(): {
-                Optional('system_id'): {
+                'system_id': {
                     Any(): {
                        'type': {
                            Any(): {

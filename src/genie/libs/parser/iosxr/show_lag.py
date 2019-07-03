@@ -89,7 +89,7 @@ class ShowBundleSchema(MetaParser):
                     Optional('locality_threshold'): str,
                 },
                 'lacp': {
-                    Optional('lacp'): str,
+                    'lacp': str,
                     Optional('flap_suppression_timer'): str,
                     Optional('cisco_extensions'): str,
                     Optional('non_revertive'): str,
