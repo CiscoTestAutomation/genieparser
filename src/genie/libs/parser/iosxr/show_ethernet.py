@@ -38,7 +38,7 @@ class ShowEthernetCfmMeps(MetaParser):
     """Parser for show ethernet cfm peer meps"""
     # TODO schema
 
-    def __init__(self, **kwargs):
+    def __init__(self,**kwargs):
         super().__init__(**kwargs)
 
     cli_command = 'show ethernet cfm peer meps'

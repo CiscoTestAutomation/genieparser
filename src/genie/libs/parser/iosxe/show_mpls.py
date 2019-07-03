@@ -669,9 +669,6 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #   [None]
         p18 = re.compile(r'^\[None\]$')
 
-        if type(out) == dict:
-            for value in out.values():
-                out = value
         for line in out.splitlines():
             line = line.strip()
             # Peer LDP Ident: 10.169.197.252:0; Local LDP Ident 10.169.197.254:0
