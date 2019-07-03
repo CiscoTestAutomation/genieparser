@@ -181,7 +181,7 @@
       show context
     * Added ShowContextDetail for:
       show context detail
-      
+
 --------------------------------------------------------------------------------
                                     BFD
 --------------------------------------------------------------------------------
@@ -199,3 +199,8 @@
     * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
     * Added ShowGuestshell for "show guestshell"
 
+--------------------------------------------------------------------------------
+                              vpc
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVpc for "show vpc"
