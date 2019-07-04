@@ -96,7 +96,13 @@ class test_show_mac_address_table(unittest.TestCase):
                                           "entry": "*",
                                           "interface": "GigabitEthernet1/0/9",
                                           "entry_type": "static"
+                                      },
+                                       'Vlan101': {
+                                          "entry": "*",
+                                          "interface": "Vlan101",
+                                          "entry_type": "static"
                                       }
+                                    
                                 },
                                 "mac_address": "aaaa.bbbb.cccc"
                             }
@@ -156,6 +162,7 @@ class test_show_mac_address_table(unittest.TestCase):
          101    3820.5672.fc41    DYNAMIC     Po12
          101    58bf.eab6.2f41    STATIC      Vl101
          * 10    aaaa.bbbb.cccc    STATIC      Gi1/0/8 Gi1/0/9
+                                              Vl101
         Total Mac Addresses for this criterion: 10
     '''
     }
@@ -401,6 +408,13 @@ class test_show_mac_address_table_2(unittest.TestCase):
         obj = ShowMacAddressTable(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    # def test_golden_2(self):
+    #     self.maxDiff = None
+    #     self.dev_c3850 = Mock(**self.golden_output)
+    #     obj = ShowMacAddressTable(device=self.dev_c3850)
+    #     parsed_output = obj.parse()
+    #     self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_mac_address_table_aging_time(unittest.TestCase):

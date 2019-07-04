@@ -70,10 +70,11 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
         
         # initial regexp pattern
         p1 = re.compile(r'^Total +Mac +Addresses +for +this +criterion: +(?P<val>\d+)$')
-        p2 = re.compile(r'^(?P<entry>\*)?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) '
-            '+(?P<learn>\w+)? +(?P<age>[\d-]+)? +(?P<intfs>[\S\s]+)$')
+        p2 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) +(?P<intfs>\S+|[^\s]+\s[^\s]+)$')
         p3 = re.compile(r'^(?P<intfs>[\w\/\,]+)$')
-
+        p4 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) +(?P<learn>\w+) +(?P<age>[\d-]+) +(?P<intfs>[\w\/\,]+)$')
+        p5 = re.compile(r'^(?P<entry>\*)?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) '
+            '+(?P<learn>\w+)? +(?P<age>[\d-]+)? +(?P<intfs>[\S\s]+)$')
         for line in out.splitlines():
             line = line.strip()
 
@@ -113,18 +114,9 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                     intf_dict.update({'interface': intf})
                     entry_type = group['entry_type'].lower()
                     intf_dict.update({'entry_type': entry_type})
-                    if group['entry'] == '*':
-                        entry = '*'
+                    if group['entry']:
+                        entry = group['entry'].strip()
                         intf_dict.update({'entry': entry})
-                    if group['learn']:
-                        learn = group['learn']
-                        intf_dict.update({'learn': learn})
-                    if group['age']:
-                        if group['age'].isdigit():
-                            age = int(group['age'])
-                            intf_dict.update({'age': age})
-                        else:
-                            age = None
                 continue
 
             # Gi1/9,Gi1/10,Gi1/11,Gi1/12
@@ -152,6 +144,48 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                         intf_dict.update({'learn': learn})
                     if age:
                         intf_dict.update({'age': age})
+                continue
+
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                mac = group['mac']
+                vlan = int(group['vlan']) if re.search('\d+', group['vlan']) \
+                                          else group['vlan'].lower()
+                intfs = group['intfs'].strip()
+                vlan_dict = ret_dict.setdefault('mac_table', {}) \
+                .setdefault('vlans', {}).setdefault(str(vlan), {})
+                vlan_dict['vlan'] = vlan
+                mac_dict = vlan_dict.setdefault('mac_addresses', {}) \
+                                    .setdefault(mac, {})
+                mac_dict.update({'mac_address': mac})
+
+                if 'drop' in intfs.lower():
+                    drop_dict = mac_dict.setdefault('drop', {})
+                    drop_dict.update({'drop': True})
+                    drop_dict.update({'entry_type': group['entry_type'].lower()})
+                    continue
+
+                for intf in intfs.replace(' ',',').split(','):
+                    intf = Common.convert_intf_name(intf)
+                    intf_dict = mac_dict.setdefault('interfaces', {}) \
+                                        .setdefault(intf, {})
+                    intf_dict.update({'interface': intf})
+                    entry_type = group['entry_type'].lower()
+                    intf_dict.update({'entry_type': entry_type})
+                    if group['entry']:
+                        entry = group['entry'].strip()
+                        intf_dict.update({'entry': entry})
+                    if group['learn']:
+                        learn = group['learn']
+                        intf_dict.update({'learn': learn})
+                    if group['age']:
+                        if group['age'].isdigit():
+                            age = int(group['age'])
+                            intf_dict.update({'age': age})
+                        else:
+                            age = None
                 continue
 
         return ret_dict
