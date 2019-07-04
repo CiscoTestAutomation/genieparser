@@ -38,6 +38,9 @@
     * Updated ShowIpOspfNeighbor for:
         * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
+* NXOS
+    * Fix ShowIpOspf
+        added inserting key to avoid missing key error without duplicate output
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------

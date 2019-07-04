@@ -285,6 +285,8 @@ class ShowIpOspf(ShowIpOspfSchema):
 
                 # router_id
                 sub_dict['router_id'] = m.groupdict()['router_id']
+                # instance
+                sub_dict['instance'] = int(m.groupdict()['instance'])
 
                 # initial 
                 gr_enable = None
