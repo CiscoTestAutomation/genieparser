@@ -204,7 +204,6 @@
     * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
     * Added ShowGuestshell for "show guestshell"
 
-
 --------------------------------------------------------------------------------
                               vpc
 --------------------------------------------------------------------------------
