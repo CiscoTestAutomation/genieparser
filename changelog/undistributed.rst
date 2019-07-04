@@ -25,6 +25,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpInterfaceBrief short name issue
+    * Fix ShowInterfacesSwitchport
+        changed 'trun_vlan' schema type to support multiple values
 
 ----------------------------------------------------------------------------
                                    OSPF
@@ -36,6 +38,9 @@
     * Updated ShowIpOspfNeighbor for:
         * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
+* NXOS
+    * Fix ShowIpOspf
+        added inserting key to avoid missing key error without duplicate output
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
