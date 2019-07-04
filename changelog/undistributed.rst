@@ -25,6 +25,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpInterfaceBrief short name issue
+    * Fix ShowInterfacesSwitchport
+        changed 'trun_vlan' schema type to support multiple values
 
 ----------------------------------------------------------------------------
                                    OSPF
@@ -181,7 +183,7 @@
       show context
     * Added ShowContextDetail for:
       show context detail
-      
+
 --------------------------------------------------------------------------------
                                     BFD
 --------------------------------------------------------------------------------
@@ -198,4 +200,3 @@
     * Added ShowVirtualServiceCore for "show virtual-service core [name {name}]"
     * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
     * Added ShowGuestshell for "show guestshell"
-
