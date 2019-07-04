@@ -70,9 +70,8 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
         
         # initial regexp pattern
         p1 = re.compile(r'^Total +Mac +Addresses +for +this +criterion: +(?P<val>\d+)$')
-        p2 = re.compile(r'^(?P<entry>\*)?\s*?(?P<vlan>\S+) +(?P<mac>\S+\.\S+\.\S+) +'
-            '(?P<entry_type>\S+) +(?P<learn>\w+)? +(?P<age>[\d\-]+)? +'
-            '(?P<intfs>[\S\s]+)$')
+        p2 = re.compile(r'^(?P<entry>\*)?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) '
+            '+(?P<learn>\w+)? +(?P<age>[\d-]+)? +(?P<intfs>[\S\s]+)$')
         p3 = re.compile(r'^(?P<intfs>[\w\/\,]+)$')
 
         for line in out.splitlines():
@@ -87,9 +86,6 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
             # 10    aaaa.bbbb.cccc    STATIC      Gi1/0/8 Gi1/0/9
             # 20    aaaa.bbbb.cccc    STATIC      Drop
             # All    0100.0ccc.cccd    STATIC      CPU
-            # *  100  11aa.22bb.33cc    static  No           -   Router
-            # *  101  44dd.ee55.ff66   dynamic  Yes         10   Gi1/40
-            # *  102  aa11.bb22.cc33    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
             m = p2.match(line)
             if m:
                 group = m.groupdict()

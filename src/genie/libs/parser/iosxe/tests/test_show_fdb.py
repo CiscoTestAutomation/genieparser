@@ -88,14 +88,14 @@ class test_show_mac_address_table(unittest.TestCase):
                             "aaaa.bbbb.cccc": {
                                 "interfaces": {
                                       "GigabitEthernet1/0/8": {
+                                          "entry": "*",
                                           "interface": "GigabitEthernet1/0/8",
-                                          "entry_type": "static",
-                                          "entry": "*"
+                                          "entry_type": "static"
                                       },
                                       "GigabitEthernet1/0/9": {
+                                          "entry": "*",
                                           "interface": "GigabitEthernet1/0/9",
-                                          "entry_type": "static",
-                                          "entry": "*"
+                                          "entry_type": "static"
                                       }
                                 },
                                 "mac_address": "aaaa.bbbb.cccc"
