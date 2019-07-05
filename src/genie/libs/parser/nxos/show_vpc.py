@@ -11,6 +11,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
+# import parser utils
+from genie.libs.parser.utils.common import Common
+
 
 # ========================================
 # Schema for "show vpc"
@@ -21,38 +24,38 @@ class ShowVpcSchema(MetaParser):
 
     schema = {
         'vpc_domain_id': int,
-        'vpc-peer-status': str,
-        'vpc-peer-keepalive-status': str,
-        'vpc-configuration-consistency-status': str,
-        Optional('vpc-configuration-consistency-reason'): str,
-        Optional('vpc-per-vlan-consistency-status'): str,        
-        Optional('vpc-type-2-consistency-status'): str,
-        Optional('vpc-role'): str,
-        'num-of-vpcs': int,
-        Optional('peer-gateway'): str,
-        Optional('dual-active-excluded-vlans'): str,
-        Optional('vpc-graceful-consistency-check-status'): str,
-        Optional('vpc-auto-recovery-status'): str,
-        Optional('vpc-delay-restore-status'): str,
-        Optional('vpc-delay-restore-svi-status'): str,
-        Optional('operational-l3-peer-router'): str,
-        Optional('track-object'): int,
-        Optional('peer-link'): {
+        'vpc_peer_status': str,
+        'vpc_peer_keepalive_status': str,
+        'vpc_configuration_consistency_status': str,
+        Optional('vpc_configuration_consistency_reason'): str,
+        Optional('vpc_per_vlan_consistency_status'): str,        
+        Optional('vpc_type_2_consistency_status'): str,
+        Optional('vpc_role'): str,
+        'num_of_vpcs': int,
+        Optional('peer_gateway'): str,
+        Optional('dual_active_excluded_vlans'): str,
+        Optional('vpc_graceful_consistency_check_status'): str,
+        Optional('vpc_auto_recovery_status'): str,
+        Optional('vpc_delay_restore_status'): str,
+        Optional('vpc_delay_restore_svi_status'): str,
+        Optional('operational_l3_peer_router'): str,
+        Optional('track_object'): int,
+        Optional('peer_link'): {
             Any(): {
-                'peer-link-id': int,
-                'peer-link-ifindex': str,
-                'peer-link-port-state': str,
-                'peer-up-vlan-bitset': str
+                'peer_link_id': int,
+                'peer_link_ifindex': str,
+                'peer_link_port_state': str,
+                'peer_up_vlan_bitset': str
             }
         },
         Optional('vpc'): {
             Any(): {
-                'vpc-id': int,
-                'vpc-ifindex': str,
-                'vpc-port-state': str,
-                'vpc-consistency': str,
-                'vpc-consistency-status': str,
-                'up-vlan-bitset': str
+                'vpc_id': int,
+                'vpc_ifindex': str,
+                'vpc_port_state': str,
+                'vpc_consistency': str,
+                'vpc_consistency_status': str,
+                'up_vlan_bitset': str
             }
         }
     }
@@ -168,14 +171,14 @@ class ShowVpc(ShowVpcSchema):
             match = p2.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'vpc-peer-status': group['peer_status']})
+                ret_dict.update({'vpc_peer_status': group['peer_status']})
                 continue
 
             # vPC keep-alive status             : peer is alive 
             match = p3.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'vpc-peer-keepalive-status': group['keepalive_status']})
+                ret_dict.update({'vpc_peer_keepalive_status': group['keepalive_status']})
                 continue
 
             # Configuration consistency status  : success
@@ -184,7 +187,7 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'vpc-configuration-consistency-status': group['config_status']})
+                .update({'vpc_configuration_consistency_status': group['config_status']})
                 continue
 
             # Configuration consistency reason: vPC type-1 configuration incompatible - STP interface port type inconsistent
@@ -192,7 +195,7 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'vpc-configuration-consistency-reason': group['config_status_reason']})
+                .update({'vpc_configuration_consistency_reason': group['config_status_reason']})
                 continue
 
             # Per-vlan consistency status       : success 
@@ -200,7 +203,7 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'vpc-per-vlan-consistency-status': group['per_vlan_status']})
+                .update({'vpc_per_vlan_consistency_status': group['per_vlan_status']})
                 continue
 
             # Type-2 consistency status         : success 
@@ -208,28 +211,28 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'vpc-type-2-consistency-status': group['type_2_status']})
+                .update({'vpc_type_2_consistency_status': group['type_2_status']})
                 continue
 
             # vPC role                          : primary
             match = p8.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'vpc-role': group['vpc_role']})
+                ret_dict.update({'vpc_role': group['vpc_role']})
                 continue
 
             # Number of vPCs configured         : 1 
             match = p9.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'num-of-vpcs': int(group['num_of_vpc'])})
+                ret_dict.update({'num_of_vpcs': int(group['num_of_vpc'])})
                 continue
 
             # Peer Gateway                      : Enabled
             match = p10.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'peer-gateway': group['peer_gateway']})
+                ret_dict.update({'peer_gateway': group['peer_gateway']})
                 continue
 
             # Dual-active excluded VLANs        : -   
@@ -237,7 +240,7 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'dual-active-excluded-vlans': group['dual_active_excluded_vlan']})
+                .update({'dual_active_excluded_vlans': group['dual_active_excluded_vlan']})
                 continue
 
             # Graceful Consistency Check        : Enabled
@@ -245,21 +248,21 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'vpc-graceful-consistency-check-status': group['graceful_check']})
+                .update({'vpc_graceful_consistency_check_status': group['graceful_check']})
                 continue
 
             # Auto-recovery status              : Enabled, timer is off.(timeout = 240s)
             match = p13.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'vpc-auto-recovery-status': group['auto_recovery_status']})
+                ret_dict.update({'vpc_auto_recovery_status': group['auto_recovery_status']})
                 continue
 
             # Delay-restore status              : Timer is off.(timeout = 30s)
             match = p14.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'vpc-delay-restore-status': group['delay_recovery_status']})
+                ret_dict.update({'vpc_delay_restore_status': group['delay_recovery_status']})
                 continue
 
             # Delay-restore SVI status          : Timer is off.(timeout = 10s)
@@ -267,21 +270,21 @@ class ShowVpc(ShowVpcSchema):
             if match:
                 group = match.groupdict()
                 ret_dict \
-                .update({'vpc-delay-restore-svi-status': group['delay_svi_recovery_status']})
+                .update({'vpc_delay_restore_svi_status': group['delay_svi_recovery_status']})
                 continue
 
             # Operational Layer3 Peer-router    : Disabled
             match = p16.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'operational-l3-peer-router': group['layer3_peer_router']})
+                ret_dict.update({'operational_l3_peer_router': group['layer3_peer_router']})
                 continue
 
             # Track object : 12
             match = p17.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'track-object': int(group['track_object'])})
+                ret_dict.update({'track_object': int(group['track_object'])})
                 continue            
 
             # 1     Po101  up     1,100-102,200-202
@@ -292,13 +295,14 @@ class ShowVpc(ShowVpcSchema):
                 vpc_dict = {}
                 peer_link_id = int(group['peer_link_id'])
                 peer_up_vlan_bitset = group['peer_up_vlan_bitset']
-                peer_link_dict = ret_dict.setdefault('peer-link', {}) \
+                peer_link_dict = ret_dict.setdefault('peer_link', {}) \
                                             .setdefault(peer_link_id, {})
-                peer_link_dict.update({'peer-link-id': peer_link_id})
-                peer_link_dict.update({'peer-link-ifindex': group['peer_link_ifindex']})
+                peer_link_dict.update({'peer_link_id': peer_link_id})
+                peer_link_ifindex = Common.convert_intf_name(group['peer_link_ifindex'])
+                peer_link_dict.update({'peer_link_ifindex': peer_link_ifindex})
                 peer_link_dict \
-                .update({'peer-link-port-state': group['peer_link_port_state']})
-                peer_link_dict.update({'peer-up-vlan-bitset': peer_up_vlan_bitset})
+                .update({'peer_link_port_state': group['peer_link_port_state']})
+                peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})
                 continue
 
             # 1     Po1           up     success     success               1,100-102,200-
@@ -310,13 +314,14 @@ class ShowVpc(ShowVpcSchema):
                 vpc_id = int(group['vpc_id'])
                 up_vlan_bitset = group['up_vlan_bitset']
                 vpc_dict = ret_dict.setdefault('vpc', {}).setdefault(vpc_id, {})
-                vpc_dict.update({'vpc-id': vpc_id})
-                vpc_dict.update({'vpc-ifindex': group['vpc_ifindex']})
-                vpc_dict.update({'vpc-port-state': group['vpc_port_state']})
-                vpc_dict.update({'vpc-consistency': group['vpc_consistency']})
+                vpc_dict.update({'vpc_id': vpc_id})
+                vpc_ifindex = Common.convert_intf_name(group['vpc_ifindex'])
+                vpc_dict.update({'vpc_ifindex': vpc_ifindex})
+                vpc_dict.update({'vpc_port_state': group['vpc_port_state']})
+                vpc_dict.update({'vpc_consistency': group['vpc_consistency']})
                 vpc_dict. \
-                update({'vpc-consistency-status': group['vpc_consistency_status'].strip()})
-                vpc_dict.update({'up-vlan-bitset': up_vlan_bitset})
+                update({'vpc_consistency_status': group['vpc_consistency_status'].strip()})
+                vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
                 continue
 
             # 200
@@ -326,10 +331,10 @@ class ShowVpc(ShowVpcSchema):
                 group = match.groupdict()
                 if vpc_dict == {}:
                     peer_up_vlan_bitset += group['additional_vlan']
-                    peer_link_dict.update({'peer-up-vlan-bitset': peer_up_vlan_bitset})                    
+                    peer_link_dict.update({'peer_up_vlan_bitset': peer_up_vlan_bitset})                    
                 else:
                     up_vlan_bitset += group['additional_vlan']
-                    vpc_dict.update({'up-vlan-bitset': up_vlan_bitset})
+                    vpc_dict.update({'up_vlan_bitset': up_vlan_bitset})
                 continue
 
         return ret_dict

@@ -23,36 +23,36 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_parsed_output = {
 		'vpc_domain_id': 1,
-        'vpc-peer-status': 'peer adjacency formed ok',
-        'vpc-peer-keepalive-status': 'peer is alive',
-        'vpc-configuration-consistency-status': 'success',
-        'vpc-per-vlan-consistency-status': 'success',
-        'vpc-type-2-consistency-status': 'success',
-        'vpc-role': 'primary',
-        'num-of-vpcs': 1,
-        'peer-gateway': 'Enabled',
-        'dual-active-excluded-vlans': '-',
-        'vpc-graceful-consistency-check-status': 'Enabled',
-        'vpc-auto-recovery-status': 'Enabled, timer is off.(timeout = 240s)',
-        'vpc-delay-restore-status': 'Timer is off.(timeout = 30s)',
-        'vpc-delay-restore-svi-status': 'Timer is off.(timeout = 10s)',
-        'operational-l3-peer-router': 'Disabled',
-        'peer-link': {
+        'vpc_peer_status': 'peer adjacency formed ok',
+        'vpc_peer_keepalive_status': 'peer is alive',
+        'vpc_configuration_consistency_status': 'success',
+        'vpc_per_vlan_consistency_status': 'success',
+        'vpc_type_2_consistency_status': 'success',
+        'vpc_role': 'primary',
+        'num_of_vpcs': 1,
+        'peer_gateway': 'Enabled',
+        'dual_active_excluded_vlans': '-',
+        'vpc_graceful_consistency_check_status': 'Enabled',
+        'vpc_auto_recovery_status': 'Enabled, timer is off.(timeout = 240s)',
+        'vpc_delay_restore_status': 'Timer is off.(timeout = 30s)',
+        'vpc_delay_restore_svi_status': 'Timer is off.(timeout = 10s)',
+        'operational_l3_peer_router': 'Disabled',
+        'peer_link': {
             1: {
-                'peer-link-id': 1,
-                'peer-link-ifindex': 'Po101',
-                'peer-link-port-state': 'up',
-                'peer-up-vlan-bitset': '1,100-102,200-202,300-350'
+                'peer_link_id': 1,
+                'peer_link_ifindex': 'Port-channel101',
+                'peer_link_port_state': 'up',
+                'peer_up_vlan_bitset': '1,100-102,200-202,300-350'
             }
         },
         'vpc': {
             1: {
-            	'vpc-id': 1,
-                'vpc-ifindex': 'Po1',
-                'vpc-port-state': 'up',
-                'vpc-consistency': 'success',
-                'vpc-consistency-status': 'success',
-                'up-vlan-bitset': '1,100-102,200-202'
+            	'vpc_id': 1,
+                'vpc_ifindex': 'Port-channel1',
+                'vpc_port_state': 'up',
+                'vpc_consistency': 'success',
+                'vpc_consistency_status': 'success',
+                'up_vlan_bitset': '1,100-102,200-202'
             }
         }
 	}
@@ -60,7 +60,7 @@ class test_show_vpc(unittest.TestCase):
 	golden_output = {'execute.return_value': '''
 		R2# show vpc
 		Legend:
-		                (*) - local vPC is down, forwarding via vPC peer-link
+		                (*) - local vPC is down, forwarding via vPC peer_link
 
 		vPC domain id                     : 1   
 		Peer status                       : peer adjacency formed ok      
@@ -78,7 +78,7 @@ class test_show_vpc(unittest.TestCase):
 		Delay-restore SVI status          : Timer is off.(timeout = 10s)
 		Operational Layer3 Peer-router    : Disabled
 
-		vPC Peer-link status
+		vPC peer_link status
 		---------------------------------------------------------------------
 		id    Port   Status Active vlans    
 		--    ----   ------ -------------------------------------------------
@@ -102,27 +102,27 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_parsed_output_2 = {
 		'vpc_domain_id': 10,
-        'vpc-peer-status': 'peer adjacency formed ok',
-        'vpc-peer-keepalive-status': 'peer is alive',
-        'vpc-configuration-consistency-status': 'success',
-        'vpc-role': 'primary',
-        'num-of-vpcs': 1,
-        'peer-link': {
+        'vpc_peer_status': 'peer adjacency formed ok',
+        'vpc_peer_keepalive_status': 'peer is alive',
+        'vpc_configuration_consistency_status': 'success',
+        'vpc_role': 'primary',
+        'num_of_vpcs': 1,
+        'peer_link': {
             1: {
-                'peer-link-id': 1,
-                'peer-link-ifindex': 'Po10',
-                'peer-link-port-state': 'up',
-                'peer-up-vlan-bitset': '1-100'
+                'peer_link_id': 1,
+                'peer_link_ifindex': 'Port-channel10',
+                'peer_link_port_state': 'up',
+                'peer_up_vlan_bitset': '1-100'
             }
         },
         'vpc': {
             20: {
-            	'vpc-id': 20,
-                'vpc-ifindex': 'Po20',
-                'vpc-port-state': 'up',
-                'vpc-consistency': 'success',
-                'vpc-consistency-status': 'success',
-                'up-vlan-bitset': '1-100'
+            	'vpc_id': 20,
+                'vpc_ifindex': 'Port-channel20',
+                'vpc_port_state': 'up',
+                'vpc_consistency': 'success',
+                'vpc_consistency_status': 'success',
+                'up_vlan_bitset': '1-100'
             }
         }
 	}
@@ -130,7 +130,7 @@ class test_show_vpc(unittest.TestCase):
 	golden_output_2 = {'execute.return_value': '''
 		R2# show vpc
 		Legend:
-		(*) - local vpc is down, forwarding via vPC peer-link
+		(*) - local vpc is down, forwarding via vPC peer_link
 		 
 		vPC domain id : 10
 		Peer status : peer adjacency formed ok
@@ -139,7 +139,7 @@ class test_show_vpc(unittest.TestCase):
 		vPC role : primary
 		Number of vPC configured : 1
 		 
-		vPC Peer-link status
+		vPC peer_link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
@@ -155,35 +155,35 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_parsed_output_3 = {
 		'vpc_domain_id': 10,
-        'vpc-peer-status': 'peer adjacency formed ok',
-        'vpc-peer-keepalive-status': 'peer is alive',
-        'vpc-configuration-consistency-status': 'failed',
-        'vpc-configuration-consistency-reason': 'vPC type-1 configuration incompatible - STP interface port type inconsistent',
-        'vpc-role': 'secondary',
-        'num-of-vpcs': 1,
-        'peer-link': {
+        'vpc_peer_status': 'peer adjacency formed ok',
+        'vpc_peer_keepalive_status': 'peer is alive',
+        'vpc_configuration_consistency_status': 'failed',
+        'vpc_configuration_consistency_reason': 'vPC type-1 configuration incompatible - STP interface port type inconsistent',
+        'vpc_role': 'secondary',
+        'num_of_vpcs': 1,
+        'peer_link': {
             1: {
-                'peer-link-id': 1,
-                'peer-link-ifindex': 'Po10',
-                'peer-link-port-state': 'up',
-                'peer-up-vlan-bitset': '1-100'
+                'peer_link_id': 1,
+                'peer_link_ifindex': 'Port-channel10',
+                'peer_link_port_state': 'up',
+                'peer_up_vlan_bitset': '1-100'
             }
         },
         'vpc': {
             20: {
-            	'vpc-id': 20,
-                'vpc-ifindex': 'Po20',
-                'vpc-port-state': 'up',
-                'vpc-consistency': 'failed',
-                'vpc-consistency-status': 'vPC type-1 configuration',
-                'up-vlan-bitset': '-'
+            	'vpc_id': 20,
+                'vpc_ifindex': 'Port-channel20',
+                'vpc_port_state': 'up',
+                'vpc_consistency': 'failed',
+                'vpc_consistency_status': 'vPC type-1 configuration',
+                'up_vlan_bitset': '-'
             }
         }
 	}
 
 	golden_output_3 = {'execute.return_value': '''
 		Legend:
-		(*) - local vpc is down, forwarding via vPC peer-link
+		(*) - local vpc is down, forwarding via vPC peer_link
 
 		vPC domain id : 10
 		Peer status : peer adjacency formed ok
@@ -193,7 +193,7 @@ class test_show_vpc(unittest.TestCase):
 		vPC role : secondary
 		Number of vPC configured : 1
 
-		vPC Peer-link status
+		vPC peer_link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
@@ -212,25 +212,25 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_parsed_output_4 = {
 		'vpc_domain_id': 1,
-        'vpc-peer-status': 'peer adjacency formed ok',
-        'vpc-peer-keepalive-status': 'peer is alive',
-        'vpc-configuration-consistency-status': 'success',
-        'vpc-role': 'secondary',
-        'num-of-vpcs': 3,
-        'track-object': 12,
-        'peer-link': {
+        'vpc_peer_status': 'peer adjacency formed ok',
+        'vpc_peer_keepalive_status': 'peer is alive',
+        'vpc_configuration_consistency_status': 'success',
+        'vpc_role': 'secondary',
+        'num_of_vpcs': 3,
+        'track_object': 12,
+        'peer_link': {
             1: {
-                'peer-link-id': 1,
-                'peer-link-ifindex': 'Po10',
-                'peer-link-port-state': 'up',
-                'peer-up-vlan-bitset': '1-100'
+                'peer_link_id': 1,
+                'peer_link_ifindex': 'Port-channel10',
+                'peer_link_port_state': 'up',
+                'peer_up_vlan_bitset': '1-100'
             }
         }
 	}
 
 	golden_output_4 = {'execute.return_value': '''
 		Legend:
-		(*) - local vpc is down, forwarding via vPC peer-link
+		(*) - local vpc is down, forwarding via vPC peer_link
 		 
 		vPC domain id : 1
 		Peer status : peer adjacency formed ok
@@ -241,7 +241,7 @@ class test_show_vpc(unittest.TestCase):
 		Track object : 12
 		 
 		 
-		vPC Peer-link status
+		vPC peer_link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
@@ -251,39 +251,39 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_parsed_output_5 = {
 		'vpc_domain_id': 100,
-        'vpc-peer-status': 'peer link is down',
-        'vpc-peer-keepalive-status': 'peer is alive, but domain IDs do not match',
-        'vpc-configuration-consistency-status': 'success',
-        'vpc-per-vlan-consistency-status': 'success',
-        'vpc-type-2-consistency-status': 'success',
-        'vpc-role': 'primary',
-        'num-of-vpcs': 1,
-        'peer-gateway': 'Disabled',
-        'dual-active-excluded-vlans': '-',
-        'vpc-graceful-consistency-check-status': 'Enabled',
-        'peer-link': {
+        'vpc_peer_status': 'peer link is down',
+        'vpc_peer_keepalive_status': 'peer is alive, but domain IDs do not match',
+        'vpc_configuration_consistency_status': 'success',
+        'vpc_per_vlan_consistency_status': 'success',
+        'vpc_type_2_consistency_status': 'success',
+        'vpc_role': 'primary',
+        'num_of_vpcs': 1,
+        'peer_gateway': 'Disabled',
+        'dual_active_excluded_vlans': '-',
+        'vpc_graceful_consistency_check_status': 'Enabled',
+        'peer_link': {
             1: {
-                'peer-link-id': 1,
-                'peer-link-ifindex': 'Po100',
-                'peer-link-port-state': 'down',
-                'peer-up-vlan-bitset': '-'
+                'peer_link_id': 1,
+                'peer_link_ifindex': 'Port-channel100',
+                'peer_link_port_state': 'down',
+                'peer_up_vlan_bitset': '-'
             }
         },
         'vpc': {
             1: {
-            	'vpc-id': 1,
-                'vpc-ifindex': 'Po1',
-                'vpc-port-state': 'down',
-                'vpc-consistency': 'success',
-                'vpc-consistency-status': 'success',
-                'up-vlan-bitset': '-'
+            	'vpc_id': 1,
+                'vpc_ifindex': 'Port-channel1',
+                'vpc_port_state': 'down',
+                'vpc_consistency': 'success',
+                'vpc_consistency_status': 'success',
+                'up_vlan_bitset': '-'
             }
         }
 	}
 
 	golden_output_5 = {'execute.return_value': '''
 		Legend:
-		(*) - local vPC is down, forwarding via vPC peer-link
+		(*) - local vPC is down, forwarding via vPC peer_link
 		 
 		vPC domain id : 100
 		Peer status : peer link is down
@@ -297,7 +297,7 @@ class test_show_vpc(unittest.TestCase):
 		Dual-active excluded VLANs : -
 		Graceful Consistency Check : Enabled
 		 
-		vPC Peer-link status
+		vPC peer_link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
