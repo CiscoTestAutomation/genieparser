@@ -117,6 +117,7 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+    * added restricted list for ShowBgpAll
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
@@ -125,9 +126,6 @@
         to support custom vrf, address_family and neighbor
 
 * Optimized parser by moving all regex outside of for loop
-
-* IOSXE
-    * added restricted list for ShowBgpAll
 
 --------------------------------------------------------------------------------
                                 protocols
