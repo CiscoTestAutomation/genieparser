@@ -117,6 +117,7 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+    * added restricted list for ShowBgpAll
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
