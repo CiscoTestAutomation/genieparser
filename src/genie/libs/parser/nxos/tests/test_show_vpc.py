@@ -60,7 +60,7 @@ class test_show_vpc(unittest.TestCase):
 	golden_output = {'execute.return_value': '''
 		R2# show vpc
 		Legend:
-		                (*) - local vPC is down, forwarding via vPC peer_link
+		                (*) - local vPC is down, forwarding via vPC peer-link
 
 		vPC domain id                     : 1   
 		Peer status                       : peer adjacency formed ok      
@@ -78,7 +78,7 @@ class test_show_vpc(unittest.TestCase):
 		Delay-restore SVI status          : Timer is off.(timeout = 10s)
 		Operational Layer3 Peer-router    : Disabled
 
-		vPC peer_link status
+		vPC peer-link status
 		---------------------------------------------------------------------
 		id    Port   Status Active vlans    
 		--    ----   ------ -------------------------------------------------
@@ -130,7 +130,7 @@ class test_show_vpc(unittest.TestCase):
 	golden_output_2 = {'execute.return_value': '''
 		R2# show vpc
 		Legend:
-		(*) - local vpc is down, forwarding via vPC peer_link
+		(*) - local vpc is down, forwarding via vPC peer-link
 		 
 		vPC domain id : 10
 		Peer status : peer adjacency formed ok
@@ -139,7 +139,7 @@ class test_show_vpc(unittest.TestCase):
 		vPC role : primary
 		Number of vPC configured : 1
 		 
-		vPC peer_link status
+		vPC peer-link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
@@ -183,7 +183,7 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_output_3 = {'execute.return_value': '''
 		Legend:
-		(*) - local vpc is down, forwarding via vPC peer_link
+		(*) - local vpc is down, forwarding via vPC peer-link
 
 		vPC domain id : 10
 		Peer status : peer adjacency formed ok
@@ -193,7 +193,7 @@ class test_show_vpc(unittest.TestCase):
 		vPC role : secondary
 		Number of vPC configured : 1
 
-		vPC peer_link status
+		vPC peer-link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
@@ -230,7 +230,7 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_output_4 = {'execute.return_value': '''
 		Legend:
-		(*) - local vpc is down, forwarding via vPC peer_link
+		(*) - local vpc is down, forwarding via vPC peer-link
 		 
 		vPC domain id : 1
 		Peer status : peer adjacency formed ok
@@ -241,7 +241,7 @@ class test_show_vpc(unittest.TestCase):
 		Track object : 12
 		 
 		 
-		vPC peer_link status
+		vPC peer-link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
@@ -283,7 +283,7 @@ class test_show_vpc(unittest.TestCase):
 
 	golden_output_5 = {'execute.return_value': '''
 		Legend:
-		(*) - local vPC is down, forwarding via vPC peer_link
+		(*) - local vPC is down, forwarding via vPC peer-link
 		 
 		vPC domain id : 100
 		Peer status : peer link is down
@@ -297,7 +297,7 @@ class test_show_vpc(unittest.TestCase):
 		Dual-active excluded VLANs : -
 		Graceful Consistency Check : Enabled
 		 
-		vPC peer_link status
+		vPC peer-link status
 		---------------------------------------------------------------------
 		id Port Status Active vlans
 		-- ---- ------ --------------------------------------------------
