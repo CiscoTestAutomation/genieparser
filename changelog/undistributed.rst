@@ -210,3 +210,12 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Added ShowVpc for "show vpc"
+
+--------------------------------------------------------------------------------
+                                fdb
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added "entry", "learn", and "age" for ShowMacAddressTable to handle additional columns
+
+* NXOS
+    * Updated for ShowMacAddressTableBase to fix parsing issue with vPC Peer-Link(R) in 'ports' and regEx for 'age'
