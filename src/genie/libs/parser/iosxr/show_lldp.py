@@ -302,19 +302,19 @@ class ShowLldpNeighborsDetail(ShowLldpEntry):
     cli_command = 'show lldp neighbors detail'
 
     def cli(self, output=None):
-    	return super().cli(cmd=self.cli_command, output=output)
+        return super().cli(cmd=self.cli_command, output=output)
 
 class ShowLldpTrafficSchema(MetaParser):
     """Schema for show lldp traffic"""
     schema = {
-    	"counters": {
-	        "frame_in": int,
-	        "frame_out": int,
-	        "frame_error_in": int,
-	        "frame_discard": int,
-	        "tlv_discard": int,
-	        'tlv_unknown': int,
-	        'entries_aged_out': int
+        "counters": {
+            "frame_in": int,
+            "frame_out": int,
+            "frame_error_in": int,
+            "frame_discard": int,
+            "tlv_discard": int,
+            'tlv_unknown': int,
+            'entries_aged_out': int
         }
     }
 
@@ -329,7 +329,7 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         else:
             out = output
 
-    	# initial return dictionary
+        # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern
@@ -353,29 +353,29 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
             line = line.strip()
 
             # Total frames out: 588
-	        # Total frames in: 399
-	        # Total frames received in error: 0
-	        # Total frames discarded: 0
+            # Total frames in: 399
+            # Total frames received in error: 0
+            # Total frames discarded: 0
             m = p1.match(line)
             if m:
-            	counters = ret_dict.setdefault('counters', {})
-            	group = m.groupdict()
-            	counters.update({k:int(v) for k, v in group.items() if v is not None})
+                counters = ret_dict.setdefault('counters', {})
+                group = m.groupdict()
+                counters.update({k:int(v) for k, v in group.items() if v is not None})
 
             # Total entries aged: 0
             m = p2.match(line)
             if m:
-            	counters = ret_dict.setdefault('counters', {})
-            	group = m.groupdict()
-            	counters.update({k:int(v) for k, v in group.items() if v is not None})
+                counters = ret_dict.setdefault('counters', {})
+                group = m.groupdict()
+                counters.update({k:int(v) for k, v in group.items() if v is not None})
 
             # Total TLVs discarded: 119
-        	# Total TLVs unrecognized: 119
+            # Total TLVs unrecognized: 119
             m = p3.match(line)
             if m:
-            	counters = ret_dict.setdefault('counters', {})
-            	group = m.groupdict()
-            	counters.update({k:int(v) for k, v in group.items() if v is not None})
+                counters = ret_dict.setdefault('counters', {})
+                group = m.groupdict()
+                counters.update({k:int(v) for k, v in group.items() if v is not None})
         
         return ret_dict
 
@@ -403,7 +403,7 @@ class ShowLldpInterface(ShowLldpInterfaceSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-    	# initial return dictionary
+        # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern

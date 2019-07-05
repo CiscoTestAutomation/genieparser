@@ -218,13 +218,12 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             m = p5.match(line)
             if m:
                 vlan_id = m.groupdict()['admin_private_native_vlan']
-                if any(word in admin_mode for word in ['trunk', 'access']):
-                    if 'vlan_id' not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'] = {}
-                    if vlan_id not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]['vlan_id']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'][vlan_id] = {}
+                if 'vlan_id' not in intf_dict['interface']\
+                    [interface_name]['switchport_mode'][operational_mode]:
+                    intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'] = {}
+                if vlan_id not in intf_dict['interface']\
+                    [interface_name]['switchport_mode'][operational_mode]['vlan_id']:
+                    intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'][vlan_id] = {}
                 continue
 
         return intf_dict
