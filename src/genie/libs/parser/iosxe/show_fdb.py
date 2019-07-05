@@ -41,7 +41,7 @@ class ShowMacAddressTableSchema(MetaParser):
                                     'entry_type': str,
                                     Optional('entry'): str,
                                     Optional('learn'): str,
-                                    Optional('age'): int,
+                                    Optional('age'): int
                                 }
                             }
                         }
@@ -70,11 +70,16 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
         
         # initial regexp pattern
         p1 = re.compile(r'^Total +Mac +Addresses +for +this +criterion: +(?P<val>\d+)$')
-        p2 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) +(?P<intfs>\S+|[^\s]+\s[^\s]+)$')
-        p3 = re.compile(r'^(?P<intfs>[\w\/\,]+)$')
-        p4 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) +(?P<learn>\w+) +(?P<age>[\d-]+) +(?P<intfs>[\w\/\,]+)$')
-        p5 = re.compile(r'^(?P<entry>\*)?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+) +(?P<entry_type>\w+) '
-            '+(?P<learn>\w+)? +(?P<age>[\d-]+)? +(?P<intfs>[\S\s]+)$')
+        p2 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
+            ' +(?P<entry_type>\w+) +(?P<intfs>\S+|[^\s]+\s[^\s]+)$')
+        p3 = re.compile(r'^(?P<intfs>(vPC Peer-Link)?[\w\/\,\(\)]+)$')
+        p4 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
+            ' +(?P<entry_type>\w+) +(?P<learn>\w+) +(?P<age>[\d\-\~]+) '
+            '+(?P<intfs>(vPC )?[\w\/\,\-\(\)]+)$')
+        p5 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) +(?P<mac>[\w.]+)'
+            ' +(?P<entry_type>\w+) +(?P<age>[\d\-\~]+) +(?P<secure>\w+) '
+            '+(?P<ntfy>\w+) +(?P<intfs>(vPC )?[\w\/\,\-\(\)]+)$')
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -146,7 +151,10 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                         intf_dict.update({'age': age})
                 continue
 
-
+            # *  101  44dd.ee55.ff66   dynamic  Yes         10   Gi1/40
+            # *  102  aa11.bb22.cc33    static  Yes          -   Gi1/2,Gi1/4,Gi1/5,Gi1/6
+            # *  400  0000.0000.0000    static  No           -   vPC Peer-Link
+            # *  ---  0000.0000.0000    static  No           -   Router
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -167,7 +175,7 @@ class ShowMacAddressTable(ShowMacAddressTableSchema):
                     drop_dict.update({'entry_type': group['entry_type'].lower()})
                     continue
 
-                for intf in intfs.replace(' ',',').split(','):
+                for intf in intfs.split(','):
                     intf = Common.convert_intf_name(intf)
                     intf_dict = mac_dict.setdefault('interfaces', {}) \
                                         .setdefault(intf, {})

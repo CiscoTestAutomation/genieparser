@@ -623,7 +623,6 @@ class test_show_mac_address_table(unittest.TestCase):
               '2000': {
                   'mac_addresses': {
                       '7e00.c000.0007': {
-                          'entry': 'G',
                           'mac_address': '7e00.c000.0007',
                           'ntfy': 'F',
                           'interfaces': {
@@ -640,14 +639,14 @@ class test_show_mac_address_table(unittest.TestCase):
                   },
               '3000': {
                   'mac_addresses': {
-                      '8e00.c000.0007': {
-                          'mac_address': '7e00.c000.0007',
+                      '5e00.c000.0007': {
+                          'mac_address': '5e00.c000.0007',
                           'ntfy': 'F',
                           'interfaces': {
-                              'vPC Peer-Link': {
-                                  'age': '~~~',
-                                  'mac_type': 'dynamic',
-                                  'interface': 'vPC Peer-Link',
+                              'Sup-eth1(R)': {
+                                  'age': '-',
+                                  'mac_type': 'static',
+                                  'interface': 'Sup-eth1(R)',
                                   },
                               },
                           'secure': 'F',
@@ -655,8 +654,25 @@ class test_show_mac_address_table(unittest.TestCase):
                       },
                   'vlan': '3000',
                   },
-              },
-          },
+              '4000': {
+                  'mac_addresses': {
+                      '5e00.c000.0007': {
+                          'mac_address': '5e00.c000.0007',
+                          'ntfy': 'F',
+                          'interfaces': {
+                              'Sup-eth1(R)': {
+                                  'age': '~~~',
+                                  'mac_type': 'static',
+                                  'interface': 'Sup-eth1(R)',
+                                  },
+                              },
+                          'secure': 'F',
+                          },
+                      },
+                  'vlan': '4000',
+                  }
+              }
+          }
       }
 
     golden_output = {'execute.return_value': '''\
@@ -693,8 +709,10 @@ class test_show_mac_address_table(unittest.TestCase):
     G 1007     5e00.c000.0007   static   -         F      F    sup-eth1(R)
     G 1008     5e00.c000.0007   static   -         F      F    sup-eth1(R)
     G 1009     5e00.c000.0007   static   -         F      F    sup-eth1(R)
-    G 2000     7e00.c000.0007    static       -       F    F  vPC Peer-Link(R)
-      3000     8e00.c000.0007    dynamic     ~~~      F    F  vPC Peer-Link
+      2000     7e00.c000.0007    static       -       F    F  vPC Peer-Link(R)
+      3000     5e00.c000.0007   static   -         F      F    sup-eth1(R)
+      4000     5e00.c000.0007   static   ~~~         F      F    sup-eth1(R)
+
     '''
                      }
 

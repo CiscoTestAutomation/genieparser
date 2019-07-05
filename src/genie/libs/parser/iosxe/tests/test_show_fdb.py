@@ -368,10 +368,32 @@ class test_show_mac_address_table_2(unittest.TestCase):
                             }
                       },
                       "vlan": "---"
+                  },
+                  '400': {
+                      "mac_addresses": {
+                            "0000.0000.0000": {
+                                "interfaces": {
+                                      "vPC Peer-Link": {
+                                          "entry": "*",
+                                          "interface": "vPC Peer-Link",
+                                          "entry_type": "static",
+                                          "learn": "No"
+                                      },
+                                      "Router": {
+                                          "entry": "*",
+                                          "interface": "Router",
+                                          "entry_type": "static",
+                                          "learn": "No"
+                                      }
+                                },
+                                "mac_address": "0000.0000.0000"
+                            }
+                      },
+                      "vlan": 400
                   }
             }
         },
-        "total_mac_addresses": 6
+        "total_mac_addresses": 8
     }
 
     golden_output = {'execute.return_value': '''\
@@ -391,8 +413,10 @@ class test_show_mac_address_table_2(unittest.TestCase):
       300  11aa.22bb.33cc    static  No           -   Router
       301  11aa.22bb.33cc    static  No           -   Drop
       *  ---  0000.0000.0000    static  No           -   Router
+      *  400  0000.0000.0000    static  No           -   vPC Peer-Link
+                                                        Router
                                                        
-              Total Mac Addresses for this criterion: 6
+              Total Mac Addresses for this criterion: 8
     '''
     }
 
@@ -408,13 +432,6 @@ class test_show_mac_address_table_2(unittest.TestCase):
         obj = ShowMacAddressTable(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    # def test_golden_2(self):
-    #     self.maxDiff = None
-    #     self.dev_c3850 = Mock(**self.golden_output)
-    #     obj = ShowMacAddressTable(device=self.dev_c3850)
-    #     parsed_output = obj.parse()
-    #     self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 class test_show_mac_address_table_aging_time(unittest.TestCase):
