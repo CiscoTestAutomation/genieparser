@@ -10,7 +10,10 @@ import os
 import re
 import sys
 
-from setuptools import setup, find_packages
+from ciscodistutils import setup, find_packages, is_devnet_build
+from ciscodistutils.tools import (read,
+                                  version_info,
+                                  generate_cython_modules) 
 
 _INTERNAL_SUPPORT = 'asg-genie-support@cisco.com'
 _EXTERNAL_SUPPORT = 'pyats-support-ext@cisco.com'
@@ -92,7 +95,7 @@ setup(
 
     # project licensing
     license = LICENSE,
-
+    
     # see https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -110,6 +113,8 @@ setup(
         'Topic :: Software Development :: Libraries',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+
+    cisco_cythonized_modules = generate_cython_modules('src/'),
 
     # project keywords
     keywords = 'genie pyats test automation',
