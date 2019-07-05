@@ -585,11 +585,16 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
     exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
+        ret_dict = {}
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
             # Build command
             if address_family:
-                cmd = self.cli_command[0].format(address_family=address_family)
+                if address_family not in restricted_list:
+                    cmd = self.cli_command[0].format(address_family=address_family)
+                else:
+                    return ret_dict
             else:
                 cmd = self.cli_command[1]
             # Execute command
