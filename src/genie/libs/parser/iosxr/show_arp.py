@@ -110,8 +110,8 @@ class ShowArpTrafficDetailSchema(MetaParser):
     schema = {
         Any():
             {'statistics':
-                {Optional('in_requests_pkts'): int,
-                 Optional('in_replies_pkts'): int,
+                {'in_requests_pkts': int,
+                 'in_replies_pkts': int,
                  'out_requests_pkts': int,
                  'out_replies_pkts': int,
                  'out_gratuitous_pkts': int,

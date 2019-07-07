@@ -104,7 +104,7 @@ class ShowBundleSchema(MetaParser):
                     Optional('recovery_delay'): str,
                     Optional('maximize_threshold'): str,
                 },
-                'ipv4_bfd': {
+                'ipv4_bfd':{{
                     'ipv4_bfd': str,
                     Optional('state'): str,
                     Optional('fast_detect'): str,
