@@ -5865,7 +5865,8 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Limit             0        200          0
         # Drops             0          0          0
         # Max delay [msec] 49          2          2
-        p9_1 = re.compile(r'^(?P<item>(Limit|Drops|Max delay \[msec\])) +(?P<inputq>(\d+)) +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+        p9_1 = re.compile(r'^(?P<item>(Limit|Drops|Max delay \[msec\])) +'
+                        '(?P<inputq>(\d+)) +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
         
         # Invalid           0          0          0
         # Hello             0          0          0
@@ -5873,7 +5874,9 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # LS req            0          0          0
         # LS upd            0          0          0
         # LS ack           14         14          6
-        p9_2 = re.compile(r'^(?P<item>(Invalid|Hello|DB des|LS req|LS upd|LS ack)) +(?P<inputq>(\d+)) +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+        p9_2 = re.compile(r'^(?P<item>(Invalid|Hello|DB des|LS '
+                        'req|LS upd|LS ack)) +(?P<inputq>(\d+)) '
+                        '+(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
 
         #                   InputQ   UpdateQ      OutputQ
         # Max size         14         14          6
