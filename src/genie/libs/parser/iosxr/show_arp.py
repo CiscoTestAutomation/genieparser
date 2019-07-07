@@ -162,8 +162,8 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
         p2 = re.compile(r'^ARP +statistics:$')
 
         # Recv: 108 requests, 8 replies
-        p3 = re.compile(r'^Recv: +(?P<in_requests_pkts>\w+) +requests,'
-            ' +(?P<in_replies_pkts>[\w]+) +replies$')
+        p3 = re.compile(r'^Recv: +(?P<in_requests_pkts>\w+) +requests, '
+            '+(?P<in_replies_pkts>[\w]+) +replies$')
 
         # Sent: 8 requests, 108 replies (0 proxy, 0 local proxy, 2 gratuitous)
         p4 = re.compile(r'^Sent: +(?P<out_requests_pkts>\w+) +requests,'
