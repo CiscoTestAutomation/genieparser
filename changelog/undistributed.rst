@@ -25,6 +25,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpInterfaceBrief short name issue
+    * Fix ShowInterfacesSwitchport
+        changed 'trun_vlan' schema type to support multiple values
 
 ----------------------------------------------------------------------------
                                    OSPF
@@ -36,6 +38,9 @@
     * Updated ShowIpOspfNeighbor for:
         * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
+* NXOS
+    * Fix ShowIpOspf
+        added inserting key to avoid missing key error without duplicate output
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -112,6 +117,7 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+    * added restricted list for ShowBgpAll
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
@@ -181,7 +187,7 @@
       show context
     * Added ShowContextDetail for:
       show context detail
-      
+
 --------------------------------------------------------------------------------
                                     BFD
 --------------------------------------------------------------------------------
@@ -199,3 +205,17 @@
     * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
     * Added ShowGuestshell for "show guestshell"
 
+--------------------------------------------------------------------------------
+                              vpc
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVpc for "show vpc"
+
+--------------------------------------------------------------------------------
+                                fdb
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added "entry", "learn", and "age" for ShowMacAddressTable to handle additional columns
+
+* NXOS
+    * Updated for ShowMacAddressTableBase to fix parsing issue with vPC Peer-Link(R) in 'ports' and regEx for 'age'
