@@ -124,6 +124,7 @@
         ShowBgpVrfAllAllDampeningParameters, ShowBgpVrfAllNeighborsAdvertisedRoutes,
         ShowBgpVrfAllNeighborsRoutes, ShowBgpVrfAllNeighborsReceivedRoutes
         to support custom vrf, address_family and neighbor
+    * Updated ShowBgpProcessVrfAll to remove vrf checks
 
 * Optimized parser by moving all regex outside of for loop
 
