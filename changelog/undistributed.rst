@@ -220,3 +220,11 @@
 
 * NXOS
     * Updated for ShowMacAddressTableBase to fix parsing issue with vPC Peer-Link(R) in 'ports' and regEx for 'age'
+
+
+--------------------------------------------------------------------------------
+                              bridge-domain
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBridgeDomain:
+      Parser will parse outputs even when Bridge-domain has 0 ports
