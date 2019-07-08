@@ -294,6 +294,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
             # D        192.168.205.1
+            # S*       0.0.0.0/0 [1/0] via 10.50.15.1
             p3 = re.compile(
                 r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
