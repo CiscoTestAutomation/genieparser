@@ -19,6 +19,9 @@
         * added show routing vrf {vrf} to support custom vrf
     * Updated ShowRoutingIpv6VrfAll
         * added show ipv6 routing vrf {vrf} to support custom vrf
+* IOSXE
+    * Fix ShowIpRoute
+        * updated regex to handle the output more flexibly
 
 --------------------------------------------------------------------------------
                                 Interface
