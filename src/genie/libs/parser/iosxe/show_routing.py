@@ -297,7 +297,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             p3 = re.compile(
                 r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                r'via +)?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             m = p3.match(line)
             if m:
