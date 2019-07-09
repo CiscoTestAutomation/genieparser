@@ -83,7 +83,6 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         # initial variables
         ret_dict = {}
-        synchronized_checker = False
 
         #   address         ref clock       st   when   poll reach  delay  offset   disp
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
@@ -134,7 +133,6 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 # ops clock_state structure
                 if groups['mode_code']:
                     if '*' in groups['mode_code']:
-                        synchronized_checker = True
                         clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
                         clock_dict['clock_state'] = mode
                         clock_dict['clock_stratum'] = int(groups['stratum'])
