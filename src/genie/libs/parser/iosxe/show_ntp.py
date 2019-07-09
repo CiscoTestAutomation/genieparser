@@ -513,7 +513,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                          '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
         # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
-        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
+        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+)( +)?, +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
 
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
