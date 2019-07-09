@@ -65,6 +65,14 @@ class ShowNtpAssociationsSchema(MetaParser):
 class ShowNtpAssociations(ShowNtpAssociationsSchema):
     """Parser for show ntp associations"""
 
+    # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+    MODE_MAP = {'*': 'synchronized',
+                '#': 'selected',
+                'x': 'falseticker',
+                '+': 'candidate',
+                '-': 'outlyer',
+                None: 'unsynchronized'}
+
     cli_command = 'show ntp associations'
 
     def cli(self, output=None):
@@ -102,10 +110,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 else:
                     configured = False
                 local_mode = 'client'
-                if groups['mode_code']:
-                    mode = groups['mode_code']
-                else:
-                    mode = 'None'
+                mode = self.MODE_MAP.get(groups['mode_code'])
                 try:
                     receive_time = int(groups['receive_time'])
                 except:
@@ -129,8 +134,9 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 # ops clock_state structure
                 if groups['mode_code']:
                     if '*' in groups['mode_code']:
+                        synchronized_checker = True
                         clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = 'synchronized'
+                        clock_dict['clock_state'] = mode
                         clock_dict['clock_stratum'] = int(groups['stratum'])
                         clock_dict['associations_address'] = peer
                         clock_dict['root_delay'] = float(groups['delay'])
