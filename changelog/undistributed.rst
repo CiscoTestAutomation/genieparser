@@ -19,6 +19,9 @@
         * added show routing vrf {vrf} to support custom vrf
     * Updated ShowRoutingIpv6VrfAll
         * added show ipv6 routing vrf {vrf} to support custom vrf
+* IOSXE
+    * Fix ShowIpRoute
+        * updated regex to handle the output more flexibly
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -117,12 +120,14 @@
         Support for more VRF values
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
+    * added restricted list for ShowBgpAll
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
         ShowBgpVrfAllAllDampeningParameters, ShowBgpVrfAllNeighborsAdvertisedRoutes,
         ShowBgpVrfAllNeighborsRoutes, ShowBgpVrfAllNeighborsReceivedRoutes
         to support custom vrf, address_family and neighbor
+    * Updated ShowBgpProcessVrfAll to remove vrf checks
 
 * Optimized parser by moving all regex outside of for loop
 
@@ -203,3 +208,33 @@
     * Added ShowVirtualServiceCore for "show virtual-service core [name {name}]"
     * Added ShowVirtualServiceDetail for "show virtual-service detail [name {name}]"
     * Added ShowGuestshell for "show guestshell"
+
+--------------------------------------------------------------------------------
+                              vpc
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVpc for "show vpc"
+
+--------------------------------------------------------------------------------
+                                fdb
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added "entry", "learn", and "age" for ShowMacAddressTable to handle additional columns
+
+* NXOS
+    * Updated for ShowMacAddressTableBase to fix parsing issue with vPC Peer-Link(R) in 'ports' and regEx for 'age'
+
+
+--------------------------------------------------------------------------------
+                              bridge-domain
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBridgeDomain:
+      Parser will parse outputs even when Bridge-domain has 0 ports
+
+--------------------------------------------------------------------------------
+                                ntp
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowNtpAssociations:
+        Fixed parsing wrong data in different order and changed to not converting the mode name due to different mode symbols depending on devices
