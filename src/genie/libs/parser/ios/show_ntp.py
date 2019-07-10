@@ -119,6 +119,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
+                # appending ip address in order to trace data in the dictionary for p2 or p3
                 peer_list.append(peer)
                 if '~' is groups['configured']:
                     configured = True
@@ -165,6 +166,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
             m = p2.match(line)
             if m:
+                # find 'mode' and convert data based on MODE_MAP
                 for peer in peer_list:
                     peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
                         .setdefault('local_mode', {}).setdefault('client', {})
@@ -178,6 +180,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             # * master (synced), # master (unsynced), + selected, - candidate, ~ configured
             m = p3.match(line)
             if m:
+                # find 'mode' and convert data based on MODE_MAP_2
                 for peer in peer_list:
                     peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
                         .setdefault('local_mode', {}).setdefault('client', {})
