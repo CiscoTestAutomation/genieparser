@@ -231,3 +231,10 @@
 * IOSXE
     * Updated ShowBridgeDomain:
       Parser will parse outputs even when Bridge-domain has 0 ports
+
+--------------------------------------------------------------------------------
+                                ntp
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowNtpAssociations:
+        Fixed parsing wrong data in different order and changed to not converting the mode name due to different mode symbols depending on devices
