@@ -141,9 +141,6 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                         clock_dict['clock_offset'] = float(groups['offset'])
                         clock_dict['clock_refid'] = groups['refid']
                         clock_dict['associations_local_mode'] = local_mode
-                    else:
-                        clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = 'unsynchronized'
 
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):

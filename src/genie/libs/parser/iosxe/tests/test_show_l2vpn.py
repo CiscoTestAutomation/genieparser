@@ -370,6 +370,24 @@ class test_show_bridge_domain(unittest.TestCase):
     '''
     }
 
+    golden_output_4 = {'execute.return_value': '''
+        #show bridge-domain
+        Bridge-domain 4050 (0 ports in all)
+        State: UP                    Mac learning: Enabled
+        Aging-Timer: 3600 second(s)
+            AED MAC address    Policy  Tag       Age  Pseudoport
+    '''}
+
+    parsed_output_4 = {
+        'bridge_domain': {
+            4050: {
+                'aging_timer': 3600,
+                'bd_domain_id': 4050,
+                'mac_learning_state': 'Enabled',
+                'number_of_ports_in_all': 0,
+                'state': 'UP'}}}
+
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         platform_obj = ShowBridgeDomain(device=self.device)
@@ -396,6 +414,13 @@ class test_show_bridge_domain(unittest.TestCase):
         platform_obj = ShowBridgeDomain(device=self.device)
         parsed_output = platform_obj.parse(word='Port-channel1\.EFP2.*')
         self.assertEqual(parsed_output, self.golden_parsed_output_count)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        platform_obj = ShowBridgeDomain(device=self.device)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_4)
 
 
 class test_show_ethernet_service_instance_detail(unittest.TestCase):
