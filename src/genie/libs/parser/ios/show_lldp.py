@@ -1,4 +1,4 @@
-"""show_spanning_tree.py
+"""show_lldp.py
    supported commands:
      *  show lldp
      *  show lldp entry [<WORD>|*]

@@ -2904,7 +2904,7 @@ class ShowNveInterfaceSchema(MetaParser):
 class ShowNveInterface(ShowNveInterfaceSchema):
     """Parser for show nve interface"""
 
-    cli_command = 'sh nve interface {intf} detail'
+    cli_command = 'show nve interface {intf} detail'
 
     def cli(self, intf, output=None):
         cmd = ""

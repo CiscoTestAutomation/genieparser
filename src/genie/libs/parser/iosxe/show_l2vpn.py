@@ -47,7 +47,7 @@ class ShowBridgeDomainSchema(MetaParser):
                 'aging_timer': int,
                 'state': str,
                 'mac_learning_state': str,
-                'member_ports': list,
+                Optional('member_ports'): list,
                 Any(): {
                     Any(): {
                         'num_of_ports': str,
