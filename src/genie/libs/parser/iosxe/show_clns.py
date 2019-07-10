@@ -860,8 +860,6 @@ class ShowClnsTrafficSchema(MetaParser):
         },
         'tag': {
             Any() : {
-                Optional('VRF'): int,
-                Optional('test'): int,
                 'IS-IS': {
                     'last_clear': str,
                     'hello': {

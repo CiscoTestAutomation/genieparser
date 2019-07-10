@@ -125,6 +125,7 @@ class ShowArpTrafficDetailSchema(MetaParser):
                  'out_of_memory_errors': int,
                  'no_buffers_errors': int,
                  'out_of_subnet_errors': int,
+                 Optional('unsolicited'): int,
                 },
             'cache':
                 {'total_arp_entries': int,
@@ -162,8 +163,9 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
         p2 = re.compile(r'^ARP +statistics:$')
 
         # Recv: 108 requests, 8 replies
-        p3 = re.compile(r'^Recv: +(?P<in_requests_pkts>\w+) +requests, *'
-            '(?P<in_replies_pkts>[\w]+) +replies$')
+        p3 = re.compile(r'^Recv: +(?P<in_requests_pkts>\w+) +requests, '
+            '+(?P<in_replies_pkts>[\w]+) +replies( '
+            '+\((?P<unsolicited>\w+) +unsolicited\))*')
 
         # Sent: 8 requests, 108 replies (0 proxy, 0 local proxy, 2 gratuitous)
         p4 = re.compile(r'^Sent: +(?P<out_requests_pkts>\w+) +requests,'
@@ -240,7 +242,7 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if isinstance(groups[k], str)})
                 continue
 
             m = p4.match(line)
