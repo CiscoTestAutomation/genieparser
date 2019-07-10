@@ -237,4 +237,4 @@
 --------------------------------------------------------------------------------
 * IOS
     * Updated ShowNtpAssociations:
-        Fixed parsing wrong data in different order and changed to not converting the mode name due to different mode symbols depending on devices
+        Fixed parsing wrong data in different order and added regExs to handle old version of device output as well
