@@ -83,11 +83,13 @@ devnet: package
 	@echo "Completed building DevNet packages"
 	@echo ""
 
-package_anti_shitcode: devnet build_cythonize
-	@echo "Bout to compile into C"
+package_compile: build_cythonize
+	@echo ""
+	@echo "Done Compiling"
 	@echo ""
 
 build_cythonize:
+	@echo "Compiling to C code"
 	@echo --------------------------
 	$(BUILD_CMD) --cythonize
 	@echo --------------------------
