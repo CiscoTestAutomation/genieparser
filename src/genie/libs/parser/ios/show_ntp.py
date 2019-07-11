@@ -73,6 +73,12 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 '-': 'outlyer',
                 None: 'unsynchronized'}
 
+    # * master (synced), # master (unsynced), + selected, - candidate, ~ configured            
+    MODE_MAP_2 = {'*': 'synchronized',
+                  '#': 'unsynchronized',
+                  '+': 'selected',
+                  '-': 'candidate'}
+
     cli_command = 'show ntp associations'
 
     def cli(self, output=None):
@@ -83,6 +89,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
 
         # initial variables
         ret_dict = {}
+        peer_list = []
 
         #   address         ref clock       st   when   poll reach  delay  offset   disp
         # *~127.127.1.1     .LOCL.           0      6     16   377  0.000   0.000  1.204
@@ -94,6 +101,14 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                         '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
                         '(?P<offset>[\d\.\-]+) +(?P<disp>[\d\.\-]+)$')
 
+        # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+        p2 = re.compile(r'^\* sys.peer, +\# selected, +\+ candidate, +- outlyer, '
+            '+x falseticker, +~ configured$')
+
+        # * master (synced), # master (unsynced), + selected, - candidate, ~ configured
+        p3 = re.compile(r'^\* master +\(synced\), +\# master \(unsynced\), +\+ '
+            'selected, +\- candidate, +~ configured$')
+
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -104,12 +119,17 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
             if m:
                 groups = m.groupdict()
                 peer = groups['remote']
+                # appending ip address in order to trace data in the dictionary for p2 or p3
+                peer_list.append(peer)
                 if '~' is groups['configured']:
                     configured = True
                 else:
                     configured = False
                 local_mode = 'client'
-                mode = self.MODE_MAP.get(groups['mode_code'])
+                if groups['mode_code']:
+                    mode = groups['mode_code']
+                else:
+                    mode = 'None'
                 try:
                     receive_time = int(groups['receive_time'])
                 except:
@@ -134,13 +154,41 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                 if groups['mode_code']:
                     if '*' in groups['mode_code']:
                         clock_dict = ret_dict.setdefault('clock_state', {}).setdefault('system_status', {})
-                        clock_dict['clock_state'] = mode
+                        clock_dict['clock_state'] = 'synchronized'
                         clock_dict['clock_stratum'] = int(groups['stratum'])
                         clock_dict['associations_address'] = peer
                         clock_dict['root_delay'] = float(groups['delay'])
                         clock_dict['clock_offset'] = float(groups['offset'])
                         clock_dict['clock_refid'] = groups['refid']
                         clock_dict['associations_local_mode'] = local_mode
+                continue
+
+            # * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
+            m = p2.match(line)
+            if m:
+                # find 'mode' and convert data based on MODE_MAP
+                for peer in peer_list:
+                    peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
+                        .setdefault('local_mode', {}).setdefault('client', {})
+                    mode = peer_dict['mode']
+                    if mode == 'None':
+                        mode = None
+                    mode = self.MODE_MAP.get(mode)
+                    peer_dict.update({'mode': mode})
+                continue
+
+            # * master (synced), # master (unsynced), + selected, - candidate, ~ configured
+            m = p3.match(line)
+            if m:
+                # find 'mode' and convert data based on MODE_MAP_2
+                for peer in peer_list:
+                    peer_dict = ret_dict.setdefault('peer', {}).setdefault(peer, {})\
+                        .setdefault('local_mode', {}).setdefault('client', {})
+                    mode = peer_dict['mode']
+                    mode = self.MODE_MAP_2.get(mode)
+                    if mode:
+                        peer_dict.update({'mode': mode})
+                continue
 
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):
