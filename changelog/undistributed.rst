@@ -41,9 +41,6 @@
     * Updated ShowIpOspfNeighbor for:
         * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
-    * Updated ShowIpOspfTraffic to support different outputs
-    * Enhanced regex to support more patterns
-    * Updated 
 * NXOS
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
@@ -62,18 +59,12 @@
 * IOSXE
     * Update ShowEnvironment to support:
         show environment | include {include}
-    * Updated showProcessCpuPlatform to support different outputs
-    
 
 --------------------------------------------------------------------------------
                                 ARP
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
-
-* IOSXR
-    * Updated ShowArpTrafficDetail to support more outputs
-    * Updated regex to support more patterns
 
 --------------------------------------------------------------------------------
                                 interface
@@ -247,19 +238,3 @@
 * IOS
     * Updated ShowNtpAssociations:
         Fixed parsing wrong data in different order and added regExs to handle old version of device output as well
-
---------------------------------------------------------------------------------
-                               RIP
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowIpv6RipDatabase to support more outputs
-
---------------------------------------------------------------------------------
-                                LAG
---------------------------------------------------------------------------------
-*IOSXE
-    * Updated ShowLacpNeighborDetail to support more outputs
-*NXOS
-    * Updated ShowLacpNeighborDetail to support more outputs
-*IOSXR
-    * Updated ShowLacpNeighborDetail to support more outputs
