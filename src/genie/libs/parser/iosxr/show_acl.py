@@ -102,7 +102,7 @@ class ShowAclAfiAllSchema(MetaParser):
 # =======================================
 
 class ShowAclAfiAll(ShowAclAfiAllSchema):
-    '''Schema for
+    '''Parser for
         'show access-lists afi-all'
     '''
     cli_command = 'show access-lists afi-all'
@@ -135,7 +135,8 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # ipv4 access-list acl_name# ipv6 access-list ipv6_acl
+            # ipv4 access-list acl_name#
+            # ipv6 access-list ipv6_acl
             m = p1.match(line)
             if m:
                 group = m.groupdict()
