@@ -238,3 +238,6 @@
 * IOS
     * Updated ShowNtpAssociations:
         Fixed parsing wrong data in different order and added regExs to handle old version of device output as well
+* IOSXE
+    * Update ShowNtpAssociationsDetail:
+        Fixed space issue for refid

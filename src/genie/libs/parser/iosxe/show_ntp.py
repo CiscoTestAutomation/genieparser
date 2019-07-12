@@ -512,6 +512,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
                          '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
                          '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
+        # ref ID 10.10.10.254      , time DBAB02D6.9E354130 (18:49:35.873 UTC Thu Jul 11 2019)
         # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
         p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+)( +)?, +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
 
