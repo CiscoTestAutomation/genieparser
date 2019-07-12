@@ -183,6 +183,10 @@
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
 
+* IOSXE
+    * Fix for ShowEthernetServiceInstanceDetail
+        updated code to handle multiple outputs properly and fixed incorrect UT
+
 --------------------------------------------------------------------------------
                                 context
 --------------------------------------------------------------------------------
