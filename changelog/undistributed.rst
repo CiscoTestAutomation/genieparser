@@ -19,6 +19,9 @@
         * added show routing vrf {vrf} to support custom vrf
     * Updated ShowRoutingIpv6VrfAll
         * added show ipv6 routing vrf {vrf} to support custom vrf
+* IOSXE
+    * Fix ShowIpRoute
+        * updated regex to handle the output more flexibly
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -232,6 +235,9 @@
 --------------------------------------------------------------------------------
                                 ntp
 --------------------------------------------------------------------------------
+* IOS
+    * Updated ShowNtpAssociations:
+        Fixed parsing wrong data in different order and added regExs to handle old version of device output as well
 * IOSXE
     * Update ShowNtpStatus:
         Added leap second field in schema
