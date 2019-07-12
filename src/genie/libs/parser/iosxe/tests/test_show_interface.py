@@ -510,7 +510,7 @@ class test_show_interfaces(unittest.TestCase):
             "output_hang": "never",
             "txload": "1/255",
             "oper_status": "up",
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "rxload": "1/255",
             "duplex_mode": "full",
             "link_type": "auto",
@@ -599,7 +599,7 @@ class test_show_interfaces(unittest.TestCase):
             "txload": "1/255",
             "description": "desc",
             "oper_status": "down",
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "rxload": "1/255",
             "duplex_mode": "auto",
             "queues": {
@@ -694,7 +694,7 @@ class test_show_interfaces(unittest.TestCase):
             "output_hang": "never",
             "txload": "1/255",
             "reliability": "255/255",
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "rxload": "1/255",
             "queues": {
                  "input_queue_size": 0,
@@ -849,7 +849,7 @@ class test_show_interfaces(unittest.TestCase):
             },
             "txload": "1/255",
             "reliability": "255/255",
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "rxload": "1/255",
             "output_hang": "never",
             "ipv4": {
@@ -927,7 +927,7 @@ class test_show_interfaces(unittest.TestCase):
             "output_hang": "never",
             "txload": "1/255",
             "oper_status": "up",
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "media_type": "10/100/1000BaseTX",
             "rxload": "1/255",
             "duplex_mode": "full",
@@ -963,7 +963,7 @@ class test_show_interfaces(unittest.TestCase):
        },
        "GigabitEthernet0/0/4": {
             "arp_timeout": "04:00:00",
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "bandwidth": 1000000,
             "counters": {
                  "in_broadcast_pkts": 0,
@@ -1271,7 +1271,7 @@ class test_show_interfaces(unittest.TestCase):
                     "send": False,
                     "receive": False
                 },
-                "arp_type": "arpa",
+                "arp_type": {"arpa": {}},
                 "type": "CSR vNIC",
                 "enabled": True,
                 "media_type": "Virtual",
@@ -4704,7 +4704,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -4771,7 +4771,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -4844,7 +4844,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -4917,7 +4917,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -4990,7 +4990,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5063,7 +5063,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5136,7 +5136,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5209,7 +5209,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5282,7 +5282,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5355,7 +5355,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5428,7 +5428,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5501,7 +5501,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5574,7 +5574,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5647,7 +5647,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5720,7 +5720,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5793,7 +5793,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5866,7 +5866,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -5939,7 +5939,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -6012,7 +6012,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -6085,7 +6085,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -6158,7 +6158,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -6231,7 +6231,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -6304,7 +6304,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:20",
@@ -6377,7 +6377,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:20",
@@ -6450,7 +6450,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:20",
@@ -6523,7 +6523,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:20",
@@ -6596,7 +6596,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:24",
@@ -6669,7 +6669,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:24",
@@ -6742,7 +6742,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:24",
@@ -6815,7 +6815,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:28",
@@ -6888,7 +6888,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:28",
@@ -6961,7 +6961,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:28",
@@ -7034,7 +7034,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:28",
@@ -7107,7 +7107,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:32",
@@ -7180,7 +7180,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:32",
@@ -7253,7 +7253,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:32",
@@ -7326,7 +7326,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:32",
@@ -7399,7 +7399,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:37",
@@ -7472,7 +7472,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:37",
@@ -7545,7 +7545,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:37",
@@ -7618,7 +7618,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:41",
@@ -7691,7 +7691,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "arpa"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "06:39:41",
@@ -7773,7 +7773,7 @@ Tunnel10 is up, line protocol is up
                 "receive": False,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:15",
@@ -7859,7 +7859,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -7942,7 +7942,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:03",
@@ -8029,7 +8029,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8112,7 +8112,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:15",
             "last_output": "00:00:03",
@@ -8199,7 +8199,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8286,7 +8286,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8373,7 +8373,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8460,7 +8460,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8547,7 +8547,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8634,7 +8634,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8721,7 +8721,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8808,7 +8808,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8895,7 +8895,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -8982,7 +8982,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9069,7 +9069,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9156,7 +9156,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9243,7 +9243,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9330,7 +9330,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9417,7 +9417,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9504,7 +9504,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9591,7 +9591,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9678,7 +9678,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9765,7 +9765,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9852,7 +9852,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -9939,7 +9939,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10026,7 +10026,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10113,7 +10113,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10200,7 +10200,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10287,7 +10287,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10374,7 +10374,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10461,7 +10461,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10548,7 +10548,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10635,7 +10635,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10722,7 +10722,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -10806,7 +10806,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:18",
             "last_output": "00:00:00",
@@ -10889,7 +10889,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -10919,7 +10919,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -10949,7 +10949,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -10979,7 +10979,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11009,7 +11009,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11039,7 +11039,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11069,7 +11069,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11099,7 +11099,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11129,7 +11129,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11159,7 +11159,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11189,7 +11189,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11219,7 +11219,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11249,7 +11249,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11279,7 +11279,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11309,7 +11309,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11339,7 +11339,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11369,7 +11369,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11399,7 +11399,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11429,7 +11429,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11459,7 +11459,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11489,7 +11489,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11519,7 +11519,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11549,7 +11549,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11579,7 +11579,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11609,7 +11609,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11639,7 +11639,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11669,7 +11669,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11699,7 +11699,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11729,7 +11729,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11759,7 +11759,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -11793,7 +11793,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -11880,7 +11880,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -11967,7 +11967,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12054,7 +12054,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12141,7 +12141,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12229,7 +12229,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:01",
             "last_output": "00:00:00",
@@ -12316,7 +12316,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12403,7 +12403,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12490,7 +12490,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12577,7 +12577,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12664,7 +12664,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12751,7 +12751,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -12840,7 +12840,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -12923,7 +12923,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -12953,7 +12953,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -12983,7 +12983,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13013,7 +13013,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13043,7 +13043,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13073,7 +13073,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13103,7 +13103,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13133,7 +13133,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13163,7 +13163,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13193,7 +13193,7 @@ Tunnel10 is up, line protocol is up
             "encapsulations": {
                 "encapsulation": "dot1q"
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "keepalive": 10
         },
@@ -13221,7 +13221,7 @@ Tunnel10 is up, line protocol is up
                 "receive": False,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "never",
             "last_output": "never",
@@ -13306,7 +13306,7 @@ Tunnel10 is up, line protocol is up
                 "receive": True,
                 "send": False
             },
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:04:37",
@@ -14441,7 +14441,7 @@ Tunnel10 is up, line protocol is up
             },
             "carrier_delay_up": 2,
             "carrier_delay_down": 10,
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:07:19",
             "last_output": "03:51:33",
@@ -14575,7 +14575,7 @@ Tunnel10 is up, line protocol is up
                 "send": False
             },
             "carrier_delay": 10,
-            "arp_type": "arpa",
+            "arp_type": {"arpa": {}},
             "arp_timeout": "04:00:00",
             "last_input": "00:00:00",
             "last_output": "00:00:00",
@@ -14668,6 +14668,169 @@ Tunnel10 is up, line protocol is up
     csr1000v-1#
     '''}
 
+
+    golden_interface_output_10 = {'execute.return_value': '''
+    show interfaces po10
+
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 7%
+
+Time source is NTP, 18:12:08.937 UTC Thu Jan 2 2020
+
+
+
+Port-channel10 is up, line protocol is up 
+
+  Hardware is GEChannel, address is 006b.f1d5.e8c9 (bia 006b.f1d5.e8c9)
+
+  MTU 1500 bytes, BW 2000000 Kbit/sec, DLY 10 usec, 
+
+     reliability 255/255, txload 1/255, rxload 2/255
+
+  Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+
+  Keepalive set (10 sec)
+
+  ARP type: ARPA, ARP Timeout 04:00:00
+
+    No. of active members in this channel: 2 
+
+        Member 0 : GigabitEthernet0/0/0 , Full-duplex, 1000Mb/s
+
+        Member 1 : GigabitEthernet0/0/1 , Full-duplex, 1000Mb/s
+
+    No. of PF_JUMBO supported members in this channel : 2
+
+  Last input 00:00:01, output never, output hang never
+
+  Last clearing of "show interface" counters never
+
+  Input queue: 0/750/0/0 (size/max/drops/flushes); Total output drops: 0
+
+  Queueing strategy: fifo
+
+  Output queue: 0/80 (size/max)
+
+  5 minute input rate 221204000 bits/sec, 58787 packets/sec
+
+  5 minute output rate 0 bits/sec, 0 packets/sec
+
+     583820 packets input, 40060334 bytes, 0 no buffer
+
+     Received 541743009 broadcasts (0 IP multicasts)
+
+     0 runts, 0 giants, 0 throttles 
+
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+
+     0 watchdog, 124659201 multicast, 0 pause input
+
+     52201 packets output, 3236622 bytes, 0 underruns
+
+     0 output errors, 0 collisions, 0 interface resets
+
+     0 unknown protocol drops
+
+     0 babbles, 0 late collision, 0 deferred
+
+     0 lost carrier, 0 no carrier, 0 pause output
+
+     0 output buffer failures, 0 output buffers swapped out
+    '''}
+
+    golden_parsed_interface_output_10 = {
+'Port-channel10': {
+    'port_channel': {
+        'port_channel_member': False,
+        },
+    'enabled': True,
+    'line_protocol': 'up',
+    'oper_status': 'up',
+    'type': 'GEChannel',
+    'mac_address': '006b.f1d5.e8c9',
+    'phys_address': '006b.f1d5.e8c9',
+    'delay': 10,
+    'mtu': 1500,
+    'bandwidth': 2000000,
+    'reliability': '255/255',
+    'txload': '1/255',
+    'rxload': '2/255',
+    'encapsulations': {
+        'encapsulation': 'dot1q',
+        'first_dot1q': '1',
+        },
+    'keepalive': 10,
+    'arp_timeout': '04:00:00',
+    'arp_type': {
+        'arpa': {
+            'member': {
+                '0': {
+                    'interface': 'GigabitEthernet0/0/0',
+                    'duplex_mode': 'Full-duplex',
+                    'port_speed': '1000Mb/s',
+                    },
+                '1': {
+                    'interface': 'GigabitEthernet0/0/1',
+                    'duplex_mode': 'Full-duplex',
+                    'port_speed': '1000Mb/s',
+                    },
+                },
+            },
+        },
+    'last_input': '00:00:01',
+    'last_output': 'never',
+    'output_hang': 'never',
+    'queues': {
+        'input_queue_size': 0,
+        'input_queue_max': 750,
+        'input_queue_drops': 0,
+        'input_queue_flushes': 0,
+        'total_output_drop': 0,
+        'queue_strategy': 'fifo',
+        'output_queue_size': 0,
+        'output_queue_max': 80,
+        },
+    'counters': {
+        'rate': {
+            'load_interval': 300,
+            'in_rate': 221204000,
+            'in_rate_pkts': 58787,
+            'out_rate': 0,
+            'out_rate_pkts': 0,
+            },
+        'last_clear': 'never',
+        'in_pkts': 583820,
+        'in_octets': 40060334,
+        'in_no_buffer': 0,
+        'in_multicast_pkts': 124659201,
+        'in_broadcast_pkts': 0,
+        'in_runts': 0,
+        'in_giants': 0,
+        'in_throttles': 0,
+        'in_errors': 0,
+        'in_crc_errors': 0,
+        'in_frame': 0,
+        'in_overrun': 0,
+        'in_ignored': 0,
+        'in_watchdog': 0,
+        'in_mac_pause_frames': 0,
+        'out_pkts': 52201,
+        'out_octets': 3236622,
+        'out_underruns': 0,
+        'out_errors': 0,
+        'out_interface_resets': 0,
+        'out_collision': 0,
+        'out_unknown_protocl_drops': 0,
+        'out_babble': 0,
+        'out_late_collision': 0,
+        'out_deferred': 0,
+        'out_lost_carrier': 0,
+        'out_no_carrier': 0,
+        'out_mac_pause_frames': 0,
+        'out_buffer_failure': 0,
+        'out_buffers_swapped': 0,
+        },
+    },
+}
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowInterfaces(device=self.device)
@@ -14701,6 +14864,17 @@ Tunnel10 is up, line protocol is up
         parsed_output = interface_obj.parse(interface='GigabitEthernet3')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
+    def test_show_interfaces_10(self):
+        self.device = Mock(**self.golden_interface_output_10)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='po10')
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_10)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)

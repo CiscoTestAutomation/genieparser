@@ -79,7 +79,18 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('carrier_delay_down'): int,
                 Optional('keepalive'): int,
                 Optional('auto_negotiate'): bool,
-                Optional('arp_type'): str,
+                Optional('arp_type'): {
+                    Any(): {
+                        Optional('active_channels'): int,
+                        Optional('member'): {
+                            Any(): {
+                                'interface': str,
+                                'duplex_mode': str,
+                                'port_speed': str,
+                            }
+                        }
+                    }
+                },
                 Optional('arp_timeout'): str,
                 Optional('last_input'): str,
                 Optional('last_output'): str,
@@ -504,9 +515,42 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 arp_type = m.groupdict()['arp_type'].lower()
                 arp_timeout = m.groupdict()['arp_timeout']
-                interface_dict[interface]['arp_type'] = arp_type
+                #interface_dict[interface]['arp_type'] = { arp_type: {}}
                 interface_dict[interface]['arp_timeout'] = arp_timeout
+                arp_type_dict = interface_dict.setdefault(interface, {}).\
+                                    setdefault('arp_type', {}).\
+                                    setdefault(arp_type, {})
                 continue
+            # Optional('arp_type'): {
+            #         Any(): {
+            #             Optional('active_channels'): int,
+            #             Optional('member'): {
+            #                 Any(): {
+            #                     'interface': str,
+            #                     'duplex_mode': str,
+            #                     'port_speed': str,
+            #                 }
+            #             }
+            #         }
+            #     },
+            p13_1 = re.compile(r'^No\. +of +active +members +in +this +channel: +(?P<active_channels>\d+)$')
+            p13_2 = re.compile(r'^Member +(?P<number>\d+) +: +(?P<interface>\S+) +,'
+                ' +(?P<duplex_mode>\S+), +(?P<port_speed>\S+)$')
+            m = p13_2.match(line)
+            if m:
+                group = m.groupdict()
+                number = group['number']
+                c_interface = group['interface']
+                duplex_mode = group['duplex_mode']
+                port_speed = group['port_speed']
+
+                member = arp_type_dict.setdefault('member', {}).\
+                    setdefault(number, {})
+                member.update({'interface': c_interface})
+                member.update({'duplex_mode': duplex_mode})
+                member.update({'port_speed': port_speed})
+                continue
+
 
             # Last input never, output 00:01:05, output hang never
             p14 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
