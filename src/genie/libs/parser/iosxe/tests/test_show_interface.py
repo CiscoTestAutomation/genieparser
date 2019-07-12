@@ -14864,15 +14864,11 @@ Port-channel10 is up, line protocol is up
         parsed_output = interface_obj.parse(interface='GigabitEthernet3')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
+    
     def test_show_interfaces_10(self):
         self.device = Mock(**self.golden_interface_output_10)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='po10')
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_10)
 
