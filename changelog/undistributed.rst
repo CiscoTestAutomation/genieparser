@@ -32,6 +32,9 @@
         changed 'trun_vlan' schema type to support multiple values
     * Fix ShowInterfaces
         changed 'arp_type' schema type to support multiple values
+* IOS
+    * Fix ShowInterfaces
+        changed 'arp_type' schema type to support multiple values
 
 ----------------------------------------------------------------------------
                                    OSPF
