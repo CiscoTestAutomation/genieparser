@@ -228,3 +228,10 @@
 * IOSXE
     * Updated ShowBridgeDomain:
       Parser will parse outputs even when Bridge-domain has 0 ports
+
+--------------------------------------------------------------------------------
+                                ntp
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowNtpStatus:
+        Added leap second field in schema
