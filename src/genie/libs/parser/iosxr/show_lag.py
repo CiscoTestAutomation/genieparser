@@ -124,7 +124,7 @@ class ShowBundleSchema(MetaParser):
                     Optional('preferred_multiple'): int,
                     Optional('destination_address'): str,
                 },
-                'port': {
+                Optional('port'): {
                     Any(): {
                         'interface': str,
                         'device': str,
@@ -201,7 +201,7 @@ class ShowBundle(ShowBundleSchema):
         p10_3 = re.compile(r'^Locality +threshold: *(?P<locality_threshold>[\w]+)$')
 
         # LACP:  Operational
-        p11 = re.compile(r'^LACP: *(?P<lacp>[\w]+)$')
+        p11 = re.compile(r'^LACP: *(?P<lacp>[\w\s]+)$')
 
         # Flap suppression timer:  Off
         # Flap suppression timer:  2500 ms
@@ -390,6 +390,7 @@ class ShowBundle(ShowBundleSchema):
             m = p11_1.match(line)
             if m:
                 group = m.groupdict()
+                lacp_dict = bundle_dict.setdefault('lacp', {})
                 lacp_dict.update({'flap_suppression_timer': group['flap_suppression_timer']})
                 continue
 
