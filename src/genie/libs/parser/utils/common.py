@@ -16,7 +16,7 @@ from genie.abstract import Lookup
 log = logging.getLogger(__name__)
 
 
-def get_parser_data():
+def _load_parser_json():
     '''get all parser data in json file'''
     try:
         mod = importlib.import_module('genie.libs.parser')
@@ -34,10 +34,9 @@ def get_parser_data():
             parser_data = json.load(f)
     return parser_data
 
-# Parser within Genie
-parser_data = get_parser_data()
+parser_data = _load_parser_json()
 
-def filter_all_commands_for_device(device, data=parser_data):
+def get_parser_commands(device, data=parser_data):
     '''Remove all commands which contains { as this requires
        extra kwargs which cannot be guessed dynamically
        Remove the one that arent related to this os'''
