@@ -251,6 +251,9 @@
 * IOS
     * Updated ShowNtpAssociations:
         Fixed parsing wrong data in different order and added regExs to handle old version of device output as well
+* IOSXE
+    * Updated ShowNtpAssociationsDetail:
+        Updated regex to support more output
 
 --------------------------------------------------------------------------------
                                RIP
