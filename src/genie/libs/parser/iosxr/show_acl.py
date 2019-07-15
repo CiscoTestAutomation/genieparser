@@ -135,7 +135,7 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # ipv4 access-list acl_name#
+            # ipv4 access-list acl_name
             # ipv6 access-list ipv6_acl
             m = p1.match(line)
             if m:
