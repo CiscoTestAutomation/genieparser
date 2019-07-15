@@ -49,16 +49,6 @@ ifeq ($(MAKECMDGOALS), devnet)
 	BUILD_CMD += --devnet
 endif
 
-# build options
-ifeq ($(CYTHONIZE), true)
-    BUILD_CMD += --cythonize
-endif
-
-# build options
-ifeq ($(DEVNET), true)
-    BUILD_CMD += --devnet
-endif
-
 .PHONY: clean package distribute develop undevelop help devnet\
         docs test install_build_deps uninstall_build_deps
 
@@ -83,16 +73,14 @@ devnet: package
 	@echo "Completed building DevNet packages"
 	@echo ""
 
-package_compile: build_cythonize
+package_compile:
 	@echo ""
-	@echo "Done Compiling"
-	@echo ""
-
-build_cythonize:
 	@echo "Compiling to C code"
 	@echo --------------------------
 	$(BUILD_CMD) --cythonize
 	@echo --------------------------
+	@echo "Done Compiling"
+	@echo ""
 
 install_build_deps:
 	@echo "--------------------------------------------------------------------"

@@ -391,7 +391,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
-                    interface_dict[interface]['medium'] = medium
+                    interface_dict[interface]['medium'] = m.groupdict()['medium']
                 elif m3:
                     first_dot1q = m3.groupdict()['first']
                     second_dot1q = m3.groupdict()['second']
@@ -991,7 +991,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     def yang_cli(self):
         cli_output = self.cli()
         yang_output = self.yang()
-        merged_output = _merge_dict(yang_output,cli_output)
+        merged_output = ShowIpInterfaceBrief._merge_dict(yang_output,cli_output)
         return merged_output
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
