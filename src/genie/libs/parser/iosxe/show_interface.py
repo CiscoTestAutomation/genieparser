@@ -974,7 +974,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         for key in b:
             if key in ret:
                 if isinstance(ret[key], dict) and isinstance(b[key], dict):
-                    _merge_dict(ret[key], b[key], path + [str(key)])
+                    ShowIpInterfaceBrief._merge_dict(ret[key], b[key], path + [str(key)])
                 elif ret[key] == b[key]:
                     # same leaf value so do nothing
                     pass
