@@ -34,6 +34,7 @@ def _load_parser_json():
             parser_data = json.load(f)
     return parser_data
 
+# Parser within Genie
 parser_data = _load_parser_json()
 
 def get_parser_commands(device, data=parser_data):
