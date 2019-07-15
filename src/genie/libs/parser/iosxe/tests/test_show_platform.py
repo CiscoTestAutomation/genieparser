@@ -2212,7 +2212,7 @@ Switch#   Role        Priority      State
                                             }
                                         },
                                         '1': {
-                                            'other': {
+                                            'lc': {
                                                 'ASR1000-2T+20X1GE': {
                                                     'slot': '1',
                                                     'name': 'ASR1000-2T+20X1GE',
@@ -2234,7 +2234,7 @@ Switch#   Role        Priority      State
                                             }
                                         },
                                         '2': {
-                                            'other': {
+                                            'lc': {
                                                 'ASR1000-6TGE': {
                                                     'slot': '2',
                                                     'name': 'ASR1000-6TGE',
