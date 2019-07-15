@@ -42,6 +42,7 @@ class test_show_version(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     dev_isr4k = Device(name='isr4k')
     dev_asr901 = Device(name='asr901')
+    dev_asr1002 = Device(name='asr1002')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -2482,6 +2483,29 @@ Switch#   Role        Priority      State
         c4331a#      
     '''}
 
+    golden_parsed_output_2 = {
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        Chassis type: ASR1002            
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         ASR1002-SIP10       ok                    1y51w        
+         0/0      4XGE-BUILT-IN       ok                    1y51w        
+         0/1      SPA-2X1GE-V2        ok                    1y51w        
+        R0        ASR1002-RP1         ok, active            1y51w        
+        F0        ASR1000-ESP10       ok, active            1y51w        
+        P0        ASR1002-PWR-AC      ok                    1y51w        
+        P1        ASR1002-PWR-AC      ok                    1y51w        
+         
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- ---------------------------------------
+        0         07120202            15.3(3r)S                          
+        R0        08011017            15.3(3r)S                          
+        F0        09111601            15.3(3r)S    
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
@@ -2514,6 +2538,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_asr1002 = Mock(**self.golden_output_2)
+        platform_obj = ShowPlatform(device=self.dev_asr1002)
+        parsed_output_2 = platform_obj.parse()
+        self.assertEqual(parsed_output_2,self.golden_parsed_output_2)
 
 
 class test_show_boot(unittest.TestCase):

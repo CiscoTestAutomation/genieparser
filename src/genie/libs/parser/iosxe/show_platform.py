@@ -1638,7 +1638,7 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if ('ASR1000-SIP' in name) or ('ASR1000-2T' in name) or ('ASR1000-6T' in name) or ('ISR' in name):
+                    if re.match(r'^ASR\d+-SIP\d+$', name) or ('ISR' in name):
                         lc_type = 'lc'
                     elif 'ASR1000-RP' in name:
                         lc_type = 'rp'
