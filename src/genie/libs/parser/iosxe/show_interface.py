@@ -45,7 +45,6 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
-from genie.libs.parser.iosxe.show_ospf import *
 
 logger = logging.getLogger(__name__)
 
