@@ -13,8 +13,8 @@ from genie.libs.parser.iosxe.show_protocols import ShowIpProtocols as \
 
 
 class ShowIpProtocols(ShowIpProtocols_iosxe):
-    ''' Parser for "show ip protocols" '''
-    pass
+	''' Parser for "show ip protocols" '''
+	pass
 
 class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRip_iosxe):
 	"""
@@ -25,8 +25,8 @@ class ShowIpProtocolsSectionRip(ShowIpProtocolsSectionRip_iosxe):
 	pass
 
 class ShowIpv6ProtocolsSectionRip(ShowIpv6ProtocolsSectionRip_iosxe):
-    """Parser for :
-       show ipv6 protocols | sec rip
-       show ipv6 protocols vrf {vrf} | sec rip
-    """
-    pass
+	"""Parser for :
+		show ipv6 protocols | sec rip
+		show ipv6 protocols vrf {vrf} | sec rip
+	"""
+	pass
