@@ -16074,6 +16074,71 @@ class test_show_interfaces_accounting(unittest.TestCase):
       }
     }
 
+    golden_parsed_output2 = {
+    'GigabitEthernet1': {
+        'accounting': {
+            'arp': {
+                'chars_in': 42242472,
+                'chars_out': 83700,
+                'pkts_in': 748749,
+                'pkts_out': 1395,
+                },
+            'ip': {
+                'chars_in': 11143657,
+                'chars_out': 76200963,
+                'pkts_in': 190404,
+                'pkts_out': 233969,
+                },
+            'ipv6': {
+                'chars_in': 29412,
+                'chars_out': 0,
+                'pkts_in': 374,
+                'pkts_out': 0,
+                },
+            'other': {
+                'chars_in': 42241938,
+                'chars_out': 83700,
+                'pkts_in': 748738,
+                'pkts_out': 1395,
+                },
+            },
+        },
+    'GigabitEthernet2': {
+        'accounting': {
+            'arp': {
+                'chars_in': 6748,
+                'chars_out': 7076,
+                'pkts_in': 111,
+                'pkts_out': 115,
+                },
+            'dec mop': {
+                'chars_in': 154,
+                'chars_out': 154,
+                'pkts_in': 2,
+                'pkts_out': 2,
+                },
+            'ip': {
+                'chars_in': 20043363,
+                'chars_out': 17367856,
+                'pkts_in': 244424,
+                'pkts_out': 196065,
+                },
+            'mpls': {
+                'chars_in': 0,
+                'chars_out': 3379706,
+                'pkts_in': 0,
+                'pkts_out': 49529,
+                },
+            'other': {
+                'chars_in': 6926,
+                'chars_out': 7166,
+                'pkts_in': 112,
+                'pkts_out': 116,
+                },
+            },
+        },
+    }
+
     golden_output = {'execute.return_value': '''
 show interface accounting
 GigabitEthernet1 
@@ -16103,6 +16168,27 @@ No traffic sent or received on this interface.
 
     '''}
 
+    golden_output2 = {'execute.return_value': '''
+GigabitEthernet1 OOB Management
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other     748738   42241938       1395      83700
+                      IP     190404   11143657     233969   76200963
+                     ARP     748749   42242472       1395      83700
+                    IPv6        374      29412          0          0
+GigabitEthernet2 toP
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other        112       6926        116       7166
+                      IP     244424   20043363     196065   17367856
+                 DEC MOP          2        154          2        154
+                     ARP        111       6748        115       7076
+                    MPLS          0          0      49529    3379706
+GigabitEthernet3 to CE1
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+No traffic sent or received on this interface.
+
+    '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowInterfacesAccounting(device=self.device)
@@ -16114,6 +16200,13 @@ No traffic sent or received on this interface.
         obj = ShowInterfacesAccounting(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowInterfacesAccounting(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 ###################################################
