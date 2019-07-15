@@ -508,7 +508,7 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # 192.168.13.33 configured, selected, sane, valid, stratum 3
         # 192.168.13.57 configured, our_master, sane, valid, stratum 3
         p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),( +(?P<ip_type>ipv4|ipv6),)?'
-                         '( +(?P<authenticated>authenticated).*?,)?( +(?P<our_master>our_master),)?'
+                         '( +(?P<authenticated>authenticated)( +\(\'\W\' +\S+\))?,)?( +(?P<our_master>our_master),)?'
                          '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
                          '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
