@@ -66,7 +66,7 @@
 
 * IOSXE
     * Fix ShowPlatform
-        updated schema for 'lc_type' as other, added regEx the condition for 'lc_type'
+        added regEx in the condition for 'lc_type' to handle outputs flexibly
 
 --------------------------------------------------------------------------------
                                 ARP
