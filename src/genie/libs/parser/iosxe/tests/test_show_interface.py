@@ -16083,6 +16083,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
                 'pkts_in': 748749,
                 'pkts_out': 1395,
                 },
+            'description': 'OOB Net',
             'ip': {
                 'chars_in': 11143657,
                 'chars_out': 76200963,
@@ -16117,6 +16118,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
                 'pkts_in': 2,
                 'pkts_out': 2,
                 },
+            'description': 'toP',
             'ip': {
                 'chars_in': 20043363,
                 'chars_out': 17367856,
@@ -16169,7 +16171,7 @@ No traffic sent or received on this interface.
     '''}
 
     golden_output2 = {'execute.return_value': '''
-GigabitEthernet1 OOB Management
+GigabitEthernet1 OOB Net
                 Protocol    Pkts In   Chars In   Pkts Out  Chars Out
                    Other     748738   42241938       1395      83700
                       IP     190404   11143657     233969   76200963
@@ -16182,7 +16184,7 @@ GigabitEthernet2 toP
                  DEC MOP          2        154          2        154
                      ARP        111       6748        115       7076
                     MPLS          0          0      49529    3379706
-GigabitEthernet3 to CE1
+GigabitEthernet3 to P1
                 Protocol    Pkts In   Chars In   Pkts Out  Chars Out
 No traffic sent or received on this interface.
 

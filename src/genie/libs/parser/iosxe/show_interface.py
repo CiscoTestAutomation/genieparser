@@ -2785,6 +2785,7 @@ class ShowInterfacesAccountingSchema(MetaParser):
     schema = {
                 Any(): {
                     'accounting': {
+                        Optional('description'): str,
                         Any(): {
                             'pkts_in': int,
                             'pkts_out': int,
@@ -2819,7 +2820,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)( (\S)+)*$')
+        # GigabitEthernet1 OOB Net
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
@@ -2844,11 +2846,11 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 continue
 
             # GigabitEthernet0/0/0/0
-            # GigabitEthernet1 OOB Management
-            # GigabitEthernet3 to CE1
+            # GigabitEthernet1 OOB Net
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
+                description = m.groupdict()['description']
                 continue
 
             #   IPV4_UNICAST             9943           797492           50             3568
@@ -2860,6 +2862,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                     setdefault('accounting', {}).setdefault(protocol, {})
                 ret_dict[intf]['accounting'][protocol].update({k: int(v) \
                     for k, v in protocol_dict.items()})
+                if description:
+                    ret_dict[intf]['accounting'].setdefault('description', description.strip())
                 continue
 
         return ret_dict
