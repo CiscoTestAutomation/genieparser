@@ -22,6 +22,8 @@
 * IOSXE
     * Fix ShowIpRoute
         * updated regex to handle the output more flexibly
+    * Fix ShowIpv6Route
+        * updated command
 
 --------------------------------------------------------------------------------
                                 Interface
