@@ -2491,16 +2491,16 @@ Switch#   Role        Priority      State
             '0': {
                 'lc': {
                     'ASR1002-SIP10': {
-                        'cpld_ver': '07120202',
-                        'fw_ver': '15.3(3r)S',
-                        'insert_time': '1y51w',
+                        'cpld_ver': '07123456',
+                        'fw_ver': '16.1(5r)S',
+                        'insert_time': '2y30w',
                         'name': 'ASR1002-SIP10',
                         'slot': '0',
                         'state': 'ok',
                         'subslot': {
                             '0': {
                                 '4XGE-BUILT-IN': {
-                                    'insert_time': '1y51w',
+                                    'insert_time': '2y30w',
                                     'name': '4XGE-BUILT-IN',
                                     'state': 'ok',
                                     'subslot': '0'
@@ -2508,7 +2508,7 @@ Switch#   Role        Priority      State
                             },
                             '1': {
                                 'SPA-2X1GE-V2': {
-                                    'insert_time': '1y51w',
+                                    'insert_time': '2y30w',
                                     'name': 'SPA-2X1GE-V2',
                                     'state': 'ok',
                                     'subslot': '1'
@@ -2521,9 +2521,9 @@ Switch#   Role        Priority      State
             'F0': {
                 'other': {
                     'ASR1000-ESP10': {
-                        'cpld_ver': '09111601',
-                        'fw_ver': '15.3(3r)S',
-                        'insert_time': '1y51w',
+                        'cpld_ver': '09123456',
+                        'fw_ver': '16.1(5r)S',
+                        'insert_time': '2y30w',
                         'name': 'ASR1000-ESP10',
                         'slot': 'F0',
                         'state': 'ok, active'
@@ -2533,17 +2533,17 @@ Switch#   Role        Priority      State
             'P0': {
                 'other': {
                     'ASR1002-PWR-AC': {
-                        'insert_time': '1y51w',
+                        'insert_time': '2y30w',
                         'name': 'ASR1002-PWR-AC',
                         'slot': 'P0',
-                        'state': 'ok'
+                        'state': 'ok, active'
                     }
                 }
             },
             'P1': {
                 'other': {
                     'ASR1002-PWR-AC': {
-                        'insert_time': '1y51w',
+                        'insert_time': '2y30w',
                         'name': 'ASR1002-PWR-AC',
                         'slot': 'P1',
                         'state': 'ok'
@@ -2553,9 +2553,9 @@ Switch#   Role        Priority      State
             'R0': {
                 'rp': {
                     'ASR1002-RP1': {
-                        'cpld_ver': '08011017',
-                        'fw_ver': '15.3(3r)S',
-                        'insert_time': '1y51w',
+                        'cpld_ver': '08123456',
+                        'fw_ver': '16.1(5r)S',
+                        'insert_time': '2y30w',
                         'name': 'ASR1002-RP1',
                         'slot': 'R0',
                         'state': 'ok, active'
@@ -2570,19 +2570,19 @@ Switch#   Role        Priority      State
          
         Slot      Type                State                 Insert time (ago)
         --------- ------------------- --------------------- -----------------
-        0         ASR1002-SIP10       ok                    1y51w        
-         0/0      4XGE-BUILT-IN       ok                    1y51w        
-         0/1      SPA-2X1GE-V2        ok                    1y51w        
-        R0        ASR1002-RP1         ok, active            1y51w        
-        F0        ASR1000-ESP10       ok, active            1y51w        
-        P0        ASR1002-PWR-AC      ok                    1y51w        
-        P1        ASR1002-PWR-AC      ok                    1y51w        
+        0         ASR1002-SIP10       ok                    2y30w        
+         0/0      4XGE-BUILT-IN       ok                    2y30w        
+         0/1      SPA-2X1GE-V2        ok                    2y30w        
+        R0        ASR1002-RP1         ok, active            2y30w        
+        F0        ASR1000-ESP10       ok, active            2y30w        
+        P0        ASR1002-PWR-AC      ok, active            2y30w        
+        P1        ASR1002-PWR-AC      ok                    2y30w        
          
         Slot      CPLD Version        Firmware Version                        
         --------- ------------------- ---------------------------------------
-        0         07120202            15.3(3r)S                          
-        R0        08011017            15.3(3r)S                          
-        F0        09111601            15.3(3r)S    
+        0         07123456            16.1(5r)S                          
+        R0        08123456            16.1(5r)S                          
+        F0        09123456            16.1(5r)S    
     '''}
 
     def test_empty(self):
