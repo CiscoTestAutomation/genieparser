@@ -2704,7 +2704,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # BGP state = Idle, down for 01:10:35
         # BGP state = Idle
         # BGP state = Established, up for 1w2d
-        p6 = re.compile(r'^BGP +state += +(?P<session_state>(\S+))'
+        # Session state = Closing
+        p6 = re.compile(r'^(BGP|Session) +state += +(?P<session_state>(\S+))'
                          '(?:, +(?P<state>(up|down)) +for +(?P<time>(\S+)))?$')
 
         # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
@@ -2774,7 +2775,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
                          ' +(?P<value>(.*))$')
 
         # Message statistics:
-        p19 = re.compile(r'^Message +statistics:$')
+        # Message statistics for 192.168.10.253 active:
+        p19 = re.compile(r'^Message +statistics.*:$')
 
         #  InQ depth is 0
         #  OutQ depth is 0
