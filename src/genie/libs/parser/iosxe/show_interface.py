@@ -2784,8 +2784,8 @@ class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interfaces accounting"""
     schema = {
                 Any(): {
+                    Optional('description'): str,
                     'accounting': {
-                        Optional('description'): str,
                         Any(): {
                             'pkts_in': int,
                             'pkts_out': int,
@@ -2863,7 +2863,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 ret_dict[intf]['accounting'][protocol].update({k: int(v) \
                     for k, v in protocol_dict.items()})
                 if description:
-                    ret_dict[intf]['accounting'].setdefault('description', description.strip())
+                    ret_dict[intf].setdefault('description', description.strip())
                 continue
 
         return ret_dict

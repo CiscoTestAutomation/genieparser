@@ -16076,6 +16076,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
 
     golden_parsed_output2 = {
     'GigabitEthernet1': {
+        'description': 'OOB Net',
         'accounting': {
             'arp': {
                 'chars_in': 42242472,
@@ -16083,7 +16084,6 @@ class test_show_interfaces_accounting(unittest.TestCase):
                 'pkts_in': 748749,
                 'pkts_out': 1395,
                 },
-            'description': 'OOB Net',
             'ip': {
                 'chars_in': 11143657,
                 'chars_out': 76200963,
@@ -16105,6 +16105,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
             },
         },
     'GigabitEthernet2': {
+        'description': 'toP',
         'accounting': {
             'arp': {
                 'chars_in': 6748,
@@ -16118,7 +16119,6 @@ class test_show_interfaces_accounting(unittest.TestCase):
                 'pkts_in': 2,
                 'pkts_out': 2,
                 },
-            'description': 'toP',
             'ip': {
                 'chars_in': 20043363,
                 'chars_out': 17367856,
@@ -16184,7 +16184,7 @@ GigabitEthernet2 toP
                  DEC MOP          2        154          2        154
                      ARP        111       6748        115       7076
                     MPLS          0          0      49529    3379706
-GigabitEthernet3 to P1
+GigabitEthernet3 to Device1
                 Protocol    Pkts In   Chars In   Pkts Out  Chars Out
 No traffic sent or received on this interface.
 
