@@ -965,32 +965,11 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         typically contains 3 steps: executing, transforming, returning
         """
         pass
-    def _merge_dict(a, b, path=None):
-        '''merges b into a for as many level as there is'''
-        # Dict to use to return
-        ret = a
-        if path is None:
-            path = []
-        for key in b:
-            if key in ret:
-                if isinstance(ret[key], dict) and isinstance(b[key], dict):
-                    ShowIpInterfaceBrief._merge_dict(ret[key], b[key], path + [str(key)])
-                elif ret[key] == b[key]:
-                    # same leaf value so do nothing
-                    pass
-                else:
-                    # Any other case
-                    raise Exception('{key} cannot be merged as it already '
-                                    'exists with type '
-                                    '{ty}.'.format(key=key, ty=type(ret[key])))
-            else:
-                ret[key] = b[key]
-        return ret
 
     def yang_cli(self):
         cli_output = self.cli()
         yang_output = self.yang()
-        merged_output = ShowIpInterfaceBrief._merge_dict(yang_output,cli_output)
+        merged_output = merge_dict(yang_output,cli_output)
         return merged_output
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
