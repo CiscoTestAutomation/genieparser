@@ -24,7 +24,7 @@ def _load_parser_json():
     except Exception:
         parsers = ''
     if not os.path.isfile(parsers):
-        log.warning('parsers.json does not exists, make sure you '
+        log.warning('parsers.json does not exist, make sure you '
                     'are running with latest version of '
                     'genie.libs.parsers')
         parser_data = {}
@@ -38,9 +38,9 @@ def _load_parser_json():
 parser_data = _load_parser_json()
 
 def get_parser_commands(device, data=parser_data):
-    '''Remove all commands which contains { as this requires
+    '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
-       Remove the one that arent related to this os'''
+       Remove the ones that arent related to this os'''
 
     commands = []
     for command, values in data.items():
