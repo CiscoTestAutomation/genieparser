@@ -30,6 +30,7 @@
     * Fix ShowIpInterfaceBrief short name issue
     * Fix ShowInterfacesSwitchport
         changed 'trun_vlan' schema type to support multiple values
+    * Fix ShowInterfacesAccounting interface name issue
 
 ----------------------------------------------------------------------------
                                    OSPF
