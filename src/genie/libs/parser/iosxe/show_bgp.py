@@ -2485,7 +2485,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('stateful_switchover'): str,
                         },
                         Optional('bgp_neighbor_counters'):
-                            {'messages':
+                            {
+                            Optional('messages'):
                                 {'sent':
                                     {'opens': int,
                                     'updates': int,
@@ -2504,6 +2505,28 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     },
                                 'in_queue_depth': int,
                                 'out_queue_depth': int,
+                                },
+                            Optional('multisession_messages'): {
+                                Any(): 
+                                    {'sent':
+                                        {'opens': int,
+                                        'updates': int,
+                                        'notifications': int,
+                                        'keepalives': int,
+                                        'route_refresh': int,
+                                        'total': int,
+                                        },
+                                    'received':
+                                        {'opens': int,
+                                        'updates': int,
+                                        'notifications': int,
+                                        'keepalives': int,
+                                        'route_refresh': int,
+                                        'total': int,
+                                        },
+                                    'in_queue_depth': int,
+                                    'out_queue_depth': int,
+                                    },
                                 },
                             },
                         Optional('bgp_session_transport'):
@@ -2776,7 +2799,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # Message statistics:
         # Message statistics for 192.168.10.253 active:
-        p19 = re.compile(r'^Message +statistics.*:$')
+        p19 = re.compile(r'^Message +statistics( +for +(?P<state>[\w. ]+))?:$')
 
         #  InQ depth is 0
         #  OutQ depth is 0
@@ -3283,13 +3306,21 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             # Message statistics:
+            # Message statistics for 192.168.10.253 active:
             m = p19.match(line)
             if m:
                 message_statistics = True
                 prefix_activity = False
                 local_prefix = False
                 refresh_activity = False
-                nbr_counters_dict = nbr_dict.\
+                state = m.groupdict()['state']
+                if state:
+                    nbr_counters_dict = nbr_dict.\
+                                        setdefault('bgp_neighbor_counters', {}).\
+                                        setdefault('multisession_messages', {}).\
+                                        setdefault(state, {})
+                else:
+                    nbr_counters_dict = nbr_dict.\
                                         setdefault('bgp_neighbor_counters', {}).\
                                         setdefault('messages', {})
                 nbr_counters_sent_dict = nbr_counters_dict.\
