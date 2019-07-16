@@ -2820,7 +2820,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
-        # GigabitEthernet1 OOB Net
+        # GigabitEthernet11 OOB Net
         p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
@@ -2846,7 +2846,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 continue
 
             # GigabitEthernet0/0/0/0
-            # GigabitEthernet1 OOB Net
+            # GigabitEthernet11 OOB Net
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']

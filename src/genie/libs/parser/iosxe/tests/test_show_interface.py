@@ -16075,7 +16075,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
     }
 
     golden_parsed_output2 = {
-    'GigabitEthernet1': {
+    'GigabitEthernet11': {
         'description': 'OOB Net',
         'accounting': {
             'arp': {
@@ -16104,7 +16104,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
                 },
             },
         },
-    'GigabitEthernet2': {
+    'GigabitEthernet12': {
         'description': 'toP',
         'accounting': {
             'arp': {
@@ -16171,20 +16171,20 @@ No traffic sent or received on this interface.
     '''}
 
     golden_output2 = {'execute.return_value': '''
-GigabitEthernet1 OOB Net
+GigabitEthernet11 OOB Net
                 Protocol    Pkts In   Chars In   Pkts Out  Chars Out
                    Other     748738   42241938       1395      83700
                       IP     190404   11143657     233969   76200963
                      ARP     748749   42242472       1395      83700
                     IPv6        374      29412          0          0
-GigabitEthernet2 toP
+GigabitEthernet12 toP
                 Protocol    Pkts In   Chars In   Pkts Out  Chars Out
                    Other        112       6926        116       7166
                       IP     244424   20043363     196065   17367856
                  DEC MOP          2        154          2        154
                      ARP        111       6748        115       7076
                     MPLS          0          0      49529    3379706
-GigabitEthernet3 to Device1
+GigabitEthernet13 to Device1
                 Protocol    Pkts In   Chars In   Pkts Out  Chars Out
 No traffic sent or received on this interface.
 
