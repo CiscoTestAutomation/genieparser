@@ -43,7 +43,7 @@
     * Enhanced ShowIpOspfMaxMetric to support different outputs
     * Updated ShowIpOspfTraffic to support different outputs
     * Enhanced regex to support more patterns
-    * Updated 
+    * Updated ShowIpOspfInterface to support command 'show ip ospf interface brief'
 * NXOS
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
