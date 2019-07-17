@@ -2009,6 +2009,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                                         if (local_neighbor == neighbor and
                                             as_num['remote_as'] == str(neighbor_as)):
                                             vrf = vrf_value
+                                            neighbors_value.pop(local_neighbor, '')
                                             break
                                     else:
                                         continue
