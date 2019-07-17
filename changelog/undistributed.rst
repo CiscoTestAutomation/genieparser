@@ -47,7 +47,7 @@
     * Enhanced ShowIpOspfMaxMetric to support different outputs
     * Updated ShowIpOspfTraffic to support different outputs
     * Enhanced regex to support more patterns
-    * Updated 
+    * Updated
 * NXOS
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
@@ -67,7 +67,10 @@
     * Update ShowEnvironment to support:
         show environment | include {include}
     * Updated showProcessCpuPlatform to support different outputs
-    
+
+* IOSXE
+    * Fix ShowPlatform
+        added regEx in the condition for 'lc_type' to handle outputs flexibly
 
 --------------------------------------------------------------------------------
                                 ARP
