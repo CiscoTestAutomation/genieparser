@@ -5,6 +5,7 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+-----------------------------------------------------------------------------
                                    Dot1x
 -----------------------------------------------------------------------------
 * NXOS
@@ -133,6 +134,8 @@
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
     * added restricted list for ShowBgpAll
+    * Updates ShowIpBgpNeighbors for:
+        Support for more Message statistics values
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
