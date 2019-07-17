@@ -47,7 +47,7 @@ class ShowBridgeDomainSchema(MetaParser):
                 'aging_timer': int,
                 'state': str,
                 'mac_learning_state': str,
-                'member_ports': list,
+                Optional('member_ports'): list,
                 Any(): {
                     Any(): {
                         'num_of_ports': str,
@@ -384,6 +384,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
             # Service Instance ID: 2051
             m = p1.match(line)
             if m:
+                sub_dict = {}
                 group = m.groupdict()
                 service_instance_id = int(group['service_id'])
                 continue
@@ -411,7 +412,6 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
                     setdefault(service_instance_id, {}).\
                     setdefault('interfaces', {}).\
                     setdefault(group['associated_interface'], sub_dict)
-                
                 continue
 
             # Associated EVC: 
@@ -502,7 +502,7 @@ class ShowEthernetServiceInstanceDetail(ShowEthernetServiceInstanceDetailSchema)
             
             # Microblock type: Storm-Control
             m = p17.match(line)
-            if m and service_instance_id and interface:
+            if m:
                 if not final_dict:
                     final_dict = ret_dict.setdefault('service_instance', {}).\
                         setdefault(service_instance_id, {}).\

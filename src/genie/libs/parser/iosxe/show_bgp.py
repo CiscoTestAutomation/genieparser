@@ -585,11 +585,16 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
     exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
+        ret_dict = {}
+        restricted_list = ['ipv4 unicast', 'ipv6 unicast']
 
         if output is None:
             # Build command
             if address_family:
-                cmd = self.cli_command[0].format(address_family=address_family)
+                if address_family not in restricted_list:
+                    cmd = self.cli_command[0].format(address_family=address_family)
+                else:
+                    return ret_dict
             else:
                 cmd = self.cli_command[1]
             # Execute command
@@ -2480,7 +2485,8 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('stateful_switchover'): str,
                         },
                         Optional('bgp_neighbor_counters'):
-                            {'messages':
+                            {
+                            Optional('messages'):
                                 {'sent':
                                     {'opens': int,
                                     'updates': int,
@@ -2499,6 +2505,28 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                     },
                                 'in_queue_depth': int,
                                 'out_queue_depth': int,
+                                },
+                            Optional('multisession_messages'): {
+                                Any(): 
+                                    {'sent':
+                                        {'opens': int,
+                                        'updates': int,
+                                        'notifications': int,
+                                        'keepalives': int,
+                                        'route_refresh': int,
+                                        'total': int,
+                                        },
+                                    'received':
+                                        {'opens': int,
+                                        'updates': int,
+                                        'notifications': int,
+                                        'keepalives': int,
+                                        'route_refresh': int,
+                                        'total': int,
+                                        },
+                                    'in_queue_depth': int,
+                                    'out_queue_depth': int,
+                                    },
                                 },
                             },
                         Optional('bgp_session_transport'):
@@ -2699,7 +2727,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # BGP state = Idle, down for 01:10:35
         # BGP state = Idle
         # BGP state = Established, up for 1w2d
-        p6 = re.compile(r'^BGP +state += +(?P<session_state>(\S+))'
+        # Session state = Closing
+        p6 = re.compile(r'^(BGP|Session) +state += +(?P<session_state>(\S+))'
                          '(?:, +(?P<state>(up|down)) +for +(?P<time>(\S+)))?$')
 
         # Last read 00:00:04, last write 00:00:09, hold time is 180, keepalive interval is 60 seconds
@@ -2769,7 +2798,8 @@ class ShowBgpNeighborSuperParser(MetaParser):
                          ' +(?P<value>(.*))$')
 
         # Message statistics:
-        p19 = re.compile(r'^Message +statistics:$')
+        # Message statistics for 192.168.10.253 active:
+        p19 = re.compile(r'^Message +statistics( +for +(?P<state>[\w. ]+))?:$')
 
         #  InQ depth is 0
         #  OutQ depth is 0
@@ -3276,13 +3306,21 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             # Message statistics:
+            # Message statistics for 192.168.10.253 active:
             m = p19.match(line)
             if m:
                 message_statistics = True
                 prefix_activity = False
                 local_prefix = False
                 refresh_activity = False
-                nbr_counters_dict = nbr_dict.\
+                state = m.groupdict()['state']
+                if state:
+                    nbr_counters_dict = nbr_dict.\
+                                        setdefault('bgp_neighbor_counters', {}).\
+                                        setdefault('multisession_messages', {}).\
+                                        setdefault(state, {})
+                else:
+                    nbr_counters_dict = nbr_dict.\
                                         setdefault('bgp_neighbor_counters', {}).\
                                         setdefault('messages', {})
                 nbr_counters_sent_dict = nbr_counters_dict.\

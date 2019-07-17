@@ -398,7 +398,7 @@ class ShowPlatform(ShowPlatformSchema):
                     # Check for daughtercards
                     if daughtercard_dict and slot in daughtercard_dict:
                         # Then merge dictionary
-                        show_platform['slot'][slot_type][slot]['subslot'].update(daughter_temp[slot])
+                        show_platform['slot'][slot_type][slot]['subslot'].update(daughtercard_dict[slot])
                         continue
 
                 # Check for daughtercards

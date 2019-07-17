@@ -149,6 +149,7 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                          Optional('mvpn_import_rt_list'): str,
                          Optional('label_mode'): str,
                          Optional('aggregate_label'): str,
+                         Optional('allocate_index'): str,
                          Optional('route_reflector'): bool,
                          Optional('next_hop_trigger_delay'):
                             {'critical': int,
@@ -178,7 +179,7 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
     cli_command = ['show bgp process vrf all', 'show bgp process vrf {vrf}']
     xml_command = ['show bgp process vrf all | xml', 'show bgp process vrf {vrf} | xml']
     exclude = [
-      'bgp_pid'
+      'bgp_pid',
       'hwm_attr_entries',
       'bgp_protocol_started_reason',
       'aggregate_label',
@@ -288,6 +289,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         p32_1 = re.compile(r'^\s*Is +a +Route\-reflector$')
         p33 = re.compile(r'^\s*Aggregate +label *:'
                             ' +(?P<aggregate_label>[a-zA-Z0-9\-]+)$')
+        p33_1 = re.compile(r'^\s*Allocate-index *:'
+                           ' +(?P<allocate_index>[a-zA-Z0-9\-]+)$')
         p34 = re.compile(r'^\s*Import +default +limit *:'
                             ' +(?P<import_default_prefix_limit>[0-9]+)$')
         p35 = re.compile(r'^\s*Import +default +prefix +count *:'
@@ -719,6 +722,13 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
                     ['aggregate_label'] = str(m.groupdict()['aggregate_label'])
                 continue
 
+            #     Allocate-index:
+            m = p33_1.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family] \
+                    ['allocate_index'] = str(m.groupdict()['allocate_index'])
+                continue
+
             # Import default limit       : 1000
             m = p34.match(line)
             if m:
@@ -1065,48 +1075,26 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         map_dict['bgp_pid'] = yang_dict['bgp_pid']
 
         # vrf
-        if vrf:
-            for vrf_name in yang_dict['vrf']:
-                if 'vrf' not in map_dict:
-                    map_dict['vrf'] = {}
-                if vrf_name == vrf:
-                    if vrf_name not in map_dict['vrf']:
-                        map_dict['vrf'][vrf_name] = {}
-                    for vrf_attr_key in yang_dict['vrf'][vrf_name]:
-                        # Set router_id
-                        if vrf_attr_key == 'router_id':
-                            map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
-                        # Set address_family
-                        if vrf_attr_key == 'address_family':
-                            map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
-                        if vrf_attr_key == 'neighbor':
-                            for nbr in yang_dict['vrf'][vrf_name]['neighbor']:
-                                for key in yang_dict['vrf'][vrf_name]['neighbor'][nbr]:
-                                    # Set cluster_id
-                                    if key == 'route_reflector_cluster_id':
-                                        cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf_name]['neighbor'][nbr]['route_reflector_cluster_id'])
-                                        map_dict['vrf'][vrf_name]['cluster_id'] = cluster_id
 
-        else:
-            for vrf_name in yang_dict['vrf']:
-                if 'vrf' not in map_dict:
-                    map_dict['vrf'] = {}
-                if vrf_name not in map_dict['vrf']:
-                    map_dict['vrf'][vrf_name] = {}
-                for vrf_attr_key in yang_dict['vrf'][vrf_name]:
-                    # Set router_id
-                    if vrf_attr_key == 'router_id':
-                        map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
-                    # Set address_family
-                    if vrf_attr_key == 'address_family':
-                        map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
-                    if vrf_attr_key == 'neighbor':
-                        for nbr in yang_dict['vrf'][vrf_name]['neighbor']:
-                            for key in yang_dict['vrf'][vrf_name]['neighbor'][nbr]:
-                                # Set cluster_id
-                                if key == 'route_reflector_cluster_id':
-                                    cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf_name]['neighbor'][nbr]['route_reflector_cluster_id'])
-                                    map_dict['vrf'][vrf_name]['cluster_id'] = cluster_id
+        for vrf_name in yang_dict['vrf']:
+            if 'vrf' not in map_dict:
+                map_dict['vrf'] = {}
+            if vrf_name not in map_dict['vrf']:
+                map_dict['vrf'][vrf_name] = {}
+            for vrf_attr_key in yang_dict['vrf'][vrf_name]:
+                # Set router_id
+                if vrf_attr_key == 'router_id':
+                    map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
+                # Set address_family
+                if vrf_attr_key == 'address_family':
+                    map_dict['vrf'][vrf_name][vrf_attr_key] = yang_dict['vrf'][vrf_name][vrf_attr_key]
+                if vrf_attr_key == 'neighbor':
+                    for nbr in yang_dict['vrf'][vrf_name]['neighbor']:
+                        for key in yang_dict['vrf'][vrf_name]['neighbor'][nbr]:
+                            # Set cluster_id
+                            if key == 'route_reflector_cluster_id':
+                                cluster_id = '0.0.0' + str(yang_dict['vrf'][vrf_name]['neighbor'][nbr]['route_reflector_cluster_id'])
+                                map_dict['vrf'][vrf_name]['cluster_id'] = cluster_id
 
         # Return to caller
         return map_dict
@@ -6896,10 +6884,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                             continue
 
                         #   transport connection-mode <nbr_transport_connection_mode>
-                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
                         m = p56.match(line)
                         if m:
-                            str(m.groupdict()['nbr_transport_connection_mode'])
+                            bgp_dict['bgp']['instance']['default']['vrf'][vrf]['neighbor_id'][neighbor_id]['nbr_transport_connection_mode'] = \
+                                str(m.groupdict()['nbr_transport_connection_mode'])
                             continue
 
                         # peer-type fabric-external

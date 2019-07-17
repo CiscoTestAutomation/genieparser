@@ -217,15 +217,15 @@ class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
             p5 = re.compile(r'^\s*Administrative private-vlan trunk native VLAN:\s*(?P<admin_private_native_vlan>[0-9]+)$')
             m = p5.match(line)
             if m:
-                vlan_id = m.groupdict()['admin_private_native_vlan']
-                if any(word in admin_mode for word in ['trunk', 'access']):
+                if any(word in operational_mode for word in ['trunk', 'access']):
+                    vlan_id = m.groupdict()['admin_private_native_vlan']
                     if 'vlan_id' not in intf_dict['interface']\
                         [interface_name]['switchport_mode'][operational_mode]:
                         intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'] = {}
                     if vlan_id not in intf_dict['interface']\
                         [interface_name]['switchport_mode'][operational_mode]['vlan_id']:
                         intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'][vlan_id] = {}
-                continue
+                    continue
 
         return intf_dict
 

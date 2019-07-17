@@ -37,7 +37,7 @@ class ShowMacAddressTableVniSchema(MetaParser):
                         'mac_addresses': {
                             Any():{
                                 'mac_address': str,
-                                'entry': str,
+                                Optional('entry'): str,
                                 'secure': str,
                                 'ntfy': str,
                                 Optional('drop'): {
@@ -73,13 +73,14 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
 
         # C 1001     0000.04b1.0000   dynamic  0     F      F nve1(10.9.0.101)
         # * 1001     0000.0191.0000   dynamic  0     F      F    Eth1/11
-        p1 = re.compile(r'^\s*(?P<entry>[A-Z\*\(\+\)\~]+) +(?P<vlan>[0-9\-]+) '
+        # G 2000     7e00.c000.0007    static       -       F    F  vPC Peer-Link(R)
+        # 4000     5e00.c000.0007   static   ~~~         F      F    sup-eth1(R)
+        p1 = re.compile(r'^(?P<entry>[\w\*] )?\s*(?P<vlan>All|[\d\-]+) '
             '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
-            '+(?P<age>[0-9\-]+) '
+            '+(?P<age>[0-9\-\~]+) '
             '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
             '+(?P<drop>(drop|Drop))?'
-            '(?P<ports>[a-zA-Z0-9\/\.\(\)\-]+)?$')
-
+            '(?P<ports>[a-zA-Z0-9\/\.\(\)\-\s]+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -90,29 +91,31 @@ class ShowMacAddressTableBase(ShowMacAddressTableVniSchema):
                 vlan = str(group['vlan'])
                 vlan_dict = ret_dict.setdefault('mac_table', {})\
                 .setdefault('vlans', {}).setdefault(vlan, {})
-                vlan_dict['vlan'] = str(vlan)
+                vlan_dict.update({'vlan': str(vlan)})
                 mac_address = str(group['mac_address'])
                 mac_dict = vlan_dict.setdefault('mac_addresses', {})\
                 .setdefault(mac_address,{})
-                mac_dict['mac_address'] = mac_address
-                mac_dict['entry'] = str(group['entry'])
-
+                mac_dict.update({'mac_address': mac_address})
+                if group['entry']:
+                    mac_dict.update({'entry': str(group['entry']).strip()})
                 if not str(group['drop']) == 'None':
                     intf_dict = mac_dict.setdefault('drop',{})
-                    intf_dict['drop'] = True
-
+                    intf_dict.update({'drop': True})
                 port = str(group['ports'])
                 if not port == 'None':
                     converted_port = Common.convert_intf_name(group['ports'])
                     intf_dict = mac_dict.setdefault('interfaces',{})\
                     .setdefault(converted_port,{})
-                    intf_dict['interface'] = converted_port
-                
-                intf_dict['mac_type'] = str(group['mac_type'])
-                intf_dict['age'] = str(group['age'])
-                
-                mac_dict['secure'] = str(group['secure'])
-                mac_dict['ntfy'] = str(group['ntfy'])
+                    intf_dict.update({'interface': converted_port})
+                mac_type = str(group['mac_type'])
+                age = str(group['age'])
+                secure = str(group['secure'])
+                ntfy = str(group['ntfy'])
+                intf_dict.update({'mac_type': str(group['mac_type'])})
+                intf_dict.update({'age': str(group['age'])})                
+                mac_dict.update({'secure': str(group['secure'])})
+                mac_dict.update({'ntfy': str(group['ntfy'])})
+                continue
                 
         return ret_dict
 
@@ -299,11 +302,11 @@ class ShowMacAddressTableLimit(ShowMacAddressTableLimitSchema):
                 vlan = str(group['vlan'])
                 vlan_dict = ret_dict.setdefault('mac_table', {})\
                 .setdefault('vlans', {}).setdefault(str(vlan), {})
-                vlan_dict['vlan'] = vlan
-                vlan_dict['conf_limit'] = int(group['conf_limit'])
-                vlan_dict['curr_count'] = int(group['curr_count'])
-                vlan_dict['cfg_action'] = group['cfg_action']
-                vlan_dict['currently'] = group['currently']
+                vlan_dict.update({'vlan': vlan})
+                vlan_dict.update({'conf_limit': int(group['conf_limit'])})
+                vlan_dict.update({'curr_count': int(group['curr_count'])})
+                vlan_dict.update({'cfg_action': group['cfg_action']})
+                vlan_dict.update({'currently': group['currently']})
 
         return ret_dict
 

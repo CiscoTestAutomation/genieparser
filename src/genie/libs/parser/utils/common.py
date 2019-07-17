@@ -14,22 +14,40 @@ from genie.libs import parser
 from genie.abstract import Lookup
 
 log = logging.getLogger(__name__)
-# Parser within Genie
-try:
-    mod = importlib.import_module('genie.libs.parser')
-    parsers = os.path.join(mod.__path__[0], 'parsers.json')
-except Exception:
-    parsers = ''
 
-if not os.path.isfile(parsers):
-    log.warning('parsers.json does not exists, make sure you '
-                'are running with latest version of '
-                'genie.libs.parsers')
-    parser_data = {}
-else:
-    # Open all the parsers in json file
-    with open(parsers) as f:
-        parser_data = json.load(f)
+
+def _load_parser_json():
+    '''get all parser data in json file'''
+    try:
+        mod = importlib.import_module('genie.libs.parser')
+        parsers = os.path.join(mod.__path__[0], 'parsers.json')
+    except Exception:
+        parsers = ''
+    if not os.path.isfile(parsers):
+        log.warning('parsers.json does not exist, make sure you '
+                    'are running with latest version of '
+                    'genie.libs.parsers')
+        parser_data = {}
+    else:
+        # Open all the parsers in json file
+        with open(parsers) as f:
+            parser_data = json.load(f)
+    return parser_data
+
+# Parser within Genie
+parser_data = _load_parser_json()
+
+def get_parser_commands(device, data=parser_data):
+    '''Remove all commands which contain { as this requires
+       extra kwargs which cannot be guessed dynamically
+       Remove the ones that arent related to this os'''
+
+    commands = []
+    for command, values in data.items():
+        if '{' in command or command == 'tokens' or device.os not in values:
+            continue
+        commands.append(command)
+    return commands
 
 def format_output(parser_data, tab=0):
     '''Format the parsed output in an aligned intended structure'''

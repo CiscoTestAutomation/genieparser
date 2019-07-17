@@ -69,7 +69,7 @@ class ShowIpv6RouteDistributor(MetaParser):
                    'show ipv6 route vrf {vrf} {protocol}',
                    'show ipv6 route',
                    'show ipv6 route {route}',
-                   'show ip route {protocol}']
+                   'show ipv6 route {protocol}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
@@ -294,10 +294,11 @@ class ShowIpRoute(ShowIpRouteSchema):
             # O        10.2.3.0/24 [110/2] via 10.186.2.2, 06:46:59, GigabitEthernet0/1
             # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
             # D        192.168.205.1
+            # S*       0.0.0.0/0 [1/0] via 10.50.15.1
             p3 = re.compile(
                 r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                r'via +)?(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             m = p3.match(line)
             if m:
@@ -752,8 +753,8 @@ class ShowIpv6Route(ShowIpRoute):
     """Parser for:
         show ipv6 route
         show ipv6 route vrf <vrf>"""
-    command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {protocol}',
-               'show ip route', 'show ip route {protocol}']
+    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {protocol}',
+               'show ipv6 route', 'show ipv6 route {protocol}']
     exclude = ['uptime']
 
     IP_VER = 'ipv6'

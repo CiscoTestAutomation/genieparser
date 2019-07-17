@@ -390,7 +390,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
-                    interface_dict[interface]['medium'] = medium
+                    interface_dict[interface]['medium'] = m.groupdict()['medium']
                 elif m3:
                     first_dot1q = m3.groupdict()['first']
                     second_dot1q = m3.groupdict()['second']
@@ -965,11 +965,32 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         typically contains 3 steps: executing, transforming, returning
         """
         pass
+    def _merge_dict(a, b, path=None):
+        '''merges b into a for as many level as there is'''
+        # Dict to use to return
+        ret = a
+        if path is None:
+            path = []
+        for key in b:
+            if key in ret:
+                if isinstance(ret[key], dict) and isinstance(b[key], dict):
+                    ShowIpInterfaceBrief._merge_dict(ret[key], b[key], path + [str(key)])
+                elif ret[key] == b[key]:
+                    # same leaf value so do nothing
+                    pass
+                else:
+                    # Any other case
+                    raise Exception('{key} cannot be merged as it already '
+                                    'exists with type '
+                                    '{ty}.'.format(key=key, ty=type(ret[key])))
+            else:
+                ret[key] = b[key]
+        return ret
 
     def yang_cli(self):
         cli_output = self.cli()
         yang_output = self.yang()
-        merged_output = _merge_dict(yang_output,cli_output)
+        merged_output = ShowIpInterfaceBrief._merge_dict(yang_output,cli_output)
         return merged_output
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
@@ -1460,11 +1481,19 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Trunking VLANs Enabled: 200-211
-            # Trunking VLANs Enabled: 1,2
+            # Trunking VLANs Enabled: 100,101,110-120,121,130,170,180,
             p21 =  re.compile(r'^Trunking +VLANs +Enabled: +(?P<trunk_vlans>[\w\-\,\s]+)$')
             m = p21.match(line)
             if m:
                 ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()
+                continue
+
+            # 100,111,222,300-30,500-55,
+            # 1111,2222,3333
+            p21_1 = re.compile(r'^(?P<trunk_vlans>[\d\,\-]+)$')
+            m = p21_1.match(line)
+            if m:              
+                ret_dict[intf]['trunk_vlans'] += m.groupdict()['trunk_vlans'].lower()
                 continue
 
             # Pruning VLANs Enabled: 2-1001
@@ -2776,6 +2805,7 @@ class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interfaces accounting"""
     schema = {
                 Any(): {
+                    Optional('description'): str,
                     'accounting': {
                         Any(): {
                             'pkts_in': int,
@@ -2811,7 +2841,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)$')
+        # GigabitEthernet11 OOB Net
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
@@ -2821,16 +2852,26 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         p2 = re.compile(r'^(?P<protocol>[\w\_\-\s]+)\s+(?P<pkts_in>\d+)\s+'
                          '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
                          '(?P<chars_out>\d+)')
+
+        # No traffic sent or received on this interface.
+        p3 = re.compile(r'^No +traffic +sent +or +received +on +this +interface\.$')
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
             else:
                 continue
 
+            m = p3.match(line)
+            if m:
+                continue
+
             # GigabitEthernet0/0/0/0
+            # GigabitEthernet11 OOB Net
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
+                description = m.groupdict()['description']
                 continue
 
             #   IPV4_UNICAST             9943           797492           50             3568
@@ -2842,6 +2883,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                     setdefault('accounting', {}).setdefault(protocol, {})
                 ret_dict[intf]['accounting'][protocol].update({k: int(v) \
                     for k, v in protocol_dict.items()})
+                if description:
+                    ret_dict[intf].setdefault('description', description.strip())
                 continue
 
         return ret_dict

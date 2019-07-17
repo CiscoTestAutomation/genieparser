@@ -84,26 +84,21 @@ class test_show_ntp_associations(unittest.TestCase):
     golden_parsed_output_2 = {
         'clock_state': {
             'system_status': {
-                'associations_address': '10.16.2.2',
-                'associations_local_mode': 'client',
-                'clock_offset': 27.027,
-                'clock_refid': '127.127.1.1',
-                'clock_state': 'synchronized',
-                'clock_stratum': 3,
-                'root_delay': 5.61}
+                'clock_state': 'unsynchronized'
+            }
         },
         'peer': {
             '10.16.2.2': {
                 'local_mode': {
                     'client': {
-                        'delay': 5.61,
-                        'jitter': 3.342,
+                        'delay': 0.0,
+                        'jitter': 15937.0,
                         'local_mode': 'client',
-                        'mode': 'synchronized',
-                        'offset': 27.027,
+                        'mode': 'unsynchronized',
+                        'offset': 0.0,
                         'poll': 64,
-                        'reach': 7,
-                        'receive_time': 25,
+                        'reach': 0,
+                        'receive_time': 41,
                         'refid': '127.127.1.1',
                         'remote': '10.16.2.2',
                         'configured': True,
@@ -118,10 +113,10 @@ class test_show_ntp_associations(unittest.TestCase):
                         'local_mode': 'client',
                         'mode': 'unsynchronized',
                         'offset': 0.0,
-                        'poll': 512,
+                        'poll': 64,
                         'reach': 0,
                         'receive_time': '-',
-                        'refid': '.STEP.',
+                        'refid': '.INIT.',
                         'remote': '10.36.3.3',
                         'configured': True,
                         'stratum': 16}
@@ -139,6 +134,84 @@ class test_show_ntp_associations(unittest.TestCase):
          * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured
     '''}
 
+    golden_parsed_output_3 = {
+        'clock_state': {
+            'system_status': {
+                'associations_address': '192.168.13.57',
+                                     'associations_local_mode': 'client',
+                                     'clock_offset': 11.18,
+                                     'clock_refid': '192.168.1.111',
+                                     'clock_state': 'synchronized',
+                                     'clock_stratum': 3,
+                                     'root_delay': 7.9}},
+        'peer': {
+            '172.31.32.2': {
+                'local_mode': {
+                    'client': {
+                        'configured': True,
+                             'delay': 4.2,
+                             'jitter': 1.6,
+                             'local_mode': 'client',
+                             'mode': 'None',
+                             'offset': -8.59,
+                             'poll': 1024,
+                             'reach': 377,
+                             'receive_time': 29,
+                             'refid': '172.31.32.1',
+                             'remote': '172.31.32.2',
+                             'stratum': 5
+                    }
+                }
+            },
+            '192.168.13.33': {
+                'local_mode': {
+                    'client': {
+                        'configured': True,
+                        'delay': 4.1,
+                        'jitter': 2.3,
+                        'local_mode': 'client',
+                        'mode': 'selected',
+                        'offset': 3.48,
+                        'poll': 128,
+                        'reach': 377,
+                        'receive_time': 69,
+                        'refid': '192.168.1.111',
+                        'remote': '192.168.13.33',
+                        'stratum': 3
+                    }
+                }
+            },
+            '192.168.13.57': {
+                'local_mode': {
+                    'client': {
+                        'configured': True,
+                        'delay': 7.9,
+                        'jitter': 3.6,
+                        'local_mode': 'client',
+                        'mode': 'synchronized',
+                        'offset': 11.18,
+                        'poll': 128,
+                        'reach': 377,
+                        'receive_time': 32,
+                        'refid': '192.168.1.111',
+                        'remote': '192.168.13.57',
+                        'stratum': 3
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        Router#show ntp associations 
+
+        address            ref clock         st      when    poll   reach   delay   offset    disp
+        *~192.168.13.57    192.168.1.111     3       32      128    377     7.9     11.18     3.6  
+        ~172.31.32.2       172.31.32.1       5       29      1024   377     4.2     -8.59     1.6 
+        +~192.168.13.33    192.168.1.111     3       69      128    377     4.1     3.48      2.3 
+        * master (synced), # master (unsynced), + selected, - candidate, ~ configured
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowNtpAssociations(device=self.device)
@@ -154,10 +227,17 @@ class test_show_ntp_associations(unittest.TestCase):
 
     def test_golden_2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_1)
+        self.device = Mock(**self.golden_output_2)
         obj = ShowNtpAssociations(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowNtpAssociations(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 # ==============================================

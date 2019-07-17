@@ -179,6 +179,7 @@ class ShowNtpStatusSchema(MetaParser):
                 Optional('drift'): str,
                 Optional('poll'): int,
                 Optional('last_update'): str,
+                Optional('leapsecond'): bool,
             }
         }
     }
@@ -201,8 +202,8 @@ class ShowNtpStatus(ShowNtpStatusSchema):
         # Clock is synchronized, stratum 1, reference is .LOCL.
         # Clock is synchronized, stratum 2, reference assoc id 1, reference is 192.0.2.1
         # Clock is synchronized (adding leap second), stratum 1, reference is 192.168.4.20
-        p1 = re.compile(r'^Clock +is +(?P<clock_state>\w+)( +\([\S\s]+\))?'
-            ', +stratum +(?P<stratum>\d+),(?: +reference +assoc +id +'
+        p1 = re.compile(r'Clock +is +(?P<clock_state>\w+)(?P<leapsecond> +\(adding +leap +second\))?,'
+            ' +stratum +(?P<stratum>\d+),(?: +reference +assoc +id +'
             '(?P<assoc_id>[\d]+),)? +reference +is +(?P<refid>[\w\.]+)$')
 
         # Clock is unsynchronized, stratum 16, no reference clock
@@ -244,6 +245,8 @@ class ShowNtpStatus(ShowNtpStatusSchema):
                 clock_dict['refid'] = groups['refid']
                 if groups['assoc_id']:
                     clock_dict['assoc_id'] = int(groups['assoc_id'])
+                if groups['leapsecond']:
+                    clock_dict['leapsecond'] = True
                 continue
 
             m = p1_1.match(line)
@@ -507,13 +510,15 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # 172.31.32.2 configured, insane, invalid, stratum 5
         # 192.168.13.33 configured, selected, sane, valid, stratum 3
         # 192.168.13.57 configured, our_master, sane, valid, stratum 3
+        # 192.168.255.254 configured, ipv4, authenticated (' ' reject), insane, invalid, stratum 3
         p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),( +(?P<ip_type>ipv4|ipv6),)?'
-                         '( +(?P<authenticated>authenticated),)?( +(?P<our_master>our_master),)?'
+                         '( +(?P<authenticated>authenticated)( +\(\'\W\' +\S+\))?,)?( +(?P<our_master>our_master),)?'
                          '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
                          '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
+        # ref ID 10.10.10.254      , time DBAB02D6.9E354130 (18:49:35.873 UTC Thu Jul 11 2019)
         # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
-        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
+        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+)( +)?, +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
 
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
