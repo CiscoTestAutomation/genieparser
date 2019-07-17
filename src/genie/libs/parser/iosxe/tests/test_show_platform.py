@@ -2499,17 +2499,17 @@ Switch#   Role        Priority      State
                         'state': 'ok',
                         'subslot': {
                             '0': {
-                                'NIM-ES2-4': {
+                                'SPA-2X1GE-V2': {
                                     'insert_time': '2y30w',
-                                    'name': 'NIM-ES2-4',
+                                    'name': 'SPA-2X1GE-V2',
                                     'state': 'ok',
                                     'subslot': '0'
                                 }
                             },
                             '1': {
-                                'ISR4331-3x1GE': {
+                                '4XGE-BUILT-IN': {
                                     'insert_time': '2y30w',
-                                    'name': 'ISR4331-3x1GE',
+                                    'name': '4XGE-BUILT-IN',
                                     'state': 'ok',
                                     'subslot': '1'
                                 }
@@ -2571,8 +2571,8 @@ Switch#   Role        Priority      State
         Slot      Type                State                 Insert time (ago)
         --------- ------------------- --------------------- -----------------
         0         ASR1002-SIP10       ok                    2y30w        
-         0/0      NIM-ES2-4           ok                    2y30w        
-         0/1      ISR4331-3x1GE       ok                    2y30w        
+         0/0      SPA-2X1GE-V2        ok                    2y30w        
+         0/1      4XGE-BUILT-IN       ok                    2y30w        
         R0        ASR1002-RP1         ok, active            2y30w        
         F0        ASR1000-ESP10       ok, active            2y30w        
         P0        ASR1002-PWR-AC      ok, active            2y30w        
