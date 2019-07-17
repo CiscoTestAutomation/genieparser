@@ -142,7 +142,7 @@ class test_show_interfaces(unittest.TestCase):
             "delay": 10,
             "enabled": True,
             "txload": "1/255",
-            "arp_type": {"arpa": {}},
+            "arp_type": "arpa",
             "encapsulations": {
                "encapsulation": "dot1q"
             },
@@ -240,7 +240,7 @@ class test_show_interfaces(unittest.TestCase):
             "last_input": "00:00:11",
             "reliability": "255/255",
             "enabled": True,
-            "arp_type": {"arpa": {}},
+            "arp_type": "arpa",
             "encapsulations": {
                "encapsulation": "dot1q",
                "first_dot1q": "1"

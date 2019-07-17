@@ -55,18 +55,18 @@ class ShowInterfacesSchema(MetaParser):
 
     schema = {
             Any(): {
-                'oper_status': str,
+                Optional('oper_status'): str,
                 Optional('line_protocol'): str,
-                'enabled': bool,
+                Optional('enabled'): bool,
                 Optional('connected'): bool,
                 Optional('description'): str,
-                'type': str,
+                Optional('type'): str,
                 Optional('link_state'): str,
                 Optional('port_speed'): str,
                 Optional('duplex_mode'): str,
                 Optional('link_type'): str,
                 Optional('media_type'): str,
-                'mtu': int,
+                Optional('mtu'): int,
                 Optional('medium'): str,
                 Optional('reliability'): str,
                 Optional('txload'): str,
@@ -79,21 +79,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('carrier_delay_down'): int,
                 Optional('keepalive'): int,
                 Optional('auto_negotiate'): bool,
-                Optional('arp_type'): {
-                    Any(): {
-                        Optional('active_channels'): int,
-                        Optional('member'): {
-                            Any(): {
-                                'interface': str,
-                                'duplex_mode': str,
-                                'port_speed': str,
-                            }
-                        },
-                        Optional('supported_members'): {
-                            Any(): int
-                        }
-                    }
-                },
+                Optional('arp_type'): str,
                 Optional('arp_timeout'): str,
                 Optional('last_input'): str,
                 Optional('last_output'): str,
@@ -116,8 +102,9 @@ class ShowInterfacesSchema(MetaParser):
                     {Optional('port_channel_member'): bool,
                     Optional('port_channel_int'): str,
                     Optional('port_channel_member_intfs'): list,
+                    Any(): int,
                 },
-                'bandwidth': int,
+                Optional('bandwidth'): int,
                 Optional('counters'):
                     {Optional('rate'):
                        {Optional('load_interval'): int,
@@ -404,7 +391,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
-                    interface_dict[interface]['medium'] = medium
+                    interface_dict[interface]['medium'] = m.groupdict()['medium']
                 elif m3:
                     first_dot1q = m3.groupdict()['first']
                     second_dot1q = m3.groupdict()['second']
@@ -518,53 +505,10 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 arp_type = m.groupdict()['arp_type'].lower()
                 arp_timeout = m.groupdict()['arp_timeout']
+                interface_dict[interface]['arp_type'] = arp_type
                 interface_dict[interface]['arp_timeout'] = arp_timeout
-                arp_type_dict = interface_dict.setdefault(interface, {}).\
-                                    setdefault('arp_type', {}).\
-                                    setdefault(arp_type, {})
                 continue
 
-            # No. of active members in this channel: 12 
-            p13_1 = re.compile(r'^No\. +of +active +members +in +this +'
-                'channel: +(?P<active_channels>\d+)$')
-            m = p13_1.match(line)
-            if m:
-                group = m.groupdict()
-                active_channels = int(group['active_channels'])
-                interface_dict[interface]['arp_type'][arp_type]\
-                    ['active_channels'] = active_channels
-                continue
-
-            # Member 2 : GigabitEthernet0/0/10 , Full-duplex, 900Mb/s
-            p13_2 = re.compile(r'^Member +(?P<number>\d+) +: +(?P<interface>\S+) +,'
-                ' +(?P<duplex_mode>\S+), +(?P<port_speed>\S+)$')
-            m = p13_2.match(line)
-            if m:
-                group = m.groupdict()
-                number = int(group['number'])
-                c_interface = group['interface']
-                duplex_mode = group['duplex_mode']
-                port_speed = group['port_speed']
-
-                member = arp_type_dict.setdefault('member', {}).\
-                    setdefault(number, {})
-                member.update({'interface': c_interface})
-                member.update({'duplex_mode': duplex_mode})
-                member.update({'port_speed': port_speed})
-                continue
-
-            # No. of PF_JUMBO supported members in this channel : 0
-            p13_3 = re.compile(r'^No\. +of +(?P<supported_member>\S+) +supported +members +'
-                'in +this +channel +: +(?P<number>\d+)$')
-            m = p13_3.match(line)
-            if m:
-                group = m.groupdict()
-                supported_member = group['supported_member']
-                number = int(group['number'])
-                member = arp_type_dict.setdefault('supported_members', {}).\
-                    setdefault(supported_member, number)
-                continue
-            
             # Last input never, output 00:01:05, output hang never
             p14 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
                               'output +(?P<last_output>[\w\.\:]+), '
@@ -600,6 +544,52 @@ class ShowInterfaces(ShowInterfacesSchema):
                         interface_dict[intf]['port_channel'] = {}
                     interface_dict[intf]['port_channel']['port_channel_member'] = True
                     interface_dict[intf]['port_channel']['port_channel_int'] = interface
+                continue
+
+            # No. of active members in this channel: 12 
+            p15_1 = re.compile(r'^No\. +of +active +members +in +this +'
+                'channel: +(?P<active_members>\d+)$')
+            m = p15_1.match(line)
+            if m:
+                group = m.groupdict()
+                active_members = int(group['active_members'])
+                interface_dict[interface]['port_channel']\
+                    ['port_channel_member'] = True
+                interface_dict[interface]['port_channel']\
+                    ['active_members'] = active_members
+                continue
+
+            # Member 2 : GigabitEthernet0/0/10 , Full-duplex, 900Mb/s
+            p15_2 = re.compile(r'^Member +\d+ +: +(?P<interface>\S+) +,'
+                ' +\S+, +\S+$')
+            m = p15_2.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group['interface']
+                if 'port_channel_member_intfs' not in interface_dict[interface]['port_channel']:
+                    interface_dict[interface]['port_channel']\
+                            ['port_channel_member_intfs'] = []
+
+                interface_dict[interface]['port_channel']\
+                    ['port_channel_member_intfs'].append(intf)
+                    
+                if intf not in interface_dict:
+                    interface_dict[intf] = {}
+                    if 'port_channel' not in interface_dict[intf]:
+                        interface_dict[intf]['port_channel'] = {}
+                    interface_dict[intf]['port_channel']['port_channel_member'] = True
+                    interface_dict[intf]['port_channel']['port_channel_int'] = interface
+                continue
+
+            # No. of PF_JUMBO supported members in this channel : 0
+            p15_3 = re.compile(r'^No\. +of +(?P<supported_member>\S+) +supported +members +'
+                'in +this +channel +: +(?P<number>\d+)$')
+            m = p15_3.match(line)
+            if m:
+                group = m.groupdict()
+                supported_member = group['supported_member']
+                number = int(group['number'])
+                interface_dict[interface]['port_channel'][supported_member] = number
                 continue
 
             # Last clearing of "show interface" counters 1d02h
@@ -1022,11 +1012,32 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         typically contains 3 steps: executing, transforming, returning
         """
         pass
+    def _merge_dict(a, b, path=None):
+        '''merges b into a for as many level as there is'''
+        # Dict to use to return
+        ret = a
+        if path is None:
+            path = []
+        for key in b:
+            if key in ret:
+                if isinstance(ret[key], dict) and isinstance(b[key], dict):
+                    ShowIpInterfaceBrief._merge_dict(ret[key], b[key], path + [str(key)])
+                elif ret[key] == b[key]:
+                    # same leaf value so do nothing
+                    pass
+                else:
+                    # Any other case
+                    raise Exception('{key} cannot be merged as it already '
+                                    'exists with type '
+                                    '{ty}.'.format(key=key, ty=type(ret[key])))
+            else:
+                ret[key] = b[key]
+        return ret
 
     def yang_cli(self):
         cli_output = self.cli()
         yang_output = self.yang()
-        merged_output = _merge_dict(yang_output,cli_output)
+        merged_output = ShowIpInterfaceBrief._merge_dict(yang_output,cli_output)
         return merged_output
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
@@ -2841,6 +2852,7 @@ class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interfaces accounting"""
     schema = {
                 Any(): {
+                    Optional('description'): str,
                     'accounting': {
                         Any(): {
                             'pkts_in': int,
@@ -2876,7 +2888,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)$')
+        # GigabitEthernet11 OOB Net
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
@@ -2886,16 +2899,26 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         p2 = re.compile(r'^(?P<protocol>[\w\_\-\s]+)\s+(?P<pkts_in>\d+)\s+'
                          '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
                          '(?P<chars_out>\d+)')
+
+        # No traffic sent or received on this interface.
+        p3 = re.compile(r'^No +traffic +sent +or +received +on +this +interface\.$')
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
             else:
                 continue
 
+            m = p3.match(line)
+            if m:
+                continue
+
             # GigabitEthernet0/0/0/0
+            # GigabitEthernet11 OOB Net
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
+                description = m.groupdict()['description']
                 continue
 
             #   IPV4_UNICAST             9943           797492           50             3568
@@ -2907,6 +2930,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                     setdefault('accounting', {}).setdefault(protocol, {})
                 ret_dict[intf]['accounting'][protocol].update({k: int(v) \
                     for k, v in protocol_dict.items()})
+                if description:
+                    ret_dict[intf].setdefault('description', description.strip())
                 continue
 
         return ret_dict
