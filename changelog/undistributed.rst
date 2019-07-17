@@ -282,3 +282,8 @@
 *IOSXR
     * Updated ShowLacpNeighborDetail to support more outputs
 
+--------------------------------------------------------------------------------
+                                SYSTEM
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowSystem to support more outputs
