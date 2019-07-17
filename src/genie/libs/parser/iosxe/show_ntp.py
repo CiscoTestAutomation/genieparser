@@ -510,13 +510,15 @@ class ShowNtpAssociationsDetail(ShowNtpAssociationsDetailSchema):
         # 172.31.32.2 configured, insane, invalid, stratum 5
         # 192.168.13.33 configured, selected, sane, valid, stratum 3
         # 192.168.13.57 configured, our_master, sane, valid, stratum 3
+        # 192.168.255.254 configured, ipv4, authenticated (' ' reject), insane, invalid, stratum 3
         p1 = re.compile(r'^(?P<address>[\w\.\:]+) +(?P<configured>\w+),( +(?P<ip_type>ipv4|ipv6),)?'
-                         '( +(?P<authenticated>authenticated),)?( +(?P<our_master>our_master),)?'
+                         '( +(?P<authenticated>authenticated)( +\(\'\W\' +\S+\))?,)?( +(?P<our_master>our_master),)?'
                          '( +(?P<selected>selected),)? +(?P<insane>\w+), +(?P<invalid>\w+),'
                          '( +(?P<unsynced>unsynced),)? +stratum +(?P<stratum>\d+)$')
 
+        # ref ID 10.10.10.254      , time DBAB02D6.9E354130 (18:49:35.873 UTC Thu Jul 11 2019)
         # ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
-        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+), +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
+        p2 = re.compile(r'^ref +ID +(?P<refid>[\w\.]+)( +)?, +time +(?P<input_time>[\w\:\s\(\)\.]+)$')
 
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         # our mode client, peer mode server, our poll intvl 512, peer poll intvl 512

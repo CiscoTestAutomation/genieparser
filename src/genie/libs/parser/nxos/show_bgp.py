@@ -149,6 +149,7 @@ class ShowBgpProcessVrfAllSchema(MetaParser):
                          Optional('mvpn_import_rt_list'): str,
                          Optional('label_mode'): str,
                          Optional('aggregate_label'): str,
+                         Optional('allocate_index'): str,
                          Optional('route_reflector'): bool,
                          Optional('next_hop_trigger_delay'):
                             {'critical': int,
@@ -288,6 +289,8 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         p32_1 = re.compile(r'^\s*Is +a +Route\-reflector$')
         p33 = re.compile(r'^\s*Aggregate +label *:'
                             ' +(?P<aggregate_label>[a-zA-Z0-9\-]+)$')
+        p33_1 = re.compile(r'^\s*Allocate-index *:'
+                           ' +(?P<allocate_index>[a-zA-Z0-9\-]+)$')
         p34 = re.compile(r'^\s*Import +default +limit *:'
                             ' +(?P<import_default_prefix_limit>[0-9]+)$')
         p35 = re.compile(r'^\s*Import +default +prefix +count *:'
@@ -717,6 +720,13 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
             if m:
                 parsed_dict['vrf'][vrf_name]['address_family'][address_family]\
                     ['aggregate_label'] = str(m.groupdict()['aggregate_label'])
+                continue
+
+            #     Allocate-index:
+            m = p33_1.match(line)
+            if m:
+                parsed_dict['vrf'][vrf_name]['address_family'][address_family] \
+                    ['allocate_index'] = str(m.groupdict()['allocate_index'])
                 continue
 
             # Import default limit       : 1000

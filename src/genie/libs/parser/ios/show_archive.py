@@ -14,13 +14,13 @@ class ShowArchive(ShowArchive_iosxe):
     pass
 
 class ShowArchiveConfigDifferences(ShowArchiveConfigDifferences_iosxe):
-	""" Parser for the following commands:
+    """ Parser for the following commands:
         * show archive config differences
         * show archive config differences {fileA} {fileB}
         * show archive config differences {fileA}
     """
-	pass
+    pass
 
 class ShowArchiveConfigIncrementalDiffs(ShowArchiveConfigIncrementalDiffs_iosxe):
-	""" Parser for show archive config incremental-diffs <fileA>"""
-	pass
+    """ Parser for show archive config incremental-diffs <fileA>"""
+    pass

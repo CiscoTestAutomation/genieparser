@@ -73,6 +73,15 @@ devnet: package
 	@echo "Completed building DevNet packages"
 	@echo ""
 
+package_compile:
+	@echo ""
+	@echo "Compiling to C code"
+	@echo --------------------------
+	$(BUILD_CMD) --cythonize
+	@echo --------------------------
+	@echo "Done Compiling"
+	@echo ""
+
 install_build_deps:
 	@echo "--------------------------------------------------------------------"
 	@echo "Installing cisco-distutils"

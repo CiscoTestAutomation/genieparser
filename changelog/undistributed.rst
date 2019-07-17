@@ -5,6 +5,7 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+-----------------------------------------------------------------------------
                                    Dot1x
 -----------------------------------------------------------------------------
 * NXOS
@@ -22,6 +23,8 @@
 * IOSXE
     * Fix ShowIpRoute
         * updated regex to handle the output more flexibly
+    * Fix ShowIpv6Route
+        * updated command
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -30,6 +33,7 @@
     * Fix ShowIpInterfaceBrief short name issue
     * Fix ShowInterfacesSwitchport
         changed 'trun_vlan' schema type to support multiple values
+    * Fix ShowInterfacesAccounting interface name issue
 
 ----------------------------------------------------------------------------
                                    OSPF
@@ -41,6 +45,9 @@
     * Updated ShowIpOspfNeighbor for:
         * show ip ospf neighbor {interface}
     * Enhanced ShowIpOspfMaxMetric to support different outputs
+    * Updated ShowIpOspfTraffic to support different outputs
+    * Enhanced regex to support more patterns
+    * Updated
 * NXOS
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
@@ -59,12 +66,21 @@
 * IOSXE
     * Update ShowEnvironment to support:
         show environment | include {include}
+    * Updated showProcessCpuPlatform to support different outputs
+
+* IOSXE
+    * Fix ShowPlatform
+        added regEx in the condition for 'lc_type' to handle outputs flexibly
 
 --------------------------------------------------------------------------------
                                 ARP
 --------------------------------------------------------------------------------
 * IOSXE
     * Fix ShowIpTraffic to parser customer's output
+
+* IOSXR
+    * Updated ShowArpTrafficDetail to support more outputs
+    * Updated regex to support more patterns
 
 --------------------------------------------------------------------------------
                                 interface
@@ -121,6 +137,8 @@
     * Updates ShowIpBgpAllSummary for:
         Support for more VRF values
     * added restricted list for ShowBgpAll
+    * Updates ShowIpBgpNeighbors for:
+        Support for more Message statistics values
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
@@ -183,6 +201,10 @@
     * Added ShowEthernetServiceInstanceDetail for:
         show ethernet service instance id {service_instance_id} interface {interface} detail
 
+* IOSXE
+    * Fix for ShowEthernetServiceInstanceDetail
+        updated code to handle multiple outputs properly and fixed incorrect UT
+
 --------------------------------------------------------------------------------
                                 context
 --------------------------------------------------------------------------------
@@ -239,5 +261,24 @@
     * Updated ShowNtpAssociations:
         Fixed parsing wrong data in different order and added regExs to handle old version of device output as well
 * IOSXE
+    * Updated ShowNtpAssociationsDetail:
+        Updated regex to support more output
     * Update ShowNtpStatus:
         Added leap second field in schema
+
+--------------------------------------------------------------------------------
+                               RIP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpv6RipDatabase to support more outputs
+
+--------------------------------------------------------------------------------
+                                LAG
+--------------------------------------------------------------------------------
+*IOSXE
+    * Updated ShowLacpNeighborDetail to support more outputs
+*NXOS
+    * Updated ShowLacpNeighborDetail to support more outputs
+*IOSXR
+    * Updated ShowLacpNeighborDetail to support more outputs
+
