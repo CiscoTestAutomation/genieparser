@@ -263,6 +263,8 @@
 * IOSXE
     * Updated ShowNtpAssociationsDetail:
         Updated regex to support more output
+    * Update ShowNtpStatus:
+        Added leap second field in schema
 
 --------------------------------------------------------------------------------
                                RIP
@@ -279,3 +281,4 @@
     * Updated ShowLacpNeighborDetail to support more outputs
 *IOSXR
     * Updated ShowLacpNeighborDetail to support more outputs
+
