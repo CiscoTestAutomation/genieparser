@@ -42,6 +42,7 @@ class test_show_version(unittest.TestCase):
     dev_c3850 = Device(name='c3850')
     dev_isr4k = Device(name='isr4k')
     dev_asr901 = Device(name='asr901')
+    dev_asr1002 = Device(name='asr1002')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
         Cisco IOS-XE software, Copyright (c) 2005-2017 by cisco Systems, Inc.
@@ -2482,6 +2483,108 @@ Switch#   Role        Priority      State
         c4331a#      
     '''}
 
+    golden_parsed_output_2 = {
+        'main': {
+            'chassis': 'ASR1002'
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'ASR1002-SIP10': {
+                        'cpld_ver': '07123456',
+                        'fw_ver': '16.1(5r)S',
+                        'insert_time': '2y30w',
+                        'name': 'ASR1002-SIP10',
+                        'slot': '0',
+                        'state': 'ok',
+                        'subslot': {
+                            '0': {
+                                'SPA-2X1GE-V2': {
+                                    'insert_time': '2y30w',
+                                    'name': 'SPA-2X1GE-V2',
+                                    'state': 'ok',
+                                    'subslot': '0'
+                                }
+                            },
+                            '1': {
+                                '4XGE-BUILT-IN': {
+                                    'insert_time': '2y30w',
+                                    'name': '4XGE-BUILT-IN',
+                                    'state': 'ok',
+                                    'subslot': '1'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            'F0': {
+                'other': {
+                    'ASR1000-ESP10': {
+                        'cpld_ver': '09123456',
+                        'fw_ver': '16.1(5r)S',
+                        'insert_time': '2y30w',
+                        'name': 'ASR1000-ESP10',
+                        'slot': 'F0',
+                        'state': 'ok, active'
+                    }
+                }
+            },
+            'P0': {
+                'other': {
+                    'ASR1002-PWR-AC': {
+                        'insert_time': '2y30w',
+                        'name': 'ASR1002-PWR-AC',
+                        'slot': 'P0',
+                        'state': 'ok, active'
+                    }
+                }
+            },
+            'P1': {
+                'other': {
+                    'ASR1002-PWR-AC': {
+                        'insert_time': '2y30w',
+                        'name': 'ASR1002-PWR-AC',
+                        'slot': 'P1',
+                        'state': 'ok'
+                    }
+                }
+            },
+            'R0': {
+                'rp': {
+                    'ASR1002-RP1': {
+                        'cpld_ver': '08123456',
+                        'fw_ver': '16.1(5r)S',
+                        'insert_time': '2y30w',
+                        'name': 'ASR1002-RP1',
+                        'slot': 'R0',
+                        'state': 'ok, active'
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        Chassis type: ASR1002            
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         ASR1002-SIP10       ok                    2y30w        
+         0/0      SPA-2X1GE-V2        ok                    2y30w        
+         0/1      4XGE-BUILT-IN       ok                    2y30w        
+        R0        ASR1002-RP1         ok, active            2y30w        
+        F0        ASR1000-ESP10       ok, active            2y30w        
+        P0        ASR1002-PWR-AC      ok, active            2y30w        
+        P1        ASR1002-PWR-AC      ok                    2y30w        
+         
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- ---------------------------------------
+        0         07123456            16.1(5r)S                          
+        R0        08123456            16.1(5r)S                          
+        F0        09123456            16.1(5r)S    
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
@@ -2514,6 +2617,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev_asr1k)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_asr1002 = Mock(**self.golden_output_2)
+        platform_obj = ShowPlatform(device=self.dev_asr1002)
+        parsed_output_2 = platform_obj.parse()
+        self.assertEqual(parsed_output_2,self.golden_parsed_output_2)
 
 
 class test_show_boot(unittest.TestCase):

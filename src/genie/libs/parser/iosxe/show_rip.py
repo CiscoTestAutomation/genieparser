@@ -452,7 +452,7 @@ class ShowIpv6RipDatabaseSchema(MetaParser):
             Any(): {
                 'address_family': {
                     Any(): {
-                        'routes': {
+                        Optional('routes'): {
                             Any(): {
                                 'index': {
                                     Any(): {

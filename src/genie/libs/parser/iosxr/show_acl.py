@@ -18,10 +18,10 @@ from genie.libs.parser.utils.common import Common
 # =======================================
 
 class ShowAclAfiAllSchema(MetaParser):
-	"""
-	Schema for 'show access-lists afi-all'
-	"""
-	schema = {
+    """Schema for:
+        'show access-lists afi-all'
+    """
+    schema = {
         Any():{
             'name': str,
             'type': str,
@@ -96,14 +96,15 @@ class ShowAclAfiAllSchema(MetaParser):
         }
     }
 
+
 # =======================================
 # Parser for 'show access-lists afi-all'
 # =======================================
-class ShowAclAfiAll(ShowAclAfiAllSchema):
-    """Parser for:
-        'show access-lists afi-all'
-    """
 
+class ShowAclAfiAll(ShowAclAfiAllSchema):
+    '''Parser for
+        'show access-lists afi-all'
+    '''
     cli_command = 'show access-lists afi-all'
     def cli(self,output=None):
         if output is None:
@@ -159,7 +160,7 @@ class ShowAclAfiAll(ShowAclAfiAllSchema):
                 des_port = group['des_port']
                 established_log = group['established_log']
                 log = group['log']
-               
+                
 
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
                 seq_dict['name'] = group['seq']
@@ -260,7 +261,7 @@ class ShowAclEthernetServices(ShowAclAfiAllSchema):
                 group = m.groupdict()
                 seq = int(group['seq'])
                 actions_forwarding = group['actions_forwarding']
-               
+                
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(seq, {})
                 seq_dict['name'] = group['seq']
                 l2_dict = seq_dict.setdefault('matches', {}).setdefault('l2', {})\
