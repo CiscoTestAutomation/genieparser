@@ -69,7 +69,7 @@ class ShowIpv6RouteDistributor(MetaParser):
                    'show ipv6 route vrf {vrf} {protocol}',
                    'show ipv6 route',
                    'show ipv6 route {route}',
-                   'show ip route {protocol}']
+                   'show ipv6 route {protocol}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
                     'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
@@ -753,8 +753,8 @@ class ShowIpv6Route(ShowIpRoute):
     """Parser for:
         show ipv6 route
         show ipv6 route vrf <vrf>"""
-    command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {protocol}',
-               'show ip route', 'show ip route {protocol}']
+    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {protocol}',
+               'show ipv6 route', 'show ipv6 route {protocol}']
     exclude = ['uptime']
 
     IP_VER = 'ipv6'

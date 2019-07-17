@@ -401,7 +401,7 @@ class test_show_ntp_associations_detail(unittest.TestCase):
         Load for five secs: 1%/0%; one minute: 3%; five minutes: 4%
         Time source is NTP, 16:21:12.433 EST Fri Oct 14 2016
 
-        192.168.255.254 configured, ipv4, authenticated, insane, invalid, stratum 3
+        192.168.255.254 configured, ipv4, authenticated (' ' reject), insane, invalid, stratum 3
         ref ID 172.16.255.254, time DBAB02D6.9E354130 (16:08:06.618 EST Fri Oct 14 2016)
         our mode client, peer mode server, our poll intvl 512, peer poll intvl 512
         root delay 0.00 msec, root disp 14.52, reach 377, sync dist 28.40

@@ -1638,11 +1638,11 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if ('ASR1000-SIP' in name) or ('ASR1000-2T' in name) or ('ASR1000-6T' in name) or ('ISR' in name):
+                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+)', name) or ('ISR' in name):
                         lc_type = 'lc'
-                    elif 'ASR1000-RP' in name:
+                    elif re.match(r'^ASR\d+-RP\d+', name):
                         lc_type = 'rp'
-                    elif 'CSR1000V' in name:
+                    elif re.match(r'^CSR\d+V', name):
                         if 'R' in slot:
                             lc_type = 'rp'
                         else:
@@ -2455,7 +2455,7 @@ class ShowProcessesCpuPlatformSchema(MetaParser):
             'cpu_util_five_secs': str,
             'cpu_util_one_min': str,
             'cpu_util_five_min': str,
-            'core': {
+            Optional('core'): {
                 Any(): {
                     'core_cpu_util_five_secs': str,
                     'core_cpu_util_one_min': str,
