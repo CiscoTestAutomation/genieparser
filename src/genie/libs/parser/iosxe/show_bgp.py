@@ -4444,9 +4444,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                 m = p3_2.match(line.strip())
 
                 if m:
-                    # New prefix, reset index count
-                    index = 1
-
                     # Get keys
                     if m.groupdict()['status_codes']:
                         status_codes = str(m.groupdict()['status_codes'].rstrip())
@@ -4464,6 +4461,12 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                         af_dict['advertised'] = {}
                     if prefix not in af_dict['advertised']:
                         af_dict['advertised'][prefix] = {}
+                        # New prefix, reset index count
+                        index = 1
+                    else:
+                        # get last index for prefix to prevent overwriting
+                        index = list(af_dict['advertised'][prefix]['index'].keys())[-1]
+                        index += 1
                     if 'index' not in af_dict['advertised'][prefix]:
                         af_dict['advertised'][prefix]['index'] = {}
                     if index not in af_dict['advertised'][prefix]['index']:
