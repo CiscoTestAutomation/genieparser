@@ -368,10 +368,10 @@ class ShowPortChannelDatabaseSchema(MetaParser):
                 'last_update_success': bool,  # successful => True, else False
                 'total_ports': int,
                 'up_ports': int,
-                'first_oper_port': str,
                 'port_channel_age': str,
                 'time_last_bundle': str,
                 'last_bundled_member': str,
+                Optional('first_oper_port'): str,
                 Optional('time_last_unbundle'): str,
                 Optional('last_unbundled_member'): str,
                 'members': {

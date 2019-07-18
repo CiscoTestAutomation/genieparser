@@ -92,7 +92,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
-            out = cli_command
+            out = output
 
         ret_dict = {}
         p1_1 = re.compile(r'^##### MST(?P<mst_id>\d+) +\s+vlans\s+mapped: '

@@ -225,7 +225,7 @@ class ShowMplsLdpNsrStatisticsSchema(MetaParser):
     """Schema for show mpls ldp nsr statistics"""
     schema = {
         'statistics': {
-            'peer': {
+            Optional('peer'): {
                 Any(): {
                     'local_space_id': {
                         Any(): {
@@ -413,6 +413,7 @@ class ShowMplsLdpNsrStatistics(ShowMplsLdpNsrStatisticsSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
+                statistic_dict = result_dict.setdefault('statistics', {})
                 total_label_dict = statistic_dict.setdefault('total_in_label_request_records', {})
                 total_label_dict.update({'created': int(group['created'])})
                 total_label_dict.update({'freed': int(group['freed'])})
