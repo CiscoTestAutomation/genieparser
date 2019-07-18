@@ -549,21 +549,21 @@ class test_show_ip_ospf_interface_brief(unittest.TestCase):
             'areas': {
                 '0.0.0.8': {
                     'interfaces': {
-                        'Lo0': {
+                        'Loopback0': {
                             'ip_address': '106.162.197.254/32',
                             'cost': 1,
                             'state': 'LOOP',
                             'nbrs_full': 0,
                             'nbrs_count': 0,
                             },
-                        'Gi4': {
+                        'GigabitEthernet4': {
                             'ip_address': '106.162.197.98/30',
                             'cost': 1000,
                             'state': 'P2P',
                             'nbrs_full': 1,
                             'nbrs_count': 1,
                             },
-                        'Gi2': {
+                        'GigabitEthernet2': {
                             'ip_address': '106.162.197.94/30',
                             'cost': 1000,
                             'state': 'BDR',

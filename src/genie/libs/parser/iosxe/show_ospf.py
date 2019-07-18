@@ -1291,7 +1291,8 @@ class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface = str(group['interface'])
+                interface = Common.convert_intf_name(
+                    str(group['interface']))
                 instance = str(group['instance'])
                 ip_address = str(group['address'])
                 area = str(IPAddress(str(group['area'])))
