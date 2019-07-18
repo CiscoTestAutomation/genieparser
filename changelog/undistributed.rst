@@ -52,7 +52,7 @@
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
 * JUNOS
-    * Added ShowOspfInterface for:
+    * Added ShowOspfInterfaceBrief for:
         * show ospf interface brief
 --------------------------------------------------------------------------------
                                 policy-map
