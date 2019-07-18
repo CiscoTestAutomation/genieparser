@@ -20,6 +20,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf mpls traffic-eng link
     * show ip ospf max-metric
     * show ip ospf traffic
+    * show ip ospf interface brief
 
 '''
 
@@ -1237,6 +1238,83 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         return ret_dict
 
+# ============================
+# Schema for:
+#   * 'show ip ospf interface brief'
+# ============================
+class ShowIpOspfInterfaceBriefSchema(MetaParser):
+    ''' Schema for:
+        * 'show ip ospf interface brief'
+    '''
+    schema = {
+        'instance': {
+            Any(): {
+                'areas': {
+                    Any(): {
+                        'interfaces': {
+                            Any(): {
+                                'ip_address': str,
+                                'cost': int,
+                                'state': str,
+                                'nbrs_full': int,
+                                'nbrs_count': int,
+                                },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
+    ''' Parser for:
+        * 'show ip ospf interface'
+        * 'show ip ospf interface {interface}'
+        * 'show ip ospf interface brief'
+    '''
+
+    cli_command = 'show ip ospf interface brief'
+
+    def cli(self):
+
+        out = self.device.execute(self.cli_command)
+
+        # Init vars
+        ret_dict = {}
+        
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<instance>\S+) +(?P<area>\d+) +'
+            '(?P<address>\S+) +(?P<cost>\d+) +(?P<state>\S+) +(?P<nbrs_full>\d+)'
+            '\/(?P<nbrs_count>\d+)$$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = str(group['interface'])
+                instance = str(group['instance'])
+                ip_address = str(group['address'])
+                area = str(IPAddress(str(group['area'])))
+                state = group['state']
+                cost = int(group['cost'])
+                nbrs_full = int(group['nbrs_full'])
+                nbrs_count = int(group['nbrs_count'])
+
+                intf_dict = ret_dict.setdefault('instance', {}).\
+                    setdefault(instance, {}).\
+                    setdefault('areas', {}).\
+                    setdefault(area, {}).\
+                    setdefault('interfaces', {}).\
+                    setdefault(interface, {})
+
+                intf_dict.update({'ip_address' : ip_address})
+                intf_dict.update({'cost' : cost})
+                intf_dict.update({'state' : state})
+                intf_dict.update({'nbrs_full' : nbrs_full})
+                intf_dict.update({'nbrs_count' : nbrs_count})
+                continue
+
+        return ret_dict
 
 # ============================
 # Schema for:
@@ -1261,17 +1339,17 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                     {Any(): 
                                         {Optional('interfaces'): 
                                             {Any(): 
-                                                {Optional('name'): str,
-                                                Optional('enable'): bool,
-                                                Optional('line_protocol'): bool,
+                                                {'name': str,
+                                                'enable': bool,
+                                                'line_protocol': bool,
                                                 'ip_address': str,
                                                 Optional('nbrs_full_count'): str,
                                                 Optional('interface_id'): int,
                                                 Optional('attached'): str,
-                                                Optional('demand_circuit'): bool,
-                                                Optional('router_id'): str,
-                                                Optional('interface_type'): str,
-                                                Optional('bfd'): 
+                                                'demand_circuit': bool,
+                                                'router_id': str,
+                                                'interface_type': str,
+                                                'bfd': 
                                                     {'enable': bool},
                                                 Optional('if_cfg'): bool,
                                                 Optional('cost'): int,
