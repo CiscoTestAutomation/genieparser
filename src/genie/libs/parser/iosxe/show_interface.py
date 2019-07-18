@@ -2805,6 +2805,7 @@ class ShowInterfacesAccountingSchema(MetaParser):
     """Schema for show interfaces accounting"""
     schema = {
                 Any(): {
+                    Optional('description'): str,
                     'accounting': {
                         Any(): {
                             'pkts_in': int,
@@ -2840,7 +2841,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)$')
+        # GigabitEthernet11 OOB Net
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$')
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
         p1_1 = re.compile(r'^(?P<interface>Tunnel\d+) +Pim +Register +'
@@ -2850,16 +2852,26 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         p2 = re.compile(r'^(?P<protocol>[\w\_\-\s]+)\s+(?P<pkts_in>\d+)\s+'
                          '(?P<chars_in>\d+)\s+(?P<pkts_out>\d+)\s+'
                          '(?P<chars_out>\d+)')
+
+        # No traffic sent or received on this interface.
+        p3 = re.compile(r'^No +traffic +sent +or +received +on +this +interface\.$')
+
         for line in out.splitlines():
             if line:
                 line = line.strip()
             else:
                 continue
 
+            m = p3.match(line)
+            if m:
+                continue
+
             # GigabitEthernet0/0/0/0
+            # GigabitEthernet11 OOB Net
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
+                description = m.groupdict()['description']
                 continue
 
             #   IPV4_UNICAST             9943           797492           50             3568
@@ -2871,6 +2883,8 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                     setdefault('accounting', {}).setdefault(protocol, {})
                 ret_dict[intf]['accounting'][protocol].update({k: int(v) \
                     for k, v in protocol_dict.items()})
+                if description:
+                    ret_dict[intf].setdefault('description', description.strip())
                 continue
 
         return ret_dict

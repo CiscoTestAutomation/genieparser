@@ -6329,104 +6329,243 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
         192.168.10.253  4        60103       0       0        1    0    0 never    Idle
         '''}
 
-    golden_parsed_output2 = {'bgp_id': 65109,
-            'vrf': {'VRF1': {'neighbor': {'192.168.10.253': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                  'activity_prefixes': '226/0',
-                                                                                  'as': 65555,
-                                                                                  'attribute_entries': '106/104',
-                                                                                  'bgp_table_version': 263,
-                                                                                  'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                    'total_entries': 0},
-                                                                                                    'route-map': {'memory_usage': 0,
-                                                                                                                  'total_entries': 0}},
-                                                                                  'community_entries': {'memory_usage': 3248,
-                                                                                                        'total_entries': 102},
-                                                                                  'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                          'total_entries': 2},
-                                                                                              'rrinfo': {'memory_usage': 40,
-                                                                                                         'total_entries': 1}},
-                                                                                  'input_queue': 0,
-                                                                                  'local_as': 65109,
-                                                                                  'msg_rcvd': 0,
-                                                                                  'msg_sent': 0,
-                                                                                  'output_queue': 0,
-                                                                                  'path': {'memory_usage': 25704,
-                                                                                           'total_entries': 189},
-                                                                                  'prefixes': {'memory_usage': 32256,
-                                                                                               'total_entries': 126},
-                                                                                  'route_identifier': '10.169.197.254',
-                                                                                  'routing_table_version': 263,
-                                                                                  'scan_interval': 60,
-                                                                                  'state_pfxrcd': 'Idle',
-                                                                                  'tbl_ver': 1,
-                                                                                  'total_memory': 92688,
-                                                                                  'up_down': 'never',
-                                                                                  'version': 4}}}}},
-         'default': {'neighbor': {'192.168.36.119': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                   'activity_prefixes': '226/0',
-                                                                                   'as': 65109,
-                                                                                   'attribute_entries': '106/104',
-                                                                                   'bgp_table_version': 263,
-                                                                                   'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0},
-                                                                                                     'route-map': {'memory_usage': 0,
-                                                                                                                   'total_entries': 0}},
-                                                                                   'community_entries': {'memory_usage': 3248,
-                                                                                                         'total_entries': 102},
-                                                                                   'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                           'total_entries': 2},
-                                                                                               'rrinfo': {'memory_usage': 40,
-                                                                                                          'total_entries': 1}},
-                                                                                   'input_queue': 0,
-                                                                                   'local_as': 65109,
-                                                                                   'msg_rcvd': 10293,
-                                                                                   'msg_sent': 10213,
-                                                                                   'output_queue': 0,
-                                                                                   'path': {'memory_usage': 25704,
-                                                                                            'total_entries': 189},
-                                                                                   'prefixes': {'memory_usage': 32256,
-                                                                                                'total_entries': 126},
-                                                                                   'route_identifier': '10.169.197.254',
-                                                                                   'routing_table_version': 263,
-                                                                                   'scan_interval': 60,
-                                                                                   'state_pfxrcd': '62',
-                                                                                   'tbl_ver': 263,
-                                                                                   'total_memory': 92688,
-                                                                                   'up_down': '3d05h',
-                                                                                   'version': 4}}},
-                                  '192.168.36.120': {'address_family': {'vpnv4': {'activity_paths': '4035/3696',
-                                                                                   'activity_prefixes': '226/0',
-                                                                                   'as': 65109,
-                                                                                   'attribute_entries': '106/104',
-                                                                                   'bgp_table_version': 263,
-                                                                                   'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                     'total_entries': 0},
-                                                                                                     'route-map': {'memory_usage': 0,
-                                                                                                                   'total_entries': 0}},
-                                                                                   'community_entries': {'memory_usage': 3248,
-                                                                                                         'total_entries': 102},
-                                                                                   'entries': {'AS-PATH': {'memory_usage': 64,
-                                                                                                           'total_entries': 2},
-                                                                                               'rrinfo': {'memory_usage': 40,
-                                                                                                          'total_entries': 1}},
-                                                                                   'input_queue': 0,
-                                                                                   'local_as': 65109,
-                                                                                   'msg_rcvd': 9930,
-                                                                                   'msg_sent': 9826,
-                                                                                   'output_queue': 0,
-                                                                                   'path': {'memory_usage': 25704,
-                                                                                            'total_entries': 189},
-                                                                                   'prefixes': {'memory_usage': 32256,
-                                                                                                'total_entries': 126},
-                                                                                   'route_identifier': '10.169.197.254',
-                                                                                   'routing_table_version': 263,
-                                                                                   'scan_interval': 60,
-                                                                                   'state_pfxrcd': '62',
-                                                                                   'tbl_ver': 263,
-                                                                                   'total_memory': 92688,
-                                                                                   'up_down': '3d02h',
-                                                                                   'version': 4}}}}}}}
-
+    golden_parsed_output2 = {
+        "bgp_id": 65109,
+        "vrf": {
+            "VRF1": {
+                "neighbor": {
+                    "192.168.10.253": {
+                        "address_family": {
+                            "vpnv4": {
+                                "version": 4,
+                                "as": 65555,
+                                "msg_rcvd": 10112,
+                                "msg_sent": 10107,
+                                "tbl_ver": 263,
+                                "input_queue": 0,
+                                "output_queue": 0,
+                                "up_down": "3d05h",
+                                "state_pfxrcd": "13",
+                                "route_identifier": "10.169.197.254",
+                                "local_as": 65109,
+                                "bgp_table_version": 263,
+                                "routing_table_version": 263,
+                                "attribute_entries": "106/104",
+                                "prefixes": {
+                                    "total_entries": 126,
+                                    "memory_usage": 32256
+                                },
+                                "path": {
+                                    "total_entries": 189,
+                                    "memory_usage": 25704
+                                },
+                                "total_memory": 92688,
+                                "activity_prefixes": "226/0",
+                                "activity_paths": "4035/3696",
+                                "scan_interval": 60,
+                                "cache_entries": {
+                                    "route-map": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    },
+                                    "filter-list": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    }
+                                },
+                                "entries": {
+                                    "rrinfo": {
+                                        "total_entries": 1,
+                                        "memory_usage": 40
+                                    },
+                                    "AS-PATH": {
+                                        "total_entries": 2,
+                                        "memory_usage": 64
+                                    }
+                                },
+                                "community_entries": {
+                                    "total_entries": 102,
+                                    "memory_usage": 3248
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "default": {
+                "neighbor": {
+                    "192.168.10.253": {
+                        "address_family": {
+                            "vpnv4": {
+                                "version": 4,
+                                "as": 65555,
+                                "msg_rcvd": 0,
+                                "msg_sent": 0,
+                                "tbl_ver": 1,
+                                "input_queue": 0,
+                                "output_queue": 0,
+                                "up_down": "never",
+                                "state_pfxrcd": "Idle",
+                                "route_identifier": "10.169.197.254",
+                                "local_as": 65109,
+                                "bgp_table_version": 263,
+                                "routing_table_version": 263,
+                                "attribute_entries": "106/104",
+                                "prefixes": {
+                                    "total_entries": 126,
+                                    "memory_usage": 32256
+                                },
+                                "path": {
+                                    "total_entries": 189,
+                                    "memory_usage": 25704
+                                },
+                                "total_memory": 92688,
+                                "activity_prefixes": "226/0",
+                                "activity_paths": "4035/3696",
+                                "scan_interval": 60,
+                                "cache_entries": {
+                                    "route-map": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    },
+                                    "filter-list": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    }
+                                },
+                                "entries": {
+                                    "rrinfo": {
+                                        "total_entries": 1,
+                                        "memory_usage": 40
+                                    },
+                                    "AS-PATH": {
+                                        "total_entries": 2,
+                                        "memory_usage": 64
+                                    }
+                                },
+                                "community_entries": {
+                                    "total_entries": 102,
+                                    "memory_usage": 3248
+                                }
+                            }
+                        }
+                    },
+                    "192.168.36.119": {
+                        "address_family": {
+                            "vpnv4": {
+                                "version": 4,
+                                "as": 65109,
+                                "msg_rcvd": 10293,
+                                "msg_sent": 10213,
+                                "tbl_ver": 263,
+                                "input_queue": 0,
+                                "output_queue": 0,
+                                "up_down": "3d05h",
+                                "state_pfxrcd": "62",
+                                "route_identifier": "10.169.197.254",
+                                "local_as": 65109,
+                                "bgp_table_version": 263,
+                                "routing_table_version": 263,
+                                "attribute_entries": "106/104",
+                                "prefixes": {
+                                    "total_entries": 126,
+                                    "memory_usage": 32256
+                                },
+                                "path": {
+                                    "total_entries": 189,
+                                    "memory_usage": 25704
+                                },
+                                "total_memory": 92688,
+                                "activity_prefixes": "226/0",
+                                "activity_paths": "4035/3696",
+                                "scan_interval": 60,
+                                "cache_entries": {
+                                    "route-map": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    },
+                                    "filter-list": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    }
+                                },
+                                "entries": {
+                                    "rrinfo": {
+                                        "total_entries": 1,
+                                        "memory_usage": 40
+                                    },
+                                    "AS-PATH": {
+                                        "total_entries": 2,
+                                        "memory_usage": 64
+                                    }
+                                },
+                                "community_entries": {
+                                    "total_entries": 102,
+                                    "memory_usage": 3248
+                                }
+                            }
+                        }
+                    },
+                    "192.168.36.120": {
+                        "address_family": {
+                            "vpnv4": {
+                                "version": 4,
+                                "as": 65109,
+                                "msg_rcvd": 9930,
+                                "msg_sent": 9826,
+                                "tbl_ver": 263,
+                                "input_queue": 0,
+                                "output_queue": 0,
+                                "up_down": "3d02h",
+                                "state_pfxrcd": "62",
+                                "route_identifier": "10.169.197.254",
+                                "local_as": 65109,
+                                "bgp_table_version": 263,
+                                "routing_table_version": 263,
+                                "attribute_entries": "106/104",
+                                "prefixes": {
+                                    "total_entries": 126,
+                                    "memory_usage": 32256
+                                },
+                                "path": {
+                                    "total_entries": 189,
+                                    "memory_usage": 25704
+                                },
+                                "total_memory": 92688,
+                                "activity_prefixes": "226/0",
+                                "activity_paths": "4035/3696",
+                                "scan_interval": 60,
+                                "cache_entries": {
+                                    "route-map": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    },
+                                    "filter-list": {
+                                        "total_entries": 0,
+                                        "memory_usage": 0
+                                    }
+                                },
+                                "entries": {
+                                    "rrinfo": {
+                                        "total_entries": 1,
+                                        "memory_usage": 40
+                                    },
+                                    "AS-PATH": {
+                                        "total_entries": 2,
+                                        "memory_usage": 64
+                                    }
+                                },
+                                "community_entries": {
+                                    "total_entries": 102,
+                                    "memory_usage": 3248
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     def test_show_ip_bgp_all_summary_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -6599,232 +6738,387 @@ class test_show_ip_bgp_all_summary(unittest.TestCase):
              address-family ipv6 vrf VRF1
         '''
 
-        parsed_output3 = {'bgp_id': 65000,
-            'vrf': {'VRF1': {'neighbor': {'10.16.2.2': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
-                                                                                'activity_prefixes': '12/0',
-                                                                                'as': 65000,
-                                                                                'attribute_entries': '3/3',
-                                                                                'bgp_table_version': 4,
-                                                                                'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                  'total_entries': 0},
-                                                                                                  'route-map': {'memory_usage': 0,
-                                                                                                                'total_entries': 0}},
-                                                                                'community_entries': {'memory_usage': 500,
-                                                                                                      'total_entries': 2},
-                                                                                'input_queue': 0,
-                                                                                'local_as': 65000,
-                                                                                'msg_rcvd': 30178,
-                                                                                'msg_sent': 33215,
-                                                                                'output_queue': 0,
-                                                                                'path': {'memory_usage': 408,
-                                                                                         'total_entries': 3},
-                                                                                'prefixes': {'memory_usage': 768,
-                                                                                             'total_entries': 3},
-                                                                                'route_identifier': '10.4.1.1',
-                                                                                'routing_table_version': 4,
-                                                                                'scan_interval': 60,
-                                                                                'state_pfxrcd': '1',
-                                                                                'tbl_ver': 4,
-                                                                                'total_memory': 2564,
-                                                                                'up_down': '2w6d',
-                                                                                'version': 4}}},
-                               '2001:2:2:2::2': {'address_family': {'vpnv6 unicast': {'activity_paths': '12/0',
-                                                                                      'activity_prefixes': '12/0',
-                                                                                      'as': 65000,
-                                                                                      'attribute_entries': '3/3',
-                                                                                      'bgp_table_version': 5,
-                                                                                      'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                        'total_entries': 0},
-                                                                                                        'route-map': {'memory_usage': 0,
-                                                                                                                      'total_entries': 0}},
-                                                                                      'community_entries': {'memory_usage': 500,
-                                                                                                            'total_entries': 2},
-                                                                                      'input_queue': 0,
-                                                                                      'local_as': 65000,
-                                                                                      'msg_rcvd': 30178,
-                                                                                      'msg_sent': 33203,
-                                                                                      'output_queue': 0,
-                                                                                      'path': {'memory_usage': 468,
-                                                                                               'total_entries': 3},
-                                                                                      'prefixes': {'memory_usage': 840,
-                                                                                                   'total_entries': 3},
-                                                                                      'route_identifier': '10.4.1.1',
-                                                                                      'routing_table_version': 5,
-                                                                                      'scan_interval': 60,
-                                                                                      'state_pfxrcd': '1',
-                                                                                      'tbl_ver': 5,
-                                                                                      'total_memory': 2696,
-                                                                                      'up_down': '2w6d',
-                                                                                      'version': 4}}},
-                               '2001:3:3:3::3': {'address_family': {'vpnv6 unicast': {'activity_paths': '12/0',
-                                                                                      'activity_prefixes': '12/0',
-                                                                                      'as': 65000,
-                                                                                      'attribute_entries': '3/3',
-                                                                                      'bgp_table_version': 5,
-                                                                                      'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                        'total_entries': 0},
-                                                                                                        'route-map': {'memory_usage': 0,
-                                                                                                                      'total_entries': 0}},
-                                                                                      'community_entries': {'memory_usage': 500,
-                                                                                                            'total_entries': 2},
-                                                                                      'input_queue': 0,
-                                                                                      'local_as': 65000,
-                                                                                      'msg_rcvd': 30183,
-                                                                                      'msg_sent': 33216,
-                                                                                      'output_queue': 0,
-                                                                                      'path': {'memory_usage': 468,
-                                                                                               'total_entries': 3},
-                                                                                      'prefixes': {'memory_usage': 840,
-                                                                                                   'total_entries': 3},
-                                                                                      'route_identifier': '10.4.1.1',
-                                                                                      'routing_table_version': 5,
-                                                                                      'scan_interval': 60,
-                                                                                      'state_pfxrcd': '1',
-                                                                                      'tbl_ver': 5,
-                                                                                      'total_memory': 2696,
-                                                                                      'up_down': '2w6d',
-                                                                                      'version': 4}}},
-                               '10.36.3.3': {'address_family': {'vpnv4 unicast': {'activity_paths': '12/0',
-                                                                                'activity_prefixes': '12/0',
-                                                                                'as': 65000,
-                                                                                'attribute_entries': '3/3',
-                                                                                'bgp_table_version': 4,
-                                                                                'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                  'total_entries': 0},
-                                                                                                  'route-map': {'memory_usage': 0,
-                                                                                                                'total_entries': 0}},
-                                                                                'community_entries': {'memory_usage': 500,
-                                                                                                      'total_entries': 2},
-                                                                                'input_queue': 0,
-                                                                                'local_as': 65000,
-                                                                                'msg_rcvd': 30182,
-                                                                                'msg_sent': 33221,
-                                                                                'output_queue': 0,
-                                                                                'path': {'memory_usage': 408,
-                                                                                         'total_entries': 3},
-                                                                                'prefixes': {'memory_usage': 768,
-                                                                                             'total_entries': 3},
-                                                                                'route_identifier': '10.4.1.1',
-                                                                                'routing_table_version': 4,
-                                                                                'scan_interval': 60,
-                                                                                'state_pfxrcd': '1',
-                                                                                'tbl_ver': 4,
-                                                                                'total_memory': 2564,
-                                                                                'up_down': '2w6d',
-                                                                                'version': 4}}}}},
-         'default': {'neighbor': {'10.16.2.2': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
-                                                                                  'activity_prefixes': '12/0',
-                                                                                  'as': 65000,
-                                                                                  'attribute_entries': '3/3',
-                                                                                  'bgp_table_version': 4,
-                                                                                  'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                    'total_entries': 0},
-                                                                                                    'route-map': {'memory_usage': 0,
-                                                                                                                  'total_entries': 0}},
-                                                                                  'community_entries': {'memory_usage': 500,
-                                                                                                        'total_entries': 2},
-                                                                                  'input_queue': 0,
-                                                                                  'local_as': 65000,
-                                                                                  'msg_rcvd': 30178,
-                                                                                  'msg_sent': 33211,
-                                                                                  'output_queue': 0,
-                                                                                  'path': {'memory_usage': 408,
-                                                                                           'total_entries': 3},
-                                                                                  'prefixes': {'memory_usage': 744,
-                                                                                               'total_entries': 3},
-                                                                                  'route_identifier': '10.4.1.1',
-                                                                                  'routing_table_version': 4,
-                                                                                  'scan_interval': 60,
-                                                                                  'state_pfxrcd': '1',
-                                                                                  'tbl_ver': 4,
-                                                                                  'total_memory': 2492,
-                                                                                  'up_down': '2w6d',
-                                                                                  'version': 4}}},
-                                  '2001:2:2:2::2': {'address_family': {'ipv6 unicast': {'activity_paths': '12/0',
-                                                                                        'activity_prefixes': '12/0',
-                                                                                        'as': 65000,
-                                                                                        'attribute_entries': '3/3',
-                                                                                        'bgp_table_version': 5,
-                                                                                        'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                          'total_entries': 0},
-                                                                                                          'route-map': {'memory_usage': 0,
-                                                                                                                        'total_entries': 0}},
-                                                                                        'community_entries': {'memory_usage': 500,
-                                                                                                              'total_entries': 2},
-                                                                                        'input_queue': 0,
-                                                                                        'local_as': 65000,
-                                                                                        'msg_rcvd': 30178,
-                                                                                        'msg_sent': 33214,
-                                                                                        'output_queue': 0,
-                                                                                        'path': {'memory_usage': 456,
-                                                                                                 'total_entries': 3},
-                                                                                        'prefixes': {'memory_usage': 816,
-                                                                                                     'total_entries': 3},
-                                                                                        'route_identifier': '10.4.1.1',
-                                                                                        'routing_table_version': 5,
-                                                                                        'scan_interval': 60,
-                                                                                        'state_pfxrcd': '1',
-                                                                                        'tbl_ver': 5,
-                                                                                        'total_memory': 2612,
-                                                                                        'up_down': '2w6d',
-                                                                                        'version': 4}}},
-                                  '2001:3:3:3::3': {'address_family': {'ipv6 unicast': {'activity_paths': '12/0',
-                                                                                        'activity_prefixes': '12/0',
-                                                                                        'as': 65000,
-                                                                                        'attribute_entries': '3/3',
-                                                                                        'bgp_table_version': 5,
-                                                                                        'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                          'total_entries': 0},
-                                                                                                          'route-map': {'memory_usage': 0,
-                                                                                                                        'total_entries': 0}},
-                                                                                        'community_entries': {'memory_usage': 500,
-                                                                                                              'total_entries': 2},
-                                                                                        'input_queue': 0,
-                                                                                        'local_as': 65000,
-                                                                                        'msg_rcvd': 30182,
-                                                                                        'msg_sent': 33196,
-                                                                                        'output_queue': 0,
-                                                                                        'path': {'memory_usage': 456,
-                                                                                                 'total_entries': 3},
-                                                                                        'prefixes': {'memory_usage': 816,
-                                                                                                     'total_entries': 3},
-                                                                                        'route_identifier': '10.4.1.1',
-                                                                                        'routing_table_version': 5,
-                                                                                        'scan_interval': 60,
-                                                                                        'state_pfxrcd': '1',
-                                                                                        'tbl_ver': 5,
-                                                                                        'total_memory': 2612,
-                                                                                        'up_down': '2w6d',
-                                                                                        'version': 4}}},
-                                  '10.36.3.3': {'address_family': {'ipv4 unicast': {'activity_paths': '12/0',
-                                                                                  'activity_prefixes': '12/0',
-                                                                                  'as': 65000,
-                                                                                  'attribute_entries': '3/3',
-                                                                                  'bgp_table_version': 4,
-                                                                                  'cache_entries': {'filter-list': {'memory_usage': 0,
-                                                                                                                    'total_entries': 0},
-                                                                                                    'route-map': {'memory_usage': 0,
-                                                                                                                  'total_entries': 0}},
-                                                                                  'community_entries': {'memory_usage': 500,
-                                                                                                        'total_entries': 2},
-                                                                                  'input_queue': 0,
-                                                                                  'local_as': 65000,
-                                                                                  'msg_rcvd': 30182,
-                                                                                  'msg_sent': 33227,
-                                                                                  'output_queue': 0,
-                                                                                  'path': {'memory_usage': 408,
-                                                                                           'total_entries': 3},
-                                                                                  'prefixes': {'memory_usage': 744,
-                                                                                               'total_entries': 3},
-                                                                                  'route_identifier': '10.4.1.1',
-                                                                                  'routing_table_version': 4,
-                                                                                  'scan_interval': 60,
-                                                                                  'state_pfxrcd': '1',
-                                                                                  'tbl_ver': 4,
-                                                                                  'total_memory': 2492,
-                                                                                  'up_down': '2w6d',
-                                                                                  'version': 4}}}}}}}
-
+        parsed_output3 = {
+            "bgp_id": 65000,
+            "vrf": {
+                "VRF1": {
+                    "neighbor": {
+                        "10.16.2.2": {
+                            "address_family": {
+                                "vpnv4 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 4,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30178,
+                                    "msg_sent": 33215,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 408,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 768,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 4,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 4,
+                                    "total_memory": 2564,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        },
+                        "2001:2:2:2::2": {
+                            "address_family": {
+                                "vpnv6 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 5,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30178,
+                                    "msg_sent": 33203,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 468,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 840,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 5,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 5,
+                                    "total_memory": 2696,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        },
+                        "2001:3:3:3::3": {
+                            "address_family": {
+                                "vpnv6 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 5,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30183,
+                                    "msg_sent": 33216,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 468,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 840,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 5,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 5,
+                                    "total_memory": 2696,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        },
+                        "10.36.3.3": {
+                            "address_family": {
+                                "vpnv4 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 4,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30182,
+                                    "msg_sent": 33221,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 408,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 768,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 4,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 4,
+                                    "total_memory": 2564,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        }
+                    }
+                },
+                "default": {
+                    "neighbor": {
+                        "10.16.2.2": {
+                            "address_family": {
+                                "ipv4 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 4,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30178,
+                                    "msg_sent": 33211,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 408,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 744,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 4,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 4,
+                                    "total_memory": 2492,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        },
+                        "2001:2:2:2::2": {
+                            "address_family": {
+                                "ipv6 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 5,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30178,
+                                    "msg_sent": 33214,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 456,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 816,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 5,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 5,
+                                    "total_memory": 2612,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        },
+                        "2001:3:3:3::3": {
+                            "address_family": {
+                                "ipv6 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 5,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30182,
+                                    "msg_sent": 33196,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 456,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 816,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 5,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 5,
+                                    "total_memory": 2612,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        },
+                        "10.36.3.3": {
+                            "address_family": {
+                                "ipv4 unicast": {
+                                    "activity_paths": "12/0",
+                                    "activity_prefixes": "12/0",
+                                    "as": 65000,
+                                    "attribute_entries": "3/3",
+                                    "bgp_table_version": 4,
+                                    "cache_entries": {
+                                        "filter-list": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        },
+                                        "route-map": {
+                                            "memory_usage": 0,
+                                            "total_entries": 0
+                                        }
+                                    },
+                                    "community_entries": {
+                                        "memory_usage": 500,
+                                        "total_entries": 2
+                                    },
+                                    "input_queue": 0,
+                                    "local_as": 65000,
+                                    "msg_rcvd": 30182,
+                                    "msg_sent": 33227,
+                                    "output_queue": 0,
+                                    "path": {
+                                        "memory_usage": 408,
+                                        "total_entries": 3
+                                    },
+                                    "prefixes": {
+                                        "memory_usage": 744,
+                                        "total_entries": 3
+                                    },
+                                    "route_identifier": "10.4.1.1",
+                                    "routing_table_version": 4,
+                                    "scan_interval": 60,
+                                    "state_pfxrcd": "1",
+                                    "tbl_ver": 4,
+                                    "total_memory": 2492,
+                                    "up_down": "2w6d",
+                                    "version": 4
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         self.outputs = {}
         self.maxDiff = None 
@@ -14996,6 +15290,388 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         SSO is disabled
         No active TCP connection
     '''}
+
+    golden_parsed_output4 = {
+        "list_of_neighbors": [
+            "192.168.10.253"
+        ],
+        "vrf": {
+            "CE1test": {
+                "neighbor": {
+                    "192.168.10.253": {
+                        "remote_as": 65555,
+                        "link": "external",
+                        "shutdown": False,
+                        "bgp_version": 4,
+                        "router_id": "192.168.10.253",
+                        "session_state": "Closing",
+                        "bgp_negotiated_keepalive_timers": {
+                            "hold_time": 90,
+                            "keepalive_interval": 30,
+                            "min_holdtime": 15
+                        },
+                        "bgp_neighbor_session": {
+                            "sessions": 0,
+                            "stateful_switchover": "NO for session 0, 0"
+                        },
+                        "bgp_neighbor_counters": {
+                            "multisession_messages": {
+                                "192.168.10.253 active": {
+                                    "sent": {
+                                        "opens": 1,
+                                        "notifications": 1,
+                                        "updates": 0,
+                                        "keepalives": 0,
+                                        "route_refresh": 0,
+                                        "total": 2
+                                    },
+                                    "received": {
+                                        "opens": 1,
+                                        "notifications": 0,
+                                        "updates": 0,
+                                        "keepalives": 0,
+                                        "route_refresh": 0,
+                                        "total": 2
+                                    },
+                                    "in_queue_depth": 0,
+                                    "out_queue_depth": 0
+                                },
+                                "192.168.10.253 passive": {
+                                    "sent": {
+                                        "opens": 0,
+                                        "notifications": 1,
+                                        "updates": 0,
+                                        "keepalives": 0,
+                                        "route_refresh": 0,
+                                        "total": 1
+                                    },
+                                    "received": {
+                                        "opens": 1,
+                                        "notifications": 0,
+                                        "updates": 0,
+                                        "keepalives": 0,
+                                        "route_refresh": 0,
+                                        "total": 1
+                                    },
+                                    "in_queue_depth": 0,
+                                    "out_queue_depth": 0
+                                }
+                            }
+                        },
+                        "bgp_session_transport": {
+                            "min_time_between_advertisement_runs": 0,
+                            "address_tracking_status": "enabled",
+                            "rib_route_ip": "192.168.10.253",
+                            "connection": {
+                                "established": 0,
+                                "dropped": 0,
+                                "last_reset": "never"
+                            },
+                            "tcp_path_mtu_discovery": "enabled",
+                            "graceful_restart": "enabled",
+                            "gr_restart_time": 120,
+                            "gr_stalepath_time": 360,
+                            "sso": False,
+                            "connection_state": "closewait",
+                            "io_status": 1,
+                            "unread_input_bytes": 0,
+                            "ecn_connection": "disabled",
+                            "minimum_incoming_ttl": 0,
+                            "outgoing_ttl": 1,
+                            "transport": {
+                                "local_host": "192.168.10.254",
+                                "local_port": "26883",
+                                "foreign_host": "192.168.10.253",
+                                "foreign_port": "179",
+                                "mss": 1460
+                            },
+                            "connection_tableid": 1,
+                            "maximum_output_segment_queue_size": 50,
+                            "enqueued_packets": {
+                                "retransmit_packet": 0,
+                                "input_packet": 0,
+                                "mis_ordered_packet": 0
+                            },
+                            "iss": 168450936,
+                            "snduna": 168451027,
+                            "sndnxt": 168451027,
+                            "irs": 3682975333,
+                            "rcvnxt": 3682975411,
+                            "sndwnd": 16294,
+                            "snd_scale": 0,
+                            "maxrcvwnd": 16384,
+                            "rcvwnd": 16308,
+                            "rcv_scale": 0,
+                            "delrcvwnd": 76,
+                            "srtt": 330,
+                            "rtto": 3159,
+                            "rtv": 2829,
+                            "krtt": 0,
+                            "min_rtt": 3,
+                            "max_rtt": 1000,
+                            "ack_hold": 200,
+                            "uptime": 3222,
+                            "sent_idletime": 3177,
+                            "receive_idletime": 3178,
+                            "status_flags": "active open",
+                            "option_flags": "VRF id set, nagle, path mtu capable",
+                            "ip_precedence_value": 6,
+                            "datagram": {
+                                "datagram_received": {
+                                    "value": 5,
+                                    "out_of_order": 0,
+                                    "with_data": 2,
+                                    "total_data": 76
+                                },
+                                "datagram_sent": {
+                                    "value": 6,
+                                    "retransmit": 0,
+                                    "fastretransmit": 0,
+                                    "partialack": 0,
+                                    "second_congestion": 0,
+                                    "with_data": 2,
+                                    "total_data": 90
+                                }
+                            },
+                            "packet_fast_path": 0,
+                            "packet_fast_processed": 0,
+                            "packet_slow_path": 0,
+                            "fast_lock_acquisition_failures": 0,
+                            "lock_slow_path": 0,
+                            "tcp_semaphore": "0x7F2C7331EBC8",
+                            "tcp_semaphore_status": "FREE"
+                        },
+                        "address_family": {
+                            "vpnv4 unicast": {
+                                "bgp_table_version": 239,
+                                "neighbor_version": "1/239",
+                                "output_queue_size": 0,
+                                "index": 0,
+                                "advertise_bit": 0,
+                                "slow_peer_detection": False,
+                                "slow_peer_split_update_group_dynamic": False,
+                                "prefix_activity_counters": {
+                                    "sent": {
+                                        "prefixes_current": 0,
+                                        "prefixes_total": 0,
+                                        "implicit_withdraw": 0,
+                                        "explicit_withdraw": 0,
+                                        "used_as_bestpath": "n/a",
+                                        "used_as_multipath": "n/a",
+                                        "used_as_secondary": "n/a"
+                                    },
+                                    "received": {
+                                        "prefixes_current": 0,
+                                        "prefixes_total": 0,
+                                        "implicit_withdraw": 0,
+                                        "explicit_withdraw": 0,
+                                        "used_as_bestpath": 0,
+                                        "used_as_multipath": 0,
+                                        "used_as_secondary": 0
+                                    }
+                                },
+                                "local_policy_denied_prefixes_counters": {
+                                    "outbound": {
+                                        "total": 0
+                                    },
+                                    "inbound": {
+                                        "total": 0
+                                    }
+                                },
+                                "max_nlri": 0,
+                                "min_nlri": 0,
+                                "last_detected_dynamic_slow_peer": "never",
+                                "dynamic_slow_peer_recovered": "never",
+                                "refresh_epoch": 1,
+                                "last_sent_refresh_start_of_rib": "never",
+                                "last_sent_refresh_end_of_rib": "never",
+                                "last_received_refresh_start_of_rib": "never",
+                                "last_received_refresh_end_of_rib": "never",
+                                "refresh_activity_counters": {
+                                    "sent": {
+                                        "refresh_start_of_rib": 0,
+                                        "refresh_end_of_rib": 0
+                                    },
+                                    "received": {
+                                        "refresh_start_of_rib": 0,
+                                        "refresh_end_of_rib": 0
+                                    }
+                                },
+                                "current_time": "0x65B4C8"
+                            }
+                        },
+                        "bgp_event_timer": {
+                            "starts": {
+                                "retrans": 3,
+                                "timewait": 0,
+                                "ackhold": 2,
+                                "sendwnd": 0,
+                                "keepalive": 0,
+                                "giveup": 0,
+                                "deadwait": 0,
+                                "linger": 0,
+                                "processq": 0
+                            },
+                            "wakeups": {
+                                "retrans": 0,
+                                "timewait": 0,
+                                "ackhold": 0,
+                                "sendwnd": 0,
+                                "keepalive": 0,
+                                "giveup": 0,
+                                "deadwait": 0,
+                                "linger": 0,
+                                "processq": 0
+                            },
+                            "next": {
+                                "retrans": "0x0",
+                                "timewait": "0x0",
+                                "ackhold": "0x0",
+                                "sendwnd": "0x0",
+                                "keepalive": "0x0",
+                                "giveup": "0x0",
+                                "deadwait": "0x0",
+                                "linger": "0x0",
+                                "processq": "0x0"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output4 = {'execute.return_value': '''
+        show ip bgp vpnv4 vrf CE1test neighbors
+        Load for five secs: 65%/1%; one minute: 29%; five minutes: 24%
+        Time source is NTP, 02:22:21.112 JST Wed Jul 17 2019
+
+        BGP neighbor is 192.168.10.253,  vrf CE1test,  remote AS 65555, external link
+          BGP version 4, remote router ID 192.168.10.253
+          Session state = Closing
+          Last read 00:00:03, last write 00:00:03, hold time is 90, keepalive interval is 30 seconds
+          BGP multisession with 2 sessions
+          Configured hold time is 90, keepalive interval is 30 seconds
+          Minimum holdtime from neighbor is 15 seconds
+          Neighbor sessions:
+            0 active, is not multisession capable (disabled)
+            Stateful switchover support enabled: NO for session 0, 0
+          Message statistics for 192.168.10.253 active:
+            InQ depth is 0
+            OutQ depth is 0
+            
+                                 Sent       Rcvd
+            Opens:                  1          1
+            Notifications:          1          0
+            Updates:                0          0
+            Keepalives:             0          0
+            Route Refresh:          0          0
+            Total:                  2          2
+          Message statistics for 192.168.10.253 passive:
+            InQ depth is 0
+            OutQ depth is 0
+            
+                                 Sent       Rcvd
+            Opens:                  0          1
+            Notifications:          1          0
+            Updates:                0          0
+            Keepalives:             0          0
+            Route Refresh:          0          0
+            Total:                  1          1
+          Do log neighbor state changes (via global configuration)
+          Default minimum time between advertisement runs is 0 seconds
+
+         For address family: VPNv4 Unicast
+          Translates address family IPv4 Unicast for VRF CE1test
+          Session: 192.168.10.253 active
+          BGP table version 239, neighbor version 1/239
+          Output queue size : 0
+          Index 0, Advertise bit 0
+          session 0 member
+          Overrides the neighbor AS with my AS before sending updates
+          Slow-peer detection is disabled
+          Slow-peer split-update-group dynamic is disabled
+                                         Sent       Rcvd
+          Prefix activity:               ----       ----
+            Prefixes Current:               0          0
+            Prefixes Total:                 0          0
+            Implicit Withdraw:              0          0
+            Explicit Withdraw:              0          0
+            Used as bestpath:             n/a          0
+            Used as multipath:            n/a          0
+            Used as secondary:            n/a          0
+
+                                           Outbound    Inbound
+          Local Policy Denied Prefixes:    --------    -------
+            Total:                                0          0
+          Number of NLRIs in the update sent: max 0, min 0
+          Last detected as dynamic slow peer: never
+          Dynamic slow peer recovered: never
+          Refresh Epoch: 1
+          Last Sent Refresh Start-of-rib: never
+          Last Sent Refresh End-of-rib: never
+          Last Received Refresh Start-of-rib: never
+          Last Received Refresh End-of-rib: never
+                               Sent   Rcvd
+            Refresh activity:          ----   ----
+              Refresh Start-of-RIB          0          0
+              Refresh End-of-RIB            0          0
+
+          Address tracking is enabled, the RIB does have a route to 192.168.10.253
+          Route to peer address reachability Up: 1; Down: 0
+            Last notification 00:03:30
+          Connections established 0; dropped 0
+          Last reset never
+          External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+          Interface associated: (none) (peering address in same link)
+          Transport(tcp) path-mtu-discovery is enabled
+          Graceful-Restart is enabled, restart-time 120 seconds, stalepath-time 360 seconds
+          SSO is disabled
+        Connection state is CLOSEWAIT, I/O status: 1, unread input bytes: 0            
+        Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 1
+        Local host: 192.168.10.254, Local port: 26883
+        Foreign host: 192.168.10.253, Foreign port: 179
+        Connection tableid (VRF): 1
+        Maximum output segment queue size: 50
+
+        Enqueued packets for retransmit: 0, input: 0  mis-ordered: 0 (0 bytes)
+
+        Event Timers (current time is 0x65B4C8):
+        Timer          Starts    Wakeups            Next
+        Retrans             3          0             0x0
+        TimeWait            0          0             0x0
+        AckHold             2          0             0x0
+        SendWnd             0          0             0x0
+        KeepAlive           0          0             0x0
+        GiveUp              0          0             0x0
+        PmtuAger            1          0        0x6ED083
+        DeadWait            0          0             0x0
+        Linger              0          0             0x0
+        ProcessQ            0          0             0x0
+
+        iss:  168450936  snduna:  168451027  sndnxt:  168451027
+        irs: 3682975333  rcvnxt: 3682975411
+
+        sndwnd:  16294  scale:      0  maxrcvwnd:  16384
+        rcvwnd:  16308  scale:      0  delrcvwnd:     76
+
+        SRTT: 330 ms, RTTO: 3159 ms, RTV: 2829 ms, KRTT: 0 ms
+        minRTT: 3 ms, maxRTT: 1000 ms, ACK hold: 200 ms
+        uptime: 3222 ms, Sent idletime: 3177 ms, Receive idletime: 3178 ms 
+        Status Flags: active open
+        Option Flags: VRF id set, nagle, path mtu capable
+        IP Precedence value : 6
+
+        Datagrams (max data segment is 1460 bytes):
+        Rcvd: 5 (out of order: 0), with data: 2, total data bytes: 76
+        Sent: 6 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 2, total data bytes: 90
+
+         Packets received in fast path: 0, fast processed: 0, slow path: 0
+         fast lock acquisition failures: 0, slow path: 0
+        TCP Semaphore      0x7F2C7331EBC8  FREE 
+
+    '''}
+
     def test_show_ip_bgp_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpBgpNeighbors(device=self.device)
@@ -15022,6 +15698,13 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
         obj = ShowIpBgpNeighbors(device=self.device)
         parsed_output = obj.parse(address_family='link-state link-state')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_ip_bgp_neighbors_golden4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output4)
+        obj = ShowIpBgpNeighbors(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4', vrf='CE1test')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 # ===========================================
