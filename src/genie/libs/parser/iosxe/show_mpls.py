@@ -1492,7 +1492,8 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                         ' +(?P<synchronization_enabled>(enabled)+))?(SYNC +(?P<enabled>\w+))?.$')
 
         #     Sync status: sync achieved; peer reachable.
-        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +achieved; +peer +reachable.$')
+        #     Sync status: sync not achieved; peer reachable.
+        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +(?P<sync_status>[\w\s]+); +peer +reachable.$')
 
         #     Sync delay time: 0 seconds (0 seconds left)
         p4 = re.compile(r'^Sync +delay +time: +(?P<delay_time>\d+) +seconds \((?P<left_time>\d+) +seconds +left\)$')
@@ -1546,7 +1547,8 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
             if m:
                 sync_dict = interface_dict.setdefault('sync', {})
                 sync_status_dict = sync_dict.setdefault('status', {})
-                sync_status_dict.update({'sync_achieved': True})
+                sync_status = m.groupdict()['sync_status']
+                sync_status_dict.update({'sync_achieved': True if sync_status == 'achieved' else False})
                 sync_status_dict.update({'peer_reachable': True})
                 continue
 

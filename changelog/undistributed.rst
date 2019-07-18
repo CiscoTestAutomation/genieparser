@@ -282,3 +282,9 @@
 *IOSXR
     * Updated ShowLacpNeighborDetail to support more outputs
 
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowMplsLdpIgpSync:
+        updated regex to support more outputs
