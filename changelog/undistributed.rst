@@ -127,7 +127,9 @@
     * fixed regex in ShowBgpAllDetail
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
-    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
+    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser for:
+        * issue to parse with VRF
+        * issue parsing more than one of the same advertised address
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -286,4 +288,11 @@
                                 SYSTEM
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowSystem to support more outputs
+    * Updated ShowClock to support more outputs
+
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowMplsLdpIgpSync:
+        updated regex to support more outputs
