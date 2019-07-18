@@ -1237,56 +1237,7 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         return ret_dict
 
-# ============================
-# Schema for:
-#   * 'show ospf interface brief'
-class ShowOspfInterfaceSchema(MetaParser):
-    schema= {
-        'interfaces': {
-            Any(): {
-                'state': str,
-                'area': str,
-                'dr_id': str,
-                'bdr_id': str,
-                'nbrs': int
-            }
-        }
-    }
 
-class ShowOspfInterface(ShowOspfInterfaceSchema):
-    cli_command = [
-        'show ospf interface',
-        'show ospf interface brief']
-
-    def cli(self, brief=False):
-        if brief:
-            cmd = self.cli_command[1]
-        else:
-            cmd = self.cli_command[0]
-
-        out = self.device.execute(cmd)
-
-        # Init vars
-        ret_dict = {}
-        # ge-0/0/2.0    BDR    0.0.0.1    2.2.2.2    4.4.4.4     5
-        p1 = re.compile(r'^(?P<interface>\S+) +(?P<state>\S+) +(?P<area>\S+) +(?P<dr_id>\S+) +(?P<bdr_id>\S+) +(?P<nbrs>\S+)$')
-
-        for line in out.splitlines():
-            line = line.strip()
-            # ge-0/0/2.0    BDR    0.0.0.1    2.2.2.2    4.4.4.4     5
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict = ret_dict.setdefault('interfaces', {}).\
-                    setdefault(group['interface'], {})
-                intf_dict.update({'state' : group['state']})
-                intf_dict.update({'area' : group['area']})
-                intf_dict.update({'dr_id' : group['dr_id']})
-                intf_dict.update({'bdr_id' : group['bdr_id']})
-                intf_dict.update({'nbrs' : int(group['nbrs'])})
-                continue
-
-        return ret_dict
 # ============================
 # Schema for:
 #   * 'show ip ospf interface'

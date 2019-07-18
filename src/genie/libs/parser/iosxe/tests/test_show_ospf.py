@@ -28,51 +28,9 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfMaxMetric,\
                                               ShowIpOspfTraffic,\
                                               ShowIpOspfNeighbor,\
-                                              ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowOspfInterface
+                                              ShowIpOspfDatabaseRouterSelfOriginate
 
 
-# ============================
-# Unit test for 'show ospf interface brief'
-# ============================
-class test_show_ospf(unittest.TestCase):
-
-    '''Unit test for "show ospf interface brief" '''
-
-    device = Device(name='aDevice')
-    
-    empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': '''
-    show ospf interface brief                              
-    Interface           State   Area            DR ID           BDR ID          Nbrs
-    ge-0/0/2.0          BDR     0.0.0.1         2.2.2.2         4.4.4.4            5
-    '''}
-
-    golden_parsed_output = {
-        'interfaces': {
-            'ge-0/0/2.0': {
-                'state': 'BDR',
-                'area': '0.0.0.1',
-                'dr_id': '2.2.2.2',
-                'bdr_id': '4.4.4.4',
-                'nbrs': 5,
-                },
-            },
-        }
-    def test_show_ospf_full(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowOspfInterface(device=self.device)
-        parsed_output = obj.parse(brief=True)
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-    def test_show_ospf_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.empty_output)
-        obj = ShowOspfInterface(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(brief=True)
 
 # ============================
 # Unit test for 'show ip ospf'
