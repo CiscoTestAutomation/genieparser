@@ -141,6 +141,7 @@
     * added restricted list for ShowBgpAll
     * Updates ShowIpBgpNeighbors for:
         Support for more Message statistics values
+    * Updated ShowBgpAllNeighborsRoutesSuperParser for parsing of more status codes
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,

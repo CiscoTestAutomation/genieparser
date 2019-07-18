@@ -5545,7 +5545,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         # *>iaaaa:1::/113       ::ffff:10.106.101.1
         # *>i  20::/64          ::FFFF:192.168.51.1
         # r>i  2001:2:2:2::2/128
-        p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
+        p3 = re.compile(r'^\s*(?P<status_codes>(b|s|x|S|d|h|r|\*|\>|\s)+)?'
                          '(?P<path_type>(i|e|c|l|a|r|I))? *'
                          '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                          '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
