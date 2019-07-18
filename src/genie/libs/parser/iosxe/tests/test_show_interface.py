@@ -14762,7 +14762,9 @@ Tunnel10 is up, line protocol is up
          0 output buffer failures, 0 output buffers swapped out
 
          0 carrier transitions
+         
     '''}
+
     golden_parsed_interface_output_10 = {
         'Port-channel10': {
             'port_channel': {
