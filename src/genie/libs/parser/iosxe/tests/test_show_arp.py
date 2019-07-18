@@ -1228,4 +1228,3 @@ class test_show_arp_summary(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
