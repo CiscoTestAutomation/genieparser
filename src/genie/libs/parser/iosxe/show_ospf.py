@@ -4870,8 +4870,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                             ' +through +LDP +autoconfig$')
 
         p5 = re.compile(r'^Holddown +timer +is (?P<val>([a-zA-Z\s]+))$')
-
-        p6 = re.compile(r'^Interface +is (?P<state>(up|down))$')
+        # Interface is down and pending LDP
+        p6 = re.compile(r'^Interface +is (?P<state>(up|down))[\w\s]*$')
 
 
         for line in out.splitlines():
