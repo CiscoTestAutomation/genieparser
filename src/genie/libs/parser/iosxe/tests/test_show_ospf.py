@@ -6257,7 +6257,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                         'autoconfig_area_id': '0.0.0.1',
                                                         'holddown_timer': False,
                                                         'igp_sync': False,
-                                                        'state': 'down'}}},
+                                                        'state': 'down',
+                                                         'state_info': 'pending LDP'}}},
                                             'OSPF_SL1': 
                                                 {'mpls': 
                                                     {'ldp': 
