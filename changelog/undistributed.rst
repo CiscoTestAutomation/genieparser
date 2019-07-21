@@ -142,6 +142,7 @@
     * Updates ShowIpBgpNeighbors for:
         Support for more Message statistics values
     * Updated ShowBgpAllNeighborsRoutesSuperParser for parsing of more status codes
+    * Updated regex in ShowBgpSuperParser to support more output
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
