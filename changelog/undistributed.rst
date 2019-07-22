@@ -50,9 +50,15 @@
     * Updated ShowIpOspfTraffic to support different outputs
     * Enhanced regex to support more patterns
     * Updated regex in ShowIpOspfMplsLdpInterface to support more output
+    * Added ShowIpOspfInterfaceBrief for:
+        * show ip ospf interface brief
 * NXOS
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
+* JUNOS
+    * Added ShowOspfInterfaceBrief for:
+        * show ospf interface brief
+        * show ospf interface brief instance master
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
