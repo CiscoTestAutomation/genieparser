@@ -1729,9 +1729,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
  
         p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
 
-        p29 = re.compile(r'^(?P<interface>\S+) +(?P<instance>\S+) +(?P<area>\d+) +'
-            '(?P<address>\S+) +(?P<cost>\d+) +(?P<state>\S+) +(?P<nbrs_full_count>\S+)$')
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1784,83 +1781,6 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             if m:
                 attached = str(m.groupdict()['attached']).lower()
                 continue
-
-            m = p29.match(line)
-            if m:
-                group = m.groupdict()
-                interface = str(group['interface'])
-                instance = str(group['instance'])
-                ip_address = str(group['address'])
-                area = str(IPAddress(str(group['area'])))
-                cost = int(group['cost'])
-                nbrs_full_count = str(group['nbrs_full_count'])
-                # Get VRF information based on OSPF instance
-
-                cmd = 'show running-config | section router ospf {}'.format(instance)
-                out = self.device.execute(cmd)
-                for line in out.splitlines():
-                    line = line.rstrip()
-
-                    # Skip the show command line so as to not match
-                    if re.search('show', line):
-                        continue
-
-                    # router ospf 1
-                    # router ospf 2 vrf VRF1
-                    p = re.search('router +ospf +(?P<instance>(\S+))'
-                                  '(?: +vrf +(?P<vrf>(\S+)))?', line)
-                    if p:
-                        p_instance = str(p.groupdict()['instance'])
-                        if p_instance == instance:
-                            if p.groupdict()['vrf']:
-                                vrf = str(p.groupdict()['vrf'])
-                                break
-                            else:
-                                vrf = 'default'
-                                break
-                    else:
-                        vrf = 'default'
-
-                # Build dictionary
-                if 'vrf' not in ret_dict:
-                    ret_dict['vrf'] = {}
-                if vrf not in ret_dict['vrf']:
-                    ret_dict['vrf'][vrf] = {}
-                if 'address_family' not in ret_dict['vrf'][vrf]:
-                    ret_dict['vrf'][vrf]['address_family'] = {}
-                if af not in ret_dict['vrf'][vrf]['address_family']:
-                    ret_dict['vrf'][vrf]['address_family'][af] = {}
-                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
-                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance] = {}
-                if 'areas' not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'] = {}
-                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area] = {}
-                intf_type = 'interfaces'
-                if intf_type not in ret_dict['vrf'][vrf]['address_family']\
-                        [af]['instance'][instance]['areas'][area]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area][intf_type] = {}
-                if interface not in ret_dict['vrf'][vrf]['address_family'][af]\
-                        ['instance'][instance]['areas'][area][intf_type]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                        [instance]['areas'][area][intf_type][interface] = {}
-                
-                # Set sub_dict
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area]\
-                            [intf_type][interface]
-                sub_dict['ip_address'] = ip_address
-                sub_dict['cost'] = cost
-                sub_dict['nbrs_full_count'] = nbrs_full_count
 
             # Process ID 1, Router ID 10.64.4.4, Network Type VIRTUAL_LINK, Cost: 1
             # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
