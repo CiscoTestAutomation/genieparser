@@ -1583,12 +1583,10 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
     ''' Parser for:
         * 'show ip ospf interface'
         * 'show ip ospf interface {interface}'
-        * 'show ip ospf interface brief'
     '''
 
     cli_command = ['show ip ospf interface {interface}',
-                   'show ip ospf interface',
-                   'show ip ospf interface brief']
+                   'show ip ospf interface']
 
     exclude = ['hello_timer', 'dead_timer',
         'bdr_ip_addr', 'bdr_router_id', 'last_flood_scan_length',
@@ -1600,10 +1598,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         if interface:
             cmd = self.cli_command[0].format(interface=interface)
         else:
-            if brief:
-                cmd = self.cli_command[2]
-            else:
-                cmd = self.cli_command[1]
+            cmd = self.cli_command[1]
 
         out = self.device.execute(cmd)
 
