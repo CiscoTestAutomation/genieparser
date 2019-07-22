@@ -1724,7 +1724,7 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
                         "sync": {
                             "status": {
                                 "enabled": True,
-                                "sync_achieved": True,
+                                "sync_achieved": False,
                                 "peer_reachable": True
                             }
                         },
@@ -1747,7 +1747,7 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
     Router#show mpls ldp igp sync
         FastEthernet0/0/0:
             LDP configured;  SYNC enabled.
-            SYNC status: sync achieved; peer reachable.
+            SYNC status: sync not achieved; peer reachable.
             IGP holddown time: infinite.
             Peer LDP Ident: 10.0.0.1:0
             IGP enabled: OSPF 1

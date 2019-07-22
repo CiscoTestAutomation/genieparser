@@ -25,6 +25,8 @@
         * updated regex to handle the output more flexibly
     * Fix ShowIpv6Route
         * updated command
+    * Fix ShowIpRouteSummary
+        * updated regex to support table name containing a dash
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -47,6 +49,7 @@
     * Enhanced ShowIpOspfMaxMetric to support different outputs
     * Updated ShowIpOspfTraffic to support different outputs
     * Enhanced regex to support more patterns
+    * Updated regex in ShowIpOspfMplsLdpInterface to support more output
     * Added ShowIpOspfInterfaceBrief for:
         * show ip ospf interface brief
 * NXOS
@@ -55,6 +58,7 @@
 * JUNOS
     * Added ShowOspfInterfaceBrief for:
         * show ospf interface brief
+        * show ospf interface brief instance master
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -131,7 +135,9 @@
     * fixed regex in ShowBgpAllDetail
     * Updated ShowBgpAllNeighborsAdvertisedRoutes to support:
         show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
-    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser issue to parse with VRF
+    * Updated ShowBgpNeighborsAdvertisedRoutesSuperParser for:
+        * issue to parse with VRF
+        * issue parsing more than one of the same advertised address
     * Updated ShowBgpSummary for:
         Support for more VRF values
     * Updated ShowBgpAllSummary for:
@@ -143,6 +149,8 @@
     * added restricted list for ShowBgpAll
     * Updates ShowIpBgpNeighbors for:
         Support for more Message statistics values
+    * Updated ShowBgpAllNeighborsRoutesSuperParser for parsing of more status codes
+    * Updated regex in ShowBgpSuperParser to support more output
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
@@ -286,3 +294,15 @@
 *IOSXR
     * Updated ShowLacpNeighborDetail to support more outputs
 
+--------------------------------------------------------------------------------
+                                SYSTEM
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowClock to support more outputs
+
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowMplsLdpIgpSync:
+        updated regex to support more outputs

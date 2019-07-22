@@ -19,6 +19,7 @@ from genie.libs.parser.utils.common import Common
 # ============================
 # Schema for:
 #   * 'show ospf interface brief'
+#   * 'show ospf interface brief instance master'
 class ShowOspfInterfaceBriefSchema(MetaParser):
     schema= {
         'instance':{

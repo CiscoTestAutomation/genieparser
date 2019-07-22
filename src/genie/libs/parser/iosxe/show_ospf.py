@@ -4904,6 +4904,7 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                                         'igp_sync': bool,
                                                         'holddown_timer': bool,
                                                         'state': str,
+                                                         Optional('state_info') :str
                                                         },
                                                     },
                                                 },
@@ -4956,8 +4957,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                             ' +through +LDP +autoconfig$')
 
         p5 = re.compile(r'^Holddown +timer +is (?P<val>([a-zA-Z\s]+))$')
-
-        p6 = re.compile(r'^Interface +is (?P<state>(up|down))$')
+        # Interface is down and pending LDP
+        p6 = re.compile(r'^Interface +is (?P<state>(up|down))( +and +(?P<state_info>[\w\s]*))?$')
 
 
         for line in out.splitlines():
@@ -5102,7 +5103,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             # Interface is up 
             m = p6.match(line)
             if m:
+                state_info = m.groupdict()['state_info']
                 intf_dict['state'] = str(m.groupdict()['state'])
+                if state_info:
+                    intf_dict['state_info'] = str(state_info)
                 continue
 
         return ret_dict

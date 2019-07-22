@@ -6316,7 +6316,8 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
                                                         'autoconfig_area_id': '0.0.0.1',
                                                         'holddown_timer': False,
                                                         'igp_sync': False,
-                                                        'state': 'up'}}},
+                                                        'state': 'down',
+                                                         'state_info': 'pending LDP'}}},
                                             'OSPF_SL1': 
                                                 {'mpls': 
                                                     {'ldp': 
@@ -6405,7 +6406,7 @@ class test_show_ip_ospf_mpls_ldp_interface(unittest.TestCase):
           LDP is not configured through LDP autoconfig
           LDP-IGP Synchronization : Not required
           Holddown timer is disabled
-          Interface is up 
+          Interface is down and pending LDP
         TenGigabitEthernet3/0/1
           Process ID 1, Area 0
           LDP is not configured through LDP autoconfig

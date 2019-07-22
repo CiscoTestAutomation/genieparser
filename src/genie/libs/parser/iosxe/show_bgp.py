@@ -244,8 +244,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>                    0.0.0.0                 0         32768 ?
         # * i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?'
-                          ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          '(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
+                          '(?P<next_hop>[a-zA-Z0-9\.\:]+)'
                           ' +(?P<metric>[0-9]+)?'
                             '(?P<space>\s{1,4})'
                           ' +(?P<local_prf>[0-9]+)?'
@@ -4444,9 +4444,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                 m = p3_2.match(line.strip())
 
                 if m:
-                    # New prefix, reset index count
-                    index = 1
-
                     # Get keys
                     if m.groupdict()['status_codes']:
                         status_codes = str(m.groupdict()['status_codes'].rstrip())
@@ -4464,6 +4461,12 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                         af_dict['advertised'] = {}
                     if prefix not in af_dict['advertised']:
                         af_dict['advertised'][prefix] = {}
+                        # New prefix, reset index count
+                        index = 1
+                    else:
+                        # get last index for prefix to prevent overwriting
+                        index = list(af_dict['advertised'][prefix]['index'].keys())[-1]
+                        index += 1
                     if 'index' not in af_dict['advertised'][prefix]:
                         af_dict['advertised'][prefix]['index'] = {}
                     if index not in af_dict['advertised'][prefix]['index']:
@@ -5542,7 +5545,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         # *>iaaaa:1::/113       ::ffff:10.106.101.1
         # *>i  20::/64          ::FFFF:192.168.51.1
         # r>i  2001:2:2:2::2/128
-        p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
+        p3 = re.compile(r'^\s*(?P<status_codes>(b|s|x|S|d|h|r|\*|\>|\s)+)?'
                          '(?P<path_type>(i|e|c|l|a|r|I))? *'
                          '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                          '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
