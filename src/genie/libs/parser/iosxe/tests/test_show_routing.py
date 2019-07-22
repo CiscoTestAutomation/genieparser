@@ -1811,7 +1811,7 @@ Total           4           23          0           2688        9932
         application     0           0           0           0           0
         connected       0           2           0           192         624
         static          0           0           0           0           0
-        bgp 9996        1           0           0           96          312
+        bgp 65000        1           0           0           96          312
           External: 0 Internal: 1 Local: 0
         internal        1                                               712
         Total           2           2           0           288         1648
@@ -1829,7 +1829,7 @@ Total           4           23          0           2688        9932
                         'replicates': 0,
                         'subnets': 0},
                     'bgp': {
-                        '9996': {
+                        '65000': {
                             'external': 0,
                             'internal': 1,
                             'local': 0,
