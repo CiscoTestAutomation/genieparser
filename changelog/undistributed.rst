@@ -25,6 +25,8 @@
         * updated regex to handle the output more flexibly
     * Fix ShowIpv6Route
         * updated command
+    * Fix ShowIpRouteSummary
+        * updated regex to support table name containing a dash
 
 --------------------------------------------------------------------------------
                                 Interface
