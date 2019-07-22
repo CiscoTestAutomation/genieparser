@@ -1594,7 +1594,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
 
 
-    def cli(self, interface='', brief=False):
+    def cli(self, interface=None):
         if interface:
             cmd = self.cli_command[0].format(interface=interface)
         else:
