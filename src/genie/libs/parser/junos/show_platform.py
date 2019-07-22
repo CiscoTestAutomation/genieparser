@@ -56,7 +56,7 @@ class FileList(FileListSchema):
         # Execute command
         if output is None:
             if filename:
-                out = self.device.execute(self.cli_command[1])
+                out = self.device.execute(self.cli_command[1].format(filename=filename))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
