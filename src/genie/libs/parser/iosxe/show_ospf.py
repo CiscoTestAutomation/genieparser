@@ -1273,9 +1273,11 @@ class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
 
     cli_command = 'show ip ospf interface brief'
 
-    def cli(self):
-
-        out = self.device.execute(self.cli_command)
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -1594,13 +1596,17 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
 
 
-    def cli(self, interface=None):
-        if interface:
-            cmd = self.cli_command[0].format(interface=interface)
-        else:
-            cmd = self.cli_command[1]
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
 
-        out = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
 
         # Init vars
         ret_dict = {}
