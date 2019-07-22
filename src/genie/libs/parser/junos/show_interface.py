@@ -1,6 +1,6 @@
 """show_interface.py
 
-NXOS parsers for the following show commands:
+JunOS parsers for the following show commands:
     * show interfaces terse
     * show interfaces terse | match <interface>
 """

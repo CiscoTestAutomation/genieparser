@@ -1,6 +1,6 @@
 """show_ntp.py
 
-Junos parsers for the following show commands:
+JunOS parsers for the following show commands:
 
     * show ntp associations
     * show ntp status
