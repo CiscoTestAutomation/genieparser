@@ -22,21 +22,21 @@ class test_file_list(unittest.TestCase):
 
     golden_parsed_output1 = {
         'dir': 
-            {'root/': 
+            {'root': 
                 {'files': 
-                    {'cshrc': 
+                    {'.cshrc@': 
                         {'path': '/packages/mnt/os-runtime/root/.cshrc'},
-                    'filename': {},
-                    'golden_config': {},
-                    'login': 
+                    '.history': {},
+                    '.login@': 
                         {'path': '/packages/mnt/os-runtime/root/.login'},
+                    '.profile@': 
+                        {'path': '/packages/mnt/os-runtime/root/.profile'},
+                    'filename': {},
                     'my_file1': {},
-                    'profile': 
-                        {'path': '/packages/mnt/os-runtime/root/.profile'}}}}}
+                    'golden_config': {}}}}}
 
     golden_output1 = {'execute.return_value': '''
         root@junos_vmx1> file list
-
         /root/:
         .cshrc@ -> /packages/mnt/os-runtime/root/.cshrc
         .history
@@ -45,6 +45,26 @@ class test_file_list(unittest.TestCase):
         filename
         my_file1
         golden_config
+        '''}
+
+    golden_parsed_output2 = {
+        'dir': 
+            {'root': 
+                {'files': 
+                    {'filename999': {}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        root@junos_vmx1> file list filename999
+        /root/filename999
+        '''}
+
+    golden_parsed_output3 = {
+        'dir': 
+            {'root': {}}}
+
+    golden_output3 = {'execute.return_value': '''
+        root@junos_vmx1> file list filename999
+        /root/filename999: No such file or directory
         '''}
 
     def test_empty(self):
@@ -60,6 +80,19 @@ class test_file_list(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = FileList(device=self.device)
+        parsed_output = obj.parse(filename='filename999')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = FileList(device=self.device)
+        parsed_output = obj.parse(filename='filename999')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 if __name__ == '__main__':
     unittest.main()
