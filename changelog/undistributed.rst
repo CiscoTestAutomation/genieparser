@@ -6,12 +6,19 @@
 | ``genie.libs.parser``   |               |
 
 -----------------------------------------------------------------------------
+                                   platform
+-----------------------------------------------------------------------------
+* JunOS
+    * Added parser for 'file list' and 'file list {filename}'
+
+-----------------------------------------------------------------------------
                                    Dot1x
 -----------------------------------------------------------------------------
 * NXOS
         * Added show_dot1x_Summary and modified show_dot1x_Statistics parsers
         * Added all_details and test_all_details & adressed show_dot1x comments
         * Modification to show_Dot1x schema and adressed show_dot1x comments
+
 --------------------------------------------------------------------------------
                                    Routing
 --------------------------------------------------------------------------------
