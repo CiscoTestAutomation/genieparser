@@ -1268,8 +1268,6 @@ class ShowIpOspfInterfaceBriefSchema(MetaParser):
 
 class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
     ''' Parser for:
-        * 'show ip ospf interface'
-        * 'show ip ospf interface {interface}'
         * 'show ip ospf interface brief'
     '''
 
@@ -1344,7 +1342,6 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                 'enable': bool,
                                                 'line_protocol': bool,
                                                 'ip_address': str,
-                                                Optional('nbrs_full_count'): str,
                                                 Optional('interface_id'): int,
                                                 Optional('attached'): str,
                                                 'demand_circuit': bool,

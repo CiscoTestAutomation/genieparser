@@ -45,10 +45,11 @@ class ShowOspfInterfaceBrief(ShowOspfInterfaceBriefSchema):
         'show ospf interface brief instance {instance}',
         'show ospf interface brief']
 
-    def cli(self, instance='master'):
+    def cli(self, instance=None):
         if instance:
             out = self.device.execute(self.cli_command[0].format(instance=instance))
         else:
+            instance='master'
             out = self.device.execute(self.cli_command[1])
 
         # Init vars
