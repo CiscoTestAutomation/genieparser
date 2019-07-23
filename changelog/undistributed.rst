@@ -313,3 +313,10 @@
 * IOSXE
     * Updated ShowMplsLdpIgpSync:
         updated regex to support more outputs
+
+--------------------------------------------------------------------------------
+                                CDP
+--------------------------------------------------------------------------------
+* NXOS
+    * Fixed ShowCdpNeighbors:
+        updated regex to support outputs in different order

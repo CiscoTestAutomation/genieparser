@@ -123,6 +123,85 @@ class test_show_cdp_neighbors(unittest.TestCase):
                             Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
     '''}
 
+    expected_parsed_output_4 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R S I',
+                    'device_id': 'CISCONXOS1.ctr.globedev.aac',
+                    'hold_time': 100,
+                    'local_interface': 'mgmt0',
+                    'platform': 'WS-C5000-E',
+                    'port_id': 'GigabitEthernet1/5'
+                },
+                2: {
+                    'capability': 'R S I s',
+                    'device_id': 'CISCONXOS101-CISCOXR202.ctr.globeint.aac(ABCD1234567)',
+                    'hold_time': 110,
+                    'local_interface': 'Ethernet1/1',
+                    'platform': 'N7K-C7010',
+                    'port_id': 'Ethernet1/20'
+                },
+                3: {
+                    'capability': 'S',
+                    'device_id': 'llxde101.ctr.globeint.aac',
+                    'hold_time': 120,
+                    'local_interface': 'Ethernet1/5',
+                    'platform': 'VMware ESX',
+                    'port_id': 'Vmnic1'
+                },
+                4: {
+                    'capability': 'S',
+                    'device_id': 'llxde102.ctr.globeint.aac',
+                    'hold_time': 121,
+                    'local_interface': 'Ethernet1/7',
+                    'platform': 'VMware ESX',
+                    'port_id': 'Vmnic2'
+                },
+                5: {
+                    'capability': 'S',
+                    'device_id': '1111-2222-3333',
+                    'hold_time': 130,
+                    'local_interface': 'Ethernet1/3',
+                    'platform': 'HPE 2200AF-48',
+                    'port_id': 'Ten-GigabitEthernet1/0/10'
+                },
+                6: {
+                    'capability': 'S',
+                    'device_id': '4444-5555-6666',
+                    'hold_time': 125,
+                    'local_interface': 'Ethernet1/5',
+                    'platform': 'HPE 2200AF-48',
+                    'port_id': 'Ten-GigabitEthernet2/0/20'
+                }
+            }
+        }   
+    }
+
+    device_output_4 = {'execute.return_value': '''
+        +++ DDBUSXS105-DDBUSXS205: executing command 'show cdp neighbors' +++
+        show cdp neighbors
+
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater,
+                          V - VoIP-Phone, D - Remotely-Managed-Device,
+                          s - Supports-STP-Dispute
+
+        Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+        CISCONXOS1.ctr.globedev.aac
+                            mgmt0          100    R S I     WS-C5000-E    Gig1/5       
+        CISCONXOS101-CISCOXR202.ctr.globeint.aac(ABCD1234567)
+                            Eth1/1         110    R S I s   N7K-C7010     Eth1/20       
+        llxde101.ctr.globeint.aac
+                            Eth1/5         120    S         VMware ESX    vmnic1
+        llxde102.ctr.globeint.aac
+                            Eth1/7         121    S         VMware ESX    vmnic2        
+        1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48 
+                                                               Ten-GigabitEthernet1/0/10
+        4444-5555-6666      Eth1/5         125    S         HPE 2200AF-48 
+                                                               Ten-GigabitEthernet2/0/20
+    '''}
+
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
         Capability Codes:
@@ -154,6 +233,12 @@ class test_show_cdp_neighbors(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_3)
 
+    def test_show_cdp_neighbors_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_4)
+        obj = ShowCdpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_4)
 
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None

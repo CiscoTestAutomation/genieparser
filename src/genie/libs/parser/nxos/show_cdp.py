@@ -68,7 +68,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<platform>[\S]+( [\S]+)?( [\S]+)?) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # p3 and p4: If Device Id is not on same line as everything else
         # vsm-p(2094532764140613037)
@@ -77,7 +77,14 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         p4 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<platform>[\S]+( [\S]+)?( [\S]+)?) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+
+        # p3 and p5: If Port Id is not on same line
+        # 1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48
+        p5 = re.compile(r'^(?P<device_id>\S+) +'
+                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        '(?P<platform>[\S]+( [\S]+)?( [\S]+)?)$')        
 
         device_id_index = 0
 
@@ -87,7 +94,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             line = line.strip()
 
             result = p1.match(line)
-
             if not result:
                 result = p2.match(line)
     
@@ -117,16 +123,18 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
             result = p3.match(line)
             if result:
-                device_id_index += 1
-
-                device_dict = parsed_dict.setdefault('cdp', {})\
-                    .setdefault('index', {}).setdefault(device_id_index, {})
-
                 group = result.groupdict()
-
-                device_dict['device_id'] = group['device_id'].strip()
+                if 'Eth' not in group['device_id']:
+                    device_id_index += 1
+                    device_dict = parsed_dict.setdefault('cdp', {})\
+                        .setdefault('index', {}).setdefault(device_id_index, {})
+                    device_dict['device_id'] = group['device_id'].strip()
+                else:
+                    device_dict['port_id'] = Common\
+                    .convert_intf_name(intf=group['device_id'].strip())
 
                 continue
+
             result = p4.match(line)
             if result:
                 
@@ -143,6 +151,26 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 device_dict['port_id'] = Common\
                     .convert_intf_name(intf=group['port_id'].strip())
                 continue
+
+            result = p5.match(line)
+            if result:
+                device_id_index += 1
+
+                device_dict = parsed_dict.setdefault('cdp', {})\
+                    .setdefault('index', {}).setdefault(device_id_index, {})
+
+                group = result.groupdict()
+
+                device_dict['device_id'] = group['device_id'].strip()
+                device_dict['local_interface'] = Common\
+                    .convert_intf_name(intf=group['local_interface'].strip())
+                device_dict['hold_time'] = int(group['hold_time'])
+                device_dict['capability'] = group['capability'].strip()
+                if group['platform']:
+                    device_dict['platform'] = group['platform'].strip()
+                elif not group['platform']:
+                    device_dict['platform'] = ''
+
         # import pdb; pdb.set_trace()
         return parsed_dict
 
