@@ -1070,6 +1070,7 @@ class test_show_redundancy(unittest.TestCase):
     dev2 = Device(name='semi_empty')
     dev_asr1k = Device(name='asr1k')
     dev_c3850 = Device(name='c3850')
+    dev_asr1002 = Device(name='asr1002')
     empty_output = {'execute.return_value': ''}
     semi_empty_output = {'execute.return_value': '''\
 Redundant System Information :
@@ -1199,6 +1200,63 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         Configuration register = 0x2102
 '''}
 
+    golden_parsed_output_asr1002 = {
+        'red_sys_info': {
+            'available_system_uptime': '33 weeks, 3 days, 8 hours, 0 minutes',
+            'communications': 'Down',
+            'communications_reason': 'Failure',
+            'conf_red_mode': 'Non-redundant',
+            'hw_mode': 'Simplex',
+            'last_switchover_reason': 'none',
+            'maint_mode': 'Disabled',
+            'oper_red_mode': 'Non-redundant',
+            'standby_failures': '0',
+            'switchovers_system_experienced': '0'
+        },
+        'slot': {
+            'slot 6': {
+                'boot': 'bootflash:asr1002x-universalk9.03.13.09.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
+                'config_register': '0x2102',
+                'curr_sw_state': 'ACTIVE',
+                'image_ver': 'Cisco IOS Software, ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 15.4(3)S9, RELEASE SOFTWARE (fc2)',
+                'uptime_in_curr_state': '33 weeks, 3 days, 7 hours, 59 minutes'
+            }
+        }
+    }
+
+    golden_output_asr1002 = {'execute.return_value': '''\
+    +++ router: executing command 'show redundancy' +++
+    show redundancy
+    Redundant System Information :
+    ------------------------------
+           Available system uptime = 33 weeks, 3 days, 8 hours, 0 minutes
+    Switchovers system experienced = 0
+                  Standby failures = 0
+            Last switchover reason = none
+
+                     Hardware Mode = Simplex
+        Configured Redundancy Mode = Non-redundant
+         Operating Redundancy Mode = Non-redundant
+                  Maintenance Mode = Disabled
+                    Communications = Down      Reason: Failure
+
+    Current Processor Information :
+    -------------------------------
+                   Active Location = slot 6
+            Current Software state = ACTIVE
+           Uptime in current state = 33 weeks, 3 days, 7 hours, 59 minutes
+                     Image Version = Cisco IOS Software, ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 15.4(3)S9, RELEASE SOFTWARE (fc2)
+    Technical Support: http://www.cisco.com/techsupport
+    Copyright (c) 1986-2018 by Cisco Systems, Inc.
+    Compiled Mon 26-Feb-18 09:00 by mcpre
+                              BOOT = bootflash:asr1002x-universalk9.03.13.09.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
+            Configuration register = 0x2102
+
+    Peer (slot: 7) information is not available because it is in 'DISABLED' state
+'''}
+
+
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         redundancy_obj = ShowRedundancy(device=self.dev1)
@@ -1226,8 +1284,15 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         parsed_output = redundancy_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1k)
 
+    def test_golden_asr1002(self):
+        self.maxDiff = None
+        self.dev_asr1002 = Mock(**self.golden_output_asr1002)
+        redundancy_obj = ShowRedundancy(device=self.dev_asr1002)
+        parsed_output = redundancy_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
 
-class test_show_redundancy(unittest.TestCase):
+
+class test_show_redundancy_2(unittest.TestCase):
     dev = Device(name='aDevice')
     
     empty_output = {'execute.return_value': ''}
@@ -1618,132 +1683,7 @@ class test_show_inventory(unittest.TestCase):
         '''}
 
     golden_parsed_output_asr1k = {
-        'main': 
-            {'chassis': 
-                {'ASR1006': 
-                    {'name': 'Chassis',
-                    'descr': 'Cisco ASR1006 Chassis',
-                    'pid': 'ASR1006',
-                    'vid': 'V01',
-                    'sn': 'FOX1204G6WN',
-                    },
-                },
-            },
-        'slot': 
-            {'0': 
-                {'lc': 
-                    {'ASR1000-SIP40': 
-                        {'name': 'module 0',
-                        'descr': 'Cisco ASR1000 SPA Interface Processor 40',
-                        'pid': 'ASR1000-SIP40',
-                        'vid': 'V02',
-                        'sn': 'JAE200609WP',
-                        'subslot': 
-                            {'0': 
-                                {'SPA-5X1GE-V2': 
-                                    {'name': 'SPA subslot 0/0',
-                                    'descr': '5-port Gigabit Ethernet Shared Port Adapter',
-                                    'pid': 'SPA-5X1GE-V2',
-                                    'vid': 'V02',
-                                    'sn': 'JAE151203T2',
-                                    },
-                                },
-                            '0 transceiver 0': 
-                                {'SP7041-E': 
-                                    {'name': 'subslot 0/0 transceiver 0',
-                                    'descr': 'GE T',
-                                    'pid': 'SP7041-E',
-                                    'vid': 'E',
-                                    'sn': 'MTC164204VE',
-                                    },
-                                },
-                            '0 transceiver 1': 
-                                {'SP7041-E': 
-                                    {'name': 'subslot 0/0 transceiver 1',
-                                    'descr': 'GE T',
-                                    'pid': 'SP7041-E',
-                                    'vid': 'E',
-                                    'sn': 'MTC164204F0',
-                                    },
-                                },
-                            '0 transceiver 2': 
-                                {'SP7041-E': 
-                                    {'name': 'subslot 0/0 transceiver 2',
-                                    'descr': 'GE T',
-                                    'pid': 'SP7041-E',
-                                    'vid': 'E',
-                                    'sn': 'MTC164206U2',
-                                    },
-                                },
-                            '0 transceiver 3': 
-                                {'SP7041-E': 
-                                    {'name': 'subslot 0/0 transceiver 3',
-                                    'descr': 'GE T',
-                                    'pid': 'SP7041-E',
-                                    'vid': 'E',
-                                    'sn': 'MTC1644033S',
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            'R0': 
-                {'rp': 
-                    {'ASR1000-RP2': 
-                        {'name': 'module R0',
-                        'descr': 'Cisco ASR1000 Route Processor 2',
-                        'pid': 'ASR1000-RP2',
-                        'vid': 'V02',
-                        'sn': 'JAE153408NJ',
-                        },
-                    },
-                },
-            'R1': 
-                {'rp': 
-                    {'ASR1000-RP2': 
-                        {'name': 'module R1',
-                        'descr': 'Cisco ASR1000 Route Processor 2',
-                        'pid': 'ASR1000-RP2',
-                        'vid': 'V03',
-                        'sn': 'JAE1703094H',
-                        },
-                    },
-                },
-            'F0': 
-                {'other': 
-                    {'ASR1000-ESP20': 
-                        {'name': 'module F0',
-                        'descr': 'Cisco ASR1000 Embedded Services Processor, 20Gbps',
-                        'pid': 'ASR1000-ESP20',
-                        'vid': 'V01',
-                        'sn': 'JAE1239W7G6',
-                        },
-                    },
-                },
-            'P0': 
-                {'other': 
-                    {'ASR1006-PWR-AC': 
-                        {'name': 'Power Supply Module 0',
-                        'descr': 'Cisco ASR1006 AC Power Supply',
-                        'pid': 'ASR1006-PWR-AC',
-                        'vid': 'V01',
-                        'sn': 'ART1210Q049',
-                        },
-                    },
-                },
-            'P1': 
-                {'other': 
-                    {'ASR1006-PWR-AC': 
-                        {'name': 'Power Supply Module 1',
-                        'descr': 'Cisco ASR1006 AC Power Supply',
-                        'pid': 'ASR1006-PWR-AC',
-                        'vid': 'V01',
-                        'sn': 'ART1210Q04C',
-                        },
-                    },
-                },
-            },
+      
         }
 
     golden_output_asr1k = {'execute.return_value': '''
@@ -2002,6 +1942,48 @@ class test_show_inventory(unittest.TestCase):
         PID: ASR-920-FAN-M     , VID: V01  , SN: CAT1903V028
         '''}
 
+
+    golden_parsed_output_asr1002 = {
+        }
+
+    golden_output_asr1002 = {'execute.return_value': '''
+        router#
+        ++ router: executing command 'show inventory' +++
+        how inventory
+        NAME: "Chassis", DESCR: "Cisco ASR1002-X Chassis"
+        PID: ASR1002-X         , VID: V07, SN: FOX2232P1M6
+
+        NAME: "Power Supply Module 0", DESCR: "Cisco ASR1002 AC Power Supply"
+        PID: ASR1002-PWR-AC    , VID: V04, SN: DCB223040EJ
+
+        NAME: "Power Supply Module 1", DESCR: "Cisco ASR1002 AC Power Supply"
+        PID: ASR1002-PWR-AC    , VID: V04, SN: DCB223040EK
+
+        NAME: "module 0", DESCR: "Cisco ASR1002-X SPA Interface Processor"
+        PID: ASR1002-X         , VID:    , SN:            
+
+        NAME: "SPA subslot 0/0", DESCR: "6-port Built-in GE SPA"
+        PID: 6XGE-BUILT-IN     , VID:    , SN:            
+
+        NAME: "subslot 0/0 transceiver 0", DESCR: "GE SX"
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2226R1GC     
+
+        NAME: "subslot 0/0 transceiver 1", DESCR: "GE SX"
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2226R1G1     
+
+        NAME: "subslot 0/0 transceiver 2", DESCR: "GE SX"
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2226R1FL     
+
+        NAME: "subslot 0/0 transceiver 3", DESCR: "GE SX"
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2152RAFM     
+
+        NAME: "module R0", DESCR: "Cisco ASR1002-X Route Processor"
+        PID: ASR1002-X         , VID: V07, SN: JAD224008AQ
+
+        NAME: "module F0", DESCR: "Cisco ASR1002-X Embedded Services Processor"
+        PID: ASR1002-X         , VID:    , SN:         
+        '''}
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2036,6 +2018,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr901)
+
+    def test_show_inventory_golden_asr1002(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_asr1002)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
 
 
 class test_show_platform(unittest.TestCase):
