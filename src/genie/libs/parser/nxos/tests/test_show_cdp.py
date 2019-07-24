@@ -171,7 +171,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'device_id': '4444-5555-6666',
                     'hold_time': 125,
                     'local_interface': 'Ethernet1/5',
-                    'platform': 'HPE 2200AF-48',
+                    'platform': 'HPE 2200AF-48 B',
                     'port_id': 'Ten-GigabitEthernet2/0/20'
                 }
             }
@@ -198,8 +198,9 @@ class test_show_cdp_neighbors(unittest.TestCase):
                             Eth1/7         121    S         VMware ESX    vmnic2        
         1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48 
                                                                Ten-GigabitEthernet1/0/10
-        4444-5555-6666      Eth1/5         125    S         HPE 2200AF-48 
+        4444-5555-6666      Eth1/5         125    S         HPE 2200AF-48 B
                                                                Ten-GigabitEthernet2/0/20
+        
     '''}
 
     empty_device_output = {'execute.return_value': '''

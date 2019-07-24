@@ -62,13 +62,14 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
                         '(?: +(?P<platform>[\w\-]+) )? +'
-                        '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt)[a-zA-Z0-9\/\-]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S]+( [\S]+)?( [\S]+)?) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<platform>[\S\s]+) '
+                        '+(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p4: If Device Id is not on same line as everything else
         # vsm-p(2094532764140613037)
@@ -77,14 +78,15 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
         p4 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S]+( [\S]+)?( [\S]+)?) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<platform>[\S\s]+) +'
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p5: If Port Id is not on same line
         # 1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48
         p5 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S]+( [\S]+)?( [\S]+)?)$')        
+                        '(?P<platform>[\S\s]+)$')        
 
         device_id_index = 0
 
@@ -170,6 +172,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                     device_dict['platform'] = group['platform'].strip()
                 elif not group['platform']:
                     device_dict['platform'] = ''
+                continue
 
         # import pdb; pdb.set_trace()
         return parsed_dict
