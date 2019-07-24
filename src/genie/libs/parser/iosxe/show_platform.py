@@ -1353,6 +1353,7 @@ class ShowInventory(ShowInventorySchema):
 
                 # PID: ASR1000-SIP40     , VID: V02  , SN: JAE200609WP
                 # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
+                # PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
                 elif ('SIP' in pid) or ('ISR' in pid) or ('-X' in pid):
                     lc_dict = slot_dict.setdefault('lc', {}).\
                                         setdefault(pid, {})
