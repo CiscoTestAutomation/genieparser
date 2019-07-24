@@ -102,7 +102,8 @@ class ShowInterfacesSchema(MetaParser):
                     {Optional('port_channel_member'): bool,
                     Optional('port_channel_int'): str,
                     Optional('port_channel_member_intfs'): list,
-                    Any(): int,
+                    Optional('active_members'): int,
+                    Optional('num_of_pf_jumbo_supported_members'): int,
                 },
                 'bandwidth': int,
                 Optional('counters'):
@@ -576,14 +577,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # No. of PF_JUMBO supported members in this channel : 0
-            p15_3 = re.compile(r'^No\. +of +(?P<supported_member>\S+) +supported +members +'
+            p15_3 = re.compile(r'^No\. +of +PF_JUMBO +supported +members +'
                 'in +this +channel +: +(?P<number>\d+)$')
             m = p15_3.match(line)
             if m:
                 group = m.groupdict()
-                supported_member = group['supported_member']
                 number = int(group['number'])
-                interface_dict[interface]['port_channel'][supported_member] = number
+                interface_dict[interface]['port_channel']\
+                    ['num_of_pf_jumbo_supported_members'] = number
                 continue
 
             # Last clearing of "show interface" counters 1d02h

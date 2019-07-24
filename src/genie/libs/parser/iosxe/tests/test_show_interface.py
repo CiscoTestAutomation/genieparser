@@ -14771,7 +14771,7 @@ Tunnel10 is up, line protocol is up
                 'port_channel_member': True,
                 'active_members': 2,
                 'port_channel_member_intfs': ['GigabitEthernet0/0/0', 'GigabitEthernet0/0/1'],
-                'PF_JUMBO': 2,
+                'num_of_pf_jumbo_supported_members': 2,
                 },
             'enabled': True,
             'line_protocol': 'up',
