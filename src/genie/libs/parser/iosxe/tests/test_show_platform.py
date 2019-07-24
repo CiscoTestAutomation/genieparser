@@ -1683,8 +1683,133 @@ class test_show_inventory(unittest.TestCase):
         '''}
 
     golden_parsed_output_asr1k = {
-      
+        'main': {
+            'chassis': {
+                'ASR1006': {
+                    'descr': 'Cisco ASR1006 Chassis',
+                    'name': 'Chassis',
+                    'pid': 'ASR1006',
+                    'sn': 'FOX1204G6WN',
+                    'vid': 'V01'
+                }
+            }
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'ASR1000-SIP40': {
+                        'descr': 'Cisco ASR1000 SPA Interface Processor 40',
+                        'name': 'module 0',
+                        'pid': 'ASR1000-SIP40',
+                        'sn': 'JAE200609WP',
+                        'subslot': {
+                            '0': {
+                                'SPA-5X1GE-V2': {
+                                    'descr': '5-port Gigabit Ethernet Shared Port Adapter',
+                                    'name': 'SPA subslot 0/0',
+                                    'pid': 'SPA-5X1GE-V2',
+                                    'sn': 'JAE151203T2',
+                                    'vid': 'V02'
+                                }
+                            },
+                            '0 transceiver 0': {
+                                'SP7041-E': {
+                                    'descr': 'GE T',
+                                    'name': 'subslot 0/0 transceiver 0',
+                                    'pid': 'SP7041-E',
+                                    'sn': 'MTC164204VE',
+                                    'vid': 'E'
+                                }
+                            },
+                            '0 transceiver 1': {
+                                'SP7041-E': {
+                                    'descr': 'GE T',
+                                    'name': 'subslot 0/0 transceiver 1',
+                                    'pid': 'SP7041-E',
+                                    'sn': 'MTC164204F0',
+                                    'vid': 'E'
+                                }
+                            },
+                            '0 transceiver 2': {
+                                'SP7041-E': {
+                                    'descr': 'GE T',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'pid': 'SP7041-E',
+                                    'sn': 'MTC164206U2',
+                                    'vid': 'E'
+                                }
+                            },
+                            '0 transceiver 3': {
+                                'SP7041-E': {
+                                    'descr': 'GE T',
+                                    'name': 'subslot 0/0 transceiver 3',
+                                    'pid': 'SP7041-E',
+                                    'sn': 'MTC1644033S',
+                                    'vid': 'E'
+                                }
+                            }
+                        },
+                        'vid': 'V02'
+                    }
+                }
+            },
+            'F0': {
+                'other': {
+                    'ASR1000-ESP20': {
+                        'descr': 'Cisco ASR1000 Embedded Services Processor, 20Gbps',
+                        'name': 'module F0',
+                        'pid': 'ASR1000-ESP20',
+                        'sn': 'JAE1239W7G6',
+                        'vid': 'V01'
+                    }
+                }
+            },
+            'P0': {
+                'other': {
+                    'ASR1006-PWR-AC': {
+                        'descr': 'Cisco ASR1006 AC Power Supply',
+                        'name': 'Power Supply Module 0',
+                        'pid': 'ASR1006-PWR-AC',
+                        'sn': 'ART1210Q049',
+                        'vid': 'V01'
+                    }
+                }
+            },
+            'P1': {
+                'other': {
+                    'ASR1006-PWR-AC': {
+                        'descr': 'Cisco ASR1006 AC Power Supply',
+                        'name': 'Power Supply Module 1',
+                        'pid': 'ASR1006-PWR-AC',
+                        'sn': 'ART1210Q04C',
+                        'vid': 'V01'
+                    }
+                }
+            },
+            'R0': {
+                'rp': {
+                    'ASR1000-RP2': {
+                        'descr': 'Cisco ASR1000 Route Processor 2',
+                        'name': 'module R0',
+                        'pid': 'ASR1000-RP2',
+                        'sn': 'JAE153408NJ',
+                        'vid': 'V02'
+                    }
+                }
+            },
+            'R1': {
+                'rp': {
+                    'ASR1000-RP2': {
+                        'descr': 'Cisco ASR1000 Route Processor 2',
+                        'name': 'module R1',
+                        'pid': 'ASR1000-RP2',
+                        'sn': 'JAE1703094H',
+                        'vid': 'V03'
+                    }
+                }
+            }
         }
+    }
 
     golden_output_asr1k = {'execute.return_value': '''
         NAME: "Chassis", DESCR: "Cisco ASR1006 Chassis"
@@ -1944,20 +2069,135 @@ class test_show_inventory(unittest.TestCase):
 
 
     golden_parsed_output_asr1002 = {
+        'main': {
+            'chassis': {
+                'ASR1002-X': {
+                    'descr': 'Cisco ASR1002-X Chassis',
+                    'name': 'Chassis',
+                    'pid': 'ASR1002-X',
+                    'sn': 'FOX1111P1M1',
+                    'vid': 'V07'
+                }
+            }
+        },
+        'slot': {
+            '0': {
+                'lc': {
+                    'ASR1002-X': {
+                        'descr': 'Cisco ASR1002-X SPA Interface Processor',
+                        'name': 'module 0',
+                        'pid': 'ASR1002-X',
+                        'sn': '',
+                        'subslot': {
+                            '0': {
+                                '6XGE-BUILT-IN': {
+                                    'descr': '6-port Built-in GE SPA',
+                                    'name': 'SPA subslot 0/0',
+                                    'pid': '6XGE-BUILT-IN',
+                                    'sn': '',
+                                    'vid': ''
+                                }
+                            },
+                            '0 transceiver 0': {
+                                'GLC-SX-MMD': {
+                                    'descr': 'GE SX',
+                                    'name': 'subslot 0/0 transceiver 0',
+                                    'pid': 'GLC-SX-MMD',
+                                    'sn': 'AGJ3333R1GC',
+                                    'vid': '001'
+                                }
+                            },
+                            '0 transceiver 1': {
+                                'GLC-SX-MMD': {
+                                    'descr': 'GE SX',
+                                    'name': 'subslot 0/0 transceiver 1',
+                                    'pid': 'GLC-SX-MMD',
+                                    'sn': 'AGJ1111R1G1',
+                                    'vid': '001'
+                                }
+                            },
+                            '0 transceiver 2': {
+                                'GLC-SX-MMD': {
+                                    'descr': 'GE SX',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'pid': 'GLC-SX-MMD',
+                                    'sn': 'AGJ9999R1FL',
+                                    'vid': '001'
+                                }
+                            },
+                            '0 transceiver 3': {
+                                'GLC-SX-MMD': {
+                                    'descr': 'GE SX',
+                                    'name': 'subslot 0/0 transceiver 3',
+                                    'pid': 'GLC-SX-MMD',
+                                    'sn': 'AGJ5555RAFM',
+                                    'vid': '001'
+                                }
+                            }
+                        },
+                        'vid': ''
+                    }
+                }
+            },
+            'F0': {
+                'lc': {
+                    'ASR1002-X': {
+                        'descr': 'Cisco ASR1002-X Embedded Services Processor',
+                        'name': 'module F0',
+                        'pid': 'ASR1002-X',
+                        'sn': '',
+                        'vid': ''
+                    }
+                }
+            },
+            'P0': {
+                'other': {
+                    'ASR1002-PWR-AC': {
+                        'descr': 'Cisco ASR1002 AC Power Supply',
+                        'name': 'Power Supply Module 0',
+                        'pid': 'ASR1002-PWR-AC',
+                        'sn': 'ABC111111EJ',
+                        'vid': 'V04'
+                    }
+                }
+            },
+            'P1': {
+                'other': {
+                    'ASR1002-PWR-AC': {
+                        'descr': 'Cisco ASR1002 AC Power Supply',
+                        'name': 'Power Supply Module 1',
+                        'pid': 'ASR1002-PWR-AC',
+                        'sn': 'DCB222222EK',
+                        'vid': 'V04'
+                    }
+                }
+            },
+            'R0': {
+                'lc': {
+                    'ASR1002-X': {
+                        'descr': 'Cisco ASR1002-X Route Processor',
+                        'name': 'module R0',
+                        'pid': 'ASR1002-X',
+                        'sn': 'JAD333333AQ',
+                        'vid': 'V07'
+                    }
+                }
+            }
         }
+    }
 
     golden_output_asr1002 = {'execute.return_value': '''
         router#
         ++ router: executing command 'show inventory' +++
         how inventory
         NAME: "Chassis", DESCR: "Cisco ASR1002-X Chassis"
-        PID: ASR1002-X         , VID: V07, SN: FOX2232P1M6
+        PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
 
         NAME: "Power Supply Module 0", DESCR: "Cisco ASR1002 AC Power Supply"
-        PID: ASR1002-PWR-AC    , VID: V04, SN: DCB223040EJ
+        PID: ASR1002-PWR-AC    , VID: V04, SN: ABC111111EJ
 
         NAME: "Power Supply Module 1", DESCR: "Cisco ASR1002 AC Power Supply"
-        PID: ASR1002-PWR-AC    , VID: V04, SN: DCB223040EK
+        PID: ASR1002-PWR-AC    , VID: V04, SN: DCB222222EK
 
         NAME: "module 0", DESCR: "Cisco ASR1002-X SPA Interface Processor"
         PID: ASR1002-X         , VID:    , SN:            
@@ -1966,19 +2206,19 @@ class test_show_inventory(unittest.TestCase):
         PID: 6XGE-BUILT-IN     , VID:    , SN:            
 
         NAME: "subslot 0/0 transceiver 0", DESCR: "GE SX"
-        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2226R1GC     
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ3333R1GC     
 
         NAME: "subslot 0/0 transceiver 1", DESCR: "GE SX"
-        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2226R1G1     
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ1111R1G1     
 
         NAME: "subslot 0/0 transceiver 2", DESCR: "GE SX"
-        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2226R1FL     
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ9999R1FL     
 
         NAME: "subslot 0/0 transceiver 3", DESCR: "GE SX"
-        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ2152RAFM     
+        PID: GLC-SX-MMD          , VID: 001 , SN: AGJ5555RAFM     
 
         NAME: "module R0", DESCR: "Cisco ASR1002-X Route Processor"
-        PID: ASR1002-X         , VID: V07, SN: JAD224008AQ
+        PID: ASR1002-X         , VID: V07, SN: JAD333333AQ
 
         NAME: "module F0", DESCR: "Cisco ASR1002-X Embedded Services Processor"
         PID: ASR1002-X         , VID:    , SN:         
