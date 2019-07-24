@@ -1202,7 +1202,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
 
     golden_parsed_output_asr1002 = {
         'red_sys_info': {
-            'available_system_uptime': '33 weeks, 3 days, 8 hours, 0 minutes',
+            'available_system_uptime': '11 weeks, 2 days, 3 hours, 0 minutes',
             'communications': 'Down',
             'communications_reason': 'Failure',
             'conf_red_mode': 'Non-redundant',
@@ -1215,11 +1215,11 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
         },
         'slot': {
             'slot 6': {
-                'boot': 'bootflash:asr1002x-universalk9.03.13.09.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
-                'config_register': '0x2102',
+                'boot': 'bootflash:asr1002x-universalk9.03.01.01.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;',
+                'config_register': '0x1000',
                 'curr_sw_state': 'ACTIVE',
                 'image_ver': 'Cisco IOS Software, ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 15.4(3)S9, RELEASE SOFTWARE (fc2)',
-                'uptime_in_curr_state': '33 weeks, 3 days, 7 hours, 59 minutes'
+                'uptime_in_curr_state': '11 weeks, 2 days, 2 hours, 59 minutes'
             }
         }
     }
@@ -1229,7 +1229,7 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
     show redundancy
     Redundant System Information :
     ------------------------------
-           Available system uptime = 33 weeks, 3 days, 8 hours, 0 minutes
+           Available system uptime = 11 weeks, 2 days, 3 hours, 0 minutes
     Switchovers system experienced = 0
                   Standby failures = 0
             Last switchover reason = none
@@ -1244,13 +1244,13 @@ Compiled Tue 25-Apr-17 06:17 by mcpre
     -------------------------------
                    Active Location = slot 6
             Current Software state = ACTIVE
-           Uptime in current state = 33 weeks, 3 days, 7 hours, 59 minutes
+           Uptime in current state = 11 weeks, 2 days, 2 hours, 59 minutes
                      Image Version = Cisco IOS Software, ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 15.4(3)S9, RELEASE SOFTWARE (fc2)
     Technical Support: http://www.cisco.com/techsupport
     Copyright (c) 1986-2018 by Cisco Systems, Inc.
-    Compiled Mon 26-Feb-18 09:00 by mcpre
-                              BOOT = bootflash:asr1002x-universalk9.03.13.09.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
-            Configuration register = 0x2102
+    Compiled Mon 26-Feb-18 10:00 by mcpre
+                              BOOT = bootflash:asr1002x-universalk9.03.01.01.S.154-3.S9-ext.SPA.bin,1;bootflash:,1;
+            Configuration register = 0x1000
 
     Peer (slot: 7) information is not available because it is in 'DISABLED' state
 '''}
