@@ -14702,7 +14702,7 @@ Tunnel10 is up, line protocol is up
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
 
-    golden_interface_output_10 = {'execute.return_value' : '''
+    golden_interface_output_1 = {'execute.return_value' : '''
     Port-channel10 is up, line protocol is up 
 
       Hardware is GEChannel, address is 006b.f1d5.e8c9 (bia 006b.f1d5.e8c9)
@@ -14765,7 +14765,7 @@ Tunnel10 is up, line protocol is up
          
     '''}
 
-    golden_parsed_interface_output_10 = {
+    golden_parsed_interface_output_1 = {
         'Port-channel10': {
             'port_channel': {
                 'port_channel_member': True,
@@ -14845,26 +14845,14 @@ Tunnel10 is up, line protocol is up
                 'out_buffer_failure': 0,
                 'out_buffers_swapped': 0,
                 },
-            },
-        'GigabitEthernet0/0/0': {
-            'port_channel': {
-                'port_channel_member': True,
-                'port_channel_int': 'Port-channel10',
-                },
-            },
-        'GigabitEthernet0/0/1': {
-            'port_channel': {
-                'port_channel_member': True,
-                'port_channel_int': 'Port-channel10',
-                },
-            },
+            }
         }
     def test_show_interfaces_10(self):
-        self.device = Mock(**self.golden_interface_output_10)
+        self.device = Mock(**self.golden_interface_output_1)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='Port-channel10')
         self.maxDiff = None
-        self.assertEqual(parsed_output,self.golden_parsed_interface_output_10)
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_1)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)

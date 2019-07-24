@@ -573,12 +573,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_dict[interface]['port_channel']\
                     ['port_channel_member_intfs'].append(intf)
                     
-                if intf not in interface_dict:
-                    interface_dict[intf] = {}
-                    if 'port_channel' not in interface_dict[intf]:
-                        interface_dict[intf]['port_channel'] = {}
-                    interface_dict[intf]['port_channel']['port_channel_member'] = True
-                    interface_dict[intf]['port_channel']['port_channel_int'] = interface
                 continue
 
             # No. of PF_JUMBO supported members in this channel : 0
