@@ -61,7 +61,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
 
         # VTP version running             : 1
         # VTP Version                     : 2
-        p2 = re.compile(r'^VTP +[Vv]ersion( +running)? +: +(?P<val>\d+)$')
+        # VTP Version : running VTP1 (VTP2 capable)
+        p2 = re.compile(r'^VTP +[Vv]ersion( +running)? +: +(?P<val>[\S\s]+)$')
 
         # VTP Domain Name                 : 
         p3 = re.compile(r'^VTP +Domain +Name +: +(?P<val>\S+)$')

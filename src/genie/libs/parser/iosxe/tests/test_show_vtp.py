@@ -64,6 +64,37 @@ class test_show_vtp_status(unittest.TestCase):
                                             0xDE 0x2D 0x66 0x67 0x70 0x72 0x55 0x38
     '''}
 
+    golden_parsed_output_2 = {
+        'vtp': {
+            'conf_last_modified_by': '0.0.0.0',
+            'conf_last_modified_time': '0-0-00 00:00:00',
+            'configuration_revision': 0,
+            'domain_name': '<>',
+            'enabled': False,
+            'existing_vlans': 100,
+            'maximum_vlans': 1005,
+            'md5_digest': '0x11 0x22 0x50 0x77 0x99 0xA1 0xB2 0xC3',
+            'operating_mode': 'transparent',
+            'pruning_mode': True,
+            'traps_generation': True,
+            'version': 'running VTP1 (VTP2 capable)'
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        VTP Version : running VTP1 (VTP2 capable)
+        Configuration Revision : 0
+        Maximum VLANs supported locally : 1005
+        Number of existing VLANs : 100
+        VTP Operating Mode : Transparent
+        VTP Domain Name : <>
+        VTP Pruning Mode : Enabled
+        VTP V2 Mode : Disabled
+        VTP Traps Generation : Enabled
+        MD5 digest : 0x11 0xA1 0xB2 0x77 0x22 0x50 0xC3 0x99
+        Configuration last modified by 0.0.0.0 at 0-0-00 00:00:00
+    '''}
+
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -77,6 +108,13 @@ class test_show_vtp_status(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowVtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
