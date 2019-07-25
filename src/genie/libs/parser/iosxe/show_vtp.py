@@ -134,11 +134,10 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                     ret_dict['vtp'] = {}
                 version = m.groupdict()['version']
                 capable = m.groupdict()['capable']
-                if version and capable:
+                if version:
                     ret_dict['vtp']['version'] = version
+                if capable:
                     ret_dict['vtp']['version_capable'] = list(capable)
-                else:
-                    ret_dict['vtp']['version'] = version
                 continue
 
             # VTP Domain Name                 : 
