@@ -62,27 +62,33 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
                         '(?: +(?P<platform>[\w\-]+) )? +'
-                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt)[a-zA-Z0-9\/\-]+)$')
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0
+        # switchB                Ethernet2/3     177     R S I    WS-C2960-24TC Ethernet1/4
+        # Switch mgmt0 163 S I WS-C2960-24TC Fas0/21
+        # swordfish-6k-2 Eth3/2 149 R S I WS-C6506-E Gig1/38
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
                         '(?P<platform>[\S\s]+) '
-                        '+(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt)[a-zA-Z0-9\/\-]+)$')
+                        '+(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p4: If Device Id is not on same line as everything else
         # vsm-p(2094532764140613037)
-        #   mgmt0 141 R B T S Nexus1000V control0
+        # Ten-GigabitEthernet2/0/20
         p3 = re.compile(r'^(?P<device_id>\S+)$')
 
+        #   mgmt0 141 R B T S Nexus1000V control0
         p4 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
                         '(?P<platform>[\S\s]+) +'
-                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt)[a-zA-Z0-9\/\-]+)$')
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p5: If Port Id is not on same line
         # 1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48
+        # Eth1/5         120    S         VMware ESX    vmnic1
+        # Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
         p5 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
