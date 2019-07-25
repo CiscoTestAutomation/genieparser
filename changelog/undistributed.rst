@@ -43,6 +43,8 @@
     * Fix ShowInterfacesSwitchport
         changed 'trun_vlan' schema type to support multiple values
     * Fix ShowInterfacesAccounting interface name issue
+    * Fix ShowInterfaces
+        changed schema type to support multiple outputs of interface
 
 ----------------------------------------------------------------------------
                                    OSPF

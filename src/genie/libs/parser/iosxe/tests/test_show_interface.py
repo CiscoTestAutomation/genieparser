@@ -14702,6 +14702,158 @@ Tunnel10 is up, line protocol is up
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
 
+    golden_interface_output_1 = {'execute.return_value' : '''
+    Port-channel10 is up, line protocol is up 
+
+      Hardware is GEChannel, address is 006b.f1d5.e8c9 (bia 006b.f1d5.e8c9)
+
+      MTU 1500 bytes, BW 2000000 Kbit/sec, DLY 10 usec, 
+
+         reliability 255/255, txload 1/255, rxload 1/255
+
+      Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+
+      Keepalive set (10 sec)
+
+      ARP type: ARPA, ARP Timeout 04:00:00
+
+        No. of active members in this channel: 2 
+
+            Member 0 : GigabitEthernet0/0/0 , Full-duplex, 1000Mb/s
+
+            Member 1 : GigabitEthernet0/0/1 , Full-duplex, 1000Mb/s
+
+        No. of PF_JUMBO supported members in this channel : 2
+
+      Last input 00:00:01, output 00:00:00, output hang never
+
+      Last clearing of "show interface" counters never
+
+      Input queue: 0/750/0/0 (size/max/drops/flushes); Total output drops: 0
+
+      Queueing strategy: fifo
+
+      Output queue: 0/80 (size/max)
+
+      5 minute input rate 27204000 bits/sec, 6797 packets/sec
+
+      5 minute output rate 0 bits/sec, 0 packets/sec
+
+         73017 packets input, 5016308 bytes, 0 no buffer
+
+         Received 12871133 broadcasts (0 IP multicasts)
+
+         0 runts, 0 giants, 0 throttles 
+
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+
+         0 watchdog, 4557345 multicast, 0 pause input
+
+         5887 packets output, 377641 bytes, 0 underruns
+
+         0 output errors, 0 collisions, 0 interface resets
+
+         0 unknown protocol drops
+
+         0 babbles, 0 late collision, 0 deferred
+
+         0 lost carrier, 0 no carrier, 0 pause output
+
+         0 output buffer failures, 0 output buffers swapped out
+
+         0 carrier transitions
+         
+    '''}
+
+    golden_parsed_interface_output_1 = {
+        'Port-channel10': {
+            'port_channel': {
+                'port_channel_member': True,
+                'active_members': 2,
+                'port_channel_member_intfs': ['GigabitEthernet0/0/0', 'GigabitEthernet0/0/1'],
+                'num_of_pf_jumbo_supported_members': 2,
+                },
+            'enabled': True,
+            'line_protocol': 'up',
+            'oper_status': 'up',
+            'type': 'GEChannel',
+            'mac_address': '006b.f1d5.e8c9',
+            'phys_address': '006b.f1d5.e8c9',
+            'delay': 10,
+            'mtu': 1500,
+            'bandwidth': 2000000,
+            'reliability': '255/255',
+            'txload': '1/255',
+            'rxload': '1/255',
+            'encapsulations': {
+                'encapsulation': 'dot1q',
+                'first_dot1q': '1',
+                },
+            'keepalive': 10,
+            'arp_type': 'arpa',
+            'arp_timeout': '04:00:00',
+            'last_input': '00:00:01',
+            'last_output': '00:00:00',
+            'output_hang': 'never',
+            'queues': {
+                'input_queue_size': 0,
+                'input_queue_max': 750,
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'total_output_drop': 0,
+                'queue_strategy': 'fifo',
+                'output_queue_size': 0,
+                'output_queue_max': 80,
+                },
+            'counters': {
+                'rate': {
+                    'load_interval': 300,
+                    'in_rate': 27204000,
+                    'in_rate_pkts': 6797,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0,
+                    },
+                'last_clear': 'never',
+                'in_pkts': 73017,
+                'in_octets': 5016308,
+                'in_no_buffer': 0,
+                'in_multicast_pkts': 4557345,
+                'in_broadcast_pkts': 0,
+                'in_runts': 0,
+                'in_giants': 0,
+                'in_throttles': 0,
+                'in_errors': 0,
+                'in_crc_errors': 0,
+                'in_frame': 0,
+                'in_overrun': 0,
+                'in_ignored': 0,
+                'in_watchdog': 0,
+                'in_mac_pause_frames': 0,
+                'out_pkts': 5887,
+                'out_octets': 377641,
+                'out_underruns': 0,
+                'out_errors': 0,
+                'out_interface_resets': 0,
+                'out_collision': 0,
+                'out_unknown_protocl_drops': 0,
+                'out_babble': 0,
+                'out_late_collision': 0,
+                'out_deferred': 0,
+                'out_lost_carrier': 0,
+                'out_no_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                },
+            }
+        }
+    def test_show_interfaces_10(self):
+        self.device = Mock(**self.golden_interface_output_1)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='Port-channel10')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_1)
+
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         interface_obj = ShowInterfaces(device=self.device)

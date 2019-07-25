@@ -254,7 +254,7 @@ Protocol  Address          Age (min)  Hardware Addr   Type   Interface
 Internet  10.12.90.1              -   fa16.3e24.787a  ARPA   GigabitEthernet2.390
 Internet  10.12.90.2            139   fa16.3e8a.cfeb  ARPA   GigabitEthernet2.390
 Internet  10.12.110.1             -   fa16.3e24.787a  ARPA   GigabitEthernet2.410
-    		'''}
+            '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -275,31 +275,31 @@ Internet  10.12.110.1             -   fa16.3e24.787a  ARPA   GigabitEthernet2.41
 #=========================================================
 class test_show_ip_arp_summary(unittest.TestCase):
 
-		device = Device(name='aDevice')
-		empty_output = {'execute.return_value': ''}
+        device = Device(name='aDevice')
+        empty_output = {'execute.return_value': ''}
 
-		golden_parsed_output = {
-				'incomp_entries': 0,
-				'total_entries': 8}
+        golden_parsed_output = {
+                'incomp_entries': 0,
+                'total_entries': 8}
 
-		golden_output = {'execute.return_value': '''
-				R1_csr1000v#show ip arp summary 
-				8 IP ARP entries, with 0 of them incomplete
-		'''
-		}
+        golden_output = {'execute.return_value': '''
+                R1_csr1000v#show ip arp summary 
+                8 IP ARP entries, with 0 of them incomplete
+        '''
+        }
 
-		def test_empty(self):
-				self.device = Mock(**self.empty_output)
-				obj = ShowIpArpSummary(device=self.device)
-				with self.assertRaises(SchemaEmptyParserError):
-						parsed_output = obj.parse()
+        def test_empty(self):
+                self.device = Mock(**self.empty_output)
+                obj = ShowIpArpSummary(device=self.device)
+                with self.assertRaises(SchemaEmptyParserError):
+                        parsed_output = obj.parse()
 
-		def test_golden(self):
-				self.maxDiff = None
-				self.device = Mock(**self.golden_output)
-				obj = ShowIpArpSummary(device=self.device)
-				parsed_output = obj.parse()
-				self.assertEqual(parsed_output, self.golden_parsed_output)
+        def test_golden(self):
+                self.maxDiff = None
+                self.device = Mock(**self.golden_output)
+                obj = ShowIpArpSummary(device=self.device)
+                parsed_output = obj.parse()
+                self.assertEqual(parsed_output, self.golden_parsed_output)
 
 #=========================================================
 # Unit test for show ip traffic
