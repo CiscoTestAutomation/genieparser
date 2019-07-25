@@ -62,7 +62,9 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         # VTP version running             : 1
         # VTP Version                     : 2
         # VTP Version : running VTP1 (VTP2 capable)
-        p2 = re.compile(r'^VTP +[Vv]ersion( +running)? +: +(?P<val>[\S\s]+)$')
+        p2 = re.compile(r'^VTP +[Vv]ersion(?: +running)? *: '
+                         '(running VTP)?(?P<version>\d+)'
+                         '( +\(VTP+(?P<capable>\d+) capable\))?$')
 
         # VTP Domain Name                 : 
         p3 = re.compile(r'^VTP +Domain +Name +: +(?P<val>\S+)$')
@@ -125,11 +127,18 @@ class ShowVtpStatus(ShowVtpStatusSchema):
 
             # VTP version running             : 1
             # VTP Version                     : 2
+            # VTP Version : running VTP1 (VTP2 capable)
             m = p2.match(line)
             if m:
                 if 'vtp' not in ret_dict:
                     ret_dict['vtp'] = {}
-                ret_dict['vtp']['version'] = m.groupdict()['val']
+                version = m.groupdict()['version']
+                capable = m.groupdict()['capable']
+                if version and capable:
+                    ret_dict['vtp']['version'] = version
+                    ret_dict['vtp']['version_capable'] = list(capable)
+                else:
+                    ret_dict['vtp']['version'] = version
                 continue
 
             # VTP Domain Name                 : 

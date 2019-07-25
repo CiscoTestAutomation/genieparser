@@ -77,7 +77,8 @@ class test_show_vtp_status(unittest.TestCase):
             'operating_mode': 'transparent',
             'pruning_mode': True,
             'traps_generation': True,
-            'version': 'running VTP1 (VTP2 capable)'
+            'version': '1',
+            'version_capable': ['2']
         }
     }
 
