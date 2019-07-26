@@ -322,3 +322,10 @@
 * NXOS
     * Fixed ShowCdpNeighbors:
         updated regex to support outputs in different order
+
+--------------------------------------------------------------------------------
+                                VTP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed ShowVtpStatus:
+        updated regex to support more flexible output
