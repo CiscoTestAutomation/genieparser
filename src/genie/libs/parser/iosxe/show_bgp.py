@@ -244,8 +244,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>                    0.0.0.0                 0         32768 ?
         # * i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?'
-                          ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          '(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
+                          '(?P<next_hop>[a-zA-Z0-9\.\:]+)'
                           ' +(?P<metric>[0-9]+)?'
                             '(?P<space>\s{1,4})'
                           ' +(?P<local_prf>[0-9]+)?'

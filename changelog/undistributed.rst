@@ -6,12 +6,19 @@
 | ``genie.libs.parser``   |               |
 
 -----------------------------------------------------------------------------
+                                   platform
+-----------------------------------------------------------------------------
+* JunOS
+    * Added parser for 'file list' and 'file list {filename}'
+
+-----------------------------------------------------------------------------
                                    Dot1x
 -----------------------------------------------------------------------------
 * NXOS
         * Added show_dot1x_Summary and modified show_dot1x_Statistics parsers
         * Added all_details and test_all_details & adressed show_dot1x comments
         * Modification to show_Dot1x schema and adressed show_dot1x comments
+
 --------------------------------------------------------------------------------
                                    Routing
 --------------------------------------------------------------------------------
@@ -25,6 +32,8 @@
         * updated regex to handle the output more flexibly
     * Fix ShowIpv6Route
         * updated command
+    * Fix ShowIpRouteSummary
+        * updated regex to support table name containing a dash
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -34,6 +43,8 @@
     * Fix ShowInterfacesSwitchport
         changed 'trun_vlan' schema type to support multiple values
     * Fix ShowInterfacesAccounting interface name issue
+    * Fix ShowInterfaces
+        changed schema type to support multiple outputs of interface
 
 ----------------------------------------------------------------------------
                                    OSPF
@@ -48,9 +59,15 @@
     * Updated ShowIpOspfTraffic to support different outputs
     * Enhanced regex to support more patterns
     * Updated regex in ShowIpOspfMplsLdpInterface to support more output
+    * Added ShowIpOspfInterfaceBrief for:
+        * show ip ospf interface brief
 * NXOS
     * Fix ShowIpOspf
         added inserting key to avoid missing key error without duplicate output
+* JUNOS
+    * Added ShowOspfInterfaceBrief for:
+        * show ospf interface brief
+        * show ospf interface brief instance master
 --------------------------------------------------------------------------------
                                 policy-map
 --------------------------------------------------------------------------------
@@ -142,6 +159,7 @@
     * Updates ShowIpBgpNeighbors for:
         Support for more Message statistics values
     * Updated ShowBgpAllNeighborsRoutesSuperParser for parsing of more status codes
+    * Updated regex in ShowBgpSuperParser to support more output
 * NXOS
     * Updated ShowBgpProcessVrfAll, ShowBgpVrfAllAll, ShowBgpVrfAllNeighbors,
         ShowBgpVrfAllAllNextHopDatabase, ShowBgpVrfAllAllSummary,
@@ -297,3 +315,17 @@
 * IOSXE
     * Updated ShowMplsLdpIgpSync:
         updated regex to support more outputs
+
+--------------------------------------------------------------------------------
+                                CDP
+--------------------------------------------------------------------------------
+* NXOS
+    * Fixed ShowCdpNeighbors:
+        updated regex to support outputs in different order
+
+--------------------------------------------------------------------------------
+                                VTP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed ShowVtpStatus:
+        updated regex to support more flexible output

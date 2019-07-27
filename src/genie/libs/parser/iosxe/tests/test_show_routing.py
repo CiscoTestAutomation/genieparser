@@ -1803,6 +1803,64 @@ Total           4           23          0           2688        9932
         }
     }
 
+    golden_output_2 = {'execute.return_value':'''
+        #show ip route vrf VRF-1 summary
+        IP routing table name is VRF-1 (0x27)
+        IP routing table maximum-paths is 32
+        Route Source    Networks    Subnets     Replicates  Overhead    Memory (bytes)
+        application     0           0           0           0           0
+        connected       0           2           0           192         624
+        static          0           0           0           0           0
+        bgp 65000        1           0           0           96          312
+          External: 0 Internal: 1 Local: 0
+        internal        1                                               712
+        Total           2           2           0           288         1648
+    '''}
+
+    golden_parsed_output_2 = {
+        'vrf': {
+            'VRF-1': {
+                'maximum_paths': 32,
+                'route_source': {
+                    'application': {
+                        'memory_bytes': 0,
+                        'networks': 0,
+                        'overhead': 0,
+                        'replicates': 0,
+                        'subnets': 0},
+                    'bgp': {
+                        '65000': {
+                            'external': 0,
+                            'internal': 1,
+                            'local': 0,
+                            'memory_bytes': 312,
+                            'networks': 1,
+                            'overhead': 96,
+                            'replicates': 0,
+                            'subnets': 0}},
+                    'connected': {
+                        'memory_bytes': 624,
+                        'networks': 0,
+                        'overhead': 192,
+                        'replicates': 0,
+                        'subnets': 2},
+                    'internal': {
+                        'memory_bytes': 712,
+                        'networks': 1},
+                    'static': {
+                        'memory_bytes': 0,
+                        'networks': 0,
+                        'overhead': 0,
+                        'replicates': 0,
+                        'subnets': 0}},
+                'total_route_source': {
+                        'memory_bytes': 1648,
+                        'networks': 2,
+                        'overhead': 288,
+                        'replicates': 0,
+                        'subnets': 2},
+                'vrf_id': '0x27'}}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteSummary(device=self.device)
@@ -1815,6 +1873,13 @@ Total           4           23          0           2688        9932
         obj = ShowIpRouteSummary(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpRouteSummary(device=self.device)
+        parsed_output = obj.parse(vrf='VRF-1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
     
 if __name__ == '__main__':
     unittest.main()

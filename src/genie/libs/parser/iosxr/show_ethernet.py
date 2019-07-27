@@ -387,5 +387,5 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
     def yang_cli(self):
         cli_output = self.cli()
         yang_output = self.yang()
-        merged_output = _merge_dict(yang_output,cli_output)
+        merged_output = merge_dict(yang_output,cli_output)
         return merged_output
