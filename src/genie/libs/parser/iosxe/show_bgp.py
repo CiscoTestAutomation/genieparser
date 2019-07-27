@@ -847,7 +847,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         refresh_epoch_flag = False
         route_info = ''
         refresh_epoch = None
-
+        cmd_vrf = vrf if vrf else None
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^\s*For +address +family:'
@@ -859,7 +859,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Paths: (1 available, best #1, table default, RIB-failure(17))
         p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, '
                         r'+(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +('
-                        r'?P<vrf_id>\S+?)|no +table)),?(?: +(.*))?)\)')
+                        r'?P<vrf_id>\S+?)|no +table))?,?(?: +(.*))?)\)')
 
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
@@ -1037,6 +1037,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     best_path = ''
                 if m.groupdict()['vrf_id']:
                     vrf = m.groupdict()['vrf_id']
+                elif cmd_vrf:
+                    vrf = cmd_vrf
                 else:
                     vrf = 'default'
                 if vrf not in ret_dict['instance']['default']['vrf']:
@@ -1169,7 +1171,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 prefixes = prefixes.replace('[', '')
                 prefixes = prefixes.replace(']', '')
                 prefix_table_version = m.groupdict()['version']
-
+                continue
             # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
             # 10.16.2.2 (metric 11) (via default) from 10.16.2.2 (10.16.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
@@ -1525,7 +1527,7 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family, vrf=vrf)
 
 # ================================================
 # Parser for:
