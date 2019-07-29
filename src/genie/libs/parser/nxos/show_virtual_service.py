@@ -721,32 +721,38 @@ class ShowVirtualServiceUtilization(ShowVirtualServiceUtilizationSchema):
         for line in output.splitlines():
             line = line.strip()
 
+            #   Requested Application Utilization:  1 %
             match = p1.match(line)
             if match:
                 util_dict.setdefault('cpu', {})['requested_percent'] = int(match.groupdict()['pct'])
                 continue
 
+            #   Actual Application Utilization:  0 % (30 second average)
             match = p2.match(line)
             if match:
                 util_dict.setdefault('cpu', {})['actual_percent'] = int(match.groupdict()['pct'])
                 continue
 
+            #   CPU State: R : Running
             match = p3.match(line)
             if match:
                 util_dict.setdefault('cpu', {})['state_abbrev'] = match.groupdict()['abbrev']
                 util_dict['cpu']['state'] = match.groupdict()['state']
                 continue
 
+            #   Memory Allocation: 262144 KB
             match = p4.match(line)
             if match:
                 util_dict.setdefault('memory', {})['allocation_kb'] = int(match.groupdict()['kb'])
                 continue
 
+            #   Memory Used:       13400 KB
             match = p5.match(line)
             if match:
                 util_dict.setdefault('memory', {})['used_kb'] = int(match.groupdict()['kb'])
                 continue
 
+            #   Name: _rootfs, Alias:
             match = p6.match(line)
             if match:
                 storage_name = match.groupdict()['name']
@@ -754,12 +760,14 @@ class ShowVirtualServiceUtilization(ShowVirtualServiceUtilizationSchema):
                 continue
 
             if storage_name:
+                #     Capacity(1K blocks):  243823      Used(1K blocks): 161690
                 match = p7.match(line)
                 if match:
                     util_dict['storage'][storage_name]['capacity_kb'] = int(match.groupdict()['capacity'])
                     util_dict['storage'][storage_name]['used_kb'] = int(match.groupdict()['used'])
                     continue
 
+                #     Available(1K blocks): 77537       Usage: 68 %
                 match = p8.match(line)
                 if match:
                     util_dict['storage'][storage_name]['available_kb'] = int(match.groupdict()['available'])
