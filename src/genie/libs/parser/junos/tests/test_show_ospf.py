@@ -29,16 +29,16 @@ class test_show_ospf(unittest.TestCase):
     golden_output = {'execute.return_value': '''
     show ospf interface brief                              
     Interface           State   Area            DR ID           BDR ID          Nbrs
-    ge-0/0/2.0          BDR     0.0.0.1         2.2.2.2         4.4.4.4            5
+    ge-0/0/2.0          BDR     0.0.0.1         10.16.2.2         10.64.4.4            5
     '''}
     
     golden_output_master = {'execute.return_value': '''
     show ospf interface brief instance master
     Interface           State   Area            DR ID           BDR ID          Nbrs
-    ge-0/0/4.0          BDR     0.0.0.4         4.4.4.4         192.168.10.22    2
-    ge-0/0/5.0          BDR     0.0.0.4         2.2.2.2         2.2.2.2          3
-    ge-0/0/6.0          DR      0.0.0.4         4.4.4.4         192.168.10.22    4
-    lo1.0               DR      0.0.0.4         2.2.2.2         0.0.0.0          0
+    ge-0/0/4.0          BDR     0.0.0.4         10.64.4.4         192.168.10.22    2
+    ge-0/0/5.0          BDR     0.0.0.4         10.16.2.2         10.16.2.2          3
+    ge-0/0/6.0          DR      0.0.0.4         10.64.4.4         192.168.10.22    4
+    lo1.0               DR      0.0.0.4         10.16.2.2         0.0.0.0          0
     '''}
     
     golden_parsed_output = {
@@ -49,8 +49,8 @@ class test_show_ospf(unittest.TestCase):
                     'interfaces': {
                         'ge-0/0/2.0': {
                             'state': 'BDR',
-                            'dr_id': '2.2.2.2',
-                            'bdr_id': '4.4.4.4',
+                            'dr_id': '10.16.2.2',
+                            'bdr_id': '10.64.4.4',
                             'nbrs_count': 5,
                             },
                         },
@@ -68,25 +68,25 @@ class test_show_ospf(unittest.TestCase):
                     'interfaces': {
                         'ge-0/0/4.0': {
                             'state': 'BDR',
-                            'dr_id': '4.4.4.4',
+                            'dr_id': '10.64.4.4',
                             'bdr_id': '192.168.10.22',
                             'nbrs_count': 2,
                             },
                         'ge-0/0/5.0': {
                             'state': 'BDR',
-                            'dr_id': '2.2.2.2',
-                            'bdr_id': '2.2.2.2',
+                            'dr_id': '10.16.2.2',
+                            'bdr_id': '10.16.2.2',
                             'nbrs_count': 3,
                             },
                         'ge-0/0/6.0': {
                             'state': 'DR',
-                            'dr_id': '4.4.4.4',
+                            'dr_id': '10.64.4.4',
                             'bdr_id': '192.168.10.22',
                             'nbrs_count': 4,
                             },
                         'lo1.0': {
                             'state': 'DR',
-                            'dr_id': '2.2.2.2',
+                            'dr_id': '10.16.2.2',
                             'bdr_id': '0.0.0.0',
                             'nbrs_count': 0,
                             },

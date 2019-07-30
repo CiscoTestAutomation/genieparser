@@ -17049,7 +17049,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                             'isolate': False,
                             'log_neighbor_changes': False,
                             'neighbor_id': 
-                                {'55.1.1.101': 
+                                {'10.76.1.101': 
                                     {'nbr_af_name': 
                                         {'ipv4 unicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17095,7 +17095,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'af_redist_connected': True,
                                     'af_redist_connected_route_policy': 'ALL'},
                                 'ipv4 unicast': 
-                                    {'af_aggregate_address_ipv4_address': '83.0.0.0',
+                                    {'af_aggregate_address_ipv4_address': '10.4.0.0',
                                     'af_aggregate_address_ipv4_mask': 16,
                                     'af_client_to_client_reflection': True,
                                     'af_dampening': True,
@@ -17142,7 +17142,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'keepalive_interval': 30,
                                     'log_neighbor_changes': False,
                             'neighbor_id': 
-                                {'200.1.1.1': 
+                                {'192.168.4.1': 
                                     {'nbr_af_name': 
                                         {'ipv4 unicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17197,7 +17197,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_shutdown': False,
                                     'nbr_suppress_four_byte_as_capability': False,
                                     'nbr_update_source': 'loopback0'},
-                                '210.1.1.1': 
+                                '192.168.64.1': 
                                     {'nbr_af_name': 
                                         {'ipv4 unicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17235,7 +17235,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_shutdown': False,
                                     'nbr_suppress_four_byte_as_capability': False,
                                     'nbr_update_source': 'loopback0'},
-                                '50.1.1.101': 
+                                '10.51.1.101': 
                                     {'nbr_af_name': 
                                         {'ipv4 multicast': 
                                             {'nbr_af_allowas_in': False,
@@ -17297,7 +17297,7 @@ class test_show_running_config_bgp(unittest.TestCase):
                                     'nbr_shutdown': False,
                                     'nbr_suppress_four_byte_as_capability': False,
                                     'nbr_update_source': 'loopback0'}},
-                    'router_id': '100.1.1.1'}}}}}}
+                    'router_id': '10.1.1.1'}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         show running-config bgp
@@ -17307,7 +17307,7 @@ class test_show_running_config_bgp(unittest.TestCase):
         version 9.2(2) Bios:version
         feature bgp
         router bgp 100
-          router-id 100.1.1.1
+          router-id 10.1.1.1
           timers bgp 30 60
           graceful-restart restart-time 250
           graceful-restart stalepath-time 450
@@ -17323,7 +17323,7 @@ class test_show_running_config_bgp(unittest.TestCase):
             redistribute direct route-map RMAP_Lo0
             redistribute static route-map ALL
             redistribute ospf 1 route-map RMAP_OSPF
-            aggregate-address 83.0.0.0/16
+            aggregate-address 10.4.0.0/16
             maximum-paths 8
             nexthop route-map ALL
             distance 19 199 219
@@ -17367,7 +17367,7 @@ class test_show_running_config_bgp(unittest.TestCase):
             ebgp-multihop 5
             address-family ipv6 unicast
               next-hop-self
-          neighbor 50.1.1.101
+          neighbor 10.51.1.101
             remote-as 300
             local-as 101
             update-source loopback0
@@ -17389,7 +17389,7 @@ class test_show_running_config_bgp(unittest.TestCase):
             address-family vpnv6 unicast
               send-community
               send-community extended
-          neighbor 200.1.1.1
+          neighbor 192.168.4.1
             bfd
             remote-as 100
             update-source loopback0
@@ -17408,7 +17408,7 @@ class test_show_running_config_bgp(unittest.TestCase):
             address-family vpnv6 unicast
               send-community
               send-community extended
-          neighbor 210.1.1.1
+          neighbor 192.168.64.1
             remote-as 200
             update-source loopback0
             ebgp-multihop 5
@@ -17418,7 +17418,7 @@ class test_show_running_config_bgp(unittest.TestCase):
             neighbor 55:1::1:101
               remote-as 70000
               address-family ipv6 unicast
-            neighbor 55.1.1.101
+            neighbor 10.76.1.101
               remote-as 70000
               disable-connected-check
               address-family ipv4 unicast

@@ -526,8 +526,8 @@ class test_show_ip_ospf(unittest.TestCase):
                         {'instance':
                             {'10':
                                 {'areas':
-                                    {'1.1.2.255':
-                                        {'area_id': '1.1.2.255',
+                                    {'10.4.2.255':
+                                        {'area_id': '10.4.2.255',
                                         'area_type': 'nssa',
                                         'authentication': 'none',
                                         'existed': '1y16w',
@@ -570,7 +570,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                 'opaque_lsa_enable': True,
                                 'preference':
                                     {'single_value': {'all': 110}},
-                                'router_id': '111.222.255.1',
+                                'router_id': '10.219.255.1',
 
                                 'single_tos_routes_enable': True,
                                 'spf_control':
@@ -595,7 +595,7 @@ class test_show_ip_ospf(unittest.TestCase):
                                                 'start': 200}}}}}}}}}}
 
     golden_output_3 = {'execute.return_value': '''
-        Routing Process 10 with ID 111.222.255.1 VRF default
+        Routing Process 10 with ID 10.219.255.1 VRF default
         Stateful High Availability enabled
         Graceful-restart is configured
         Grace period: 60 state: Inactive
@@ -620,7 +620,7 @@ class test_show_ip_ospf(unittest.TestCase):
         Number of opaque AS LSAs 0, checksum sum 0
         Number of areas is 1, 0 normal, 0 stub, 1 nssa
         Number of active areas is 1, 0 normal, 0 stub, 1 nssa
-       Area (1.1.2.255)
+       Area (10.4.2.255)
             Area has existed for 1y16w
             Interfaces in this area: 20 Active interfaces: 16
             Passive interfaces: 17  Loopback interfaces: 1
