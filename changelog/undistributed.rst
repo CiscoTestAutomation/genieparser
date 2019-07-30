@@ -5,3 +5,9 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowRedundancyStates
+        changed 'maintenance_mode' key to optional to support more output

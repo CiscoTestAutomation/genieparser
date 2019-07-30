@@ -909,7 +909,7 @@ class ShowRedundancyStatesSchema(MetaParser):
                 'redundancy_mode_operational': str,
                 'redundancy_mode_configured': str,
                 'redundancy_state': str,
-                'maintenance_mode': str,
+                Optional('maintenance_mode'): str,
                 'manual_swact': str,
                 Optional('manual_swact_reason'): str,
                 'communications': str,
