@@ -545,26 +545,26 @@ class test_show_ip_ospf_interface_brief(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output_brief = {
     'instance': {
-        '9996': {
+        '65109': {
             'areas': {
                 '0.0.0.8': {
                     'interfaces': {
                         'Loopback0': {
-                            'ip_address': '106.162.197.254/32',
+                            'ip_address': '10.169.197.254/32',
                             'cost': 1,
                             'state': 'LOOP',
                             'nbrs_full': 0,
                             'nbrs_count': 0,
                             },
                         'GigabitEthernet4': {
-                            'ip_address': '106.162.197.98/30',
+                            'ip_address': '10.169.197.98/30',
                             'cost': 1000,
                             'state': 'P2P',
                             'nbrs_full': 1,
                             'nbrs_count': 1,
                             },
                         'GigabitEthernet2': {
-                            'ip_address': '106.162.197.94/30',
+                            'ip_address': '10.169.197.94/30',
                             'cost': 1000,
                             'state': 'BDR',
                             'nbrs_full': 1,
@@ -580,12 +580,12 @@ class test_show_ip_ospf_interface_brief(unittest.TestCase):
     golden_output_brief = {'execute.return_value': '''
         show ip ospf interface brief
         Load for five secs: 2%/0%; one minute: 2%; five minutes: 1%
-        Time source is NTP, 01:20:44.789 JST Wed Jul 17 2019
+        Time source is NTP, 01:20:44.789 EST Wed Jul 17 2019
 
         Interface    PID   Area            IP Address/Mask    Cost  State Nbrs F/C
-        Lo0          9996  8               106.162.197.254/32 1     LOOP  0/0
-        Gi4          9996  8               106.162.197.98/30  1000  P2P   1/1
-        Gi2          9996  8               106.162.197.94/30  1000  BDR   1/1
+        Lo0          65109  8               10.169.197.254/32 1     LOOP  0/0
+        Gi4          65109  8               10.169.197.98/30  1000  P2P   1/1
+        Gi2          65109  8               10.169.197.94/30  1000  BDR   1/1
     '''}
 
     def test_show_ip_ospf_interface_brief(self):
