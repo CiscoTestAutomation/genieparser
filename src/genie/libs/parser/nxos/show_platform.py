@@ -226,7 +226,9 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['hardware'] = {}
                 continue
 
-            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +Chassis( +\(\"(?P<chassis>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
+            # cisco NX-OSv chassis
+            # cisco Nexus7000 C7009 (9 Slot) Chassis ("Supervisor Module-2")
+            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<chassis>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
             m = p15.match(line)
             if m:
 
@@ -245,7 +247,10 @@ class ShowVersion(ShowVersionSchema):
 
                 continue
 
-            p16 = re.compile(r'^\s*Intel\(R\) +Xeon\(R\) +CPU +(?P<cpu>[a-zA-Z0-9\s\@\.\-]+) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
+            # Intel(R) Xeon(R) CPU         with 32938744 kB of memory.
+            # Intel(R) Core(TM) i3- CPU @ 2.50GHz with 12345678 kB of memory.
+            # Intel(R) Celeron(R) M CPU with 2073416 kB of memory.
+            p16 = re.compile(r'^\s*Intel(\S+)?( +[\S\s]+)? +CPU +(?P<cpu>[a-zA-Z0-9\s\@\.\-]+) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
             m = p16.match(line)
             if m:
 

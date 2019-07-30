@@ -11,3 +11,10 @@
 * IOSXE
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* NXOS
+    * Fix ShowVersion
+        updated regEx to support more outputs
