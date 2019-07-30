@@ -314,7 +314,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowMplsLdpIgpSync:
-        updated regex to support more outputs
+        updated regEx to support more outputs
+    * updated ShowCdpNeighborsDetail:
+        updated regEx for an issue of omitting after '/'
 
 --------------------------------------------------------------------------------
                                 CDP
