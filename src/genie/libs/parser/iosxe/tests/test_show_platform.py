@@ -1379,6 +1379,42 @@ class test_show_redundancy_2(unittest.TestCase):
     asr104#
     '''}
 
+
+    golden_output3 = {'execute.return_value': '''
+    show redundancy states
+    my state = 13 -ACTIVE 
+    peer state = 1  -DISABLED 
+    Mode = Simplex
+    Unit = Primary
+    Unit ID = 48
+    Redundancy Mode (Operational) = Non-redundant
+    Redundancy Mode (Configured)  = sso
+    Redundancy State              = Non Redundant
+    Manual Swact = disabled (system is simplex (no peer unit))
+    Communications = Down      Reason: Simplex mode
+    client count = 84
+    client_notification_TMR = 30000 milliseconds
+    RF debug mask = 0x0   
+    '''}
+
+    golden_parsed_output3 = {
+        'my_state': '13 -ACTIVE',
+        'peer_state': '1  -DISABLED',
+        'mode': 'Simplex',
+        'unit': 'Primary',
+        'unit_id': 48,
+        'redundancy_mode_operational': 'Non-redundant',
+        'redundancy_mode_configured': 'sso',
+        'redundancy_state': 'Non Redundant',
+        'manual_swact': 'disabled',
+        'manual_swact_reason': 'system is simplex (no peer unit)',
+        'communications': 'Down',
+        'communications_reason': 'Simplex mode',
+        'client_count': 84,
+        'client_notification_tmr_msec': 30000,
+        'rf_debug_mask': '0x0',
+    }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         redundancy_obj = ShowRedundancyStates(device=self.dev)
@@ -1398,6 +1434,13 @@ class test_show_redundancy_2(unittest.TestCase):
         redundancy_obj = ShowRedundancyStates(device=self.dev)
         parsed_output = redundancy_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output3)
+        redundancy_obj = ShowRedundancyStates(device=self.dev)
+        parsed_output = redundancy_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 # ====================
@@ -2283,7 +2326,7 @@ Switch#   Role        Priority      State
                                     'main': {
                                         'switch_mac_address': '0057.d21b.cc00',
                                         'mac_persistency_wait_time': 'indefinite',
-	                                    'swstack': True,
+                                        'swstack': True,
                                     },
                                     'slot': {
                                         '1': {
