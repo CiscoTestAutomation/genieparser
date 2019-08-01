@@ -11,3 +11,10 @@
 * IOSXE
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
+
+--------------------------------------------------------------------------------
+                                Lag
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowBundle
+        to support 'show bundle {interface}'
