@@ -11,3 +11,10 @@
 * IOSXE
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
+
+--------------------------------------------------------------------------------
+                                Lag
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowPagpNeighbor
+        added 'show pagp neighbor' key to cli command for Ops
