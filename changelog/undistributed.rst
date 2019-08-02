@@ -18,3 +18,10 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
+--------------------------------------------------------------------------------
+                                Prefix_list
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowIpv6PrefixListDetail
+        added 'cli_command' to avoid 'execute' issue for Ops

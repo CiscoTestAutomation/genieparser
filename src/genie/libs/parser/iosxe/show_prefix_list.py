@@ -53,7 +53,7 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
 
     cli_command = 'show {af} prefix-list detail'
 
-    def cli(self, af='ip',output=None):
+    def cli(self, cmd=cli_command, af='ip',output=None):
         # ip should be ip or ipv6
         assert af in ['ip', 'ipv6']
         # excute command to get output
@@ -167,6 +167,7 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
 # ===========================================
 class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail):
     """Parser for show ipv6 prefix-list detail"""
+    cli_command = 'show ipv6 prefix-list detail'
     def cli(self,output=None):
-        return super().cli(af='ipv6',output=output)
+        return super().cli(cmd=self.cli_command, af='ipv6',output=output)
 
