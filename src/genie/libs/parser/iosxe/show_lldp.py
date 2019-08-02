@@ -130,15 +130,17 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'S': 'station_only',
                         'O': 'other'}
 
-    cli_command = 'show lldp entry {entry}'
+    cli_command = ['show lldp entry {entry}', 'show lldp entry']
 
     def cli(self, entry='*',output=None):
         if output is None:
-            # get output from device
             if hasattr(self, 'CMD'):
                 out = self.device.execute(self.CMD)
+            elif entry:
+                cmd = self.cli_command[0].format(entry=entry)
             else:
-                out = self.device.execute(self.cli_command.format(entry=entry))
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
         # initial return dictionary

@@ -18,3 +18,10 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
+--------------------------------------------------------------------------------
+                                Lldp
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowLldpEntry
+        added a key 'show lldp entry' for Ops
