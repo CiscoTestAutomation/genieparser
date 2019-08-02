@@ -1699,7 +1699,7 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 
     cli_command = ['show {af} pim vrf {vrf} neighbor', 'show {af} pim neighbor']
 
-    def cli(self, af='ip',vrf='', output=None):
+    def cli(self, cmd=cli_command, af='ip',vrf='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(af=af,vrf=vrf)
@@ -1812,10 +1812,11 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 # ==========================================================
 class ShowIpPimNeighbor(ShowPimNeighbor):
     '''Parser for show ip pim [vrf <WORD>] neighbor'''
+    cli_command = 'show ip pim neighbor'
     exclude = ['expiration', 'up_time']
 
     def cli(self, vrf='',output=None):
-        return super().cli(af='ip', vrf=vrf,output=output)
+        return super().cli(cmd=self.cli_command, af='ip', vrf=vrf, output=output)
 
 # ==========================================================
 #  parser for 'show ipv6 pim [vrf <WORD>] neighbor'
@@ -1834,11 +1835,12 @@ class ShowIpv6PimNeighbor(ShowPimNeighbor):
 # ==========================================================
 class ShowIpv6PimNeighborDetail(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor detail'''
+    cli_command = 'show ipv6 pim neighbor detail'
     exclude = ['expiration', 'up_time']
 
 
     def cli(self, vrf='',output=None):
-        return super().cli(af='ipv6', vrf=vrf,output=output)
+        return super().cli(cmd=self.cli_command, af='ipv6', vrf=vrf,output=output)
 
 
 # ===========================================================
