@@ -20,6 +20,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf mpls traffic-eng link
     * show ip ospf max-metric
     * show ip ospf traffic
+    * show ip ospf interface brief
 
 '''
 
@@ -1237,6 +1238,84 @@ class ShowIpOspf(ShowIpOspfSchema):
 
         return ret_dict
 
+# ============================
+# Schema for:
+#   * 'show ip ospf interface brief'
+# ============================
+class ShowIpOspfInterfaceBriefSchema(MetaParser):
+    ''' Schema for:
+        * 'show ip ospf interface brief'
+    '''
+    schema = {
+        'instance': {
+            Any(): {
+                'areas': {
+                    Any(): {
+                        'interfaces': {
+                            Any(): {
+                                'ip_address': str,
+                                'cost': int,
+                                'state': str,
+                                'nbrs_full': int,
+                                'nbrs_count': int,
+                                },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
+    ''' Parser for:
+        * 'show ip ospf interface brief'
+    '''
+
+    cli_command = 'show ip ospf interface brief'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<instance>\S+) +(?P<area>\d+) +'
+            '(?P<address>\S+) +(?P<cost>\d+) +(?P<state>\S+) +(?P<nbrs_full>\d+)'
+            '\/(?P<nbrs_count>\d+)$$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(
+                    str(group['interface']))
+                instance = str(group['instance'])
+                ip_address = str(group['address'])
+                area = str(IPAddress(str(group['area'])))
+                state = group['state']
+                cost = int(group['cost'])
+                nbrs_full = int(group['nbrs_full'])
+                nbrs_count = int(group['nbrs_count'])
+
+                intf_dict = ret_dict.setdefault('instance', {}).\
+                    setdefault(instance, {}).\
+                    setdefault('areas', {}).\
+                    setdefault(area, {}).\
+                    setdefault('interfaces', {}).\
+                    setdefault(interface, {})
+
+                intf_dict.update({'ip_address' : ip_address})
+                intf_dict.update({'cost' : cost})
+                intf_dict.update({'state' : state})
+                intf_dict.update({'nbrs_full' : nbrs_full})
+                intf_dict.update({'nbrs_count' : nbrs_count})
+                continue
+
+        return ret_dict
 
 # ============================
 # Schema for:
@@ -1505,24 +1584,29 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
     ''' Parser for:
         * 'show ip ospf interface'
-        * 'show ip ospf interface {interface}''
+        * 'show ip ospf interface {interface}'
     '''
 
     cli_command = ['show ip ospf interface {interface}',
                    'show ip ospf interface']
+
     exclude = ['hello_timer', 'dead_timer',
         'bdr_ip_addr', 'bdr_router_id', 'last_flood_scan_length',
         'last_flood_scan_time_msec', 
         'max_flood_scan_length', 'max_flood_scan_time_msec', 'state']
 
 
-    def cli(self, interface=''):
-        if interface:
-            cmd = self.cli_command[0].format(interface=interface)
-        else:
-            cmd = self.cli_command[1]
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
 
-        out = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
 
         # Init vars
         ret_dict = {}
@@ -4818,6 +4902,7 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
                                                         'igp_sync': bool,
                                                         'holddown_timer': bool,
                                                         'state': str,
+                                                         Optional('state_info') :str
                                                         },
                                                     },
                                                 },
@@ -4870,8 +4955,8 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                             ' +through +LDP +autoconfig$')
 
         p5 = re.compile(r'^Holddown +timer +is (?P<val>([a-zA-Z\s]+))$')
-
-        p6 = re.compile(r'^Interface +is (?P<state>(up|down))$')
+        # Interface is down and pending LDP
+        p6 = re.compile(r'^Interface +is (?P<state>(up|down))( +and +(?P<state_info>[\w\s]*))?$')
 
 
         for line in out.splitlines():
@@ -5016,7 +5101,10 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             # Interface is up 
             m = p6.match(line)
             if m:
+                state_info = m.groupdict()['state_info']
                 intf_dict['state'] = str(m.groupdict()['state'])
+                if state_info:
+                    intf_dict['state_info'] = str(state_info)
                 continue
 
         return ret_dict

@@ -2,6 +2,7 @@
    supported commands:
      *  show lacp system-id
      *  show bundle 
+     *  show bundle <interface>
      *  show lacp
 """
 # Python
@@ -142,11 +143,15 @@ class ShowBundleSchema(MetaParser):
 class ShowBundle(ShowBundleSchema):
     """Parser for show bundle"""
 
-    cli_command = 'show bundle'
+    cli_command = ['show bundle {interface}','show bundle']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
