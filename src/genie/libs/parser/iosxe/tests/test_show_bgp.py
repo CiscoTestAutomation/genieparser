@@ -15544,7 +15544,7 @@ class test_show_ip_bgp_neighbors(unittest.TestCase):
     golden_output4 = {'execute.return_value': '''
         show ip bgp vpnv4 vrf CE1test neighbors
         Load for five secs: 65%/1%; one minute: 29%; five minutes: 24%
-        Time source is NTP, 02:22:21.112 JST Wed Jul 17 2019
+        Time source is NTP, 02:22:21.112 EST Wed Jul 17 2019
 
         BGP neighbor is 192.168.10.253,  vrf CE1test,  remote AS 65555, external link
           BGP version 4, remote router ID 192.168.10.253

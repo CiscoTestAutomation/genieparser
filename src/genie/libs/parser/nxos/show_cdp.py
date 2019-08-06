@@ -246,7 +246,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         interface_port_re = re.compile(r'Interface:\s*'
                                         '(?P<interface>[\w\s\-\/\/]+)\s*\,'
                                         '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                        '(?P<port_id>[\w\/]+)')
+                                        '(?P<port_id>\S+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
