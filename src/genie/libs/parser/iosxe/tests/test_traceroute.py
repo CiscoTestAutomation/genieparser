@@ -157,21 +157,22 @@ class test_traceroute(unittest.TestCase):
                         'paths': {
                             1: {
                                 'address': '192.168.197.93',
-                                'code': 'L',
+
                                 'label_info': {
                                     'label_name': 'implicit-null',
                                     'exp': 0,
                                 },
                                 'probe_msec': ['1'],
                                 'mru': 1552,
-                            }}},
+                            }},
+                        'code': 'L', },
                     '2': {
                         'paths': {
                             1: {
                                 'address': '192.168.197.102',
-                                'code': '!',
                                 'probe_msec': ['1'],
-                            }}},
+                            }},
+                        'code': '!', },
                     '0': {
                         'paths': {
                             1: {

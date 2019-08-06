@@ -46,10 +46,10 @@ class TracerouteSchema(MetaParser):
                                                 'exp': int,
                                                 },
                                            },
-                                      Optional('code'): str,
                                       Optional('mru'): int,
                                       },
                                  },
+                            Optional('code'): str,
                             }
                        },
                   Optional('timeout_seconds'): int,
@@ -199,14 +199,15 @@ class Traceroute(TracerouteSchema):
             m = p3_1.match(line)
             if m:
                 group = m.groupdict()
+                hops_dict = tr_dict.setdefault('hops', {}). \
+                    setdefault(group['hop'], {})
                 if group.get('hop'):
                     index = 1
-                    path_dict = tr_dict.setdefault('hops', {}).\
-                                        setdefault(group['hop'], {}).setdefault('paths',{})
+                    path_dict = hops_dict.setdefault('paths',{})
                 index_dict = path_dict.setdefault(index, {})
                 index_dict['address'] = group['address']
                 if group['code']:
-                    index_dict['code'] = group['code']
+                    hops_dict['code'] = group['code']
                 if group['mru']:
                     index_dict['mru'] = int(group['mru'])
                 if group['label_name']:
