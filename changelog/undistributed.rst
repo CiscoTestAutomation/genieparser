@@ -18,3 +18,10 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
+--------------------------------------------------------------------------------
+                                traceroute
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update TraceRoute
+        schema changed for multi paths support
