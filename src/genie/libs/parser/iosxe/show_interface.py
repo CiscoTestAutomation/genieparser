@@ -1331,7 +1331,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Access Mode VLAN: 1 (default)
             p8 =  re.compile(r'^Access +Mode +VLAN: +(?P<access_vlan>[\d\-]+)'
-                              '( *\((?P<dummy>\w+)\))?$')
+                              '( *\((?P<access_vlan_name>\w+)\))?$')
             m = p8.match(line)
             if m:
                 ret_dict[intf]['access_vlan'] = m.groupdict()['access_vlan']
@@ -1340,7 +1340,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Trunking Native Mode VLAN: 1 (default)
             p9 =  re.compile(r'^Trunking +Native +Mode +VLAN: +(?P<native_vlan>[\d\-]+)'
-                              '( *\((?P<dummy>\w+)\))?$')
+                              '( *\((?P<native_vlan_name>\w+)\))?$')
             m = p9.match(line)
             if m:
                 if 'encapsulation' not in ret_dict[intf]:
