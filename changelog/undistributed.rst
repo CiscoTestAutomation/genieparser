@@ -18,3 +18,10 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update schema for ShowPlatform
+        to support unexpected outputs 

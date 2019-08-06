@@ -1458,6 +1458,16 @@ class ShowPlatformSchema(MetaParser):
                                 Optional('name'): str,
                                 Optional('slot'): str,
                                 Optional('state'): str,
+                                Optional('subslot'): {
+                                    Any(): {
+                                        Any(): {
+                                            Optional('insert_time'): str,
+                                            Optional('name'): str,
+                                            Optional('state'): str,
+                                            Optional('subslot'): str,
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
