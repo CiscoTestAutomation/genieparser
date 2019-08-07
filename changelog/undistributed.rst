@@ -25,3 +25,10 @@
 * IOSXE
     * Update TraceRoute
         schema changed for multi paths support
+
+-----------------------------------------------------------------------------
+                                Cdp
+-----------------------------------------------------------------------------
+* NXOS
+    * Updated ShowCdpNeighborsDetail
+        * Fixed regEx to avoid omitting after '/' in the 'port_id'
