@@ -119,7 +119,7 @@ class Traceroute(TracerouteSchema):
         # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
         # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
         # 4 192.168.15.1 [MPLS: Label 24133 Exp 0] 6 msec 7 msec 64 msec
-        # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec # 1  * 65 msec 111 msec
+        # 5 10.80.241.86 [MPLS: Label 24147 Exp 0] 69 msec 65 msec 111 msec
         # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
         # 7 172.31.166.10 92 msec 51 msec 148 msec
         # 8 10.169.197.101 1 msec 1 msec *
