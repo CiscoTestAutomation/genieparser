@@ -12,6 +12,8 @@
     * show ipv4 vrf all interface
     * show ipv6 vrf all interface
     * show interfaces accounting
+    * show interfaces
+    * show interfaces <interface>
 """
 
 # python
@@ -733,7 +735,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             p7 = re.compile(r'^\s*Encapsulation +(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
                              ' +VLAN +Id +(?P<first_dot1q>[0-9]+), +2nd +VLAN'
                              ' +Id +(?P<second_dot1q>[0-9]+),$')
-            m = p7.match(line)
+            m = p7.match(line) 
             if m:
                 encapsulation = str(m.groupdict()['encapsulation']).lower()
 
@@ -2336,3 +2338,718 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
                 continue
 
         return ret_dict
+
+
+class ShowInterfacesSchema(MetaParser):
+    """schema for show interfaces
+                  show interfaces <interface>"""
+
+    schema = {
+        Any(): {
+            'oper_status': str,
+            Optional('line_protocol'): str,
+            'enabled': bool,
+            Optional('interface_state'): int,
+            'type': str,
+            Optional('mac_address'): str,
+            Optional('phys_address'): str,
+            Optional('layer2'): bool,
+            Optional('description'): str,
+            'mtu': int,
+            'bandwidth': int,
+            Optional('bandwidth_max'): int,
+            Optional('port_speed'): str,
+            Optional('duplex_mode'): str,
+            Optional('link_type'): str,
+            Optional('media_type'): str,
+            Optional('reliability'): str,
+            Optional('txload'): str,
+            Optional('rxload'): str,
+            Optional('carrier_delay_up'): int,
+            Optional('carrier_delay_down'): int,
+            Optional('auto_negotiate'): bool,
+            Optional('arp_type'): str,
+            Optional('arp_timeout'): str,
+            Optional('loopback_status'): str,
+            Optional('last_link_flapped'): str,
+            Optional('last_input'): str,
+            Optional('last_output'): str,
+            Optional('ipv4'): {
+                Any(): {
+                    Optional('ip'): str,
+                    Optional('prefix_length'): str,
+                },
+            },
+            Optional('encapsulations'): {
+                Optional('encapsulation'): str,
+                Optional('first_dot1q'): str,
+                Optional('second_dot1q'): str,
+                Optional('outer_match'): str,
+                Optional('ethertype'): str,
+                Optional('mac_match'): str,
+                Optional('dest'): str,
+            },
+            Optional('flow_control'): {
+                Optional('receive'): bool,
+                Optional('send'): bool,
+            },
+            Optional('port_channel'): {
+                Optional('member_count'): int,
+                Optional('members'): {
+                    Any(): {
+                        Optional('interface'): str,
+                        Optional('duplex_mode'): str,
+                        Optional('speed'): str,
+                        Optional('state'): str,
+                    },
+                },
+            },
+            Optional('counters'): {
+                Optional('rate'): {
+                    Optional('load_interval'): int,
+                    Optional('in_rate'): int,
+                    Optional('in_rate_pkts'): int,
+                    Optional('out_rate'): int,
+                    Optional('out_rate_pkts'): int,
+                },
+                Optional('in_discards'): int,
+                Optional('in_unknown_protos'): int,
+                Optional('in_octets'): int,
+                Optional('in_pkts'): int,
+                Optional('in_multicast_pkts'): int,
+                Optional('in_broadcast_pkts'): int,
+                Optional('in_runts'): int,
+                Optional('in_giants'): int,
+                Optional('in_throttles'): int,
+                Optional('in_parity'): int,
+                Optional('in_frame_errors'): int,
+                Optional('in_crc_errors'): int,
+                Optional('in_frame'): int,
+                Optional('in_overrun'): int,
+                Optional('in_ignored'): int,
+                Optional('in_errors'): int,
+                Optional('in_abort'): int,
+                Optional('in_drops'): int,
+                Optional('in_queue_drops'): int,
+                Optional('out_pkts'): int,
+                Optional('out_octets'): int,
+                Optional('out_discards'): int,
+                Optional('out_broadcast_pkts'): int,
+                Optional('out_multicast_pkts'): int,
+                Optional('out_errors'): int,
+                Optional('out_underruns'): int,
+                Optional('out_applique'): int,
+                Optional('out_resets'): int,
+                Optional('out_buffer_failure'): int,
+                Optional('out_buffers_swapped'): int,
+                Optional('out_drops'): int,
+                Optional('out_queue_drops'): int,
+                Optional('last_clear'): str,
+                Optional('carrier_transitions'): int,
+            },
+        },
+    }
+
+
+class ShowInterfaces(ShowInterfacesSchema):
+    """parser for show interfaces
+                  show interfaces <interface>"""
+
+    cli_command = ['show interfaces','show interfaces {interface}']
+    exclude = []
+
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # GigabitEthernet1 is up, line protocol is up 
+        # TenGigE0/0/0/4 is administratively down, line protocol is administratively down
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+), '
+                         '+line +protocol +is +(?P<line_protocol>[\w\s]+)$')
+
+        # Interface state transitions: 9 
+        p2 = re.compile(r'^Interface +state +transitions: +(?P<interface_state>[\d]+)$')
+
+        # Hardware is Loopback
+        # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+        p3 = re.compile(r'^Hardware +is +(?P<type>[\w\-\/\s\+\(\)]+)'
+                         '(, *address +is +(?P<mac_address>[\w\.]+))?'
+                         '( *\(bia *(?P<phys_address>[\w\.]+)\))?$')
+
+        # Layer 2 Transport Mode
+        p4 = re.compile(r'^Layer +2 +Transport +Mode$')
+
+        # Description: to-ML26-BE1
+        p5 = re.compile(r'^Description: *(?P<description>.*)$')
+
+        # Internet address is 10.4.4.4/24
+        # Internet address is Unknown
+        p6 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[\d\.]+)'
+                         '\/(?P<prefix_length>[\d]+))?(?P<unknown>Unknown)?$')
+
+        # MTU 1500 bytes, BW 10000 Kbit
+        # MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+        p7 = re.compile(r'^MTU +(?P<mtu>[\d]+) +bytes, +BW +(?P<bandwidth>[\d]+) +Kbit'
+                         '(.*Max: +(?P<bandwidth_max>[\d]+).*)?$')
+
+        # reliability 255/255, txload 1/255, rxload 1/255
+        # reliability Unknown, txload Unknown, rxload Unknown
+        p8 = re.compile(r'^reliability +(?P<reliability>[\w\/]+), '
+                         '+txload +(?P<txload>[\w\/]+), +rxload '
+                         '+(?P<rxload>[\w\/]+)$')
+
+        # Encapsulation ARPA,
+        # Encapsulation 802.1Q Virtual LAN,
+        # Encapsulation ARPA,  loopback not set,
+        # Encapsulation 802.1Q Virtual LAN, VLAN Id 10,  loopback not set,
+        # Encapsulation 802.1Q Virtual LAN, VLAN Id 10, 2nd VLAN Id 10,
+        p9 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\.\s]+),'
+                         '( +VLAN +Id +(?P<first_dot1q>\d+),)?'
+                         '( +2nd +VLAN +Id +(?P<second_dot1q>\d+),)?'
+                         '( +loopback +(?P<loopback_status>[\w\s]+),)?$')
+
+        # Outer Match: Dot1Q VLAN 300
+        p10 = re.compile(r'^Outer +Match: +(?P<outer_match>[\w\s]+)$')
+
+        # Ethertype Any, MAC Match src any, dest any
+        p11 = re.compile(r'^Ethertype +(?P<ethertype>\w+), '
+                           '+MAC +Match +(?P<mac_match>[\w\s]+), '
+                           '+dest +(?P<dest>\w+)$')
+
+        # Full-duplex, 0Kb/s
+        # Full-duplex, 1000Mb/s, link type is force-up
+        # Full-duplex, Auto Speed, SR, link type is force-up
+        # Duplex unknown, 0Kb/s, THD, link type is autonegotiation
+        p12 = re.compile(r'^(?P<duplex_mode>[\w\s\-]+([d|D]uplex|unknown)), '
+                          '+(?P<port_speed>[\w\s\/]+)(, +(?P<media_type>\S+))?'
+                          '(, +link +type +is +(?P<link_type>\S+))?$')
+
+        # output flow control is off, input flow control is off
+        # output flow control is off, input flow control is unsupported
+        p13 = re.compile(r'^output +flow +control +is +(?P<send>\w+), +'
+                          'input +flow +control +is +(?P<receive>\w+)$')
+
+        # Carrier delay (up) is 10 msec
+        # Carrier delay (up) is 10 msec, Carrier delay (down) is 60 msec
+        p14 = re.compile(r'^Carrier +delay +\(up\) +is +(?P<carrier_delay_up>\d+) +msec'
+                '(, +Carrier +delay +\(down\) +is +(?P<carrier_delay_down>\d+) +msec)?$')
+
+        # loopback not set,
+        p15 = re.compile(r'^loopback +(?P<loopback_status>[\w\s]+),$')
+
+        # Last link flapped 5w6d
+        p16 = re.compile(r'^Last +link +flapped +(?P<last_link_flapped>\S+)$')
+
+        # ARP type ARPA, ARP timeout 04:00:00
+        p17 = re.compile(r'^ARP +type +(?P<arp_type>\w+), +'
+                          'ARP +timeout +(?P<arp_timeout>[\w\:\.]+)$')
+
+        # Last input never, output 00:01:05
+        p18 = re.compile(r'^Last +input +(?P<last_input>[\w\.\:]+), +'
+                          'output +(?P<last_output>[\w\.\:]+)$')
+
+        # No. of members in this bundle: 1
+        p19 = re.compile(r'^No\. +of +members +in +this +bundle: +(?P<member_count>\d+)$')
+
+        # TenGigE0/0/0/1               Full-duplex  10000Mb/s    Active
+        p20 = re.compile(r'^(?P<interface>[\w\/\.]+) '
+                          '+(?P<duplex_mode>[\w\-\s]+([d|D]uplex|unknown)) '
+                          '+(?P<speed>[\w\/\s]+?) +(?P<state>\w+)$')
+
+        # Last clearing of "show interface" counters 1d02h
+        p21 = re.compile(r'^Last +clearing +of +"show +interface" +counters +'
+                          '(?P<last_clear>[\w\:\.]+)$')
+
+        # Input/output data rate is disabled.
+        p22 = re.compile(r'^Input\/output +data +rate +is +disabled\.$')
+
+        # 5 minute input rate 0 bits/sec, 0 packets/sec
+        p23 = re.compile(r'^(?P<load_interval>[\d\#]+)'
+                          ' *(?P<unit>(minute|second|minutes|seconds)) +input +rate'
+                          ' +(?P<in_rate>[\d]+) +bits/sec,'
+                          ' +(?P<in_rate_pkts>[\d]+) +packets/sec$')
+
+        # 5 minute output rate 0 bits/sec, 0 packets/sec
+        p24 = re.compile(r'^(?P<load_interval>[\d\#]+)'
+                          ' *(minute|second|minutes|seconds) +output +rate'
+                          ' +(?P<out_rate>[\d]+) +bits/sec,'
+                          ' +(?P<out_rate_pkts>[\d]+) +packets/sec$')
+
+        # 0 packets input, 0 bytes
+        # 0 packets input, 0 bytes, 0 total input drops
+        p25 = re.compile(r'^(?P<in_pkts>[\d]+) +packets +input, +(?P<in_octets>[\d]+) +bytes'
+                          '(, +(?P<in_discards>[\d]+) +total +input +drops)?$')
+
+        # 1258859 drops for unrecognized upper-level protocol
+        p26 = re.compile(r'(?P<in_unknown_protos>[\d]+) +drops +for '
+                          '+unrecognized +upper-level +protocol$')
+
+        # 0 input drops, 0 queue drops, 0 input errors
+        p27 = re.compile(r'(?P<in_drops>[\d]+) +input +drops, '
+                          '+(?P<in_queue_drops>[\d]+) +queue +drops, '
+                          '+(?P<in_errors>[\d]+) +input +errors$')
+
+        # Received 0 broadcast packets, 0 multicast packets
+        p28 = re.compile(r'^Received +(?P<in_broadcast_pkts>\d+) +broadcast +packets, '
+                          '+(?P<in_multicast_pkts>\d+) +multicast +packets$')
+
+        # 0 runts, 0 giants, 0 throttles, 0 parity
+        p29 = re.compile(r'^(?P<in_runts>[\d]+) +runts, +(?P<in_giants>[\d]+) +giants, '
+                          '+(?P<in_throttles>[\d]+) +throttles, +(?P<in_parity>[\d]+) +parity$')
+
+        # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+        p30 = re.compile(r'^(?P<in_errors>[\d]+) +input +errors, +'
+                          '(?P<in_crc_errors>[\d]+) +CRC, +'
+                          '(?P<in_frame>[\d]+) +frame, +'
+                          '(?P<in_overrun>[\d]+) +overrun, +'
+                          '(?P<in_ignored>[\d]+) +ignored, +'
+                          '(?P<in_abort>[\d]+) +abort$')
+
+        # 0 packets output, 0 bytes
+        # 0 packets output, 0 bytes, 0 total output drops
+        p31 = re.compile(r'^(?P<out_pkts>[\d]+) +packets +output, +(?P<out_octets>[\d]+) +bytes'
+                          '(, +(?P<out_discards>[\d]+) +total +output +drops)?$')
+
+        # Output 0 broadcast packets, 178045 multicast packets
+        p32 = re.compile(r'^Output +(?P<out_broadcast_pkts>\d+) +broadcast +packets, '
+                          '+(?P<out_multicast_pkts>\d+) +multicast +packets$')
+        
+        # 0 output errors, 0 underruns, 0 applique, 0 resets
+        p33 = re.compile(r'^(?P<out_errors>[\d]+) +output +errors, '
+                          '+(?P<out_underruns>[\d]+) +underruns, '
+                          '+(?P<out_applique>[\d]+) +applique, '
+                          '+(?P<out_resets>[\d]+) +resets$')
+
+        # 0 output drops, 0 queue drops, 0 output errors
+        p34 = re.compile(r'(?P<out_drops>[\d]+) +output +drops, '
+                          '+(?P<out_queue_drops>[\d]+) +queue +drops, '
+                          '+(?P<out_errors>[\d]+) +output +errors$')
+
+        # 0 output buffer failures, 0 output buffers swapped out
+        p35 = re.compile(r'^(?P<out_buffer_failure>[\d]+) +output +buffer +failures, '
+                          '+(?P<out_buffers_swapped>[\d]+) +output +buffers +swapped +out$')
+
+        # 0 carrier transitions
+        p36 = re.compile(r'^(?P<carrier_transitions>[\d]+) +carrier +transitions$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # GigabitEthernet1 is up, line protocol is up
+            # TenGigE0/0/0/4 is administratively down, line protocol is administratively down
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                enabled = group['enabled']
+                line_protocol = group['line_protocol']
+
+                intf_dict = result_dict.setdefault(interface, {})
+                if 'administratively down' in enabled or 'delete' in enabled:
+                    intf_dict['enabled'] = False
+                else:
+                    intf_dict['enabled'] = True
+
+                if line_protocol:
+                    intf_dict['line_protocol'] = line_protocol
+                    intf_dict['oper_status'] = line_protocol
+                continue
+
+            # Interface state transitions: 9
+            m = p2.match(line)
+            if m:
+                interface_state = int(m.groupdict()['interface_state'])
+                intf_dict['interface_state'] = interface_state
+                continue
+
+            # Hardware is Loopback
+            # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
+            m = p3.match(line)
+            if m:
+                types = m.groupdict()['type']
+                mac_address = m.groupdict()['mac_address']
+                phys_address = m.groupdict()['phys_address']
+                intf_dict['type'] = types
+                if mac_address:
+                    intf_dict['mac_address'] = mac_address
+                if phys_address:
+                    intf_dict['phys_address'] = phys_address
+                continue
+
+            # Layer 2 Transport Mode
+            m = p4.match(line)
+            if m:
+                intf_dict['layer2'] = True
+                continue
+
+            # Description: desc
+            m = p5.match(line)
+            if m:
+                description = m.groupdict()['description']
+                intf_dict['description'] = description
+                continue
+
+            # Internet Address is 10.4.4.4/24
+            # Internet address is Unknown
+            m = p6.match(line)
+            if m:
+                ipv4 = m.groupdict()['ipv4']
+                ip = m.groupdict()['ip']
+                prefix_length = m.groupdict()['prefix_length']
+                unknown = m.groupdict()['unknown']
+
+                if ipv4 and not unknown:
+                    ipv4_dict = intf_dict.setdefault('ipv4', {}).setdefault(ipv4, {})
+                    ipv4_dict['ip'] = ip
+                    ipv4_dict['prefix_length'] = prefix_length
+                continue
+
+            # MTU 1500 bytes, BW 10000 Kbit
+            # MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+            m = p7.match(line)
+            if m:
+                mtu = m.groupdict()['mtu']
+                bandwidth = m.groupdict()['bandwidth']
+                bandwidth_max = m.groupdict()['bandwidth_max']
+
+                intf_dict['mtu'] = int(mtu)
+                intf_dict['bandwidth'] = int(bandwidth)
+                if bandwidth_max:
+                    intf_dict['bandwidth_max'] = int(bandwidth_max)
+                continue
+
+            # reliability 255/255, txload 1/255, rxload 1/255
+            m = p8.match(line)
+            if m:
+                reliability = m.groupdict()['reliability']
+                txload = m.groupdict()['txload']
+                rxload = m.groupdict()['rxload']
+
+                intf_dict['reliability'] = reliability
+                intf_dict['txload'] = txload
+                intf_dict['rxload'] = rxload
+                continue
+
+            # Encapsulation ARPA,
+            # Encapsulation 802.1Q Virtual LAN, Vlan ID 1, loopback not set
+            # Encapsulation 802.1Q Virtual LAN, VLAN Id 10, 2nd VLAN Id 10,
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                encapsulation = group['encapsulation'].lower()
+                encapsulation = encapsulation.replace("802.1q virtual lan","dot1q")
+                first_dot1q = group['first_dot1q']
+                second_dot1q = group['second_dot1q']
+                loopback_status = group['loopback_status']
+
+                encap_dict = intf_dict.setdefault('encapsulations', {})
+                encap_dict['encapsulation'] = encapsulation
+
+                if first_dot1q:
+                    encap_dict['first_dot1q'] = first_dot1q
+                
+                if second_dot1q:
+                    encap_dict['second_dot1q'] = second_dot1q
+                   
+                if loopback_status:
+                    intf_dict['loopback_status'] = loopback_status
+                continue
+
+            # Outer Match: Dot1Q VLAN 300
+            m = p10.match(line)
+            if m:
+                outer_match = m.groupdict()['outer_match']
+                encap_dict['outer_match'] = outer_match
+                continue
+
+            # Ethertype Any, MAC Match src any, dest any
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ethertype = group['ethertype']
+                mac_match = group['mac_match']
+                dest = group['dest']
+
+                encap_dict['ethertype'] = ethertype
+                encap_dict['mac_match'] = mac_match
+                encap_dict['dest'] = dest
+                continue
+
+            # Full-duplex, 0Kb/s
+            # Full-duplex, 1000Mb/s, link type is force-up
+            # Full-duplex, Auto Speed, SR, link type is force-up
+            # Duplex unknown, 0Kb/s, THD, link type is autonegotiation
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                duplex_mode = group['duplex_mode'].lower()
+                duplex_mode = duplex_mode.replace("duplex", "").replace("-","")
+                port_speed = group['port_speed']
+                link_type = group['link_type']
+                media_type = group['media_type']
+
+                intf_dict['duplex_mode'] = duplex_mode.strip()
+                intf_dict['port_speed'] = port_speed
+                if link_type:
+                    intf_dict['link_type'] = link_type
+                    if 'auto' in link_type:
+                        intf_dict['auto_negotiate'] = True
+                    else:
+                        intf_dict['auto_negotiate'] = False
+                if media_type:
+                    intf_dict['media_type'] = media_type
+                continue
+
+            # output flow control is off, input flow control is off
+            m = p13.match(line)
+            if m:
+                receive = m.groupdict()['receive'].lower()
+                send = m.groupdict()['send'].lower()
+                flow_dict = intf_dict.setdefault('flow_control', {})
+
+                if 'on' in receive:
+                    flow_dict['receive'] = True
+                elif 'off' in receive or 'unsupported' in receive:
+                    flow_dict['receive'] = False
+
+                if 'on' in send:
+                    flow_dict['send'] = True
+                elif 'off' in send or 'unsupported' in send:
+                    flow_dict['send'] = False
+                continue
+
+            # Carrier delay (up) is 10 msec
+            # Carrier delay (up) is 10 msec, Carrier delay (down) is 60 msec
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                carrier_delay_up = group['carrier_delay_up']
+                carrier_delay_down = group['carrier_delay_down']
+
+                if carrier_delay_up:
+                    intf_dict['carrier_delay_up'] = int(carrier_delay_up)
+                if carrier_delay_down:
+                    intf_dict['carrier_delay_down'] = int(carrier_delay_down)
+                continue
+
+            # loopback not set,
+            m = p15.match(line)
+            if m:
+                loopback_status = m.groupdict()['loopback_status']
+                intf_dict['loopback_status'] = loopback_status
+                continue
+
+            # Last link flapped 5w6d
+            m = p16.match(line)
+            if m:
+                last_link_flapped = m.groupdict()['last_link_flapped']
+                intf_dict['last_link_flapped'] = last_link_flapped
+                continue
+
+
+            # ARP type ARPA, ARP timeout 04:00:00
+            m = p17.match(line)
+            if m:
+                arp_type = m.groupdict()['arp_type'].lower()
+                arp_timeout = m.groupdict()['arp_timeout']
+                intf_dict['arp_type'] = arp_type
+                intf_dict['arp_timeout'] = arp_timeout
+                continue
+
+            # Last input never, output 00:01:05
+            m = p18.match(line)
+            if m:
+                last_input = m.groupdict()['last_input']
+                last_output = m.groupdict()['last_output']
+                intf_dict['last_input'] = last_input
+                intf_dict['last_output'] = last_output
+                continue
+
+            # No. of members in this bundle: 1
+            m = p19.match(line)
+            if m:
+                port_dict = intf_dict.setdefault('port_channel', {})
+                port_dict['member_count'] = int(m.groupdict()['member_count'])
+                continue
+
+            # TenGigE0/0/0/1               Full-duplex  10000Mb/s    Active
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                duplex_mode = group['duplex_mode']
+                speed = group['speed']
+                state = group['state']
+
+                members_intf_dict = port_dict.setdefault('members', {}).setdefault(interface, {})
+                members_intf_dict['interface'] = interface
+                members_intf_dict['duplex_mode'] = duplex_mode
+                members_intf_dict['speed'] = speed
+                members_intf_dict['state'] = state
+                continue
+
+            # Last clearing of "show interface" counters 1d02h
+            m = p21.match(line)
+            if m:
+                last_clear = m.groupdict()['last_clear']
+                counter_dict = intf_dict.setdefault('counters', {})
+                counter_dict['last_clear'] = last_clear
+                continue
+
+            # 5 minute input rate 0 bits/sec, 0 packets/sec
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                load_interval = int(group['load_interval'])
+                in_rate = int(group['in_rate'])
+                in_rate_pkts = int(group['in_rate_pkts'])
+                unit = group['unit']
+
+                rate_dict = intf_dict.setdefault('counters', {}).setdefault('rate', {})
+                # covert minutes to seconds
+                if 'minute' in unit:
+                    load_interval = load_interval * 60
+                
+                rate_dict['load_interval'] = load_interval
+                rate_dict['in_rate'] = in_rate
+                rate_dict['in_rate_pkts'] = in_rate_pkts                    
+                continue
+
+            # 5 minute output rate 0 bits/sec, 0 packets/sec
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                out_rate = int(group['out_rate'])
+                out_rate_pkts = int(group['out_rate_pkts'])
+
+                rate_dict = intf_dict.setdefault('counters', {}).setdefault('rate', {})
+                rate_dict['out_rate'] = out_rate
+                rate_dict['out_rate_pkts'] = out_rate_pkts
+                continue
+
+            # 0 packets input, 0 bytes
+            # 0 packets input, 0 bytes, 0 total input drops
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                in_discards = group['in_discards']
+                counter_dict = intf_dict.setdefault('counters', {})
+
+                counter_dict['in_pkts'] = int(group['in_pkts'])
+                counter_dict['in_octets'] = int(group['in_octets'])
+                if in_discards:
+                    counter_dict['in_discards'] = int(in_discards)
+                continue
+
+            # 1258859 drops for unrecognized upper-level protocol
+            m = p26.match(line)
+            if m:
+                counter_dict['in_unknown_protos'] = int(m.groupdict()['in_unknown_protos'])
+                continue
+
+            # 0 input drops, 0 queue drops, 0 input errors
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['in_drops'] = int(group['in_drops'])
+                counter_dict['in_queue_drops'] = int(group['in_queue_drops'])
+                counter_dict['in_errors'] = int(group['in_errors'])
+                continue
+
+            # Received 0 broadcast packets, 0 multicast packets
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['in_broadcast_pkts'] = int(group['in_broadcast_pkts'])
+                counter_dict['in_multicast_pkts'] = int(group['in_multicast_pkts'])
+                continue
+
+            # 0 runts, 0 giants, 0 throttles, 0 parity
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['in_runts'] = int(group['in_runts'])
+                counter_dict['in_giants'] = int(group['in_giants'])
+                counter_dict['in_throttles'] = int(group['in_throttles'])
+                counter_dict['in_parity'] = int(group['in_parity'])
+                continue
+
+            # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['in_errors'] = int(group['in_errors'])
+                counter_dict['in_crc_errors'] = int(group['in_crc_errors'])
+                counter_dict['in_frame'] = int(group['in_frame'])
+                counter_dict['in_overrun'] = int(group['in_overrun'])
+                counter_dict['in_ignored'] = int(group['in_ignored'])
+                counter_dict['in_abort'] = int(group['in_abort'])
+                continue
+
+            # 0 packets output, 0 bytes
+            # 0 packets output, 0 bytes, 0 total output drops
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                out_discards = group['out_discards']
+
+                counter_dict['out_pkts'] = int(group['out_pkts'])
+                counter_dict['out_octets'] = int(group['out_octets'])
+
+                if out_discards:
+                    counter_dict['out_discards'] = int(out_discards)
+                continue
+
+            # Output 0 broadcast packets, 178045 multicast packets
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['out_broadcast_pkts'] = int(group['out_broadcast_pkts'])
+                counter_dict['out_multicast_pkts'] = int(group['out_multicast_pkts'])
+                continue
+
+
+            # 0 output errors, 0 underruns, 0 applique, 0 resets
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['out_errors'] = int(group['out_errors'])
+                counter_dict['out_underruns'] = int(group['out_underruns'])
+                counter_dict['out_applique'] = int(group['out_applique'])
+                counter_dict['out_resets'] = int(group['out_resets'])
+                continue
+
+            # 0 output drops, 0 queue drops, 0 output errors
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['out_drops'] = int(group['out_drops'])
+                counter_dict['out_queue_drops'] = int(group['out_queue_drops'])
+                counter_dict['out_errors'] = int(group['out_errors'])
+                continue
+
+            # 0 output buffer failures, 0 output buffers swapped out
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['out_buffer_failure'] = int(group['out_buffer_failure'])
+                counter_dict['out_buffers_swapped'] = int(group['out_buffers_swapped'])
+                continue
+
+            # 0 carrier transitions
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                counter_dict['carrier_transitions'] = int(group['carrier_transitions'])
+                continue
+
+        return result_dict

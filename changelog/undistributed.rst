@@ -11,3 +11,11 @@
 * IOSXE
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowInterfaces for:
+        'show interfaces'
+        'show interfaces {interface}'
