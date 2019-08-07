@@ -37,7 +37,7 @@ class ShowVersionSchema(MetaParser):
                    'hardware':
                       {Optional('bootflash'): str,
                        Optional('slot0'): str,
-                       Optional('chassis'): str,
+                       Optional('rp'): str,
                        Optional('cpu'): Or(str, None),
                        Optional('device_name'): str,
                        Optional('memory'): str,
@@ -228,13 +228,13 @@ class ShowVersion(ShowVersionSchema):
 
             # cisco NX-OSv chassis
             # cisco Nexus7000 C7009 (9 Slot) Chassis ("Supervisor Module-2")
-            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<chassis>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
+            p15 = re.compile(r'^\s*cisco +(?P<model>[a-zA-Z0-9\-\s]+)( +\((?P<slot>[0-9]+) Slot\))? +[C|c]hassis( +\(\"(?P<rp>[a-zA-Z0-9\s\-]+)\"\))?(\s)?$')
             m = p15.match(line)
             if m:
 
                 model = str(m.groupdict()['model'])
                 slot = str(m.groupdict()['slot'])
-                chassis = str(m.groupdict()['chassis'])
+                rp = str(m.groupdict()['rp'])
 
                 if 'model' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['model'] = model
@@ -243,18 +243,18 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['platform']['hardware']['slots'] = slot
 
                 if 'chassis' not in version_dict['platform']['hardware']:
-                    version_dict['platform']['hardware']['chassis'] = chassis
+                    version_dict['platform']['hardware']['rp'] = rp
 
                 continue
 
             # Intel(R) Xeon(R) CPU         with 32938744 kB of memory.
             # Intel(R) Core(TM) i3- CPU @ 2.50GHz with 12345678 kB of memory.
             # Intel(R) Celeron(R) M CPU with 2073416 kB of memory.
-            p16 = re.compile(r'^\s*Intel(\S+)?( +[\S\s]+)? +CPU +(?P<cpu>[a-zA-Z0-9\s\@\.\-]+) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
+            p16 = re.compile(r'^(?P<cpu>[\S\s]+) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
             m = p16.match(line)
             if m:
 
-                cpu = str(m.groupdict()['cpu'])
+                cpu = str(m.groupdict()['cpu']).strip()
                 memory = str(m.groupdict()['memory'])
 
                 if cpu == ' ':

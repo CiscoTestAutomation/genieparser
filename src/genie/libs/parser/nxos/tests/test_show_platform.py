@@ -34,8 +34,8 @@ class test_show_version(unittest.TestCase):
                                'os': 'NX-OS',
                                'hardware':
                                 {'bootflash': '2007040 kB',
-                                 'cpu': None,
-                                 'chassis': 'Supervisor Module-2',
+                                 'cpu': 'Intel(R) Xeon(R) CPU',
+                                 'rp': 'Supervisor Module-2',
                                  'device_name': 'PE1',
                                  'memory': '32938744 kB',
                                  'model': 'Nexus7000 C7009',
@@ -65,9 +65,9 @@ class test_show_version(unittest.TestCase):
                                'name': 'Nexus',
                                'hardware':
                                 {'bootflash': '3509454 kB',
-                                 'chassis': 'None',
+                                 'rp': 'None',
                                  'slots': 'None',
-                                 'cpu': 'E5-2699 v3 @ 2.30GHz',
+                                 'cpu': 'Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz',
                                  'device_name': 'N95_2',
                                  'memory': '10214428 kB',
                                  'model': 'NX-OSv',
