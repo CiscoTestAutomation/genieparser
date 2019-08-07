@@ -250,7 +250,7 @@ class ShowVersion(ShowVersionSchema):
             # Intel(R) Xeon(R) CPU         with 32938744 kB of memory.
             # Intel(R) Core(TM) i3- CPU @ 2.50GHz with 12345678 kB of memory.
             # Intel(R) Celeron(R) M CPU with 2073416 kB of memory.
-            p16 = re.compile(r'^(?P<cpu>[\S\s]+) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
+            p16 = re.compile(r'^(?P<cpu>.*) +with +(?P<memory>[0-9a-zA-Z\s]+) +of +memory\.$')
             m = p16.match(line)
             if m:
 
