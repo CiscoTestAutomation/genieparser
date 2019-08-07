@@ -18,3 +18,10 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
+--------------------------------------------------------------------------------
+                                Bgp
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpBgpTemplatePeerSession, ShowIpBgpTemplatePeerPolicy
+        added a key to cli command for Ops
