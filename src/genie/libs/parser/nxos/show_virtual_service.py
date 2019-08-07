@@ -679,7 +679,7 @@ class ShowVirtualServiceUtilization(ShowVirtualServiceUtilizationSchema):
 
     cli_command = "show virtual-service utilization name {name}"
 
-    def cli(self, name="", output=None):
+    def cli(self, name, output=None):
         if output is None:
             cmd = self.cli_command.format(name=name)
             output = self.device.execute(cmd)

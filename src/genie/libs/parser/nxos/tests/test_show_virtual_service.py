@@ -193,9 +193,9 @@ class test_show_virtual_service_core(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-        obj = ShowVirtualServiceCore(device=self.device, name='guestshell+')
+        obj = ShowVirtualServiceCore(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(name="guestshell+")
 
     def test_show_virtual_service_core(self):
         self.maxDiff = None
@@ -204,8 +204,8 @@ class test_show_virtual_service_core(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-        obj = ShowVirtualServiceCore(device=self.device, name='guestshell+')
-        parsed_output = obj.parse()
+        obj = ShowVirtualServiceCore(device=self.device)
+        parsed_output = obj.parse(name="guestshell+")
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
@@ -655,15 +655,15 @@ class test_show_virtual_service_utilization(unittest.TestCase):
     def test_show_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
-        obj = ShowVirtualServiceUtilization(device=self.device, name="guestshell+")
+        obj = ShowVirtualServiceUtilization(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(name="guestshell+")
 
     def test_show_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowVirtualServiceUtilization(device=self.device, name="guestshell+")
-        parsed_output = obj.parse()
+        obj = ShowVirtualServiceUtilization(device=self.device)
+        parsed_output = obj.parse(name="guestshell+")
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
