@@ -18,3 +18,10 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
+-----------------------------------------------------------------------------
+                                Cdp
+-----------------------------------------------------------------------------
+* NXOS
+    * Updated ShowCdpNeighborsDetail
+        * Fixed regEx to avoid omitting after '/' in the 'port_id'
