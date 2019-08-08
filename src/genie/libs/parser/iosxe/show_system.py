@@ -40,7 +40,9 @@ class ShowClock(ShowClockSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<time>[\d\:\.]+) +(?P<timezone>\w+)'
+        # 05:26:38.035 EST Wed JAN 4 2019
+        # *05:26:38.035 EST Wed JAN 4 2019
+        p1 = re.compile(r'^\*?(?P<time>[\d\:\.]+) +(?P<timezone>\w+)'
                          ' +(?P<day_of_week>\w+) +(?P<month>\w+) +'
                          '(?P<day>\d+) +(?P<year>\d+)$')
 

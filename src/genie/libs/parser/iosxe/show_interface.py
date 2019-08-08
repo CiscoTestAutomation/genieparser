@@ -102,6 +102,8 @@ class ShowInterfacesSchema(MetaParser):
                     {Optional('port_channel_member'): bool,
                     Optional('port_channel_int'): str,
                     Optional('port_channel_member_intfs'): list,
+                    Optional('active_members'): int,
+                    Optional('num_of_pf_jumbo_supported_members'): int,
                 },
                 'bandwidth': int,
                 Optional('counters'):
@@ -545,6 +547,46 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[intf]['port_channel']['port_channel_int'] = interface
                 continue
 
+            # No. of active members in this channel: 12 
+            p15_1 = re.compile(r'^No\. +of +active +members +in +this +'
+                'channel: +(?P<active_members>\d+)$')
+            m = p15_1.match(line)
+            if m:
+                group = m.groupdict()
+                active_members = int(group['active_members'])
+                interface_dict[interface]['port_channel']\
+                    ['port_channel_member'] = True
+                interface_dict[interface]['port_channel']\
+                    ['active_members'] = active_members
+                continue
+
+            # Member 2 : GigabitEthernet0/0/10 , Full-duplex, 900Mb/s
+            p15_2 = re.compile(r'^Member +\d+ +: +(?P<interface>\S+) +,'
+                ' +\S+, +\S+$')
+            m = p15_2.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group['interface']
+                if 'port_channel_member_intfs' not in interface_dict[interface]['port_channel']:
+                    interface_dict[interface]['port_channel']\
+                            ['port_channel_member_intfs'] = []
+
+                interface_dict[interface]['port_channel']\
+                    ['port_channel_member_intfs'].append(intf)
+                    
+                continue
+
+            # No. of PF_JUMBO supported members in this channel : 0
+            p15_3 = re.compile(r'^No\. +of +PF_JUMBO +supported +members +'
+                'in +this +channel +: +(?P<number>\d+)$')
+            m = p15_3.match(line)
+            if m:
+                group = m.groupdict()
+                number = int(group['number'])
+                interface_dict[interface]['port_channel']\
+                    ['num_of_pf_jumbo_supported_members'] = number
+                continue
+
             # Last clearing of "show interface" counters 1d02h
             p16 = re.compile(r'^Last +clearing +of +\"show +interface\" +counters +'
                               '(?P<last_clear>[\w\:\.]+)$')
@@ -965,32 +1007,11 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         typically contains 3 steps: executing, transforming, returning
         """
         pass
-    def _merge_dict(a, b, path=None):
-        '''merges b into a for as many level as there is'''
-        # Dict to use to return
-        ret = a
-        if path is None:
-            path = []
-        for key in b:
-            if key in ret:
-                if isinstance(ret[key], dict) and isinstance(b[key], dict):
-                    ShowIpInterfaceBrief._merge_dict(ret[key], b[key], path + [str(key)])
-                elif ret[key] == b[key]:
-                    # same leaf value so do nothing
-                    pass
-                else:
-                    # Any other case
-                    raise Exception('{key} cannot be merged as it already '
-                                    'exists with type '
-                                    '{ty}.'.format(key=key, ty=type(ret[key])))
-            else:
-                ret[key] = b[key]
-        return ret
 
     def yang_cli(self):
         cli_output = self.cli()
         yang_output = self.yang()
-        merged_output = ShowIpInterfaceBrief._merge_dict(yang_output,cli_output)
+        merged_output = merge_dict(yang_output,cli_output)
         return merged_output
 
 class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):

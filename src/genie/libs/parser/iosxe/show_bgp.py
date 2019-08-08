@@ -244,8 +244,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # *>                    0.0.0.0                 0         32768 ?
         # * i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
-                          '(?P<path_type>(i|e|c|l|a|r|I))?'
-                          ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
+                          '(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
+                          '(?P<next_hop>[a-zA-Z0-9\.\:]+)'
                           ' +(?P<metric>[0-9]+)?'
                             '(?P<space>\s{1,4})'
                           ' +(?P<local_prf>[0-9]+)?'
@@ -847,7 +847,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         refresh_epoch_flag = False
         route_info = ''
         refresh_epoch = None
-
+        cmd_vrf = vrf if vrf else None
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^\s*For +address +family:'
@@ -859,7 +859,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Paths: (1 available, best #1, table default, RIB-failure(17))
         p2 = re.compile(r'^\s*Paths: +\((?P<paths>(?P<available_path>[0-9]+) +available\, '
                         r'+(no +best +path|best +\#(?P<best_path>[0-9]+))\,?(?: +(table +('
-                        r'?P<vrf_id>\S+?)|no +table)),?(?: +(.*))?)\)')
+                        r'?P<vrf_id>\S+?)|no +table))?,?(?: +(.*))?)\)')
 
         # Route Distinguisher: 100:100 (default for vrf VRF1)
         # Route Distinguisher: 65535:1 (default for vrf evpn1)
@@ -1037,6 +1037,8 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                     best_path = ''
                 if m.groupdict()['vrf_id']:
                     vrf = m.groupdict()['vrf_id']
+                elif cmd_vrf:
+                    vrf = cmd_vrf
                 else:
                     vrf = 'default'
                 if vrf not in ret_dict['instance']['default']['vrf']:
@@ -1169,7 +1171,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 prefixes = prefixes.replace('[', '')
                 prefixes = prefixes.replace(']', '')
                 prefix_table_version = m.groupdict()['version']
-
+                continue
             # 10.1.1.2 from 10.1.1.2 (10.1.1.2)
             # 10.16.2.2 (metric 11) (via default) from 10.16.2.2 (10.16.2.2)
             # :: (via vrf VRF1) from 0.0.0.0 (10.1.1.1)
@@ -1525,7 +1527,7 @@ class ShowIpBgpAllDetail(ShowBgpDetailSuperParser):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family)
+        return super().cli(output=show_output, address_family=address_family, vrf=vrf)
 
 # ================================================
 # Parser for:
@@ -4444,9 +4446,6 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                 m = p3_2.match(line.strip())
 
                 if m:
-                    # New prefix, reset index count
-                    index = 1
-
                     # Get keys
                     if m.groupdict()['status_codes']:
                         status_codes = str(m.groupdict()['status_codes'].rstrip())
@@ -4464,6 +4463,12 @@ class ShowBgpNeighborsAdvertisedRoutesSuperParser(ShowBgpNeighborsAdvertisedRout
                         af_dict['advertised'] = {}
                     if prefix not in af_dict['advertised']:
                         af_dict['advertised'][prefix] = {}
+                        # New prefix, reset index count
+                        index = 1
+                    else:
+                        # get last index for prefix to prevent overwriting
+                        index = list(af_dict['advertised'][prefix]['index'].keys())[-1]
+                        index += 1
                     if 'index' not in af_dict['advertised'][prefix]:
                         af_dict['advertised'][prefix]['index'] = {}
                     if index not in af_dict['advertised'][prefix]['index']:
@@ -5542,7 +5547,7 @@ class ShowBgpAllNeighborsRoutesSuperParser(ShowBgpAllNeighborsRoutesSchema):
         # *>iaaaa:1::/113       ::ffff:10.106.101.1
         # *>i  20::/64          ::FFFF:192.168.51.1
         # r>i  2001:2:2:2::2/128
-        p3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
+        p3 = re.compile(r'^\s*(?P<status_codes>(b|s|x|S|d|h|r|\*|\>|\s)+)?'
                          '(?P<path_type>(i|e|c|l|a|r|I))? *'
                          '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
                          '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')

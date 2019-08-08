@@ -69,6 +69,14 @@ help:
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
 
+compile:
+	@echo ""
+	@echo "Compiling to C code"
+	@echo --------------------------
+	python compile.py 
+	@echo "Done Compiling"
+	@echo ""
+
 devnet: package
 	@echo "Completed building DevNet packages"
 	@echo ""
@@ -83,16 +91,10 @@ package_compile:
 	@echo ""
 
 install_build_deps:
-	@echo "--------------------------------------------------------------------"
-	@echo "Installing cisco-distutils"
-	@pip install --index-url=http://pyats-pypi.cisco.com/simple \
-	             --trusted-host=pyats-pypi.cisco.com \
-	             cisco-distutils
+	@echo "Nothing to do"
 
 uninstall_build_deps:
-	@echo "--------------------------------------------------------------------"
-	@echo "Uninstalling pyats-distutils"
-	@pip uninstall cisco-distutils
+	@echo "Nothing to do"
 
 docs:
 	@echo ""

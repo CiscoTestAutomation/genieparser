@@ -62,22 +62,37 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+)'
                         '(?: +(?P<platform>[\w\-]+) )? +'
-                        '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W- WGi 0
+        # switchB                Ethernet2/3     177     R S I    WS-C2960-24TC Ethernet1/4
+        # Switch mgmt0 163 S I WS-C2960-24TC Fas0/21
+        # swordfish-6k-2 Eth3/2 149 R S I WS-C6506-E Gig1/38
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<platform>[\S\s]+) '
+                        '+(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p4: If Device Id is not on same line as everything else
         # vsm-p(2094532764140613037)
-        #   mgmt0 141 R B T S Nexus1000V control0
+        # Ten-GigabitEthernet2/0/20
         p3 = re.compile(r'^(?P<device_id>\S+)$')
 
+        #   mgmt0 141 R B T S Nexus1000V control0
         p4 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        '(?P<platform>[\S\s]+) +'
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
+
+        # p3 and p5: If Port Id is not on same line
+        # 1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48
+        # Eth1/5         120    S         VMware ESX    vmnic1
+        # Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
+        p5 = re.compile(r'^(?P<device_id>\S+) +'
+                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        '(?P<platform>[\S\s]+)$')        
 
         device_id_index = 0
 
@@ -87,7 +102,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             line = line.strip()
 
             result = p1.match(line)
-
             if not result:
                 result = p2.match(line)
     
@@ -117,16 +131,18 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
             result = p3.match(line)
             if result:
-                device_id_index += 1
-
-                device_dict = parsed_dict.setdefault('cdp', {})\
-                    .setdefault('index', {}).setdefault(device_id_index, {})
-
                 group = result.groupdict()
-
-                device_dict['device_id'] = group['device_id'].strip()
+                if 'Eth' not in group['device_id']:
+                    device_id_index += 1
+                    device_dict = parsed_dict.setdefault('cdp', {})\
+                        .setdefault('index', {}).setdefault(device_id_index, {})
+                    device_dict['device_id'] = group['device_id'].strip()
+                else:
+                    device_dict['port_id'] = Common\
+                    .convert_intf_name(intf=group['device_id'].strip())
 
                 continue
+
             result = p4.match(line)
             if result:
                 
@@ -143,6 +159,27 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 device_dict['port_id'] = Common\
                     .convert_intf_name(intf=group['port_id'].strip())
                 continue
+
+            result = p5.match(line)
+            if result:
+                device_id_index += 1
+
+                device_dict = parsed_dict.setdefault('cdp', {})\
+                    .setdefault('index', {}).setdefault(device_id_index, {})
+
+                group = result.groupdict()
+
+                device_dict['device_id'] = group['device_id'].strip()
+                device_dict['local_interface'] = Common\
+                    .convert_intf_name(intf=group['local_interface'].strip())
+                device_dict['hold_time'] = int(group['hold_time'])
+                device_dict['capability'] = group['capability'].strip()
+                if group['platform']:
+                    device_dict['platform'] = group['platform'].strip()
+                elif not group['platform']:
+                    device_dict['platform'] = ''
+                continue
+
         # import pdb; pdb.set_trace()
         return parsed_dict
 
@@ -205,10 +242,11 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                                 '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        # Interface: Ethernet1/1, Port ID (outgoing port): Ethernet1/2
         interface_port_re = re.compile(r'Interface:\s*'
                                         '(?P<interface>[\w\s\-\/\/]+)\s*\,'
                                         '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                        '(?P<port_id>\w+)')
+                                        '(?P<port_id>\S+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
