@@ -2645,7 +2645,7 @@ Switch#   Role        Priority      State
                     },
                 },
             'F0': {
-                'lc': {
+                'other': {
                     'ISR4331/K9': {
                         'insert_time': '3w5d',
                         'slot': 'F0',
@@ -2715,7 +2715,7 @@ Switch#   Role        Priority      State
                     },
                 },
             'R0': {
-                'lc': {
+                'rp': {
                     'ISR4331/K9': {
                         'insert_time': '3w5d',
                         'slot': 'R0',
@@ -2860,7 +2860,7 @@ Switch#   Role        Priority      State
     golden_parsed_output_3 = {
         'slot': {
             '0': {
-                'other': {
+                'lc': {
                     'ASR1002-X': {
                         'cpld_ver': '11112222',
                         'fw_ver': '16.7(2r)',
@@ -2914,7 +2914,7 @@ Switch#   Role        Priority      State
                 }
             },
             'R0': {
-                'other': {
+                'rp': {
                     'ASR1002-X': {
                         'cpld_ver': '11112222',
                         'fw_ver': '16.7(2r)',
@@ -2925,7 +2925,7 @@ Switch#   Role        Priority      State
                     }
                 }
             }
-        }
+        }        
     }
 
     golden_output_3 = {'execute.return_value': '''\
