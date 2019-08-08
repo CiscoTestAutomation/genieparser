@@ -20,8 +20,22 @@
         to support 'show bundle {interface}'
 
 --------------------------------------------------------------------------------
+                                traceroute
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update TraceRoute
+        schema changed for multi paths support
+
+--------------------------------------------------------------------------------
+                                Cdp
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowCdpNeighborsDetail
+        * Fixed regEx to avoid omitting after '/' in the 'port_id'
+
+--------------------------------------------------------------------------------
                                 Platform
 --------------------------------------------------------------------------------
 * NXOS
     * Fix ShowVersion
-        updated regEx to support more outputs
+        updated schema and regEx to support more outputs
