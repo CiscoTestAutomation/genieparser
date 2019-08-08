@@ -18,7 +18,6 @@
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
-
 --------------------------------------------------------------------------------
                                 traceroute
 --------------------------------------------------------------------------------
@@ -39,3 +38,6 @@
 * NXOS
     * Fix ShowVersion
         updated schema and regEx to support more outputs
+* IOSXE
+    * Update ShowPlatform
+        to parse 'lc_type' more clearly and flexibly based on updated schema
