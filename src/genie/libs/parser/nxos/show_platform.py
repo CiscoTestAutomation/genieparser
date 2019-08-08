@@ -233,19 +233,19 @@ class ShowVersion(ShowVersionSchema):
             m = p15.match(line)
             if m:
 
-                model = str(m.groupdict()['model'])
+                model = chassis = str(m.groupdict()['model'])
                 slot = str(m.groupdict()['slot'])
-                rp = chassis = str(m.groupdict()['rp'])
+                rp = str(m.groupdict()['rp'])
 
                 if 'model' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['model'] = model
+                    version_dict['platform']['hardware']['chassis'] = chassis
 
                 if 'slots' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['slots'] = slot
 
-                if 'chassis' not in version_dict['platform']['hardware']:
+                if 'rp' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['rp'] = rp
-                    version_dict['platform']['hardware']['chassis'] = chassis
 
                 continue
 
