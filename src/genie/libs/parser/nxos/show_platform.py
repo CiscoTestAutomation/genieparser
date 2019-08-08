@@ -37,6 +37,7 @@ class ShowVersionSchema(MetaParser):
                    'hardware':
                       {Optional('bootflash'): str,
                        Optional('slot0'): str,
+                       Optional('chassis'): str,
                        Optional('rp'): str,
                        Optional('cpu'): Or(str, None),
                        Optional('device_name'): str,
@@ -234,7 +235,7 @@ class ShowVersion(ShowVersionSchema):
 
                 model = str(m.groupdict()['model'])
                 slot = str(m.groupdict()['slot'])
-                rp = str(m.groupdict()['rp'])
+                rp = chassis = str(m.groupdict()['rp'])
 
                 if 'model' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['model'] = model
@@ -244,6 +245,7 @@ class ShowVersion(ShowVersionSchema):
 
                 if 'chassis' not in version_dict['platform']['hardware']:
                     version_dict['platform']['hardware']['rp'] = rp
+                    version_dict['platform']['hardware']['chassis'] = chassis
 
                 continue
 

@@ -35,6 +35,7 @@ class test_show_version(unittest.TestCase):
                                'hardware':
                                 {'bootflash': '2007040 kB',
                                  'cpu': 'Intel(R) Xeon(R) CPU',
+                                 'chassis': 'Supervisor Module-2',
                                  'rp': 'Supervisor Module-2',
                                  'device_name': 'PE1',
                                  'memory': '32938744 kB',
@@ -65,6 +66,7 @@ class test_show_version(unittest.TestCase):
                                'name': 'Nexus',
                                'hardware':
                                 {'bootflash': '3509454 kB',
+                                 'chassis': 'None',
                                  'rp': 'None',
                                  'slots': 'None',
                                  'cpu': 'Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz',
