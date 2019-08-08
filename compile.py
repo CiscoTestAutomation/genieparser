@@ -12,7 +12,6 @@ from Cython.Build import cythonize
 def generate_cython_modules(src_path, ignore_patterns = []):
     modules = []
     src = os.getcwd().split('/')[-1]
-    # import pdb;pdb.set_trace()
 
     for root, dirnames, filenames in os.walk(src_path):
         for filename in fnmatch.filter(filenames, '*.py'):
@@ -36,7 +35,8 @@ def generate_cython_modules(src_path, ignore_patterns = []):
                     # pattern match!
                     break
             else:
-                module_name = module_file.split('.')[0].split('/')
+                module_temp = module_file.split('/')
+                module_name = module_temp[:-1] + module_temp[-1].split('.')
 
                 if 'ats' in module_name:
                     index = module_name.index('ats')
