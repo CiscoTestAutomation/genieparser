@@ -1,7 +1,8 @@
 ''' show_controllers.py
-
-show controllers parser class
-
+    IOSXR parsers for the following show commands:
+    * show controllers fia diagshell <diagshell_unit> "l2 show" location <location>
+    * show controllers coherentDSP <unit>
+    * show controllers optics <unit>
 '''
 
 import re
@@ -82,50 +83,48 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
 
 
 class ShowControllersCoherentDSPSchema(MetaParser):
-    """Schema for show controllers coherentDSP"""
+    """Schema for show controllers coherentDSP {unit}"""
     schema = {
-        Any(): {
-            'port': str,
-            'controller_state': str,
-            'inherited_secondary_state': str,
-            'configured_secondary_state': str,
-            'derived_state': str,
-            'loopback_mode': str,
-            'ber_thresholds_sf': str,
-            'ber_thresholds_sd': str,
-            'performance_monitoring': str,
-            'alarm_info': {
-                'los': int,
-                'lof': int,
-                'lom': int,
-                'oof': int,
-                'oom': int,
-                'ais': int,
-                'iae': int,
-                'biae': int,
-                'sf_ber': int,
-                'sd_ber': int,
-                'bdi': int,
-                'tim': int,
-                'fecmis_match': int,
-                'fec_unc': int,
-            },
-            'detected_alarms': str,
-            'prefec_ber': str,
-            'postfec_ber': str,
-            'otu_tti': str,
-            'fec_mode': str,
+        'port': str,
+        'controller_state': str,
+        'inherited_secondary_state': str,
+        'configured_secondary_state': str,
+        'derived_state': str,
+        'loopback_mode': str,
+        'ber_thresholds_sf': str,
+        'ber_thresholds_sd': str,
+        'performance_monitoring': str,
+        'alarm_info': {
+            'los': int,
+            'lof': int,
+            'lom': int,
+            'oof': int,
+            'oom': int,
+            'ais': int,
+            'iae': int,
+            'biae': int,
+            'sf_ber': int,
+            'sd_ber': int,
+            'bdi': int,
+            'tim': int,
+            'fecmis_match': int,
+            'fec_unc': int,
         },
+        'detected_alarms': str,
+        'prefec_ber': str,
+        'postfec_ber': str,
+        'otu_tti': str,
+        'fec_mode': str,
     }
 
 
 class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
-    """Parser for show controllers coherentDSP"""
+    """Parser for show controllers coherentDSP {unit}"""
 
     cli_command = 'show controllers coherentDSP {unit}'
     exclude = []
 
-    def cli(self, unit='', output=None):
+    def cli(self, unit, output=None):
 
         if output is None:
             out = self.device.execute(self.cli_command.format(unit=unit))
@@ -199,7 +198,7 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
             m = p1.match(line)
             if m:
                 port = m.groupdict()['port']
-                port_dict = result_dict.setdefault(port, {})
+                port_dict = result_dict
                 port_dict.update({'port': port})
                 continue
 
@@ -334,83 +333,81 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
 
 
 class ShowControllersOpticsSchema(MetaParser):
-    """Schema for show controllers optics"""
+    """Schema for show controllers optics {unit}"""
     schema = {
-        Any(): {
-            'name': str,
-            'controller_state': str,
-            'transport_admin_state': str,
-            'laser_state': str,
-            Optional('led_state'): str,
-            'optics_status': {
-                'optics_type': str,
-                'wavelength': str,
-                Optional('dwdm_carrier_info'): str,
-                Optional('msa_itu_channel'): str,
-                Optional('frequency'): str,
-                Optional('detected_alarms'): Or(str, list),
-                Optional('high_rx_pwr'): int,
-                Optional('low_rx_pwr'): int,
-                Optional('high_tx_pwr'): int,
-                Optional('low_tx_pwr'): int,
-                Optional('high_lbc'): int,
-                Optional('high_dgd'): int,
-                Optional('oor_cd'): int,
-                Optional('osnr'): int,
-                Optional('wvl_ool'): int,
-                Optional('mea'): int,
-                Optional('improper_rem'): int,
-                Optional('tc_power_prov_mismatch'): int,
-                Optional('detected_fault'): str,
-                Optional('laser_bias_current'): str,
-                'tx_power': str,
-                'rx_power': str,
-                Optional('performance_monitoring'): str,
-                Optional('parameters'): {
-                    Any() :{
-                        'parameter': str,
-                        'high_alarm': str,
-                        'low_alarm': str,
-                        'high_warning': str,
-                        'low_warning': str,
-                    },
+        'name': str,
+        'controller_state': str,
+        'transport_admin_state': str,
+        'laser_state': str,
+        Optional('led_state'): str,
+        'optics_status': {
+            'optics_type': str,
+            'wavelength': str,
+            Optional('dwdm_carrier_info'): str,
+            Optional('msa_itu_channel'): str,
+            Optional('frequency'): str,
+            Optional('detected_alarms'): Or(str, list),
+            Optional('high_rx_pwr'): int,
+            Optional('low_rx_pwr'): int,
+            Optional('high_tx_pwr'): int,
+            Optional('low_tx_pwr'): int,
+            Optional('high_lbc'): int,
+            Optional('high_dgd'): int,
+            Optional('oor_cd'): int,
+            Optional('osnr'): int,
+            Optional('wvl_ool'): int,
+            Optional('mea'): int,
+            Optional('improper_rem'): int,
+            Optional('tc_power_prov_mismatch'): int,
+            Optional('detected_fault'): str,
+            Optional('laser_bias_current'): str,
+            'tx_power': str,
+            'rx_power': str,
+            Optional('performance_monitoring'): str,
+            Optional('parameters'): {
+                Any() :{
+                    'parameter': str,
+                    'high_alarm': str,
+                    'low_alarm': str,
+                    'high_warning': str,
+                    'low_warning': str,
                 },
-                Optional('lbc_high_threshold'): str,
-                Optional('configured_tx_power'): str,
-                Optional('configured_osnr_lower_threshold'): str,
-                Optional('configured_dgd_higher_threshold'): str,
-                Optional('chromatic_dispersion'): str,
-                Optional('configured_cd_min'): str,
-                Optional('configured_cd_max'): str,
-                Optional('optical_snr'): str,
-                Optional('polarization_dependent_loss'): str,
-                Optional('differential_group_delay'): str,
-                Optional('temperature'): str,
-                Optional('voltage'): str,
             },
-            Optional('transceiver_vendor_details'): {
-                Optional('form_factor'): str,
-                Optional('optics_type'): str,
-                Optional('name'): str,
-                Optional('oui_number'): str,
-                Optional('part_number'): str,
-                Optional('rev_number'): str,
-                Optional('serial_number'): str,
-                Optional('pid'): str,
-                Optional('vid'): str,
-                Optional('date_code'): str,
-            },
+            Optional('lbc_high_threshold'): str,
+            Optional('configured_tx_power'): str,
+            Optional('configured_osnr_lower_threshold'): str,
+            Optional('configured_dgd_higher_threshold'): str,
+            Optional('chromatic_dispersion'): str,
+            Optional('configured_cd_min'): str,
+            Optional('configured_cd_max'): str,
+            Optional('optical_snr'): str,
+            Optional('polarization_dependent_loss'): str,
+            Optional('differential_group_delay'): str,
+            Optional('temperature'): str,
+            Optional('voltage'): str,
+        },
+        Optional('transceiver_vendor_details'): {
+            Optional('form_factor'): str,
+            Optional('optics_type'): str,
+            Optional('name'): str,
+            Optional('oui_number'): str,
+            Optional('part_number'): str,
+            Optional('rev_number'): str,
+            Optional('serial_number'): str,
+            Optional('pid'): str,
+            Optional('vid'): str,
+            Optional('date_code'): str,
         },
     }
 
 
 class ShowControllersOptics(ShowControllersOpticsSchema):
-    """Parser for show controllers optics"""
+    """Parser for show controllers optics {unit}"""
 
     cli_command = 'show controllers optics {unit}'
     exclude = []
 
-    def cli(self, unit='', output=None):
+    def cli(self, unit, output=None):
 
         if output is None:
             out = self.device.execute(self.cli_command.format(unit=unit))
@@ -420,7 +417,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         result_dict = {}
 
         # Controller State:  Up
-        p1 = re.compile(r'^Controller +State: +(?P<controller_state>\w+)$')
+        p1 = re.compile(r'^Controller +State: +(?P<controller_state>Up|Down)$')
 
         # Transport Admin State: In Service
         p2 = re.compile(r'^Transport +Admin +State: +(?P<transport_admin_state>[\w\s]+)$')
@@ -566,8 +563,8 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             # Controller State:  Up
             m = p1.match(line)
             if m:
-                name = 'optics {}'.format(unit)
-                optics_dict = result_dict.setdefault(name, {})
+                name = 'Optics {}'.format(unit)
+                optics_dict = result_dict
                 optics_dict.update({'name': name})
                 
                 group = m.groupdict()
