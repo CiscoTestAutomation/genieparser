@@ -2528,7 +2528,6 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-
 # =======================================
 # Unit test for 'show ip ospf sham-links'
 # =======================================
