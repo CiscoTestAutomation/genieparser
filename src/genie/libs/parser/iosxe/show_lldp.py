@@ -1,8 +1,8 @@
 """show_lldp.py
    supported commands:
      *  show lldp
-     *  show lldp entry *
-     *  show lldp entry * [<WORD>]
+     *  show lldp entry
+     *  show lldp entry [<WORD>|*]
      *  show lldp interface [<WORD>]
      *  show lldp neighbors detail
      *  show lldp traffic
@@ -131,7 +131,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'S': 'station_only',
                         'O': 'other'}
 
-    cli_command = ['show lldp entry * {entry}', 'show lldp entry *']
+    cli_command = ['show lldp entry {entry}', 'show lldp entry']
 
     def cli(self, entry='',output=None):
         if output is None:
