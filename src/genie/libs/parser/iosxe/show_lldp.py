@@ -120,7 +120,7 @@ class ShowLldpEntrySchema(MetaParser):
 
 
 class ShowLldpEntry(ShowLldpEntrySchema):
-    """Parser for show lldp entry [<WORD>|*]"""
+    """Parser for show lldp entry {* | word}"""
 
     CAPABILITY_CODES = {'R': 'router',
                         'B': 'mac_bridge',
@@ -131,7 +131,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'S': 'station_only',
                         'O': 'other'}
 
-    cli_command = ['show lldp entry {entry}', 'show lldp entry']
+    cli_command = ['show lldp entry * {entry}', 'show lldp entry *']
 
     def cli(self, entry='',output=None):
         if output is None:
