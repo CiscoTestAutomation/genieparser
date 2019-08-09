@@ -735,7 +735,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
             p7 = re.compile(r'^\s*Encapsulation +(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
                              ' +VLAN +Id +(?P<first_dot1q>[0-9]+), +2nd +VLAN'
                              ' +Id +(?P<second_dot1q>[0-9]+),$')
-            m = p7.match(line) 
+            m = p7.match(line)
             if m:
                 encapsulation = str(m.groupdict()['encapsulation']).lower()
 
