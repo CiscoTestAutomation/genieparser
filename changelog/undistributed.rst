@@ -44,3 +44,9 @@
 * IOSXE
     * Update ShowPlatform
         to parse 'lc_type' more clearly and flexibly based on updated schema
+--------------------------------------------------------------------------------
+                                Ospf
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpOspfNeighborDetail
+        to parse 'SR adj label' in output
