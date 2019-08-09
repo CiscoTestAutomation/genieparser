@@ -2645,7 +2645,7 @@ Switch#   Role        Priority      State
                     },
                 },
             'F0': {
-                'lc': {
+                'other': {
                     'ISR4331/K9': {
                         'insert_time': '3w5d',
                         'slot': 'F0',
@@ -2715,7 +2715,7 @@ Switch#   Role        Priority      State
                     },
                 },
             'R0': {
-                'lc': {
+                'rp': {
                     'ISR4331/K9': {
                         'insert_time': '3w5d',
                         'slot': 'R0',
@@ -2857,6 +2857,96 @@ Switch#   Role        Priority      State
         F0        09123456            16.1(5r)S    
     '''}
 
+    golden_parsed_output_3 = {
+        'slot': {
+            '0': {
+                'lc': {
+                    'ASR1002-X': {
+                        'cpld_ver': '11112222',
+                        'fw_ver': '16.7(2r)',
+                        'insert_time': '22w5d',
+                        'name': 'ASR1002-X',
+                        'slot': '0',
+                        'state': 'ok',
+                        'subslot': {
+                            '0': {
+                                '6XGE-BUILT-IN': {
+                                    'insert_time': '22w5d',
+                                    'name': '6XGE-BUILT-IN',
+                                    'state': 'ok',
+                                    'subslot': '0'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            'F0': {
+                'other': {
+                    'ASR1002-X': {
+                        'cpld_ver': '11112222',
+                        'fw_ver': '16.7(2r)',
+                        'insert_time': '22w5d',
+                        'name': 'ASR1002-X',
+                        'slot': 'F0',
+                        'state': 'ok, active'
+                    }
+                }
+            },
+            'P0': {
+                'other': {
+                    'ASR1002-PWR-AC': {
+                        'insert_time': '22w5d',
+                        'name': 'ASR1002-PWR-AC',
+                        'slot': 'P0',
+                        'state': 'ok'
+                    }
+                }
+            },
+            'P1': {
+                'other': {
+                    'ASR1002-PWR-AC': {
+                        'insert_time': '22w5d',
+                        'name': 'ASR1002-PWR-AC',
+                        'slot': 'P1',
+                        'state': 'ok'
+                    }
+                }
+            },
+            'R0': {
+                'rp': {
+                    'ASR1002-X': {
+                        'cpld_ver': '11112222',
+                        'fw_ver': '16.7(2r)',
+                        'insert_time': '22w5d',
+                        'name': 'ASR1002-X',
+                        'slot': 'R0',
+                        'state': 'ok, active'
+                    }
+                }
+            }
+        }        
+    }
+
+    golden_output_3 = {'execute.return_value': '''\
+        Chassis type: ASR1002-X          
+         
+        Slot      Type                State                 Insert time (ago)
+        --------- ------------------- --------------------- -----------------
+        0         ASR1002-X           ok                    22w5d        
+         0/0      6XGE-BUILT-IN       ok                    22w5d        
+        R0        ASR1002-X           ok, active            22w5d        
+        F0        ASR1002-X           ok, active            22w5d        
+        P0        ASR1002-PWR-AC      ok                    22w5d        
+        P1        ASR1002-PWR-AC      ok                    22w5d        
+         
+        Slot      CPLD Version        Firmware Version                        
+        --------- ------------------- ---------------------------------------
+        0         11112222            16.7(2r)                            
+        R0        11112222            16.7(2r)                            
+        F0        11112222            16.7(2r)            
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowPlatform(device=self.dev1)
@@ -2896,6 +2986,13 @@ Switch#   Role        Priority      State
         platform_obj = ShowPlatform(device=self.dev_asr1002)
         parsed_output_2 = platform_obj.parse()
         self.assertEqual(parsed_output_2,self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev_asr1002 = Mock(**self.golden_output_3)
+        platform_obj = ShowPlatform(device=self.dev_asr1002)
+        parsed_output_3 = platform_obj.parse()
+        self.assertEqual(parsed_output_3,self.golden_parsed_output_3)
 
 
 class test_show_boot(unittest.TestCase):
