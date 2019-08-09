@@ -1458,6 +1458,16 @@ class ShowPlatformSchema(MetaParser):
                                 Optional('name'): str,
                                 Optional('slot'): str,
                                 Optional('state'): str,
+                                Optional('subslot'): {
+                                    Any(): {
+                                        Any(): {
+                                            Optional('insert_time'): str,
+                                            Optional('name'): str,
+                                            Optional('state'): str,
+                                            Optional('subslot'): str,
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1639,8 +1649,13 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+)', name) or ('ISR' in name):
-                        lc_type = 'lc'
+                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name):
+                        if 'R' in slot:
+                            lc_type = 'rp'
+                        elif re.match(r'^\d+', slot):
+                            lc_type = 'lc'
+                        else:
+                            lc_type = 'other'
                     elif re.match(r'^ASR\d+-RP\d+', name):
                         lc_type = 'rp'
                     elif re.match(r'^CSR\d+V', name):
