@@ -41,3 +41,10 @@
 * IOSXE
     * Update ShowPlatform
         to parse 'lc_type' more clearly and flexibly based on updated schema
+
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsState for
+        show segment-routing mpls state
