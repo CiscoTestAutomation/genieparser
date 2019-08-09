@@ -137,7 +137,7 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
         p1 = re.compile(r'^Port +: +(?P<port>[\s\S]+)$')
 
         # Controller State    : Up
-        p2 = re.compile(r'^Controller +State +: +(?P<controller_state>\w+)$')
+        p2 = re.compile(r'^Controller +State +: +(?P<controller_state>Up|Down)$')
 
         # Inherited Secondary State   : Normal
         p3 = re.compile(r'^Inherited +Secondary +State +: +(?P<inherited_secondary_state>\w+)$')
