@@ -2473,7 +2473,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # GigabitEthernet1 is up, line protocol is up 
         # TenGigE0/0/0/4 is administratively down, line protocol is administratively down
-        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+), '
+        p1 = re.compile(r'^(?P<interface>\S+) +is +(?P<enabled>[\w\s]+), '
                          '+line +protocol +is +(?P<line_protocol>[\w\s]+)$')
 
         # Interface state transitions: 9 
