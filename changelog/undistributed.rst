@@ -15,6 +15,9 @@
 --------------------------------------------------------------------------------
                                 Lag
 --------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowPagpNeighbor
+        added 'show pagp neighbor' key to cli command for Ops
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
