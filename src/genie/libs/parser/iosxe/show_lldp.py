@@ -1,6 +1,7 @@
 """show_lldp.py
    supported commands:
      *  show lldp
+     *  show lldp entry
      *  show lldp entry [<WORD>|*]
      *  show lldp interface [<WORD>]
      *  show lldp neighbors detail
@@ -132,7 +133,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
     cli_command = ['show lldp entry {entry}', 'show lldp entry']
 
-    def cli(self, entry='*',output=None):
+    def cli(self, entry='',output=None):
         if output is None:
             if hasattr(self, 'CMD'):
                 out = self.device.execute(self.CMD)
