@@ -1778,3 +1778,44 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 continue
         return ret_dict
 
+# =============================================
+# Parser for 'show segment-routing mpls state'
+# =============================================
+
+class ShowSegmentRoutingMplsStateSchema(MetaParser):
+    """Schema for show segment-routing mpls state
+    """
+
+    schema = {
+        'mpls': {
+            'state': bool
+        }
+    }
+
+class ShowSegmentRoutingMplsState(ShowSegmentRoutingMplsStateSchema):
+    """ Parser for show segment-routing mpls state"""
+    
+    cli_command = 'show segment-routing mpls state'
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        
+        # Segment Routing MPLS State : ENABLED
+        p1 = re.compile(r'^Segment +Routing +MPLS +State +: +(?P<state>\S+)$')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Segment Routing MPLS State : ENABLED
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                state = group['state'].upper()
+                state_dict = ret_dict.setdefault('mpls', {})
+                state_dict.update({'state': True if state == 'ENABLED' else False})
+                continue
+        
+        return ret_dict
