@@ -1788,7 +1788,7 @@ class ShowSegmentRoutingMplsStateSchema(MetaParser):
 
     schema = {
         'mpls': {
-            'state': bool
+            'state': str
         }
     }
 
@@ -1813,9 +1813,9 @@ class ShowSegmentRoutingMplsState(ShowSegmentRoutingMplsStateSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                state = group['state'].upper()
+                state = group['state']
                 state_dict = ret_dict.setdefault('mpls', {})
-                state_dict.update({'state': True if state == 'ENABLED' else False})
+                state_dict.update({'state': state})
                 continue
         
         return ret_dict

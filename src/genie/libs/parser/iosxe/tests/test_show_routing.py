@@ -1893,7 +1893,7 @@ class test_show_routing_mpls_state(unittest.TestCase):
     
     golden_parsed_output = {
         'mpls': {
-            'state': True,
+            'state': "ENABLED",
             },
         }
     
