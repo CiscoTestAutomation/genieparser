@@ -2941,6 +2941,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p25.match(line)
             if m:
                 group = m.groupdict()
+                counter_dict = intf_dict.setdefault('counters', {})
                 for k, v in group.items():
                     if v:
                         counter_dict.update({k: int(v)})
