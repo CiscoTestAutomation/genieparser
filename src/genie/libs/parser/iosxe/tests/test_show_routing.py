@@ -14,8 +14,7 @@ from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
                                                  ShowIpCef,\
                                                  ShowIpv6Cef,\
                                                  ShowIpv6RouteDistributor,\
-                                                 ShowIpRouteSummary,\
-                                                 ShowSegmentRoutingMplsState
+                                                 ShowIpRouteSummary
 
 # ============================================
 # unit test for 'show ip route'
