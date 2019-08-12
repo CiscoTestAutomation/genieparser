@@ -1148,6 +1148,7 @@ class ShowIpRouteWordSchema(MetaParser):
                 Optional('net'): str,
                 Optional('redist_via'): str,
                 Optional('redist_via_tag'): str,
+                Optional('sr_incoming_label'): str,
                 Optional('update'): {
                     'from': str,
                     'interface': str,
@@ -1160,7 +1161,15 @@ class ShowIpRouteWordSchema(MetaParser):
                         Optional('age'): str,
                         Optional('interface'): str,
                         Optional('metric'): str,
-                        Optional('share_count'): str
+                        Optional('share_count'): str,
+                        Optional('mpls_label'): str,
+                        Optional('mpls_flags'): str,
+                        'prefer_non_rib_labels': bool,
+                        'merge_labels': bool,
+                        Optional('repair_path'): {
+                            'repair_path': str,
+                            'via': str
+                        }
                     }
                 }
             }
@@ -1203,16 +1212,16 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                          '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
                          '(, +(?P<net>[\w\s]+))?$')
         # Known via "connected", distance 0, metric 0 (connected)
-        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?P<type>[\w\- ]+)?,? *.*$')
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:type (?P<type>[\w\- ]+))?,? *.*$')
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
                          '(?P<redist_via_tag>\d+)?$')
         p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
                          'on +(?P<interface>[\w\.\/\-]+), +'
                          '(?P<age>[\w\.\:]+) +ago$')
-        p5 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(, +'
-                         'from +(?P<from>[\w\.]+), +'
-                         '(?P<age>[\w\.\:]+) +ago, +'
-                         'via +(?P<interface>[\w\.\/\-]+))?$')
+        p5 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+), +'
+                         '(?P<age>[\w\.\:]+) +ago, +via +(?P<interface>\S+)(?:, +'
+                         '(?P<rib_labels>prefer-non-rib-labels))?(?:, +'
+                         '(?P<merge_labels>merge-labels))?)?$')
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                          'traffic +share +count +is +(?P<share_count>\d+)$')
 
@@ -1224,6 +1233,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
         p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')
+        p11 = re.compile(r'^MPLS +label: +(?P<mpls_label>\S+)$')
+        p12 = re.compile(r'^MPLS +Flags: +(?P<mpls_flags>\S+)$')
+        p13 = re.compile(r'^SR +Incoming +Label: +(?P<sr_incoming_label>\d+)')
+        p14 = re.compile(r'^Repair +Path: +(?P<path>[\d\.]+), +via +(?P<via>\w+)')
 
         # initial variables
         ret_dict = {}
@@ -1277,7 +1290,18 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 group = m.groupdict()
                 index += 1
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                path_dict.update({k:v for k,v in group.items() if v})
+
+                if group['nexthop']:
+                    path_dict.update({'nexthop': group['nexthop']})
+                if group['from']:
+                    path_dict.update({'from': group['from']})
+                if group['age']:
+                    path_dict.update({'age': group['age']})
+                if group['interface']:
+                    path_dict.update({'interface': group['interface']})
+
+                path_dict.update({'prefer_non_rib_labels': True if group['rib_labels'] else False})
+                path_dict.update({'merge_labels': True if group['merge_labels'] else False})
                 continue
 
             # Route metric is 10880, traffic share count is 1
@@ -1325,6 +1349,30 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             if m:
                 path_dict['age'] = m.groupdict()['age']
                 continue
+
+            m = p11.match(line)
+            if m:
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({'mpls_label': m.groupdict()['mpls_label']})
+                continue
+
+            m = p12.match(line)
+            if m:
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({'mpls_flags': m.groupdict()['mpls_flags']})
+                continue
+
+            m = p13.match(line)
+            if m:
+                entry_dict.update({'sr_incoming_label': m.groupdict()['sr_incoming_label']})
+                continue
+
+            m = p14.match(line)
+            if m:
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {}).setdefault('repair_path', {})
+                path_dict.update({'repair_path': m.groupdict()['path']})
+                path_dict.update({'via': m.groupdict()['via']})
+
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None
         return ret_dict

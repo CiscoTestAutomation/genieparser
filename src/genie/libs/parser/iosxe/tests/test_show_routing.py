@@ -1183,7 +1183,7 @@ class test_show_ip_route_word(unittest.TestCase):
         "entry": {
             "192.168.154.0/24": {
                "mask": "24",
-               "type": "type internal",
+               "type": "internal",
                "known_via": "eigrp 1",
                "ip": "192.168.154.0",
                "redist_via": "eigrp",
@@ -1202,7 +1202,9 @@ class test_show_ip_route_word(unittest.TestCase):
                          "from": "192.168.151.2",
                          "metric": "10880",
                          "share_count": "1",
-                         "nexthop": "192.168.151.2"
+                         "nexthop": "192.168.151.2",
+                         "prefer_non_rib_labels": False,
+                         "merge_labels": False
                     }
                 }
             }
@@ -1230,6 +1232,7 @@ class test_show_ip_route_word(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
+
 ###################################################
 # unit test for show ipv6 route <WROD>
 ####################################################
@@ -1244,7 +1247,7 @@ class test_show_ipv6_route_word(unittest.TestCase):
 		"entry": {
 		    "2000:2::4:1/128": {
 		       "ip": "2000:2::4:1",
-		       "type": "type level-2",
+		       "type": "level-2",
 		       "distance": "115",
 		       "metric": "20",
 		       "known_via": "isis",
