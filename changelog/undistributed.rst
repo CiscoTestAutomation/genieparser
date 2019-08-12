@@ -57,3 +57,10 @@
 * IOSXR
     * Update ShowLldpEntry
         added a key 'show lldp entry' for Ops
+
+--------------------------------------------------------------------------------
+                                Prefix_list
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowIpv6PrefixListDetail
+        updated cli for Ops
