@@ -172,7 +172,7 @@ class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail, ShowIpPrefixListDetailSch
     def cli(self, af='ipv6', output=None):
         # ip should be ip or ipv6
         if output is None:
-        # get output from device
+            # get output from device
             out = self.device.execute(self.cli_command)
         else:
             out = output
