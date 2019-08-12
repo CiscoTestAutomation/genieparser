@@ -1787,9 +1787,7 @@ class ShowSegmentRoutingMplsStateSchema(MetaParser):
     """
 
     schema = {
-        'mpls': {
-            'state': str
-        }
+        'sr_mpls_state': str
     }
 
 class ShowSegmentRoutingMplsState(ShowSegmentRoutingMplsStateSchema):
@@ -1814,8 +1812,7 @@ class ShowSegmentRoutingMplsState(ShowSegmentRoutingMplsStateSchema):
             if m:
                 group = m.groupdict()
                 state = group['state']
-                state_dict = ret_dict.setdefault('mpls', {})
-                state_dict.update({'state': state})
+                ret_dict.update({'sr_mpls_state': state})
                 continue
         
         return ret_dict

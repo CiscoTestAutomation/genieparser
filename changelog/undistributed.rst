@@ -15,9 +15,13 @@
 --------------------------------------------------------------------------------
                                 Lag
 --------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowPagpNeighbor
+        added 'show pagp neighbor' key to cli command for Ops
 * IOSXR
     * Update ShowBundle
         to support 'show bundle {interface}'
+
 --------------------------------------------------------------------------------
                                 traceroute
 --------------------------------------------------------------------------------
@@ -41,6 +45,13 @@
 * IOSXE
     * Update ShowPlatform
         to parse 'lc_type' more clearly and flexibly based on updated schema
+
+--------------------------------------------------------------------------------
+                                Lldp
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowLldpEntry
+        added a key 'show lldp entry' for Ops
 
 --------------------------------------------------------------------------------
                                 Segment Routing

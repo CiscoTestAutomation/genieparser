@@ -1892,10 +1892,8 @@ class test_show_routing_mpls_state(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'mpls': {
-            'state': "ENABLED",
-            },
-        }
+        'sr_mpls_state': "ENABLED",
+    }
     
     golden_output = {'execute.return_value': '''
         Device#show segment-routing mpls state
