@@ -57,3 +57,10 @@
 * IOSXR
     * Update ShowLldpEntry
         added a key 'show lldp entry' for Ops
+
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsLB for
+        'show segment-routing mpls lb'
