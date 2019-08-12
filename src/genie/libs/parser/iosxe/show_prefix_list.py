@@ -177,4 +177,4 @@ class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail, ShowIpPrefixListDetailSch
         else:
             out = output
 
-        return super().cli(output=out, af=af)
+        return super().cli(af=af, output=out)

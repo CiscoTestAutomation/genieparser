@@ -8,6 +8,11 @@
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowInterfaces for:
+        'show interfaces'
+        'show interfaces {interface}'
+
 * IOSXE
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
@@ -47,8 +52,15 @@
         to parse 'lc_type' more clearly and flexibly based on updated schema
 
 --------------------------------------------------------------------------------
+                                Lldp
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowLldpEntry
+        added a key 'show lldp entry' for Ops
+
+--------------------------------------------------------------------------------
                                 Prefix_list
 --------------------------------------------------------------------------------
 * IOSXR
     * Update ShowIpv6PrefixListDetail
-        added 'cli_command' to avoid 'execute' issue for Ops
+        updated cli for Ops
