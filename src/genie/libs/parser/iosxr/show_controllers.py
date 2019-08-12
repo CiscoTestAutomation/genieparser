@@ -1,8 +1,8 @@
 ''' show_controllers.py
     IOSXR parsers for the following show commands:
     * show controllers fia diagshell <diagshell_unit> "l2 show" location <location>
-    * show controllers coherentDSP <unit>
-    * show controllers optics <unit>
+    * show controllers coherentDSP <port>
+    * show controllers optics <port>
 '''
 
 import re
@@ -83,51 +83,55 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
 
 
 class ShowControllersCoherentDSPSchema(MetaParser):
-    """Schema for show controllers coherentDSP {unit}"""
+    """Schema for show controllers coherentDSP {port}"""
     schema = {
-        'port': str,
-        'controller_state': str,
-        'inherited_secondary_state': str,
-        'configured_secondary_state': str,
-        'derived_state': str,
-        'loopback_mode': str,
-        'ber_thresholds_sf': str,
-        'ber_thresholds_sd': str,
-        'performance_monitoring': str,
-        'alarm_info': {
-            'los': int,
-            'lof': int,
-            'lom': int,
-            'oof': int,
-            'oom': int,
-            'ais': int,
-            'iae': int,
-            'biae': int,
-            'sf_ber': int,
-            'sd_ber': int,
-            'bdi': int,
-            'tim': int,
-            'fecmis_match': int,
-            'fec_unc': int,
+        Any(): {
+            'port': str,
+            'controller_state': str,
+            'inherited_secondary_state': str,
+            'configured_secondary_state': str,
+            'derived_state': str,
+            'loopback_mode': str,
+            'ber_thresholds_sf': str,
+            'ber_thresholds_sd': str,
+            'performance_monitoring': str,
+            'alarm_info': {
+                'los': int,
+                'lof': int,
+                'lom': int,
+                'oof': int,
+                'oom': int,
+                'ais': int,
+                'iae': int,
+                'biae': int,
+                'sf_ber': int,
+                'sd_ber': int,
+                'bdi': int,
+                'tim': int,
+                'fecmis_match': int,
+                'fec_unc': int,
+            },
+            'detected_alarms': str,
+            'bit_error_rate_info': {
+                'prefec_ber': str,
+                'postfec_ber': str,
+            },
+            'otu_tti': str,
+            'fec_mode': str,
         },
-        'detected_alarms': str,
-        'prefec_ber': str,
-        'postfec_ber': str,
-        'otu_tti': str,
-        'fec_mode': str,
     }
 
 
 class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
-    """Parser for show controllers coherentDSP {unit}"""
+    """Parser for show controllers coherentDSP {port}"""
 
-    cli_command = 'show controllers coherentDSP {unit}'
+    cli_command = 'show controllers coherentDSP {port}'
     exclude = []
 
-    def cli(self, unit, output=None):
+    def cli(self, port, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(unit=unit))
+            out = self.device.execute(self.cli_command.format(port=port))
         else:
             out = output
 
@@ -137,7 +141,7 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
         p1 = re.compile(r'^Port +: +(?P<port>[\s\S]+)$')
 
         # Controller State    : Up
-        p2 = re.compile(r'^Controller +State +: +(?P<controller_state>Up|Down)$')
+        p2 = re.compile(r'^Controller +State +: +(?P<controller_state>\w+)$')
 
         # Inherited Secondary State   : Normal
         p3 = re.compile(r'^Inherited +Secondary +State +: +(?P<inherited_secondary_state>\w+)$')
@@ -197,9 +201,9 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
             # Port   : CoherentDSP 0/0/1/2
             m = p1.match(line)
             if m:
-                port = m.groupdict()['port']
-                port_dict = result_dict
-                port_dict.update({'port': port})
+                port_num = m.groupdict()['port']
+                port_dict = result_dict.setdefault(port_num, {})
+                port_dict.update({'port': port_num})
                 continue
 
             # Controller State    : Up
@@ -305,14 +309,16 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
             m = p15.match(line)
             if m:
                 prefec_ber = m.groupdict()['prefec_ber']
-                port_dict.update({'prefec_ber': prefec_ber})
+                bit_info_dict = port_dict.setdefault('bit_error_rate_info', {})
+                bit_info_dict.update({'prefec_ber': prefec_ber})
                 continue
 
             # POSTFEC BER        : 0.0E+00
             m = p16.match(line)
             if m:
                 postfec_ber = m.groupdict()['postfec_ber']
-                port_dict.update({'postfec_ber': postfec_ber})
+                bit_info_dict = port_dict.setdefault('bit_error_rate_info', {})
+                bit_info_dict.update({'postfec_ber': postfec_ber})
                 continue
 
             # OTU TTI Received
@@ -333,91 +339,100 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
 
 
 class ShowControllersOpticsSchema(MetaParser):
-    """Schema for show controllers optics {unit}"""
+    """Schema for show controllers optics {port}"""
     schema = {
-        'name': str,
-        'controller_state': str,
-        'transport_admin_state': str,
-        'laser_state': str,
-        Optional('led_state'): str,
-        'optics_status': {
-            'optics_type': str,
-            'wavelength': str,
-            Optional('dwdm_carrier_info'): str,
-            Optional('msa_itu_channel'): str,
-            Optional('frequency'): str,
-            Optional('detected_alarms'): Or(str, list),
-            Optional('high_rx_pwr'): int,
-            Optional('low_rx_pwr'): int,
-            Optional('high_tx_pwr'): int,
-            Optional('low_tx_pwr'): int,
-            Optional('high_lbc'): int,
-            Optional('high_dgd'): int,
-            Optional('oor_cd'): int,
-            Optional('osnr'): int,
-            Optional('wvl_ool'): int,
-            Optional('mea'): int,
-            Optional('improper_rem'): int,
-            Optional('tc_power_prov_mismatch'): int,
-            Optional('detected_fault'): str,
-            Optional('laser_bias_current'): str,
-            'tx_power': str,
-            'rx_power': str,
-            Optional('performance_monitoring'): str,
-            Optional('parameters'): {
-                Any() :{
-                    'parameter': str,
-                    'high_alarm': str,
-                    'low_alarm': str,
-                    'high_warning': str,
-                    'low_warning': str,
+        Any(): {
+            'name': str,
+            'controller_state': str,
+            'transport_admin_state': str,
+            'laser_state': str,
+            Optional('led_state'): str,
+            'optics_status': {
+                'optics_type': str,
+                'wavelength': str,
+                Optional('dwdm_carrier_info'): str,
+                Optional('msa_itu_channel'): str,
+                Optional('frequency'): str,
+                Optional('alarm_status'): {
+                    Optional('detected_alarms'): Or(str, list),
                 },
+                Optional('alarm_statistics'): {
+                    Optional('high_rx_pwr'): int,
+                    Optional('low_rx_pwr'): int,
+                    Optional('high_tx_pwr'): int,
+                    Optional('low_tx_pwr'): int,
+                    Optional('high_lbc'): int,
+                    Optional('high_dgd'): int,
+                    Optional('oor_cd'): int,
+                    Optional('osnr'): int,
+                    Optional('wvl_ool'): int,
+                    Optional('mea'): int,
+                    Optional('improper_rem'): int,
+                    Optional('tc_power_prov_mismatch'): int,
+                },
+                Optional('los_lol_fault_status'): {
+                    Optional('detected_los_lol_fault'): list,
+                },
+                Optional('laser_bias_current'): str,
+                'actual_tx_power': str,
+                'rx_power': str,
+                Optional('performance_monitoring'): str,
+                Optional('threshold_values'): {
+                    Any() :{
+                        'parameter': str,
+                        'high_alarm': str,
+                        'low_alarm': str,
+                        'high_warning': str,
+                        'low_warning': str,
+                    },
+                },
+                Optional('lbc_high_threshold'): str,
+                Optional('configured_tx_power'): str,
+                Optional('configured_osnr_lower_threshold'): str,
+                Optional('configured_dgd_higher_threshold'): str,
+                Optional('chromatic_dispersion'): str,
+                Optional('configured_cd_min'): str,
+                Optional('configured_cd_max'): str,
+                Optional('optical_snr'): str,
+                Optional('polarization_dependent_loss'): str,
+                Optional('polarization_parameters'): str,
+                Optional('differential_group_delay'): str,
+                Optional('temperature'): str,
+                Optional('voltage'): str,
             },
-            Optional('lbc_high_threshold'): str,
-            Optional('configured_tx_power'): str,
-            Optional('configured_osnr_lower_threshold'): str,
-            Optional('configured_dgd_higher_threshold'): str,
-            Optional('chromatic_dispersion'): str,
-            Optional('configured_cd_min'): str,
-            Optional('configured_cd_max'): str,
-            Optional('optical_snr'): str,
-            Optional('polarization_dependent_loss'): str,
-            Optional('differential_group_delay'): str,
-            Optional('temperature'): str,
-            Optional('voltage'): str,
-        },
-        Optional('transceiver_vendor_details'): {
-            Optional('form_factor'): str,
-            Optional('optics_type'): str,
-            Optional('name'): str,
-            Optional('oui_number'): str,
-            Optional('part_number'): str,
-            Optional('rev_number'): str,
-            Optional('serial_number'): str,
-            Optional('pid'): str,
-            Optional('vid'): str,
-            Optional('date_code'): str,
+            Optional('transceiver_vendor_details'): {
+                Optional('form_factor'): str,
+                Optional('optics_type'): str,
+                Optional('name'): str,
+                Optional('oui_number'): str,
+                Optional('part_number'): str,
+                Optional('rev_number'): str,
+                Optional('serial_number'): str,
+                Optional('pid'): str,
+                Optional('vid'): str,
+                Optional('date_code'): str,
+            },
         },
     }
 
 
 class ShowControllersOptics(ShowControllersOpticsSchema):
-    """Parser for show controllers optics {unit}"""
+    """Parser for show controllers optics {port}"""
 
-    cli_command = 'show controllers optics {unit}'
+    cli_command = 'show controllers optics {port}'
     exclude = []
 
-    def cli(self, unit, output=None):
+    def cli(self, port, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(unit=unit))
+            out = self.device.execute(self.cli_command.format(port=port))
         else:
             out = output
 
         result_dict = {}
 
         # Controller State:  Up
-        p1 = re.compile(r'^Controller +State: +(?P<controller_state>Up|Down)$')
+        p1 = re.compile(r'^Controller +State: +(?P<controller_state>\w+)$')
 
         # Transport Admin State: In Service
         p2 = re.compile(r'^Transport +Admin +State: +(?P<transport_admin_state>[\w\s]+)$')
@@ -448,8 +463,11 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         #          LOW-RX1-PWR
         p9 = re.compile(r'^(?!-)(?P<alarm>[\w-]+)$')
 
+        # LOS/LOL/Fault Status:
+        p10 = re.compile(r'^LOS\/LOL\/Fault +Status:$')
+
         # Detected LOS/LOL/FAULT: RX-LOS
-        p10 = re.compile(r'^Detected +LOS\/LOL\/FAULT: +(?P<detected_fault>\S+)$')
+        p10_1 = re.compile(r'^Detected +LOS\/LOL\/FAULT: +(?P<detected_los_lol_fault>\S+)$')
 
         # HIGH-RX-PWR = 0            LOW-RX-PWR = 1
         p11 = re.compile(r'^HIGH-RX-PWR *= *(?P<high_rx_pwr>\d+) +LOW-RX-PWR *= *(?P<low_rx_pwr>\d+)$')
@@ -477,7 +495,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
 
         # Actual TX Power = -17.25 dBm
         # TX Power = Unavailable
-        p19 = re.compile(r'^(Actual *)?TX +Power *= *(?P<tx_power>[\s\S]+)$')
+        p19 = re.compile(r'^(Actual *)?TX +Power *= *(?P<actual_tx_power>[\s\S]+)$')
 
         # RX Power = -40.00 dBm
         p20 = re.compile(r'^RX +Power *= *(?P<rx_power>[\s\S]+)$')
@@ -522,6 +540,9 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # Polarization Dependent Loss = 0.00 dB
         p32 = re.compile(r'^Polarization +Dependent +Loss *= *(?P<polarization_dependent_loss>[\s\S]+)$')
 
+        # Polarization parameters not supported by optics
+        p32_1 = re.compile(r'^Polarization +parameters +(?P<polarization_parameters>[\s\S]+)$')
+
         # Differential Group Delay = 2.00 ps
         p33 = re.compile(r'^Differential +Group +Delay *= *(?P<differential_group_delay>[\s\S]+)$')
 
@@ -563,8 +584,8 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             # Controller State:  Up
             m = p1.match(line)
             if m:
-                name = 'Optics {}'.format(unit)
-                optics_dict = result_dict
+                name = 'Optics {}'.format(port)
+                optics_dict = result_dict.setdefault(name, {})
                 optics_dict.update({'name': name})
                 
                 group = m.groupdict()
@@ -619,7 +640,8 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: v for k, v in group.items()})
+                alarm_status = status_dict.setdefault('alarm_status', {})
+                alarm_status.update({k: v for k, v in group.items()})
                 continue
 
             # Detected Alarms:
@@ -627,64 +649,79 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             m = p9.match(line)
             if m:
                 alarm = m.groupdict()['alarm']
-                alarms = status_dict.setdefault('detected_alarms', [])
+                alarm_status = status_dict.setdefault('alarm_status', {})
+                alarms = alarm_status.setdefault('detected_alarms', [])
                 alarms.append(alarm)
                 continue
 
-            # Detected LOS/LOL/FAULT: RX-LOS
+            # LOS/LOL/Fault Status:
             m = p10.match(line)
             if m:
-                group = m.groupdict()
-                status_dict.update({k: v for k, v in group.items()})
+                fault_dict = status_dict.setdefault('los_lol_fault_status', {})
+                continue
+
+            # Detected LOS/LOL/FAULT: RX-LOS
+            m = p10_1.match(line)
+            if m:
+                fault = m.groupdict()['detected_los_lol_fault']
+                faults = fault_dict.setdefault('detected_los_lol_fault', [])
+                faults.append(fault)
                 continue
 
             # HIGH-RX-PWR = 0            LOW-RX-PWR = 1
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: int(v) for k, v in group.items()})
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # HIGH-TX-PWR = 0            LOW-TX-PWR = 1
             m = p12.match(line)
             if m:
-                group = m.groupdict() 
-                status_dict.update({k: int(v) for k, v in group.items()})
+                group = m.groupdict()
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # HIGH-LBC = 0               HIGH-DGD = 0
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: int(v) for k, v in group.items()})
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # OOR-CD = 0                 OSNR = 0
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: int(v) for k, v in group.items()})
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # WVL-OOL = 0                MEA  = 0
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: int(v) for k, v in group.items()})
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # IMPROPER-REM = 0
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: int(v) for k, v in group.items()})
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # TX-POWER-PROV-MISMATCH = 0
             m = p17.match(line)
             if m:
                 group = m.groupdict()
-                status_dict.update({k: int(v) for k, v in group.items()})
+                alarm_statistics = status_dict.setdefault('alarm_statistics', {})
+                alarm_statistics.update({k: int(v) for k, v in group.items()})
                 continue
 
             # Laser Bias Current = 0.0 mA
@@ -723,7 +760,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             if m:
                 group = m.groupdict()
                 parameter = group['parameter']
-                para_dict = status_dict.setdefault('parameters', {}).setdefault(parameter, {})
+                para_dict = status_dict.setdefault('threshold_values', {}).setdefault(parameter, {})
                 para_dict.update({k: v for k, v in group.items()})
                 continue
 
@@ -792,6 +829,13 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
 
             # Polarization Dependent Loss = 0.00 dB
             m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                status_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Polarization parameters not supported by optics
+            m = p32_1.match(line)
             if m:
                 group = m.groupdict()
                 status_dict.update({k: v for k, v in group.items()})

@@ -18,42 +18,46 @@ from genie.libs.parser.iosxr.show_controllers import ShowControllersCoherentDSP,
 # =====================================================
 
 class test_show_controllers_coherentDSP(unittest.TestCase):
-    '''Unit test for show controllers coherentDSP {unit}'''
+    '''Unit test for show controllers coherentDSP {port}'''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "port": "CoherentDSP 0/0/1/2",
-        "controller_state": "Up",
-        "inherited_secondary_state": "Normal",
-        "configured_secondary_state": "Normal",
-        "derived_state": "In Service",
-        "loopback_mode": "None",
-        "ber_thresholds_sf": "1.0E-5",
-        "ber_thresholds_sd": "1.0E-7",
-        "performance_monitoring": "Enable",
-        "alarm_info": {
-            "los": 1,
-            "lof": 0,
-            "lom": 0,
-            "oof": 0,
-            "oom": 0,
-            "ais": 0,
-            "iae": 0,
-            "biae": 0,
-            "sf_ber": 0,
-            "sd_ber": 0,
-            "bdi": 2,
-            "tim": 0,
-            "fecmis_match": 0,
-            "fec_unc": 0
+        "CoherentDSP 0/0/1/2": {
+            "port": "CoherentDSP 0/0/1/2",
+            "controller_state": "Up",
+            "inherited_secondary_state": "Normal",
+            "configured_secondary_state": "Normal",
+            "derived_state": "In Service",
+            "loopback_mode": "None",
+            "ber_thresholds_sf": "1.0E-5",
+            "ber_thresholds_sd": "1.0E-7",
+            "performance_monitoring": "Enable",
+            "alarm_info": {
+                "los": 1,
+                "lof": 0,
+                "lom": 0,
+                "oof": 0,
+                "oom": 0,
+                "ais": 0,
+                "iae": 0,
+                "biae": 0,
+                "sf_ber": 0,
+                "sd_ber": 0,
+                "bdi": 2,
+                "tim": 0,
+                "fecmis_match": 0,
+                "fec_unc": 0
+            },
+            "detected_alarms": "None",
+            "bit_error_rate_info": {
+                "prefec_ber": "0.0E+00",
+                "postfec_ber": "0.0E+00",
+            },
+            "otu_tti": "Received",
+            "fec_mode": "STANDARD"
         },
-        "detected_alarms": "None",
-        "prefec_ber": "0.0E+00",
-        "postfec_ber": "0.0E+00",
-        "otu_tti": "Received",
-        "fec_mode": "STANDARD"
     }
 
     golden_output = {'execute.return_value': '''
@@ -90,13 +94,13 @@ class test_show_controllers_coherentDSP(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowControllersCoherentDSP(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(unit='0/0/1/2')
+            parsed_output = obj.parse(port='0/0/1/2')
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowControllersCoherentDSP(device=self.device)
-        parsed_output = obj.parse(unit='0/0/1/2')
+        parsed_output = obj.parse(port='0/0/1/2')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
@@ -111,70 +115,76 @@ class test_show_controllers_optics(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        "name": "Optics 0/0/0/0",
-        "controller_state": "Up",
-        "transport_admin_state": "In Service",
-        "laser_state": "On",
-        "led_state": "Green",
-        "optics_status": {
-            "optics_type": "SFP+ 10G SR",
-            "wavelength": "850.00 nm",
-            "detected_alarms": "None",
-            "laser_bias_current": "6.1 mA",
-            "tx_power": "-2.45 dBm",
-            "rx_power": "-7.56 dBm",
-            "performance_monitoring": "Enable",
-            "parameters": {
-                "Rx Power Threshold(dBm)": {
-                    "parameter": "Rx Power Threshold(dBm)",
-                    "high_alarm": "2.0",
-                    "low_alarm": "-13.9",
-                    "high_warning": "-1.0",
-                    "low_warning": "-9.9"
+        "Optics 0/0/0/0": {
+            "name": "Optics 0/0/0/0",
+            "controller_state": "Up",
+            "transport_admin_state": "In Service",
+            "laser_state": "On",
+            "led_state": "Green",
+            "optics_status": {
+                "optics_type": "SFP+ 10G SR",
+                "wavelength": "850.00 nm",
+                "alarm_status": {
+                    "detected_alarms": "None"
                 },
-                "Tx Power Threshold(dBm)": {
-                    "parameter": "Tx Power Threshold(dBm)",
-                    "high_alarm": "1.6",
-                    "low_alarm": "-11.3",
-                    "high_warning": "-1.3",
-                    "low_warning": "-7.3"
+                "los_lol_fault_status": {},
+                "laser_bias_current": "6.1 mA",
+                "actual_tx_power": "-2.45 dBm",
+                "rx_power": "-7.56 dBm",
+                "performance_monitoring": "Enable",
+                "threshold_values": {
+                    "Rx Power Threshold(dBm)": {
+                        "parameter": "Rx Power Threshold(dBm)",
+                        "high_alarm": "2.0",
+                        "low_alarm": "-13.9",
+                        "high_warning": "-1.0",
+                        "low_warning": "-9.9"
+                    },
+                    "Tx Power Threshold(dBm)": {
+                        "parameter": "Tx Power Threshold(dBm)",
+                        "high_alarm": "1.6",
+                        "low_alarm": "-11.3",
+                        "high_warning": "-1.3",
+                        "low_warning": "-7.3"
+                    },
+                    "LBC Threshold(mA)": {
+                        "parameter": "LBC Threshold(mA)",
+                        "high_alarm": "10.00",
+                        "low_alarm": "2.00",
+                        "high_warning": "10.00",
+                        "low_warning": "2.00"
+                    },
+                    "Temp. Threshold(celsius)": {
+                        "parameter": "Temp. Threshold(celsius)",
+                        "high_alarm": "75.00",
+                        "low_alarm": "-5.00",
+                        "high_warning": "70.00",
+                        "low_warning": "0.00"
+                    },
+                    "Voltage Threshold(volt)": {
+                        "parameter": "Voltage Threshold(volt)",
+                        "high_alarm": "3.63",
+                        "low_alarm": "2.97",
+                        "high_warning": "3.46",
+                        "low_warning": "3.13"
+                    }
                 },
-                "LBC Threshold(mA)": {
-                    "parameter": "LBC Threshold(mA)",
-                    "high_alarm": "10.00",
-                    "low_alarm": "2.00",
-                    "high_warning": "10.00",
-                    "low_warning": "2.00"
-                },
-                "Temp. Threshold(celsius)": {
-                    "parameter": "Temp. Threshold(celsius)",
-                    "high_alarm": "75.00",
-                    "low_alarm": "-5.00",
-                    "high_warning": "70.00",
-                    "low_warning": "0.00"
-                },
-                "Voltage Threshold(volt)": {
-                    "parameter": "Voltage Threshold(volt)",
-                    "high_alarm": "3.63",
-                    "low_alarm": "2.97",
-                    "high_warning": "3.46",
-                    "low_warning": "3.13"
-                }
+                "polarization_parameters": "not supported by optics",
+                "temperature": "35.00 Celsius",
+                "voltage": "3.26 V"
             },
-            "temperature": "35.00 Celsius",
-            "voltage": "3.26 V"
-        },
-        "transceiver_vendor_details": {
-            "form_factor": "SFP+",
-            "optics_type": "SFP+ 10G SR",
-            "name": "CISCO-AVAGO",
-            "oui_number": "00.17.6a",
-            "part_number": "SFBR-7702SDZ-CS5",
-            "rev_number": "G2.5",
-            "serial_number": "AGD162040SP",
-            "pid": "SFP-10G-SR",
-            "vid": "V03",
-            "date_code": "12/05/20"
+            "transceiver_vendor_details": {
+                "form_factor": "SFP+",
+                "optics_type": "SFP+ 10G SR",
+                "name": "CISCO-AVAGO",
+                "oui_number": "00.17.6a",
+                "part_number": "SFBR-7702SDZ-CS5",
+                "rev_number": "G2.5",
+                "serial_number": "AGD162040SP",
+                "pid": "SFP-10G-SR",
+                "vid": "V03",
+                "date_code": "12/05/20"
+            }
         }
     }
 
@@ -234,77 +244,84 @@ class test_show_controllers_optics(unittest.TestCase):
     '''}
 
     golden_parsed_output2 = {
-        "name": "Optics 0/0/1/2",
-        "controller_state": "Up",
-        "transport_admin_state": "In Service",
-        "laser_state": "On",
-        "led_state": "Green",
-        "optics_status": {
-            "optics_type": "CFP2 DWDM",
-            "dwdm_carrier_info": "C BAND",
-            "msa_itu_channel": "97",
-            "frequency": "191.30THz",
-            "wavelength": "1567.133nm",
-            "detected_alarms": "None",
-            "high_rx_pwr": 0,
-            "low_rx_pwr": 1,
-            "high_tx_pwr": 0,
-            "low_tx_pwr": 1,
-            "high_lbc": 0,
-            "high_dgd": 0,
-            "oor_cd": 0,
-            "osnr": 0,
-            "wvl_ool": 0,
-            "mea": 0,
-            "improper_rem": 0,
-            "tc_power_prov_mismatch": 0,
-            "laser_bias_current": "0.0 %",
-            "tx_power": "0.99 dBm",
-            "rx_power": "-20.50 dBm",
-            "performance_monitoring": "Enable",
-            "parameters": {
-                "Rx Power Threshold(dBm)": {
-                    "parameter": "Rx Power Threshold(dBm)",
-                    "high_alarm": "1.5",
-                    "low_alarm": "-30.0",
-                    "high_warning": "0.0",
-                    "low_warning": "0.0"
+        "Optics 0/0/1/2": {
+            "name": "Optics 0/0/1/2",
+            "controller_state": "Up",
+            "transport_admin_state": "In Service",
+            "laser_state": "On",
+            "led_state": "Green",
+            "optics_status": {
+                "optics_type": "CFP2 DWDM",
+                "dwdm_carrier_info": "C BAND",
+                "msa_itu_channel": "97",
+                "frequency": "191.30THz",
+                "wavelength": "1567.133nm",
+                "alarm_status": {
+                    "detected_alarms": "None"
                 },
-                "Tx Power Threshold(dBm)": {
-                    "parameter": "Tx Power Threshold(dBm)",
-                    "high_alarm": "3.5",
-                    "low_alarm": "-10.0",
-                    "high_warning": "0.0",
-                    "low_warning": "0.0"
+                "los_lol_fault_status": {},
+                "alarm_statistics": {
+                    "high_rx_pwr": 0,
+                    "low_rx_pwr": 1,
+                    "high_tx_pwr": 0,
+                    "low_tx_pwr": 1,
+                    "high_lbc": 0,
+                    "high_dgd": 0,
+                    "oor_cd": 0,
+                    "osnr": 0,
+                    "wvl_ool": 0,
+                    "mea": 0,
+                    "improper_rem": 0,
+                    "tc_power_prov_mismatch": 0
                 },
-                "LBC Threshold(mA)": {
-                    "parameter": "LBC Threshold(mA)",
-                    "high_alarm": "N/A",
-                    "low_alarm": "N/A",
-                    "high_warning": "0.00",
-                    "low_warning": "0.00"
-                }
+                "laser_bias_current": "0.0 %",
+                "actual_tx_power": "0.99 dBm",
+                "rx_power": "-20.50 dBm",
+                "performance_monitoring": "Enable",
+                "threshold_values": {
+                    "Rx Power Threshold(dBm)": {
+                        "parameter": "Rx Power Threshold(dBm)",
+                        "high_alarm": "1.5",
+                        "low_alarm": "-30.0",
+                        "high_warning": "0.0",
+                        "low_warning": "0.0"
+                    },
+                    "Tx Power Threshold(dBm)": {
+                        "parameter": "Tx Power Threshold(dBm)",
+                        "high_alarm": "3.5",
+                        "low_alarm": "-10.0",
+                        "high_warning": "0.0",
+                        "low_warning": "0.0"
+                    },
+                    "LBC Threshold(mA)": {
+                        "parameter": "LBC Threshold(mA)",
+                        "high_alarm": "N/A",
+                        "low_alarm": "N/A",
+                        "high_warning": "0.00",
+                        "low_warning": "0.00"
+                    }
+                },
+                "lbc_high_threshold": "98 %",
+                "configured_tx_power": "1.00 dBm",
+                "configured_osnr_lower_threshold": "0.00 dB",
+                "configured_dgd_higher_threshold": "180.00 ps",
+                "chromatic_dispersion": "5 ps/nm",
+                "configured_cd_min": "-10000 ps/nm ",
+                "configured_cd_max": "16000 ps/nm",
+                "optical_snr": "27.00 dB",
+                "polarization_dependent_loss": "0.00 dB",
+                "differential_group_delay": "2.00 ps"
             },
-            "lbc_high_threshold": "98 %",
-            "configured_tx_power": "1.00 dBm",
-            "configured_osnr_lower_threshold": "0.00 dB",
-            "configured_dgd_higher_threshold": "180.00 ps",
-            "chromatic_dispersion": "5 ps/nm",
-            "configured_cd_min": "-10000 ps/nm ",
-            "configured_cd_max": "16000 ps/nm",
-            "optical_snr": "27.00 dB",
-            "polarization_dependent_loss": "0.00 dB",
-            "differential_group_delay": "2.00 ps"
-        },
-        "transceiver_vendor_details": {
-            "form_factor": "CFP2",
-            "name": "CISCO-ACACIA",
-            "part_number": "AC200-D23-190",
-            "rev_number": "16672",
-            "serial_number": "180653009",
-            "pid": "ONS-C2-WDM-DE-1HL",
-            "vid": "VES#",
-            "date_code": "18/02/03"
+            "transceiver_vendor_details": {
+                "form_factor": "CFP2",
+                "name": "CISCO-ACACIA",
+                "part_number": "AC200-D23-190",
+                "rev_number": "16672",
+                "serial_number": "180653009",
+                "pid": "ONS-C2-WDM-DE-1HL",
+                "vid": "VES#",
+                "date_code": "18/02/03"
+            }
         }
     }
 
@@ -376,18 +393,20 @@ class test_show_controllers_optics(unittest.TestCase):
     '''}
 
     golden_parsed_output3 = {
-        "name": "Optics 0/0/0/20",
-        "controller_state": "Down",
-        "transport_admin_state": "In Service",
-        "laser_state": "Off",
-        "optics_status": {
-            "optics_type": "Unavailable",
-            "dwdm_carrier_info": "Unavailable",
-            "msa_itu_channel": "Unavailable",
-            "frequency": "Unavailable",
-            "wavelength": "Unavailable",
-            "tx_power": "Unavailable",
-            "rx_power": "Unavailable"
+        "Optics 0/0/0/20": {
+            "name": "Optics 0/0/0/20",
+            "controller_state": "Down",
+            "transport_admin_state": "In Service",
+            "laser_state": "Off",
+            "optics_status": {
+                "optics_type": "Unavailable",
+                "dwdm_carrier_info": "Unavailable",
+                "msa_itu_channel": "Unavailable",
+                "frequency": "Unavailable",
+                "wavelength": "Unavailable",
+                "actual_tx_power": "Unavailable",
+                "rx_power": "Unavailable"
+            }
         }
     }
 
@@ -406,75 +425,84 @@ class test_show_controllers_optics(unittest.TestCase):
     '''}
 
     golden_parsed_output4 = {
-        "name": "Optics 0/0/0/18",
-        "controller_state": "Up",
-        "transport_admin_state": "In Service",
-        "laser_state": "Off",
-        "led_state": "Off",
-        "optics_status": {
-            "optics_type": "SFP+ 10G SR",
-            "wavelength": "850.00 nm",
-            "detected_alarms": [
-                "LOW-RX1-PWR",
-                "LOW-TX1-PWR",
-                "LOW-TX1_LBC"
-            ],
-            "detected_fault": "RX-LOS",
-            "laser_bias_current": "0.0 mA",
-            "tx_power": "-17.25 dBm",
-            "rx_power": "-40.00 dBm",
-            "performance_monitoring": "Enable",
-            "parameters": {
-                "Rx Power Threshold(dBm)": {
-                    "parameter": "Rx Power Threshold(dBm)",
-                    "high_alarm": "2.0",
-                    "low_alarm": "-13.9",
-                    "high_warning": "-1.0",
-                    "low_warning": "-9.9"
+        "Optics 0/0/0/18": {
+            "name": "Optics 0/0/0/18",
+            "controller_state": "Up",
+            "transport_admin_state": "In Service",
+            "laser_state": "Off",
+            "led_state": "Off",
+            "optics_status": {
+                "optics_type": "SFP+ 10G SR",
+                "wavelength": "850.00 nm",
+                "alarm_status": {
+                    "detected_alarms": [
+                        "LOW-RX1-PWR",
+                        "LOW-TX1-PWR",
+                        "LOW-TX1_LBC"
+                    ]
                 },
-                "Tx Power Threshold(dBm)": {
-                    "parameter": "Tx Power Threshold(dBm)",
-                    "high_alarm": "1.6",
-                    "low_alarm": "-11.3",
-                    "high_warning": "-1.3",
-                    "low_warning": "-7.3"
+                "los_lol_fault_status": {
+                    "detected_los_lol_fault": [
+                        "RX-LOS"
+                    ]
                 },
-                "LBC Threshold(mA)": {
-                    "parameter": "LBC Threshold(mA)",
-                    "high_alarm": "11.00",
-                    "low_alarm": "4.00",
-                    "high_warning": "10.00",
-                    "low_warning": "5.00"
+                "laser_bias_current": "0.0 mA",
+                "actual_tx_power": "-17.25 dBm",
+                "rx_power": "-40.00 dBm",
+                "performance_monitoring": "Enable",
+                "threshold_values": {
+                    "Rx Power Threshold(dBm)": {
+                        "parameter": "Rx Power Threshold(dBm)",
+                        "high_alarm": "2.0",
+                        "low_alarm": "-13.9",
+                        "high_warning": "-1.0",
+                        "low_warning": "-9.9"
+                    },
+                    "Tx Power Threshold(dBm)": {
+                        "parameter": "Tx Power Threshold(dBm)",
+                        "high_alarm": "1.6",
+                        "low_alarm": "-11.3",
+                        "high_warning": "-1.3",
+                        "low_warning": "-7.3"
+                    },
+                    "LBC Threshold(mA)": {
+                        "parameter": "LBC Threshold(mA)",
+                        "high_alarm": "11.00",
+                        "low_alarm": "4.00",
+                        "high_warning": "10.00",
+                        "low_warning": "5.00"
+                    },
+                    "Temp. Threshold(celsius)": {
+                        "parameter": "Temp. Threshold(celsius)",
+                        "high_alarm": "75.00",
+                        "low_alarm": "-5.00",
+                        "high_warning": "70.00",
+                        "low_warning": "0.00"
+                    },
+                    "Voltage Threshold(volt)": {
+                        "parameter": "Voltage Threshold(volt)",
+                        "high_alarm": "3.63",
+                        "low_alarm": "2.97",
+                        "high_warning": "3.46",
+                        "low_warning": "3.13"
+                    }
                 },
-                "Temp. Threshold(celsius)": {
-                    "parameter": "Temp. Threshold(celsius)",
-                    "high_alarm": "75.00",
-                    "low_alarm": "-5.00",
-                    "high_warning": "70.00",
-                    "low_warning": "0.00"
-                },
-                "Voltage Threshold(volt)": {
-                    "parameter": "Voltage Threshold(volt)",
-                    "high_alarm": "3.63",
-                    "low_alarm": "2.97",
-                    "high_warning": "3.46",
-                    "low_warning": "3.13"
-                }
+                "polarization_parameters": "not supported by optics",
+                "temperature": "31.00 Celsius",
+                "voltage": "3.30 V"
             },
-            "temperature": "31.00 Celsius",
-            "voltage": "3.30 V"
-        },
-        "transceiver_vendor_details": {
-            "form_factor": "SFP+",
-            "optics_type": "SFP+ 10G SR",
-            "name": "CISCO-FINISAR",
-            "oui_number": "00.90.65",
-            "part_number": "FTLX8571D3BCL-C2",
-            "rev_number": "A",
-            "serial_number": "FNS210108H7",
-            "pid": "SFP-10G-SR",
-            "vid": "V03",
-            "date_code": "17/01/03"
+            "transceiver_vendor_details": {
+                "form_factor": "SFP+",
+                "optics_type": "SFP+ 10G SR",
+                "name": "CISCO-FINISAR",
+                "oui_number": "00.90.65",
+                "part_number": "FTLX8571D3BCL-C2",
+                "rev_number": "A",
+                "serial_number": "FNS210108H7",
+                "pid": "SFP-10G-SR",
+                "vid": "V03",
+                "date_code": "17/01/03"
+            }
         }
     }
 
@@ -541,34 +569,34 @@ class test_show_controllers_optics(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowControllersOptics(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(unit='0/0/0/0')
+            parsed_output = obj.parse(port='0/0/0/0')
 
     def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowControllersOptics(device=self.device)
-        parsed_output = obj.parse(unit='0/0/0/0')
+        parsed_output = obj.parse(port='0/0/0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowControllersOptics(device=self.device)
-        parsed_output = obj.parse(unit='0/0/1/2')
+        parsed_output = obj.parse(port='0/0/1/2')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowControllersOptics(device=self.device)
-        parsed_output = obj.parse(unit='0/0/0/20')
+        parsed_output = obj.parse(port='0/0/0/20')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowControllersOptics(device=self.device)
-        parsed_output = obj.parse(unit='0/0/0/18')
+        parsed_output = obj.parse(port='0/0/0/18')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
