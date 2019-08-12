@@ -3005,7 +3005,6 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
 # ================================
 class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
-
     ''' Parser for:
         * 'show ip ospf neighbor detail'
     '''
@@ -3027,7 +3026,6 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
         # Init vars
         ret_dict = {}
-        vrf = None
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
@@ -3069,7 +3067,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                             ' +(?P<num2>(\d+)) +msec$')
         
         p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
-
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -3132,9 +3130,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                                 else:
                                     vrf = 'default'
                                     break
-                
-                if not vrf:
-                    vrf = 'default'
+
                 # Build dict
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
@@ -3146,7 +3142,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     ret_dict['vrf'][vrf]['address_family'][af] = {}
                 if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
-                if instance and instance not in ret_dict['vrf'][vrf]['address_family'][af]\
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af]\
                         ['instance']:
                     ret_dict['vrf'][vrf]['address_family'][af]['instance']\
                         [instance] = {}
@@ -3240,159 +3236,148 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     # Set values for dict
                     intf_type = 'interfaces'
                     intf_name = interface
-                
-                if instance:
-                    if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]:
-                        ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['areas'] = {}
-                    if area not in ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas']:
-                        ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['areas'][area] = {}
-                    if intf_type not in ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area]:
-                        ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['areas'][area][intf_type] = {}
-                    if intf_name not in ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area][intf_type]:
-                        ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['areas'][area][intf_type][intf_name] = {}
-                    if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
-                            [af]['instance'][instance]['areas'][area][intf_type]\
-                            [intf_name]:
-                        ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['areas'][area][intf_type][intf_name]\
-                            ['neighbors'] = {}
-                    if neighbor not in ret_dict['vrf'][vrf]['address_family'][af]\
-                            ['instance'][instance]['areas'][area][intf_type]\
-                            [intf_name]['neighbors']:
-                        ret_dict['vrf'][vrf]['address_family'][af]['instance']\
-                            [instance]['areas'][area][intf_type][intf_name]\
-                            ['neighbors'][neighbor] = {}
-                    
-                    # Set sub_dict
-                    sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
-                                ['instance'][instance]['areas'][area][intf_type]\
-                                [intf_name]['neighbors'][neighbor]
 
-                    # Set values
-                    sub_dict['neighbor_router_id'] = neighbor
-                    sub_dict['interface'] = interface
-                    try:
-                        sub_dict['address'] = address
-                        del address
-                    except Exception:
-                        pass
-                    try:
-                        sub_dict['interface_id'] = interface_id
-                        del interface_id
-                    except Exception:
-                        pass
-                    continue
+                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if intf_type not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type] = {}
+                if intf_name not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name] = {}
+                if 'neighbors' not in ret_dict['vrf'][vrf]['address_family']\
+                        [af]['instance'][instance]['areas'][area][intf_type]\
+                        [intf_name]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name]\
+                        ['neighbors'] = {}
+                if neighbor not in ret_dict['vrf'][vrf]['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]\
+                        [intf_name]['neighbors']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name]\
+                        ['neighbors'][neighbor] = {}
+                
+                # Set sub_dict
+                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]\
+                            ['instance'][instance]['areas'][area][intf_type]\
+                            [intf_name]['neighbors'][neighbor]
+
+                # Set values
+                sub_dict['neighbor_router_id'] = neighbor
+                sub_dict['interface'] = interface
+                try:
+                    sub_dict['address'] = address
+                    del address
+                except Exception:
+                    pass
+                try:
+                    sub_dict['interface_id'] = interface_id
+                    del interface_id
+                except Exception:
+                    pass
+                continue
 
             # Neighbor priority is 1, State is FULL, 6 state changes
             m = p3.match(line)
             if m:
-                if instance:
-                    sub_dict['priority'] = int(m.groupdict()['priority'])
-                    state = str(m.groupdict()['state']).lower()
-                    state = state.replace('_', '-')
-                    sub_dict['state'] = state
-                    if 'statistics' not in sub_dict:
-                        sub_dict['statistics'] = {}
-                    sub_dict['statistics']['nbr_event_count'] = \
-                        int(m.groupdict()['num'])
+                sub_dict['priority'] = int(m.groupdict()['priority'])
+                state = str(m.groupdict()['state']).lower()
+                state = state.replace('_', '-')
+                sub_dict['state'] = state
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['nbr_event_count'] = \
+                    int(m.groupdict()['num'])
                 continue
 
             # DR is 10.2.3.3 BDR is 10.2.3.2
             m = p4.match(line)
             if m:
-                if instance:
-                    sub_dict['dr_ip_addr'] = str(m.groupdict()['dr_ip_addr'])
-                    sub_dict['bdr_ip_addr'] = str(m.groupdict()['bdr_ip_addr'])
+                sub_dict['dr_ip_addr'] = str(m.groupdict()['dr_ip_addr'])
+                sub_dict['bdr_ip_addr'] = str(m.groupdict()['bdr_ip_addr'])
                 continue
 
             # Options is 0x2 in Hello (E-bit)
             m = p5.match(line)
             if m:
-                if instance:
-                    sub_dict['hello_options'] = str(m.groupdict()['options'])
+                sub_dict['hello_options'] = str(m.groupdict()['options'])
                 continue
 
             # Options is 0x42 in DBD (E-bit, O-bit)
             # Options is 0x42 in DBD (E-bit, O-bit)
             m = p6.match(line)
             if m:
-                if instance:
-                    sub_dict['dbd_options'] = str(m.groupdict()['options'])
+                sub_dict['dbd_options'] = str(m.groupdict()['options'])
                 continue
 
             # Dead timer due in 00:00:38
             m = p7.match(line)
             if m:
-                if instance:
-                    sub_dict['dead_timer'] = str(m.groupdict()['dead_timer'])
+                sub_dict['dead_timer'] = str(m.groupdict()['dead_timer'])
                 continue
 
             # Neighbor is up for 08:22:07
             m = p8.match(line)
             if m:
-                if instance:
-                    sub_dict['uptime'] = str(m.groupdict()['uptime'])
+                sub_dict['uptime'] = str(m.groupdict()['uptime'])
                 continue
 
             # Index 1/2/2, retransmission queue length 0, number of retransmission 0
             m = p9.match(line)
             if m:
-                if instance:
-                    sub_dict['index'] = str(m.groupdict()['index'])
-                    if 'statistics' not in sub_dict:
-                        sub_dict['statistics'] = {}
-                    sub_dict['statistics']['nbr_retrans_qlen'] = \
-                        int(m.groupdict()['ql'])
-                    sub_dict['statistics']['total_retransmission'] = \
-                        int(m.groupdict()['num_retrans'])
+                sub_dict['index'] = str(m.groupdict()['index'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['nbr_retrans_qlen'] = \
+                    int(m.groupdict()['ql'])
+                sub_dict['statistics']['total_retransmission'] = \
+                    int(m.groupdict()['num_retrans'])
                 continue
 
             # First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
             m = p10.match(line)
             if m:
-                if instance:
-                    sub_dict['first'] = str(m.groupdict()['first'])
-                    sub_dict['next'] = str(m.groupdict()['next'])
+                sub_dict['first'] = str(m.groupdict()['first'])
+                sub_dict['next'] = str(m.groupdict()['next'])
                 continue
 
             # Last retransmission scan length is 0, maximum is 0
             m = p11.match(line)
             if m:
-                if instance:
-                    if 'statistics' not in sub_dict:
-                        sub_dict['statistics'] = {}
-                    sub_dict['statistics']['last_retrans_scan_length'] = \
-                        int(m.groupdict()['num1'])
-                    sub_dict['statistics']['last_retrans_max_scan_length'] = \
-                        int(m.groupdict()['num2'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['last_retrans_scan_length'] = \
+                    int(m.groupdict()['num1'])
+                sub_dict['statistics']['last_retrans_max_scan_length'] = \
+                    int(m.groupdict()['num2'])
                 continue
 
             # Last retransmission scan time is 0 msec, maximum is 0 msec
             m = p12.match(line)
             if m:
-                if instance:
-                    if 'statistics' not in sub_dict:
-                        sub_dict['statistics'] = {}
-                    sub_dict['statistics']['last_retrans_scan_time_msec'] = \
-                        int(m.groupdict()['num1'])
-                    sub_dict['statistics']['last_retrans_max_scan_time_msec'] = \
-                        int(m.groupdict()['num2'])
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['last_retrans_scan_time_msec'] = \
+                    int(m.groupdict()['num1'])
+                sub_dict['statistics']['last_retrans_max_scan_time_msec'] = \
+                    int(m.groupdict()['num2'])
                 continue
             
             # SR adj label 10
             m = p13.match(line)
             if m:
-                if instance:
-                    sub_dict['sr_adj_label'] = str(m.groupdict()['sr_adj_label'])
+                sub_dict['sr_adj_label'] = str(m.groupdict()['sr_adj_label'])
                 continue
+            
         return ret_dict
 
 
