@@ -2349,7 +2349,7 @@ class ShowInterfacesSchema(MetaParser):
             'oper_status': str,
             Optional('line_protocol'): str,
             'enabled': bool,
-            Optional('interface_state'): int,
+            Optional('interface_state_transitions'): int,
             'type': str,
             Optional('mac_address'): str,
             Optional('phys_address'): str,
@@ -2370,7 +2370,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional('auto_negotiate'): bool,
             Optional('arp_type'): str,
             Optional('arp_timeout'): str,
-            Optional('loopback_status'): str,
+            Optional('loopback'): str,
             Optional('last_link_flapped'): str,
             Optional('last_input'): str,
             Optional('last_output'): str,
@@ -2412,7 +2412,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('out_rate'): int,
                     Optional('out_rate_pkts'): int,
                 },
-                Optional('in_discards'): int,
+                Optional('in_total_drops'): int,
                 Optional('in_unknown_protos'): int,
                 Optional('in_octets'): int,
                 Optional('in_pkts'): int,
@@ -2433,7 +2433,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('in_queue_drops'): int,
                 Optional('out_pkts'): int,
                 Optional('out_octets'): int,
-                Optional('out_discards'): int,
+                Optional('out_total_drops'): int,
                 Optional('out_broadcast_pkts'): int,
                 Optional('out_multicast_pkts'): int,
                 Optional('out_errors'): int,
@@ -2477,7 +2477,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                          '+line +protocol +is +(?P<line_protocol>[\w\s]+)$')
 
         # Interface state transitions: 9 
-        p2 = re.compile(r'^Interface +state +transitions: +(?P<interface_state>[\d]+)$')
+        p2 = re.compile(r'^Interface +state +transitions: +(?P<interface_state_transitions>[\d]+)$')
 
         # Hardware is Loopback
         # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
@@ -2515,7 +2515,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p9 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\.\s]+),'
                          '( +VLAN +Id +(?P<first_dot1q>\d+),)?'
                          '( +2nd +VLAN +Id +(?P<second_dot1q>\d+),)?'
-                         '( +loopback +(?P<loopback_status>[\w\s]+),)?$')
+                         '( +loopback +(?P<loopback>[\w\s]+),)?$')
 
         # Outer Match: Dot1Q VLAN 300
         p10 = re.compile(r'^Outer +Match: +(?P<outer_match>[\w\s]+)$')
@@ -2544,7 +2544,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 '(, +Carrier +delay +\(down\) +is +(?P<carrier_delay_down>\d+) +msec)?$')
 
         # loopback not set,
-        p15 = re.compile(r'^loopback +(?P<loopback_status>[\w\s]+),$')
+        p15 = re.compile(r'^loopback +(?P<loopback>[\w\s]+),$')
 
         # Last link flapped 5w6d
         p16 = re.compile(r'^Last +link +flapped +(?P<last_link_flapped>\S+)$')
@@ -2587,7 +2587,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # 0 packets input, 0 bytes
         # 0 packets input, 0 bytes, 0 total input drops
         p25 = re.compile(r'^(?P<in_pkts>[\d]+) +packets +input, +(?P<in_octets>[\d]+) +bytes'
-                          '(, +(?P<in_discards>[\d]+) +total +input +drops)?$')
+                          '(, +(?P<in_total_drops>[\d]+) +total +input +drops)?$')
 
         # 1258859 drops for unrecognized upper-level protocol
         p26 = re.compile(r'(?P<in_unknown_protos>[\d]+) +drops +for '
@@ -2617,7 +2617,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # 0 packets output, 0 bytes
         # 0 packets output, 0 bytes, 0 total output drops
         p31 = re.compile(r'^(?P<out_pkts>[\d]+) +packets +output, +(?P<out_octets>[\d]+) +bytes'
-                          '(, +(?P<out_discards>[\d]+) +total +output +drops)?$')
+                          '(, +(?P<out_total_drops>[\d]+) +total +output +drops)?$')
 
         # Output 0 broadcast packets, 178045 multicast packets
         p32 = re.compile(r'^Output +(?P<out_broadcast_pkts>\d+) +broadcast +packets, '
@@ -2667,8 +2667,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Interface state transitions: 9
             m = p2.match(line)
             if m:
-                interface_state = int(m.groupdict()['interface_state'])
-                intf_dict['interface_state'] = interface_state
+                interface_state_transitions = int(m.groupdict()['interface_state_transitions'])
+                intf_dict['interface_state_transitions'] = interface_state_transitions
                 continue
 
             # Hardware is Loopback
@@ -2749,7 +2749,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 encapsulation = encapsulation.replace("802.1q virtual lan","dot1q")
                 first_dot1q = group['first_dot1q']
                 second_dot1q = group['second_dot1q']
-                loopback_status = group['loopback_status']
+                loopback = group['loopback']
 
                 encap_dict = intf_dict.setdefault('encapsulations', {})
                 encap_dict['encapsulation'] = encapsulation
@@ -2760,8 +2760,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if second_dot1q:
                     encap_dict['second_dot1q'] = second_dot1q
                    
-                if loopback_status:
-                    intf_dict['loopback_status'] = loopback_status
+                if loopback:
+                    intf_dict['loopback'] = loopback
                 continue
 
             # Outer Match: Dot1Q VLAN 300
@@ -2844,8 +2844,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             # loopback not set,
             m = p15.match(line)
             if m:
-                loopback_status = m.groupdict()['loopback_status']
-                intf_dict['loopback_status'] = loopback_status
+                loopback = m.groupdict()['loopback']
+                intf_dict['loopback'] = loopback
                 continue
 
             # Last link flapped 5w6d
@@ -2941,13 +2941,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                in_discards = group['in_discards']
-                counter_dict = intf_dict.setdefault('counters', {})
-
-                counter_dict['in_pkts'] = int(group['in_pkts'])
-                counter_dict['in_octets'] = int(group['in_octets'])
-                if in_discards:
-                    counter_dict['in_discards'] = int(in_discards)
+                for k, v in group.items():
+                    if v:
+                        counter_dict.update({k: int(v)})
                 continue
 
             # 1258859 drops for unrecognized upper-level protocol
@@ -2960,39 +2956,28 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p27.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['in_drops'] = int(group['in_drops'])
-                counter_dict['in_queue_drops'] = int(group['in_queue_drops'])
-                counter_dict['in_errors'] = int(group['in_errors'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # Received 0 broadcast packets, 0 multicast packets
             m = p28.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['in_broadcast_pkts'] = int(group['in_broadcast_pkts'])
-                counter_dict['in_multicast_pkts'] = int(group['in_multicast_pkts'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # 0 runts, 0 giants, 0 throttles, 0 parity
             m = p29.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['in_runts'] = int(group['in_runts'])
-                counter_dict['in_giants'] = int(group['in_giants'])
-                counter_dict['in_throttles'] = int(group['in_throttles'])
-                counter_dict['in_parity'] = int(group['in_parity'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # 0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
             m = p30.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['in_errors'] = int(group['in_errors'])
-                counter_dict['in_crc_errors'] = int(group['in_crc_errors'])
-                counter_dict['in_frame'] = int(group['in_frame'])
-                counter_dict['in_overrun'] = int(group['in_overrun'])
-                counter_dict['in_ignored'] = int(group['in_ignored'])
-                counter_dict['in_abort'] = int(group['in_abort'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # 0 packets output, 0 bytes
@@ -3000,21 +2985,16 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p31.match(line)
             if m:
                 group = m.groupdict()
-                out_discards = group['out_discards']
-
-                counter_dict['out_pkts'] = int(group['out_pkts'])
-                counter_dict['out_octets'] = int(group['out_octets'])
-
-                if out_discards:
-                    counter_dict['out_discards'] = int(out_discards)
+                for k, v in group.items():
+                    if v:
+                        counter_dict.update({k: int(v)})
                 continue
 
             # Output 0 broadcast packets, 178045 multicast packets
             m = p32.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['out_broadcast_pkts'] = int(group['out_broadcast_pkts'])
-                counter_dict['out_multicast_pkts'] = int(group['out_multicast_pkts'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
 
@@ -3022,34 +3002,28 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p33.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['out_errors'] = int(group['out_errors'])
-                counter_dict['out_underruns'] = int(group['out_underruns'])
-                counter_dict['out_applique'] = int(group['out_applique'])
-                counter_dict['out_resets'] = int(group['out_resets'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # 0 output drops, 0 queue drops, 0 output errors
             m = p34.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['out_drops'] = int(group['out_drops'])
-                counter_dict['out_queue_drops'] = int(group['out_queue_drops'])
-                counter_dict['out_errors'] = int(group['out_errors'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # 0 output buffer failures, 0 output buffers swapped out
             m = p35.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['out_buffer_failure'] = int(group['out_buffer_failure'])
-                counter_dict['out_buffers_swapped'] = int(group['out_buffers_swapped'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             # 0 carrier transitions
             m = p36.match(line)
             if m:
                 group = m.groupdict()
-                counter_dict['carrier_transitions'] = int(group['carrier_transitions'])
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
         return result_dict
