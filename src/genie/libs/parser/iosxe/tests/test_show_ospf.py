@@ -2523,7 +2523,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
     
     golden_output4 = {'execute.return_value': '''
         show ip ospf neighbor detail
-        Neighbor 2.2.2.2, interface address 200.0.3.2, interface-id 24
+        Neighbor 10.16.2.2, interface address 192.168.154.2, interface-id 24
             In the area 8 via interface GigabitEthernet0/1/2
             Neighbor priority is 0, State is FULL, 6 state changes
             DR is 0.0.0.0 BDR is 0.0.0.0
@@ -2537,7 +2537,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
             Last retransmission scan length is 0, maximum is 0
             Last retransmission scan time is 0 msec, maximum is 0 msec
-        Neighbor 2.2.2.2, interface address 200.0.2.2, interface-id 23
+        Neighbor 10.16.2.2, interface address 192.168.4.2, interface-id 23
             In the area 8 via interface GigabitEthernet0/1/1
             Neighbor priority is 0, State is FULL, 6 state changes
             DR is 0.0.0.0 BDR is 0.0.0.0
@@ -2559,16 +2559,16 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'instance': {
-                            '9996': {
+                            '65109': {
                                 'areas': {
                                     '0.0.0.8': {
                                         'interfaces': {
                                             'GigabitEthernet5': {
                                                 'neighbors': {
-                                                    '2.2.2.2': {
-                                                        'neighbor_router_id': '2.2.2.2',
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
                                                         'interface': 'GigabitEthernet5',
-                                                        'address': '15.0.0.15',
+                                                        'address': '10.225.0.15',
                                                         'interface_id': '11',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -2594,10 +2594,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                 },
                                             'GigabitEthernet4': {
                                                 'neighbors': {
-                                                    '2.2.2.2': {
-                                                        'neighbor_router_id': '2.2.2.2',
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
                                                         'interface': 'GigabitEthernet4',
-                                                        'address': '15.0.0.16',
+                                                        'address': '10.225.0.16',
                                                         'interface_id': '10',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -2622,10 +2622,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                 },
                                             'GigabitEthernet3': {
                                                 'neighbors': {
-                                                    '2.2.2.2': {
-                                                        'neighbor_router_id': '2.2.2.2',
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
                                                         'interface': 'GigabitEthernet3',
-                                                        'address': '15.0.0.17',
+                                                        'address': '10.225.0.17',
                                                         'interface_id': '9',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -2650,10 +2650,10 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
                                                 },
                                             'GigabitEthernet2': {
                                                 'neighbors': {
-                                                    '2.2.2.2': {
-                                                        'neighbor_router_id': '2.2.2.2',
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
                                                         'interface': 'GigabitEthernet2',
-                                                        'address': '15.0.0.18',
+                                                        'address': '10.225.0.18',
                                                         'interface_id': '8',
                                                         'priority': 0,
                                                         'state': 'full',
@@ -2693,7 +2693,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         def mapper(key):
             return self.outputs[key]
         raw1 = '''
-        Neighbor 2.2.2.2, interface address 15.0.0.15, interface-id 11
+        Neighbor 10.16.2.2, interface address 10.225.0.15, interface-id 11
             In the area 8 via interface GigabitEthernet5
             Neighbor priority is 0, State is FULL, 6 state changes
             DR is 0.0.0.0 BDR is 0.0.0.0
@@ -2707,7 +2707,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
             Last retransmission scan length is 0, maximum is 0
             Last retransmission scan time is 0 msec, maximum is 0 msec
-        Neighbor 2.2.2.2, interface address 15.0.0.16, interface-id 10
+        Neighbor 10.16.2.2, interface address 10.225.0.16, interface-id 10
             In the area 8 via interface GigabitEthernet4
             Neighbor priority is 0, State is FULL, 6 state changes
             DR is 0.0.0.0 BDR is 0.0.0.0
@@ -2720,7 +2720,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
             Last retransmission scan length is 0, maximum is 0
             Last retransmission scan time is 0 msec, maximum is 0 msec
-        Neighbor 2.2.2.2, interface address 15.0.0.17, interface-id 9
+        Neighbor 10.16.2.2, interface address 10.225.0.17, interface-id 9
             In the area 8 via interface GigabitEthernet3
             Neighbor priority is 0, State is FULL, 6 state changes
             DR is 0.0.0.0 BDR is 0.0.0.0
@@ -2733,7 +2733,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
             Last retransmission scan length is 0, maximum is 0
             Last retransmission scan time is 0 msec, maximum is 0 msec
-        Neighbor 2.2.2.2, interface address 15.0.0.18, interface-id 8
+        Neighbor 10.16.2.2, interface address 10.225.0.18, interface-id 8
             In the area 8 via interface GigabitEthernet2
             Neighbor priority is 0, State is FULL, 6 state changes
             DR is 0.0.0.0 BDR is 0.0.0.0
@@ -2750,9 +2750,9 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         raw2_1 = '''
             show ip ospf interface | section GigabitEthernet5
             GigabitEthernet5 is up, line protocol is up
-            Internet Address 15.0.0.28/30, Interface ID 11, Area 8
+            Internet Address 10.225.0.28/30, Interface ID 11, Area 8
             Attached via Network Statement
-            Process ID 9996, Router ID 1.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
             Topology-MTID    Cost    Disabled    Shutdown      Topology Name
                     0           1         no          no            Base
             Transmit Delay is 1 sec, State POINT_TO_POINT
@@ -2770,15 +2770,15 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             Last flood scan length is 1, maximum is 10
             Last flood scan time is 0 msec, maximum is 9 msec
             Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 2.2.2.2
+                Adjacent with neighbor 10.16.2.2
             Suppress hello for 0 neighbor(s)
         '''
         raw2_2 = '''
             show ip ospf interface | section GigabitEthernet4
             GigabitEthernet4 is up, line protocol is up
-            Internet Address 15.0.0.29/30, Interface ID 10, Area 8
+            Internet Address 10.225.0.29/30, Interface ID 10, Area 8
             Attached via Network Statement
-            Process ID 9996, Router ID 1.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
             Topology-MTID    Cost    Disabled    Shutdown      Topology Name
                     0           1         no          no            Base
             Transmit Delay is 1 sec, State POINT_TO_POINT
@@ -2796,15 +2796,15 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             Last flood scan length is 1, maximum is 10
             Last flood scan time is 0 msec, maximum is 1 msec
             Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 2.2.2.2
+                Adjacent with neighbor 10.16.2.2
             Suppress hello for 0 neighbor(s)
         '''
         raw2_3 = '''
             show ip ospf interface | section GigabitEthernet3
             GigabitEthernet3 is up, line protocol is up
-            Internet Address 15.0.0.30/30, Interface ID 9, Area 8
+            Internet Address 10.225.0.30/30, Interface ID 9, Area 8
             Attached via Network Statement
-            Process ID 9996, Router ID 1.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
             Topology-MTID    Cost    Disabled    Shutdown      Topology Name
                     0           1         no          no            Base
             Transmit Delay is 1 sec, State POINT_TO_POINT
@@ -2822,15 +2822,15 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             Last flood scan length is 1, maximum is 10
             Last flood scan time is 1 msec, maximum is 1 msec
             Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 2.2.2.2
+                Adjacent with neighbor 10.16.2.2
             Suppress hello for 0 neighbor(s)
         '''
         raw2_4 = '''
             show ip ospf interface | section GigabitEthernet2
             GigabitEthernet2 is up, line protocol is up
-            Internet Address 15.0.0.31/30, Interface ID 8, Area 8
+            Internet Address 10.225.0.31/30, Interface ID 8, Area 8
             Attached via Network Statement
-            Process ID 9996, Router ID 1.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
             Topology-MTID    Cost    Disabled    Shutdown      Topology Name
                     0           1         no          no            Base
             Transmit Delay is 1 sec, State POINT_TO_POINT
@@ -2848,14 +2848,14 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
             Last flood scan length is 1, maximum is 10
             Last flood scan time is 0 msec, maximum is 1 msec
             Neighbor Count is 1, Adjacent neighbor count is 1
-                Adjacent with neighbor 2.2.2.2
+                Adjacent with neighbor 10.16.2.2
             Suppress hello for 0 neighbor(s)
         '''
 
         raw3_1 = '''
-            show running-config | section router ospf 9996
-            router ospf 9996
-            router-id 1.1.1.1
+            show running-config | section router ospf 65109
+            router ospf 65109
+            router-id 10.4.1.1
             network 0.0.0.0 255.255.255.255 area 8
         '''
 
@@ -2866,7 +2866,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_3
         self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_4
 
-        self.outputs['show running-config | section router ospf 9996'] = raw3_1
+        self.outputs['show running-config | section router ospf 65109'] = raw3_1
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
