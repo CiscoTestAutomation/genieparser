@@ -41,3 +41,10 @@
 * IOSXE
     * Update ShowPlatform
         to parse 'lc_type' more clearly and flexibly based on updated schema
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpRouteWord
+        * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
