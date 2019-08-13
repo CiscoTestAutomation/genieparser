@@ -87,8 +87,10 @@ IOSXE parsers for the following show commands:
     ----------------------------------------------------------------------------
     * show bgp all neighbors {neighbor} policy
     ----------------------------------------------------------------------------
+    * show ip bgp template peer-session
     * show ip bgp template peer-session {template_name}
     ----------------------------------------------------------------------------
+    * show ip bgp template peer-policy
     * show ip bgp template peer-policy {template_name}
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
@@ -6397,12 +6399,16 @@ class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
 
     ''' Parser for "show ip bgp template peer-session {template_name}" '''
 
-    cli_command = 'show ip bgp template peer-session {template_name}'
+    cli_command = ['show ip bgp template peer-session {template_name}', 'show ip bgp template peer-session']
 
     def cli(self, template_name="", output=None):
         # show ip bgp template peer-session <WORD>
         if output is None:
-            out = self.device.execute(self.cli_command.format(template_name=template_name))
+            if template_name:
+                cmd = self.cli_command[0].format(template_name=template_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -6683,12 +6689,16 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpBgpTemplatePeerPolicySchema):
 
     ''' Parser for "show ip bgp template peer-policy {template_name}" '''
 
-    cli_command = 'show ip bgp template peer-policy {template_name}'
+    cli_command = ['show ip bgp template peer-policy {template_name}', 'show ip bgp template peer-policy']
 
     def cli(self, template_name="", output=None):
         # show ip bgp template peer-policy <WORD>
         if output is None:
-            out = self.device.execute(self.cli_command.format(template_name=template_name))
+            if template_name:
+                cmd = self.cli_command[0].format(template_name=template_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 

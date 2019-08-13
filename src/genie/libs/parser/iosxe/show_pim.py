@@ -1698,6 +1698,7 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
                   show ipv6 pim [vrf <word>] neighbor detail'''
 
     cli_command = ['show {af} pim vrf {vrf} neighbor', 'show {af} pim neighbor']
+    exclude = ['expiration', 'up_time']
 
     def cli(self, af='ip',vrf='', output=None):
         if output is None:
@@ -1812,21 +1813,35 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 # ==========================================================
 class ShowIpPimNeighbor(ShowPimNeighbor):
     '''Parser for show ip pim [vrf <WORD>] neighbor'''
+    cli_command = 'show ip pim neighbor'
     exclude = ['expiration', 'up_time']
 
     def cli(self, vrf='',output=None):
-        return super().cli(af='ip', vrf=vrf,output=output)
+         # ip should be ip or ipv6
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        return super().cli(af='ip', vrf=vrf, output=out)
 
 # ==========================================================
 #  parser for 'show ipv6 pim [vrf <WORD>] neighbor'
 # ==========================================================
 class ShowIpv6PimNeighbor(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor'''
+    cli_command = 'show ipv6 pim neighbor'
     exclude = ['expiration', 'up_time']
 
-
     def cli(self, vrf='',output=None):
-        return super().cli(af='ipv6', vrf=vrf,output=output)
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(af='ipv6', vrf=vrf,output=out)
 
 
 # ==========================================================
@@ -1834,11 +1849,19 @@ class ShowIpv6PimNeighbor(ShowPimNeighbor):
 # ==========================================================
 class ShowIpv6PimNeighborDetail(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor detail'''
+    cli_command = 'show ipv6 pim neighbor detail'
     exclude = ['expiration', 'up_time']
 
 
     def cli(self, vrf='',output=None):
-        return super().cli(af='ipv6', vrf=vrf,output=output)
+         # ip should be ip or ipv6
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(af='ipv6', vrf=vrf,output=out)
 
 
 # ===========================================================
