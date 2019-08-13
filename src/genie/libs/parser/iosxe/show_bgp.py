@@ -87,8 +87,10 @@ IOSXE parsers for the following show commands:
     ----------------------------------------------------------------------------
     * show bgp all neighbors {neighbor} policy
     ----------------------------------------------------------------------------
+    * show ip bgp template peer-session
     * show ip bgp template peer-session {template_name}
     ----------------------------------------------------------------------------
+    * show ip bgp template peer-policy
     * show ip bgp template peer-policy {template_name}
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
