@@ -13,7 +13,7 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
 # Parser for 'show segment-routing mpls lb lock'
 # ==============================================
 
-class test_show_routing_mpls_lb(unittest.TestCase):
+class test_show_routing_mpls_lb_lock(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
