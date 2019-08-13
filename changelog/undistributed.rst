@@ -64,3 +64,10 @@
 * IOSXR
     * Update ShowIpv6PrefixListDetail
         updated cli for Ops
+
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsLB for
+        'show segment-routing mpls lb'
