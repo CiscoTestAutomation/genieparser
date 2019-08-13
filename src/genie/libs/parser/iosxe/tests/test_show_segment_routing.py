@@ -12,6 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMplsLB,
                                                           ShowSegmentRoutingMplsState,
                                                           ShowSegmentRoutingMplsConnectedPrefixSidMap,
+                                                          ShowSegmentRoutingMplsGb,
                                                           )
 
 # =============================================================
@@ -86,9 +87,46 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
         parsed_output = obj.parse(af='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-# ============================================
-# Parser for 'show segment-routing mpls lb'
-# ============================================
+
+# ==================================
+# Unittest for:
+#   * 'show segment-routing mpls gb'
+# ==================================
+class test_show_routing_mpls_gb(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 = {
+        'default': 'Yes',
+        'label_max': 23999,
+        'label_min': 16000,
+        'state': 'ENABLED'}
+
+    golden_output1 = {'execute.return_value': '''
+        PE1#show segment-routing mpls gb
+        LABEL-MIN  LABEL_MAX  STATE           DEFAULT   
+        16000      23999      ENABLED         Yes       
+        PE1#
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingMplsGb(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowSegmentRoutingMplsGb(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ==================================
+# Unittest for:
+#   * 'show segment-routing mpls lb'
+# ==================================
 class test_show_routing_mpls_lb(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -119,9 +157,11 @@ class test_show_routing_mpls_lb(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-# ============================================
-# Parser for 'show segment-routing mpls state'
-# ============================================
+
+# =====================================
+# Unittest for:
+#   * 'show segment-routing mpls state'
+# =====================================
 class test_show_routing_mpls_state(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -147,6 +187,7 @@ class test_show_routing_mpls_state(unittest.TestCase):
         obj = ShowSegmentRoutingMplsState(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()

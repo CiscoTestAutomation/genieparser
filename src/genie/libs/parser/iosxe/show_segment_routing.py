@@ -5,6 +5,8 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls lb'
     * 'show segment-routing mpls state'
     * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+    * 'show segment-routing mpls gb'
 '''
 
 # Python
@@ -196,6 +198,66 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
 
         return ret_dict
 
+
+# ==================================
+# Schema for:
+#   * 'show segment-routing mpls gb'
+# ==================================
+class ShowSegmentRoutingMplsGbSchema(MetaParser):
+    ''' Schema for:
+        * 'show segment-routing mpls gb'
+    '''
+
+    schema = {
+        'label_min': int,
+        'label_max': int,
+        'state': str,
+        'default': str,
+        }
+
+
+# ==================================
+# Parser for:
+#   * 'show segment-routing mpls gb'
+# ==================================
+class ShowSegmentRoutingMplsGb(ShowSegmentRoutingMplsGbSchema):
+    ''' Parser for:
+        * 'show segment-routing mpls gb'
+    '''
+    
+    cli_command = 'show segment-routing mpls gb'
+    
+    def cli(self, output=None):
+
+        # Get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init
+        ret_dict = {}
+
+        # LABEL-MIN  LABEL_MAX  STATE           DEFAULT  
+        # 16000      23999      ENABLED         Yes  
+        p1 = re.compile(r'^(?P<label_min>(\d+)) +(?P<label_max>(\d+))'
+                         ' +(?P<state>(\S+)) +(?P<default>(\S+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # LABEL-MIN  LABEL_MAX  STATE           DEFAULT  
+            # 16000      23999      ENABLED         Yes  
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['label_min'] = int(group['label_min']) 
+                ret_dict['label_max'] = int(group['label_max'])
+                ret_dict['state'] = group['state']
+                ret_dict['default'] = group['default']
+                continue
+
+        return ret_dict
 
 
 # =============================================
