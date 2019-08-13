@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
+    * show ip ospf {process_id} segment-routing adjacency-sid
 
 '''
 
@@ -6464,3 +6465,98 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, db_type='router', output=output)
+
+
+class ShowIpOspfSegmentRoutingSchema(MetaParser):
+    ''' Schema for commands:
+            * show ip ospf {bgp_as} segment-routing adjacency-sid
+    '''
+    schema = {
+        'ospf_id': {
+            Any():{
+                'process_id': {
+                    Any(): {
+                        'adjacency_sids': {
+                            Any(): {
+                                'neighbor_id': str,
+                                'neighbor_address': str,
+                                'interface': str,
+                                'flags': str,
+                                Optional('backup_nexthop'): str,
+                                Optional('backup_interface'): str,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+    ''' Parser for commands:
+            * show ip ospf {bgp_as} segment-routing adjacency-sid
+    '''
+
+    cli_commands = [
+        'show ip ospf {process_id} segment-routing adjacency-sid',
+        'show ip ospf segment-routing adjacency-sid',
+    ]
+
+    def cli(self, process_id=None, output=None):
+
+        if output is None:
+            if process_id:
+                command = self.cli_commands[0].format(process_id=process_id)
+            else:
+                command = self.cli_commands[1]
+
+            out = self.device.execute(command)
+        else:
+            out = output
+
+        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        r1 = re.compile(r'OSPF\s+Router\s+with\s+ID\s+\((?P<ospf_id>\S+)\)\s+\(Process\s+ID\s+(?P<process_id>9996)\)')
+
+        # 16       2.2.2.2         Gi0/1/2            200.0.3.2       D U   
+        # 17       2.2.2.2         Gi0/1/1            200.0.2.2       D U   
+        r2 = re.compile(r'(?P<adj_sid>\d+)\s+(?P<neighbor_id>\S+)\s+(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+(?P<flags>[SDPUGL\s]+)')
+
+        parsed_output = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+
+                ospf_id = group['ospf_id']
+                process_id = group['process_id']
+
+                process_id_dict = parsed_output.setdefault('ospf_id', {})\
+                .setdefault(ospf_id, {}).setdefault('process_id', {})\
+                .setdefault(process_id, {})                
+
+                continue
+
+            # 16       2.2.2.2         Gi0/1/2            200.0.3.2       D U
+            # 17       2.2.2.2         Gi0/1/1            200.0.2.2       D U
+            result = r2.match(line)
+            if result:
+
+                group = result.groupdict()
+                adj_sid = group['adj_sid']
+
+                adjs_sid_dict = process_id_dict.setdefault('adjacency_sids', {})\
+                .setdefault(adj_sid, {})
+
+                adjs_sid_dict['neighbor_id'] = group['neighbor_id']
+                interface = group['interface']
+                adjs_sid_dict['interface'] = Common.convert_intf_name(str(interface))
+                adjs_sid_dict['neighbor_address'] = group['neighbor_address']
+                adjs_sid_dict['flags'] = group['flags']
+
+                continue
+
+        return parsed_output
