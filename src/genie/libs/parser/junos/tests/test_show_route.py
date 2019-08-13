@@ -22,13 +22,13 @@ class test_show_route_table(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-    #show route table inet.3 4.4.4.4
- 
-    inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
-    + = Active Route, - = Last Active, * = Both
+        #show route table inet.3 4.4.4.4
      
-    4.4.4.4/32         *[LDP/9] 03:40:50, metric 110
-                        > to 200.0.0.6 via ge-0/0/1.0
+        inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+         
+        4.4.4.4/32         *[LDP/9] 03:40:50, metric 110
+                            > to 200.0.0.6 via ge-0/0/1.0
 
     '''}
 
@@ -41,28 +41,31 @@ class test_show_route_table(unittest.TestCase):
                         'destination_count': 3,
                         'hidden_route_count': 0,
                         'holddown_route_count': 0,
-                        'rt': {
-                            'rt_destination': {
-                                '4.4.4.4/32': {
-                                    'active_tag': '*',
-                                    'age': '03:40:50',
-                                    'metric': '110',
-                                    'nh': {
-                                        'to': '200.0.0.6',
-                                        'via': 'GigabitEthernet0/0/1.0'},
-                            'preference': '9',
-                            'protocol_name': 'LDP'}}},
-                            'total_route_count': 3}}}}}
+                        'routes': {
+                            '4.4.4.4/32': {
+                                'active_tag': '*',
+                                'age': '03:40:50',
+                                'metric': '110',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_route': '>',
+                                            'to': '200.0.0.6',
+                                            'via': 'ge-0/0/1.0'}}},
+                                'preference': '9',
+                                'protocol_name': 'LDP'}},
+                        'total_route_count': 3}}}}}
+
 
 
     golden_output_2 = {'execute.return_value': '''
-    #show route table inet.3 202.239.165.220
- 
-    inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
-    + = Active Route, - = Last Active, * = Both
+        #show route table inet.3 202.239.165.220
      
-    202.239.165.220/32 *[LDP/9] 03:41:19, metric 1111
-                        > to 200.0.0.6 via ge-0/0/1.0, Push 305550
+        inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+         
+        202.239.165.220/32 *[LDP/9] 03:41:19, metric 1111
+                            > to 200.0.0.6 via ge-0/0/1.0, Push 305550
 
     '''}
 
@@ -75,32 +78,35 @@ class test_show_route_table(unittest.TestCase):
                         'destination_count': 3,
                         'hidden_route_count': 0,
                         'holddown_route_count': 0,
-                        'rt': {
-                            'rt_destination': {
-                                '202.239.165.220/32': {
-                                    'active_tag': '*',
-                                    'age': '03:41:19',
-                                    'metric': '1111',
-                                    'nh': {
-                                        'mpls_label': 'Push 305550',
-                                        'to': '200.0.0.6',
-                                        'via': 'GigabitEthernet0/0/1.0'},
-                                    'preference': '9',
-                                    'protocol_name': 'LDP'}}},
+                        'routes': {
+                            '202.239.165.220/32': {
+                                'active_tag': '*',
+                                'age': '03:41:19',
+                                'metric': '1111',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_route': '>',
+                                            'mpls_label': 'Push 305550',
+                                            'to': '200.0.0.6',
+                                            'via': 'ge-0/0/1.0'}}},
+                                'preference': '9',
+                                'protocol_name': 'LDP'}},
                         'total_route_count': 3}}}}}
 
+
     golden_output_3 = {'execute.return_value': '''
-    #show route table inet.3
+        #show route table inet.3
 
-    inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
-    + = Active Route, - = Last Active, * = Both
+        inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
 
-    4.4.4.4/32         *[LDP/9] 02:30:55, metric 110
-                        > to 200.0.0.6 via ge-0/0/1.0
-    106.162.197.254/32 *[LDP/9] 02:14:05, metric 1001
-                        > to 7.0.0.1 via ge-0/0/2.0
-    202.239.165.220/32 *[LDP/9] 02:03:22, metric 1111
-                        > to 200.0.0.6 via ge-0/0/1.0, Push 307742
+        4.4.4.4/32         *[LDP/9] 02:30:55, metric 110
+                            > to 200.0.0.6 via ge-0/0/1.0
+        106.162.197.254/32 *[LDP/9] 02:14:05, metric 1001
+                            > to 7.0.0.1 via ge-0/0/2.0
+        202.239.165.220/32 *[LDP/9] 02:03:22, metric 1111
+                            > to 200.0.0.6 via ge-0/0/1.0, Push 307742
     '''}
 
     parsed_output_3 = {
@@ -112,37 +118,84 @@ class test_show_route_table(unittest.TestCase):
                         'destination_count': 3,
                         'hidden_route_count': 0,
                         'holddown_route_count': 0,
-                        'rt': {
-                            'rt_destination': {
-                                '106.162.197.254/32': {
-                                    'active_tag': '*',
-                                    'age': '02:14:05',
-                                    'metric': '1001',
-                                    'nh': {
-                                        'to': '7.0.0.1',
-                                        'via': 'GigabitEthernet0/0/2.0'},
-                                        'preference': '9',
-                                        'protocol_name': 'LDP'},
-                                '202.239.165.220/32': {
-                                    'active_tag': '*',
-                                    'age': '02:03:22',
-                                    'metric': '1111',
-                                    'nh': {
-                                        'mpls_label': 'Push 307742',
-                                        'to': '200.0.0.6',
-                                        'via': 'GigabitEthernet0/0/1.0'},
-                                    'preference': '9',
-                                    'protocol_name': 'LDP'},
-                                '4.4.4.4/32': {
-                                    'active_tag': '*',
-                                    'age': '02:30:55',
-                                    'metric': '110',
-                                    'nh': {
-                                        'to': '200.0.0.6',
-                                        'via': 'GigabitEthernet0/0/1.0'},
-                                        'preference': '9',
-                                        'protocol_name': 'LDP'}}},
-                        'total_route_count': 3}}}}}
+                        'routes': {
+                            '106.162.197.254/32': {
+                                'active_tag': '*',
+                                'age': '02:14:05',
+                                'metric': '1001',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_route': '>',
+                                            'to': '7.0.0.1',
+                                            'via': 'ge-0/0/2.0'}}},
+                                'preference': '9',
+                                'protocol_name': 'LDP'},
+                            '202.239.165.220/32': {
+                                'active_tag': '*',
+                                'age': '02:03:22',
+                                'metric': '1111',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_route': '>',
+                                            'mpls_label': 'Push 307742',
+                                            'to': '200.0.0.6',
+                                            'via': 'ge-0/0/1.0'}}},
+                                'preference': '9',
+                                'protocol_name': 'LDP'},
+                            '4.4.4.4/32': {
+                                'active_tag': '*',
+                                'age': '02:30:55',
+                                'metric': '110',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_route': '>',
+                                            'to': '200.0.0.6',
+                                            'via': 'ge-0/0/1.0'}}},
+                                'preference': '9',
+                                'protocol_name': 'LDP'}},
+                                'total_route_count': 3}}}}}
+
+    golden_output_4= {'execute.return_value': '''
+        #show route table inet.3
+        inet.3: 5 destinations, 5 routes (5 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        10.0.0.5/32        *[LDP/9] 00:25:43, metric 10
+                              to 10.2.94.2 via lt-1/2/0.49
+                            > to 10.2.3.2 via lt-1/2/0.23
+
+    '''}
+
+    parsed_output_4 = {
+        'route_information': {
+            'route_table': {
+                'table_name': {
+                    'inet.3:': {
+                        'active_route_count': 5,
+                        'destination_count': 5,
+                        'hidden_route_count': 0,
+                        'holddown_route_count': 0,
+                        'routes': {
+                            '10.0.0.5/32': {
+                                'active_tag': '*',
+                                'age': '00:25:43',
+                                'metric': '10',
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'to': '10.2.94.2',
+                                            'via': 'lt-1/2/0.49'},
+                                        2: {
+                                            'best_route': '>',
+                                            'to': '10.2.3.2',
+                                            'via': 'lt-1/2/0.23'}}},
+                                'preference': '9',
+                                'protocol_name': 'LDP'}},
+                        'total_route_count': 5}}}}}
+
 
     def test_show_route_table_empty(self):
         self.maxDiff = None
@@ -171,6 +224,13 @@ class test_show_route_table(unittest.TestCase):
         obj = ShowRouteTable(device=self.device)
         parsed_output = obj.parse(table='inet.3')
         self.assertEqual(parsed_output, self.parsed_output_3)
+
+    def test_show_route_table_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowRouteTable(device=self.device)
+        parsed_output = obj.parse(table='inet.3')
+        self.assertEqual(parsed_output, self.parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()
