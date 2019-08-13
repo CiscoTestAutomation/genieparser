@@ -6469,7 +6469,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
 
 class ShowIpOspfSegmentRoutingSchema(MetaParser):
     ''' Schema for commands:
-            * show ip ospf {bgp_as} segment-routing adjacency-sid
+            * show ip ospf {process_id} segment-routing adjacency-sid
     '''
     schema = {
         'ospf_id': {
@@ -6494,7 +6494,7 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
 
 class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
     ''' Parser for commands:
-            * show ip ospf {bgp_as} segment-routing adjacency-sid
+            * show ip ospf {process_id} segment-routing adjacency-sid
     '''
 
     cli_commands = [
