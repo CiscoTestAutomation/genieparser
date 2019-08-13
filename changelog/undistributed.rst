@@ -69,7 +69,5 @@
                                 Pim
 --------------------------------------------------------------------------------
 * IOSXR
-    * Update ShowIpPimNeighbor
-        added 'cli_command' to avoid 'execute' issue for Ops
-    * Update ShowIpv6PimNeighborDetail
-        added 'cli_command' to avoid 'execute' issue for Ops
+    * Update ShowPimNeighbor
+        added exclude
