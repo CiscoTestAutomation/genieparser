@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
+    * show ip ospf fast-reroute ti-ifa
 
 '''
 
@@ -6489,6 +6490,11 @@ class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
         }
     }
 
+# =================================================
+# Parser for:
+#   * 'show ip ospf fast-reroute ti-ifa'
+# =================================================
+
 class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
     """Parser for show ip ospf fast-reroute ti-ifa
     """
@@ -6508,8 +6514,9 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
         # Area 8                  no       yes      no          no           
         # Loopback0               no       no       no          no           
         # GigabitEthernet0/1/2    no       yes      no          no  
-        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>\S+) +'
-            '(?P<sr_enabled>\S+) +(?P<ti_lfa_configured>\S+) +(?P<ti_lfa_enabled>\S+)')
+        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)) '
+                         '+(?P<sr_enabled>(yes|no)) +(?P<ti_lfa_configured>(yes|no))'
+                         ' +(?P<ti_lfa_enabled>(yes|no))')
         
         # initial variables
         ret_dict = {}
@@ -6537,7 +6544,7 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ospf_object = group['ospf_object']
+                ospf_object = group['ospf_object'].strip()
                 ipfrr_enabled = group['ipfrr_enabled']
                 sr_enabled = group['sr_enabled']
                 ti_lfa_configured = group['ti_lfa_configured']
@@ -6545,10 +6552,10 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
                 
                 ospf_object = router_dict.setdefault(ospf_object, {})
 
-                ospf_object.update({'ipfrr_enabled', ipfrr_enabled })
-                ospf_object.update({'sr_enabled', sr_enabled })
-                ospf_object.update({'ti_lfa_configured', ti_lfa_configured })
-                ospf_object.update({'ti_lfa_enabled', ti_lfa_enabled })
+                ospf_object.update({'ipfrr_enabled': ipfrr_enabled })
+                ospf_object.update({'sr_enabled': sr_enabled })
+                ospf_object.update({'ti_lfa_configured': ti_lfa_configured })
+                ospf_object.update({'ti_lfa_enabled': ti_lfa_enabled })
                 continue
 
         return ret_dict

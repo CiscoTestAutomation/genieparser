@@ -8141,19 +8141,87 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
 # Parser for 'show ip ospf fast-reroute ti-ifa'
 # ==============================================
 
-class test_show_routing_mpls_lb_lock(unittest.TestCase):
+class test_show_ip_ospf_fast_reroute_ti_ifa(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'label_min': 15000,
-        'label_max': 15999
-    }
+        'router': {
+            '1.1.1.1': {
+                'process_id': {
+                    9996: {
+                        'ospf_object': {
+                            'Process ID (9996)': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'Area 8': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'Loopback0': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'no',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'GigabitEthernet0/1/2': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'GigabitEthernet0/1/1': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'GigabitEthernet0/1/0': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'TenGigabitEthernet0/0/': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            'AS external': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'no',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
     
     golden_output = {'execute.return_value': '''
-        show segment-routing mpls lb lock
-        SR LB (15000, 15999) Lock Users :
+        
+        OSPF Router with ID (1.1.1.1) (Process ID 9996)
+
+        OSPF                    IPFRR    SR       TI-LFA      TI-LFA       
+        Object                  enabled  enabled  configured  enabled      
+        --------------------------------------------------------------------
+        Process ID (9996)       no       yes      no          no           
+        Area 8                  no       yes      no          no           
+        Loopback0               no       no       no          no           
+        GigabitEthernet0/1/2    no       yes      no          no           
+        GigabitEthernet0/1/1    no       yes      no          no           
+        GigabitEthernet0/1/0    no       yes      no          no           
+        TenGigabitEthernet0/0/  no       yes      no          no           
+        AS external             no       yes      no          no       
     '''}
 
     def test_empty(self):
