@@ -82,6 +82,8 @@
         'show segment-routing mpls lb'
     * Added ShowSegmentRoutingMplsState for
         'show segment-routing mpls state'
+    * Added ShowSegmentRoutingMplsLbLock for
+        'show segment-routing mpls lb lock'
 
 --------------------------------------------------------------------------------
                                 Pim
@@ -95,3 +97,12 @@
         updated cli and added exclude for Ops
     * Update ShowIpv6PimNeighborDetail
         updated cli and added exclude for Ops
+
+--------------------------------------------------------------------------------
+                                Bgp
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpBgpTemplatePeerSession
+        added a key to cli command for Ops
+    * Fix ShowIpBgpTemplatePeerPolicy
+        added a key to cli command for Ops
