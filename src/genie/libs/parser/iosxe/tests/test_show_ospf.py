@@ -8138,10 +8138,10 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 # ==============================================
-# Parser for 'show ip ospf fast-reroute ti-ifa'
+# Parser for 'show ip ospf fast-reroute ti-lfa'
 # ==============================================
 
-class test_show_ip_ospf_fast_reroute_ti_ifa(unittest.TestCase):
+class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -8208,7 +8208,7 @@ class test_show_ip_ospf_fast_reroute_ti_ifa(unittest.TestCase):
         }
     
     golden_output = {'execute.return_value': '''
-        
+        show ip ospf fast-reroute ti-lfa
         OSPF Router with ID (1.1.1.1) (Process ID 9996)
 
         OSPF                    IPFRR    SR       TI-LFA      TI-LFA       

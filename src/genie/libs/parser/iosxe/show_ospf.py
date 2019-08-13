@@ -21,7 +21,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
-    * show ip ospf fast-reroute ti-ifa
+    * show ip ospf fast-reroute ti-lfa
 
 '''
 
@@ -6468,7 +6468,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
 
 
 class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
-    """Schema for show ip ospf fast-reroute ti-ifa
+    """Schema for show ip ospf fast-reroute ti-lfa
     """
 
     schema = {
@@ -6492,14 +6492,14 @@ class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
 
 # =================================================
 # Parser for:
-#   * 'show ip ospf fast-reroute ti-ifa'
+#   * 'show ip ospf fast-reroute ti-lfa'
 # =================================================
 
 class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
-    """Parser for show ip ospf fast-reroute ti-ifa
+    """Parser for show ip ospf fast-reroute ti-lfa
     """
 
-    cli_command = 'show ip ospf fast-reroute ti-ifa'
+    cli_command = 'show ip ospf fast-reroute ti-lfa'
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
