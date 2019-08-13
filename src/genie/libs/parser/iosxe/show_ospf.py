@@ -6506,11 +6506,11 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
         else:
             out = output
         
-        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)'
             '\) +\(Process +ID +(?P<process_id>\d+)\)')
         
-        # Process ID (9996)       no       yes      no          no           
+        # Process ID (65109)       no       yes      no          no           
         # Area 8                  no       yes      no          no           
         # Loopback0               no       no       no          no           
         # GigabitEthernet0/1/2    no       yes      no          no  
@@ -6525,7 +6525,7 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -6538,7 +6538,7 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
                                 setdefault('ospf_object', {})
                 continue
             
-            # Process ID (9996)       no       yes      no          no           
+            # Process ID (65109)       no       yes      no          no           
             # Area 8                  no       yes      no          no           
             # Loopback0               no       no       no          no           
             # GigabitEthernet0/1/2    no       yes      no          no  

@@ -8148,11 +8148,11 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
     
     golden_parsed_output = {
         'router': {
-            '1.1.1.1': {
+            '10.4.1.1': {
                 'process_id': {
-                    9996: {
+                    65109: {
                         'ospf_object': {
-                            'Process ID (9996)': {
+                            'Process ID (65109)': {
                                 'ipfrr_enabled': 'no',
                                 'sr_enabled': 'yes',
                                 'ti_lfa_configured': 'no',
@@ -8209,12 +8209,12 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
     
     golden_output = {'execute.return_value': '''
         show ip ospf fast-reroute ti-lfa
-        OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
         OSPF                    IPFRR    SR       TI-LFA      TI-LFA       
         Object                  enabled  enabled  configured  enabled      
         --------------------------------------------------------------------
-        Process ID (9996)       no       yes      no          no           
+        Process ID (65109)       no       yes      no          no           
         Area 8                  no       yes      no          no           
         Loopback0               no       no       no          no           
         GigabitEthernet0/1/2    no       yes      no          no           
@@ -8226,11 +8226,11 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
 
     golden_parsed_output2 = {
         'router': {
-            '1.1.1.1': {
+            '10.4.1.1': {
                 'process_id': {
-                    9996: {
+                    65109: {
                         'ospf_object': {
-                            'Process ID (9996)': {
+                            'Process ID (65109)': {
                                 'ipfrr_enabled': 'no',
                                 'sr_enabled': 'yes',
                                 'ti_lfa_configured': 'yes',
@@ -8288,12 +8288,12 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
     show ip ospf fast-reroute ti-lfa
 
-    OSPF Router with ID (1.1.1.1) (Process ID 9996)
+    OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
     OSPF                    IPFRR    SR       TI-LFA      TI-LFA
     Object                  enabled  enabled  configured  enabled
     --------------------------------------------------------------------
-    Process ID (9996)       no       yes      yes         yes (inactive)
+    Process ID (65109)       no       yes      yes         yes (inactive)
     Area 8                  yes      yes      yes         yes
     Loopback0               yes      no       no          yes (inactive)
     GigabitEthernet5        yes      yes      no          yes
