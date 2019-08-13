@@ -89,3 +89,9 @@
 * IOSXR
     * Update ShowPimNeighbor
         updated cli and added exclude for Ops
+    * Update ShowIpPimNeighbor
+        updated cli and added exclude for Ops
+    * Update ShowIpv6PimNeighbor
+        updated cli and added exclude for Ops
+    * Update ShowIpv6PimNeighborDetail
+        updated cli and added exclude for Ops
