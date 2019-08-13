@@ -4,12 +4,197 @@ show_segment_routing.py
 IOSXE parsers for the following show commands:
     * 'show segment-routing mpls lb'
     * 'show segment-routing mpls state'
+    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
 '''
+
+# Python
 import re
+
+# Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, \
-                                               Any, \
-                                               Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
+
+
+# =============================================================
+# Schema for:
+#   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#   * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+# =============================================================
+class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
+    ''' Schema for:
+        * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+    '''
+
+    schema = {
+        'segment_routing':
+            {'bindings':
+                {'connected_prefix_sid_map':
+                    {Optional('ipv4'):
+                        {'ipv4_prefix_sid':
+                            {Any():
+                                {'algorithm':
+                                    {Any():
+                                        {'prefix': str,
+                                        'value_type': str,
+                                        'start_sid': str,
+                                        'range': str,
+                                        'srgb': str,
+                                        Optional('source'): str,
+                                        'algorithm': str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    Optional('ipv6'):
+                        {'ipv6_prefix_sid':
+                            {Any():
+                                {'algorithm':
+                                    {Any():
+                                        {'prefix': str,
+                                        'value_type': str,
+                                        'start_sid': str,
+                                        'range': str,
+                                        'srgb': str,
+                                        Optional('source'): str,
+                                        'algorithm': str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# =============================================================
+# Parser for:
+#   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#   * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+# =============================================================
+class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnectedPrefixSidMapSchema):
+    ''' Parser for:
+        * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+    '''
+    
+    cli_command = 'show segment-routing mpls connected-prefix-sid-map {af}'
+    
+    def cli(self, af, output=None):
+
+        # Get output
+        if output is None:
+            out = self.device.execute(self.cli_command.format(af=af))
+        else:
+            out = output
+
+        # Mapping dict
+        mapping_dict = {
+            'ipv4': 'ipv4_prefix_sid',
+            'ipv6': 'ipv6_prefix_sid',
+        }
+
+        # Init
+        ret_dict = {}
+
+        # PREFIX_SID_CONN_MAP ALGO_0
+        # PREFIX_SID_CONN_MAP ALGO_1
+        p1 = re.compile(r'^PREFIX_SID_CONN_MAP +(?P<algorithm>(.*))$')
+
+        # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
+        # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_1
+        p2 = re.compile(r'^PREFIX_SID_PROTOCOL_ADV_MAP +(?P<algorithm>(.*))$')
+
+        # Prefix/masklen   SID Type Range Flags SRGB
+        # 1.1.1.1/32         1 Indx     1         Y
+        p3 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
+                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
+
+        # Prefix/masklen   SID Type Range Flags SRGB Source
+        # 1.1.1.1/32         1 Indx     1         Y  OSPF Area 8 1.1.1.1
+        # 2.2.2.2/32         2 Indx     1         Y  OSPF Area 8 2.2.2.2
+        p4 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
+                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
+                         ' +(?P<source>(.*))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # PREFIX_SID_CONN_MAP ALGO_0
+            # PREFIX_SID_CONN_MAP ALGO_1
+            m = p1.match(line)
+            if m:
+                algorithm = m.groupdict()['algorithm']
+                continue
+
+            # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
+            # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_1
+            m = p2.match(line)
+            if m:
+                algorithm = m.groupdict()['algorithm']
+                continue
+
+            # Prefix/masklen   SID Type Range Flags SRGB
+            # 1.1.1.1/32         1 Indx     1         Y
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                # Set dict
+                algo_dict = ret_dict.setdefault('segment_routing', {}).\
+                                     setdefault('bindings', {}).\
+                                     setdefault('connected_prefix_sid_map', {}).\
+                                     setdefault(af, {}).\
+                                     setdefault(mapping_dict[af], {}).\
+                                     setdefault(prefix, {}).\
+                                     setdefault('algorithm', {}).\
+                                     setdefault(algorithm, {})
+                # Set values
+                algo_dict['prefix'] = prefix
+                algo_dict['algorithm'] = algorithm
+                algo_dict['value_type'] = group['type']
+                algo_dict['start_sid'] = group['sid']
+                algo_dict['range'] = group['range']
+                algo_dict['srgb'] = group['srgb']
+                if group['flags']:
+                    algo_dict['flags'] = group['flags']
+                continue
+
+            # Prefix/masklen   SID Type Range Flags SRGB Source
+            # 1.1.1.1/32         1 Indx     1         Y  OSPF Area 8 1.1.1.1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                # Set dict
+                algo_dict = ret_dict.setdefault('segment_routing', {}).\
+                                     setdefault('bindings', {}).\
+                                     setdefault('connected_prefix_sid_map', {}).\
+                                     setdefault(af, {}).\
+                                     setdefault(mapping_dict[af], {}).\
+                                     setdefault(prefix, {}).\
+                                     setdefault('algorithm', {}).\
+                                     setdefault(algorithm, {})
+                # Set values
+                algo_dict['prefix'] = prefix
+                algo_dict['algorithm'] = algorithm
+                algo_dict['value_type'] = group['type']
+                algo_dict['start_sid'] = group['sid']
+                algo_dict['range'] = group['range']
+                algo_dict['srgb'] = group['srgb']
+                algo_dict['source'] = group['source']
+                if group['flags']:
+                    algo_dict['flags'] = group['flags']
+                continue
+
+        return ret_dict
+
+
 
 # =============================================
 # Parser for 'show segment-routing mpls lb'
