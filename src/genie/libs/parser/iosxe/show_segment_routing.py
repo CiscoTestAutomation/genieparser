@@ -11,22 +11,24 @@ from genie.metaparser.util.schemaengine import Schema, \
                                                Any, \
                                                Optional
 
-# =============================================
+# ==============================================
 # Parser for 'show segment-routing mpls lb'
-# =============================================
+#            'show segment-routing mpls gb lock'
+# ==============================================
 
-class ShowSegmentRoutingMplsLBSchema(MetaParser):
+class ShowSegmentRoutingMplsSchema(MetaParser):
     """Schema for show segment-routing mpls lb
+                  show segment-routing mpls gb lock
     """
 
     schema = {
         'label_min': int,
         'label_max': int,
-        'state': str,
-        'default': str
+        Optional('state'): str,
+        Optional('default'): str
     }
 
-class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsLBSchema):
+class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsSchema):
     """ Parser for show segment-routing mpls lb"""
     
     cli_command = 'show segment-routing mpls lb'
@@ -63,6 +65,39 @@ class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsLBSchema):
                 continue
         
         return ret_dict
+
+
+# ==============================================
+# Parser for 'show segment-routing mpls gb lock'
+# ==============================================
+class ShowSegmentRoutingMplsGbLock(ShowSegmentRoutingMplsSchema):
+    """ Parser for 'show segment-routing mpls gb lock'
+    """
+
+    cli_command = 'show segment-routing mpls gb lock'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # SR GB (9000, 10000) Lock Users :
+        p1 = re.compile(r'^SR +GB +\((?P<label_min>\d+), +(?P<label_max>\d+)\) +Lock +Users +:$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({k: int(v) for k, v in group.items() if v})
+                continue
+
+        return ret_dict
+
 
 # =============================================
 # Parser for 'show segment-routing mpls state'
