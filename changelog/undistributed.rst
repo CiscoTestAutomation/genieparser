@@ -72,4 +72,4 @@
     * Added ShowSegmentRoutingMplsLB for
         'show segment-routing mpls lb'
     * Added ShowSegmentRoutingMplsState for
-        show segment-routing mpls state
+        'show segment-routing mpls state'
