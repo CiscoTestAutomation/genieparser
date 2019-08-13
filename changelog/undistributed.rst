@@ -106,3 +106,10 @@
         added a key to cli command for Ops
     * Fix ShowIpBgpTemplatePeerPolicy
         added a key to cli command for Ops
+
+--------------------------------------------------------------------------------
+                                Ospf
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpOspfNeighborDetail
+        to parse 'SR adj label' in output
