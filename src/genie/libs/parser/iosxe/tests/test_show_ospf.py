@@ -29,7 +29,8 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfTraffic,\
                                               ShowIpOspfNeighbor,\
                                               ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowIpOspfInterfaceBrief
+                                              ShowIpOspfInterfaceBrief, \
+                                              ShowIpOspfFastRerouteTiLfa
 
 
 
@@ -8136,6 +8137,36 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+# ==============================================
+# Parser for 'show ip ospf fast-reroute ti-ifa'
+# ==============================================
+
+class test_show_routing_mpls_lb_lock(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'label_min': 15000,
+        'label_max': 15999
+    }
+    
+    golden_output = {'execute.return_value': '''
+        show segment-routing mpls lb lock
+        SR LB (15000, 15999) Lock Users :
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

@@ -6464,3 +6464,92 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, db_type='router', output=output)
+
+
+class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
+    """Schema for show ip ospf fast-reroute ti-ifa
+    """
+
+    schema = {
+        'router': {
+            Any(): {
+                'process_id': {
+                    int: {
+                        'ospf_object': {
+                            Any(): {
+                                'ipfrr_enabled': str,
+                                'sr_enabled': str,
+                                'ti_lfa_configured': str,
+                                'ti_lfa_enabled': str,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
+    """Parser for show ip ospf fast-reroute ti-ifa
+    """
+
+    cli_command = 'show ip ospf fast-reroute ti-ifa'
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)'
+            '\) +\(Process +ID +(?P<process_id>\d+)\)')
+        
+        # Process ID (9996)       no       yes      no          no           
+        # Area 8                  no       yes      no          no           
+        # Loopback0               no       no       no          no           
+        # GigabitEthernet0/1/2    no       yes      no          no  
+        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>\S+) +'
+            '(?P<sr_enabled>\S+) +(?P<ti_lfa_configured>\S+) +(?P<ti_lfa_enabled>\S+)')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                router_dict = ret_dict.setdefault('router', {}). \
+                                setdefault(router_id, {}). \
+                                setdefault('process_id', {}). \
+                                setdefault(process_id, {}). \
+                                setdefault('ospf_object', {})
+                continue
+            
+            # Process ID (9996)       no       yes      no          no           
+            # Area 8                  no       yes      no          no           
+            # Loopback0               no       no       no          no           
+            # GigabitEthernet0/1/2    no       yes      no          no  
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_object = group['ospf_object']
+                ipfrr_enabled = group['ipfrr_enabled']
+                sr_enabled = group['sr_enabled']
+                ti_lfa_configured = group['ti_lfa_configured']
+                ti_lfa_enabled = group['ti_lfa_enabled']
+                
+                ospf_object = router_dict.setdefault(ospf_object, {})
+
+                ospf_object.update({'ipfrr_enabled', ipfrr_enabled })
+                ospf_object.update({'sr_enabled', sr_enabled })
+                ospf_object.update({'ti_lfa_configured', ti_lfa_configured })
+                ospf_object.update({'ti_lfa_enabled', ti_lfa_enabled })
+                continue
+
+        return ret_dict
+        
