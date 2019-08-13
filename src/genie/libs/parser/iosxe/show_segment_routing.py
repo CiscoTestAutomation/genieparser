@@ -30,7 +30,8 @@ class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsLBSchema):
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
-        
+        else:
+            out = output
         # 15000      15999      ENABLED         Yes
         p1 = re.compile(r'^(?P<label_min>\d+) +(?P<label_max>\d+) +'
             '(?P<state>\S+) +(?P<default>\S+)$')
