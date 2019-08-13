@@ -6514,9 +6514,10 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
         # Area 8                  no       yes      no          no           
         # Loopback0               no       no       no          no           
         # GigabitEthernet0/1/2    no       yes      no          no  
-        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)) '
-                         '+(?P<sr_enabled>(yes|no)) +(?P<ti_lfa_configured>(yes|no))'
-                         ' +(?P<ti_lfa_enabled>(yes|no))')
+        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)'
+                         '( +\(inactive\))?) +(?P<sr_enabled>(yes|no)( +\(inactive\))?) '
+                         '+(?P<ti_lfa_configured>(yes|no)( +\(inactive\))?) +'
+                         '(?P<ti_lfa_enabled>(yes|no)( +\(inactive\))?)$')
         
         # initial variables
         ret_dict = {}

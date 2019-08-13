@@ -8224,6 +8224,85 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
         AS external             no       yes      no          no       
     '''}
 
+    golden_parsed_output2 = {
+        'router': {
+            '1.1.1.1': {
+                'process_id': {
+                    9996: {
+                        'ospf_object': {
+                            'Process ID (9996)': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'yes',
+                                'ti_lfa_enabled': 'yes (inactive)',
+                                },
+                            'Area 8': {
+                                'ipfrr_enabled': 'yes',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'yes',
+                                'ti_lfa_enabled': 'yes',
+                                },
+                            'Loopback0': {
+                                'ipfrr_enabled': 'yes',
+                                'sr_enabled': 'no',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'yes (inactive)',
+                                },
+                            'GigabitEthernet5': {
+                                'ipfrr_enabled': 'yes',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'yes',
+                                },
+                            'GigabitEthernet4': {
+                                'ipfrr_enabled': 'yes',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'yes',
+                                },
+                            'GigabitEthernet3': {
+                                'ipfrr_enabled': 'yes',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'yes',
+                                },
+                            'GigabitEthernet2': {
+                                'ipfrr_enabled': 'yes',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'no',
+                                'ti_lfa_enabled': 'yes',
+                                },
+                            'AS external': {
+                                'ipfrr_enabled': 'no',
+                                'sr_enabled': 'yes',
+                                'ti_lfa_configured': 'yes',
+                                'ti_lfa_enabled': 'yes (inactive)',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output2 = {'execute.return_value': '''
+    show ip ospf fast-reroute ti-lfa
+
+    OSPF Router with ID (1.1.1.1) (Process ID 9996)
+
+    OSPF                    IPFRR    SR       TI-LFA      TI-LFA
+    Object                  enabled  enabled  configured  enabled
+    --------------------------------------------------------------------
+    Process ID (9996)       no       yes      yes         yes (inactive)
+    Area 8                  yes      yes      yes         yes
+    Loopback0               yes      no       no          yes (inactive)
+    GigabitEthernet5        yes      yes      no          yes
+    GigabitEthernet4        yes      yes      no          yes
+    GigabitEthernet3        yes      yes      no          yes
+    GigabitEthernet2        yes      yes      no          yes
+    AS external             no       yes      yes         yes (inactive)
+    '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowIpOspfFastRerouteTiLfa(device=self.device1)
@@ -8235,6 +8314,12 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
         obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
