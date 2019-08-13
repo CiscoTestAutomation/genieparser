@@ -14,7 +14,7 @@ from genie.libs.parser.iosxr.show_controllers import ShowControllersCoherentDSP,
 
 
 # =====================================================
-#  Unit test for 'show controllers coherentDSP {unit}'
+#  Unit test for 'show controllers coherentDSP {port}'
 # =====================================================
 
 class test_show_controllers_coherentDSP(unittest.TestCase):
@@ -105,11 +105,11 @@ class test_show_controllers_coherentDSP(unittest.TestCase):
 
 
 # ==================================================
-#  Unit test for 'show controllers optics {unit}'
+#  Unit test for 'show controllers optics {port}'
 # ==================================================
 
 class test_show_controllers_optics(unittest.TestCase):
-    '''Unit test for show controllers optics {unit}'''
+    '''Unit test for show controllers optics {port}'''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
