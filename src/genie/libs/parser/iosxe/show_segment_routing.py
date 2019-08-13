@@ -24,11 +24,14 @@ class ShowSegmentRoutingMplsState(ShowSegmentRoutingMplsStateSchema):
     """ Parser for show segment-routing mpls state"""
     
     cli_command = 'show segment-routing mpls state'
+    
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
+        else:
+            out = output
         
-        # Segment Routing MPLS State : ENABLED
+            # Segment Routing MPLS State : ENABLED
         p1 = re.compile(r'^Segment +Routing +MPLS +State +: +(?P<state>\S+)$')
         
         # initial variables
