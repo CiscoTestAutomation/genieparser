@@ -10,10 +10,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMplsLB)
 
 # ============================================
-# Parser for 'show segment-routing mpls state'
+# Parser for 'show segment-routing mpls lb'
 # ============================================
 
-class test_show_routing_mpls_state(unittest.TestCase):
+class test_show_routing_mpls_lb(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
