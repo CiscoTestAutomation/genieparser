@@ -1880,6 +1880,6 @@ Total           4           23          0           2688        9932
         obj = ShowIpRouteSummary(device=self.device)
         parsed_output = obj.parse(vrf='VRF-1')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-    
+
 if __name__ == '__main__':
     unittest.main()

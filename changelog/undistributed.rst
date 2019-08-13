@@ -18,6 +18,15 @@
         changed 'maintenance_mode' key to optional to support more output
 
 --------------------------------------------------------------------------------
+                                Controllers
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowControllersCoherentDSP for
+        'show controllers coherentDSP {unit}'
+    * Add ShowControllersOptics for
+        'show controllers optics {unit}'
+
+--------------------------------------------------------------------------------
                                 Lag
 --------------------------------------------------------------------------------
 * IOSXE
@@ -64,3 +73,19 @@
 * IOSXR
     * Update ShowIpv6PrefixListDetail
         updated cli for Ops
+
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsLB for
+        'show segment-routing mpls lb'
+    * Added ShowSegmentRoutingMplsState for
+        'show segment-routing mpls state'
+
+--------------------------------------------------------------------------------
+                                Ospf
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpOspfFastRerouteTiLfa for
+        'show ip ospf fast-reroute ti-lfa'
