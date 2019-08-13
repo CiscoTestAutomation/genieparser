@@ -69,6 +69,14 @@ help:
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
 
+compile:
+	@echo ""
+	@echo "Compiling to C code"
+	@echo --------------------------
+	python compile.py 
+	@echo "Done Compiling"
+	@echo ""
+
 devnet: package
 	@echo "Completed building DevNet packages"
 	@echo ""
