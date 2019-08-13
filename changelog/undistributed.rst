@@ -59,8 +59,17 @@
         added a key 'show lldp entry' for Ops
 
 --------------------------------------------------------------------------------
+                                Prefix_list
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowIpv6PrefixListDetail
+        updated cli for Ops
+
+--------------------------------------------------------------------------------
                                 Segment Routing
 --------------------------------------------------------------------------------
 * IOSXE
+    * Added ShowSegmentRoutingMplsLB for
+        'show segment-routing mpls lb'
     * Added ShowSegmentRoutingMplsState for
         show segment-routing mpls state
