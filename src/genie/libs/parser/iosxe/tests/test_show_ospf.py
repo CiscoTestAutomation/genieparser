@@ -8147,60 +8147,57 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        'router': {
-            '1.1.1.1': {
-                'process_id': {
-                    9996: {
-                        'ospf_object': {
-                            'Process ID (9996)': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'Area 8': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'Loopback0': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'no',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'GigabitEthernet0/1/2': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'GigabitEthernet0/1/1': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'GigabitEthernet0/1/0': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'TenGigabitEthernet0/0/': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            'AS external': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'no',
-                                },
-                            },
+        'process_id': {
+            9996: {
+                'router_id': '1.1.1.1',
+                'ospf_object': {
+                    'Process ID (9996)': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'Area 8': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'Loopback0': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'no',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/2': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/1': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/0': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'TenGigabitEthernet0/0/': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'AS external': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
                         },
                     },
                 },
@@ -8225,60 +8222,57 @@ class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
     '''}
 
     golden_parsed_output2 = {
-        'router': {
-            '1.1.1.1': {
-                'process_id': {
-                    9996: {
-                        'ospf_object': {
-                            'Process ID (9996)': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'yes',
-                                'ti_lfa_enabled': 'yes (inactive)',
-                                },
-                            'Area 8': {
-                                'ipfrr_enabled': 'yes',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'yes',
-                                'ti_lfa_enabled': 'yes',
-                                },
-                            'Loopback0': {
-                                'ipfrr_enabled': 'yes',
-                                'sr_enabled': 'no',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'yes (inactive)',
-                                },
-                            'GigabitEthernet5': {
-                                'ipfrr_enabled': 'yes',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'yes',
-                                },
-                            'GigabitEthernet4': {
-                                'ipfrr_enabled': 'yes',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'yes',
-                                },
-                            'GigabitEthernet3': {
-                                'ipfrr_enabled': 'yes',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'yes',
-                                },
-                            'GigabitEthernet2': {
-                                'ipfrr_enabled': 'yes',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'no',
-                                'ti_lfa_enabled': 'yes',
-                                },
-                            'AS external': {
-                                'ipfrr_enabled': 'no',
-                                'sr_enabled': 'yes',
-                                'ti_lfa_configured': 'yes',
-                                'ti_lfa_enabled': 'yes (inactive)',
-                                },
-                            },
+        'process_id': {
+            9996: {
+                'router_id': '1.1.1.1',
+                'ospf_object': {
+                    'Process ID (9996)': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    'Area 8': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'Loopback0': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'no',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    'GigabitEthernet5': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet4': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet3': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet2': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'AS external': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes (inactive)',
                         },
                     },
                 },

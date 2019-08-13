@@ -6472,18 +6472,15 @@ class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
     """
 
     schema = {
-        'router': {
+        'process_id': {
             Any(): {
-                'process_id': {
-                    int: {
-                        'ospf_object': {
-                            Any(): {
-                                'ipfrr_enabled': str,
-                                'sr_enabled': str,
-                                'ti_lfa_configured': str,
-                                'ti_lfa_enabled': str,
-                            }
-                        }
+                'router_id': str,
+                'ospf_object': {
+                    Any(): {
+                        'ipfrr_enabled': str,
+                        'sr_enabled': str,
+                        'ti_lfa_configured': str,
+                        'ti_lfa_enabled': str,
                     }
                 }
             }
@@ -6531,11 +6528,10 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
                 group = m.groupdict()
                 router_id = group['router_id']
                 process_id = int(group['process_id'])
-                router_dict = ret_dict.setdefault('router', {}). \
-                                setdefault(router_id, {}). \
-                                setdefault('process_id', {}). \
-                                setdefault(process_id, {}). \
-                                setdefault('ospf_object', {})
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                setdefault(process_id, {})
+                process_id_dict.update({'router_id': router_id})
+                ospf_object_dict = process_id_dict.setdefault('ospf_object', {})
                 continue
             
             # Process ID (9996)       no       yes      no          no           
@@ -6551,7 +6547,7 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
                 ti_lfa_configured = group['ti_lfa_configured']
                 ti_lfa_enabled = group['ti_lfa_enabled']
                 
-                ospf_object = router_dict.setdefault(ospf_object, {})
+                ospf_object = ospf_object_dict.setdefault(ospf_object, {})
 
                 ospf_object.update({'ipfrr_enabled': ipfrr_enabled })
                 ospf_object.update({'sr_enabled': sr_enabled })
