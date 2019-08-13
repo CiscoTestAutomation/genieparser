@@ -85,6 +85,8 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
     
     def cli(self, af, output=None):
 
+        assert af in ['ipv4', 'ipv6']
+
         # Get output
         if output is None:
             out = self.device.execute(self.cli_command.format(af=af))
