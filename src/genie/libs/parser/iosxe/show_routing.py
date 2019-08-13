@@ -1211,7 +1211,9 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p1 = re.compile(r'^Routing +entry +for +'
                          '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
                          '(, +(?P<net>[\w\s]+))?$')
+
         # Known via "connected", distance 0, metric 0 (connected)
+        # Known via "eigrp 1", distance 130, metric 10880, type internal
         p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:type (?P<type>[\w\- ]+))?,? *.*$')
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
                          '(?P<redist_via_tag>\d+)?$')
@@ -1271,6 +1273,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Known via "eigrp 1", distance 130, metric 10880, type internal
             # Known via "rip", distance 120, metric 2
             # Known via "connected", distance 0, metric 0 (connected)
+            # Known via "eigrp 1", distance 130, metric 10880, type internal
             m = p2.match(line)
             if m:
                 group = m.groupdict()
