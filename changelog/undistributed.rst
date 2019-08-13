@@ -18,6 +18,15 @@
         changed 'maintenance_mode' key to optional to support more output
 
 --------------------------------------------------------------------------------
+                                Controllers
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowControllersCoherentDSP for
+        'show controllers coherentDSP {unit}'
+    * Add ShowControllersOptics for
+        'show controllers optics {unit}'
+
+--------------------------------------------------------------------------------
                                 Lag
 --------------------------------------------------------------------------------
 * IOSXE
@@ -70,4 +79,20 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Update ShowPimNeighbor
-        added exclude
+        updated cli and added exclude for Ops
+
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsLB for
+        'show segment-routing mpls lb'
+    * Added ShowSegmentRoutingMplsState for
+        'show segment-routing mpls state'
+
+--------------------------------------------------------------------------------
+                                Pim
+--------------------------------------------------------------------------------
+* IOSXR
+    * Update ShowPimNeighbor
+        updated cli and added exclude for Ops

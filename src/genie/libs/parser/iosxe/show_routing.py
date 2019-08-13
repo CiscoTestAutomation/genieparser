@@ -8,9 +8,6 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional
 
-
-
-
 # ====================================================
 #  distributor class for show ip route
 # ====================================================
@@ -1777,4 +1774,3 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
         return ret_dict
-
