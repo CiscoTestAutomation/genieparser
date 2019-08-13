@@ -354,7 +354,7 @@ class ShowControllersOpticsSchema(MetaParser):
                 Optional('msa_itu_channel'): str,
                 Optional('frequency'): str,
                 Optional('alarm_status'): {
-                    Optional('detected_alarms'): Or(str, list),
+                    Optional('detected_alarms'): list,
                 },
                 Optional('alarm_statistics'): {
                     Optional('high_rx_pwr'): int,
@@ -420,7 +420,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
     """Parser for show controllers optics {port}"""
 
     cli_command = 'show controllers optics {port}'
-    exclude = []
+    exclude = ['laser_bias_current', 'actual_tx_power', 'rx_power', 'chromatic_dispersion']
 
     def cli(self, port, output=None):
 
@@ -639,9 +639,11 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             # Detected Alarms: None
             m = p8.match(line)
             if m:
-                group = m.groupdict()
+                alarm = m.groupdict()['detected_alarms']
                 alarm_status = status_dict.setdefault('alarm_status', {})
-                alarm_status.update({k: v for k, v in group.items()})
+                alarms = alarm_status.setdefault('detected_alarms', [])
+                if alarm.lower() != 'none':
+                    alarms.append(alarm)
                 continue
 
             # Detected Alarms:

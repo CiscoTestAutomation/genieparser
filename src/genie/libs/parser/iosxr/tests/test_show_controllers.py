@@ -125,7 +125,7 @@ class test_show_controllers_optics(unittest.TestCase):
                 "optics_type": "SFP+ 10G SR",
                 "wavelength": "850.00 nm",
                 "alarm_status": {
-                    "detected_alarms": "None"
+                    "detected_alarms": [],
                 },
                 "los_lol_fault_status": {},
                 "laser_bias_current": "6.1 mA",
@@ -257,7 +257,7 @@ class test_show_controllers_optics(unittest.TestCase):
                 "frequency": "191.30THz",
                 "wavelength": "1567.133nm",
                 "alarm_status": {
-                    "detected_alarms": "None"
+                    "detected_alarms": [],
                 },
                 "los_lol_fault_status": {},
                 "alarm_statistics": {
