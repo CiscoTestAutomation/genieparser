@@ -1,12 +1,14 @@
 '''
 show_segment_routing.py
 
+IOSXE parsers for the following show commands:
+	* 'show segment-routing mpls lb'
 '''
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional
+                                               Any, \
+                                               Optional
 
 # =============================================
 # Parser for 'show segment-routing mpls lb'
@@ -27,6 +29,7 @@ class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsLBSchema):
     """ Parser for show segment-routing mpls lb"""
     
     cli_command = 'show segment-routing mpls lb'
+    
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -34,7 +37,7 @@ class ShowSegmentRoutingMplsLB(ShowSegmentRoutingMplsLBSchema):
             out = output
         # 15000      15999      ENABLED         Yes
         p1 = re.compile(r'^(?P<label_min>\d+) +(?P<label_max>\d+) +'
-            '(?P<state>\S+) +(?P<default>\S+)$')
+                        '(?P<state>\S+) +(?P<default>\S+)$')
         
         # initial variables
         ret_dict = {}
