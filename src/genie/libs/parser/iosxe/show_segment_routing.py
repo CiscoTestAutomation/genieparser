@@ -83,7 +83,9 @@ class ShowSegmentRoutingMplsState(ShowSegmentRoutingMplsStateSchema):
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
-        
+        else:
+            out = output
+            
         # Segment Routing MPLS State : ENABLED
         p1 = re.compile(r'^Segment +Routing +MPLS +State +: +(?P<state>\S+)$')
         
