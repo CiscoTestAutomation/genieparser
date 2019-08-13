@@ -18,6 +18,15 @@
         changed 'maintenance_mode' key to optional to support more output
 
 --------------------------------------------------------------------------------
+                                Controllers
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowControllersCoherentDSP for
+        'show controllers coherentDSP {unit}'
+    * Add ShowControllersOptics for
+        'show controllers optics {unit}'
+
+--------------------------------------------------------------------------------
                                 Lag
 --------------------------------------------------------------------------------
 * IOSXE
