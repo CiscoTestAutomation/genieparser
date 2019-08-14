@@ -91,6 +91,8 @@
         'show segment-routing mpls state'
     * Added ShowSegmentRoutingMplsLbLock for
         'show segment-routing mpls lb lock'
+    * Added ShowSegmentRoutingMplsGbLock for:
+        'show segment-routing mpls gb lock'
 
 --------------------------------------------------------------------------------
                                 Pim
