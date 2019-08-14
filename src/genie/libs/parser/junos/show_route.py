@@ -121,7 +121,7 @@ class ShowRouteTable(ShowRouteTableSchema):
                 rt_destination = group['rt_destination']
 
                 route_dict = table_dict.setdefault('routes', {})\
-                .setdefault(rt_destination, {})
+                                       .setdefault(rt_destination, {})
                 
                 route_dict['active_tag'] = group['active_tag']
                 route_dict['protocol_name'] = group['protocol_name']
@@ -137,7 +137,9 @@ class ShowRouteTable(ShowRouteTableSchema):
             result = r3.match(line)
             if result:
 
-                max_index = table_dict.get('routes', {}).get(rt_destination, {}).get('next_hop', {}).get('next_hop_list', {}).keys()
+                max_index = table_dict.get('routes', {}).get(rt_destination, {})\
+                                      .get('next_hop', {})\
+                                      .get('next_hop_list', {}).keys()
 
                 if not max_index:
                     max_index = 1
@@ -146,7 +148,9 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 group = result.groupdict()
 
-                nh_dict = route_dict.setdefault('next_hop', {}).setdefault('next_hop_list', {}).setdefault(max_index, {})
+                nh_dict = route_dict.setdefault('next_hop', {})\
+                                    .setdefault('next_hop_list', {})\
+                                    .setdefault(max_index, {})
 
                 nh_dict['to'] = group['to']
                 nh_dict['via'] = group['via']
