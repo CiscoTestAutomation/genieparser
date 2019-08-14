@@ -21,10 +21,17 @@
                                 Controllers
 --------------------------------------------------------------------------------
 * IOSXR
-    * Add ShowControllersCoherentDSP for
-        'show controllers coherentDSP {unit}'
-    * Add ShowControllersOptics for
-        'show controllers optics {unit}'
+    * Add ShowBgpL2vpnEvpnNeighbors for
+        'show bgp l2vpn evpn neighbors'
+        'show bgp l2vpn evpn neighbors {neighbor}'
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Add ShowInterfaces for:
+        'show interfaces'
+        'show interfaces {interface}'
 
 --------------------------------------------------------------------------------
                                 Lag

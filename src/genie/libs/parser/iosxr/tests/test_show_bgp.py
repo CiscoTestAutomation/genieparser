@@ -21,7 +21,8 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsReceivedRoutes,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
-                                  ShowBgpInstanceAllAll, ShowBgpInstances
+                                  ShowBgpInstanceAllAll, ShowBgpInstances,\
+                                  ShowBgpL2vpnEvpnNeighbors
 
 
 # ==================================
@@ -7592,6 +7593,810 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================
+# Unit test for 'show bgp l2vpn evpn neighbors'
+# =============================================
+
+class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "neighbors": {
+            "192.168.99.11": {
+                "remote_as": "65001",
+                "local_as": "65001",
+                "link": "internal",
+                "router_id": "192.168.99.11",
+                "bgp_state": "Established",
+                "up_time": "2w5d",
+                "nsr_state": "None",
+                "last_read": "00:00:18",
+                "last_read_reset": "00:00:00",
+                "hold_time": 180,
+                "keepalive": 60,
+                "configured_hold_time": 180,
+                "configured_keepalive": 60,
+                "min_accept_hold_time": 3,
+                "last_write": {
+                    "last_write": "00:00:18",
+                    "attempted": 19,
+                    "written": 19
+                },
+                "second_last_write": {
+                    "second_last_write": "00:01:18",
+                    "attempted": 19,
+                    "written": 19
+                },
+                "last_write_reset": {
+                    "last_write_reset": "00:00:00",
+                    "attempted": 0,
+                    "written": 0
+                },
+                "second_last_write_reset": {
+                    "second_last_write_reset": "00:00:00",
+                    "attempted": 0,
+                    "written": 0
+                },
+                "last_write_pulse_rcvd": "Aug 13 23:27:04.895",
+                "last_full_not_set_pulse_count": 57338,
+                "last_write_pulse_rcvd_reset": "00:00:00",
+                "socket_io": False,
+                "socket_read": True,
+                "socket_write": True,
+                "last_write_thread_event_reset": "00:00:00",
+                "second_last_write_thread_event_reset": "00:00:00",
+                "last_ka_expiry": "00:00:00",
+                "second_last_ka_expiry": "00:00:00",
+                "last_ka_error": "00:00:00",
+                "ka_not_sent": "00:00:00",
+                "last_ka_start": "00:00:00",
+                "second_last_ka_start": "00:00:00",
+                "precedence": "internet",
+                "non_stop_routing": "enabled",
+                "multi_protocol_capability": "received",
+                "neighbor_capabilities": {
+                    "route_refresh": "advertised (old + new) and received (old + new)",
+                    "four_octets_as": "advertised and received",
+                    "ipv4_unicast": "advertised and received",
+                    "ipv6_labeled_unicast": "advertised and received",
+                    "l2vpn_evpn": "advertised and received"
+                },
+                "received_msg": 29295,
+                "received_notifications": 0,
+                "received_in_queue": 0,
+                "sent_msg": 28818,
+                "sent_notifications": 0,
+                "sent_in_queue": 0,
+                "minimum_time_between_advertisement_runs": 0,
+                "inbound_msg_logging": "enabled",
+                "inbound_msg_buffered": 3,
+                "outbound_msg_logging": "enabled",
+                "outbound_msg_buffered": 3,
+                "address_family": {
+                    "ipv4 unicast": {
+                        "bgp_neighbor_version": 177,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "extended_nexthop_encoding": "advertised and received",
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 0,
+                        "accepted_prefixes": 26,
+                        "bestpaths": 11,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 0,
+                        "prefix_advertised": 6,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 2,
+                        "maximum_prefixes_allowed": 1048576,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 177,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 1,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    },
+                    "ipv6 labeled-unicast": {
+                        "bgp_neighbor_version": 141,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 0,
+                        "accepted_prefixes": 25,
+                        "bestpaths": 1,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 0,
+                        "prefix_advertised": 4,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 1,
+                        "maximum_prefixes_allowed": 131072,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 141,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 1,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    },
+                    "l2vpn evpn": {
+                        "bgp_neighbor_version": 367,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 2,
+                        "accepted_prefixes": 83,
+                        "bestpaths": 83,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 6,
+                        "no_policy": 0,
+                        "failed_rt_match": 45,
+                        "by_orf_policy": 0,
+                        "by_policy": 0,
+                        "prefix_advertised": 40,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 12,
+                        "maximum_prefixes_allowed": 2097152,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 367,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 2,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    }
+                },
+                "established_connections": 1,
+                "dropped_connections": 0,
+                "local_host": "192.168.99.25",
+                "local_port": 18078,
+                "if_handle": "0x00000000",
+                "foreign_host": "192.168.99.11",
+                "foreign_port": 179,
+                "last_reset": "00:00:00"
+            },
+            "192.168.99.12": {
+                "remote_as": "65001",
+                "local_as": "65001",
+                "link": "internal",
+                "router_id": "192.168.99.12",
+                "bgp_state": "Established",
+                "up_time": "2w5d",
+                "nsr_state": "None",
+                "last_read": "00:00:18",
+                "last_read_reset": "00:00:00",
+                "hold_time": 180,
+                "keepalive": 60,
+                "configured_hold_time": 180,
+                "configured_keepalive": 60,
+                "min_accept_hold_time": 3,
+                "last_write": {
+                    "last_write": "00:00:18",
+                    "attempted": 19,
+                    "written": 19
+                },
+                "second_last_write": {
+                    "second_last_write": "00:01:18",
+                    "attempted": 19,
+                    "written": 19
+                },
+                "last_write_reset": {
+                    "last_write_reset": "00:00:00",
+                    "attempted": 0,
+                    "written": 0
+                },
+                "second_last_write_reset": {
+                    "second_last_write_reset": "00:00:00",
+                    "attempted": 0,
+                    "written": 0
+                },
+                "last_write_pulse_rcvd": "Aug 13 23:27:05.090",
+                "last_full_not_set_pulse_count": 57565,
+                "last_write_pulse_rcvd_reset": "00:00:00",
+                "socket_io": False,
+                "socket_read": True,
+                "socket_write": True,
+                "last_write_thread_event_reset": "00:00:00",
+                "second_last_write_thread_event_reset": "00:00:00",
+                "last_ka_expiry": "00:00:00",
+                "second_last_ka_expiry": "00:00:00",
+                "last_ka_error": "00:00:00",
+                "ka_not_sent": "00:00:00",
+                "last_ka_start": "00:00:00",
+                "second_last_ka_start": "00:00:00",
+                "precedence": "internet",
+                "non_stop_routing": "enabled",
+                "multi_protocol_capability": "received",
+                "neighbor_capabilities": {
+                    "route_refresh": "advertised (old + new) and received (old + new)",
+                    "four_octets_as": "advertised and received",
+                    "ipv4_unicast": "advertised and received",
+                    "ipv6_labeled_unicast": "advertised and received",
+                    "l2vpn_evpn": "advertised and received"
+                },
+                "received_msg": 29291,
+                "received_notifications": 0,
+                "received_in_queue": 0,
+                "sent_msg": 28818,
+                "sent_notifications": 0,
+                "sent_in_queue": 0,
+                "minimum_time_between_advertisement_runs": 0,
+                "inbound_msg_logging": "enabled",
+                "inbound_msg_buffered": 3,
+                "outbound_msg_logging": "enabled",
+                "outbound_msg_buffered": 3,
+                "address_family": {
+                    "ipv4 unicast": {
+                        "bgp_neighbor_version": 177,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "extended_nexthop_encoding": "advertised and received",
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 0,
+                        "accepted_prefixes": 26,
+                        "bestpaths": 13,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 0,
+                        "prefix_advertised": 6,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 2,
+                        "maximum_prefixes_allowed": 1048576,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 177,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 1,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    },
+                    "ipv6 labeled-unicast": {
+                        "bgp_neighbor_version": 141,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 0,
+                        "accepted_prefixes": 25,
+                        "bestpaths": 23,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 0,
+                        "prefix_advertised": 4,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 1,
+                        "maximum_prefixes_allowed": 131072,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 141,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 1,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    },
+                    "l2vpn evpn": {
+                        "bgp_neighbor_version": 367,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 2,
+                        "accepted_prefixes": 83,
+                        "bestpaths": 0,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 6,
+                        "no_policy": 0,
+                        "failed_rt_match": 42,
+                        "by_orf_policy": 0,
+                        "by_policy": 0,
+                        "prefix_advertised": 40,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 12,
+                        "maximum_prefixes_allowed": 2097152,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 367,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 2,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    }
+                },
+                "established_connections": 1,
+                "dropped_connections": 0,
+                "local_host": "192.168.99.25",
+                "local_port": 179,
+                "if_handle": "0x00000000",
+                "foreign_host": "192.168.99.12",
+                "foreign_port": 34287,
+                "last_reset": "00:00:00"
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        #show bgp l2vpn evpn neighbors
+        Tue Aug 13 23:27:23.263 JST
+
+        BGP neighbor is 192.168.99.11
+         Remote AS 65001, local AS 65001, internal link
+         Remote router ID 192.168.99.11
+          BGP state = Established, up for 2w5d
+          NSR State: None
+          Last read 00:00:18, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:18, attempted 19, written 19
+          Second last write 00:01:18, attempted 19, written 19
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  Aug 13 23:27:04.895 last full not set pulse count 57338
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, armed for read, armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Multi-protocol capability received
+          Neighbor capabilities:
+            Route refresh: advertised (old + new) and received (old + new)
+            4-byte AS: advertised and received
+            Address family IPv4 Unicast: advertised and received
+            Address family IPv6 Labeled-unicast: advertised and received
+            Address family L2VPN EVPN: advertised and received
+          Received 29295 messages, 0 notifications, 0 in queue
+          Sent 28818 messages, 0 notifications, 0 in queue
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+
+         For Address Family: IPv4 Unicast
+          BGP neighbor version 177
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+            Extended Nexthop Encoding: advertised and received
+          Route refresh request: received 0, sent 0
+          26 accepted prefixes, 11 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0.
+          Prefix advertised 6, suppressed 0, withdrawn 2
+          Maximum prefixes allowed 1048576
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 177, Last synced ack version 0
+          Outstanding version objects: current 0, max 1, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+          Advertise routes with local-label via Unicast SAFI
+
+         For Address Family: IPv6 Labeled-unicast
+          BGP neighbor version 141
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          25 accepted prefixes, 1 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0.
+          Prefix advertised 4, suppressed 0, withdrawn 1
+          Maximum prefixes allowed 131072
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 141, Last synced ack version 0
+          Outstanding version objects: current 0, max 1, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+
+         For Address Family: L2VPN EVPN
+          BGP neighbor version 367
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+          Route refresh request: received 0, sent 2
+          83 accepted prefixes, 83 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 6.
+            No policy: 0, Failed RT match: 45
+            By ORF policy: 0, By policy: 0
+          Prefix advertised 40, suppressed 0, withdrawn 12
+          Maximum prefixes allowed 2097152
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 367, Last synced ack version 0
+          Outstanding version objects: current 0, max 2, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+
+          Connections established 1; dropped 0
+          Local host: 192.168.99.25, Local port: 18078, IF Handle: 0x00000000
+          Foreign host: 192.168.99.11, Foreign port: 179
+          Last reset 00:00:00
+
+        BGP neighbor is 192.168.99.12
+         Remote AS 65001, local AS 65001, internal link
+         Remote router ID 192.168.99.12
+          BGP state = Established, up for 2w5d
+          NSR State: None
+          Last read 00:00:18, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:18, attempted 19, written 19
+          Second last write 00:01:18, attempted 19, written 19
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  Aug 13 23:27:05.090 last full not set pulse count 57565
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, armed for read, armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Multi-protocol capability received
+          Neighbor capabilities:
+            Route refresh: advertised (old + new) and received (old + new)
+            4-byte AS: advertised and received
+            Address family IPv4 Unicast: advertised and received
+            Address family IPv6 Labeled-unicast: advertised and received
+            Address family L2VPN EVPN: advertised and received
+          Received 29291 messages, 0 notifications, 0 in queue
+          Sent 28818 messages, 0 notifications, 0 in queue
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+
+         For Address Family: IPv4 Unicast
+          BGP neighbor version 177
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+            Extended Nexthop Encoding: advertised and received
+          Route refresh request: received 0, sent 0
+          26 accepted prefixes, 13 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0.
+          Prefix advertised 6, suppressed 0, withdrawn 2
+          Maximum prefixes allowed 1048576
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 177, Last synced ack version 0
+          Outstanding version objects: current 0, max 1, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+          Advertise routes with local-label via Unicast SAFI
+
+         For Address Family: IPv6 Labeled-unicast
+          BGP neighbor version 141
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          25 accepted prefixes, 23 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0.
+          Prefix advertised 4, suppressed 0, withdrawn 1
+          Maximum prefixes allowed 131072
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 141, Last synced ack version 0
+          Outstanding version objects: current 0, max 1, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+
+         For Address Family: L2VPN EVPN
+          BGP neighbor version 367
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+          Route refresh request: received 0, sent 2
+          83 accepted prefixes, 0 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 6.
+            No policy: 0, Failed RT match: 42
+            By ORF policy: 0, By policy: 0
+          Prefix advertised 40, suppressed 0, withdrawn 12
+          Maximum prefixes allowed 2097152
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 367, Last synced ack version 0
+          Outstanding version objects: current 0, max 2, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+
+          Connections established 1; dropped 0
+          Local host: 192.168.99.25, Local port: 179, IF Handle: 0x00000000
+          Foreign host: 192.168.99.12, Foreign port: 34287
+          Last reset 00:00:00
+    '''}
+
+    golden_parsed_output_neighbor = {
+        "neighbors": {
+            "192.168.99.11": {
+                "remote_as": "65001",
+                "local_as": "65001",
+                "link": "internal",
+                "router_id": "192.168.99.11",
+                "bgp_state": "Established",
+                "up_time": "2w5d",
+                "nsr_state": "None",
+                "last_read": "00:00:09",
+                "last_read_reset": "00:00:00",
+                "hold_time": 180,
+                "keepalive": 60,
+                "configured_hold_time": 180,
+                "configured_keepalive": 60,
+                "min_accept_hold_time": 3,
+                "last_write": {
+                    "last_write": "00:00:09",
+                    "attempted": 19,
+                    "written": 19
+                },
+                "second_last_write": {
+                    "second_last_write": "00:01:09",
+                    "attempted": 19,
+                    "written": 19
+                },
+                "last_write_reset": {
+                    "last_write_reset": "00:00:00",
+                    "attempted": 0,
+                    "written": 0
+                },
+                "second_last_write_reset": {
+                    "second_last_write_reset": "00:00:00",
+                    "attempted": 0,
+                    "written": 0
+                },
+                "last_write_pulse_rcvd": "Aug 13 04:20:04.721",
+                "last_full_not_set_pulse_count": 55044,
+                "last_write_pulse_rcvd_reset": "00:00:00",
+                "socket_io": False,
+                "socket_read": True,
+                "socket_write": True,
+                "last_write_thread_event_reset": "00:00:00",
+                "second_last_write_thread_event_reset": "00:00:00",
+                "last_ka_expiry": "00:00:00",
+                "second_last_ka_expiry": "00:00:00",
+                "last_ka_error": "00:00:00",
+                "ka_not_sent": "00:00:00",
+                "last_ka_start": "00:00:00",
+                "second_last_ka_start": "00:00:00",
+                "precedence": "internet",
+                "non_stop_routing": "enabled",
+                "multi_protocol_capability": "received",
+                "neighbor_capabilities": {
+                    "route_refresh": "advertised (old + new) and received (old + new)",
+                    "four_octets_as": "advertised and received",
+                    "ipv4_unicast": "advertised and received",
+                    "ipv6_labeled_unicast": "advertised and received",
+                    "l2vpn_evpn": "advertised and received"
+                },
+                "received_msg": 28148,
+                "received_notifications": 0,
+                "received_in_queue": 0,
+                "sent_msg": 27671,
+                "sent_notifications": 0,
+                "sent_in_queue": 0,
+                "minimum_time_between_advertisement_runs": 0,
+                "inbound_msg_logging": "enabled",
+                "inbound_msg_buffered": 3,
+                "outbound_msg_logging": "enabled",
+                "outbound_msg_buffered": 3,
+                "address_family": {
+                    "ipv4 unicast": {
+                        "bgp_neighbor_version": 177,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "extended_nexthop_encoding": "advertised and received",
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 0,
+                        "accepted_prefixes": 26,
+                        "bestpaths": 11,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 0,
+                        "prefix_advertised": 6,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 2,
+                        "maximum_prefixes_allowed": 1048576,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 177,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 1,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    },
+                    "ipv6 labeled-unicast": {
+                        "bgp_neighbor_version": 141,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 0,
+                        "accepted_prefixes": 25,
+                        "bestpaths": 1,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 0,
+                        "prefix_advertised": 4,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 1,
+                        "maximum_prefixes_allowed": 131072,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 141,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 1,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    },
+                    "l2vpn evpn": {
+                        "bgp_neighbor_version": 367,
+                        "update_group": 0.2,
+                        "filter_group": 0.1,
+                        "route_refresh_request_received": 0,
+                        "route_refresh_request_sent": 2,
+                        "accepted_prefixes": 83,
+                        "bestpaths": 83,
+                        "exact_no_prefixes_denied": 0,
+                        "cummulative_no_prefixes_denied": 6,
+                        "no_policy": 0,
+                        "failed_rt_match": 45,
+                        "by_orf_policy": 0,
+                        "by_policy": 0,
+                        "prefix_advertised": 40,
+                        "prefix_suppressed": 0,
+                        "prefix_withdrawn": 12,
+                        "maximum_prefixes_allowed": 2097152,
+                        "warning_msg_threshold": "75%",
+                        "restart_interval": 0,
+                        "aigp": "enabled",
+                        "last_ack_version": 367,
+                        "last_synced_ack_version": 0,
+                        "outstanding_version_objects_current": 0,
+                        "outstanding_version_objects_max": 2,
+                        "outstanding_version_objects_refresh": 0,
+                        "additional_paths_operation": "None"
+                    }
+                },
+                "established_connections": 1,
+                "dropped_connections": 0,
+                "local_host": "192.168.99.25",
+                "local_port": 18078,
+                "if_handle": "0x00000000",
+                "foreign_host": "192.168.99.11",
+                "foreign_port": 179,
+                "last_reset": "00:00:00"
+            }
+        }
+    }
+
+    golden_output_neighbor = {'execute.return_value': '''
+        #show bgp l2vpn evpn neighbors 192.168.99.11
+        Tue Aug 13 04:20:13.553 JST
+
+        BGP neighbor is 192.168.99.11
+         Remote AS 65001, local AS 65001, internal link
+         Remote router ID 192.168.99.11
+          BGP state = Established, up for 2w5d
+          NSR State: None
+          Last read 00:00:09, Last read before reset 00:00:00
+          Hold time is 180, keepalive interval is 60 seconds
+          Configured hold time: 180, keepalive: 60, min acceptable hold time: 3
+          Last write 00:00:09, attempted 19, written 19
+          Second last write 00:01:09, attempted 19, written 19
+          Last write before reset 00:00:00, attempted 0, written 0
+          Second last write before reset 00:00:00, attempted 0, written 0
+          Last write pulse rcvd  Aug 13 04:20:04.721 last full not set pulse count 55044
+          Last write pulse rcvd before reset 00:00:00
+          Socket not armed for io, armed for read, armed for write
+          Last write thread event before reset 00:00:00, second last 00:00:00
+          Last KA expiry before reset 00:00:00, second last 00:00:00
+          Last KA error before reset 00:00:00, KA not sent 00:00:00
+          Last KA start before reset 00:00:00, second last 00:00:00
+          Precedence: internet
+          Non-stop routing is enabled
+          Multi-protocol capability received
+          Neighbor capabilities:
+            Route refresh: advertised (old + new) and received (old + new)
+            4-byte AS: advertised and received
+            Address family IPv4 Unicast: advertised and received
+            Address family IPv6 Labeled-unicast: advertised and received
+            Address family L2VPN EVPN: advertised and received
+          Received 28148 messages, 0 notifications, 0 in queue
+          Sent 27671 messages, 0 notifications, 0 in queue
+          Minimum time between advertisement runs is 0 secs
+          Inbound message logging enabled, 3 messages buffered
+          Outbound message logging enabled, 3 messages buffered
+
+         For Address Family: IPv4 Unicast
+          BGP neighbor version 177
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+            Extended Nexthop Encoding: advertised and received
+          Route refresh request: received 0, sent 0
+          26 accepted prefixes, 11 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0.
+          Prefix advertised 6, suppressed 0, withdrawn 2
+          Maximum prefixes allowed 1048576
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 177, Last synced ack version 0
+          Outstanding version objects: current 0, max 1, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+          Advertise routes with local-label via Unicast SAFI
+
+         For Address Family: IPv6 Labeled-unicast
+          BGP neighbor version 141
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+          Route refresh request: received 0, sent 0
+          25 accepted prefixes, 1 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 0.
+          Prefix advertised 4, suppressed 0, withdrawn 1
+          Maximum prefixes allowed 131072
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 141, Last synced ack version 0
+          Outstanding version objects: current 0, max 1, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+
+         For Address Family: L2VPN EVPN
+          BGP neighbor version 367
+          Update group: 0.2 Filter-group: 0.1  No Refresh request being processed
+          Route refresh request: received 0, sent 2
+          83 accepted prefixes, 83 are bestpaths
+          Exact no. of prefixes denied : 0.
+          Cumulative no. of prefixes denied: 6.
+            No policy: 0, Failed RT match: 45
+            By ORF policy: 0, By policy: 0
+          Prefix advertised 40, suppressed 0, withdrawn 12
+          Maximum prefixes allowed 2097152
+          Threshold for warning message 75%, restart interval 0 min
+          AIGP is enabled
+          An EoR was received during read-only mode
+          Last ack version 367, Last synced ack version 0
+          Outstanding version objects: current 0, max 2, refresh 0
+          Additional-paths operation: None
+          Send Multicast Attributes
+
+          Connections established 1; dropped 0
+          Local host: 192.168.99.25, Local port: 18078, IF Handle: 0x00000000
+          Foreign host: 192.168.99.11, Foreign port: 179
+          Last reset 00:00:00
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_neighbor(self):
+        self.device = Mock(**self.golden_output_neighbor)
+        obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
+        parsed_output = obj.parse(neighbor='192.168.99.11')
+        self.assertEqual(parsed_output,self.golden_parsed_output_neighbor)
 
 
 if __name__ == '__main__':
