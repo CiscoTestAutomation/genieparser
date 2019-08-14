@@ -12,25 +12,26 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # iosxe show_ospf
-from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
-                                              ShowIpOspfInterface,\
-                                              ShowIpOspfNeighborDetail,\
-                                              ShowIpOspfShamLinks,\
-                                              ShowIpOspfVirtualLinks,\
-                                              ShowIpOspfDatabase,\
-                                              ShowIpOspfDatabaseRouter,\
-                                              ShowIpOspfDatabaseExternal,\
-                                              ShowIpOspfDatabaseNetwork,\
-                                              ShowIpOspfDatabaseSummary,\
-                                              ShowIpOspfDatabaseOpaqueArea,\
-                                              ShowIpOspfMplsLdpInterface,\
-                                              ShowIpOspfMplsTrafficEngLink,\
-                                              ShowIpOspfMaxMetric,\
-                                              ShowIpOspfTraffic,\
-                                              ShowIpOspfNeighbor,\
-                                              ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowIpOspfInterfaceBrief,\
-                                              ShowIpOspfSegmentRouting
+from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
+                                               ShowIpOspfInterface,
+                                               ShowIpOspfNeighborDetail,
+                                               ShowIpOspfShamLinks,
+                                               ShowIpOspfVirtualLinks,
+                                               ShowIpOspfDatabase,
+                                               ShowIpOspfDatabaseRouter,
+                                               ShowIpOspfDatabaseExternal,
+                                               ShowIpOspfDatabaseNetwork,
+                                               ShowIpOspfDatabaseSummary,
+                                               ShowIpOspfDatabaseOpaqueArea,
+                                               ShowIpOspfMplsLdpInterface,
+                                               ShowIpOspfMplsTrafficEngLink,
+                                               ShowIpOspfMaxMetric,
+                                               ShowIpOspfTraffic,
+                                               ShowIpOspfNeighbor,
+                                               ShowIpOspfDatabaseRouterSelfOriginate,
+                                               ShowIpOspfInterfaceBrief,
+                                               ShowIpOspfSegmentRouting,
+                                               ShowIpOspfSegmentRoutingSidDatabase)
 
 
 
@@ -8553,6 +8554,72 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
         obj=ShowIpOspfSegmentRouting(device=self.device)
         parsed_output = obj.parse(process_id=65109)
         self.assertEqual(parsed_output, self.parsed_output_1)
+
+
+class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
+    """ Test case for command:
+          * show ip ospf segment-routing sid-database
+    """
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf segment-routing sid-database
+ 
+                    OSPF Router with ID (1.1.1.1) (Process ID 1234)
+         
+        OSPF Segment Routing SIDs
+         
+        Codes: L - local, N - label not programmed,
+               M - mapping-server
+         
+        SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
+        --------------  ------------------  ---------------  -------  --------  ----
+        1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0  
+        2               2.2.2.2/32          2.2.2.2          8        Intra     0  
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            1234: {
+                'router_id': '1.1.1.1',
+                'sids': {
+                    1: {
+                        'sid': 1,
+                        'codes': 'L',
+                        'prefix': '1.1.1.1/32',
+                        'adv_rtr_id': '1.1.1.1',
+                        'area_id': 8,
+                        'type': 'Intra',
+                        'algo': 0
+                    },
+                    2: {
+                        'sid': 2,
+                        'prefix': '2.2.2.2/32',
+                        'adv_rtr_id': '2.2.2.2',
+                        'area_id': 8,
+                        'type': 'Intra',
+                        'algo': 0
+                    }
+                }
+            }
+        }
+    }
+
+    def test_show_ip_ospf_segment_routing_sid_database_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_segment_routing_sid_database(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

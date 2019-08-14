@@ -6581,3 +6581,87 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 continue
 
         return parsed_output
+
+
+class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
+    ''' Schema for commands:
+            * show ip ospf segment-routing sid-database
+    '''
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'sids': {
+                    Any(): {
+                        'sid': int,
+                        Optional('codes'): str,
+                        'prefix': str,
+                        'adv_rtr_id': str,
+                        'area_id': int,
+                        'type': str,
+                        'algo': int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSchema):
+    """ Parser for commands:
+            * show ip ospf segment-routing sid-database
+    """
+
+    cli_command = ['show ip ospf segment-routing sid-database']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
+                         '\(Process +ID +(?P<pid>\d+)\)$')
+        
+        # 1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0
+        # 2               2.2.2.2/32          2.2.2.2          8        Intra     0
+        p2 = re.compile(r'^(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
+                         '(?P<prefix>[\d\.\/]+) +(?P<adv_rtr_id>[\d\.]+) +'
+                         '(?P<area_id>\d+) +(?P<type>\w+) +(?P<algo>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                
+                process_dict = ret_dict.setdefault('process_id', {}).setdefault(int(group['pid']), {})
+                process_dict.update({'router_id': group['router_id']})
+                continue
+
+            # 1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0
+            # 2               2.2.2.2/32          2.2.2.2          8        Intra     0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                
+                sid_dict = process_dict.setdefault('sids', {}).setdefault(int(group['sid']), {})
+                sid_dict.update({'sid': int(group['sid'])})
+                
+                if group['codes']:
+                    sid_dict.update({'codes': group['codes']})
+                    
+                sid_dict.update({'prefix': group['prefix']})
+                sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
+                sid_dict.update({'area_id': int(group['area_id'])})
+                sid_dict.update({'type': group['type']})
+                sid_dict.update({'algo': int(group['algo'])})
+                continue
+
+        return ret_dict
