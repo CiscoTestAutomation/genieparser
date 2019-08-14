@@ -1,9 +1,9 @@
-''' show_mcast.py
+''' show_pim.py
 
 IOSXE parsers for the following show commands:
 
     * show ipv6 pim interface
-    * show ipv6 pim vrf <WROD> interface 
+    * show ipv6 pim vrf <WROD> interface
 
 '''
 
@@ -213,7 +213,7 @@ class ShowIpv6PimBsrElection(ShowIpv6PimBsrElectionSchema):
                 if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
                         [af_name]['rp']:
                     ret_dict['vrf'][vrf]['address_family'][af_name] \
-                        ['rp']['bsr'] = {}                
+                        ['rp']['bsr'] = {}
 
                 if 'bsr' not in ret_dict['vrf'][vrf]['address_family'] \
                         [af_name]['rp']['bsr']:
@@ -792,7 +792,7 @@ class ShowIpPimBsrRouter(ShowIpPimBsrRouterSchema):
                     ret_dict['vrf'][vrf]['address_family'] = {}
                 if af_name not in ret_dict['vrf'][vrf]['address_family']:
                     ret_dict['vrf'][vrf]['address_family'][af_name] = {}
-                
+
                 if 'rp' not in ret_dict['vrf'][vrf]['address_family'][af_name]:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp'] = {}
                 if 'bsr' not in ret_dict['vrf'][vrf]['address_family'][af_name]['rp']:
@@ -891,7 +891,7 @@ class ShowIpPimRpMappingSchema(MetaParser):
                             },
                             Optional('static_rp'):{
                                 Any():{
-                                    Optional('sm'): {                                    
+                                    Optional('sm'): {
                                         Optional('policy_name'): str,
                                         Optional('override'): bool,
                                     },
@@ -948,7 +948,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
 
             # Group(s) 224.0.0.0/4
             # Group(s) 224.0.0.0/4, Static
-            # Group(s): 224.0.0.0/4, Static, Bidir Mode 
+            # Group(s): 224.0.0.0/4, Static, Bidir Mode
             p1 = re.compile(r'^\s*Group\(s\)\:? +(?P<group>[0-9a-zA-Z\:\.\/]+)'
                              '(, +(?P<protocol>\S+))?'
                              '(, +(?P<mode>[\w\s]+))?$')
@@ -984,7 +984,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                 if protocol:
                     if 'static' in protocol.lower():
                         protocol_static = 'static'
-                    
+
                     if 'override' in protocol.lower():
                         override = True
                     else:
@@ -1220,7 +1220,7 @@ class ShowIpPimRpMapping(ShowIpPimRpMappingSchema):
                 up_time = m.groupdict()['uptime']
                 expiration = m.groupdict()['expires']
 
-                try:                    
+                try:
                     ret_dict['vrf'][vrf]['address_family'][af_name]['rp']['bsr']['rp']\
                         ['up_time'] = up_time
                 except Exception:
@@ -1794,7 +1794,7 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
                 mode_list = m.groupdict()['mode']
                 if mode_list:
                     for mode in mode_list.strip().split():
-                        sub_dict[mode_tbl[mode]] = True                    
+                        sub_dict[mode_tbl[mode]] = True
                 continue
 
             # 2001::2:1
@@ -1813,17 +1813,20 @@ class ShowPimNeighbor(ShowPimNeighborSchema):
 # ==========================================================
 class ShowIpPimNeighbor(ShowPimNeighbor):
     '''Parser for show ip pim [vrf <WORD>] neighbor'''
-    cli_command = 'show ip pim neighbor'
+    cli_command = ['show ip pim vrf {vrf} neighbor', 'show ip pim neighbor']
     exclude = ['expiration', 'up_time']
 
     def cli(self, vrf='',output=None):
          # ip should be ip or ipv6
         if output is None:
-            # get output from device
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
-        
+
         return super().cli(af='ip', vrf=vrf, output=out)
 
 # ==========================================================
@@ -1831,13 +1834,16 @@ class ShowIpPimNeighbor(ShowPimNeighbor):
 # ==========================================================
 class ShowIpv6PimNeighbor(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor'''
-    cli_command = 'show ipv6 pim neighbor'
+    cli_command = ['show ipv6 pim vrf {vrf} neighbor', 'show ipv6 pim neighbor']
     exclude = ['expiration', 'up_time']
 
     def cli(self, vrf='',output=None):
         if output is None:
-            # get output from device
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1849,15 +1855,18 @@ class ShowIpv6PimNeighbor(ShowPimNeighbor):
 # ==========================================================
 class ShowIpv6PimNeighborDetail(ShowPimNeighbor):
     '''Parser for show ipv6 pim [vrf <WORD>] neighbor detail'''
-    cli_command = 'show ipv6 pim neighbor detail'
+    cli_command = ['show ipv6 pim vrf {vrf} neighbor detail', 'show ipv6 pim neighbor detail']
     exclude = ['expiration', 'up_time']
 
 
     def cli(self, vrf='',output=None):
          # ip should be ip or ipv6
         if output is None:
-            # get output from device
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1930,7 +1939,7 @@ class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
             # Interface          RP               DF Winner        Metric          Uptime
             # Ethernet3/3        10.10.0.2        10.4.0.2         0               00:03:49
             #                    10.10.0.3        10.4.0.3         0               00:01:49
-            # Ethernet0/1        10.186.0.1      *10.4.0.4         20              00:00:39 
+            # Ethernet0/1        10.186.0.1      *10.4.0.4         20              00:00:39
             p1 = re.compile(r'^((?P<intf>[\w\.\/\-]+) +)?'
                              '(?P<address>[\w\.\:]+) +'
                              '(?P<df>\*)?(?P<df_address>[\w\.\:]+) +'
@@ -1975,6 +1984,6 @@ class ShowIpPimInterfaceDf(ShowIpPimInterfaceDfSchema):
                 sub_dict['metric'] = int(m.groupdict()['metric'])
                 sub_dict['df_address'] = m.groupdict()['df_address']
                 sub_dict['df_uptime'] = m.groupdict()['uptime']
-                sub_dict['winner_metric'] = int(m.groupdict()['metric'])                  
+                sub_dict['winner_metric'] = int(m.groupdict()['metric'])
                 continue
         return ret_dict
