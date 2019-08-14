@@ -8501,44 +8501,44 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-        PE1#show ip ospf 9996 segment-routing adjacency-sid
+        PE1#show ip ospf 65109 segment-routing adjacency-sid
  
-                    OSPF Router with ID (1.1.1.1) (Process ID 9996)
+                    OSPF Router with ID (10.4.1.1) (Process ID 65109)
             Flags: S - Static, D - Dynamic,  P - Protected, U - Unprotected, G - Group, L - Adjacency Lost
          
         Adj-Sid  Neighbor ID     Interface          Neighbor Addr   Flags   Backup Nexthop  Backup Interface 
         -------- --------------- ------------------ --------------- ------- --------------- ------------------
-        16       2.2.2.2         Gi0/1/2            200.0.3.2       D U   
-        17       2.2.2.2         Gi0/1/1            200.0.2.2       D U   
-        18       2.2.2.2         Gi0/1/0            200.0.1.2       D U   
-        19       2.2.2.2         Te0/0/0            200.0.0.2       D U    
+        16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+        17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
+        18       10.16.2.2         Gi0/1/0            192.168.111.2       D U   
+        19       10.16.2.2         Te0/0/0            192.168.220.2       D U    
     '''}
 
     parsed_output_1 = {        
         'process_id': {
-            '9996': {
-                'router_id': '1.1.1.1',
+            '65109': {
+                'router_id': '10.4.1.1',
                 'adjacency_sids': {
                     '16': {
                        'flags': 'D U',
                        'interface': 'GigabitEthernet0/1/2',
-                       'neighbor_address': '200.0.3.2',
-                       'neighbor_id': '2.2.2.2'},
+                       'neighbor_address': '192.168.154.2',
+                       'neighbor_id': '10.16.2.2'},
                     '17': {
                         'flags': 'D U',
                         'interface': 'GigabitEthernet0/1/1',
-                        'neighbor_address': '200.0.2.2',
-                        'neighbor_id': '2.2.2.2'},
+                        'neighbor_address': '192.168.4.2',
+                        'neighbor_id': '10.16.2.2'},
                     '18': {
                         'flags': 'D U',
                         'interface': 'GigabitEthernet0/1/0',
-                        'neighbor_address': '200.0.1.2',
-                        'neighbor_id': '2.2.2.2'},
+                        'neighbor_address': '192.168.111.2',
+                        'neighbor_id': '10.16.2.2'},
                     '19': {
                         'flags': 'D U',
                         'interface': 'TenGigabitEthernet0/0/0',
-                        'neighbor_address': '200.0.0.2',
-                        'neighbor_id': '2.2.2.2'}}}}}
+                        'neighbor_address': '192.168.220.2',
+                        'neighbor_id': '10.16.2.2'}}}}}
 
     def test_show_ip_ospf_segment_routing_empty(self):
         self.maxDiff = None
@@ -8551,7 +8551,7 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
         self.maxDiff = None
         self.device=Mock(**self.golden_output_1)
         obj=ShowIpOspfSegmentRouting(device=self.device)
-        parsed_output = obj.parse(process_id=9996)
+        parsed_output = obj.parse(process_id=65109)
         self.assertEqual(parsed_output, self.parsed_output_1)
 
 if __name__ == '__main__':

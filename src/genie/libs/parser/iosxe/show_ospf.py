@@ -6522,12 +6522,12 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         else:
             out = output
 
-        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         r1 = re.compile(r'OSPF\s+Router\s+with\s+ID\s+\((?P<router_id>\S+)\)\s+'
                          '\(Process\s+ID\s+(?P<process_id>\d+)\)')
 
-        # 16       2.2.2.2         Gi0/1/2            200.0.3.2       D U   
-        # 17       2.2.2.2         Gi0/1/1            200.0.2.2       D U   
+        # 16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+        # 17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
         r2 = re.compile(r'(?P<adj_sid>\d+)\s+(?P<neighbor_id>\S+)\s+'
                          '(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+'
                          '(?P<flags>[SDPUGL\s]+)\s*(?:(?P<backup_nexthop>\S+))?'
@@ -6538,7 +6538,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
             result = r1.match(line)
             if result:
                 group = result.groupdict()
@@ -6553,8 +6553,8 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
                 continue
 
-            # 16       2.2.2.2         Gi0/1/2            200.0.3.2       D U
-            # 17       2.2.2.2         Gi0/1/1            200.0.2.2       D U
+            # 16       10.16.2.2         Gi0/1/2            192.168.154.2       D U
+            # 17       10.16.2.2         Gi0/1/1            192.168.4.2       D U
             result = r2.match(line)
             if result:
 
