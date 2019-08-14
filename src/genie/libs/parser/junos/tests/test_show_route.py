@@ -33,28 +33,26 @@ class test_show_route_table(unittest.TestCase):
     '''}
 
     parsed_output_1 = {
-        'route_information': {
-            'route_table': {
-                'table_name': {
-                    'inet.3:': {
-                        'active_route_count': 3,
-                        'destination_count': 3,
-                        'hidden_route_count': 0,
-                        'holddown_route_count': 0,
-                        'routes': {
-                            '4.4.4.4/32': {
-                                'active_tag': '*',
-                                'age': '03:40:50',
-                                'metric': '110',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'best_route': '>',
-                                            'to': '200.0.0.6',
-                                            'via': 'ge-0/0/1.0'}}},
-                                'preference': '9',
-                                'protocol_name': 'LDP'}},
-                        'total_route_count': 3}}}}}
+        'table_name': {
+            'inet.3:': {
+                'active_route_count': 3,
+                'destination_count': 3,
+                'hidden_route_count': 0,
+                'holddown_route_count': 0,
+                'routes': {
+                    '4.4.4.4/32': {
+                        'active_tag': '*',
+                        'age': '03:40:50',
+                        'metric': '110',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'best_route': '>',
+                                    'to': '200.0.0.6',
+                                    'via': 'ge-0/0/1.0'}}},
+                        'preference': '9',
+                        'protocol_name': 'LDP'}},
+                'total_route_count': 3}}}
 
 
 
@@ -70,29 +68,27 @@ class test_show_route_table(unittest.TestCase):
     '''}
 
     parsed_output_2 = {
-        'route_information': {
-            'route_table': {
-                'table_name': {
-                    'inet.3:': {
-                        'active_route_count': 3,
-                        'destination_count': 3,
-                        'hidden_route_count': 0,
-                        'holddown_route_count': 0,
-                        'routes': {
-                            '202.239.165.220/32': {
-                                'active_tag': '*',
-                                'age': '03:41:19',
-                                'metric': '1111',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'best_route': '>',
-                                            'mpls_label': 'Push 305550',
-                                            'to': '200.0.0.6',
-                                            'via': 'ge-0/0/1.0'}}},
-                                'preference': '9',
-                                'protocol_name': 'LDP'}},
-                        'total_route_count': 3}}}}}
+        'table_name': {
+            'inet.3:': {
+                'active_route_count': 3,
+                'destination_count': 3,
+                'hidden_route_count': 0,
+                'holddown_route_count': 0,
+                'routes': {
+                    '202.239.165.220/32': {
+                        'active_tag': '*',
+                        'age': '03:41:19',
+                        'metric': '1111',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'best_route': '>',
+                                    'mpls_label': 'Push 305550',
+                                    'to': '200.0.0.6',
+                                    'via': 'ge-0/0/1.0'}}},
+                        'preference': '9',
+                        'protocol_name': 'LDP'}},
+                'total_route_count': 3}}}
 
 
     golden_output_3 = {'execute.return_value': '''
@@ -109,54 +105,52 @@ class test_show_route_table(unittest.TestCase):
                             > to 200.0.0.6 via ge-0/0/1.0, Push 307742
     '''}
 
-    parsed_output_3 = {
-        'route_information': {
-            'route_table': {
-                'table_name': {
-                    'inet.3:': {
-                        'active_route_count': 3,
-                        'destination_count': 3,
-                        'hidden_route_count': 0,
-                        'holddown_route_count': 0,
-                        'routes': {
-                            '106.162.197.254/32': {
-                                'active_tag': '*',
-                                'age': '02:14:05',
-                                'metric': '1001',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'best_route': '>',
-                                            'to': '7.0.0.1',
-                                            'via': 'ge-0/0/2.0'}}},
-                                'preference': '9',
-                                'protocol_name': 'LDP'},
-                            '202.239.165.220/32': {
-                                'active_tag': '*',
-                                'age': '02:03:22',
-                                'metric': '1111',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'best_route': '>',
-                                            'mpls_label': 'Push 307742',
-                                            'to': '200.0.0.6',
-                                            'via': 'ge-0/0/1.0'}}},
-                                'preference': '9',
-                                'protocol_name': 'LDP'},
-                            '4.4.4.4/32': {
-                                'active_tag': '*',
-                                'age': '02:30:55',
-                                'metric': '110',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'best_route': '>',
-                                            'to': '200.0.0.6',
-                                            'via': 'ge-0/0/1.0'}}},
-                                'preference': '9',
-                                'protocol_name': 'LDP'}},
-                                'total_route_count': 3}}}}}
+    parsed_output_3 = {        
+        'table_name': {
+            'inet.3:': {
+                'active_route_count': 3,
+                'destination_count': 3,
+                'hidden_route_count': 0,
+                'holddown_route_count': 0,
+                'routes': {
+                    '106.162.197.254/32': {
+                        'active_tag': '*',
+                        'age': '02:14:05',
+                        'metric': '1001',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'best_route': '>',
+                                    'to': '7.0.0.1',
+                                    'via': 'ge-0/0/2.0'}}},
+                        'preference': '9',
+                        'protocol_name': 'LDP'},
+                    '202.239.165.220/32': {
+                        'active_tag': '*',
+                        'age': '02:03:22',
+                        'metric': '1111',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'best_route': '>',
+                                    'mpls_label': 'Push 307742',
+                                    'to': '200.0.0.6',
+                                    'via': 'ge-0/0/1.0'}}},
+                        'preference': '9',
+                        'protocol_name': 'LDP'},
+                    '4.4.4.4/32': {
+                        'active_tag': '*',
+                        'age': '02:30:55',
+                        'metric': '110',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'best_route': '>',
+                                    'to': '200.0.0.6',
+                                    'via': 'ge-0/0/1.0'}}},
+                        'preference': '9',
+                        'protocol_name': 'LDP'}},
+                        'total_route_count': 3}}}
 
     golden_output_4= {'execute.return_value': '''
         #show route table inet.3
@@ -170,31 +164,29 @@ class test_show_route_table(unittest.TestCase):
     '''}
 
     parsed_output_4 = {
-        'route_information': {
-            'route_table': {
-                'table_name': {
-                    'inet.3:': {
-                        'active_route_count': 5,
-                        'destination_count': 5,
-                        'hidden_route_count': 0,
-                        'holddown_route_count': 0,
-                        'routes': {
-                            '10.0.0.5/32': {
-                                'active_tag': '*',
-                                'age': '00:25:43',
-                                'metric': '10',
-                                'next_hop': {
-                                    'next_hop_list': {
-                                        1: {
-                                            'to': '10.2.94.2',
-                                            'via': 'lt-1/2/0.49'},
-                                        2: {
-                                            'best_route': '>',
-                                            'to': '10.2.3.2',
-                                            'via': 'lt-1/2/0.23'}}},
-                                'preference': '9',
-                                'protocol_name': 'LDP'}},
-                        'total_route_count': 5}}}}}
+        'table_name': {
+            'inet.3:': {
+                'active_route_count': 5,
+                'destination_count': 5,
+                'hidden_route_count': 0,
+                'holddown_route_count': 0,
+                'routes': {
+                    '10.0.0.5/32': {
+                        'active_tag': '*',
+                        'age': '00:25:43',
+                        'metric': '10',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'to': '10.2.94.2',
+                                    'via': 'lt-1/2/0.49'},
+                                2: {
+                                    'best_route': '>',
+                                    'to': '10.2.3.2',
+                                    'via': 'lt-1/2/0.23'}}},
+                        'preference': '9',
+                        'protocol_name': 'LDP'}},
+                'total_route_count': 5}}}
 
 
     def test_show_route_table_empty(self):
