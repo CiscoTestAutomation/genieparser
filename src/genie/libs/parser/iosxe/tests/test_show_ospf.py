@@ -29,7 +29,8 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfTraffic,\
                                               ShowIpOspfNeighbor,\
                                               ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowIpOspfInterfaceBrief
+                                              ShowIpOspfInterfaceBrief, \
+                                              ShowIpOspfSegmentRoutingProtectedAdjacencies
 
 
 
@@ -8489,6 +8490,78 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
         obj=ShowIpOspfDatabaseRouterSelfOriginate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ===================================================================
+# Unit test for 'show ip ospf segment-routing protected-adjacencies'
+# ===================================================================
+
+class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf segment-routing protected-adjacencies
+
+                OSPF Router with ID (1.1.1.1) (Process ID 9996)
+
+                            Area with ID (8)
+
+        Neighbor ID     Interface          Address         Adj-Sid      Backup Nexthop  Backup Interface
+        --------------- ------------------ --------------- ------------ --------------- ------------------
+        22.22.22.22     Gi5                10.0.0.25       20           10.0.0.9        Gi3
+        22.22.22.22     Gi4                10.0.0.13       21           10.0.0.9        Gi3
+        11.11.11.11     Gi3                10.0.0.9        22           10.0.0.13       Gi4
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            9996: {
+                'router_id': '1.1.1.1',
+                'area_id': 8,
+                'neighbors': {
+                    '22.22.22.22': {
+                        'interfaces': {
+                            'GigabitEthernet5': {
+                                'address': '10.0.0.25',
+                                'adj_sid': 20,
+                                'backup_nexthop': '10.0.0.9',
+                                'backup_interface': 'GigabitEthernet3',
+                                },
+                            'GigabitEthernet4': {
+                                'address': '10.0.0.13',
+                                'adj_sid': 21,
+                                'backup_nexthop': '10.0.0.9',
+                                'backup_interface': 'GigabitEthernet3',
+                                },
+                            },
+                        },
+                    '11.11.11.11': {
+                        'interfaces': {
+                            'GigabitEthernet3': {
+                                'address': '10.0.0.9',
+                                'adj_sid': 22,
+                                'backup_nexthop': '10.0.0.13',
+                                'backup_interface': 'GigabitEthernet4',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
 if __name__ == '__main__':
