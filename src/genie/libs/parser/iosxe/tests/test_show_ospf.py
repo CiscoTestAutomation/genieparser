@@ -12,24 +12,25 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # iosxe show_ospf
-from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
-                                              ShowIpOspfInterface,\
-                                              ShowIpOspfNeighborDetail,\
-                                              ShowIpOspfShamLinks,\
-                                              ShowIpOspfVirtualLinks,\
-                                              ShowIpOspfDatabase,\
-                                              ShowIpOspfDatabaseRouter,\
-                                              ShowIpOspfDatabaseExternal,\
-                                              ShowIpOspfDatabaseNetwork,\
-                                              ShowIpOspfDatabaseSummary,\
-                                              ShowIpOspfDatabaseOpaqueArea,\
-                                              ShowIpOspfMplsLdpInterface,\
-                                              ShowIpOspfMplsTrafficEngLink,\
-                                              ShowIpOspfMaxMetric,\
-                                              ShowIpOspfTraffic,\
-                                              ShowIpOspfNeighbor,\
-                                              ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowIpOspfInterfaceBrief
+from genie.libs.parser.iosxe.show_ospf import  (ShowIpOspf,
+                                               ShowIpOspfInterface,
+                                               ShowIpOspfNeighborDetail,
+                                               ShowIpOspfShamLinks,
+                                               ShowIpOspfVirtualLinks,
+                                               ShowIpOspfDatabase,
+                                               ShowIpOspfDatabaseRouter,
+                                               ShowIpOspfDatabaseExternal,
+                                               ShowIpOspfDatabaseNetwork,
+                                               ShowIpOspfDatabaseSummary,
+                                               ShowIpOspfDatabaseOpaqueArea,
+                                               ShowIpOspfMplsLdpInterface,
+                                               ShowIpOspfMplsTrafficEngLink,
+                                               ShowIpOspfMaxMetric,
+                                               ShowIpOspfTraffic,
+                                               ShowIpOspfNeighbor,
+                                               ShowIpOspfDatabaseRouterSelfOriginate,
+                                               ShowIpOspfInterfaceBrief,
+                                               ShowIpOspfSegmentRoutingGlobalBlock)
 
 
 
@@ -8488,6 +8489,78 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
         self.device=Mock(**self.golden_output)
         obj=ShowIpOspfDatabaseRouterSelfOriginate(device=self.device)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ===================================================
+# Unit tests for:
+#   'show ip ospf segment-routing global-block'
+#   'show ip ospf {pid} segment-routing global-block'
+# ===================================================
+class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf 1234 segment-routing global-block
+ 
+                    OSPF Router with ID (1.1.1.1) (Process ID 1234)
+         
+        OSPF Segment Routing Global Blocks in Area 3
+         
+          Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
+         
+         *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label    
+          2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label  
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            1234: {
+                'router_id': '1.1.1.1',
+                'area': 3,
+                'routers': {
+                    '1.1.1.1': {
+                        'router_id': '1.1.1.1',
+                        'sr_capable': 'Yes',
+                        'sr_algorithm': 'SPF,StrictSPF',
+                        'srgb_base': 16000,
+                        'srgb_range': 8000,
+                        'sid_label': 'Label'
+                    },
+                    '2.2.2.2': {
+                        'router_id': '2.2.2.2',
+                        'sr_capable': 'Yes',
+                        'sr_algorithm': 'SPF,StrictSPF',
+                        'srgb_base': 16000,
+                        'srgb_range': 8000,
+                        'sid_label': 'Label'
+                    }
+                }
+            }
+        }
+    }
+
+    def test_show_ip_ospf_segment_routing_empty(self):
+        self.maxDiff= None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_segment_routing(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output)
+        obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ip_ospf_segment_routing_pid(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output)
+        obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=1234)
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 

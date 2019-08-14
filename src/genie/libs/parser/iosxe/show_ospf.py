@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
+    * show ip ospf {pid} segment-routing global-block
 
 '''
 
@@ -6473,3 +6474,107 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, db_type='router', output=output)
+
+
+# =====================================================
+# Schema for:
+#   * 'show ip ospf {pid} segment-routing global-block'
+# =====================================================
+class ShowIpOspfSegmentRoutingGlobalBlockSchema(MetaParser):
+    """ Schema for commands:
+            * show ip ospf {pid} segment-routing global-block
+    """
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'area': int,
+                'routers': {
+                    Any(): {
+                        'router_id': str,
+                        'sr_capable': str,
+                        'sr_algorithm': str,
+                        'srgb_base': int,
+                        'srgb_range': int,
+                        'sid_label': str
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================================
+# Parser for:
+#   * 'show ip ospf {pid} segment-routing global-block'
+# =====================================================
+class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSchema):
+    """ Parser for commands:
+            * show ip ospf {pid} segment-routing global-block
+    """
+
+    cli_command = ['show ip ospf segment-routing global-block',
+                   'show ip ospf {process_id} segment-routing global-block']
+
+    def cli(self, process_id=None, output=None):
+
+        if not output:
+            if not process_id:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(process_id=process_id)
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # OSPF Router with ID (1.1.1.1) (Process ID 1234)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
+                         '\(Process +ID +(?P<pid>\d+)\)$')
+
+        # OSPF Segment Routing Global Blocks in Area 3
+        p2 = re.compile(r'^OSPF +Segment +Routing +Global +Blocks +in +Area (?P<area>\d+)$')
+
+        # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+        # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+        p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+) +'
+                         '(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
+                         '(?P<srgb_range>\d+) +(?P<sid_label>\w+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 1234)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_dict = ret_dict.setdefault('process_id', {}).setdefault(int(group['pid']), {})
+                router_dict.update({'router_id': group['router_id']})
+                continue
+
+            # OSPF Segment Routing Global Blocks in Area 3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_dict.update({'area': int(group['area'])})
+                continue
+
+            # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+            # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_entry_dict = router_dict.setdefault('routers', {}).setdefault(group['router_id'], {})
+                router_entry_dict.update({'router_id': group['router_id']})
+                router_entry_dict.update({'sr_capable': group['sr_capable']})
+                router_entry_dict.update({'sr_algorithm': group['sr_algorithm']})
+                router_entry_dict.update({'srgb_base': int(group['srgb_base'])})
+                router_entry_dict.update({'srgb_range': int(group['srgb_range'])})
+                router_entry_dict.update({'sid_label': group['sid_label']})
+                continue
+
+        return ret_dict
