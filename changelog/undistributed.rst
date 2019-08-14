@@ -133,3 +133,12 @@
 * IOSXE
     * Updated ShowIpRouteWord
         * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
+
+--------------------------------------------------------------------------------
+                                Mcast
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpMroute
+        added a key to cli command for Ops
+    * Update ShowIpv6Mroute
+        added a key to cli command for Ops
