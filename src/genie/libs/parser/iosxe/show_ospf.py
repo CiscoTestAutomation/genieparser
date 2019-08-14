@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
 
+    * show ip ospf {process_id} segment-routing local-block
     * show ip ospf
     * show ip ospf interface
     * show ip ospf interface {interface}
@@ -21,8 +22,6 @@ IOSXE parsers for the following show commands:
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
-    * show ip ospf {process_id} segment-routing local-block
-
 '''
 
 # Python
