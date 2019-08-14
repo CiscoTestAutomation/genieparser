@@ -6480,26 +6480,25 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
     ''' Schema for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
-    schema = {
-        'ospf_id': {
-            Any():{
-                'process_id': {
+    schema = {        
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'adjacency_sids': {
                     Any(): {
-                        'adjacency_sids': {
-                            Any(): {
-                                'neighbor_id': str,
-                                'neighbor_address': str,
-                                'interface': str,
-                                'flags': str,
-                                Optional('backup_nexthop'): str,
-                                Optional('backup_interface'): str,
-                            }
-                        }
+                        'neighbor_id': str,
+                        'neighbor_address': str,
+                        'interface': str,
+                        'flags': str,
+                        Optional('backup_nexthop'): str,
+                        Optional('backup_interface'): str,
                     }
                 }
             }
         }
     }
+        
+    
 
 class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
     ''' Parser for commands:
@@ -6524,11 +6523,15 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             out = output
 
         # OSPF Router with ID (1.1.1.1) (Process ID 9996)
-        r1 = re.compile(r'OSPF\s+Router\s+with\s+ID\s+\((?P<ospf_id>\S+)\)\s+\(Process\s+ID\s+(?P<process_id>9996)\)')
+        r1 = re.compile(r'OSPF\s+Router\s+with\s+ID\s+\((?P<router_id>\S+)\)\s+'
+                         '\(Process\s+ID\s+(?P<process_id>\d+)\)')
 
         # 16       2.2.2.2         Gi0/1/2            200.0.3.2       D U   
         # 17       2.2.2.2         Gi0/1/1            200.0.2.2       D U   
-        r2 = re.compile(r'(?P<adj_sid>\d+)\s+(?P<neighbor_id>\S+)\s+(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+(?P<flags>[SDPUGL\s]+)')
+        r2 = re.compile(r'(?P<adj_sid>\d+)\s+(?P<neighbor_id>\S+)\s+'
+                         '(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+'
+                         '(?P<flags>[SDPUGL\s]+)\s*(?:(?P<backup_nexthop>\S+))?'
+                         '\s*(?:(?P<backup_interface>\S+))?')
 
         parsed_output = {}
 
@@ -6540,12 +6543,13 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             if result:
                 group = result.groupdict()
 
-                ospf_id = group['ospf_id']
+                router_id = group['router_id']
                 process_id = group['process_id']
 
-                process_id_dict = parsed_output.setdefault('ospf_id', {})\
-                .setdefault(ospf_id, {}).setdefault('process_id', {})\
-                .setdefault(process_id, {})                
+                process_id_dict = parsed_output.setdefault('process_id', {})\
+                .setdefault(process_id, {})
+
+                process_id_dict['router_id'] = router_id
 
                 continue
 
@@ -6565,6 +6569,14 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 adjs_sid_dict['interface'] = Common.convert_intf_name(str(interface))
                 adjs_sid_dict['neighbor_address'] = group['neighbor_address']
                 adjs_sid_dict['flags'] = group['flags']
+
+                backup_nexthop = group['backup_nexthop']                
+                if backup_nexthop:
+                    adjs_sid_dict['backup_nexthop'] = backup_nexthop
+
+                backup_interface = group['backup_interface']
+                if backup_interface:
+                    adjs_sid_dict['backup_interface'] = backup_interface
 
                 continue
 
