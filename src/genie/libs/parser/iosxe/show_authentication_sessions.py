@@ -2,8 +2,8 @@
 
 IOSXE parsers for the following show commands:
     * show authentication sessions
-    * show authentication sessions interface <WORD>
-    * show authentication sessions interface <WORD> details
+    * show authentication sessions interface {intf}
+    * show authentication sessions interface {intf} details
 
 '''
 # Python
@@ -34,7 +34,7 @@ Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E2981
 #==============================================
 class ShowAuthenticationSessionsSchema(MetaParser):
     """Schema for show authentication sessions
-                  show authentication sessions interface <WORD>
+                  show authentication sessions interface {intf}
     """
 
     schema = {
@@ -59,8 +59,8 @@ class ShowAuthenticationSessionsSchema(MetaParser):
     }
 
 class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
-    """Parser for show authentication sessions
-                  show authentication sessions interface <WORD>
+    """Parser for 'show authentication sessions'
+                  'show authentication sessions interface {intf}''
     """
 
     cli_command = ['show authentication sessions', 'show authentication sessions interface {intf}']
@@ -82,16 +82,16 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
 
         # initial regexp pattern
 
-        # Detect headline
+        # Interface  MAC Address     Method   Domain   Status         Session ID
         p1 = re.compile(r'^Interface +MAC +Address +Method +Domain +Status +Session +ID')
 
-        # Detect headline
+        # Interface Identifier Method Domain Status Fg Session ID
         p2 = re.compile(r'^Interface +Identifier +Method +Domain +Status +Fg +Session +ID')
 
-        # match another line
-        p3 = re.compile(r'^(?:--------------*)')
-
         # Matching patterns
+        # Gi1/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
+        # Gi1/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
+        # Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
         p4 = re.compile(r'^(?P<interface>\S+) +'
                          '(?P<client>[\w\.]+) +'
                          '(?P<method>\w+) +'
@@ -103,7 +103,7 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
             line = line.strip()
 
             # Ignore the title
-            if p1.match(line) or p2.match(line) or p3.match(line):
+            if p1.match(line) or p2.match(line):
                 continue
 
             # Gi1/0/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
@@ -130,10 +130,10 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         return ret_dict
 
 #==================================================================================
-# Parser for 'show authentication sessions interface <WORD> details'
+# Parser for 'show authentication sessions interface {intf} details'
 #==================================================================================
 class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
-    """Schema for show authentication sessions interface <WORD> details
+    """Schema for 'show authentication sessions interface {intf} details'
     """
 
     schema = {
@@ -173,7 +173,8 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
     }
 
 class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
-
+    """Parser for 'show authentication sessions interface {intf} details'
+    """
     cli_command = 'show authentication sessions interface {intf} details'
 
     def cli(self, intf, output=None):
@@ -206,19 +207,14 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Current Policy:  dot1x_dvlan_reauth_hm
         p1 = re.compile(r'^(?P<argument>\S[\w\s\-]+): +(?P<value>\S+)$')
 
-
-        # Template: CRITICAL_VLAN (priority 150)
-
         # Local Policies:
         p2 = re.compile(r'^Local +Policies:')
 
         # Local Policies:
         # Template: CRITICAL_VLAN (priority 150)
-        # Vlan Group:  Vlan: 130
         p3 = re.compile(r'^Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
 
         # Local Policies:
-        # Template: CRITICAL_VLAN (priority 150)
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
 

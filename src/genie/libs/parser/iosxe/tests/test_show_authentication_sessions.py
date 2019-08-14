@@ -105,6 +105,28 @@ class test_show_authentication_sessions(unittest.TestCase):
     '''
     }
 
+    def test_empty(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowAuthenticationSessions(device=self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output)
+        obj = ShowAuthenticationSessions(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowAuthenticationSessions(device=self.dev_c3850)
+        parsed_output = obj.parse(intf='GigabitEthernet1/7/35')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+class test_show_authentication_sessions_interface_details(unittest.TestCase):
+    dev_c3850 = Device(name='c3850')
     golden_parsed_output_3 = {
     	'interfaces': {
 	        'GigabitEthernet3/0/2': {
@@ -238,25 +260,6 @@ class test_show_authentication_sessions(unittest.TestCase):
            mab              Running
         '''
     }
-    def test_empty(self):
-        self.dev1 = Mock(**self.empty_output)
-        obj = ShowAuthenticationSessions(device=self.dev1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output)
-        obj = ShowAuthenticationSessions(device=self.dev_c3850)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_golden_2(self):
-        self.maxDiff = None
-        self.dev_c3850 = Mock(**self.golden_output_2)
-        obj = ShowAuthenticationSessions(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet1/7/35')
-        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_golden_3(self):
         self.maxDiff = None
