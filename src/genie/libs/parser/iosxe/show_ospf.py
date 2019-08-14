@@ -4799,22 +4799,34 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                     'seq_num': str,
                                                                     'checksum': str,
                                                                     'length': int,
-                                                                    'opaque_type': int,
+                                                                    Optional('opaque_type'): int,
                                                                     'opaque_id': int,
-                                                                    'fragment_number': int,
+                                                                    Optional('fragment_number'): int,
                                                                     Optional('mpls_te_router_id'): str},
                                                                 'body': 
                                                                     {'opaque': 
-                                                                        {'num_of_links': int,
+                                                                        {
+                                                                        Optional('links'): {
+                                                                            Any(): {
+                                                                                'link_id': str,
+                                                                                'topologies': {
+                                                                                    Any(): {
+                                                                                        'mt_id': int
+                                                                                    }
+                                                                                }
+
+                                                                            }
+                                                                        },
+                                                                        Optional('num_of_links'): int,
                                                                         Optional('link_tlvs'): 
                                                                             {Any(): 
                                                                                 {'link_type': int,
                                                                                 'link_name': str,
-                                                                                'link_id': str,
-                                                                                'te_metric': int,
-                                                                                'max_bandwidth': int,
-                                                                                'max_reservable_bandwidth': int,
-                                                                                'admin_group': str,
+                                                                                Optional('link_id'): str,
+                                                                                Optional('te_metric'): int,
+                                                                                Optional('max_bandwidth'): int,
+                                                                                Optional('max_reservable_bandwidth'): int,
+                                                                                Optional('admin_group'): str,
                                                                                 Optional('igp_metric'): int,
                                                                                 Optional('total_priority'): int,
                                                                                 Optional('local_if_ipv4_addrs'): 
@@ -6473,3 +6485,13 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, db_type='router', output=output)
+
+class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    ''' Parser for:
+        * 'show ip ospf database opaque-area self-originate'
+    '''
+
+    cli_command = 'show ip ospf database opaque-area self-originate'
+
+    def cli(self, output=None):
+        return super().cli(cmd=self.cli_command, db_type='opaque', output=output)
