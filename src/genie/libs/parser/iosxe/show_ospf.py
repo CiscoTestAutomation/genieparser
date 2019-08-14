@@ -50,7 +50,7 @@ class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
                 {'router_id': str,
                 'areas':
                     {Any():
-                        {'segment_routing_blocks':
+                        {'router_id':
                             {Any():
                                 {'sr_capable': str,
                                 'srlb_base': int,
@@ -127,7 +127,7 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                smgt_dict = area_dict.setdefault('segment_routing_blocks', {}).\
+                smgt_dict = area_dict.setdefault('router_id', {}).\
                                       setdefault(group['router_id'], {})
                 smgt_dict['sr_capable'] = group['sr_capable']
                 smgt_dict['srlb_base'] = int(group['srlb_base'])

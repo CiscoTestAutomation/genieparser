@@ -62,9 +62,10 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
     golden_parsed_output1 = {
         'instance': 
             {'9996': 
-                {'areas': 
+                {'router_id': '1.1.1.1',
+                'areas': 
                     {'0.0.0.8': 
-                        {'segment_routing_blocks': 
+                        {'router_id': 
                             {'1.1.1.1': 
                                 {'sr_capable': 'Yes',
                                 'srlb_base': 15000,
@@ -73,7 +74,7 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
                                 {'sr_capable': 'Yes',
                                 'srlb_base': 15000,
                                 'srlb_range': 1000}}}},
-                       'router_id': '1.1.1.1'}}}
+                            }}}
 
     def test_show_ip_ospf_segment_routing_local_block_empty(self):
         self.maxDiff = None
