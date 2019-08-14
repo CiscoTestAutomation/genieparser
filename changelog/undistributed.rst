@@ -113,3 +113,5 @@
 * IOSXE
     * Update ShowIpOspfNeighborDetail
         to parse 'SR adj label' in output
+    * Added ShowIpOspfSegmentRoutingProtectedAdjacencies for
+        show ip ospf segment-routing protected-adjacencies
