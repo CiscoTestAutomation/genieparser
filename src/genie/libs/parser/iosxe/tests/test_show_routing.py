@@ -1184,7 +1184,7 @@ class test_show_ip_route_word(unittest.TestCase):
         "entry": {
             "192.168.154.0/24": {
                "mask": "24",
-               "type": "type internal",
+               "type": "internal",
                "known_via": "eigrp 1",
                "ip": "192.168.154.0",
                "redist_via": "eigrp",
@@ -1203,12 +1203,129 @@ class test_show_ip_route_word(unittest.TestCase):
                          "from": "192.168.151.2",
                          "metric": "10880",
                          "share_count": "1",
-                         "nexthop": "192.168.151.2"
+                         "nexthop": "192.168.151.2",
+                         "prefer_non_rib_labels": False,
+                         "merge_labels": False
                     }
                 }
             }
         },
         "total_prefixes": 1
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        PE1#show ip route 2.2.2.2
+        Routing entry for 2.2.2.2/32
+          Known via "ospf 1024", distance 95, metric 4, type intra area
+          Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
+         SR Incoming Label: 52610
+          Routing Descriptor Blocks:
+          * 192.168.0.1, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet4, prefer-non-rib-labels, merge-labels
+              Route metric is 5, traffic share count is 1
+              MPLS label: 52610
+              MPLS Flags: NSF
+              Repair Path: 192.168.0.2, via GigabitEthernet3
+            192.168.0.2, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet3, prefer-non-rib-labels, merge-labels
+              Route metric is 3, traffic share count is 5
+              MPLS label: 52610
+              MPLS Flags: NSF
+              Repair Path: 192.168.0.4, via GigabitEthernet1
+            192.168.0.3, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet2, prefer-non-rib-labels, merge-labels
+              Route metric is 1, traffic share count is 2
+              MPLS label: 52610
+              MPLS Flags: NSF
+              Repair Path: 192.168.0.1, via GigabitEthernet4
+            192.168.0.4, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet1, prefer-non-rib-labels, merge-labels
+              Route metric is 2, traffic share count is 1
+              MPLS label: 52610
+              MPLS Flags: NSF
+              Repair Path: 192.168.0.3, via GigabitEthernet2
+    '''}
+
+    golden_parsed_output_2 = {
+        'entry': {
+            '2.2.2.2/32': {
+                'ip': '2.2.2.2',
+                'mask': '32',
+                'known_via': 'ospf 1024',
+                'distance': '95',
+                'metric': '4',
+                'type': 'intra area',
+                'update': {
+                    'from': '192.168.0.3',
+                    'interface': 'GigabitEthernet2',
+                    'age': '00:00:14'
+                },
+                'sr_incoming_label': '52610',
+                'paths': {
+                    1: {
+                        'nexthop': '192.168.0.1',
+                        'from': '2.2.2.2',
+                        'age': '00:00:14',
+                        'interface': 'GigabitEthernet4',
+                        'prefer_non_rib_labels': True,
+                        'merge_labels': True,
+                        'metric': '5',
+                        'share_count': '1',
+                        'mpls_label': '52610',
+                        'mpls_flags': 'NSF',
+                        'repair_path': {
+                            'repair_path': '192.168.0.2',
+                            'via': 'GigabitEthernet3'
+                        }
+                    },
+                    2: {
+                        'nexthop': '192.168.0.2',
+                        'from': '2.2.2.2',
+                        'age': '00:00:14',
+                        'interface': 'GigabitEthernet3',
+                        'prefer_non_rib_labels': True,
+                        'merge_labels': True,
+                        'metric': '3',
+                        'share_count': '5',
+                        'mpls_label': '52610',
+                        'mpls_flags': 'NSF',
+                        'repair_path': {
+                            'repair_path': '192.168.0.4',
+                            'via': 'GigabitEthernet1'
+                        }
+                    },
+                    3: {
+                        'nexthop': '192.168.0.3',
+                        'from': '2.2.2.2',
+                        'age': '00:00:14',
+                        'interface': 'GigabitEthernet2',
+                        'prefer_non_rib_labels': True,
+                        'merge_labels': True,
+                        'metric': '1',
+                        'share_count': '2',
+                        'mpls_label': '52610',
+                        'mpls_flags': 'NSF',
+                        'repair_path': {
+                            'repair_path': '192.168.0.1',
+                            'via': 'GigabitEthernet4'
+                        }
+                    },
+                    4: {
+                        'nexthop': '192.168.0.4',
+                        'from': '2.2.2.2',
+                        'age': '00:00:14',
+                        'interface': 'GigabitEthernet1',
+                        'prefer_non_rib_labels': True,
+                        'merge_labels': True,
+                        'metric': '2',
+                        'share_count': '1',
+                        'mpls_label': '52610',
+                        'mpls_flags': 'NSF',
+                        'repair_path': {
+                            'repair_path': '192.168.0.3',
+                            'via': 'GigabitEthernet2'
+                        }
+                    }
+                }
+            }
+        },
+        'total_prefixes': 4
     }
 
     def test_empty(self):
@@ -1231,6 +1348,14 @@ class test_show_ip_route_word(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output,self.golden_parsed_output_with_route)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='192.168.154.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
 ###################################################
 # unit test for show ipv6 route <WROD>
 ####################################################
@@ -1245,7 +1370,7 @@ class test_show_ipv6_route_word(unittest.TestCase):
 		"entry": {
 		    "2000:2::4:1/128": {
 		       "ip": "2000:2::4:1",
-		       "type": "type level-2",
+		       "type": "level-2",
 		       "distance": "115",
 		       "metric": "20",
 		       "known_via": "isis",

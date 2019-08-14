@@ -6,6 +6,13 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* Junos
+    * Add ShowRouteTable for:
+        * show route table {table}
+        * show route table {table} {prefix}
+--------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * IOSXR
@@ -84,6 +91,8 @@
         'show segment-routing mpls state'
     * Added ShowSegmentRoutingMplsLbLock for
         'show segment-routing mpls lb lock'
+    * Added ShowSegmentRoutingMplsGbLock for:
+        'show segment-routing mpls gb lock'
 
 --------------------------------------------------------------------------------
                                 Pim
@@ -106,3 +115,21 @@
         added a key to cli command for Ops
     * Fix ShowIpBgpTemplatePeerPolicy
         added a key to cli command for Ops
+
+--------------------------------------------------------------------------------
+                                Ospf
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpOspfNeighborDetail
+        to parse 'SR adj label' in output
+    * Added ShowIpOspfSegmentRouting for command:
+        * show ip ospf {process_id} segment-routing adjacency-sid
+    * Added ShowIpOspfFastRerouteTiLfa for
+        'show ip ospf fast-reroute ti-lfa'
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpRouteWord
+        * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
