@@ -113,3 +113,6 @@
 * IOSXE
     * Update ShowIpOspfNeighborDetail
         to parse 'SR adj label' in output
+    * Added ShowIpOspfSegmentRoutingGlobalBlock for
+        * 'show ip ospf segment-routing global-block'
+        * 'show ip ospf {process_id} segment-routing global-block'
