@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
+    * show ip ospf segment-routing
 
 '''
 
@@ -6473,3 +6474,377 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, db_type='router', output=output)
+
+# ==========================================
+# Parser for 'show ip ospf segment-routing'
+# ==========================================
+
+class ShowIpOspfSegmentRoutingSchema(MetaParser):
+
+    ''' Schema for show ip ospf segment-routing
+    '''
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'global_segment_routing_state': str,
+                'segment_routing_enabled': {
+                    'area': {
+                        Any(): {
+                            'topology_name': str,
+                            'forwarding': str,
+                            'strict_spf': str
+                        }
+                    }
+                },
+                'sr_attributes': {
+                    'prefer_non_sr_ldp_labels': bool,
+                    'do_not_advertise_explicit_null': bool,
+                },
+                'global_block_srgb': {
+                    'range': {
+                        'start': int,
+                        'end': int
+                    },
+                    'state': str,
+                },
+                'local_block_srlb': {
+                    'range': {
+                        'start': int,
+                        'end': int
+                    },
+                    'state': str,
+                },
+                'registered_with_sr_app': {
+                    'client_handle': int,
+                    'sr_algo': {
+                        Any(): {
+                            'notifications': {
+                                Any(): {
+                                    'active': bool,
+                                    'handle': str,
+                                    'bit_mask': str,
+                                }
+                            }
+                        }
+                    }
+                },
+                'registered_with_mpls': {
+                    'client_id': int
+                },
+                'max_labels': {
+                    'platform': int,
+                    'available': int,
+                    'pushed_by_ospf': {
+                        'uloop_tunnels': int,
+                        'ti_lfa_tunnels': int
+                    }
+                },
+                'mfi_label_reservation_ack_not_pending': bool,
+                'bind_retry_timer_not_running': bool,
+                'adj_label_bind_retry_timer_not_running': bool,
+                'srp_app_locks_requested': {
+                    'srgb': int,
+                    'srlb': int
+                },
+                'teapp': {
+                    'te_router_id': str
+                }
+            }
+        }
+    }
+
+class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+    ''' Parser for show ip ospf segment-routing
+    '''
+
+    cli_command = 'show ip ospf segment-routing'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # OSPF Router with ID (2.2.2.2) (Process ID 9996)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
+                         'Process +ID +(?P<process_id>\d+)\)$')
+
+        # Global segment-routing state: Enabled
+        p2 = re.compile(r'^Global +segment\-routing +state: +'
+                         '(?P<global_segment_routing_state>\S+)$')
+        
+        # Prefer non-SR (LDP) Labels
+        p3 = re.compile(r'^Prefer +non\-SR +\(LDP\) +Labels$')
+
+        # Do not advertise Explicit Null
+        p4 = re.compile(r'^Do +not +advertise +Explicit +Null$')
+
+        # Global Block (SRGB):
+        p5 = re.compile(r'^Global +Block +\(SRGB\):$')
+
+        # Range: 16000 - 23999
+        p6 = re.compile(r'^Range: +(?P<start>\d+) +\- +(?P<end>\d+)$')
+
+        # State: Created
+        p7 = re.compile(r'^State: +(?P<state>\S+)$')
+
+        # Local Block (SRLB):
+        p8 = re.compile(r'^Local +Block +\(SRLB\):$')
+
+        # Registered with SR App, client handle: 2
+        p9 = re.compile(r'^Registered +with +SR +App, +client +handle: +'
+                         '(?P<client_handle>\d+)$')
+
+        # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+        p10 = re.compile(r'^SR +algo +(?P<algo>\d+) +Connected +map +notifications +'
+                          'active +\(handle +(?P<handle>\w+)\), +bitmask +(?P<bitmask>\w+)$')
+
+        # SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
+        p11 = re.compile(r'^SR +algo +(?P<algo>\d+) +Active +policy +map +notifications +'
+                          'active +\(handle +(?P<handle>\w+)\), bitmask +(?P<bitmask>\w+)$')
+
+        # Registered with MPLS, client-id: 100
+        p12 = re.compile(r'^Registered +with +MPLS, +client\-id: +(?P<client_id>\d+)$')
+
+        # Max labels: platform 16, available 13
+        p13 = re.compile(r'^Max +labels: +platform +(?P<platform>\d+), available +(?P<available>\d+)$')
+
+        # Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+        p14 = re.compile(r'^Max +labels +pushed +by +OSPF: +uloop +tunnels +(?P<uloop_tunnels>\d+)'
+                          ', +TI\-LFA +tunnels +(?P<ti_lfa_tunnels>\d+)$')
+
+        # mfi label reservation ack not pending
+        p15 = re.compile(r'^mfi +label +reservation +ack +not +pending$')
+
+        # Bind Retry timer not running
+        p16 = re.compile(r'^Bind +Retry +timer +not +running$')
+
+        # Adj Label Bind Retry timer not running
+        p17 = re.compile(r'^Adj +Label +Bind +Retry +timer +not +running$')
+
+        # sr-app locks requested: srgb 0, srlb 0
+        p18 = re.compile(r'^sr\-app +locks +requested: +srgb +(?P<srgb>\d+), +srlb +(?P<srlb>\d+)$')
+
+        # TE Router ID 2.2.2.2
+        p19 = re.compile(r'^TE +Router +ID +(?P<te_router_id>\S+)$')
+
+        # Area Topology name Forwarding Strict SPF
+        p20 = re.compile(r'^Area +Topology +name +Forwarding +Strict +SPF$')
+
+        # 8    Base             MPLS          Capable
+        # AS external    Base             MPLS          Not applicable
+        p21 = re.compile(r'^(?P<area>(\d+|(\w+ +\w+))) +(?P<topology_name>\w+)'
+                         ' +(?P<forwarding>\w+) +(?P<strict_spf>\w+( +\w+)?)$')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (2.2.2.2) (Process ID 9996)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                    setdefault(process_id, {})
+                process_id_dict.update({'router_id': router_id})
+                continue
+            
+            # Global segment-routing state: Enabled
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                global_segment_routing_state = group['global_segment_routing_state']
+                process_id_dict.update({'global_segment_routing_state': global_segment_routing_state})
+                continue
+            
+            # Prefer non-SR (LDP) Labels
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
+                sr_attributes_dict.update({'prefer_non_sr_ldp_labels': True})
+                continue
+            
+            # Do not advertise Explicit Null
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
+                sr_attributes_dict.update({'do_not_advertise_explicit_null': True})
+                continue
+            
+            # Global Block (SRGB):
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                block_dict = process_id_dict.setdefault('global_block_srgb', {})
+                continue
+            
+            # Range: 16000 - 23999
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                range_dict = block_dict.setdefault('range', {})
+                range_dict.update({'start': int(group['start'])})
+                range_dict.update({'end': int(group['end'])})
+                continue
+            
+            # State: Created
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                state = group['state']
+                block_dict.update({'state': state})
+                continue
+            
+            # Local Block (SRLB):
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                block_dict = process_id_dict.setdefault('local_block_srlb', {})
+                continue
+            
+            # Registered with SR App, client handle: 2
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                client_handle = int(group['client_handle'])
+                registered_with_sr_app_dict = process_id_dict.setdefault('registered_with_sr_app', {})
+                registered_with_sr_app_dict.update({'client_handle': client_handle})
+                continue
+            
+            # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                algo = int(group['algo'])
+                handle = group['handle']
+                bitmask = group['bitmask']
+
+                sr_algo_dict = registered_with_sr_app_dict.setdefault('sr_algo', {}). \
+                                setdefault(algo, {}). \
+                                setdefault('notifications', {}). \
+                                setdefault('connected_map_notifications', {})
+                
+                sr_algo_dict.update({'active': True})
+                sr_algo_dict.update({'handle': handle})
+                sr_algo_dict.update({'bit_mask': bitmask})
+                continue
+            
+            # SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                algo = int(group['algo'])
+                handle = group['handle']
+                bitmask = group['bitmask']
+
+                sr_algo_dict = registered_with_sr_app_dict.setdefault('sr_algo', {}). \
+                                setdefault(algo, {}). \
+                                setdefault('notifications', {}). \
+                                setdefault('active_policy_map_notifications', {})
+                
+                sr_algo_dict.update({'active': True})
+                sr_algo_dict.update({'handle': handle})
+                sr_algo_dict.update({'bit_mask': bitmask})
+                continue
+            
+            # Registered with MPLS, client-id: 100
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                client_id = int(group['client_id'])
+                registered_with_mpls_dict = process_id_dict.setdefault('registered_with_mpls', {})
+                registered_with_mpls_dict.update({'client_id': client_id})
+                continue
+            
+            # Max labels: platform 16, available 13
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                platform = int(group['platform'])
+                available = int(group['available'])
+                match_labels_dict = process_id_dict.setdefault('max_labels', {})
+                match_labels_dict.update({'platform': platform})
+                match_labels_dict.update({'available': available})
+                continue
+            
+            # Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                uloop_tunnels = int(group['uloop_tunnels'])
+                ti_lfa_tunnels = int(group['ti_lfa_tunnels'])
+                match_labels_dict = process_id_dict.setdefault('max_labels', {})
+                pushed_by_ospf_dict = match_labels_dict.setdefault('pushed_by_ospf', {})
+                pushed_by_ospf_dict.update({'uloop_tunnels': uloop_tunnels})
+                pushed_by_ospf_dict.update({'ti_lfa_tunnels': ti_lfa_tunnels})
+                continue
+
+            # mfi label reservation ack not pending
+            m = p15.match(line)
+            if m:
+                process_id_dict.update({'mfi_label_reservation_ack_not_pending': True})
+                continue
+
+            # Bind Retry timer not running
+            m = p16.match(line)
+            if m:
+                process_id_dict.update({'bind_retry_timer_not_running': True})
+                continue
+            
+            # Adj Label Bind Retry timer not running
+            m = p17.match(line)
+            if m:
+                process_id_dict.update({'adj_label_bind_retry_timer_not_running': True})
+                continue
+
+            # sr-app locks requested: srgb 0, srlb 0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                srgb = int(group['srgb'])
+                srlb = int(group['srlb'])
+                srp_app_locks_requested_dict = process_id_dict.setdefault('srp_app_locks_requested', {})
+                srp_app_locks_requested_dict.update({'srgb': srgb})
+                srp_app_locks_requested_dict.update({'srlb': srlb})
+                continue
+            
+            # TE Router ID 2.2.2.2
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                te_router_id = group['te_router_id']
+                process_id_dict.setdefault('teapp', {}). \
+                    update({'te_router_id': te_router_id})
+                continue
+
+            # Area Topology name Forwarding Strict SPF
+            m = p20.match(line)
+            if m:
+                segment_routing_enabled_dict = process_id_dict.setdefault('segment_routing_enabled', {})
+                continue
+
+            # 8    Base             MPLS          Capable
+            # AS external    Base             MPLS          Not applicable
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                area = group['area']
+                topology_name = group['topology_name']
+                forwarding = group['forwarding']
+                strict_spf = group['strict_spf']
+                area_dict = segment_routing_enabled_dict.setdefault('area', {}). \
+                             setdefault(area, {})
+                area_dict.update({'topology_name' : topology_name})
+                area_dict.update({'forwarding' : forwarding})
+                area_dict.update({'strict_spf' : strict_spf})
+                continue
+        
+        return ret_dict
