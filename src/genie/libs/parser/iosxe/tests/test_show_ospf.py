@@ -30,9 +30,67 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfNeighbor,\
                                               ShowIpOspfDatabaseRouterSelfOriginate, \
                                               ShowIpOspfInterfaceBrief,\
+                                              ShowIpOspfSegmentRoutingLocalBlock,\
                                               ShowIpOspfSegmentRouting, \
                                               ShowIpOspfFastRerouteTiLfa
 
+
+# =====================================================================
+# Unit test for 'show ip ospf {process_id} segment-routing local-block'
+# =====================================================================
+class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
+
+    '''Unit test for "show ip ospf" '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = {'execute.return_value': '''
+        PE1#show ip ospf 9996 segment-routing local-block
+ 
+            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+ 
+        OSPF Segment Routing Local Blocks in Area 8
+         
+          Router ID        SR Capable   SRLB Base   SRLB Range 
+        --------------------------------------------------------
+         *1.1.1.1          Yes          15000       1000       
+          2.2.2.2          Yes          15000       1000       
+         
+        PE1#
+        '''}
+
+    golden_parsed_output1 = {
+        'instance': 
+            {'9996': 
+                {'router_id': '1.1.1.1',
+                'areas': 
+                    {'0.0.0.8': 
+                        {'router_id': 
+                            {'1.1.1.1': 
+                                {'sr_capable': 'Yes',
+                                'srlb_base': 15000,
+                                'srlb_range': 1000},
+                            '2.2.2.2': 
+                                {'sr_capable': 'Yes',
+                                'srlb_base': 15000,
+                                'srlb_range': 1000}}}},
+                            }}}
+
+    def test_show_ip_ospf_segment_routing_local_block_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process_id=9996)
+
+    def test_show_ip_ospf_segment_routing_local_block_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=9996)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ============================
