@@ -6,6 +6,13 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* Junos
+    * Add ShowRouteTable for:
+        * show route table {table}
+        * show route table {table} {prefix}
+--------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * IOSXR
@@ -113,5 +120,7 @@
 * IOSXE
     * Update ShowIpOspfNeighborDetail
         to parse 'SR adj label' in output
+    * Added ShowIpOspfSegmentRouting for
+        * show ip ospf {process_id} segment-routing adjacency-sid
     * Added ShowIpOspfSegmentRoutingProtectedAdjacencies for
         show ip ospf segment-routing protected-adjacencies
