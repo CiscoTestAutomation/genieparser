@@ -30,6 +30,7 @@ from genie.libs.parser.iosxe.show_ospf import  (ShowIpOspf,
                                                ShowIpOspfNeighbor,
                                                ShowIpOspfDatabaseRouterSelfOriginate,
                                                ShowIpOspfInterfaceBrief,
+                                               ShowIpOspfSegmentRouting,
                                                ShowIpOspfSegmentRoutingGlobalBlock)
 
 
@@ -8563,6 +8564,68 @@ class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
         parsed_output = obj.parse(process_id=1234)
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+class test_show_ip_ospf_segment_routing(unittest.TestCase):
+    ''' Test case for command:
+          * show ip ospf {bgp_as} segment-routing adjacency-sid
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        PE1#show ip ospf 65109 segment-routing adjacency-sid
+ 
+                    OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            Flags: S - Static, D - Dynamic,  P - Protected, U - Unprotected, G - Group, L - Adjacency Lost
+         
+        Adj-Sid  Neighbor ID     Interface          Neighbor Addr   Flags   Backup Nexthop  Backup Interface 
+        -------- --------------- ------------------ --------------- ------- --------------- ------------------
+        16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+        17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
+        18       10.16.2.2         Gi0/1/0            192.168.111.2       D U   
+        19       10.16.2.2         Te0/0/0            192.168.220.2       D U    
+    '''}
+
+    parsed_output_1 = {
+        'process_id': {
+            '65109': {
+                'router_id': '10.4.1.1',
+                'adjacency_sids': {
+                    '16': {
+                       'flags': 'D U',
+                       'interface': 'GigabitEthernet0/1/2',
+                       'neighbor_address': '192.168.154.2',
+                       'neighbor_id': '10.16.2.2'},
+                    '17': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/1',
+                        'neighbor_address': '192.168.4.2',
+                        'neighbor_id': '10.16.2.2'},
+                    '18': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/0',
+                        'neighbor_address': '192.168.111.2',
+                        'neighbor_id': '10.16.2.2'},
+                    '19': {
+                        'flags': 'D U',
+                        'interface': 'TenGigabitEthernet0/0/0',
+                        'neighbor_address': '192.168.220.2',
+                        'neighbor_id': '10.16.2.2'}}}}}
+
+    def test_show_ip_ospf_segment_routing_empty(self):
+        self.maxDiff = None
+        self.device=Mock(**self.empty_output)
+        obj=ShowIpOspfSegmentRouting(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_segment_routing_1(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output_1)
+        obj=ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse(process_id=65109)
+        self.assertEqual(parsed_output, self.parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
