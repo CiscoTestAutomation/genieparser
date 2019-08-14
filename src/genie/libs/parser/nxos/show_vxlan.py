@@ -27,6 +27,75 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 from genie.libs.parser.utils.common import Common
+
+
+class ShowL2routeEvpnImetAllDetailSchema(MetaParser):
+    Schema = {
+        'vni': {
+            Any(): {
+                'ip': {
+                    Any(): {
+                        'topo_id': int,
+                        'vni': int,
+                        'prod_type': str,
+                        'ip_addr': str,
+                        'eth_tag_id': int,
+                        'pmsi_flags': int,
+                        'flags': str,
+                        'type': int,
+                        'vni_label': int,
+                        'tunnel_id': str,
+                        'client_nfn': int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
+
+    """Parser for show l2route evpn imet all detail """
+
+    cli_command = 'show l2route evpn imet all detail'
+
+    def cli(self, output=None):
+        # excute command to get output
+        out = output if output else self.device.execute(self.cli_command)
+
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) + (?P<vni>[\d]+) + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+) + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+) + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+) + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+) *$')
+
+        result_dict = {}
+
+
+        for line in out.splitlines():
+            if line:
+                line = line.rstrip()
+            else:
+                continue
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vni = group['vni']
+                ip = group['ip_addr']
+                vni_dict = result_dict.setdefault(vni, {}).setdefault(ip, {})
+                vni_dict['topo_id'] = group['topo_id']
+                vni_dict['vni'] = vni
+                vni_dict['prod_type'] = group['prod_type']
+                vni_dict['ip_addr'] = ip
+                vni_dict['eth_tag_id'] = group['eth_tag_id']
+                vni_dict['pmsi_flags'] = group['pmsi_flags']
+                vni_dict['flags'] = group['flags']
+                vni_dict['type'] = group['type']
+                vni_dict['vni_label'] = group['vni_label']
+                vni_dict['tunnel_id'] = group['tunnel_id']
+                vni_dict['client_nfn'] = group['client_nfn']
+
+
+        return result_dict
+
+
+
 # ====================================================
 #  schema for show nve peers
 # ====================================================
@@ -72,7 +141,7 @@ class ShowNvePeers(ShowNvePeersSchema):
         # nve1      192.168.16.1      Up    CP        01:15:09 n/a
         # nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
 
-        p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.]+) +(?P<peer_state>[\w]+)'
+        p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
                         ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
 
         for line in out.splitlines():
@@ -365,6 +434,11 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p4 = re.compile(r'^\s*Host Learning Mode: +(?P<host_learning_mode>[\w\-]+)$')
         p5 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'
                         ' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
+
+        p5_1 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+) +\(primary: +(?P<primary_ip>[\w\.\:]+)\)')
+        p5_2 = re.compile(r'^\s*Anycast-Interface: +(?P<anycast_if>[\w\/]+) +\(secondary: +(?P<secondary_ip>[\w\.\:]+)\)')
+
+
         p6 = re.compile(r'^\s*Source +Interface +State: +(?P<source_state>[\w]+)$')
         p7 = re.compile(r'^\s*IR +Capability +Mode: +(?P<mode>[\w]+)$')
         p8 = re.compile(r'^\s*Virtual +RMAC +Advertisement: +(?P<adv_vmac>[\w]+)$')
@@ -432,6 +506,23 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     continue
 
                 #  Source-Interface: loopback1 (primary: 192.168.4.11, secondary: 192.168.196.22)
+                m = p5.match(line)
+                m_1 = p5_1.match(line)
+                m_2 = p5_2.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({k:v for k,v in group.items()})
+                elif m_1:
+                    group1 = m_1.groupdict()
+                    nve_dict.update({'source_if': group1.pop('source_if')})
+                    nve_dict.update({'primary_ip': group1.pop('primary_ip')})
+                    continue
+                elif m_2:
+                    group2 = m_2.groupdict()
+                    nve_dict.update({'anycast_if': group2.pop('anycast_if')})
+                    nve_dict.update({'secondary_ip': group2.pop('secondary_ip')})
+                    continue
+
                 m = p5.match(line)
                 if m:
                     group = m.groupdict()
@@ -1338,7 +1429,7 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
-        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
+        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
                         ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)'
                         ' +(?P<next_hop1>[\w\/\.]+)$')
