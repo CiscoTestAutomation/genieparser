@@ -2904,6 +2904,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'bdr_ip_addr': str,
                                                         Optional('interface_id'): str,
                                                         Optional('hello_options'): str,
+                                                        Optional('sr_adj_label'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
                                                         Optional('uptime'): str,
@@ -3064,7 +3065,9 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         p12 = re.compile(r'^Last +retransmission +scan +time +is'
                             ' +(?P<num1>(\d+)) +msec, +maximum +is'
                             ' +(?P<num2>(\d+)) +msec$')
-
+        
+        p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -3368,7 +3371,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 sub_dict['statistics']['last_retrans_max_scan_time_msec'] = \
                     int(m.groupdict()['num2'])
                 continue
-
+            
+            # SR adj label 10
+            m = p13.match(line)
+            if m:
+                sub_dict['sr_adj_label'] = str(m.groupdict()['sr_adj_label'])
+                continue
+            
         return ret_dict
 
 

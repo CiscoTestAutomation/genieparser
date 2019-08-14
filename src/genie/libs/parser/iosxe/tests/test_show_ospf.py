@@ -1469,7 +1469,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         self.maxDiff = None
 
         raw1='''\
-            PE1#show ip ospf interface GigabitEthernet2
+            show ip ospf interface GigabitEthernet2
             Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
             Time source is NTP, 04:44:14.272 EST Sat Jun 15 2019
 
@@ -1501,7 +1501,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         '''
 
         raw2='''\
-         PE1#show running-config | section router ospf 65109
+         show running-config | section router ospf 65109
          router ospf 65109
          router-id 10.169.197.254
          max-metric router-lsa on-startup 300
@@ -2520,6 +2520,360 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         obj = ShowIpOspfNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+    
+    golden_output4 = {'execute.return_value': '''
+        show ip ospf neighbor detail
+        Neighbor 10.16.2.2, interface address 192.168.154.2, interface-id 24
+            In the area 8 via interface GigabitEthernet0/1/2
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            SR adj label 16
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:38
+            Neighbor is up for 3d16h
+            Index 1/3/3, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 192.168.4.2, interface-id 23
+            In the area 8 via interface GigabitEthernet0/1/1
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            SR adj label 17
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:35
+            Neighbor is up for 1w0d
+            Index 1/4/4, retransmission queue length 0, number of retransmission 2
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 1, maximum is 1
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+    '''}
+    
+    golden_parsed_output4 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '65109': {
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'interfaces': {
+                                            'GigabitEthernet5': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet5',
+                                                        'address': '10.225.0.15',
+                                                        'interface_id': '11',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'sr_adj_label': '16',
+                                                        'dead_timer': '00:00:31',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/4/4,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            'GigabitEthernet4': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet4',
+                                                        'address': '10.225.0.16',
+                                                        'interface_id': '10',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:32',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/3/3,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            'GigabitEthernet3': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet3',
+                                                        'address': '10.225.0.17',
+                                                        'interface_id': '9',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:34',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/2/2,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            'GigabitEthernet2': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet2',
+                                                        'address': '10.225.0.18',
+                                                        'interface_id': '8',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:35',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/1/1,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_golden4(self):
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+        raw1 = '''
+        Neighbor 10.16.2.2, interface address 10.225.0.15, interface-id 11
+            In the area 8 via interface GigabitEthernet5
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            SR adj label 16
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:31
+            Neighbor is up for 6d07h
+            Index 1/4/4, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.225.0.16, interface-id 10
+            In the area 8 via interface GigabitEthernet4
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:32
+            Neighbor is up for 6d07h
+            Index 1/3/3, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.225.0.17, interface-id 9
+            In the area 8 via interface GigabitEthernet3
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:34
+            Neighbor is up for 6d07h
+            Index 1/2/2, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.225.0.18, interface-id 8
+            In the area 8 via interface GigabitEthernet2
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:35
+            Neighbor is up for 6d07h
+            Index 1/1/1, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+        raw2_1 = '''
+            show ip ospf interface | section GigabitEthernet5
+            GigabitEthernet5 is up, line protocol is up
+            Internet Address 10.225.0.28/30, Interface ID 11, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:01
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/4/4, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 0 msec, maximum is 9 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+        raw2_2 = '''
+            show ip ospf interface | section GigabitEthernet4
+            GigabitEthernet4 is up, line protocol is up
+            Internet Address 10.225.0.29/30, Interface ID 10, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:07
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/3/3, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 0 msec, maximum is 1 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+        raw2_3 = '''
+            show ip ospf interface | section GigabitEthernet3
+            GigabitEthernet3 is up, line protocol is up
+            Internet Address 10.225.0.30/30, Interface ID 9, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:05
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/2/2, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 1 msec, maximum is 1 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+        raw2_4 = '''
+            show ip ospf interface | section GigabitEthernet2
+            GigabitEthernet2 is up, line protocol is up
+            Internet Address 10.225.0.31/30, Interface ID 8, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:06
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/1/1, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 0 msec, maximum is 1 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+
+        raw3_1 = '''
+            show running-config | section router ospf 65109
+            router ospf 65109
+            router-id 10.4.1.1
+            network 0.0.0.0 255.255.255.255 area 8
+        '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf neighbor detail'] = raw1
+        self.outputs['show ip ospf interface | section GigabitEthernet5'] = raw2_1
+        self.outputs['show ip ospf interface | section GigabitEthernet4'] = raw2_2
+        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_3
+        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_4
+
+        self.outputs['show running-config | section router ospf 65109'] = raw3_1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_show_ip_ospf_neighbor_detail_empty(self):
         self.maxDiff = None
@@ -7955,7 +8309,7 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
               'state': 'FULL/  -'}}}}}
 
     golden_output2 = {'execute.return_value':'''
-      PE1#show ip ospf neighbor GigabitEthernet4
+      show ip ospf neighbor GigabitEthernet4
       Neighbor ID     Pri   State           Dead Time   Address         Interface
       10.16.2.2           0   FULL/  -        00:00:32    10.169.197.97  GigabitEthernet4
     '''}

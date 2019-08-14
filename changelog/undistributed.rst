@@ -6,6 +6,13 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* Junos
+    * Add ShowRouteTable for:
+        * show route table {table}
+        * show route table {table} {prefix}
+--------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * IOSXR
@@ -82,6 +89,8 @@
         'show segment-routing mpls lb'
     * Added ShowSegmentRoutingMplsState for
         'show segment-routing mpls state'
+    * Added ShowSegmentRoutingMplsLbLock for
+        'show segment-routing mpls lb lock'
 
 --------------------------------------------------------------------------------
                                 Pim
@@ -104,6 +113,13 @@
         added a key to cli command for Ops
     * Fix ShowIpBgpTemplatePeerPolicy
         added a key to cli command for Ops
+
+--------------------------------------------------------------------------------
+                                Ospf
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpOspfNeighborDetail
+        to parse 'SR adj label' in output
 
 --------------------------------------------------------------------------------
                                 Mcast
