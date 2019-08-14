@@ -4,7 +4,9 @@ IOSXE parsers for the following show commands:
 
     * show ip mroute
     * show ipv6 mroute
+    * show ip mroute
     * show ip mroute vrf <vrf_name>
+    * show ipv6 mroute
     * show ipv6 mroute vrf <vrf_name>
     * show ip mroute static
     * show ip mroute vrf <vrf_name> static
@@ -81,16 +83,17 @@ class ShowIpMroute(ShowIpMrouteSchema):
         show ip mroute
         show ip mroute vrf <vrf>"""
 
-    cli_command = 'show ip mroute'
+    cli_command = ['show ip mroute', 'show ip mroute vrf {vrf}']
     exclude = ['expire', 'uptime', 'outgoing_interface_list', 'flags']
 
 
-    def cli(self, cmd=cli_command, vrf='', output=None):
+    def cli(self, vrf='',output=None):
         if output is None:
             if vrf:
-                cmd += ' vrf {vrf}'.format(vrf=vrf)
+                cmd = self.cli_command[1].format(vrf=vrf)
             else:
                 vrf = 'default'
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -296,13 +299,23 @@ class ShowIpv6Mroute(ShowIpMroute):
        show ipv6 mroute
        show ipv6 mroute vrf <vrf>"""
 
-    cli_command = 'show ipv6 mroute'
+    cli_command = ['show ipv6 mroute', 'show ipv6 mroute vrf {vrf}']
     exclude = ['expire', 'uptime', 'joins', 'leaves',
                'incoming_interface_list', '(Tunnel.*)']
 
 
     def cli(self, vrf='',output=None):
-        return super().cli(cmd=self.cli_command, vrf=vrf,output=output)
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                vrf = 'default'
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(vrf=vrf, output=out)
 
 
 # ===========================================
