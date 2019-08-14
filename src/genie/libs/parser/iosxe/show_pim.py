@@ -3,8 +3,26 @@
 IOSXE parsers for the following show commands:
 
     * show ipv6 pim interface
-    * show ipv6 pim vrf <WROD> interface
-
+    * show ipv6 pim vrf <WORD> interface
+    * show ipv6 pim bsr election
+    * show ipv6 pim vrf <vrf> bsr election
+    * show ipv6 pim bsr candidate-rp
+    * show ipv6 pim vrf <vrf> bsr candidate-rp
+    * show ip pim interface
+    * show ip pim vrf <vrf> interface
+    * show ip pim bsr-router
+    * show ip pim vrf <vrf> bsr-router
+    * show ip pim rp mapping
+    * show ip pim vrf <vrf_name> rp mapping
+    * show ip pim Interface detail
+    * show ip pim vrf <vrf_name> interface detail
+    * show ip pim neighbor
+    * show ip pim [vrf <WORD>] neighbor
+    * show ipv6 pim neighbor
+    * show ipv6 pim [vrf <WORD>] neighbor
+    * show ipv6 pim neighbor detail
+    * show ipv6 pim [vrf <WORD>] neighbor detail
+    * show ip pim [vrf <WORD>] interface df
 '''
 
 # Python
@@ -20,7 +38,7 @@ from genie.libs.parser.utils.common import Common
 
 # =============================================
 # Parser for 'show ipv6 pim interface'
-# Parser for 'show ipv6 pim vrf <WROD> interface'
+# Parser for 'show ipv6 pim vrf <WORD> interface'
 # =============================================
 
 class ShowIpv6PimInterfaceSchema(MetaParser):
