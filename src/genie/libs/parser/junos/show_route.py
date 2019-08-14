@@ -20,41 +20,37 @@ Schema for:
 '''
 class ShowRouteTableSchema(MetaParser):
 
-    schema = {
-        'route_information': {
-            'route_table': {
-                'table_name': {
-                    Any(): {
-                        'destination_count': int,
-                        'total_route_count': int,
-                        'active_route_count': int,
-                        'holddown_route_count': int,
-                        'hidden_route_count': int,
-                        'routes': {                            
-                                Any(): {
-                                    'active_tag': str,
-                                    'protocol_name': str,
-                                    'preference': str,
-                                    'age': str,
-                                    'metric': str,
-                                    'next_hop': {
-                                        'next_hop_list': {
-                                            Any(): {
-                                                'to': str,
-                                                'via': str,
-                                                Optional('mpls_label'): str,
-                                                Optional('best_route'): str
-                                            }
-                                        }
-                                    }   
+    schema = {        
+        'table_name': {
+            Any(): {
+                'destination_count': int,
+                'total_route_count': int,
+                'active_route_count': int,
+                'holddown_route_count': int,
+                'hidden_route_count': int,
+                'routes': {                            
+                        Any(): {
+                            'active_tag': str,
+                            'protocol_name': str,
+                            'preference': str,
+                            'age': str,
+                            'metric': str,
+                            'next_hop': {
+                                'next_hop_list': {
+                                    Any(): {
+                                        'to': str,
+                                        'via': str,
+                                        Optional('mpls_label'): str,
+                                        Optional('best_route'): str
+                                    }
                                 }
-                            }
+                            }   
                         }
                     }
                 }
             }
         }
-
+       
 '''
 Parser for:
     * show route table {table}
@@ -106,8 +102,7 @@ class ShowRouteTable(ShowRouteTableSchema):
                 group = result.groupdict()
                 
                 table_name = group['table_name']
-                table_dict = parsed_output.setdefault('route_information', {})\
-                .setdefault('route_table', {}).setdefault('table_name', {})\
+                table_dict = parsed_output.setdefault('table_name', {})\
                 .setdefault(table_name, {})
 
                 table_dict['destination_count'] = int(group['destination_count'])
