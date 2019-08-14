@@ -29,8 +29,68 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfTraffic,\
                                               ShowIpOspfNeighbor,\
                                               ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowIpOspfInterfaceBrief
+                                              ShowIpOspfInterfaceBrief,\
+                                              ShowIpOspfSegmentRoutingLocalBlock,\
+                                              ShowIpOspfSegmentRouting, \
+                                              ShowIpOspfFastRerouteTiLfa
 
+
+# =====================================================================
+# Unit test for 'show ip ospf {process_id} segment-routing local-block'
+# =====================================================================
+class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
+
+    '''Unit test for "show ip ospf" '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = {'execute.return_value': '''
+        PE1#show ip ospf 9996 segment-routing local-block
+ 
+            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+ 
+        OSPF Segment Routing Local Blocks in Area 8
+         
+          Router ID        SR Capable   SRLB Base   SRLB Range 
+        --------------------------------------------------------
+         *1.1.1.1          Yes          15000       1000       
+          2.2.2.2          Yes          15000       1000       
+         
+        PE1#
+        '''}
+
+    golden_parsed_output1 = {
+        'instance': 
+            {'9996': 
+                {'router_id': '1.1.1.1',
+                'areas': 
+                    {'0.0.0.8': 
+                        {'router_id': 
+                            {'1.1.1.1': 
+                                {'sr_capable': 'Yes',
+                                'srlb_base': 15000,
+                                'srlb_range': 1000},
+                            '2.2.2.2': 
+                                {'sr_capable': 'Yes',
+                                'srlb_base': 15000,
+                                'srlb_range': 1000}}}},
+                            }}}
+
+    def test_show_ip_ospf_segment_routing_local_block_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process_id=9996)
+
+    def test_show_ip_ospf_segment_routing_local_block_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=9996)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ============================
@@ -8490,6 +8550,246 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+class test_show_ip_ospf_segment_routing(unittest.TestCase):
+    ''' Test case for command:
+          * show ip ospf {bgp_as} segment-routing adjacency-sid
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        PE1#show ip ospf 65109 segment-routing adjacency-sid
+ 
+                    OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            Flags: S - Static, D - Dynamic,  P - Protected, U - Unprotected, G - Group, L - Adjacency Lost
+         
+        Adj-Sid  Neighbor ID     Interface          Neighbor Addr   Flags   Backup Nexthop  Backup Interface 
+        -------- --------------- ------------------ --------------- ------- --------------- ------------------
+        16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+        17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
+        18       10.16.2.2         Gi0/1/0            192.168.111.2       D U   
+        19       10.16.2.2         Te0/0/0            192.168.220.2       D U    
+    '''}
+
+    parsed_output_1 = {        
+        'process_id': {
+            '65109': {
+                'router_id': '10.4.1.1',
+                'adjacency_sids': {
+                    '16': {
+                       'flags': 'D U',
+                       'interface': 'GigabitEthernet0/1/2',
+                       'neighbor_address': '192.168.154.2',
+                       'neighbor_id': '10.16.2.2'},
+                    '17': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/1',
+                        'neighbor_address': '192.168.4.2',
+                        'neighbor_id': '10.16.2.2'},
+                    '18': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/0',
+                        'neighbor_address': '192.168.111.2',
+                        'neighbor_id': '10.16.2.2'},
+                    '19': {
+                        'flags': 'D U',
+                        'interface': 'TenGigabitEthernet0/0/0',
+                        'neighbor_address': '192.168.220.2',
+                        'neighbor_id': '10.16.2.2'}}}}}
+
+    def test_show_ip_ospf_segment_routing_empty(self):
+        self.maxDiff = None
+        self.device=Mock(**self.empty_output)
+        obj=ShowIpOspfSegmentRouting(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_segment_routing_1(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output_1)
+        obj=ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse(process_id=65109)
+        self.assertEqual(parsed_output, self.parsed_output_1)
+
+# ================================================
+# Unit test for 'show ip ospf fast-reroute ti-lfa'
+# ================================================
+
+class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'ospf_object': {
+                    'Process ID (65109)': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'Area 8': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'Loopback0': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'no',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/2': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/1': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/0': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'TenGigabitEthernet0/0/': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'AS external': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    },
+                },
+            },
+        }
+    
+    golden_output = {'execute.return_value': '''
+        show ip ospf fast-reroute ti-lfa
+        OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+        OSPF                    IPFRR    SR       TI-LFA      TI-LFA       
+        Object                  enabled  enabled  configured  enabled      
+        --------------------------------------------------------------------
+        Process ID (65109)       no       yes      no          no           
+        Area 8                  no       yes      no          no           
+        Loopback0               no       no       no          no           
+        GigabitEthernet0/1/2    no       yes      no          no           
+        GigabitEthernet0/1/1    no       yes      no          no           
+        GigabitEthernet0/1/0    no       yes      no          no           
+        TenGigabitEthernet0/0/  no       yes      no          no           
+        AS external             no       yes      no          no       
+    '''}
+
+    golden_parsed_output2 = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'ospf_object': {
+                    'Process ID (65109)': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    'Area 8': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'Loopback0': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'no',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    'GigabitEthernet5': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet4': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet3': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet2': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'AS external': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output2 = {'execute.return_value': '''
+    show ip ospf fast-reroute ti-lfa
+
+    OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+    OSPF                    IPFRR    SR       TI-LFA      TI-LFA
+    Object                  enabled  enabled  configured  enabled
+    --------------------------------------------------------------------
+    Process ID (65109)       no       yes      yes         yes (inactive)
+    Area 8                  yes      yes      yes         yes
+    Loopback0               yes      no       no          yes (inactive)
+    GigabitEthernet5        yes      yes      no          yes
+    GigabitEthernet4        yes      yes      no          yes
+    GigabitEthernet3        yes      yes      no          yes
+    GigabitEthernet2        yes      yes      no          yes
+    AS external             no       yes      yes         yes (inactive)
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()

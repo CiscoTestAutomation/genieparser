@@ -29,6 +29,10 @@ def generate_cython_modules(src_path, ignore_patterns = []):
                 # ignore setup.py module
                 continue
 
+            if fnmatch.fnmatch(filename, 'compile.py'):
+                # Don't cythonize this module
+                continue
+
             # address ignores
             for pattern in ignore_patterns:
                 if fnmatch.fnmatch(module_file, pattern):
@@ -43,4 +47,4 @@ def generate_cython_modules(src_path, ignore_patterns = []):
 if __name__ == '__main__':
     # cythonize
     exclude = []
-    cisco_cythonized_mods = cythonize(generate_cython_modules(os.getcwd(), exclude))
+    cisco_cythonized_mods = cythonize(generate_cython_modules(os.getcwd(), exclude), language_level=3)
