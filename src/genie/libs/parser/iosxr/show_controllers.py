@@ -194,7 +194,7 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
         p18 = re.compile(r'^FEC +mode +: +(?P<fec_mode>\w+)$')
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.replace('\t', ' ').strip()
             if not line:
                 continue
 
@@ -577,7 +577,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         p43 = re.compile(r'^Date +Code.*: +(?P<date_code>\S+)$')
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.replace('\t', ' ').strip()
             if not line:
                 continue
 
