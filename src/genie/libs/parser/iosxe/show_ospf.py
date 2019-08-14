@@ -6499,8 +6499,8 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
                     }
                 },
                 'sr_attributes': {
-                    'prefer_non_sr_ldp_labels': bool,
-                    'do_not_advertise_explicit_null': bool,
+                    'sr_label_preferred': bool,
+                    'advertise_explicit_null': bool,
                 },
                 'global_block_srgb': {
                     'range': {
@@ -6516,22 +6516,20 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
                     },
                     'state': str,
                 },
-                'registered_with_sr_app': {
-                    'client_handle': int,
-                    'sr_algo': {
-                        Any(): {
-                            'notifications': {
+                'registered_with': {
+                    Any(): {
+                        Optional('client_handle'): int,
+                        Optional('sr_algo'): {
+                            Any(): {
                                 Any(): {
                                     'active': bool,
                                     'handle': str,
                                     'bit_mask': str,
                                 }
                             }
-                        }
+                        },
+                        Optional('client_id'): int,
                     }
-                },
-                'registered_with_mpls': {
-                    'client_id': int
                 },
                 'max_labels': {
                     'platform': int,
@@ -6541,9 +6539,11 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
                         'ti_lfa_tunnels': int
                     }
                 },
-                'mfi_label_reservation_ack_not_pending': bool,
-                'bind_retry_timer_not_running': bool,
-                'adj_label_bind_retry_timer_not_running': bool,
+                'mfi_label_reservation_ack_pending': bool,
+                'bind_retry_timer_running': bool,
+                Optional('bind_retry_timer_left'): bool,
+                'adj_label_bind_retry_timer_running': bool,
+                Optional('adj_label_bind_retry_timer_left'): bool,
                 'srp_app_locks_requested': {
                     'srgb': int,
                     'srlb': int
@@ -6594,19 +6594,16 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         p8 = re.compile(r'^Local +Block +\(SRLB\):$')
 
         # Registered with SR App, client handle: 2
-        p9 = re.compile(r'^Registered +with +SR +App, +client +handle: +'
-                         '(?P<client_handle>\d+)$')
+        p9 = re.compile(r'^Registered +with +(?P<app_name>[\S\s]+), +'
+                         'client +handle: +(?P<client_handle>\d+)$')
 
         # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
-        p10 = re.compile(r'^SR +algo +(?P<algo>\d+) +Connected +map +notifications +'
-                          'active +\(handle +(?P<handle>\w+)\), +bitmask +(?P<bitmask>\w+)$')
-
-        # SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
-        p11 = re.compile(r'^SR +algo +(?P<algo>\d+) +Active +policy +map +notifications +'
-                          'active +\(handle +(?P<handle>\w+)\), bitmask +(?P<bitmask>\w+)$')
+        p10 = re.compile(r'^SR +algo +(?P<algo>\d+) +(?P<notifications>[\S\s]+) +\('
+                          'handle +(?P<handle>\w+)\), +bitmask +(?P<bitmask>\w+)$')
 
         # Registered with MPLS, client-id: 100
-        p12 = re.compile(r'^Registered +with +MPLS, +client\-id: +(?P<client_id>\d+)$')
+        p12 = re.compile(r'^Registered +with +(?P<app_name>[\S\s]+), +client\-id: +'
+                          '(?P<client_id>\d+)$')
 
         # Max labels: platform 16, available 13
         p13 = re.compile(r'^Max +labels: +platform +(?P<platform>\d+), available +(?P<available>\d+)$')
@@ -6620,9 +6617,15 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
         # Bind Retry timer not running
         p16 = re.compile(r'^Bind +Retry +timer +not +running$')
+        
+        # Bind Retry timer running, left ???
+        p16_1 = re.compile(r'^Bind +Retry +timer +running, +left +(?P<bind_retry_timer_left>\S+)$')
 
         # Adj Label Bind Retry timer not running
         p17 = re.compile(r'^Adj +Label +Bind +Retry +timer +not +running$')
+
+        # Adj Label Bind Retry timer running, left ???
+        p17_1 = re.compile(r'^Adj +Label +Bind +Retry +timer +running, +left +(?P<adj_label_bind_retry_timer_left>\S+)$')
 
         # sr-app locks requested: srgb 0, srlb 0
         p18 = re.compile(r'^sr\-app +locks +requested: +srgb +(?P<srgb>\d+), +srlb +(?P<srlb>\d+)$')
@@ -6653,6 +6656,12 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 process_id_dict = ret_dict.setdefault('process_id', {}). \
                                     setdefault(process_id, {})
                 process_id_dict.update({'router_id': router_id})
+                sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
+                sr_attributes_dict.update({'sr_label_preferred': True})
+                sr_attributes_dict.update({'advertise_explicit_null': True})
+                process_id_dict.update({'mfi_label_reservation_ack_pending': True})
+                process_id_dict.update({'bind_retry_timer_running': True})
+                process_id_dict.update({'adj_label_bind_retry_timer_running': True})
                 continue
             
             # Global segment-routing state: Enabled
@@ -6668,7 +6677,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             if m:
                 group = m.groupdict()
                 sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
-                sr_attributes_dict.update({'prefer_non_sr_ldp_labels': True})
+                sr_attributes_dict.update({'sr_label_preferred': False})
                 continue
             
             # Do not advertise Explicit Null
@@ -6676,7 +6685,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             if m:
                 group = m.groupdict()
                 sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
-                sr_attributes_dict.update({'do_not_advertise_explicit_null': True})
+                sr_attributes_dict.update({'advertise_explicit_null': False})
                 continue
             
             # Global Block (SRGB):
@@ -6714,41 +6723,26 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
+                app_name = group['app_name']
                 client_handle = int(group['client_handle'])
-                registered_with_sr_app_dict = process_id_dict.setdefault('registered_with_sr_app', {})
+                registered_with_sr_app_dict = process_id_dict.setdefault('registered_with', {}). \
+                                                setdefault(app_name, {})
                 registered_with_sr_app_dict.update({'client_handle': client_handle})
                 continue
             
             # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+            # SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 algo = int(group['algo'])
+                notifications = group['notifications'].lower().replace(' ', '_')
                 handle = group['handle']
                 bitmask = group['bitmask']
 
                 sr_algo_dict = registered_with_sr_app_dict.setdefault('sr_algo', {}). \
                                 setdefault(algo, {}). \
-                                setdefault('notifications', {}). \
-                                setdefault('connected_map_notifications', {})
-                
-                sr_algo_dict.update({'active': True})
-                sr_algo_dict.update({'handle': handle})
-                sr_algo_dict.update({'bit_mask': bitmask})
-                continue
-            
-            # SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
-            m = p11.match(line)
-            if m:
-                group = m.groupdict()
-                algo = int(group['algo'])
-                handle = group['handle']
-                bitmask = group['bitmask']
-
-                sr_algo_dict = registered_with_sr_app_dict.setdefault('sr_algo', {}). \
-                                setdefault(algo, {}). \
-                                setdefault('notifications', {}). \
-                                setdefault('active_policy_map_notifications', {})
+                                setdefault(notifications, {})
                 
                 sr_algo_dict.update({'active': True})
                 sr_algo_dict.update({'handle': handle})
@@ -6759,8 +6753,10 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             m = p12.match(line)
             if m:
                 group = m.groupdict()
+                app_name = group['app_name']
                 client_id = int(group['client_id'])
-                registered_with_mpls_dict = process_id_dict.setdefault('registered_with_mpls', {})
+                registered_with_mpls_dict = process_id_dict.setdefault('registered_with', {}). \
+                                                setdefault(app_name, {})
                 registered_with_mpls_dict.update({'client_id': client_id})
                 continue
             
@@ -6790,19 +6786,35 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             # mfi label reservation ack not pending
             m = p15.match(line)
             if m:
-                process_id_dict.update({'mfi_label_reservation_ack_not_pending': True})
+                process_id_dict.update({'mfi_label_reservation_ack_pending': False})
                 continue
 
             # Bind Retry timer not running
             m = p16.match(line)
             if m:
-                process_id_dict.update({'bind_retry_timer_not_running': True})
+                process_id_dict.update({'bind_retry_timer_running': False})
                 continue
             
+            # Bind Retry timer running, left ???
+            m = p16_1.match(line)
+            if m:
+                group = m.groupdict()
+                bind_retry_timer_left = group['bind_retry_timer_left']
+                process_id_dict.update({'bind_retry_timer_left': bind_retry_timer_left})
+                continue
+
             # Adj Label Bind Retry timer not running
             m = p17.match(line)
             if m:
-                process_id_dict.update({'adj_label_bind_retry_timer_not_running': True})
+                process_id_dict.update({'adj_label_bind_retry_timer_running': False})
+                continue
+            
+            # adj_label_bind_retry_timer_left
+            m = p17_1.match(line)
+            if m:
+                group = m.groupdict()
+                adj_label_bind_retry_timer_left = group['adj_label_bind_retry_timer_left']
+                process_id_dict.update({'adj_label_bind_retry_timer_left': adj_label_bind_retry_timer_left})
                 continue
 
             # sr-app locks requested: srgb 0, srlb 0
@@ -6837,6 +6849,8 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             if m:
                 group = m.groupdict()
                 area = group['area']
+                if area.isdigit():
+                    area = str(IPAddress(str(area)))
                 topology_name = group['topology_name']
                 forwarding = group['forwarding']
                 strict_spf = group['strict_spf']

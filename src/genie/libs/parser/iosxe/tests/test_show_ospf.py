@@ -8546,10 +8546,17 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
         'process_id': {
             9996: {
                 'router_id': '2.2.2.2',
+                'sr_attributes': {
+                    'sr_label_preferred': False,
+                    'advertise_explicit_null': False,
+                    },
+                'mfi_label_reservation_ack_pending': False,
+                'bind_retry_timer_running': False,
+                'adj_label_bind_retry_timer_running': False,
                 'global_segment_routing_state': 'Enabled',
                 'segment_routing_enabled': {
                     'area': {
-                        '8': {
+                        '0.0.0.8': {
                             'topology_name': 'Base',
                             'forwarding': 'MPLS',
                             'strict_spf': 'Capable',
@@ -8560,10 +8567,6 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
                             'strict_spf': 'Not applicable',
                             },
                         },
-                    },
-                'sr_attributes': {
-                    'prefer_non_sr_ldp_labels': True,
-                    'do_not_advertise_explicit_null': True,
                     },
                 'global_block_srgb': {
                     'range': {
@@ -8579,31 +8582,29 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
                         },
                     'state': 'Created',
                     },
-                'registered_with_sr_app': {
-                    'client_handle': 2,
-                    'sr_algo': {
-                        0: {
-                            'notifications': {
-                                'connected_map_notifications': {
+                'registered_with': {
+                    'SR App': {
+                        'client_handle': 2,
+                        'sr_algo': {
+                            0: {
+                                'connected_map_notifications_active': {
                                     'active': True,
                                     'handle': '0x0',
                                     'bit_mask': '0x1',
                                     },
-                                'active_policy_map_notifications': {
+                                'active_policy_map_notifications_active': {
                                     'active': True,
                                     'handle': '0x2',
                                     'bit_mask': '0xC',
                                     },
                                 },
-                            },
-                        1: {
-                            'notifications': {
-                                'connected_map_notifications': {
+                            1: {
+                                'connected_map_notifications_active': {
                                     'active': True,
                                     'handle': '0x1',
                                     'bit_mask': '0x1',
                                     },
-                                'active_policy_map_notifications': {
+                                'active_policy_map_notifications_active': {
                                     'active': True,
                                     'handle': '0x3',
                                     'bit_mask': '0xC',
@@ -8611,9 +8612,9 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
                                 },
                             },
                         },
-                    },
-                'registered_with_mpls': {
-                    'client_id': 100,
+                    'MPLS': {
+                        'client_id': 100,
+                        },
                     },
                 'max_labels': {
                     'platform': 16,
@@ -8623,9 +8624,6 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
                         'ti_lfa_tunnels': 10,
                         },
                     },
-                'mfi_label_reservation_ack_not_pending': True,
-                'bind_retry_timer_not_running': True,
-                'adj_label_bind_retry_timer_not_running': True,
                 'srp_app_locks_requested': {
                     'srgb': 0,
                     'srlb': 0,
