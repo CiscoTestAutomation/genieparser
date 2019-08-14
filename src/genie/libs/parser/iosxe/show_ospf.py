@@ -22,6 +22,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf traffic
     * show ip ospf interface brief
     * show ip ospf {process_id} segment-routing adjacency-sid
+    * show ip ospf fast-reroute ti-lfa
 
 '''
 
@@ -6581,3 +6582,99 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 continue
 
         return parsed_output
+
+# =================================================
+# Schema for:
+#   * 'show ip ospf fast-reroute ti-lfa'
+# =================================================
+
+class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
+    """Schema for show ip ospf fast-reroute ti-lfa
+    """
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'ospf_object': {
+                    Any(): {
+                        'ipfrr_enabled': str,
+                        'sr_enabled': str,
+                        'ti_lfa_configured': str,
+                        'ti_lfa_enabled': str,
+                    }
+                }
+            }
+        }
+    }
+
+# =================================================
+# Parser for:
+#   * 'show ip ospf fast-reroute ti-lfa'
+# =================================================
+
+class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
+    """Parser for show ip ospf fast-reroute ti-lfa
+    """
+
+    cli_command = 'show ip ospf fast-reroute ti-lfa'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)'
+            '\) +\(Process +ID +(?P<process_id>\d+)\)')
+        
+        # Process ID (65109)       no       yes      no          no           
+        # Area 8                  no       yes      no          no           
+        # Loopback0               no       no       no          no           
+        # GigabitEthernet0/1/2    no       yes      no          no  
+        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)'
+                         '( +\(inactive\))?) +(?P<sr_enabled>(yes|no)( +\(inactive\))?) '
+                         '+(?P<ti_lfa_configured>(yes|no)( +\(inactive\))?) +'
+                         '(?P<ti_lfa_enabled>(yes|no)( +\(inactive\))?)$')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                setdefault(process_id, {})
+                process_id_dict.update({'router_id': router_id})
+                ospf_object_dict = process_id_dict.setdefault('ospf_object', {})
+                continue
+            
+            # Process ID (65109)       no       yes      no          no           
+            # Area 8                  no       yes      no          no           
+            # Loopback0               no       no       no          no           
+            # GigabitEthernet0/1/2    no       yes      no          no  
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_object = group['ospf_object'].strip()
+                ipfrr_enabled = group['ipfrr_enabled']
+                sr_enabled = group['sr_enabled']
+                ti_lfa_configured = group['ti_lfa_configured']
+                ti_lfa_enabled = group['ti_lfa_enabled']
+                
+                ospf_object = ospf_object_dict.setdefault(ospf_object, {})
+
+                ospf_object.update({'ipfrr_enabled': ipfrr_enabled })
+                ospf_object.update({'sr_enabled': sr_enabled })
+                ospf_object.update({'ti_lfa_configured': ti_lfa_configured })
+                ospf_object.update({'ti_lfa_enabled': ti_lfa_enabled })
+                continue
+
+        return ret_dict
