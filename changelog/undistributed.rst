@@ -124,3 +124,10 @@
         to parse 'SR adj label' in output
     * Added ShowIpOspfSegmentRouting for command:
         * show ip ospf {process_id} segment-routing adjacency-sid
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpRouteWord
+        * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
