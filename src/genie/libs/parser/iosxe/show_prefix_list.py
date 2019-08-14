@@ -165,8 +165,16 @@ class ShowIpPrefixListDetail(ShowIpPrefixListDetailSchema):
 # ===========================================
 # Parser for 'show ipv6 prefix-list detail'
 # ===========================================
-class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail):
+class ShowIpv6PrefixListDetail(ShowIpPrefixListDetail, ShowIpPrefixListDetailSchema):
     """Parser for show ipv6 prefix-list detail"""
-    def cli(self,output=None):
-        return super().cli(af='ipv6',output=output)
+    cli_command = 'show ipv6 prefix-list detail'
 
+    def cli(self, af='ipv6', output=None):
+        # ip should be ip or ipv6
+        if output is None:
+            # get output from device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(af=af, output=out)
