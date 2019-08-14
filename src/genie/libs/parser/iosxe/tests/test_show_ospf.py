@@ -8514,32 +8514,31 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
         19       2.2.2.2         Te0/0/0            200.0.0.2       D U    
     '''}
 
-    parsed_output_1 = {
-        'ospf_id': {
-            '1.1.1.1': {
-                'process_id': {
-                    '9996': {
-                        'adjacency_sids': {
-                            '16': {
-                               'flags': 'D U',
-                               'interface': 'GigabitEthernet0/1/2',
-                               'neighbor_address': '200.0.3.2',
-                               'neighbor_id': '2.2.2.2'},
-                            '17': {
-                                'flags': 'D U',
-                                'interface': 'GigabitEthernet0/1/1',
-                                'neighbor_address': '200.0.2.2',
-                                'neighbor_id': '2.2.2.2'},
-                            '18': {
-                                'flags': 'D U',
-                                'interface': 'GigabitEthernet0/1/0',
-                                'neighbor_address': '200.0.1.2',
-                                'neighbor_id': '2.2.2.2'},
-                            '19': {
-                                'flags': 'D U',
-                                'interface': 'TenGigabitEthernet0/0/0',
-                                'neighbor_address': '200.0.0.2',
-                                'neighbor_id': '2.2.2.2'}}}}}}}
+    parsed_output_1 = {        
+        'process_id': {
+            '9996': {
+                'router_id': '1.1.1.1',
+                'adjacency_sids': {
+                    '16': {
+                       'flags': 'D U',
+                       'interface': 'GigabitEthernet0/1/2',
+                       'neighbor_address': '200.0.3.2',
+                       'neighbor_id': '2.2.2.2'},
+                    '17': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/1',
+                        'neighbor_address': '200.0.2.2',
+                        'neighbor_id': '2.2.2.2'},
+                    '18': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/0',
+                        'neighbor_address': '200.0.1.2',
+                        'neighbor_id': '2.2.2.2'},
+                    '19': {
+                        'flags': 'D U',
+                        'interface': 'TenGigabitEthernet0/0/0',
+                        'neighbor_address': '200.0.0.2',
+                        'neighbor_id': '2.2.2.2'}}}}}
 
     def test_show_ip_ospf_segment_routing_empty(self):
         self.maxDiff = None
@@ -8554,5 +8553,6 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
         obj=ShowIpOspfSegmentRouting(device=self.device)
         parsed_output = obj.parse(process_id=9996)
         self.assertEqual(parsed_output, self.parsed_output_1)
+
 if __name__ == '__main__':
     unittest.main()
