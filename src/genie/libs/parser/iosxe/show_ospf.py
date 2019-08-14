@@ -6486,16 +6486,19 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
     schema = {
         'process_id': {
             Any(): {
-                'router_id': str,
-                'area_id': int,
-                'neighbors': {
+                'areas': {
                     Any(): {
-                        'interfaces': {
+                        'router_id': str,
+                        'neighbors': {
                             Any(): {
-                                'address': str,
-                                'adj_sid': int,
-                                'backup_nexthop': str,
-                                'backup_interface': str
+                                'interfaces': {
+                                    Any(): {
+                                        'address': str,
+                                        'adj_sid': int,
+                                        'backup_nexthop': str,
+                                        'backup_interface': str
+                                    }
+                                }
                             }
                         }
                     }
@@ -6546,15 +6549,16 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 process_id = int(group['process_id'])
                 process_id_dict = ret_dict.setdefault('process_id', {}). \
                                     setdefault(process_id, {})
-                process_id_dict.update({'router_id': router_id})
                 continue
             
             # Area with ID (8)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                area_id = int(group['area_id'])
-                process_id_dict.update({'area_id': area_id})
+                area_id = str(IPAddress(str(group['area_id'])))
+                area_dict = process_id_dict.setdefault('areas', {}). \
+                                setdefault(area_id, {})
+                area_dict.update({'router_id': router_id})
                 continue
             
             # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
@@ -6567,7 +6571,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 adj_sid = int(group['adj_sid'])
                 backup_nexthop = group['backup_nexthop']
                 backup_interface = group['backup_interface']
-                neighbor_dict = process_id_dict.setdefault('neighbors', {}). \
+                neighbor_dict = area_dict.setdefault('neighbors', {}). \
                                     setdefault(neighbor_id, {}). \
                                     setdefault('interfaces', {}). \
                                     setdefault(Common.convert_intf_name(interface), {})

@@ -8517,32 +8517,35 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
     golden_parsed_output = {
         'process_id': {
             9996: {
-                'router_id': '1.1.1.1',
-                'area_id': 8,
-                'neighbors': {
-                    '22.22.22.22': {
-                        'interfaces': {
-                            'GigabitEthernet5': {
-                                'address': '10.0.0.25',
-                                'adj_sid': 20,
-                                'backup_nexthop': '10.0.0.9',
-                                'backup_interface': 'GigabitEthernet3',
+                'areas': {
+                    '0.0.0.8': {
+                        'router_id': '1.1.1.1',
+                        'neighbors': {
+                            '22.22.22.22': {
+                                'interfaces': {
+                                    'GigabitEthernet5': {
+                                        'address': '10.0.0.25',
+                                        'adj_sid': 20,
+                                        'backup_nexthop': '10.0.0.9',
+                                        'backup_interface': 'GigabitEthernet3',
+                                        },
+                                    'GigabitEthernet4': {
+                                        'address': '10.0.0.13',
+                                        'adj_sid': 21,
+                                        'backup_nexthop': '10.0.0.9',
+                                        'backup_interface': 'GigabitEthernet3',
+                                        },
+                                    },
                                 },
-                            'GigabitEthernet4': {
-                                'address': '10.0.0.13',
-                                'adj_sid': 21,
-                                'backup_nexthop': '10.0.0.9',
-                                'backup_interface': 'GigabitEthernet3',
-                                },
-                            },
-                        },
-                    '11.11.11.11': {
-                        'interfaces': {
-                            'GigabitEthernet3': {
-                                'address': '10.0.0.9',
-                                'adj_sid': 22,
-                                'backup_nexthop': '10.0.0.13',
-                                'backup_interface': 'GigabitEthernet4',
+                            '11.11.11.11': {
+                                'interfaces': {
+                                    'GigabitEthernet3': {
+                                        'address': '10.0.0.9',
+                                        'adj_sid': 22,
+                                        'backup_nexthop': '10.0.0.13',
+                                        'backup_interface': 'GigabitEthernet4',
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -8562,7 +8565,6 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
         obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
-
 
 if __name__ == '__main__':
     unittest.main()
