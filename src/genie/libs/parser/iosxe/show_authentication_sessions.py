@@ -210,11 +210,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Local Policies:
         p2 = re.compile(r'^Local +Policies:')
 
-        # Local Policies:
         # Template: CRITICAL_VLAN (priority 150)
         p3 = re.compile(r'^Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
 
-        # Local Policies:
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
 
@@ -222,8 +220,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Method status list:
         p5 = re.compile(r'^Method +status +list:')
 
-        # Method status list:
-        # Method           State
         # dot1x            Authc Failed
         p6 = re.compile(r'^(?P<method>[dot1x|mab]\w+) +(?P<state>(\w+\s\w+)|(\w+))$')
 
