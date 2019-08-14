@@ -39,8 +39,8 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
                                 {'algorithm':
                                     {Any():
                                         {'prefix': str,
-                                        'value_type': str,
-                                        'start_sid': str,
+                                        'type': str,
+                                        'sid': str,
                                         'range': str,
                                         'srgb': str,
                                         Optional('source'): str,
@@ -56,8 +56,8 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
                                 {'algorithm':
                                     {Any():
                                         {'prefix': str,
-                                        'value_type': str,
-                                        'start_sid': str,
+                                        'type': str,
+                                        'sid': str,
                                         'range': str,
                                         'srgb': str,
                                         Optional('source'): str,
@@ -149,7 +149,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                prefix = group['prefix']
+                prefix = group['prefix'] + '/' + group['masklen']
                 # Set dict
                 algo_dict = ret_dict.setdefault('segment_routing', {}).\
                                      setdefault('bindings', {}).\
@@ -162,8 +162,8 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 # Set values
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm
-                algo_dict['value_type'] = group['type']
-                algo_dict['start_sid'] = group['sid']
+                algo_dict['type'] = group['type']
+                algo_dict['sid'] = group['sid']
                 algo_dict['range'] = group['range']
                 algo_dict['srgb'] = group['srgb']
                 if group['flags']:
@@ -175,7 +175,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                prefix = group['prefix']
+                prefix = group['prefix'] + '/' + group['masklen']
                 # Set dict
                 algo_dict = ret_dict.setdefault('segment_routing', {}).\
                                      setdefault('bindings', {}).\
@@ -188,8 +188,8 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 # Set values
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm
-                algo_dict['value_type'] = group['type']
-                algo_dict['start_sid'] = group['sid']
+                algo_dict['type'] = group['type']
+                algo_dict['sid'] = group['sid']
                 algo_dict['range'] = group['range']
                 algo_dict['srgb'] = group['srgb']
                 algo_dict['source'] = group['source']

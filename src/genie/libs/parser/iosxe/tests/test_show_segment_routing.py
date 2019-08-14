@@ -31,26 +31,26 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
                 {'connected_prefix_sid_map':
                     {'ipv4':
                         {'ipv4_prefix_sid':
-                            {'1.1.1.1':
+                            {'1.1.1.1/32':
                                 {'algorithm':
                                     {'ALGO_0':
                                         {'algorithm': 'ALGO_0',
-                                        'prefix': '1.1.1.1',
+                                        'prefix': '1.1.1.1/32',
                                         'range': '1',
                                         'source': 'OSPF Area 8 1.1.1.1',
                                         'srgb': 'Y',
-                                        'start_sid': '1',
-                                        'value_type': 'Indx'}}},
-                            '2.2.2.2': 
+                                        'sid': '1',
+                                        'type': 'Indx'}}},
+                            '2.2.2.2/32': 
                                 {'algorithm': 
                                     {'ALGO_0': 
                                         {'algorithm': 'ALGO_0',
-                                        'prefix': '2.2.2.2',
+                                        'prefix': '2.2.2.2/32',
                                         'range': '1',
                                         'source': 'OSPF Area 8 2.2.2.2',
                                         'srgb': 'Y',
-                                        'start_sid': '2',
-                                        'value_type': 'Indx'}}}}}}}}}
+                                        'sid': '2',
+                                        'type': 'Indx'}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         PE1#show segment-routing mpls connected-prefix-sid-map ipv4
@@ -189,8 +189,7 @@ class test_show_routing_mpls_state(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-<<<<<<< HEAD
-=======
+
 # ==============================================
 # Parser for 'show segment-routing mpls lb lock'
 # ==============================================
@@ -221,7 +220,7 @@ class test_show_routing_mpls_lb_lock(unittest.TestCase):
         obj = ShowSegmentRoutingMplsLbLock(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
->>>>>>> dev
+
 
 if __name__ == '__main__':
     unittest.main()
