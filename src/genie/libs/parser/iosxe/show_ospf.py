@@ -6618,6 +6618,7 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
     """
 
     cli_command = 'show ip ospf fast-reroute ti-lfa'
+    
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
