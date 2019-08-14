@@ -265,9 +265,9 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
     }
     def test_empty_3(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowAuthenticationSessions(device=self.dev1)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(intf='GigabitEthernet3/0/2')
 
     def test_golden_4(self):
         self.maxDiff = None
