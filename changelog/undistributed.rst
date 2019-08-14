@@ -95,3 +95,21 @@
         updated cli and added exclude for Ops
     * Update ShowIpv6PimNeighborDetail
         updated cli and added exclude for Ops
+
+--------------------------------------------------------------------------------
+                                Bgp
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fix ShowIpBgpTemplatePeerSession
+        added a key to cli command for Ops
+    * Fix ShowIpBgpTemplatePeerPolicy
+        added a key to cli command for Ops
+
+--------------------------------------------------------------------------------
+                                Mcast
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpMroute
+        added a key to cli command for Ops
+    * Update ShowIpv6Mroute
+        added a key to cli command for Ops
