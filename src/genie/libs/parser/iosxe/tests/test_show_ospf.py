@@ -29,6 +29,7 @@ from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
                                               ShowIpOspfTraffic,\
                                               ShowIpOspfNeighbor,\
                                               ShowIpOspfDatabaseRouterSelfOriginate, \
+                                              ShowIpOspfDatabaseOpaqueAreaSelfOriginate,\
                                               ShowIpOspfInterfaceBrief
 
 
@@ -6627,12 +6628,758 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
             OSPF Router with ID (10.229.11.11) (Process ID 2)
         '''}
 
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '9996': {
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'database': {
+                                            'lsa_types': {
+                                                10: {
+                                                    'lsa_type': 10,
+                                                    'lsas': {
+                                                        '1.0.0.0 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.0',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'num_of_links': 0
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0x58D1',
+                                                                    'fragment_number': 0,
+                                                                    'length': 28,
+                                                                    'lsa_id': '1.0.0.0',
+                                                                    'mpls_te_router_id': '1.1.1.1',
+                                                                    'opaque_id': 0,
+                                                                    'opaque_type': 1,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '1.0.0.15 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.15',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'igp_metric': 1,
+                                                                                'link_id': '2.2.2.2',
+                                                                                'link_name': 'point-to-point '
+                                                                                'network',
+                                                                                'link_type': 1,
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '200.0.0.1': {}
+                                                                                },
+                                                                                'max_bandwidth': 176258176,
+                                                                                'te_metric': 1,
+                                                                            }
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0x917E',
+                                                                    'fragment_number': 15,
+                                                                    'length': 80,
+                                                                    'lsa_id': '1.0.0.15',
+                                                                    'opaque_id': 15,
+                                                                    'opaque_type': 1,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '1.0.0.16 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.16',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'igp_metric': 1,
+                                                                                'link_id': '2.2.2.2',
+                                                                                'link_name': 'point-to-point '
+                                                                                'network',
+                                                                                'link_type': 1,
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '200.0.1.1': {}
+                                                                                },
+                                                                                'max_bandwidth': 125000000,
+                                                                                'te_metric': 1,
+                                                                            }
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0x8A09',
+                                                                    'fragment_number': 16,
+                                                                    'length': 80,
+                                                                    'lsa_id': '1.0.0.16',
+                                                                    'opaque_id': 16,
+                                                                    'opaque_type': 1,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '1.0.0.17 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.17',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'igp_metric': 1,
+                                                                                'link_id': '2.2.2.2',
+                                                                                'link_name': 'point-to-point '
+                                                                                'network',
+                                                                                'link_type': 1,
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '200.0.2.1': {}
+                                                                                },
+                                                                                'max_bandwidth': 125000000,
+                                                                                'te_metric': 1,
+                                                                            }
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xC2CD',
+                                                                    'fragment_number': 17,
+                                                                    'length': 80,
+                                                                    'lsa_id': '1.0.0.17',
+                                                                    'opaque_id': 17,
+                                                                    'opaque_type': 1,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '1.0.0.18 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '1.0.0.18',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'igp_metric': 1,
+                                                                                'link_id': '2.2.2.2',
+                                                                                'link_name': 'point-to-point '
+                                                                                'network',
+                                                                                'link_type': 1,
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '200.0.3.1': {}
+                                                                                },
+                                                                                'max_bandwidth': 125000000,
+                                                                                'te_metric': 1,
+                                                                            }
+                                                                        },
+                                                                        'num_of_links': 1,
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xFA92',
+                                                                    'fragment_number': 18,
+                                                                    'length': 80,
+                                                                    'lsa_id': '1.0.0.18',
+                                                                    'opaque_id': 18,
+                                                                    'opaque_type': 1,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '4.0.0.0 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '4.0.0.0',
+                                                            'ospfv2': {
+                                                                'body': {'opaque': {}},
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xD28C',
+                                                                    'length': 3,
+                                                                    'lsa_id': '4.0.0.0',
+                                                                    'opaque_id': 0,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '7.0.0.0 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '7.0.0.0',
+                                                            'ospfv2': {
+                                                                'body': {'opaque': {}},
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xEFA7',
+                                                                    'length': 8,
+                                                                    'lsa_id': '7.0.0.0',
+                                                                    'opaque_id': 0,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '8.0.0.20 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '8.0.0.20',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_name': ': '
+                                                                                'another '
+                                                                                'router '
+                                                                                '(point-to-point)',
+                                                                                'link_type': 1,
+                                                                            }
+                                                                        },
+                                                                        'links': {
+                                                                            '2.2.2.2': {
+                                                                                'link_id': '2.2.2.2',
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'mt_id': 0
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xF52F',
+                                                                    'length': 68,
+                                                                    'lsa_id': '8.0.0.20',
+                                                                    'opaque_id': 20,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '8.0.0.21 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '8.0.0.21',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_name': ': '
+                                                                                'another '
+                                                                                'router '
+                                                                                '(point-to-point)',
+                                                                                'link_type': 1,
+                                                                            }
+                                                                        },
+                                                                        'links': {
+                                                                            '2.2.2.2': {
+                                                                                'link_id': '2.2.2.2',
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'mt_id': 0
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xB764',
+                                                                    'length': 68,
+                                                                    'lsa_id': '8.0.0.21',
+                                                                    'opaque_id': 21,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '8.0.0.22 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '8.0.0.22',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_name': ': '
+                                                                                'another '
+                                                                                'router '
+                                                                                '(point-to-point)',
+                                                                                'link_type': 1,
+                                                                            }
+                                                                        },
+                                                                        'links': {
+                                                                            '2.2.2.2': {
+                                                                                'link_id': '2.2.2.2',
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'mt_id': 0
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0xF420',
+                                                                    'length': 68,
+                                                                    'lsa_id': '8.0.0.22',
+                                                                    'opaque_id': 22,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                        '8.0.0.23 1.1.1.1': {
+                                                            'adv_router': '1.1.1.1',
+                                                            'lsa_id': '8.0.0.23',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_name': ': '
+                                                                                'another '
+                                                                                'router '
+                                                                                '(point-to-point)',
+                                                                                'link_type': 1,
+                                                                            }
+                                                                        },
+                                                                        'links': {
+                                                                            '2.2.2.2': {
+                                                                                'link_id': '2.2.2.2',
+                                                                                'topologies': {
+                                                                                    0: {
+                                                                                        'mt_id': 0
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                    }
+                                                                },
+                                                                'header': {
+                                                                    'adv_router': '1.1.1.1',
+                                                                    'age': 49,
+                                                                    'checksum': '0x32DB',
+                                                                    'length': 68,
+                                                                    'lsa_id': '8.0.0.23',
+                                                                    'opaque_id': 23,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No '
+                                                                    'TOS-capability, '
+                                                                    'DC',
+                                                                    'seq_num': '80000001',
+                                                                    'type': 10,
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    golden_output2 = {'execute.return_value': '''
+      PE1#show ip ospf database opaque-area self-originate
+     
+                OSPF Router with ID (1.1.1.1) (Process ID 9996)
+     
+                    Type-10 Opaque Area Link States (Area 8)
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 1.0.0.0
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 0
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x58D1
+      Length: 28
+      Fragment number : 0
+     
+        MPLS TE router ID : 1.1.1.1
+     
+        Number of Links : 0
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 1.0.0.15
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 15
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x917E
+      Length: 80
+      Fragment number : 15
+     
+        Link connected to Point-to-Point network
+          Link ID : 2.2.2.2
+          Neighbor Address : 200.0.0.2
+          Interface Address : 200.0.0.1
+          Admin Metric : 1
+          Maximum bandwidth : 176258176
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 1.0.0.16
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 16
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x8A09
+      Length: 80
+      Fragment number : 16
+     
+        Link connected to Point-to-Point network
+          Link ID : 2.2.2.2
+          Neighbor Address : 200.0.1.2
+          Interface Address : 200.0.1.1
+          Admin Metric : 1
+          Maximum bandwidth : 125000000
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 1.0.0.17
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 17
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xC2CD
+      Length: 80
+      Fragment number : 17
+     
+        Link connected to Point-to-Point network
+          Link ID : 2.2.2.2
+          Neighbor Address : 200.0.2.2
+          Interface Address : 200.0.2.1
+          Admin Metric : 1
+          Maximum bandwidth : 125000000
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 1.0.0.18
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 18
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xFA92
+      Length: 80
+      Fragment number : 18
+     
+        Link connected to Point-to-Point network
+          Link ID : 2.2.2.2
+          Neighbor Address : 200.0.3.2
+          Interface Address : 200.0.3.1
+          Admin Metric : 1
+          Maximum bandwidth : 125000000
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 4.0.0.0
+      Opaque Type: 4 (Router Information)
+      Opaque ID: 0
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xD28C
+      Length: 76
+     
+        TLV Type: Router Information
+        Length: 4
+        Capabilities:
+          Graceful Restart Helper
+          Stub Router Support
+     
+        TLV Type: Segment Routing Algorithm
+        Length: 2
+          Algorithm: SPF
+          Algorithm: Strict SPF
+     
+        TLV Type: Segment Routing Range
+        Length: 12
+          Range Size: 8000
+     
+          Sub-TLV Type: SID/Label
+          Length: 3
+            Label: 16000
+     
+        TLV Type: Segment Routing Node MSD
+        Length: 2
+          Sub-type: Node Max Sid Depth, Value: 13
+     
+        TLV Type: Segment Routing Local Block
+        Length: 12
+          Range Size: 1000
+     
+          Sub-TLV Type: SID/Label
+          Length: 3
+            Label: 15000
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 7.0.0.0
+      Opaque Type: 7 (Extended Prefix)
+      Opaque ID: 0
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xEFA7
+      Length: 44
+     
+        TLV Type: Extended Prefix
+        Length: 20
+          Prefix    : 1.1.1.1/32
+          AF        : 0
+          Route-type: Intra
+          Flags     : N-bit
+     
+          Sub-TLV Type: Prefix SID
+          Length: 8
+            Flags : None
+            MTID  : 0
+            Algo  : SPF
+            SID   : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 8.0.0.20
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 20
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xF52F
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 2.2.2.2
+        (Link Data) Interface IP address: 200.0.0.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 19
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 200.0.0.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 20
+            Remote Interface ID   : 20
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 8.0.0.21
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 21
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xB764
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 2.2.2.2
+        (Link Data) Interface IP address: 200.0.1.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 18
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 200.0.1.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 21
+            Remote Interface ID   : 22
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 8.0.0.22
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 22
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xF420
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 2.2.2.2
+        (Link Data) Interface IP address: 200.0.2.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 17
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 200.0.2.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 22
+            Remote Interface ID   : 23
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 8.0.0.23
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 23
+      Advertising Router: 1.1.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x32DB
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 2.2.2.2
+        (Link Data) Interface IP address: 200.0.3.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 16
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 200.0.3.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 23
+            Remote Interface ID   : 24
+    '''}
+    
+
     def test_show_ip_ospf_database_opaque_area_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfDatabaseOpaqueArea(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_database_opaque_area_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfDatabaseOpaqueAreaSelfOriginate(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_show_ip_ospf_database_opaque_area_empty(self):
         self.maxDiff = None
