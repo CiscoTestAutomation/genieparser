@@ -30,7 +30,7 @@ def generate_cython_modules(src_path, ignore_patterns = []):
                 continue
 
             if fnmatch.fnmatch(filename, 'compile.py'):
-                # Done cythonize this module
+                # Don't cythonize this module
                 continue
 
             # address ignores
