@@ -13,6 +13,7 @@ from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
                                                  ShowIpv6RouteUpdated,\
                                                  ShowIpCef,\
                                                  ShowIpv6Cef,\
+                                                 ShowIpCefDetail,\
                                                  ShowIpv6RouteDistributor,\
                                                  ShowIpRouteSummary
 
@@ -1673,7 +1674,6 @@ class test_show_ip_cef(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
-
 ###################################################
 # unit test for show ipv6 cef <prefix>
 ####################################################
@@ -1800,6 +1800,82 @@ class test_show_ipv6_cef(unittest.TestCase):
         obj = ShowIpv6Cef(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+
+# ==========================================
+# Unittest for 'show ip cef <prefix> detail'
+# ==========================================
+class test_show_ip_cef_detail(unittest.TestCase):
+    '''Unittest for:
+        * 'show ip cef <prefix> detail'
+    '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        PE1#show ip cef 2.2.2.2 detail
+        2.2.2.2/32, epoch 2, per-destination sharing
+          sr local label info: global/16002 [0x1B]
+          nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.9 GigabitEthernet3
+          nexthop 10.0.0.9 GigabitEthernet3 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.25 GigabitEthernet5
+          nexthop 10.0.0.13 GigabitEthernet4 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.5 GigabitEthernet2
+          nexthop 10.0.0.25 GigabitEthernet5 label [16002|16002]-(local:16002)
+            repair: attached-nexthop 10.0.0.13 GigabitEthernet4
+        PE1# 
+        '''}
+
+    golden_parsed_output_1 = {
+        'vrf': 
+            {'default': 
+                {'address_family': 
+                    {'ipv4': 
+                        {'prefix': 
+                            {'2.2.2.2/32': 
+                                {'epoch': 2,
+                                'nexthop': 
+                                    {'10.0.0.13': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet4': 
+                                                {'local_label': 16002,
+                                                'outgoing_label': ['16002|16002'],
+                                                'repair': 'attached-nexthop 10.0.0.5 GigabitEthernet2'}}},
+                                    '10.0.0.25': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet5': 
+                                                {'local_label': 16002,
+                                                'outgoing_label': ['16002|16002'],
+                                                'repair': 'attached-nexthop 10.0.0.13 GigabitEthernet4'}}},
+                                    '10.0.0.5': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet2': 
+                                                {'local_label': 16002,
+                                                'outgoing_label': ['16002|16002'],
+                                                'repair': 'attached-nexthop 10.0.0.9 GigabitEthernet3'}}},
+                                    '10.0.0.9': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet3': 
+                                                {'local_label': 16002,
+                                                'outgoing_label': ['16002|16002'],
+                                                'repair': 'attached-nexthop 10.0.0.25 GigabitEthernet5'}}}},
+                            'per_destination_sharing': True,
+                            'sr_local_label_info': 'global/16002 [0x1B]'}}}}}}}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpCefDetail(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(prefix='2.2.2.2')
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpCefDetail(device=self.device)
+        parsed_output = obj.parse(prefix='2.2.2.2')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 ###################################################
 # unit test for show ip route summary
