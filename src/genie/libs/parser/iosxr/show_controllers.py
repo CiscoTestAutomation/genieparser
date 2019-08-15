@@ -202,7 +202,7 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
             m = p1.match(line)
             if m:
                 port_num = m.groupdict()['port']
-                port_dict = result_dict.setdefault(port_num, {})
+                port_dict = result_dict.setdefault(port, {})
                 port_dict.update({'port': port_num})
                 continue
 
@@ -585,7 +585,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             m = p1.match(line)
             if m:
                 name = 'Optics {}'.format(port)
-                optics_dict = result_dict.setdefault(name, {})
+                optics_dict = result_dict.setdefault(port, {})
                 optics_dict.update({'name': name})
                 
                 group = m.groupdict()
