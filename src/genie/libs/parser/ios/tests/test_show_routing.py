@@ -29,7 +29,7 @@ class test_show_ip_route_ios(unittest.TestCase):
         "entry": {
             "192.168.234.0/24": {
                 "mask": "24",
-                "type": "type internal",
+                "type": "internal",
                 "known_via": "eigrp 1",
                 "ip": "192.168.234.0",
                 "redist_via": "eigrp",
@@ -48,7 +48,9 @@ class test_show_ip_route_ios(unittest.TestCase):
                         "from": "192.168.9.2",
                         "metric": "3072",
                         "share_count": "1",
-                        "nexthop": "192.168.9.2"
+                        "nexthop": "192.168.9.2",
+                        "merge_labels": False,
+                        "prefer_non_rib_labels": False,
                     }
                 }
             }
