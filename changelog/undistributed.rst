@@ -130,6 +130,9 @@
         show ip ospf segment-routing protected-adjacencies
     * Added ShowIpOspfSegmentRoutingSidDatabase for:
         * show ip ospf segment-routing sid-database
+    * Added ShowIpOspfSegmentRoutingGlobalBlock for
+        * show ip ospf segment-routing global-block
+        * show ip ospf {process_id} segment-routing global-block
 
 --------------------------------------------------------------------------------
                                 Routing
