@@ -24,6 +24,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf interface brief
     * show ip ospf {process_id} segment-routing adjacency-sid
     * show ip ospf fast-reroute ti-lfa
+    * show ip ospf segment-routing protected-adjacencies
 '''
 
 # Python
@@ -6786,4 +6787,116 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
                 ospf_object.update({'ti_lfa_enabled': ti_lfa_enabled })
                 continue
 
+        return ret_dict
+
+
+# ===============================================================
+# Schema for 'show ip ospf segment-routing protected-adjacencies'
+# ===============================================================
+
+class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
+
+    ''' Schema for show ip ospf segment-routing protected-adjacencies
+    '''
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'areas': {
+                    Any(): {
+                        'router_id': str,
+                        'neighbors': {
+                            Any(): {
+                                'interfaces': {
+                                    Any(): {
+                                        'address': str,
+                                        'adj_sid': int,
+                                        'backup_nexthop': str,
+                                        'backup_interface': str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ========================================================
+# Parser for:
+#   * 'show ip ospf segment-routing protected-adjacencies'
+# ========================================================
+
+class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema):
+    """ Parser for show ip ospf segment-routing protected-adjacencies
+    """
+
+    cli_command = 'show ip ospf segment-routing protected-adjacencies'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        p1 = re.compile(r'OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
+                         'Process +ID +(?P<process_id>\d+)\)')
+        
+        # Area with ID (8)
+        p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
+
+        # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14  
+        p3 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +'
+                         '(?P<adj_sid>\d+) +(?P<backup_nexthop>\S+) +(?P<backup_interface>\S+)$')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                    setdefault(process_id, {})
+                continue
+            
+            # Area with ID (8)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                area_id = str(IPAddress(str(group['area_id'])))
+                area_dict = process_id_dict.setdefault('areas', {}). \
+                                setdefault(area_id, {})
+                area_dict.update({'router_id': router_id})
+                continue
+            
+            # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_id = group['neighbor_id']
+                interface = group['interface']
+                address = group['address']
+                adj_sid = int(group['adj_sid'])
+                backup_nexthop = group['backup_nexthop']
+                backup_interface = group['backup_interface']
+                neighbor_dict = area_dict.setdefault('neighbors', {}). \
+                                    setdefault(neighbor_id, {}). \
+                                    setdefault('interfaces', {}). \
+                                    setdefault(Common.convert_intf_name(interface), {})
+                
+                neighbor_dict.update({'address': address})
+                neighbor_dict.update({'adj_sid': adj_sid})
+                neighbor_dict.update({'backup_nexthop': backup_nexthop})
+                neighbor_dict.update({'backup_interface': 
+                    Common.convert_intf_name(backup_interface)})
+                continue
+        
         return ret_dict

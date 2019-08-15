@@ -126,6 +126,8 @@
         * show ip ospf {process_id} segment-routing adjacency-sid
     * Added ShowIpOspfFastRerouteTiLfa for
         'show ip ospf fast-reroute ti-lfa'
+    * Added ShowIpOspfSegmentRoutingProtectedAdjacencies for
+        show ip ospf segment-routing protected-adjacencies
 
 --------------------------------------------------------------------------------
                                 Routing
