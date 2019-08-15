@@ -128,6 +128,8 @@
         'show ip ospf fast-reroute ti-lfa'
     * Added ShowIpOspfSegmentRoutingProtectedAdjacencies for
         show ip ospf segment-routing protected-adjacencies
+    * Added ShowIpOspfSegmentRoutingSidDatabase for:
+        * show ip ospf segment-routing sid-database
 
 --------------------------------------------------------------------------------
                                 Routing
