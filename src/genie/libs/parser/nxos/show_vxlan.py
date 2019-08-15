@@ -62,7 +62,17 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
         # excute command to get output
         out = output if output else self.device.execute(self.cli_command)
 
-        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) + (?P<vni>[\d]+) + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+) + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+) + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+) + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+) *$')
+        # Topology ID  VNI         Prod  IP Addr                                 Eth Tag PMSI-Flags Flags   Type Label(VNI)  Tunnel ID                               NFN Bitmap  
+        # -----------  ----------- ----- --------------------------------------- ------- ---------- ------- ---- ----------- --------------------------------------- ----------
+        # 201          20001       BGP   2018:1015::abcd:1234:3                  0       0          -       6    20001        2018:1015::abcd:1234:3                  32          
+        # 201          20001       BGP   2018:1015::abcd:5678:1                  0       0          -       6    20001        2018:1015::abcd:5678:1                  32          
+
+
+        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) + (?P<vni>[\d]+)' 
+                         ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)' 
+                         ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)' 
+                         ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)' 
+                         ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+) *$')
 
         result_dict = {}
 
@@ -140,6 +150,8 @@ class ShowNvePeers(ShowNvePeersSchema):
         # Interface Peer-IP          State LearnType Uptime   Router-Mac
         # nve1      192.168.16.1      Up    CP        01:15:09 n/a
         # nve1      192.168.106.1        Up    CP        00:03:05 5e00.0002.0007
+        # nve1      2018:1015::abcd:1234:3                  Up    CP        21:47:20 5254.0028.093a   
+        # nve1      2018:1015::abcd:1234:5                  Up    CP        21:47:20 5254.00dc.5da5   
 
         p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<peer_ip>[\w\.\:]+) +(?P<peer_state>[\w]+)'
                         ' +(?P<learn_type>[\w]+) +(?P<uptime>[\w\:]+) +(?P<router_mac>[\w\.\/]+)$')
@@ -435,6 +447,8 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p5 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+)'
                         ' +\(primary: +(?P<primary_ip>[\w\.]+), +secondary: +(?P<secondary_ip>[\w\.]+)\)$')
 
+        # Source-Interface: loopback1 (primary: 2018:1015::abcd:1234:4)
+        # Anycast-Interface: loopback2 (secondary: 2018:1015::abcd:5678:5)
         p5_1 = re.compile(r'^\s*Source-Interface: +(?P<source_if>[\w\/]+) +\(primary: +(?P<primary_ip>[\w\.\:]+)\)')
         p5_2 = re.compile(r'^\s*Anycast-Interface: +(?P<anycast_if>[\w\/]+) +\(secondary: +(?P<secondary_ip>[\w\.\:]+)\)')
 
@@ -512,12 +526,12 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                 if m:
                     group = m.groupdict()
                     nve_dict.update({k:v for k,v in group.items()})
-                elif m_1:
+                if m_1:
                     group1 = m_1.groupdict()
                     nve_dict.update({'source_if': group1.pop('source_if')})
                     nve_dict.update({'primary_ip': group1.pop('primary_ip')})
                     continue
-                elif m_2:
+                if m_2:
                     group2 = m_2.groupdict()
                     nve_dict.update({'anycast_if': group2.pop('anycast_if')})
                     nve_dict.update({'secondary_ip': group2.pop('secondary_ip')})
@@ -1429,10 +1443,10 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # Topology    Mac Address    Host IP         Prod   Flags         Seq No     Next-Hops
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
-        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.\:]+)'
+        # 201         0011.0100.0001 10.1.1.2       BGP    --            0         2018:1015::abcd:5678:1   
+        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
                         ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)'
-                        ' +(?P<next_hop1>[\w\/\.]+)$')
 
         for line in out.splitlines():
             if line:
