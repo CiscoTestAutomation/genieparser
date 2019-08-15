@@ -91,6 +91,8 @@
         'show segment-routing mpls state'
     * Added ShowSegmentRoutingMplsLbLock for
         'show segment-routing mpls lb lock'
+    * Added ShowSegmentRoutingMplsGbLock for:
+        'show segment-routing mpls gb lock'
 
 --------------------------------------------------------------------------------
                                 Pim
@@ -122,5 +124,25 @@
         to parse 'SR adj label' in output
     * Added ShowIpOspfSegmentRouting for command:
         * show ip ospf {process_id} segment-routing adjacency-sid
+    * Added ShowIpOspfFastRerouteTiLfa for
+        'show ip ospf fast-reroute ti-lfa'
+    * Added ShowIpOspfSegmentRoutingProtectedAdjacencies for
+        show ip ospf segment-routing protected-adjacencies
     * Added ShowIpOspfSegmentRoutingSidDatabase for:
         * show ip ospf segment-routing sid-database
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpRouteWord
+        * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
+
+--------------------------------------------------------------------------------
+                                Mcast
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpMroute
+        added a key to cli command for Ops
+    * Update ShowIpv6Mroute
+        added a key to cli command for Ops
