@@ -3635,6 +3635,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "maximum_prefix_restart": 0,
                                              "prefix_advertised": 5,
                                              "route_refresh_request_sent": 0,
+                                             "send_multicast_attributes": True,
                                              "refresh_request_status": "No Refresh request being processed"
                                         },
                                         "vpnv6 unicast": {
@@ -3660,6 +3661,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "maximum_prefix_restart": 0,
                                              "prefix_advertised": 5,
                                              "route_refresh_request_sent": 0,
+                                             "send_multicast_attributes": True,
                                              "refresh_request_status": "No Refresh request being processed"
                                         }
                                    },
@@ -3774,6 +3776,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "maximum_prefix_restart": 0,
                                              "prefix_advertised": 5,
                                              "route_refresh_request_sent": 0,
+                                             "send_multicast_attributes": True,
                                              "refresh_request_status": "No Refresh request being processed"
                                         },
                                         "vpnv6 unicast": {
@@ -3799,6 +3802,7 @@ class test_show_bgp_instance_all_all_all_neighbors_detail(unittest.TestCase):
                                              "maximum_prefix_restart": 0,
                                              "prefix_advertised": 5,
                                              "route_refresh_request_sent": 0,
+                                             "send_multicast_attributes": True,
                                              "refresh_request_status": "No Refresh request being processed"
                                         }
                                    },
@@ -7657,6 +7661,31 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                 "outbound_message": "3",
                                 "address_family": {
                                     "ipv4 unicast": {
+                                        "neighbor_version": 177,
+                                        "update_group": "0.2",
+                                        "filter_group": "0.1",
+                                        "refresh_request_status": "No Refresh request being processed",
+                                        "route_refresh_request_received": 0,
+                                        "route_refresh_request_sent": 0,
+                                        "accepted_prefixes": 26,
+                                        "best_paths": 11,
+                                        "exact_no_prefixes_denied": 0,
+                                        "cummulative_no_prefixes_denied": 0,
+                                        "prefix_advertised": 6,
+                                        "prefix_suppressed": 0,
+                                        "prefix_withdrawn": 2,
+                                        "maximum_prefix_max_prefix_no": 1048576,
+                                        "maximum_prefix_warning_only": True,
+                                        "maximum_prefix_threshold": "75%",
+                                        "maximum_prefix_restart": 0,
+                                        "eor_status": "was received during read-only mode",
+                                        "last_synced_ack_version": 0,
+                                        "last_ack_version": 177,
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True,
+                                        "additional_routes_local_label": "Unicast SAFI"
+                                    },
+                                    "ipv6 labeled-unicast": {
                                         "neighbor_version": 141,
                                         "update_group": "0.2",
                                         "filter_group": "0.1",
@@ -7678,7 +7707,7 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 141,
                                         "additional_paths_operation": "None",
-                                        "additional_routes_local_label": "Unicast SAFI"
+                                        "send_multicast_attributes": True
                                     },
                                     "l2vpn evpn": {
                                         "neighbor_version": 367,
@@ -7705,7 +7734,8 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                         "eor_status": "was received during read-only mode",
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 367,
-                                        "additional_paths_operation": "None"
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True
                                     }
                                 },
                                 "bgp_session_transport": {
@@ -7771,6 +7801,31 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                 "outbound_message": "3",
                                 "address_family": {
                                     "ipv4 unicast": {
+                                        "neighbor_version": 177,
+                                        "update_group": "0.2",
+                                        "filter_group": "0.1",
+                                        "refresh_request_status": "No Refresh request being processed",
+                                        "route_refresh_request_received": 0,
+                                        "route_refresh_request_sent": 0,
+                                        "accepted_prefixes": 26,
+                                        "best_paths": 13,
+                                        "exact_no_prefixes_denied": 0,
+                                        "cummulative_no_prefixes_denied": 0,
+                                        "prefix_advertised": 6,
+                                        "prefix_suppressed": 0,
+                                        "prefix_withdrawn": 2,
+                                        "maximum_prefix_max_prefix_no": 1048576,
+                                        "maximum_prefix_warning_only": True,
+                                        "maximum_prefix_threshold": "75%",
+                                        "maximum_prefix_restart": 0,
+                                        "eor_status": "was received during read-only mode",
+                                        "last_synced_ack_version": 0,
+                                        "last_ack_version": 177,
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True,
+                                        "additional_routes_local_label": "Unicast SAFI"
+                                    },
+                                    "ipv6 labeled-unicast": {
                                         "neighbor_version": 141,
                                         "update_group": "0.2",
                                         "filter_group": "0.1",
@@ -7792,7 +7847,7 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 141,
                                         "additional_paths_operation": "None",
-                                        "additional_routes_local_label": "Unicast SAFI"
+                                        "send_multicast_attributes": True
                                     },
                                     "l2vpn evpn": {
                                         "neighbor_version": 367,
@@ -7819,7 +7874,8 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                         "eor_status": "was received during read-only mode",
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 367,
-                                        "additional_paths_operation": "None"
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True
                                     }
                                 },
                                 "bgp_session_transport": {
@@ -8091,6 +8147,31 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                 "outbound_message": "3",
                                 "address_family": {
                                     "ipv4 unicast": {
+                                        "neighbor_version": 177,
+                                        "update_group": "0.2",
+                                        "filter_group": "0.1",
+                                        "refresh_request_status": "No Refresh request being processed",
+                                        "route_refresh_request_received": 0,
+                                        "route_refresh_request_sent": 0,
+                                        "accepted_prefixes": 26,
+                                        "best_paths": 11,
+                                        "exact_no_prefixes_denied": 0,
+                                        "cummulative_no_prefixes_denied": 0,
+                                        "prefix_advertised": 6,
+                                        "prefix_suppressed": 0,
+                                        "prefix_withdrawn": 2,
+                                        "maximum_prefix_max_prefix_no": 1048576,
+                                        "maximum_prefix_warning_only": True,
+                                        "maximum_prefix_threshold": "75%",
+                                        "maximum_prefix_restart": 0,
+                                        "eor_status": "was received during read-only mode",
+                                        "last_synced_ack_version": 0,
+                                        "last_ack_version": 177,
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True,
+                                        "additional_routes_local_label": "Unicast SAFI"
+                                    },
+                                    "ipv6 labeled-unicast": {
                                         "neighbor_version": 141,
                                         "update_group": "0.2",
                                         "filter_group": "0.1",
@@ -8112,7 +8193,7 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 141,
                                         "additional_paths_operation": "None",
-                                        "additional_routes_local_label": "Unicast SAFI"
+                                        "send_multicast_attributes": True
                                     },
                                     "l2vpn evpn": {
                                         "neighbor_version": 367,
@@ -8139,7 +8220,8 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
                                         "eor_status": "was received during read-only mode",
                                         "last_synced_ack_version": 0,
                                         "last_ack_version": 367,
-                                        "additional_paths_operation": "None"
+                                        "additional_paths_operation": "None",
+                                        "send_multicast_attributes": True
                                     }
                                 },
                                 "bgp_session_transport": {

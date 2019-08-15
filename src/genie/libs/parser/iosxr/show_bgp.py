@@ -2271,6 +2271,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('as_override'): bool,
                                          Optional('default_originate'): bool,
                                          Optional('default_originate_route_map'): str,
+                                         Optional('send_multicast_attributes'): bool,
                                          Optional('soo'): str
                                          },
                                     },
@@ -2430,7 +2431,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p30 = re.compile(r'^Minimum *time *between *advertisement *runs *is *(?P<minimum_time_between_adv_runs>[0-9]+) *secs$')
         p31 = re.compile(r'^Inbound *message *logging *enabled, *(?P<inbound_message>[0-9]+) *messages *buffered$')
         p32 = re.compile(r'^Outbound *message *logging *enabled, *(?P<outbound_message>[0-9]+) *messages *buffered$')
-        p33 = re.compile(r'^For +Address +Family *: +(?P<address_family>[a-zA-Z0-9\s]+)$')
+        p33 = re.compile(r'^For +Address +Family *: +(?P<address_family>[\S\s]+)$')
         p34 = re.compile(r'^BGP +neighbor +version'
                             ' +(?P<neighbor_version>[0-9]+)$')
         p35 = re.compile(r'^Update +group: +(?P<update_group>[0-9\.]+) +Filter-group: +(?P<filter_group>[0-9\.]+) +(?P<refresh_request_status>[a-zA-Z\s]+)$')
@@ -2451,6 +2452,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p49 = re.compile(r'^Outstanding +version +objects: +current +(?P<outstanding_version_objects_current>[0-9]+), +max +(?P<outstanding_version_objects_max>[0-9]+)$')
         p50 = re.compile(r'^Additional-paths +operation: +(?P<additional_paths_operation>[a-zA-Z]+)$')
         p50_1 = re.compile(r'^Advertise +routes +with +local-label +via +(?P<additional_routes_local_label>[a-zA-Z\s]+)$')
+        p50_2 = re.compile(r'^Send +Multicast +Attributes$')
         p51 = re.compile(r'^Connections *(?P<bgp_state>\w+) *'
                             '(?P<num>[0-9]+)\; *dropped *(?P<connections_dropped>[0-9]+)$')
         p52 = re.compile(r'^Local *host: *(?P<local_host>[\w\.\:]+), *Local *port: *(?P<local_port>[0-9]+), *IF *Handle: *(?P<if_handle>[a-z0-9]+)$')
@@ -3098,6 +3100,12 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 additional_routes_local_label = str(m.groupdict()['additional_routes_local_label'])
 
                 sub_dict['address_family'][address_family]['additional_routes_local_label'] = additional_routes_local_label
+                continue
+
+            # Send Multicast Attributes
+            m = p50_2.match(line)
+            if m:
+                sub_dict['address_family'][address_family]['send_multicast_attributes'] = True
                 continue
 
             # Connections established 1; dropped 0
