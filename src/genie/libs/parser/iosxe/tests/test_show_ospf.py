@@ -8543,6 +8543,43 @@ class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        show ip ospf segment-routing global-block
+
+                    OSPF Router with ID (1.1.1.1) (Process ID 1)
+        
+        OSPF Segment Routing Global Blocks in Area 0
+        
+          Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
+        
+         *1.1.1.1         No
+          2.2.2.2         No
+          3.3.3.3         No
+    '''}
+
+    golden_parsed_output_2 = {
+        'process_id': {
+            1: {
+                'router_id': '1.1.1.1',
+                'area': 0,
+                'routers': {
+                    '1.1.1.1': {
+                        'router_id': '1.1.1.1',
+                        'sr_capable': 'No'
+                    },
+                    '2.2.2.2': {
+                        'router_id': '2.2.2.2',
+                        'sr_capable': 'No'
+                    },
+                    '3.3.3.3': {
+                        'router_id': '3.3.3.3',
+                        'sr_capable': 'No'
+                    }
+                }
+            }
+        }
+    }
+
     def test_show_ip_ospf_segment_routing_empty(self):
         self.maxDiff= None
         self.device = Mock(**self.empty_output)
@@ -8563,6 +8600,13 @@ class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
         obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
         parsed_output = obj.parse(process_id=1234)
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ip_ospf_segment_routing_pid2(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output_2)
+        obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=1234)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class test_show_ip_ospf_segment_routing(unittest.TestCase):
     ''' Test case for command:

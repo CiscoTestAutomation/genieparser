@@ -6602,10 +6602,10 @@ class ShowIpOspfSegmentRoutingGlobalBlockSchema(MetaParser):
                     Any(): {
                         'router_id': str,
                         'sr_capable': str,
-                        'sr_algorithm': str,
-                        'srgb_base': int,
-                        'srgb_range': int,
-                        'sid_label': str
+                        Optional('sr_algorithm'): str,
+                        Optional('srgb_base'): int,
+                        Optional('srgb_range'): int,
+                        Optional('sid_label'): str
                     }
                 }
             }
@@ -6645,9 +6645,11 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
 
         # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
         # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
-        p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+) +'
-                         '(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
-                         '(?P<srgb_range>\d+) +(?P<sid_label>\w+)$')
+        # *1.1.1.1         No
+        # 2.2.2.2         No
+        p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+)'
+                         '(?: +(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
+                         '(?P<srgb_range>\d+) +(?P<sid_label>\w+))?$')
 
         ret_dict = {}
 
@@ -6680,10 +6682,18 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
                 router_entry_dict = router_dict.setdefault('routers', {}).setdefault(group['router_id'], {})
                 router_entry_dict.update({'router_id': group['router_id']})
                 router_entry_dict.update({'sr_capable': group['sr_capable']})
-                router_entry_dict.update({'sr_algorithm': group['sr_algorithm']})
-                router_entry_dict.update({'srgb_base': int(group['srgb_base'])})
-                router_entry_dict.update({'srgb_range': int(group['srgb_range'])})
-                router_entry_dict.update({'sid_label': group['sid_label']})
+
+                if group['sr_algorithm']:
+                    router_entry_dict.update({'sr_algorithm': group['sr_algorithm']})
+
+                if group['srgb_base']:
+                    router_entry_dict.update({'srgb_base': int(group['srgb_base'])})
+
+                if group['srgb_range']:
+                    router_entry_dict.update({'srgb_range': int(group['srgb_range'])})
+
+                if group['sid_label']:
+                    router_entry_dict.update({'sid_label': group['sid_label']})
                 continue
 
         return ret_dict
