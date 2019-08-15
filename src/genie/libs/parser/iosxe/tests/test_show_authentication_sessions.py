@@ -68,6 +68,7 @@ class test_show_authentication_sessions(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\
+        show authentication sessions
         Interface    MAC Address     Method   Domain   Status         Session ID
         Gi1/0/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
         Gi1/0/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
@@ -138,7 +139,7 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
                 'mac_address': '0010.0010.0001', 
                 'ipv6_address': 'Unknown',
                 'ipv4_address': '192.0.2.1',
-                'user_name': 'auto601',
+                'user_name': 'genie123',
                 'status': 'Authorized',
                 'domain': 'DATA',
                 'current_policy': 'dot1x_dvlan_reauth_hm', 
@@ -149,13 +150,13 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
                 'acct_session_id': 'Unknown',
                 'handle': '0xDB003227',
                 'local_policies': {
-                    'CRITICAL_VLAN': {
-                        'template': 'CRITICAL_VLAN',
-                        'priority': 150,
+                    'template': {
+                        'CRITICAL_VLAN': {
+                            'priority': 150,
+                        }
                     },
-                    'Vlan': {
-                        'vlan_name': 'Vlan',
-                        'vlan_value': 130
+                    'vlan_group': {
+                        'vlan': 130,
                     }
                 },
                 'method_status': {
@@ -176,7 +177,7 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
               MAC Address:  0010.0010.0001
              IPv6 Address:  Unknown
              IPv4 Address:  192.0.2.1
-                User-Name:  auto601
+                User-Name:  genie123
                    Status:  Authorized
                    Domain:  DATA
            Oper host mode:  single-host
@@ -205,7 +206,7 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
                 'mac_address': '0010.0010.0001',   
                 'ipv6_address': 'Unknown',
                 'ipv4_address': '192.0.2.1',
-                'user_name': 'auto601',
+                'user_name': 'genie123',
                 'status': 'Authorized',
                 'domain': 'DATA',
                 'current_policy': 'dot1x_dvlan_reauth_hm',
@@ -216,13 +217,13 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
                 'acct_session_id': 'Unknown',
                 'handle': '0xDB003227',
                 'local_policies': {
-                    'CRITICAL_VLAN': {
-                        'template': 'CRITICAL_VLAN',
-                        'priority': 170,
+                    'template': {
+                        'CRITICAL_VLAN': {
+                            'priority': 170,
+                        }
                     },
-                    'Vlan': {
-                        'vlan_name': 'Vlan',
-                        'vlan_value': 100
+                    'vlan_group': {
+                        'vlan': 100,
                     }
                 },
                 'method_status': {
@@ -243,7 +244,7 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
               MAC Address:  0010.0010.0001
              IPv6 Address:  Unknown
              IPv4 Address:  192.0.2.1
-                User-Name:  auto601
+                User-Name:  genie123
                    Status:  Authorized
                    Domain:  DATA
            Oper host mode:  single-host

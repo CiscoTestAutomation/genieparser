@@ -93,7 +93,7 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         # Gi1/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
         # Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
         p4 = re.compile(r'^(?P<interface>\S+) +'
-                         '(?P<client>[\w\.]+) +'
+                         '(?P<client>\w+\.\w+\.\w+) +'
                          '(?P<method>\w+) +'
                          '(?P<domain>\w+) +'
                          '(?P<status>\w+(?: +\w+)?) +'
@@ -155,12 +155,14 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                 'handle': str,
                 'current_policy': str,
                 'local_policies': {
-                    Any(): {
-                        Optional('template'): str,
-                        Optional('priority'): int,
-                        Optional('vlan_name'): str,
-                        Optional('vlan_value'): int,
+                    'template': {
+                        Any():{ 
+                            'priority': int,
+                        }
                     },
+                    'vlan_group': {
+                        'vlan': int,
+                    }
                 },
                 'method_status': {
                     Any(): {
@@ -259,10 +261,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                template_dict = intf_dict.setdefault('local_policies', {}).setdefault(group['template'], {})
-
-                template_dict.update({'template': group['template']})
-                template_dict.update({'priority': int(group['priority'])})
+                template_dict = intf_dict.setdefault('local_policies', {}).setdefault('template', {})
+                priority_dict = template_dict.setdefault(group['template'], {})
+                priority_dict.update({'priority': int(group['priority'])})
                 continue
 
 
@@ -270,10 +271,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                vlan_dict = intf_dict.setdefault('local_policies', {}).setdefault(group['vlan_name'],{})
-                
-                vlan_dict.update({'vlan_name': group['vlan_name']})
-                vlan_dict.update({'vlan_value': int(group['vlan_value'])})
+
+                vlan_dict = intf_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
+                vlan_dict.update({'vlan': int(group['vlan_value'])})
 
                 continue
 
