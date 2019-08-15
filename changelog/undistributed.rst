@@ -140,6 +140,9 @@
 * IOSXE
     * Updated ShowIpRouteWord
         * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
+* NXOS
+    * Updated ShowIpRoute
+        * Updated regex to match more varied output
 
 --------------------------------------------------------------------------------
                                 Mcast
