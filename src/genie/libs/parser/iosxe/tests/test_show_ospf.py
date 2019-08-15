@@ -8590,7 +8590,7 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
                         'codes': 'L',
                         'prefix': '1.1.1.1/32',
                         'adv_rtr_id': '1.1.1.1',
-                        'area_id': 8,
+                        'area_id': '0.0.0.8',
                         'type': 'Intra',
                         'algo': 0
                     },
@@ -8598,7 +8598,7 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
                         'sid': 2,
                         'prefix': '2.2.2.2/32',
                         'adv_rtr_id': '2.2.2.2',
-                        'area_id': 8,
+                        'area_id': '0.0.0.8',
                         'type': 'Intra',
                         'algo': 0
                     }

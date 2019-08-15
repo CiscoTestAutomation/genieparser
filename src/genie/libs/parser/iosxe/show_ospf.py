@@ -6597,7 +6597,7 @@ class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
                         Optional('codes'): str,
                         'prefix': str,
                         'adv_rtr_id': str,
-                        'area_id': int,
+                        'area_id': str,
                         'type': str,
                         'algo': int
                     }
@@ -6659,7 +6659,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                     
                 sid_dict.update({'prefix': group['prefix']})
                 sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
-                sid_dict.update({'area_id': int(group['area_id'])})
+                sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
                 sid_dict.update({'type': group['type']})
                 sid_dict.update({'algo': int(group['algo'])})
                 continue
