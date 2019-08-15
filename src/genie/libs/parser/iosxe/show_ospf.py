@@ -6914,7 +6914,8 @@ class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
                         'area_id': str,
                         'type': str,
                         'algo': int
-                    }
+                    },
+                    'total_entries': int
                 }
             }
         }
@@ -6946,6 +6947,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                         '(?P<area_id>\d+) +(?P<type>\w+) +(?P<algo>\d+)$')
 
         ret_dict = {}
+        sid_entries = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -6964,8 +6966,12 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                sid_entries += 1
 
-                sid_dict = process_dict.setdefault('sids', {}).setdefault(int(group['sid']), {})
+                sids_dict = process_dict.setdefault('sids', {})
+                sids_dict.update({'total_entries': sid_entries})
+
+                sid_dict = sids_dict.setdefault(int(group['sid']), {})
                 sid_dict.update({'sid': int(group['sid'])})
 
                 if group['codes']:

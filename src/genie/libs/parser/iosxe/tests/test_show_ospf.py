@@ -9031,7 +9031,8 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
                         'area_id': '0.0.0.8',
                         'type': 'Intra',
                         'algo': 0
-                    }
+                    },
+                    'total_entries': 2
                 }
             }
         }
