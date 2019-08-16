@@ -35,7 +35,8 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfSegmentRoutingGlobalBlock,
                                                ShowIpOspfFastRerouteTiLfa,
                                                ShowIpOspfSegmentRoutingProtectedAdjacencies,
-                                               ShowIpOspfSegmentRoutingSidDatabase)
+                                               ShowIpOspfSegmentRoutingSidDatabase,
+                                               ShowIpOspfSegmentRouting)
 
 
 # =====================================================================
@@ -9052,6 +9053,186 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+# =============================================
+# Unit test for 'show ip ospf segment-routing'
+# =============================================
+
+class test_show_ip_ospf_segment_routing(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf segment-routing             
+    
+                OSPF Router with ID (2.2.2.2) (Process ID 9996)
+    
+        Global segment-routing state: Enabled
+        
+        Segment Routing enabled:
+                Area    Topology name    Forwarding    Strict SPF   
+                    8    Base             MPLS          Capable
+            AS external    Base             MPLS          Not applicable
+        
+        SR Attributes
+            Prefer non-SR (LDP) Labels
+            Do not advertise Explicit Null
+        
+        Global Block (SRGB):
+            Range: 16000 - 23999
+            State: Created
+        
+        Local Block (SRLB):
+            Range: 15000 - 15999
+            State: Created
+        
+        Registered with SR App, client handle: 2
+        SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+        SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
+        SR algo 1 Connected map notifications active (handle 0x1), bitmask 0x1
+        SR algo 1 Active policy map notifications active (handle 0x3), bitmask 0xC
+        Registered with MPLS, client-id: 100
+        
+        Max labels: platform 16, available 13
+        Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+        mfi label reservation ack not pending
+        
+        Bind Retry timer not running
+        Adj Label Bind Retry timer not running
+        sr-app locks requested: srgb 0, srlb 0
+        TEAPP:
+        TE Router ID 2.2.2.2
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            9996: {
+                'router_id': '2.2.2.2',
+                'sr_attributes': {
+                    'sr_label_preferred': False,
+                    'advertise_explicit_null': False,
+                    },
+                'mfi_label_reservation_ack_pending': False,
+                'bind_retry_timer_running': False,
+                'adj_label_bind_retry_timer_running': False,
+                'global_segment_routing_state': 'Enabled',
+                'segment_routing_enabled': {
+                    'area': {
+                        '0.0.0.8': {
+                            'topology_name': 'Base',
+                            'forwarding': 'MPLS',
+                            'strict_spf': 'Capable',
+                            },
+                        'AS external': {
+                            'topology_name': 'Base',
+                            'forwarding': 'MPLS',
+                            'strict_spf': 'Not applicable',
+                            },
+                        },
+                    },
+                'global_block_srgb': {
+                    'range': {
+                        'start': 16000,
+                        'end': 23999,
+                        },
+                    'state': 'Created',
+                    },
+                'local_block_srlb': {
+                    'range': {
+                        'start': 15000,
+                        'end': 15999,
+                        },
+                    'state': 'Created',
+                    },
+                'registered_with': {
+                    'SR App': {
+                        'client_handle': 2,
+                        'sr_algo': {
+                            0: {
+                                'connected_map_notifications_active': {
+                                    'handle': '0x0',
+                                    'bit_mask': '0x1',
+                                    },
+                                'active_policy_map_notifications_active': {
+                                    'handle': '0x2',
+                                    'bit_mask': '0xC',
+                                    },
+                                },
+                            1: {
+                                'connected_map_notifications_active': {
+                                    'handle': '0x1',
+                                    'bit_mask': '0x1',
+                                    },
+                                'active_policy_map_notifications_active': {
+                                    'handle': '0x3',
+                                    'bit_mask': '0xC',
+                                    },
+                                },
+                            },
+                        },
+                    'MPLS': {
+                        'client_id': 100,
+                        },
+                    },
+                'max_labels': {
+                    'platform': 16,
+                    'available': 13,
+                    'pushed_by_ospf': {
+                        'uloop_tunnels': 10,
+                        'ti_lfa_tunnels': 10,
+                        },
+                    },
+                'srp_app_locks_requested': {
+                    'srgb': 0,
+                    'srlb': 0,
+                    },
+                'teapp': {
+                    'te_router_id': '2.2.2.2',
+                    },
+                },
+            },
+        }
+    
+    golden_output2 = {'execute.return_value': '''
+    show ip ospf segment-routing
+
+            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+
+    Global segment-routing state: Not configured
+    '''}
+
+    golden_parsed_output2 = {
+        'process_id': {
+            9996: {
+                'router_id': '1.1.1.1',
+                'sr_attributes': {
+                    'sr_label_preferred': True,
+                    'advertise_explicit_null': True,
+                    },
+                'mfi_label_reservation_ack_pending': True,
+                'bind_retry_timer_running': True,
+                'adj_label_bind_retry_timer_running': True,
+                },
+            },
+        }
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRouting(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
