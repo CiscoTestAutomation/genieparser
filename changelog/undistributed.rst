@@ -141,6 +141,8 @@
     * Added ShowIpOspfSegmentRoutingGlobalBlock for
         * show ip ospf segment-routing global-block
         * show ip ospf {process_id} segment-routing global-block
+    * Added ShowIpOspfSegmentRouting for:
+        * show ip ospf segment-routing
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -160,3 +162,11 @@
         added a key to cli command for Ops
     * Update ShowIpv6Mroute
         added a key to cli command for Ops
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowBgpAllNeighborsSchema
+    * Update ShowBgpNeighborSuperParser
+        updated regEx to handle different outputs
