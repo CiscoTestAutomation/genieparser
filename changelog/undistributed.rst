@@ -141,6 +141,8 @@
     * Added ShowIpOspfSegmentRoutingGlobalBlock for
         * show ip ospf segment-routing global-block
         * show ip ospf {process_id} segment-routing global-block
+    * Added ShowIpOspfSegmentRouting for:
+        * show ip ospf segment-routing
     * Update ShowIpOspfSegmentRoutingSidDatabase
         to handle missing keys
 
