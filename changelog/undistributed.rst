@@ -134,6 +134,13 @@
         * show ip ospf {process_id} segment-routing adjacency-sid
     * Added ShowIpOspfFastRerouteTiLfa for
         'show ip ospf fast-reroute ti-lfa'
+    * Added ShowIpOspfSegmentRoutingProtectedAdjacencies for
+        show ip ospf segment-routing protected-adjacencies
+    * Added ShowIpOspfSegmentRoutingSidDatabase for:
+        * show ip ospf segment-routing sid-database
+    * Added ShowIpOspfSegmentRoutingGlobalBlock for
+        * show ip ospf segment-routing global-block
+        * show ip ospf {process_id} segment-routing global-block
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -141,3 +148,15 @@
 * IOSXE
     * Updated ShowIpRouteWord
         * Added parsing ability for: 'SR Incoming Label', 'MPLS label', 'MPLS Flags', 'Repair Path'
+* NXOS
+    * Updated ShowIpRoute
+        * Updated regex to match more varied output
+
+--------------------------------------------------------------------------------
+                                Mcast
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpMroute
+        added a key to cli command for Ops
+    * Update ShowIpv6Mroute
+        added a key to cli command for Ops
