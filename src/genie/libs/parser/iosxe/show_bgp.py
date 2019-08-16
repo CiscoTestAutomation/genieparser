@@ -1611,7 +1611,7 @@ class ShowIpBgpDetail(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                         cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
                 else:
-                    return ret_dict   
+                    return ret_dict
             else:
                 return ret_dict
             # Execute command
@@ -1762,15 +1762,15 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
         if not vrf:
             vrf ='default'
 
-        if ('rd' in cmd and 'summary' in cmd and 
+        if ('rd' in cmd and 'summary' in cmd and
             output != '% RD does not match the default RD of any VRF'):
             obj = ShowVrf(device=self.device)
             show_vrf_output = obj.parse()
 
 
         if address_family.lower() not in ['ipv4 unicast', 'ipv6 unicast']:
-           
-            if ('all summary' in cmd and 
+
+            if ('all summary' in cmd and
                 output != '% RD does not match the default RD of any VRF'):
 
                 if 'vpnv4' in address_family:
@@ -1780,7 +1780,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                 else:
                     commands_list = ['show run | sec address-family ipv4 vrf',
                                      'show run | sec address-family ipv6 vrf']
-                
+
                 for command in commands_list:
                     out_vrf = self.device.execute(command)
 
@@ -1790,7 +1790,7 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                     rc2 = re.compile(r'neighbor\s+(?P<neighbor_address>\S+)\s+'
                                 'remote\-as\s+(?P<remote_as>\S+)')
 
-                    flag_address_family = False            
+                    flag_address_family = False
 
                     for line in out_vrf.splitlines():
                         line = line.strip()
@@ -2020,9 +2020,9 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
                                     break
                                 else:
                                     continue
-                                break                                
+                                break
                             else:
-                                vrf = 'default'                    
+                                vrf = 'default'
                     else:
                         vrf = 'default'
 
@@ -2266,7 +2266,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
             show_output = output
 
         # Call super
-        return super().cli(output=show_output, address_family=address_family, 
+        return super().cli(output=show_output, address_family=address_family,
                           vrf=vrf, cmd=cmd)
 
 # =====================================================
@@ -2292,7 +2292,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                    ]
 
     exclude = ['msg_rcvd', 'msg_sent', 'up_down']
-    
+
     def cli(self, address_family='', vrf='', rd='', output=None):
 
         if output is None:
@@ -2414,9 +2414,9 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         Optional('local_as'): int,
                         Optional('description'): str,
                         'shutdown': bool,
-                        'bgp_version': int,
-                        'router_id': str,
-                        'session_state': str,
+                        Optional('bgp_version'): int,
+                        Optional('router_id'): str,
+                        Optional('session_state'): str,
                         Optional('address_family'):
                             {Any():
                                 {Optional('session_state'): str,
@@ -2512,7 +2512,7 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                                 'out_queue_depth': int,
                                 },
                             Optional('multisession_messages'): {
-                                Any(): 
+                                Any():
                                     {'sent':
                                         {'opens': int,
                                         'updates': int,
@@ -2712,10 +2712,11 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # IOS output
         # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
+        # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
         p2_3 = re.compile(r'^BGP +neighbor +is +(?P<neighbor>(\S+)),'
                            '(?: +vrf +(?P<vrf>(\S+)),)?'
                            ' +remote +AS +(?P<remote_as>(\d+)),'
-                           ' +local +AS +(?P<local_as>(\d+)),'
+                           ' +local +AS +(?P<local_as>(\d+))(?:[\S\s]+),'
                            ' +(?P<link>(\S+)) +link$')
 
         # Description: router22222222
@@ -4030,7 +4031,7 @@ class ShowIpBgpAllNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchem
                    'show ip bgp {address_family} all neighbors {neighbor}',
                    ]
 
-    exclude = ['current_time', 'last_read', 'last_write', 'up_time', 'ackhold' , 'retrans', 'keepalives', 'total', 'total_data', 
+    exclude = ['current_time', 'last_read', 'last_write', 'up_time', 'ackhold' , 'retrans', 'keepalives', 'total', 'total_data',
                     'value', 'with_data', 'delrcvwnd', 'rcvnxt', 'rcvwnd', 'receive_idletime' , 'sent_idletime', 'sndnxt', 'snduna',
                     'uptime']
 
@@ -4094,7 +4095,7 @@ class ShowIpBgpNeighbors(ShowBgpNeighborSuperParser, ShowBgpAllNeighborsSchema):
                    'show ip bgp neighbors {neighbor}',
                    'show ip bgp neighbors',
                    ]
-    excude = ['current_time' , 'last_read' , 'last_write', 'up_time', 'ackhold', 'retrans', 'keepalives', 
+    excude = ['current_time' , 'last_read' , 'last_write', 'up_time', 'ackhold', 'retrans', 'keepalives',
                 'total', 'total_data' , 'value', 'with_data', 'delrcvwnd', 'rcvnxt', 'rcvwnd'
                 'receive_idletime', 'sent_idletime', 'sndnxt', 'snduna', 'uptime']
 
@@ -6052,11 +6053,11 @@ class ShowIpBgpNeighborsRoutes(ShowBgpAllNeighborsRoutesSuperParser, ShowBgpAllN
             # Build command
 
             if address_family and vrf:
-                cmd = self.cli_command[0].format(neighbor=neighbor, 
-                                                 address_family=address_family, 
+                cmd = self.cli_command[0].format(neighbor=neighbor,
+                                                 address_family=address_family,
                                                  vrf=vrf)
             elif address_family:
-                cmd = self.cli_command[1].format(neighbor=neighbor, 
+                cmd = self.cli_command[1].format(neighbor=neighbor,
                                                  address_family=address_family)
             else:
                 cmd = self.cli_command[2].format(neighbor=neighbor)
@@ -6704,42 +6705,42 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpBgpTemplatePeerPolicySchema):
 
         p1 = re.compile(r'^\s*Template:+(?P<template_id>[0-9\s\S\w]+),'
                         ' +index:(?P<index>[0-9]+).$')
-    
+
         p2 = re.compile(r'^\s*Local +policies:+(?P<local_policies>0x[0-9A-F]+),'
                         ' +Inherited +polices:+(?P<inherited_polices>0x[0-9A-F]+)$')
-    
+
         p3 = re.compile(r'^\s*Local +disable +policies:+(?P<local_disable_policies>0x[0-9A-F]+),'
                         ' +Inherited +disable +policies:+(?P<inherited_disable_polices>0x[0-9A-F]+)$')
-    
+
         p4 = re.compile(r'^\s*Locally +configured +policies:$')
-    
+
         p5 = re.compile(r'^\s*route-map +(?P<remote_map_in>[0-9a-zA-Z]+) +in$')
-    
+
         p6 = re.compile(r'^\s*route-map +(?P<route_map_out>[0-9a-zA-Z]+) +out$')
-    
+
         p7 = re.compile(r'^\s*default-originate +route-map'
                         ' +(?P<default_originate_route_map>[0-9a-zA-Z]+)$')
-    
+
         p8 = re.compile(r'^\s*soft-reconfiguration'
                         ' +(?P<soft_reconfiguration>[a-zA-Z]+)$')
-    
+
         p9 = re.compile(r'^\s*maximum-prefix'
                         ' +(?P<maximum_prefix_max_prefix_no>[0-9]+)'
                         ' ?(?P<maximum_prefix_threshold>[0-9]+)?'
                         ' +restart +(?P<maximum_prefix_restart>[0-9]+)$')
-    
+
         p10 = re.compile(r'^\s*as-override$')
-    
+
         p11 = re.compile(r'^\s*allowas-in +(?P<allowas_in_as_number>[0-9]+)$')
-    
+
         p12 = re.compile(r'^\s*route-reflector-client$')
-    
+
         p13 = re.compile(r'^\s*next-hop-self$')
-    
+
         p14 = re.compile(r'^\s*send-community +(?P<send_community>[\w]+)$')
-    
+
         p15 = re.compile(r'^\s*soo +(?P<soo>[\w\:\d]+)$')
-    
+
         p16 = re.compile(r'^\s*Inherited policies:$')
 
         # Init vars
@@ -7014,7 +7015,7 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParametersSchema):
         p7 = re.compile(r'^\s*For +vrf: +(?P<vrf_name>[\w\d]+)$')
 
         p8 = re.compile(r'^\s*% +dampening +not +enabled +for +vrf +(?P<vrf_name>[\d\w]+)$')
-            
+
         # Init vars
         parsed_dict = {}
         vrf_name = 'default'
