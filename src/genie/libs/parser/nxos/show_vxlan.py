@@ -30,7 +30,7 @@ from genie.libs.parser.utils.common import Common
 
 
 class ShowL2routeEvpnImetAllDetailSchema(MetaParser):
-    Schema = {
+    schema = {
         'vni': {
             Any(): {
                 'ip': {
@@ -68,39 +68,39 @@ class ShowL2routeEvpnImetAllDetail(ShowL2routeEvpnImetAllDetailSchema):
         # 201          20001       BGP   2018:1015::abcd:5678:1                  0       0          -       6    20001        2018:1015::abcd:5678:1                  32          
 
 
-        p1 = re.compile(r'^\s*(?P<topo_id>[\d]+) + (?P<vni>[\d]+)' 
+        p1 = re.compile(r'^(?P<topo_id>[\d]+) + (?P<vni>[\d]+)' 
                          ' + (?P<prod_type>[\w]+) * (?P<ip_addr>[\w\:]+)' 
                          ' + (?P<eth_tag_id>[\d]+) + + (?P<pmsi_flags>[\d]+)' 
                          ' + (?P<flags>[\w-]) + (?P<type>[\d]+) + (?P<vni_label>[\d]+)' 
-                         ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+) *$')
+                         ' + (?P<tunnel_id>[\w\:]+) + (?P<client_nfn>[\d]+)$')
 
         result_dict = {}
 
-
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                vni = group['vni']
+                vni = int(group['vni'])
                 ip = group['ip_addr']
-                vni_dict = result_dict.setdefault(vni, {}).setdefault(ip, {})
-                vni_dict['topo_id'] = group['topo_id']
+                vni_dict = result_dict.setdefault('vni', {}).\
+                            setdefault(vni, {}).\
+                            setdefault('ip', {}).\
+                            setdefault(ip, {})
+                
+                vni_dict['topo_id'] = int(group['topo_id'])
                 vni_dict['vni'] = vni
                 vni_dict['prod_type'] = group['prod_type']
                 vni_dict['ip_addr'] = ip
-                vni_dict['eth_tag_id'] = group['eth_tag_id']
-                vni_dict['pmsi_flags'] = group['pmsi_flags']
+                vni_dict['eth_tag_id'] = int(group['eth_tag_id'])
+                vni_dict['pmsi_flags'] = int(group['pmsi_flags'])
                 vni_dict['flags'] = group['flags']
-                vni_dict['type'] = group['type']
-                vni_dict['vni_label'] = group['vni_label']
+                vni_dict['type'] = int(group['type'])
+                vni_dict['vni_label'] = int(group['vni_label'])
                 vni_dict['tunnel_id'] = group['tunnel_id']
-                vni_dict['client_nfn'] = group['client_nfn']
-
+                vni_dict['client_nfn'] = int(group['client_nfn'])
+                continue
 
         return result_dict
 
@@ -1446,7 +1446,7 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # 201         0011.0100.0001 10.1.1.2       BGP    --            0         2018:1015::abcd:5678:1   
         p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)'
+                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)')
 
         for line in out.splitlines():
             if line:

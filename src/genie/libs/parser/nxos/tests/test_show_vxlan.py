@@ -41,48 +41,52 @@ class test_show_l2route_evpn_imet_all_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "20001": {
-            "2018:1015::abcd:1234:3": {
-                "client_nfn": "32",
-                "eth_tag_id": "0",
-                "flags": "-",
-                "ip_addr": "2018:1015::abcd:1234:3",
-                "pmsi_flags": "0",
-                "prod_type": "BGP",
-                "topo_id": "201",
-                "tunnel_id": "2018:1015::abcd:1234:3",
-                "type": "6",
-                "vni": "20001",
-                "vni_label": "20001"
+        'vni': {
+            20001: {
+                'ip': {
+                    '2018:1015::abcd:1234:3': {
+                        'topo_id': 201,
+                        'vni': 20001,
+                        'prod_type': 'BGP',
+                        'ip_addr': '2018:1015::abcd:1234:3',
+                        'eth_tag_id': 0,
+                        'pmsi_flags': 0,
+                        'flags': '-',
+                        'type': 6,
+                        'vni_label': 20001,
+                        'tunnel_id': '2018:1015::abcd:1234:3',
+                        'client_nfn': 32,
+                        },
+                    '2018:1015::abcd:5678:5': {
+                        'topo_id': 201,
+                        'vni': 20001,
+                        'prod_type': 'BGP',
+                        'ip_addr': '2018:1015::abcd:5678:5',
+                        'eth_tag_id': 0,
+                        'pmsi_flags': 0,
+                        'flags': '-',
+                        'type': 6,
+                        'vni_label': 20001,
+                        'tunnel_id': '2018:1015::abcd:5678:5',
+                        'client_nfn': 32,
+                        },
+                    '2018:1015::abcd:5678:1': {
+                        'topo_id': 201,
+                        'vni': 20001,
+                        'prod_type': 'VXLAN',
+                        'ip_addr': '2018:1015::abcd:5678:1',
+                        'eth_tag_id': 0,
+                        'pmsi_flags': 0,
+                        'flags': '-',
+                        'type': 6,
+                        'vni_label': 20001,
+                        'tunnel_id': '2018:1015::abcd:5678:1',
+                        'client_nfn': 64,
+                        },
+                    },
+                },
             },
-            "2018:1015::abcd:5678:1": {
-                "client_nfn": "64",
-                "eth_tag_id": "0",
-                "flags": "-",
-                "ip_addr": "2018:1015::abcd:5678:1",
-                "pmsi_flags": "0",
-                "prod_type": "VXLAN",
-                "topo_id": "201",
-                "tunnel_id": "2018:1015::abcd:5678:1",
-                "type": "6",
-                "vni": "20001",
-                "vni_label": "20001"
-            },
-            "2018:1015::abcd:5678:5": {
-                "client_nfn": "32",
-                "eth_tag_id": "0",
-                "flags": "-",
-                "ip_addr": "2018:1015::abcd:5678:5",
-                "pmsi_flags": "0",
-                "prod_type": "BGP",
-                "topo_id": "201",
-                "tunnel_id": "2018:1015::abcd:5678:5",
-                "type": "6",
-                "vni": "20001",
-                "vni_label": "20001"
-            }
         }
-    }
 
     golden_output = {'execute.return_value': '''
     Leaf1# show l2route evpn imet all detail
@@ -106,6 +110,7 @@ class test_show_l2route_evpn_imet_all_detail(unittest.TestCase):
         obj = ShowL2routeEvpnImetAllDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
 
 # =================================
 #  Unit test for 'show nve peers'

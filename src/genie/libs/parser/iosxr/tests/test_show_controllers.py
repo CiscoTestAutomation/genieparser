@@ -24,7 +24,7 @@ class test_show_controllers_coherentDSP(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        "CoherentDSP 0/0/1/2": {
+        "0/0/1/2": {
             "port": "CoherentDSP 0/0/1/2",
             "controller_state": "Up",
             "inherited_secondary_state": "Normal",
@@ -115,7 +115,7 @@ class test_show_controllers_optics(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        "Optics 0/0/0/0": {
+        "0/0/0/0": {
             "name": "Optics 0/0/0/0",
             "controller_state": "Up",
             "transport_admin_state": "In Service",
@@ -244,7 +244,7 @@ class test_show_controllers_optics(unittest.TestCase):
     '''}
 
     golden_parsed_output2 = {
-        "Optics 0/0/1/2": {
+        "0/0/1/2": {
             "name": "Optics 0/0/1/2",
             "controller_state": "Up",
             "transport_admin_state": "In Service",
@@ -393,7 +393,7 @@ class test_show_controllers_optics(unittest.TestCase):
     '''}
 
     golden_parsed_output3 = {
-        "Optics 0/0/0/20": {
+        "0/0/0/20": {
             "name": "Optics 0/0/0/20",
             "controller_state": "Down",
             "transport_admin_state": "In Service",
@@ -425,7 +425,7 @@ class test_show_controllers_optics(unittest.TestCase):
     '''}
 
     golden_parsed_output4 = {
-        "Optics 0/0/0/18": {
+        "0/0/0/18": {
             "name": "Optics 0/0/0/18",
             "controller_state": "Up",
             "transport_admin_state": "In Service",
