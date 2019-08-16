@@ -157,6 +157,15 @@
         * Updated regex to match more varied output
 
 --------------------------------------------------------------------------------
+                                Authentication Sessions
+--------------------------------------------------------------------------------
+* IOSXE
+   * ShowAuthenticationSessions for: 
+        * 'show authentication sessions'
+        * 'show authentication sessions interface {interface}'
+   * ShowAuthenticationSessionsInterfaceDetails for:
+        * 'show authentication sessions interface {interface} details'
+--------------------------------------------------------------------------------
                                 Mcast
 --------------------------------------------------------------------------------
 * IOSXE
