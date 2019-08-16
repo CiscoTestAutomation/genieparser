@@ -181,4 +181,10 @@
     * Update ShowBgpAllNeighborsSchema
     * Update ShowBgpNeighborSuperParser
         updated regEx to handle different outputs
-        
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowL2routeEvpnImetAllDetail for
+        'show l2route evpn imet all detail'
