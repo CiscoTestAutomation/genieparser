@@ -162,3 +162,11 @@
         added a key to cli command for Ops
     * Update ShowIpv6Mroute
         added a key to cli command for Ops
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowBgpAllNeighborsSchema
+    * Update ShowBgpNeighborSuperParser
+        updated regEx to handle different outputs
