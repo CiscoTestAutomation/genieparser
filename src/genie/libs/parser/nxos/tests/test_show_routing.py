@@ -1508,6 +1508,7 @@ class test_show_ip_route(unittest.TestCase):
             *via 10.186.3.1, Eth1/3, [115/50], 01:01:16, isis-1, L1
         10.19.31.31/32, ubest/mbest: 1/0
             *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
+            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
 
         IP Route Table for VRF "VRF1"
         '*' denotes best ucast next-hop
@@ -1798,12 +1799,12 @@ class test_show_ip_route(unittest.TestCase):
                                 'active':True,
                                 'ubest':1,
                                 'mbest':0,
-                                'metric':0,
-                                'route_preference':200,
-                                'process_id':'100',
+                                'metric':41,
+                                'route_preference':110,
+                                'process_id':'1',
                                 'tag':100,
-                                'source_protocol':'bgp',
-                                'source_protocol_status':'internal',
+                                'source_protocol':'ospf',
+                                'source_protocol_status':'intra',
                                 'next_hop':{
                                     'next_hop_list':{
                                         1:{
@@ -1813,6 +1814,15 @@ class test_show_ip_route(unittest.TestCase):
                                             'source_protocol_status':'internal',
                                             'best_ucast_nexthop':True,
                                             'updated':'01:01:12'
+                                        },
+                                        2: {
+                                            'index': 2,
+                                            'next_hop': '10.1.3.1',
+                                            'source_protocol': 'ospf',
+                                            'source_protocol_status': 'intra',
+                                            'best_ucast_nexthop': True,
+                                            'updated': '01:01:18',
+                                            'outgoing_interface': 'Ethernet1/2'
                                         }
                                     }
                                 }

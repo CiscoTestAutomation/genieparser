@@ -2352,6 +2352,82 @@ tag    tag or VC   or Tunnel Id      switched   interface
 
     '''}
 
+    golden_parsed_output_5 = {
+        'vrf': 
+            {'default': 
+                {'local_label': 
+                    {16: 
+                        {'outgoing_label_or_vc': 
+                            {'Pop Label': 
+                                {'prefix_or_tunnel_id': 
+                                    {'200.0.3.2-A': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet0/1/2': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.3.2'}}}}}}},
+                    17: 
+                        {'outgoing_label_or_vc': 
+                            {'Pop Label': 
+                                {'prefix_or_tunnel_id': 
+                                    {'200.0.2.2-A': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet0/1/1': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.2.2'}}}}}}},
+                    18: 
+                        {'outgoing_label_or_vc': 
+                            {'Pop Label': 
+                                {'prefix_or_tunnel_id': 
+                                    {'200.0.1.2-A': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet0/1/0': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.1.2'}}}}}}},
+                    19: 
+                        {'outgoing_label_or_vc': 
+                            {'Pop Label': 
+                                {'prefix_or_tunnel_id': 
+                                    {'200.0.0.2-A': 
+                                        {'outgoing_interface': 
+                                            {'TenGigabitEthernet0/0/0': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.0.2'}}}}}}},
+                    16002: 
+                        {'outgoing_label_or_vc': 
+                            {'Pop Label': 
+                                {'prefix_or_tunnel_id': 
+                                    {'2.2.2.2/32': 
+                                        {'outgoing_interface': 
+                                            {'GigabitEthernet0/1/0': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.1.2'},
+                                            'GigabitEthernet0/1/1': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.2.2'},
+                                            'GigabitEthernet0/1/2': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.3.2'},
+                                            'TenGigabitEthernet0/0/0': 
+                                                {'bytes_label_switched': 0,
+                                                'next_hop': '200.0.0.2'}}}}}}}}}}}
+
+    golden_output_5 = {'execute.return_value':'''
+        PE1#show mpls forwarding-table
+        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop   
+        Label      Label      or Tunnel Id     Switched      interface             
+        16         Pop Label  200.0.3.2-A      0             Gi0/1/2    200.0.3.2  
+        17         Pop Label  200.0.2.2-A      0             Gi0/1/1    200.0.2.2  
+        18         Pop Label  200.0.1.2-A      0             Gi0/1/0    200.0.1.2  
+        19         Pop Label  200.0.0.2-A      0             Te0/0/0    200.0.0.2  
+        16002      Pop Label  2.2.2.2/32       0             Te0/0/0    200.0.0.2  
+                   Pop Label  2.2.2.2/32       0             Gi0/1/0    200.0.1.2  
+                   Pop Label  2.2.2.2/32       0             Gi0/1/1    200.0.2.2  
+                   Pop Label  2.2.2.2/32       0             Gi0/1/2    200.0.3.2  
+         
+        A  - Adjacency SID
+        PE1#
+        '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTable(device=self.dev1)
@@ -2385,6 +2461,13 @@ tag    tag or VC   or Tunnel Id      switched   interface
         obj = ShowMplsForwardingTable(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_5)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 class test_show_mpls_interface(unittest.TestCase):
     dev1 = Device(name='empty')

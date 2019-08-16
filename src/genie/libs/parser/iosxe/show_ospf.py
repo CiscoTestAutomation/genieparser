@@ -22,6 +22,10 @@ IOSXE parsers for the following show commands:
     * show ip ospf traffic
     * show ip ospf interface brief
     * show ip ospf {process_id} segment-routing adjacency-sid
+    * show ip ospf fast-reroute ti-lfa
+    * show ip ospf segment-routing protected-adjacencies
+    * show ip ospf segment-routing global-block
+    * show ip ospf {process_id} segment-routing global-block
 
 '''
 
@@ -34,6 +38,108 @@ from netaddr import IPAddress, IPNetwork
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
+
+# ===========================================================
+# Schema for:
+#   * 'show ip ospf {process_id} segment-routing local-block'
+# ===========================================================
+class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf {process_id} segment-routing local-block'
+    '''
+
+    schema = {
+        'instance':
+            {Any():
+                {'router_id': str,
+                'areas':
+                    {Any():
+                        {'router_id':
+                            {Any():
+                                {'sr_capable': str,
+                                'srlb_base': int,
+                                'srlb_range': int,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ===========================================================
+# Schema for:
+#   * 'show ip ospf {process_id} segment-routing local-block'
+# ===========================================================
+class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchema):
+
+    ''' Parser for:
+        * 'show ip ospf {process_id} segment-routing local-block'
+    '''
+
+    cli_command = 'show ip ospf {process_id} segment-routing local-block'
+
+    def cli(self, process_id, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process_id=process_id))
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<pid>(\S+))\)$')
+
+        # OSPF Segment Routing Local Blocks in Area 8
+        p2 = re.compile(r'^OSPF +Segment +Routing +Local +Blocks +in +Area'
+                         ' +(?P<area>(\d+))$')
+
+        # Router ID        SR Capable   SRLB Base   SRLB Range
+        # --------------------------------------------------------
+        # *1.1.1.1          Yes          15000       1000
+        # 2.2.2.2          Yes          15000       1000
+        p3 = re.compile(r'^(?:(?P<value>(\*)))?(?P<router_id>(\S+))'
+                         ' +(?P<sr_capable>(Yes|No)) +(?P<srlb_base>(\d+))'
+                         ' +(?P<srlb_range>(\d+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                inst_dict = ret_dict.setdefault('instance', {}).\
+                                     setdefault(group['pid'], {})
+                inst_dict['router_id'] = group['router_id']
+                continue
+
+            # OSPF Segment Routing Local Blocks in Area 8
+            m = p2.match(line)
+            if m:
+                area_dict = inst_dict.setdefault('areas', {}).\
+                    setdefault(str(IPAddress(str(m.groupdict()['area']))), {})
+                continue
+
+            # Router ID        SR Capable   SRLB Base   SRLB Range
+            # --------------------------------------------------------
+            # *1.1.1.1          Yes          15000       1000
+            # 2.2.2.2          Yes          15000       1000
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                smgt_dict = area_dict.setdefault('router_id', {}).\
+                                      setdefault(group['router_id'], {})
+                smgt_dict['sr_capable'] = group['sr_capable']
+                smgt_dict['srlb_base'] = int(group['srlb_base'])
+                smgt_dict['srlb_range'] = int(group['srlb_range'])
+                continue
+
+        return ret_dict
 
 
 # ==================
@@ -6581,3 +6687,414 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 continue
 
         return parsed_output
+
+# =================================================
+# Schema for:
+#   * 'show ip ospf fast-reroute ti-lfa'
+# =================================================
+
+class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
+    """Schema for show ip ospf fast-reroute ti-lfa
+    """
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'ospf_object': {
+                    Any(): {
+                        'ipfrr_enabled': str,
+                        'sr_enabled': str,
+                        'ti_lfa_configured': str,
+                        'ti_lfa_enabled': str,
+                    }
+                }
+            }
+        }
+    }
+
+# =================================================
+# Parser for:
+#   * 'show ip ospf fast-reroute ti-lfa'
+# =================================================
+
+class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
+    """Parser for show ip ospf fast-reroute ti-lfa
+    """
+
+    cli_command = 'show ip ospf fast-reroute ti-lfa'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)'
+            '\) +\(Process +ID +(?P<process_id>\d+)\)')
+
+        # Process ID (65109)       no       yes      no          no
+        # Area 8                  no       yes      no          no
+        # Loopback0               no       no       no          no
+        # GigabitEthernet0/1/2    no       yes      no          no
+        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)'
+                         '( +\(inactive\))?) +(?P<sr_enabled>(yes|no)( +\(inactive\))?) '
+                         '+(?P<ti_lfa_configured>(yes|no)( +\(inactive\))?) +'
+                         '(?P<ti_lfa_enabled>(yes|no)( +\(inactive\))?)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                setdefault(process_id, {})
+                process_id_dict.update({'router_id': router_id})
+                ospf_object_dict = process_id_dict.setdefault('ospf_object', {})
+                continue
+
+            # Process ID (65109)       no       yes      no          no
+            # Area 8                  no       yes      no          no
+            # Loopback0               no       no       no          no
+            # GigabitEthernet0/1/2    no       yes      no          no
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_object = group['ospf_object'].strip()
+                ipfrr_enabled = group['ipfrr_enabled']
+                sr_enabled = group['sr_enabled']
+                ti_lfa_configured = group['ti_lfa_configured']
+                ti_lfa_enabled = group['ti_lfa_enabled']
+
+                ospf_object = ospf_object_dict.setdefault(ospf_object, {})
+
+                ospf_object.update({'ipfrr_enabled': ipfrr_enabled })
+                ospf_object.update({'sr_enabled': sr_enabled })
+                ospf_object.update({'ti_lfa_configured': ti_lfa_configured })
+                ospf_object.update({'ti_lfa_enabled': ti_lfa_enabled })
+                continue
+
+        return ret_dict
+
+
+# ===============================================================
+# Schema for 'show ip ospf segment-routing protected-adjacencies'
+# ===============================================================
+
+class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
+
+    ''' Schema for show ip ospf segment-routing protected-adjacencies
+    '''
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'areas': {
+                    Any(): {
+                        'router_id': str,
+                        'neighbors': {
+                            Any(): {
+                                'interfaces': {
+                                    Any(): {
+                                        'address': str,
+                                        'adj_sid': int,
+                                        'backup_nexthop': str,
+                                        'backup_interface': str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ========================================================
+# Parser for:
+#   * 'show ip ospf segment-routing protected-adjacencies'
+# ========================================================
+
+class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema):
+    """ Parser for show ip ospf segment-routing protected-adjacencies
+    """
+
+    cli_command = 'show ip ospf segment-routing protected-adjacencies'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        p1 = re.compile(r'OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
+                         'Process +ID +(?P<process_id>\d+)\)')
+
+        # Area with ID (8)
+        p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
+
+        # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+        p3 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +'
+                         '(?P<adj_sid>\d+) +(?P<backup_nexthop>\S+) +(?P<backup_interface>\S+)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                    setdefault(process_id, {})
+                continue
+
+            # Area with ID (8)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                area_id = str(IPAddress(str(group['area_id'])))
+                area_dict = process_id_dict.setdefault('areas', {}). \
+                                setdefault(area_id, {})
+                area_dict.update({'router_id': router_id})
+                continue
+
+            # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_id = group['neighbor_id']
+                interface = group['interface']
+                address = group['address']
+                adj_sid = int(group['adj_sid'])
+                backup_nexthop = group['backup_nexthop']
+                backup_interface = group['backup_interface']
+                neighbor_dict = area_dict.setdefault('neighbors', {}). \
+                                    setdefault(neighbor_id, {}). \
+                                    setdefault('interfaces', {}). \
+                                    setdefault(Common.convert_intf_name(interface), {})
+
+                neighbor_dict.update({'address': address})
+                neighbor_dict.update({'adj_sid': adj_sid})
+                neighbor_dict.update({'backup_nexthop': backup_nexthop})
+                neighbor_dict.update({'backup_interface':
+                    Common.convert_intf_name(backup_interface)})
+                continue
+
+        return ret_dict
+
+
+class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
+    ''' Schema for commands:
+            * show ip ospf segment-routing sid-database
+    '''
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'sids': {
+                    Any(): {
+                        'sid': int,
+                        Optional('codes'): str,
+                        'prefix': str,
+                        'adv_rtr_id': str,
+                        'area_id': str,
+                        'type': str,
+                        'algo': int
+                    },
+                    'total_entries': int
+                }
+            }
+        }
+    }
+
+
+class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSchema):
+    """ Parser for commands:
+            * show ip ospf segment-routing sid-database
+    """
+
+    cli_command = ['show ip ospf segment-routing sid-database']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
+                        '\(Process +ID +(?P<pid>\d+)\)$')
+
+        # 1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0
+        # 2               2.2.2.2/32          2.2.2.2          8        Intra     0
+        p2 = re.compile(r'^(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
+                        '(?P<prefix>[\d\.\/]+) +(?P<adv_rtr_id>[\d\.]+) +'
+                        '(?P<area_id>\d+) +(?P<type>\w+) +(?P<algo>\d+)$')
+
+        ret_dict = {}
+        sid_entries = 0
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                process_dict = ret_dict.setdefault('process_id', {}).setdefault(int(group['pid']), {})
+                process_dict.update({'router_id': group['router_id']})
+                continue
+
+            # 1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0
+            # 2               2.2.2.2/32          2.2.2.2          8        Intra     0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sid_entries += 1
+
+                sids_dict = process_dict.setdefault('sids', {})
+                sids_dict.update({'total_entries': sid_entries})
+
+                sid_dict = sids_dict.setdefault(int(group['sid']), {})
+                sid_dict.update({'sid': int(group['sid'])})
+
+                if group['codes']:
+                    sid_dict.update({'codes': group['codes']})
+
+                sid_dict.update({'prefix': group['prefix']})
+                sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
+                sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                sid_dict.update({'type': group['type']})
+                sid_dict.update({'algo': int(group['algo'])})
+                continue
+
+        return ret_dict
+
+# =====================================================
+# Schema for:
+#   * 'show ip ospf {pid} segment-routing global-block'
+# =====================================================
+class ShowIpOspfSegmentRoutingGlobalBlockSchema(MetaParser):
+    """ Schema for commands:
+            * show ip ospf {pid} segment-routing global-block
+    """
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'area': int,
+                'routers': {
+                    Any(): {
+                        'router_id': str,
+                        'sr_capable': str,
+                        Optional('sr_algorithm'): str,
+                        Optional('srgb_base'): int,
+                        Optional('srgb_range'): int,
+                        Optional('sid_label'): str
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================================
+# Parser for:
+#   * 'show ip ospf {pid} segment-routing global-block'
+# =====================================================
+class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSchema):
+    """ Parser for commands:
+            * show ip ospf {pid} segment-routing global-block
+    """
+
+    cli_command = ['show ip ospf segment-routing global-block',
+                   'show ip ospf {process_id} segment-routing global-block']
+
+    def cli(self, process_id=None, output=None):
+
+        if not output:
+            if not process_id:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(process_id=process_id)
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # OSPF Router with ID (1.1.1.1) (Process ID 1234)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
+                         '\(Process +ID +(?P<pid>\d+)\)$')
+
+        # OSPF Segment Routing Global Blocks in Area 3
+        p2 = re.compile(r'^OSPF +Segment +Routing +Global +Blocks +in +Area (?P<area>\d+)$')
+
+        # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+        # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+        # *1.1.1.1         No
+        # 2.2.2.2         No
+        p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+)'
+                         '(?: +(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
+                         '(?P<srgb_range>\d+) +(?P<sid_label>\w+))?$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (1.1.1.1) (Process ID 1234)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_dict = ret_dict.setdefault('process_id', {}).setdefault(int(group['pid']), {})
+                router_dict.update({'router_id': group['router_id']})
+                continue
+
+            # OSPF Segment Routing Global Blocks in Area 3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_dict.update({'area': int(group['area'])})
+                continue
+
+            # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+            # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_entry_dict = router_dict.setdefault('routers', {}).setdefault(group['router_id'], {})
+                router_entry_dict.update({'router_id': group['router_id']})
+                router_entry_dict.update({'sr_capable': group['sr_capable']})
+
+                if group['sr_algorithm']:
+                    router_entry_dict.update({'sr_algorithm': group['sr_algorithm']})
+
+                if group['srgb_base']:
+                    router_entry_dict.update({'srgb_base': int(group['srgb_base'])})
+
+                if group['srgb_range']:
+                    router_entry_dict.update({'srgb_range': int(group['srgb_range'])})
+
+                if group['sid_label']:
+                    router_entry_dict.update({'sid_label': group['sid_label']})
+                continue
+
+        return ret_dict
