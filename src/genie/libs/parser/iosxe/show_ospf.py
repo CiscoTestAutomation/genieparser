@@ -6905,7 +6905,7 @@ class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
         'process_id': {
             Any(): {
                 'router_id': str,
-                'sids': {
+                Optional('sids'): {
                     Any(): {
                         'sid': int,
                         Optional('codes'): str,
