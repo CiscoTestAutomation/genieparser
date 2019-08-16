@@ -87,8 +87,10 @@ IOSXE parsers for the following show commands:
     ----------------------------------------------------------------------------
     * show bgp all neighbors {neighbor} policy
     ----------------------------------------------------------------------------
+    * show ip bgp template peer-session
     * show ip bgp template peer-session {template_name}
     ----------------------------------------------------------------------------
+    * show ip bgp template peer-policy
     * show ip bgp template peer-policy {template_name}
     ----------------------------------------------------------------------------
     * show ip bgp all dampening parameters
@@ -2412,9 +2414,11 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                         Optional('local_as'): int,
                         Optional('description'): str,
                         'shutdown': bool,
-                        'bgp_version': int,
-                        'router_id': str,
-                        'session_state': str,
+                        Optional('bgp_version'): int,
+                        Optional('router_id'): str,
+                        Optional('session_state'): str,
+                        Optional('no_prepend'): bool,
+                        Optional('replace_as'): bool,
                         Optional('address_family'):
                             {Any():
                                 {Optional('session_state'): str,
@@ -2710,11 +2714,12 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # IOS output
         # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
+        # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
         p2_3 = re.compile(r'^BGP +neighbor +is +(?P<neighbor>(\S+)),'
                            '(?: +vrf +(?P<vrf>(\S+)),)?'
                            ' +remote +AS +(?P<remote_as>(\d+)),'
-                           ' +local +AS +(?P<local_as>(\d+)),'
-                           ' +(?P<link>(\S+)) +link$')
+                           ' +local +AS +(?P<local_as>\d+)(?P<no_prepend> no-prepend)?'
+                           '(?P<replace_as> replace-as)?, +(?P<link>(\S+)) +link$')
 
         # Description: router22222222
         p3 = re.compile(r'^Description: +(?P<description>(\S+))$')
@@ -3121,6 +3126,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 continue
 
             # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101, external link
+            # BGP neighbor is 10.51.1.101,  remote AS 300,  local AS 101 no-prepend replace-as, external link
             m = p2_3.match(line)
             if m:
                 group = m.groupdict()
@@ -3141,6 +3147,14 @@ class ShowBgpNeighborSuperParser(MetaParser):
                 nbr_dict['shutdown'] = False
                 if group['local_as']:
                     nbr_dict['local_as'] = int(group['local_as'])
+                if group['replace_as']:
+                    nbr_dict['replace_as'] = True
+                else:
+                    nbr_dict['replace_as'] = False
+                if group['no_prepend']:
+                    nbr_dict['no_prepend'] = True
+                else:
+                    nbr_dict['no_prepend'] = False
 
                 # af_dict
                 if af_name:
@@ -6397,12 +6411,16 @@ class ShowIpBgpTemplatePeerSession(ShowIpBgpTemplatePeerSessionSchema):
 
     ''' Parser for "show ip bgp template peer-session {template_name}" '''
 
-    cli_command = 'show ip bgp template peer-session {template_name}'
+    cli_command = ['show ip bgp template peer-session {template_name}', 'show ip bgp template peer-session']
 
     def cli(self, template_name="", output=None):
         # show ip bgp template peer-session <WORD>
         if output is None:
-            out = self.device.execute(self.cli_command.format(template_name=template_name))
+            if template_name:
+                cmd = self.cli_command[0].format(template_name=template_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -6683,12 +6701,16 @@ class ShowIpBgpTemplatePeerPolicy(ShowIpBgpTemplatePeerPolicySchema):
 
     ''' Parser for "show ip bgp template peer-policy {template_name}" '''
 
-    cli_command = 'show ip bgp template peer-policy {template_name}'
+    cli_command = ['show ip bgp template peer-policy {template_name}', 'show ip bgp template peer-policy']
 
     def cli(self, template_name="", output=None):
         # show ip bgp template peer-policy <WORD>
         if output is None:
-            out = self.device.execute(self.cli_command.format(template_name=template_name))
+            if template_name:
+                cmd = self.cli_command[0].format(template_name=template_name)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 

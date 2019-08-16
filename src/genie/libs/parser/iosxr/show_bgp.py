@@ -38,7 +38,9 @@ IOSXR parsers for the following show commands:
     * 'show bgp vrf-db vrf all'
     * 'show bgp l2vpn evpn'
     * 'show bgp l2vpn evpn advertised'
-
+    * 'show bgp l2vpn evpn neighbors'
+    * 'show bgp l2vpn evpn neighbors <neighbor>'
+    
 """
 
 # Python
@@ -2269,6 +2271,7 @@ class ShowBgpInstanceNeighborsDetailSchema(MetaParser):
                                          Optional('as_override'): bool,
                                          Optional('default_originate'): bool,
                                          Optional('default_originate_route_map'): str,
+                                         Optional('send_multicast_attributes'): bool,
                                          Optional('soo'): str
                                          },
                                     },
@@ -2428,7 +2431,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p30 = re.compile(r'^Minimum *time *between *advertisement *runs *is *(?P<minimum_time_between_adv_runs>[0-9]+) *secs$')
         p31 = re.compile(r'^Inbound *message *logging *enabled, *(?P<inbound_message>[0-9]+) *messages *buffered$')
         p32 = re.compile(r'^Outbound *message *logging *enabled, *(?P<outbound_message>[0-9]+) *messages *buffered$')
-        p33 = re.compile(r'^For +Address +Family *: +(?P<address_family>[a-zA-Z0-9\s]+)$')
+        p33 = re.compile(r'^For +Address +Family *: +(?P<address_family>[\S\s]+)$')
         p34 = re.compile(r'^BGP +neighbor +version'
                             ' +(?P<neighbor_version>[0-9]+)$')
         p35 = re.compile(r'^Update +group: +(?P<update_group>[0-9\.]+) +Filter-group: +(?P<filter_group>[0-9\.]+) +(?P<refresh_request_status>[a-zA-Z\s]+)$')
@@ -2449,6 +2452,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
         p49 = re.compile(r'^Outstanding +version +objects: +current +(?P<outstanding_version_objects_current>[0-9]+), +max +(?P<outstanding_version_objects_max>[0-9]+)$')
         p50 = re.compile(r'^Additional-paths +operation: +(?P<additional_paths_operation>[a-zA-Z]+)$')
         p50_1 = re.compile(r'^Advertise +routes +with +local-label +via +(?P<additional_routes_local_label>[a-zA-Z\s]+)$')
+        p50_2 = re.compile(r'^Send +Multicast +Attributes$')
         p51 = re.compile(r'^Connections *(?P<bgp_state>\w+) *'
                             '(?P<num>[0-9]+)\; *dropped *(?P<connections_dropped>[0-9]+)$')
         p52 = re.compile(r'^Local *host: *(?P<local_host>[\w\.\:]+), *Local *port: *(?P<local_port>[0-9]+), *IF *Handle: *(?P<if_handle>[a-z0-9]+)$')
@@ -2480,10 +2484,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 instance_number = int(m.groupdict()['instance_number'])
                 instance = instance.replace("'","")
                 # Set instance
-                if 'instance' not in ret_dict:
-                    ret_dict['instance'] = {}
-                if instance not in ret_dict['instance']:
-                    ret_dict['instance'][instance] = {}
+                ret_dict.setdefault('instance', {}).setdefault(instance, {})
                 continue
 
             # BGP neighbor is 10.16.2.2
@@ -2492,6 +2493,7 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
             if m:
                 neighbor = str(m.groupdict()['neighbor'])
                 vrf = 'default'
+                ret_dict.setdefault('instance', {}).setdefault(instance, {})
                 # Set vrf
                 if 'vrf' not in ret_dict['instance'][instance]:
                     ret_dict['instance'][instance]['vrf'] = {}
@@ -3098,6 +3100,12 @@ class ShowBgpInstanceNeighborsDetail(ShowBgpInstanceNeighborsDetailSchema):
                 additional_routes_local_label = str(m.groupdict()['additional_routes_local_label'])
 
                 sub_dict['address_family'][address_family]['additional_routes_local_label'] = additional_routes_local_label
+                continue
+
+            # Send Multicast Attributes
+            m = p50_2.match(line)
+            if m:
+                sub_dict['address_family'][address_family]['send_multicast_attributes'] = True
                 continue
 
             # Connections established 1; dropped 0
@@ -5653,5 +5661,26 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
 
         return result
 
+
+class ShowBgpL2vpnEvpnNeighbors(ShowBgpInstanceNeighborsDetail):
+
+    """Parser for show bgp l2vpn evpn neighbors
+                  show bgp l2vpn evpn neighbors <neighbor>
+    """
+
+    cli_command = ['show bgp l2vpn evpn neighbors', 'show bgp l2vpn evpn neighbors {neighbor}']
+
+    def cli(self, neighbor='', output=None):
+        if output is None:
+            if neighbor:
+                out = self.device.execute(self.cli_command[1].format(neighbor=neighbor))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        result_dict = super().cli(output=out)
+
+        return result_dict
 
 # vim: ft=python ts=8 sw=4 et

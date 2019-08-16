@@ -437,11 +437,15 @@ class ShowPagpCountersSchema(MetaParser):
 class ShowPagpCounters(ShowPagpCountersSchema):
     """Parser for :
       show pagp counters"""
-    cli_command = 'show pagp {channel_group} counters'
+    cli_command = ['show pagp {channel_group} counters', 'show pagp counters']
 
-    def cli(self, channel_group="",output=None):
+    def cli(self, channel_group="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(channel_group=channel_group))
+            if channel_group:
+                cmd = self.cli_command[0].format(channel_group=channel_group)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
 

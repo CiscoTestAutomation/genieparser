@@ -8,9 +8,6 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional
 
-
-
-
 # ====================================================
 #  distributor class for show ip route
 # ====================================================
@@ -1148,6 +1145,7 @@ class ShowIpRouteWordSchema(MetaParser):
                 Optional('net'): str,
                 Optional('redist_via'): str,
                 Optional('redist_via_tag'): str,
+                Optional('sr_incoming_label'): str,
                 Optional('update'): {
                     'from': str,
                     'interface': str,
@@ -1160,7 +1158,15 @@ class ShowIpRouteWordSchema(MetaParser):
                         Optional('age'): str,
                         Optional('interface'): str,
                         Optional('metric'): str,
-                        Optional('share_count'): str
+                        Optional('share_count'): str,
+                        Optional('mpls_label'): str,
+                        Optional('mpls_flags'): str,
+                        'prefer_non_rib_labels': bool,
+                        'merge_labels': bool,
+                        Optional('repair_path'): {
+                            'repair_path': str,
+                            'via': str
+                        }
                     }
                 }
             }
@@ -1202,17 +1208,22 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p1 = re.compile(r'^Routing +entry +for +'
                          '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
                          '(, +(?P<net>[\w\s]+))?$')
+
         # Known via "connected", distance 0, metric 0 (connected)
-        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?P<type>[\w\- ]+)?,? *.*$')
+        # Known via "eigrp 1", distance 130, metric 10880, type internal
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:type (?P<type>[\w\- ]+))?,? *.*$')
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
                          '(?P<redist_via_tag>\d+)?$')
         p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
                          'on +(?P<interface>[\w\.\/\-]+), +'
                          '(?P<age>[\w\.\:]+) +ago$')
-        p5 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(, +'
-                         'from +(?P<from>[\w\.]+), +'
-                         '(?P<age>[\w\.\:]+) +ago, +'
-                         'via +(?P<interface>[\w\.\/\-]+))?$')
+
+        # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
+        # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
+        p5 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+), +'
+                         '(?P<age>[\w\.\:]+) +ago, +via +(?P<interface>\S+)(?:, +'
+                         '(?P<rib_labels>prefer-non-rib-labels))?(?:, +'
+                         '(?P<merge_labels>merge-labels))?)?$')
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                          'traffic +share +count +is +(?P<share_count>\d+)$')
 
@@ -1224,6 +1235,18 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
         p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')
+
+        # MPLS label: implicit-null
+        p11 = re.compile(r'^MPLS +label: +(?P<mpls_label>\S+)$')
+
+        # MPLS Flags: NSF
+        p12 = re.compile(r'^MPLS +Flags: +(?P<mpls_flags>\S+)$')
+
+        # SR Incoming Label: 00000
+        p13 = re.compile(r'^SR +Incoming +Label: +(?P<sr_incoming_label>\d+)')
+
+        # Repair Path: 0.0.0.0, via GigabitEthernet0
+        p14 = re.compile(r'^Repair +Path: +(?P<path>[\d\.]+), +via +(?P<via>\w+)')
 
         # initial variables
         ret_dict = {}
@@ -1247,6 +1270,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Known via "eigrp 1", distance 130, metric 10880, type internal
             # Known via "rip", distance 120, metric 2
             # Known via "connected", distance 0, metric 0 (connected)
+            # Known via "eigrp 1", distance 130, metric 10880, type internal
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -1272,12 +1296,25 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
             # * 192.168.151.2, from 192.168.151.2, 2w3d ago, via Vlan101
             # * 10.69.1.2
+            # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
+            # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 index += 1
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
-                path_dict.update({k:v for k,v in group.items() if v})
+
+                if group['nexthop']:
+                    path_dict.update({'nexthop': group['nexthop']})
+                if group['from']:
+                    path_dict.update({'from': group['from']})
+                if group['age']:
+                    path_dict.update({'age': group['age']})
+                if group['interface']:
+                    path_dict.update({'interface': group['interface']})
+
+                path_dict.update({'prefer_non_rib_labels': True if group['rib_labels'] else False})
+                path_dict.update({'merge_labels': True if group['merge_labels'] else False})
                 continue
 
             # Route metric is 10880, traffic share count is 1
@@ -1325,6 +1362,34 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             if m:
                 path_dict['age'] = m.groupdict()['age']
                 continue
+
+            # MPLS label: implicit-null
+            m = p11.match(line)
+            if m:
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({'mpls_label': m.groupdict()['mpls_label']})
+                continue
+
+            # MPLS Flags: NSF
+            m = p12.match(line)
+            if m:
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                path_dict.update({'mpls_flags': m.groupdict()['mpls_flags']})
+                continue
+
+            # SR Incoming Label: 00000
+            m = p13.match(line)
+            if m:
+                entry_dict.update({'sr_incoming_label': m.groupdict()['sr_incoming_label']})
+                continue
+
+            # Repair Path: 0.0.0.0, via GigabitEthernet0
+            m = p14.match(line)
+            if m:
+                path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {}).setdefault('repair_path', {})
+                path_dict.update({'repair_path': m.groupdict()['path']})
+                path_dict.update({'via': m.groupdict()['via']})
+
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None
         return ret_dict
@@ -1399,31 +1464,36 @@ class ShowIpCefSchema(MetaParser):
     """Schema for show ip cef show ip cef
                   show ip cef vrf <vrf>
                   show ip cef <prefix>
+                  show ip cef <prefix> detail
                   show ip cef vrf <vrf> <prefix>"""
-    schema ={
-        'vrf':{
-            Any():{
-                'address_family':{
-                    Any():{
-                        'prefix': {
-                            Any(): {
-                                'nexthop': {
-                                    Any(): {
-                                        Optional('outgoing_interface'): {
-                                             Any(): {
-                                                 Optional('local_label'): int,
-                                                 Optional('outgoing_label'): list,
-                                             }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    schema = {
+        'vrf':
+            {Any():
+                {'address_family':
+                    {Any():
+                        {'prefix':
+                            {Any():
+                                {'nexthop':
+                                    {Any():
+                                        {Optional('outgoing_interface'):
+                                            {Any():
+                                                {Optional('local_label'): int,
+                                                Optional('outgoing_label'): list,
+                                                Optional('repair'): str,
+                                                },
+                                            },
+                                        },
+                                    },
+                                Optional('epoch'): int,
+                                Optional('per_destination_sharing'): bool,
+                                Optional('sr_local_label_info'): str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         }
-    }
 
 # ====================================================
 #  parser  for show ip cef <ip>
@@ -1432,6 +1502,7 @@ class ShowIpCef(ShowIpCefSchema):
     """parser for show ip cef
                   show ip cef vrf <vrf>
                   show ip cef <prefix>
+                  show ip cef <prefix> detail
                   show ip cef vrf <vrf> <prefix>"""
 
     cli_command = ['show ip cef',
@@ -1466,13 +1537,26 @@ class ShowIpCef(ShowIpCefSchema):
 
         # 10.169.197.104/30
         # 2001:DB8:1:3::/64
-        p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)$')
+        # 2.2.2.2/32, epoch 2, per-destination sharing
+        p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)'
+                         '(?:, +epoch +(?P<epoch>(\d+)))?'
+                         '(?:, +(?P<sharing>(per-destination sharing)))?$')
+
+        # sr local label info: global/16002 [0x1B]
+        p1_1 = re.compile(r'^sr +local +label +info: +(?P<sr_local_label_info>(.*))$')
+
         #     nexthop 10.169.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
         #     nexthop 10.1.2.2 GigabitEthernet2.100
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
                        '( +label +(?P<outgoing_label>[\w\-\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
+
+        #     nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
+        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
+                           ' +label +\[(?P<outgoing_label>([0-9\|]+))\]'
+                           '\-\(local\:(?P<local_label>(\d+))\)$')
+
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
 
@@ -1484,11 +1568,15 @@ class ShowIpCef(ShowIpCefSchema):
         #                      10.2.3.3             GigabitEthernet3.100
         p5 = re.compile(r'^((?P<prefix>[\w\:\.]+[\/]+[\d]+) +)?(?P<nexthop>[\w\.]+)( +(?P<interface>[^a-z][\S]+))?$')
 
+        # repair: attached-nexthop 10.0.0.9 GigabitEthernet3
+        p6 = re.compile(r'^repair: +(?P<repair>(.*))$')
 
         for line in out.splitlines():
             line = line.strip()
 
             # 10.169.197.104/30
+            # 2001:DB8:1:3::/64
+            # 2.2.2.2/32, epoch 2, per-destination sharing
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1502,6 +1590,16 @@ class ShowIpCef(ShowIpCefSchema):
                                           setdefault(address_family,{}).\
                                           setdefault('prefix',{}).\
                                           setdefault(group['prefix'], {})
+                if group['epoch']:
+                    prefix_dict['epoch'] = int(group['epoch'])
+                if group['sharing']:
+                    prefix_dict['per_destination_sharing'] = True
+                continue
+
+            # sr local label info: global/16002 [0x1B]
+            m = p1_1.match(line)
+            if m:
+                prefix_dict['sr_local_label_info'] = m.groupdict()['sr_local_label_info']
                 continue
 
             #   nexthop 10.169.197.93 TenGigabitEthernet0/2/0 label 22-(local:2043)
@@ -1518,7 +1616,19 @@ class ShowIpCef(ShowIpCefSchema):
                     nexthop_dict.update({'local_label': int(group['local_label'])})
                 if group['outgoing_label']:
                     nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
+                continue
 
+            #     nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop_dict = prefix_dict.setdefault('nexthop', {}).\
+                                           setdefault(group['nexthop'], {}).\
+                                           setdefault('outgoing_interface', {}).\
+                                           setdefault(group['interface'], {})
+
+                nexthop_dict.update({'local_label': int(group['local_label'])})
+                nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
                 continue
 
             # attached to GigabitEthernet3.100
@@ -1567,6 +1677,12 @@ class ShowIpCef(ShowIpCefSchema):
                                 setdefault(group['interface'], {})
                 continue
 
+            # repair: attached-nexthop 10.0.0.9 GigabitEthernet3
+            m = p6.match(line)
+            if m:
+                nexthop_dict.update({'repair': m.groupdict()['repair']})
+                continue
+
         return result_dict
 
 
@@ -1601,6 +1717,27 @@ class ShowIpv6Cef(ShowIpCef):
             output = output
 
         return super().cli(cmd=cmd, vrf=vrf, prefix=prefix, output=output)
+
+
+# =========================================
+#  Parser for 'show ip cef <prefix> detail'
+# =========================================
+class ShowIpCefDetail(ShowIpCef):
+    ''' Parser for:
+        * 'show ip cef <prefix> detail'
+    '''
+
+    cli_command = 'show ip cef {prefix} detail'
+
+    def cli(self, prefix, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(prefix=prefix))
+        else:
+            output = output
+
+        return super().cli(prefix=prefix, output=output)
+
 
 # ====================================================
 #  schema for show ip route summary
@@ -1777,4 +1914,3 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
                 vrf_rs_dict['bgp'][instance].update(group)
                 continue
         return ret_dict
-

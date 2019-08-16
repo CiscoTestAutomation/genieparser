@@ -1,7 +1,8 @@
 """show_lldp.py
    supported commands:
      *  show lldp
-     *  show lldp entry [<WORD>|*]
+     *  show lldp entry *
+     *  show lldp entry [<WORD>]
      *  show lldp interface [<WORD>]
      *  show lldp neighbors detail
      *  show lldp traffic
@@ -119,7 +120,7 @@ class ShowLldpEntrySchema(MetaParser):
 
 
 class ShowLldpEntry(ShowLldpEntrySchema):
-    """Parser for show lldp entry [<WORD>|*]"""
+    """Parser for show lldp entry {* | word}"""
 
     CAPABILITY_CODES = {'R': 'router',
                         'B': 'mac_bridge',
@@ -130,15 +131,15 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                         'S': 'station_only',
                         'O': 'other'}
 
-    cli_command = 'show lldp entry {entry}'
+    cli_command = ['show lldp entry {entry}', 'show lldp entry *']
 
-    def cli(self, entry='*',output=None):
+    def cli(self, entry='',output=None):
         if output is None:
-            # get output from device
-            if hasattr(self, 'CMD'):
-                out = self.device.execute(self.CMD)
+            if entry:
+                cmd = self.cli_command[0].format(entry=entry)
             else:
-                out = self.device.execute(self.cli_command.format(entry=entry))
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
         else:
             out = output
         # initial return dictionary
