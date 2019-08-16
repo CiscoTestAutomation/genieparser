@@ -9150,24 +9150,20 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
                         'sr_algo': {
                             0: {
                                 'connected_map_notifications_active': {
-                                    'active': True,
                                     'handle': '0x0',
                                     'bit_mask': '0x1',
                                     },
                                 'active_policy_map_notifications_active': {
-                                    'active': True,
                                     'handle': '0x2',
                                     'bit_mask': '0xC',
                                     },
                                 },
                             1: {
                                 'connected_map_notifications_active': {
-                                    'active': True,
                                     'handle': '0x1',
                                     'bit_mask': '0x1',
                                     },
                                 'active_policy_map_notifications_active': {
-                                    'active': True,
                                     'handle': '0x3',
                                     'bit_mask': '0xC',
                                     },

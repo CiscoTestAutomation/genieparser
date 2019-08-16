@@ -7146,7 +7146,6 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
                         Optional('sr_algo'): {
                             Any(): {
                                 Any(): {
-                                    'active': bool,
                                     'handle': str,
                                     'bit_mask': str,
                                 }
@@ -7165,9 +7164,9 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
                 },
                 'mfi_label_reservation_ack_pending': bool,
                 'bind_retry_timer_running': bool,
-                Optional('bind_retry_timer_left'): bool,
+                Optional('bind_retry_timer_left'): str,
                 Optional('adj_label_bind_retry_timer_running'): bool,
-                Optional('adj_label_bind_retry_timer_left'): bool,
+                Optional('adj_label_bind_retry_timer_left'): str,
                 Optional('srp_app_locks_requested'): {
                     'srgb': int,
                     'srlb': int
@@ -7368,7 +7367,6 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                                 setdefault(algo, {}). \
                                 setdefault(notifications, {})
                 
-                sr_algo_dict.update({'active': True})
                 sr_algo_dict.update({'handle': handle})
                 sr_algo_dict.update({'bit_mask': bitmask})
                 continue
