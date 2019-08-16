@@ -35,8 +35,7 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfSegmentRoutingGlobalBlock,
                                                ShowIpOspfFastRerouteTiLfa,
                                                ShowIpOspfSegmentRoutingProtectedAdjacencies,
-                                               ShowIpOspfSegmentRoutingSidDatabase,
-                                               ShowIpOspfSegmentRouting)
+                                               ShowIpOspfSegmentRoutingSidDatabase)
 
 
 # =====================================================================
@@ -8986,7 +8985,6 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-
 class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
     """ Test case for command:
           * show ip ospf segment-routing sid-database
@@ -9039,19 +9037,40 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
         }
     }
 
-    def test_show_ip_ospf_segment_routing_sid_database_empty(self):
+    golden_parsed_output2 = {
+        'process_id': {
+            9996: {
+                'router_id': '1.1.1.1',
+                },
+            },
+        }
+
+    golden_output2 = {'execute.return_value': '''
+        show ip ospf segment-routing sid-database
+
+            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+    '''}
+
+    def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    def test_show_ip_ospf_segment_routing_sid_database(self):
+    def test_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 # =============================================
 # Unit test for 'show ip ospf segment-routing'
