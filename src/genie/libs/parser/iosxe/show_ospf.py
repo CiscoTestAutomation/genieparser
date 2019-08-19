@@ -16,6 +16,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf database summary
     * show ip ospf database external
     * show ip ospf database opaque-area
+    * show ip ospf database opaque-area self-originate
     * show ip ospf mpls ldp interface
     * show ip ospf mpls traffic-eng link
     * show ip ospf max-metric
@@ -3618,6 +3619,9 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         ret_dict = {}
         af = 'ipv4'
         default_mt_id = 0
+        capabilities_flag = False
+        tlv_type_flag = False
+        sub_tlv_type_flag = False
 
         # Router
         # Network Link
@@ -3699,7 +3703,9 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
                             ' +(?P<link_data>(\S+))$')
        
-        p21 = re.compile(r'^MTID:? +(?P<mtid>(\d+))(\t+|\s+)(M|m)etric(s?): +(?P<metric>(\d+))$')
+        # MTID 32 Metrics: 1
+        # MTID   : 0
+        p21 = re.compile(r'MTID\s*:*\s*(?P<mtid>\d+)\s*(?:(Metrics*\s*:*\s*(?P<metric>\d+)))?')
        
         p21_1 = re.compile(r'^Number +of +MTID +metrics: +(?P<num>(\d+))$')
        
@@ -3715,7 +3721,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p26_2 = re.compile(r'^Area +Border +Router$')
        
-        p27 = re.compile(r'^Link +connected +to +(?P<link>(.*))$')
+        p27 = re.compile(r'^Link +connected +to\s*\:*\s+(?P<link>(.*))$')
        
         p28 = re.compile(r'^Link +ID *: +(?P<id>(\S+))$')
        
@@ -3747,6 +3753,57 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                             ' +(?P<eag_length>(\d+))$')
        
         p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
+
+        # Neighbor Address : 200.0.0.2
+        p38 = re.compile(r'Neighbor\s+Address\s*:\s*(?P<neighbor_address>\S+)')
+
+        # TLV Type: Router Information
+        # TLV Type: Segment Routing Algorithm
+        p39 = re.compile(r'TLV\s+Type\s*:\s*(?P<tlv_type>.+)')
+
+        # Algorithm: SPF
+        # Algorithm: Strict SPF
+        p40 = re.compile(r'Algo(?:(rithm))?\s*:\s*(?P<algorithm>.+)')
+
+        # Range Size: 1000
+        p41 = re.compile(r'Range\s+Size\s*:\s*(?P<range_size>\d+)')
+
+        # Flags  : L-Bit, V-bit
+        p42 = re.compile(r'Flags\s*\:\s*(?P<flags>.+)')        
+
+        # Weight : 0
+        p44 = re.compile(r'Weight\s*:\s*(?P<weight>\d+)')
+
+        # Label  : 19
+        p45 = re.compile(r'Label\s*:\s*(?P<label>\d+)')       
+        
+        # (Link Data) Interface IP address: 200.0.0.1
+        p46 = re.compile(r'\(Link\s+Data\)\s+Interface\s+IP\s+address\s*:\s*(?P<link_data>\S+)')
+
+        # Prefix    : 1.1.1.1/32
+        p47 = re.compile(r'Prefix\s*:\s*(?P<prefix>\S+)')
+
+        # AF        : 0
+        p48 = re.compile(r'AF\s*:\s*(?P<af>\S+)')
+
+        # Route-type: Intra
+        p49 = re.compile(r'Route\-type\s*:\s*(?P<route_type>.+)')
+
+        # Sub-TLV Type: Remote Intf Addr
+        # Sub-TLV Type: Local / Remote Intf ID
+        p50 = re.compile(r'Sub\-TLV\s+Type\s*:\s*(?P<sub_tlv_type>.+)')
+
+        # Remote Interface Address   : 192.168.0.1
+        p51 = re.compile(r'Remote\s+Interface\s+Address\s*:\s*(?P<remote_interface_address>\S+)')
+
+        # Local Interface ID   : 20
+        p52 = re.compile(r'Local\s+Interface\s+ID\s*:\s*(?P<local_interface_id>\S+)')
+
+        # Remote Interface ID   : 20
+        p53 = re.compile(r'Remote\s+Interface\s+ID\s*:\s*(?P<remote_interface_id>\S+)')
+
+        # SID   : 1
+        p54 = re.compile(r'SID\s*:\s*(?P<sid>\S+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3838,6 +3895,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # LS age: 1565
             m = p3_2.match(line)
             if m:
+                tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
@@ -3978,7 +4036,13 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Length: 36
             m = p9.match(line)
             if m:
-                header_dict['length'] = int(m.groupdict()['length'])
+                length = int(m.groupdict()['length'])
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['length'] = length
+                elif tlv_type_flag:
+                    tlv_type_dict['length'] = length
+                
+                header_dict['length'] = length
                 continue
 
             # Network Mask: /32
@@ -4123,6 +4187,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 link_id = str(m.groupdict()['link_id'])
 
+                if tlv_type_flag:
+                    tlv_type_dict['link_id'] = link_id
+                    continue
+
                 # Create dict structures
                 if 'links' not in db_dict:
                     db_dict['links'] = {}
@@ -4159,9 +4227,15 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 continue
 
             # MTID 32 Metrics: 1
+            # MTID   : 0
             m = p21.match(line)
             if m:
                 mtid = int(m.groupdict()['mtid'])
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['mtid'] = int(mtid)
+                    continue
+
                 if db_type == 'router':
                     if mtid not in db_dict['links'][link_id]['topologies']:
                         db_dict['links'][link_id]['topologies'][mtid] = {}
@@ -4214,7 +4288,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # MPLS TE router ID : 10.4.1.1
             m = p25.match(line)
             if m:
-                header_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
+                db_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
                 continue
 
             # AS Boundary Router
@@ -4401,7 +4475,220 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     ['groups'][group_num]['value'] = int(m.groupdict()['val'])
                 continue
 
+            # Neighbor Address : 200.0.0.2
+            m = p38.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['neighbor_address'] = \
+                    m.groupdict()['neighbor_address']
 
+                continue
+
+            # TLV Type: Extended Link
+            m = p39.match(line)
+            if m:
+                tlv_type_flag = True
+                sub_tlv_type_flag = False
+
+                group = m.groupdict()
+                tlv_type = group['tlv_type']
+                
+                tlv_types_index = db_dict.get('link_tlvs', {}).get(link_tlv_counter, {}).get('tlv_types', {}).keys()
+
+                if tlv_types_index:
+                    index = max(tlv_types_index) + 1
+                else:
+                    index = 1
+                
+                tlv_type_dict = db_dict\
+                    .setdefault('link_tlvs', {})\
+                    .setdefault(link_tlv_counter, {})\
+                    .setdefault('tlv_types', {})\
+                    .setdefault(index, {})
+
+                tlv_type_dict['tlv_type_name'] = tlv_type
+
+                continue
+
+            if 'Capabilities' in line:                
+                capabilities_flag = True
+                continue
+
+            if capabilities_flag:
+
+                if not line:
+                    capabilities_flag = False
+                    continue
+
+                capabilities_index = tlv_type_dict.get('capabilities', {}).keys()
+
+                if capabilities_index:
+                    index = max(capabilities_index) + 1
+                else:
+                    index = 1
+
+                capabilities_dict = tlv_type_dict\
+                    .setdefault('capabilities', {})\
+                    .setdefault(index, {})                    
+
+                capabilities_dict['capability'] = line.strip()
+
+            # Algorithm: SPF
+            # Algorithm: Strict SPF
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                algorithm = group['algorithm']
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['algorithm'] = algorithm
+                    continue
+
+                algorithms_index = tlv_type_dict.get('algorithms', {}).keys()
+                if algorithms_index:
+                    index = max(algorithms_index) + 1
+                else:
+                    index = 1
+
+                algorithm_dict = tlv_type_dict.setdefault('algorithms', {}).setdefault(index, {})
+                algorithm_dict['name'] = algorithm
+
+                continue
+
+            # Range Size: 1000
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                range_size = group['range_size']
+                tlv_type_dict['range_size'] = int(range_size)
+
+                continue
+
+            # Flags  : L-Bit, V-bit
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                flags = group['flags']
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['flags'] = flags
+                    continue 
+
+                tlv_type_dict['flags'] = flags
+
+                continue
+
+            # Weight : 0
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                weight = group['weight']
+
+                tlv_type_dict['weight'] = int(weight)
+
+                continue
+
+            # Label  : 19
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                label = group['label']
+
+                sub_tlv_types_dict['label'] = int(label)                                
+
+                continue
+
+            # (Link Data) Interface IP address: 200.0.0.1
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                tlv_type_dict['link_data'] = group['link_data']
+
+                continue
+
+            # Prefix    : 1.1.1.1/32
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+
+                tlv_type_dict['prefix'] = prefix
+
+                continue
+
+            # AF        : 0
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                af = group['af']
+
+                tlv_type_dict['af'] = af
+
+                continue
+
+            # Route-type: Intra
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                route_type = group['route_type']            
+
+                tlv_type_dict['route_type'] = route_type
+
+                continue
+
+            # Sub-TLV Type: Remote Intf Addr
+            # Sub-TLV Type: Local / Remote Intf ID
+            m = p50.match(line)
+            if m:
+                sub_tlv_type_flag = True
+                group = m.groupdict()
+                sub_tlv_type = group['sub_tlv_type']
+
+                sub_tlv_types_index = tlv_type_dict.get('sub_tlv_types', {}).keys()
+                if sub_tlv_types_index:
+                    index = max(sub_tlv_types_index) + 1
+                else:
+                    index = 1
+
+                sub_tlv_types_dict = tlv_type_dict.setdefault('sub_tlv_types', {}).setdefault(index, {})
+
+                sub_tlv_types_dict['sub_tlv_type_name'] = sub_tlv_type
+
+                continue
+
+            # Remote Interface Address   : 192.168.0.1
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                remote_interface_address = group['remote_interface_address']
+                sub_tlv_types_dict['remote_interface_address'] = remote_interface_address
+                continue
+
+            # Local Interface ID   : 20
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                local_interface_id = group['local_interface_id']
+                sub_tlv_types_dict['local_interface_id'] = local_interface_id
+                continue            
+
+            # Remote Interface ID   : 20
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                remote_interface_id = group['remote_interface_id']
+                sub_tlv_types_dict['remote_interface_id'] = remote_interface_id
+                continue
+
+            # SID   : 1
+            m = p54.match(line)                        
+            if m:
+                group = m.groupdict()
+                sid = group['sid']
+
+                sub_tlv_types_dict['sid'] = sid
+                continue
+            
+             
         return ret_dict
 
 
@@ -4768,7 +5055,8 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
 class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
 
     ''' Schema for:
-        * 'show ip ospf database opaque-area
+        * 'show ip ospf database opaque-area'
+        * 'show ip ospf database opaque-area self-originate'
     '''
 
     schema = {
@@ -4801,11 +5089,11 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                     'length': int,
                                                                     Optional('opaque_type'): int,
                                                                     'opaque_id': int,
-                                                                    Optional('fragment_number'): int,
-                                                                    Optional('mpls_te_router_id'): str},
+                                                                    Optional('fragment_number'): int,},
                                                                 'body': 
                                                                     {'opaque': 
                                                                         {
+                                                                        Optional('mpls_te_router_id'): str,
                                                                         Optional('links'): {
                                                                             Any(): {
                                                                                 'link_id': str,
@@ -4820,8 +5108,49 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                         Optional('num_of_links'): int,
                                                                         Optional('link_tlvs'): 
                                                                             {Any(): 
-                                                                                {'link_type': int,
-                                                                                'link_name': str,
+                                                                                {Optional('link_type'): int,
+                                                                                Optional('link_name'): str,
+                                                                                Optional('tlv_types'): {
+                                                                                    Any(): {
+                                                                                        Optional('tlv_type_name'): str,
+                                                                                        Optional('length'): int,
+                                                                                        Optional('capabilities'): {
+                                                                                            Any(): {
+                                                                                                'capability': str
+                                                                                            }
+                                                                                        },
+                                                                                        Optional('algorithms'): {
+                                                                                            Any(): {
+                                                                                                'name': str
+                                                                                            }
+
+                                                                                        },
+                                                                                        Optional('prefix'): str,
+                                                                                        Optional('af'): str,
+                                                                                        Optional('route_type'): str,
+                                                                                        Optional('range_size'): int,
+                                                                                        Optional('flags'): str,                                                                                        
+                                                                                        Optional('weight'): int,
+                                                                                        Optional('link_data'): str,
+                                                                                        Optional('link_id'): str,                                                                                                                                                                                Optional('sub_tlv_types'): {
+                                                                                            Any(): {
+                                                                                                'sub_tlv_type_name': str,
+                                                                                                Optional('length'): int,
+                                                                                                Optional('flags'): str,
+                                                                                                Optional('mtid'): int,
+                                                                                                Optional('weight'): int,
+                                                                                                Optional('label'): int,
+                                                                                                Optional('remote_interface_address'): str,
+                                                                                                Optional('local_interface_id'): str,
+                                                                                                Optional('remote_interface_id'): str,
+                                                                                                Optional('algorithm'): str,
+                                                                                                Optional('sid'): str
+                                                                                            }
+                                                                                        }
+                                                                                    }
+
+                                                                                },
+                                                                                Optional('neighbor_address'): str,
                                                                                 Optional('link_id'): str,
                                                                                 Optional('te_metric'): int,
                                                                                 Optional('max_bandwidth'): int,
