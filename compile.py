@@ -56,7 +56,7 @@ if __name__ == '__main__':
     print(cisco_cythonized_mods)
 
     print('+%s+' %('-'*27))
-    print('| Removing cytohnized files |')
+    print('| Removing cythonized files |')
     print('+%s+' %('-'*27))
 
     for file in files:
