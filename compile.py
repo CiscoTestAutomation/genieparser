@@ -38,7 +38,7 @@ def generate_cython_modules(src_path, files, ignore_patterns = []):
                     break
             else:
                 modules.append(module_file)
-                files.append(module_file[:-2] + 'c')
+                files.append(os.path.splitext(module_file)[0] + '.c')
     
     for file in modules:
         cythonize(file, language_level = "3")
@@ -50,7 +50,9 @@ if __name__ == '__main__':
     files = []
     generate_cython_modules(os.getcwd(), files, exclude)
 
+    print("-"*26)
     print('Cythonized %d files' %len(files))
+    print("")
 
     for file in files:
         try:
