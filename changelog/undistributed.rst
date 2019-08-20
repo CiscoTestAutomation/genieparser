@@ -145,6 +145,8 @@
         * show ip ospf segment-routing
     * Update ShowIpOspfSegmentRoutingSidDatabase
         to handle missing keys
+    * Added ShowIpOspfDatabaseOpaqueAreaSelfOriginate for:
+        * show ip ospf database opaque-area self-originate
 
 --------------------------------------------------------------------------------
                                 Routing
@@ -160,7 +162,7 @@
                                 Authentication Sessions
 --------------------------------------------------------------------------------
 * IOSXE
-   * ShowAuthenticationSessions for: 
+   * ShowAuthenticationSessions for:
         * 'show authentication sessions'
         * 'show authentication sessions interface {interface}'
    * ShowAuthenticationSessionsInterfaceDetails for:
@@ -188,3 +190,10 @@
 * IOSXE
     * Added ShowL2routeEvpnImetAllDetail for
         'show l2route evpn imet all detail'
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBgpAllSummary
+        removed cmd as param due to missing key error
