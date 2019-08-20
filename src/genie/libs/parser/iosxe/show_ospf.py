@@ -3795,7 +3795,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
        
-        p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
+        p18_1 = re.compile(r'^Link\s+connected +to\s*: +(?P<type>(.*))$')
        
         p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
                             ' +(?P<link_id>(\S+))$')
@@ -3870,6 +3870,27 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         # TLV Type: Segment Routing Algorithm
         p39 = re.compile(r'TLV\s+Type\s*:\s*(?P<tlv_type>.+)')
 
+        # Router Information
+        p39_1 = re.compile(r'(R|r)outer\s+(I|i)nformation')
+
+        # Segment Routing Algorithm
+        p39_2 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(A|a)lgorithm')
+
+        # Segment Routing Range
+        p39_3 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(R|r)ange')
+
+        # Segment Routing Node MSD
+        p39_4 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(N|n)ode\s+MSD')
+
+        # Segment Routing Local Block
+        p39_5 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(L|l)ocal\s+(B|b)lock')
+
+        # Extended Prefix
+        p39_6 = re.compile(r'(E|e)xtended\s+(P|p)refix')
+
+        # Extended Link
+        p39_7 = re.compile(r'(E|e)xtended\s+(L|l)ink')
+
         # Algorithm: SPF
         # Algorithm: Strict SPF
         p40 = re.compile(r'Algo(?:(rithm))?\s*:\s*(?P<algorithm>.+)')
@@ -3913,6 +3934,21 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
 
         # SID   : 1
         p54 = re.compile(r'SID\s*:\s*(?P<sid>\S+)')
+
+        # Graceful Restart Helper                
+        p55 = re.compile(r'(G|g)raceful\s+(R|r)estart\s+(H|h)elper')
+
+        # Stub Router Support
+        p56 = re.compile(r'(S|s)tub\s+(R|r)outer\s+(S|s)upport')
+
+        # SPF
+        p57 = re.compile(r'SPF')
+
+        # Strict SPF
+        p58 = re.compile(r'Strict\s+SPF')
+
+        # Sub-type: Node Max Sid Depth, Value: 13
+        p59 = re.compile(r'Sub\-type\s*:\s*Node\s+Max\s+Sid\s+Depth\,\s+Value:\s*(?P<value>\d+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -4236,6 +4272,14 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Link connected to: another Router (point-to-point)
             m = p18_1.match(line)
             if m:
+                if tlv_type_flag:                    
+                    sub_link_type = str(m.groupdict()['type']).lower()
+                    if 'another Router' in sub_link_type:
+                        opaque_link_type = 1
+                    tlv_type_dict['link_name'] = sub_link_type
+                    tlv_type_dict['link_type'] = opaque_link_type
+                    continue
+
                 link_type = str(m.groupdict()['type']).lower()
                 continue
 
@@ -4342,7 +4386,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 mtid = int(m.groupdict()['mtid'])
 
                 if sub_tlv_type_flag:
-                    sub_tlv_types_dict['mtid'] = int(mtid)
+                    sub_tlv_types_dict['mt_id'] = int(mtid)
                     continue
 
                 if db_type == 'router':
@@ -4587,12 +4631,12 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Neighbor Address : 200.0.0.2
             m = p38.match(line)
             if m:
-                db_dict['link_tlvs'][link_tlv_counter]['neighbor_address'] = \
-                    m.groupdict()['neighbor_address']
-
+                db_dict['link_tlvs'][link_tlv_counter]['remote_if_ipv4_addrs'] = {m.groupdict()['neighbor_address']: {}}
+                
                 continue
 
             # TLV Type: Extended Link
+            # TLV Type: Segment Routing Node MSD
             m = p39.match(line)
             if m:
                 tlv_type_flag = True
@@ -4601,7 +4645,35 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 group = m.groupdict()
                 tlv_type = group['tlv_type']
                 
-                tlv_types_index = db_dict.get('link_tlvs', {}).get(link_tlv_counter, {}).get('tlv_types', {}).keys()
+                # Router Information
+                if p39_1.match(tlv_type):
+                    tlv_type_field = 'router_capabilities_tlv'
+
+                # Segment Routing Algorithm
+                elif p39_2.match(tlv_type):
+                    tlv_type_field = 'sr_algorithm_tlv'
+
+                # Segment Routing Range
+                elif p39_3.match(tlv_type):
+                    tlv_type_field = 'sid_range_tlvs'
+
+                # Segment Routing Node MSD
+                elif p39_4.match(tlv_type):
+                    tlv_type_field = 'node_msd_tlvs'
+
+                # Segment Routing Local Block
+                elif p39_5.match(tlv_type):
+                    tlv_type_field = 'local_block_tlvs'
+
+                # Extended Prefix
+                elif p39_6.match(tlv_type):
+                    tlv_type_field = 'extended_prefix_tlvs'
+
+                # Extended Link
+                elif p39_7.match(tlv_type):
+                    tlv_type_field = 'extended_link_tlvs'
+                
+                tlv_types_index = db_dict.get(tlv_type_field, {}).keys()
 
                 if tlv_types_index:
                     index = max(tlv_types_index) + 1
@@ -4609,12 +4681,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     index = 1
                 
                 tlv_type_dict = db_dict\
-                    .setdefault('link_tlvs', {})\
-                    .setdefault(link_tlv_counter, {})\
-                    .setdefault('tlv_types', {})\
+                    .setdefault(tlv_type_field, {})\
                     .setdefault(index, {})
 
-                tlv_type_dict['tlv_type_name'] = tlv_type
+                tlv_type_dict['tlv_type'] = tlv_type
 
                 continue
 
@@ -4627,19 +4697,25 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 if not line:
                     capabilities_flag = False
                     continue
+                capability_field = None
 
-                capabilities_index = tlv_type_dict.get('capabilities', {}).keys()
+                # Graceful Restart Helper
+                if p55.match(line):
+                    capability_field = 'graceful_restart_helper'
 
-                if capabilities_index:
-                    index = max(capabilities_index) + 1
-                else:
-                    index = 1
+                # Stub Router Support
+                elif p56.match(line):
+                    capability_field = 'stub_router'
+
+                if not capability_field:
+                    continue
 
                 capabilities_dict = tlv_type_dict\
-                    .setdefault('capabilities', {})\
-                    .setdefault(index, {})                    
+                    .setdefault('information_capabilities', {})                    
 
-                capabilities_dict['capability'] = line.strip()
+                capabilities_dict[capability_field] = True
+
+                continue
 
             # Algorithm: SPF
             # Algorithm: Strict SPF
@@ -4647,19 +4723,27 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 group = m.groupdict()
                 algorithm = group['algorithm']
+                algorithm = algorithm.strip()
 
                 if sub_tlv_type_flag:
-                    sub_tlv_types_dict['algorithm'] = algorithm
+                    sub_tlv_types_dict['algo'] = algorithm
                     continue
 
-                algorithms_index = tlv_type_dict.get('algorithms', {}).keys()
-                if algorithms_index:
-                    index = max(algorithms_index) + 1
-                else:
-                    index = 1
+                algo_field = None
 
-                algorithm_dict = tlv_type_dict.setdefault('algorithms', {}).setdefault(index, {})
-                algorithm_dict['name'] = algorithm
+                # SPF
+                if p57.match(algorithm):
+                    algo_field = 'spf'
+
+                # Strict SPF
+                if p58.match(algorithm):
+                    algo_field = 'strict_spf'
+
+                if not algo_field:
+                    continue
+
+                algorithm_dict = tlv_type_dict.setdefault('algorithm', {})
+                algorithm_dict[algo_field] = True
 
                 continue
 
@@ -4732,7 +4816,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p48.match(line)
             if m:
                 group = m.groupdict()
-                af = group['af']
+                af = int(group['af'])
 
                 tlv_type_dict['af'] = af
 
@@ -4756,15 +4840,15 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 group = m.groupdict()
                 sub_tlv_type = group['sub_tlv_type']
 
-                sub_tlv_types_index = tlv_type_dict.get('sub_tlv_types', {}).keys()
+                sub_tlv_types_index = tlv_type_dict.get('sub_tlvs', {}).keys()
                 if sub_tlv_types_index:
                     index = max(sub_tlv_types_index) + 1
                 else:
                     index = 1
 
-                sub_tlv_types_dict = tlv_type_dict.setdefault('sub_tlv_types', {}).setdefault(index, {})
+                sub_tlv_types_dict = tlv_type_dict.setdefault('sub_tlvs', {}).setdefault(index, {})
 
-                sub_tlv_types_dict['sub_tlv_type_name'] = sub_tlv_type
+                sub_tlv_types_dict['type'] = sub_tlv_type
 
                 continue
 
@@ -4780,7 +4864,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p52.match(line)
             if m:
                 group = m.groupdict()
-                local_interface_id = group['local_interface_id']
+                local_interface_id = int(group['local_interface_id'])
                 sub_tlv_types_dict['local_interface_id'] = local_interface_id
                 continue            
 
@@ -4788,7 +4872,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p53.match(line)
             if m:
                 group = m.groupdict()
-                remote_interface_id = group['remote_interface_id']
+                remote_interface_id = int(group['remote_interface_id'])
                 sub_tlv_types_dict['remote_interface_id'] = remote_interface_id
                 continue
 
@@ -4796,12 +4880,24 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p54.match(line)                        
             if m:
                 group = m.groupdict()
-                sid = group['sid']
+                sid = int(group['sid'])
 
                 sub_tlv_types_dict['sid'] = sid
                 continue
-            
-             
+
+            # Sub-type: Node Max Sid Depth, Value: 13
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                sub_type_value = int(group['value'])
+
+                sub_type_dict = tlv_type_dict.setdefault('sub_type', {})
+                sub_type_dict['node_max_sid_depth_value'] = sub_type_value
+
+                continue
+
+        # print(ret_dict)
+        # import pdb; pdb.set_trace()
         return ret_dict
 
 
@@ -5173,25 +5269,25 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
     '''
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
-                                                    {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
-                                                            {'lsa_id': str,
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'instance': {
+                            Any(): {
+                                Optional('areas'): {
+                                    Any(): {
+                                        'database': {
+                                            'lsa_types': {
+                                                Any(): {
+                                                    'lsa_type': int,
+                                                    'lsas': {
+                                                        Any(): {
+                                                            'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
-                                                                    {'option': str,
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
@@ -5202,10 +5298,10 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                     'length': int,
                                                                     Optional('opaque_type'): int,
                                                                     'opaque_id': int,
-                                                                    Optional('fragment_number'): int,},
-                                                                'body': 
-                                                                    {'opaque': 
-                                                                        {
+                                                                    Optional('fragment_number'): int,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
                                                                         Optional('mpls_te_router_id'): str,
                                                                         Optional('links'): {
                                                                             Any(): {
@@ -5214,56 +5310,119 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                                     Any(): {
                                                                                         'mt_id': int
                                                                                     }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        Optional('num_of_links'): int,                                                                        
+                                                                        Optional('router_capabilities_tlv'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                'tlv_type': str,
+                                                                                Optional('information_capabilities'): {
+                                                                                    Optional('graceful_restart'): bool,       
+                                                                                    Optional('graceful_restart_helper'): bool,
+                                                                                    Optional('stub_router'): bool,            
+                                                                                    Optional('traffic_enginnering'): bool,    
+                                                                                    Optional('p2p_over_lan'): bool,           
+                                                                                    Optional('experimental_te'): bool,
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('sr_algorithm_tlv'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'length': int,
+                                                                                Optional('algorithm'): {
+                                                                                    Optional('spf'): bool,
+                                                                                    Optional('strict_spf'): bool,
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('sid_range_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'length': int,
+                                                                                'range_size': int,
+                                                                                'sub_tlvs': {
+                                                                                    Any(): { 
+                                                                                        'type': str,
+                                                                                        'length': int,
+                                                                                        'label': int,
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('node_msd_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'length': int,
+                                                                                'sub_type': {
+                                                                                    'node_max_sid_depth_value': int
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('local_block_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'range_size': int,
+                                                                                'length': int,
+                                                                                'sub_tlvs': {
+                                                                                    Any(): {
+                                                                                        'type': str,
+                                                                                        'length': int,
+                                                                                        'label': int
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('extended_prefix_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'route_type': str,
+                                                                                'length': int,
+                                                                                'flags': str,
+                                                                                'prefix': str,
+                                                                                'af': int,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'type': str,
+                                                                                        'length': int,
+                                                                                        'flags': str,
+                                                                                        Optional('mt_id'): int,
+                                                                                        'algo': str,
+                                                                                        'sid': int,
+                                                                                    }
                                                                                 }
 
                                                                             }
                                                                         },
-                                                                        Optional('num_of_links'): int,
-                                                                        Optional('link_tlvs'): 
-                                                                            {Any(): 
-                                                                                {Optional('link_type'): int,
+                                                                        Optional('extended_link_tlvs'): {
+                                                                            Any(): {
+                                                                                'link_id': str,
+                                                                                'link_data': str,
+                                                                                'length': int,
                                                                                 Optional('link_name'): str,
-                                                                                Optional('tlv_types'): {
+                                                                                'link_type': int,
+                                                                                'tlv_type': str,
+                                                                                'sub_tlvs': {
                                                                                     Any(): {
-                                                                                        Optional('tlv_type_name'): str,
+                                                                                        'type': str,
                                                                                         Optional('length'): int,
-                                                                                        Optional('capabilities'): {
-                                                                                            Any(): {
-                                                                                                'capability': str
-                                                                                            }
-                                                                                        },
-                                                                                        Optional('algorithms'): {
-                                                                                            Any(): {
-                                                                                                'name': str
-                                                                                            }
-
-                                                                                        },
-                                                                                        Optional('prefix'): str,
-                                                                                        Optional('af'): str,
-                                                                                        Optional('route_type'): str,
-                                                                                        Optional('range_size'): int,
-                                                                                        Optional('flags'): str,                                                                                        
+                                                                                        Optional('flags'): str,
+                                                                                        Optional('mt_id'): int,
                                                                                         Optional('weight'): int,
-                                                                                        Optional('link_data'): str,
-                                                                                        Optional('link_id'): str,                                                                                                                                                                                Optional('sub_tlv_types'): {
-                                                                                            Any(): {
-                                                                                                'sub_tlv_type_name': str,
-                                                                                                Optional('length'): int,
-                                                                                                Optional('flags'): str,
-                                                                                                Optional('mtid'): int,
-                                                                                                Optional('weight'): int,
-                                                                                                Optional('label'): int,
-                                                                                                Optional('remote_interface_address'): str,
-                                                                                                Optional('local_interface_id'): str,
-                                                                                                Optional('remote_interface_id'): str,
-                                                                                                Optional('algorithm'): str,
-                                                                                                Optional('sid'): str
-                                                                                            }
-                                                                                        }
+                                                                                        Optional('label'): int,
+                                                                                        Optional('remote_interface_address'): str,
+                                                                                        Optional('local_interface_id'): int,
+                                                                                        Optional('remote_interface_id'): int,
                                                                                     }
-
-                                                                                },
-                                                                                Optional('neighbor_address'): str,
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('link_tlvs'): {
+                                                                            Any(): {
+                                                                                Optional('link_type'): int,
+                                                                                Optional('link_name'): str,
                                                                                 Optional('link_id'): str,
                                                                                 Optional('te_metric'): int,
                                                                                 Optional('max_bandwidth'): int,
@@ -5271,47 +5430,53 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                                 Optional('admin_group'): str,
                                                                                 Optional('igp_metric'): int,
                                                                                 Optional('total_priority'): int,
-                                                                                Optional('local_if_ipv4_addrs'): 
-                                                                                    {Any(): {}},
-                                                                                Optional('remote_if_ipv4_addrs'): 
-                                                                                    {Any(): {}},
-                                                                                Optional('unreserved_bandwidths'): 
-                                                                                    {Any(): 
-                                                                                        {'priority': int,
-                                                                                        'unreserved_bandwidth': int},
-                                                                                    },
-                                                                                Optional('unknown_tlvs'): 
-                                                                                    {Any(): 
-                                                                                        {'type': int,
+                                                                                Optional('local_if_ipv4_addrs'): {
+                                                                                    Any(): {}
+                                                                                },
+                                                                                Optional('remote_if_ipv4_addrs'): {
+                                                                                    Any(): {}
+                                                                                },
+                                                                                Optional('unreserved_bandwidths'): {
+                                                                                    Any(): {
+                                                                                        'priority': int,
+                                                                                        'unreserved_bandwidth': int,
+                                                                                    }
+                                                                                },
+                                                                                Optional('unknown_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'type': int,
                                                                                         'length': int,
-                                                                                        'value': str},
-                                                                                    },
-                                                                                Optional('extended_admin_group'):
-                                                                                    {'length': int,
-                                                                                    Optional('groups'): 
-                                                                                        {Any(): 
-                                                                                            {'value': int,},
-                                                                                        },
+                                                                                        'value': str,
+                                                                                    }
+                                                                                },
+                                                                                Optional('extended_admin_group'): {
+                                                                                    'length': int,
+                                                                                    Optional('groups'): {
+                                                                                        Any(): {
+                                                                                            'value': int
+                                                                                        }
                                                                                     },
                                                                                 },
-                                                                            },
+                                                                            }
                                                                         },
-                                                                    },
+                                                                    }
                                                                 },
                                                             },
-                                                        },
+                                                        }
                                                     },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
 
 
 # =======================================
