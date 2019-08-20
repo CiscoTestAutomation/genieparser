@@ -169,9 +169,9 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
         # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_)]+)'
-                                   '\,\s*Capabilities:\s+'
-                                   '(?P<capabilities>[\w+\s\-]+)$')
+        platf_cap_re = re.compile(r'Platform: +(?P<platform>[\w +(\-|\_)]+)'
+                                   '\, +Capabilities: '
+                                   '+(?P<capabilities>[\w+\s\-]+)$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
         interface_port_re = re.compile(r'Interface:\s*'
