@@ -5,8 +5,6 @@
 
 import os
 import fnmatch
-
-from distutils.core import Extension
 from Cython.Build import cythonize
 
 def generate_cython_modules(src_path, files, ignore_patterns = []):
@@ -39,29 +37,25 @@ def generate_cython_modules(src_path, files, ignore_patterns = []):
                     # pattern match!
                     break
             else:
-                module_name = os.path.splitext(os.path.basename(module_file))\
-                    [0] + '.py'
-                modules.append(Extension(module_name, [module_file]))
+                modules.append(module_file)
                 files.append(module_file[:-2] + 'c')
-    return modules
+    
+    for file in modules:
+        cythonize(file, language_level = "3")
 
 
 if __name__ == '__main__':
     # cythonize
     exclude = []
     files = []
-    cisco_cythonized_mods = cythonize(generate_cython_modules(os.getcwd(), \
-        files, exclude), language_level=3)
+    generate_cython_modules(os.getcwd(), files, exclude)
 
-    print(cisco_cythonized_mods)
-
-    print('+%s+' %('-'*27))
-    print('| Removing cythonized files |')
-    print('+%s+' %('-'*27))
+    print('Cythonized %d files' %len(files))
 
     for file in files:
         try:
             os.remove(file)
-            print('Removing %s' %file)
         except FileNotFoundError:
-            continue
+            print(file)
+            
+    print('Removed cythonized files')
