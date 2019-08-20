@@ -24,6 +24,11 @@
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
 
+* Linux
+    * Add Ifconfig for
+        'ifconfig'
+        'ifconfig {interface}'
+
 --------------------------------------------------------------------------------
                                 Controllers
 --------------------------------------------------------------------------------
