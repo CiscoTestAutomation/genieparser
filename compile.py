@@ -56,6 +56,6 @@ if __name__ == '__main__':
         try:
             os.remove(file)
         except FileNotFoundError:
-            print(file)
+            print("Couldn't remove %s" %file)
             
     print('Removed cythonized files')
