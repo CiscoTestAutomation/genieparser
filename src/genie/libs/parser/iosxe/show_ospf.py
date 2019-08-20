@@ -3713,16 +3713,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         * 'show ip ospf database opaque-area self-originate''
     '''
 
-    def cli(self, cmd, db_type, output=None):
+    def cli(self, db_type, out=None):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
-
-        if output is None:
-            # Execute command on device
-            out = self.device.execute(cmd)
-        else:
-            out = output
 
         # Init vars
         ret_dict = {}
@@ -4997,8 +4991,10 @@ class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabas
 
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='router', output=output)
+        return super().cli(db_type='router', out=output)
 
 
 # ====================================
@@ -5084,8 +5080,10 @@ class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDat
     cli_command = 'show ip ospf database external'
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='external', output=output)
+        return super().cli(db_type='external', out=output)
 
 
 # ===================================
@@ -5167,8 +5165,10 @@ class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatab
     exclude = ['age', 'seq_num', 'checksum', 'lsas']
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='network', output=output)
+        return super().cli(db_type='network', out=output)
 
 
 # ===================================
@@ -5253,8 +5253,10 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
 
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='summary', output=output)
+        return super().cli(db_type='summary', out=output)
 
 
 # =======================================
@@ -5492,8 +5494,10 @@ class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOsp
     cli_command = 'show ip ospf database opaque-area'
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='opaque', output=output)
+        return super().cli(db_type='opaque', out=output)
 
 
 # =====================================
@@ -7090,8 +7094,10 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     exclude = ['age' , 'checksum', 'seq_num', 'dead_time']
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='router', output=output)
+        return super().cli(db_type='router', out=output)
 
 
 class ShowIpOspfSegmentRoutingSchema(MetaParser):
@@ -8005,4 +8011,7 @@ class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSche
     cli_command = 'show ip ospf database opaque-area self-originate'
 
     def cli(self, output=None):
-        return super().cli(cmd=self.cli_command, db_type='opaque', output=output)
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
