@@ -41,21 +41,23 @@ class IfconfigSchema(MetaParser):
             Optional('txqueuelen'): int,
             Optional('mac'): str,
             'destription': str,
-            'rx_pkts': int,
-            'rx_bytes': int,
-            'rx_value': str,
-            'rx_errors': int,
-            'rx_dropped': int,
-            'rx_overruns': int,
-            'rx_frame': int,
-            'tx_pkts': int,
-            'tx_bytes': int,
-            'tx_value': str,
-            'tx_errors': int,
-            'tx_dropped': int,
-            'tx_overruns': int,
-            'tx_carrier': int,
-            'tx_collisions': int,
+            'counters': {
+                'rx_pkts': int,
+                'rx_bytes': int,
+                'rx_value': str,
+                'rx_errors': int,
+                'rx_dropped': int,
+                'rx_overruns': int,
+                'rx_frame': int,
+                'tx_pkts': int,
+                'tx_bytes': int,
+                'tx_value': str,
+                'tx_errors': int,
+                'tx_dropped': int,
+                'tx_overruns': int,
+                'tx_carrier': int,
+                'tx_collisions': int,
+            },
             Optional('device_interrupt'): int,
             Optional('device_memory'): str,
         }
@@ -174,28 +176,29 @@ class Ifconfig(IfconfigSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
+                counter_dict = intf_dict.setdefault('counters', {})
+                counter_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
                 continue
 
             #   RX errors 0  dropped 0  overruns 0  frame 0
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({k: int(v) for k, v in group.items()})
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             #   TX packets 365916  bytes 67689136 (64.5 MiB)
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
+                counter_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
                 continue
 
             #   TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict.update({k: int(v) for k, v in group.items()})
+                counter_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
             #   device interrupt 16  memory 0xe9200000-e9220000
