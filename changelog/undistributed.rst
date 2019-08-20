@@ -162,7 +162,7 @@
                                 Authentication Sessions
 --------------------------------------------------------------------------------
 * IOSXE
-   * ShowAuthenticationSessions for: 
+   * ShowAuthenticationSessions for:
         * 'show authentication sessions'
         * 'show authentication sessions interface {interface}'
    * ShowAuthenticationSessionsInterfaceDetails for:
@@ -190,3 +190,11 @@
 * IOSXE
     * Added ShowL2routeEvpnImetAllDetail for
         'show l2route evpn imet all detail'
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowVrfAllDetailSchema
+        updated the schema due to missing key error
+        
