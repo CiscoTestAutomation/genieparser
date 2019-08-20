@@ -145,6 +145,8 @@
         * show ip ospf segment-routing
     * Update ShowIpOspfSegmentRoutingSidDatabase
         to handle missing keys
+    * Added ShowIpOspfDatabaseOpaqueAreaSelfOriginate for:
+        * show ip ospf database opaque-area self-originate
 
 --------------------------------------------------------------------------------
                                 Routing
