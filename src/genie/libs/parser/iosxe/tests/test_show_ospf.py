@@ -6745,7 +6745,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
                                                                                 "link_id": "2.2.2.2",
-                                                                                "neighbor_address": "200.0.0.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "200.0.0.2": {}
+                                                                                },
                                                                                 "local_if_ipv4_addrs": {
                                                                                     "200.0.0.1": {}
                                                                                 },
@@ -6784,7 +6786,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
                                                                                 "link_id": "2.2.2.2",
-                                                                                "neighbor_address": "200.0.1.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "200.0.1.2": {}
+                                                                                },
                                                                                 "local_if_ipv4_addrs": {
                                                                                     "200.0.1.1": {}
                                                                                 },
@@ -6823,7 +6827,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
                                                                                 "link_id": "2.2.2.2",
-                                                                                "neighbor_address": "200.0.2.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "200.0.2.2": {}
+                                                                                },
                                                                                 "local_if_ipv4_addrs": {
                                                                                     "200.0.2.1": {}
                                                                                 },
@@ -6862,7 +6868,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
                                                                                 "link_id": "2.2.2.2",
-                                                                                "neighbor_address": "200.0.3.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "200.0.3.2": {}
+                                                                                },
                                                                                 "local_if_ipv4_addrs": {
                                                                                     "200.0.3.1": {}
                                                                                 },
@@ -6896,64 +6904,63 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "link_tlvs": {
-                                                                            0: {
-                                                                                "tlv_types": {
-                                                                                    1: {
-                                                                                        "tlv_type_name": "Router Information",
-                                                                                        "length": 4,
-                                                                                        "capabilities": {
-                                                                                            1: {
-                                                                                                "capability": "Graceful Restart Helper"
-                                                                                            },
-                                                                                            2: {
-                                                                                                "capability": "Stub Router Support"
-                                                                                            },
-                                                                                        },
-                                                                                    },
-                                                                                    2: {
-                                                                                        "tlv_type_name": "Segment Routing Algorithm",
-                                                                                        "length": 2,
-                                                                                        "algorithms": {
-                                                                                            1: {
-                                                                                                "name": "SPF"
-                                                                                            },
-                                                                                            2: {
-                                                                                                "name": "Strict SPF"
-                                                                                            },
-                                                                                        },
-                                                                                    },
-                                                                                    3: {
-                                                                                        "tlv_type_name": "Segment Routing Range",
-                                                                                        "length": 12,
-                                                                                        "range_size": 8000,
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "SID/Label",
-                                                                                                "length": 3,
-                                                                                                "label": 16000,
-                                                                                            }
-                                                                                        },
-                                                                                    },
-                                                                                    4: {
-                                                                                        "tlv_type_name": "Segment Routing Node MSD",
-                                                                                        "length": 2,
-                                                                                    },
-                                                                                    5: {
-                                                                                        "tlv_type_name": "Segment Routing Local Block",
-                                                                                        "length": 12,
-                                                                                        "range_size": 1000,
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "SID/Label",
-                                                                                                "length": 44,
-                                                                                                "label": 15000,
-                                                                                            }
-                                                                                        },
-                                                                                    },
-                                                                                }
+                                                                        "router_capabilities_tlv": {
+                                                                            1: {
+                                                                                "tlv_type": "Router Information",
+                                                                                "length": 4,
+                                                                                "information_capabilities": {
+                                                                                    "graceful_restart_helper": True,
+                                                                                    "stub_router": True,
+                                                                                },
                                                                             }
-                                                                        }
+                                                                        },
+                                                                        "sr_algorithm_tlv": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Algorithm",
+                                                                                "length": 2,
+                                                                                "algorithm": {
+                                                                                    "spf": True,
+                                                                                    "strict_spf": True,
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "sid_range_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Range",
+                                                                                "length": 12,
+                                                                                "range_size": 8000,
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "SID/Label",
+                                                                                        "length": 3,
+                                                                                        "label": 16000,
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "node_msd_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Node MSD",
+                                                                                "length": 2,
+                                                                                "sub_type": {
+                                                                                    "node_max_sid_depth_value": 13
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "local_block_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Local Block",
+                                                                                "length": 12,
+                                                                                "range_size": 1000,
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "SID/Label",
+                                                                                        "length": 44,
+                                                                                        "label": 15000,
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6976,28 +6983,24 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "link_tlvs": {
-                                                                            0: {
-                                                                                "tlv_types": {
+                                                                        "extended_prefix_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Extended Prefix",
+                                                                                "length": 20,
+                                                                                "prefix": "1.1.1.1/32",
+                                                                                "af": 0,
+                                                                                "route_type": "Intra",
+                                                                                "flags": "N-bit",
+                                                                                "sub_tlvs": {
                                                                                     1: {
-                                                                                        "tlv_type_name": "Extended Prefix",
-                                                                                        "length": 20,
-                                                                                        "prefix": "1.1.1.1/32",
-                                                                                        "af": "0",
-                                                                                        "route_type": "Intra",
-                                                                                        "flags": "N-bit",
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "Prefix SID",
-                                                                                                "length": 92,
-                                                                                                "flags": "None",
-                                                                                                "mtid": 0,
-                                                                                                "algorithm": "SPF",
-                                                                                                "sid": "1",
-                                                                                            }
-                                                                                        },
+                                                                                        "type": "Prefix SID",
+                                                                                        "length": 92,
+                                                                                        "flags": "None",
+                                                                                        "mt_id": 0,
+                                                                                        "algo": "SPF",
+                                                                                        "sid": 1,
                                                                                     }
-                                                                                }
+                                                                                },
                                                                             }
                                                                         }
                                                                     }
@@ -7022,40 +7025,34 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "link_tlvs": {
-                                                                            0: {
-                                                                                "tlv_types": {
-                                                                                    1: {
-                                                                                        "tlv_type_name": "Extended Link",
-                                                                                        "length": 68,
-                                                                                        "link_id": "2.2.2.2",
-                                                                                        "link_data": "200.0.0.1",
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "Adj SID",
-                                                                                                "flags": "L-Bit, V-bit",
-                                                                                                "mtid": 0,
-                                                                                                "weight": 0,
-                                                                                                "label": 19,
-                                                                                            },
-                                                                                            2: {
-                                                                                                "sub_tlv_type_name": "Remote Intf Addr",
-                                                                                                "remote_interface_address": "200.0.0.2",
-                                                                                            },
-                                                                                            3: {
-                                                                                                "sub_tlv_type_name": "Local / Remote Intf ID",
-                                                                                                "local_interface_id": "20",
-                                                                                                "remote_interface_id": "20",
-                                                                                                "length": 92,
-                                                                                            },
-                                                                                        },
-                                                                                    }
-                                                                                }
-                                                                            },
+                                                                        "extended_link_tlvs": {
                                                                             1: {
-                                                                                "link_type": 1,
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
-                                                                            },
+                                                                                "link_type": 1,
+                                                                                "link_id": "2.2.2.2",
+                                                                                "link_data": "200.0.0.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 19,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "200.0.0.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 20,
+                                                                                        "remote_interface_id": 20,
+                                                                                        "length": 92,
+                                                                                    },
+                                                                                },
+                                                                            }
                                                                         }
                                                                     }
                                                                 },
@@ -7079,40 +7076,34 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "link_tlvs": {
-                                                                            0: {
-                                                                                "tlv_types": {
-                                                                                    1: {
-                                                                                        "tlv_type_name": "Extended Link",
-                                                                                        "length": 68,
-                                                                                        "link_id": "2.2.2.2",
-                                                                                        "link_data": "200.0.1.1",
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "Adj SID",
-                                                                                                "flags": "L-Bit, V-bit",
-                                                                                                "mtid": 0,
-                                                                                                "weight": 0,
-                                                                                                "label": 18,
-                                                                                            },
-                                                                                            2: {
-                                                                                                "sub_tlv_type_name": "Remote Intf Addr",
-                                                                                                "remote_interface_address": "200.0.1.2",
-                                                                                            },
-                                                                                            3: {
-                                                                                                "sub_tlv_type_name": "Local / Remote Intf ID",
-                                                                                                "local_interface_id": "21",
-                                                                                                "remote_interface_id": "22",
-                                                                                                "length": 92,
-                                                                                            },
-                                                                                        },
-                                                                                    }
-                                                                                }
-                                                                            },
+                                                                        "extended_link_tlvs": {
                                                                             1: {
-                                                                                "link_type": 1,
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
-                                                                            },
+                                                                                "link_type": 1,
+                                                                                "link_id": "2.2.2.2",
+                                                                                "link_data": "200.0.1.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 18,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "200.0.1.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 21,
+                                                                                        "remote_interface_id": 22,
+                                                                                        "length": 92,
+                                                                                    },
+                                                                                },
+                                                                            }
                                                                         }
                                                                     }
                                                                 },
@@ -7136,40 +7127,34 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "link_tlvs": {
-                                                                            0: {
-                                                                                "tlv_types": {
-                                                                                    1: {
-                                                                                        "tlv_type_name": "Extended Link",
-                                                                                        "length": 68,
-                                                                                        "link_id": "2.2.2.2",
-                                                                                        "link_data": "200.0.2.1",
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "Adj SID",
-                                                                                                "flags": "L-Bit, V-bit",
-                                                                                                "mtid": 0,
-                                                                                                "weight": 0,
-                                                                                                "label": 17,
-                                                                                            },
-                                                                                            2: {
-                                                                                                "sub_tlv_type_name": "Remote Intf Addr",
-                                                                                                "remote_interface_address": "200.0.2.2",
-                                                                                            },
-                                                                                            3: {
-                                                                                                "sub_tlv_type_name": "Local / Remote Intf ID",
-                                                                                                "local_interface_id": "22",
-                                                                                                "remote_interface_id": "23",
-                                                                                                "length": 92,
-                                                                                            },
-                                                                                        },
-                                                                                    }
-                                                                                }
-                                                                            },
+                                                                        "extended_link_tlvs": {
                                                                             1: {
-                                                                                "link_type": 1,
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
-                                                                            },
+                                                                                "link_type": 1,
+                                                                                "link_id": "2.2.2.2",
+                                                                                "link_data": "200.0.2.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 17,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "200.0.2.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 22,
+                                                                                        "remote_interface_id": 23,
+                                                                                        "length": 92,
+                                                                                    },
+                                                                                },
+                                                                            }
                                                                         }
                                                                     }
                                                                 },
@@ -7193,39 +7178,33 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "link_tlvs": {
-                                                                            0: {
-                                                                                "tlv_types": {
-                                                                                    1: {
-                                                                                        "tlv_type_name": "Extended Link",
-                                                                                        "length": 68,
-                                                                                        "link_id": "2.2.2.2",
-                                                                                        "link_data": "200.0.3.1",
-                                                                                        "sub_tlv_types": {
-                                                                                            1: {
-                                                                                                "sub_tlv_type_name": "Adj SID",
-                                                                                                "flags": "L-Bit, V-bit",
-                                                                                                "mtid": 0,
-                                                                                                "weight": 0,
-                                                                                                "label": 16,
-                                                                                            },
-                                                                                            2: {
-                                                                                                "sub_tlv_type_name": "Remote Intf Addr",
-                                                                                                "remote_interface_address": "200.0.3.2",
-                                                                                            },
-                                                                                            3: {
-                                                                                                "sub_tlv_type_name": "Local / Remote Intf ID",
-                                                                                                "local_interface_id": "23",
-                                                                                                "remote_interface_id": "24",
-                                                                                            },
-                                                                                        },
-                                                                                    }
-                                                                                }
-                                                                            },
+                                                                        "extended_link_tlvs": {
                                                                             1: {
-                                                                                "link_type": 1,
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
-                                                                            },
+                                                                                "link_type": 1,
+                                                                                "link_id": "2.2.2.2",
+                                                                                "link_data": "200.0.3.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 16,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "200.0.3.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 23,
+                                                                                        "remote_interface_id": 24,
+                                                                                    },
+                                                                                },
+                                                                            }
                                                                         }
                                                                     }
                                                                 },
