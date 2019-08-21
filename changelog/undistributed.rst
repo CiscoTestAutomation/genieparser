@@ -167,7 +167,7 @@
                                 Authentication Sessions
 --------------------------------------------------------------------------------
 * IOSXE
-   * ShowAuthenticationSessions for: 
+   * ShowAuthenticationSessions for:
         * 'show authentication sessions'
         * 'show authentication sessions interface {interface}'
    * ShowAuthenticationSessionsInterfaceDetails for:
@@ -195,3 +195,10 @@
 * IOSXE
     * Added ShowL2routeEvpnImetAllDetail for
         'show l2route evpn imet all detail'
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowModule
+        added abstraction for Cat4k (c4507)
