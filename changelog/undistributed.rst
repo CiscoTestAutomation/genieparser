@@ -24,6 +24,11 @@
     * Fix ShowRedundancyStates
         changed 'maintenance_mode' key to optional to support more output
 
+* Linux
+    * Add Ifconfig for
+        'ifconfig'
+        'ifconfig {interface}'
+
 --------------------------------------------------------------------------------
                                 Controllers
 --------------------------------------------------------------------------------
@@ -197,4 +202,10 @@
 * IOSXR
     * Updated ShowVrfAllDetailSchema
         updated the schema due to missing key error
-        
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBgpAllSummary
+        removed cmd as param due to missing key error
