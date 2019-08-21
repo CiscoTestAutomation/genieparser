@@ -34,7 +34,7 @@ class ShowVrfAllDetailSchema(MetaParser):
                         },
                         Optional('route_policy'): {
                             Optional('import'): str,
-                            'export': str
+                            Optional('export'): str
                         },
                     },
                 }
