@@ -77,6 +77,14 @@ compile:
 	@echo "Done Compiling"
 	@echo ""
 
+coverage_all:
+	@echo ""
+	@echo "Running Code coverage on all unittests"
+	@echo ---------------------------------------
+	@runAll --path tests/ --coverage
+	@echo "Done Compiling"
+	@echo ""
+
 devnet: package
 	@echo "Completed building DevNet packages"
 	@echo ""
