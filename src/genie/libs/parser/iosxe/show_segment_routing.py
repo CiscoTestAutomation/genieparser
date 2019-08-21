@@ -21,13 +21,17 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 # =============================================================
 # Schema for:
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
 # =============================================================
 class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
     ''' Schema for:
         * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
         * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
     '''
 
     schema = {
@@ -74,26 +78,34 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
         }
 
 
-# =============================================================
+# ====================================================================
 # Parser for:
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv6'
-# =============================================================
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+# ====================================================================
 class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnectedPrefixSidMapSchema):
     ''' Parser for:
         * 'show segment-routing mpls connected-prefix-sid-map ipv4'
         * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
     '''
     
-    cli_command = 'show segment-routing mpls connected-prefix-sid-map {af}'
+    cli_command = ['show segment-routing mpls connected-prefix-sid-map {af}',
+                'show segment-routing mpls connected-prefix-sid-map local {af}']
     
-    def cli(self, af, output=None):
+    def cli(self, af, local=False, output=None):
 
         assert af in ['ipv4', 'ipv6']
 
         # Get output
         if output is None:
-            out = self.device.execute(self.cli_command.format(af=af))
+            if local:
+                out = self.device.execute(self.cli_command[1].format(af=af))
+            else:
+                out = self.device.execute(self.cli_command[0].format(af=af))
         else:
             out = output
 
