@@ -202,15 +202,6 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 algo_dict = address_family_dict.setdefault(prefix, {}). \
                                 setdefault('algorithm', {}). \
                                 setdefault(algorithm, {})
-                # Set dict
-                # algo_dict = ret_dict.setdefault('segment_routing', {}).\
-                #                      setdefault('bindings', {}).\
-                #                      setdefault('connected_prefix_sid_map', {}).\
-                #                      setdefault(address_family, {}).\
-                #                      setdefault(mapping_dict[address_family], {}).\
-                #                      setdefault(prefix, {}).\
-                #                      setdefault('algorithm', {}).\
-                #                      setdefault(algorithm, {})
                 # Set values
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm

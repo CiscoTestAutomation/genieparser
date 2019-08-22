@@ -106,6 +106,9 @@
         'show segment-routing mpls lb lock'
     * Added ShowSegmentRoutingMplsGbLock for:
         'show segment-routing mpls gb lock'
+    * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
+        'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        'show segment-routing mpls connected-prefix-sid-map local ipv6'
 
 --------------------------------------------------------------------------------
                                 Pim
