@@ -7315,7 +7315,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
     schema = {
         'process_id': {
             Any(): {
-                'areas': {
+                Optional('areas'): {
                     Any(): {
                         'router_id': str,
                         'neighbors': {
