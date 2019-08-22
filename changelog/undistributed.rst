@@ -209,3 +209,10 @@
 * IOSXE
     * Updated ShowBgpAllSummary
         removed cmd as param due to missing key error
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowL2routeMacIpAllDetail
+        fixed regEx to parse properly
