@@ -9829,6 +9829,20 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
             },
         }
 
+    golden_output_2 = {'execute.return_value': '''
+        PE1#show ip ospf segment-routing protected-adjacencies
+
+            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+    '''}
+
+    parsed_output_2 = {
+        'process_id': {
+            9996: {
+
+            }
+        }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device1)
@@ -9840,6 +9854,12 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
         obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
     """ Test case for command:
