@@ -218,3 +218,10 @@
         Added vl = vasileft; vr = vasiright
     * Updated test_show_vrf.py
         Replaced output similar to customer's output
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowModule
+        added abstraction for Cat4k (c4507)
