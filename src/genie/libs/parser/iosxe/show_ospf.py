@@ -8011,7 +8011,7 @@ class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSche
     cli_command = ['show ip ospf database opaque-area {lsa_id} self-originate', 
                    'show ip ospf database opaque-area self-originate']
 
-    def cli(self, lsa_id='', output=None):
+    def cli(self, lsa_id=None, output=None):
         if output is None:
             if lsa_id:
                 output = self.device.execute(self.cli_command[0].format(lsa_id=lsa_id))
