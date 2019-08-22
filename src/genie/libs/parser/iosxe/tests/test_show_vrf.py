@@ -325,16 +325,16 @@ class test_show_vrf_detail(unittest.TestCase):
                 "ipv4 unicast": {
                     "flags": "0x0",
                     "route_targets": {
-                        "50998:1": {
-                            "route_target": "50998:1",
+                        "65109:1": {
+                            "route_target": "65109:1",
                             "rt_type": "export"
                         },
-                        "50998:110": {
-                            "route_target": "50998:110",
+                        "65109:110": {
+                            "route_target": "65109:110",
                             "rt_type": "both"
                         },
-                        "50998:4094": {
-                            "route_target": "50998:4094",
+                        "65109:4094": {
+                            "route_target": "65109:4094",
                             "rt_type": "import"
                         }
                     },
@@ -363,13 +363,13 @@ class test_show_vrf_detail(unittest.TestCase):
                 "TenGigabitEthernet0/1/2.1042",
                 "Vasileft110"
             ],
-            "route_distinguisher": "50998:110",
+            "route_distinguisher": "65109:110",
             "support_af": "multiple address-families",
             "vrf_id": 17,
         }
     }
     golden_output1 = {'execute.return_value': '''
-        VRF GENIE (VRF Id = 17); default RD 50998:110; default VPNID <not set>
+        VRF GENIE (VRF Id = 17); default RD 65109:110; default VPNID <not set>
           Description: VPN for GENIE parser
           New CLI format, supports multiple address-families
           Flags: 0x180C
@@ -378,9 +378,9 @@ class test_show_vrf_detail(unittest.TestCase):
         Address family ipv4 unicast (Table ID = 0x11):
           Flags: 0x0
           Export VPN route-target communities
-            RT:50998:1               RT:50998:110
+            RT:65109:1               RT:65109:110
           Import VPN route-target communities
-            RT:50998:4094            RT:50998:110
+            RT:65109:4094            RT:65109:110
           No import route-map
           No global export route-map
           No export route-map
