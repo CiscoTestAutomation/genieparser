@@ -182,6 +182,30 @@ class test_show_cdp_neighbors(unittest.TestCase):
         device5      Eth 0            164                  7206      Eth 1/0
     '''}
 
+    expected_parsed_output_5 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R S C',
+                    'device_id': 'Device_With_A_Particularly_Long_Name',
+                    'hold_time': 134,
+                    'local_interface': 'GigabitEthernet1',
+                    'platform': 'N9K-9000v',
+                    'port_id': 'Ethernet0/0'}
+            }
+        }
+    }
+
+    device_output_5 = {'execute.return_value': '''
+        Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                      S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
+                      D - Remote, C - CVTA, M - Two-port Mac Relay
+
+        Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+        Device_With_A_Particularly_Long_Name
+                         Gig 1             134             R S C  N9K-9000v Eth 0/0
+    '''}
+
     def test_show_cdp_neighbors_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
@@ -209,6 +233,13 @@ class test_show_cdp_neighbors(unittest.TestCase):
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_4)
+
+    def test_show_cdp_neighbors_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_5)
+        obj = ShowCdpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_5)
 
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None
