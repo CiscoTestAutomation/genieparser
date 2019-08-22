@@ -140,21 +140,24 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
         'interfaces': {
             Any(): {
                 'interface': str,
-                'iif_id': str,
-                'mac_address': str,   #MAC Address
-                'ipv6_address': str,
+                Optional('iif_id'): str,
+                'mac_address': str,
+                Optional('ipv6_address'): str,
                 'ipv4_address': str,
-                'user_name': str,
+                Optional('user_name'): str,
                 'status': str,
                 'domain': str,
                 'oper_host_mode': str,
                 'oper_control_dir': str,
+                Optional('authorized_by'): str,
+                Optional('vlan_policy'): str,
                 'session_timeout': str,
                 'common_session_id': str,
                 'acct_session_id': str,
                 'handle': str,
-                'current_policy': str,
-                'local_policies': {
+                Optional('idle_timeout'): str,
+                Optional('current_policy'): str,
+                Optional('local_policies'): {
                     'template': {
                         Any():{ 
                             'priority': int,
@@ -207,7 +210,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Acct Session ID:  Unknown
         # Handle:  0xDB003227
         # Current Policy:  dot1x_dvlan_reauth_hm
-        p1 = re.compile(r'^(?P<argument>\S[\w\s\-]+): +(?P<value>\S+)$')
+        # Authorized By:  Guest Vlan
+        # Status:  Authz Success
+        p1 = re.compile(r'^(?P<argument>\S[\w\s\-]+): +(?P<value>\S+[\w\s]+)$')
 
         # Local Policies:
         p2 = re.compile(r'^Local +Policies:')
@@ -225,11 +230,14 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # dot1x            Authc Failed
         p6 = re.compile(r'^(?P<method>[dot1x|mab]\w+) +(?P<state>(\w+\s\w+)|(\w+))$')
 
+        # Runnable methods list:
+        p7 = re.compile(r'^Runnable +methods +list:')
+
         for line in out.splitlines():
             line = line.strip()
 
             # Ignore all titles
-            if p2.match(line) or p5.match(line):
+            if p2.match(line) or p5.match(line) or p7.match(line):
                 continue
 
             # match these lines:
@@ -248,18 +256,27 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #       Acct Session ID:  Unknown
             #                Handle:  0xDB003227
             #        Current Policy:  dot1x_dvlan_reauth_hm
+            #         Authorized By:  Guest Vlan
+            #                Status:  Authz Success
             m = p1.match(line)
             if m:
+                #import pdb;pdb.set_trace()
                 group = m.groupdict()
                 intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
 
                 key = re.sub(r'( |-)', '_',group['argument'].lower())
+
+                # to keep pv4_address as common key
+                if key == 'ip_address':
+                    key = 'ipv4_address'
+
                 intf_dict.update({key: group['value']})
                 continue
 
             # Template: CRITICAL_VLAN (priority 150)
             m = p3.match(line)
             if m:
+                import pdb;pdb.set_trace()
                 group = m.groupdict()
                 template_dict = intf_dict.setdefault('local_policies', {}).setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
