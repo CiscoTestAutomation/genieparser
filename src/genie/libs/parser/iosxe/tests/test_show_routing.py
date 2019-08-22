@@ -1639,6 +1639,46 @@ class test_show_ip_cef(unittest.TestCase):
 
               '''}
 
+    golden_parsed_output_5 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "prefix": {
+                            "22.22.22.22/32": {
+                                "epoch": 2,
+                                "sr_local_label_info": "global/16022 [0x1B]",
+                                "nexthop": {
+                                    "10.0.0.9": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3": {
+                                                "local_label": 16022,
+                                                "outgoing_label": [
+                                                    "16022|implicit-null"
+                                                ],
+                                                "repair": "attached-nexthop 10.0.0.13 GigabitEthernet4"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+    PE1#show ip cef 22.22.22.22 detail
+    22.22.22.22/32, epoch 2
+      sr local label info: global/16022 [0x1B]
+      nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
+        repair: attached-nexthop 10.0.0.13 GigabitEthernet4
+      nexthop 10.0.0.13 GigabitEthernet4, repair
+
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpCef(device=self.device)
@@ -1672,6 +1712,13 @@ class test_show_ip_cef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 ###################################################
