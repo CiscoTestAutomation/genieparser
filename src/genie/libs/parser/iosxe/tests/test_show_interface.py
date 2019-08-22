@@ -16019,6 +16019,16 @@ class test_show_interfaces_trunk(unittest.TestCase):
                "name": "GigabitEthernet1/0/23",
                "encapsulation": "802.1q"
             },
+            "GigabitEthernet1/0/24": {
+                "vlans_allowed_active_in_mgmt_domain": '200-211',
+                "vlans_allowed_on_trunk": '200-211',
+                "mode": "on",
+                "native_vlan": "1",
+                "status": "trunking",
+                "vlans_in_stp_forwarding_not_pruned": 'none',
+                "name": "GigabitEthernet1/0/24",
+                "encapsulation": "802.1q"
+            },
             "Port-channel12": {
                "vlans_allowed_active_in_mgmt_domain": '100-110',
                "vlans_allowed_on_trunk": '100-110',
@@ -16046,24 +16056,28 @@ class test_show_interfaces_trunk(unittest.TestCase):
         Port        Mode             Encapsulation  Status        Native vlan
         Gi1/0/4     on               802.1q         trunking      1
         Gi1/0/23    on               802.1q         trunking      1
+        Gi1/0/24    on               802.1q         trunking      1
         Po12        on               802.1q         trunking      1
         Po14        on               802.1q         trunking      1
 
         Port        Vlans allowed on trunk
         Gi1/0/4     200-211
         Gi1/0/23    200-211
+        Gi1/0/24    200-211
         Po12        100-110
         Po14        200-211
 
         Port        Vlans allowed and active in management domain
         Gi1/0/4     200-211
         Gi1/0/23    200-211
+        Gi1/0/24    200-211
         Po12        100-110
         Po14        200-211, 300-302
 
         Port        Vlans in spanning tree forwarding state and not pruned
         Gi1/0/4     200-211
         Gi1/0/23    200-211
+        Gi1/0/24    none
         Po12        100-110
                   
         Port        Vlans in spanning tree forwarding state and not pruned

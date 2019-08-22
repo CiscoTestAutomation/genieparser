@@ -2718,7 +2718,7 @@ class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
         p2 = re.compile('^Port +Vlans +allowed +on +trunk$')
         p3 = re.compile('^Port +Vlans +allowed +and +active +in +management +domain$')
         p4 = re.compile('^Port +Vlans +in +spanning +tree +forwarding +state +and +not +pruned$')
-        p5 = re.compile('^(?P<name>[\w\-\/\.]+) +(?P<vlans>[\d\-\,\s]+)$')
+        p5 = re.compile('^(?P<name>[\w\-\/\.]+) +(?P<vlans>none\s*|[\d\-\,\s]+)$')
         # initial variables
         ret_dict = {}
         vlan_list_type = None
