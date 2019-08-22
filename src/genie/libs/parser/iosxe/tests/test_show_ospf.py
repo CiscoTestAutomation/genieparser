@@ -51,32 +51,32 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output1 = {'execute.return_value': '''
-        PE1#show ip ospf 9996 segment-routing local-block
+        PE1#show ip ospf 65109 segment-routing local-block
  
-            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
  
         OSPF Segment Routing Local Blocks in Area 8
          
           Router ID        SR Capable   SRLB Base   SRLB Range 
         --------------------------------------------------------
-         *1.1.1.1          Yes          15000       1000       
-          2.2.2.2          Yes          15000       1000       
+         *10.4.1.1          Yes          15000       1000       
+          10.16.2.2          Yes          15000       1000       
          
         PE1#
         '''}
 
     golden_parsed_output1 = {
         'instance':
-            {'9996':
-                {'router_id': '1.1.1.1',
+            {'65109':
+                {'router_id': '10.4.1.1',
                 'areas':
                     {'0.0.0.8':
                         {'router_id':
-                            {'1.1.1.1':
+                            {'10.4.1.1':
                                 {'sr_capable': 'Yes',
                                 'srlb_base': 15000,
                                 'srlb_range': 1000},
-                            '2.2.2.2':
+                            '10.16.2.2':
                                 {'sr_capable': 'Yes',
                                 'srlb_base': 15000,
                                 'srlb_range': 1000}}}},
@@ -87,13 +87,13 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(process_id=9996)
+            parsed_output = obj.parse(process_id=65109)
 
     def test_show_ip_ospf_segment_routing_local_block_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
-        parsed_output = obj.parse(process_id=9996)
+        parsed_output = obj.parse(process_id=65109)
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
@@ -6700,7 +6700,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                 "address_family": {
                     "ipv4": {
                         "instance": {
-                            "9996": {
+                            "65109": {
                                 "areas": {
                                     "0.0.0.8": {
                                         "database": {
@@ -6708,13 +6708,13 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                 10: {
                                                     "lsa_type": 10,
                                                     "lsas": {
-                                                        "1.0.0.0 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "1.0.0.0",
+                                                        "10.1.0.0 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.0",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
-                                                                        "mpls_te_router_id": "1.1.1.1",
+                                                                        "mpls_te_router_id": "10.4.1.1",
                                                                         "num_of_links": 0,
                                                                     }
                                                                 },
@@ -6723,8 +6723,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "1.0.0.0",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.1.0.0",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_type": 1,
                                                                     "opaque_id": 0,
                                                                     "seq_num": "80000001",
@@ -6734,9 +6734,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "1.0.0.15 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "1.0.0.15",
+                                                        "10.1.0.15 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.15",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -6744,12 +6744,12 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
-                                                                                "link_id": "2.2.2.2",
+                                                                                "link_id": "10.16.2.2",
                                                                                 "remote_if_ipv4_addrs": {
-                                                                                    "200.0.0.2": {}
+                                                                                    "192.168.220.2": {}
                                                                                 },
                                                                                 "local_if_ipv4_addrs": {
-                                                                                    "200.0.0.1": {}
+                                                                                    "192.168.220.1": {}
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 176258176,
@@ -6764,8 +6764,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "1.0.0.15",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.1.0.15",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_type": 1,
                                                                     "opaque_id": 15,
                                                                     "seq_num": "80000001",
@@ -6775,9 +6775,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "1.0.0.16 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "1.0.0.16",
+                                                        "10.1.0.16 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.16",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -6785,12 +6785,12 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
-                                                                                "link_id": "2.2.2.2",
+                                                                                "link_id": "10.16.2.2",
                                                                                 "remote_if_ipv4_addrs": {
-                                                                                    "200.0.1.2": {}
+                                                                                    "192.168.111.2": {}
                                                                                 },
                                                                                 "local_if_ipv4_addrs": {
-                                                                                    "200.0.1.1": {}
+                                                                                    "192.168.111.1": {}
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 125000000,
@@ -6805,8 +6805,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "1.0.0.16",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.1.0.16",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_type": 1,
                                                                     "opaque_id": 16,
                                                                     "seq_num": "80000001",
@@ -6816,9 +6816,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "1.0.0.17 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "1.0.0.17",
+                                                        "10.1.0.17 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.17",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -6826,12 +6826,12 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
-                                                                                "link_id": "2.2.2.2",
+                                                                                "link_id": "10.16.2.2",
                                                                                 "remote_if_ipv4_addrs": {
-                                                                                    "200.0.2.2": {}
+                                                                                    "192.168.4.2": {}
                                                                                 },
                                                                                 "local_if_ipv4_addrs": {
-                                                                                    "200.0.2.1": {}
+                                                                                    "192.168.4.1": {}
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 125000000,
@@ -6846,8 +6846,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "1.0.0.17",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.1.0.17",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_type": 1,
                                                                     "opaque_id": 17,
                                                                     "seq_num": "80000001",
@@ -6857,9 +6857,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "1.0.0.18 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "1.0.0.18",
+                                                        "10.1.0.18 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.18",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -6867,12 +6867,12 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 "link_type": 1,
                                                                                 "link_name": "point-to-point network",
-                                                                                "link_id": "2.2.2.2",
+                                                                                "link_id": "10.16.2.2",
                                                                                 "remote_if_ipv4_addrs": {
-                                                                                    "200.0.3.2": {}
+                                                                                    "192.168.154.2": {}
                                                                                 },
                                                                                 "local_if_ipv4_addrs": {
-                                                                                    "200.0.3.1": {}
+                                                                                    "192.168.154.1": {}
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 125000000,
@@ -6887,8 +6887,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "1.0.0.18",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.1.0.18",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_type": 1,
                                                                     "opaque_id": 18,
                                                                     "seq_num": "80000001",
@@ -6898,9 +6898,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "4.0.0.0 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "4.0.0.0",
+                                                        "10.16.0.0 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.16.0.0",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -6968,8 +6968,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "4.0.0.0",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.16.0.0",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_id": 0,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xD28C",
@@ -6977,9 +6977,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "7.0.0.0 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "7.0.0.0",
+                                                        "10.49.0.0 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.49.0.0",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -6987,7 +6987,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 "tlv_type": "Extended Prefix",
                                                                                 "length": 20,
-                                                                                "prefix": "1.1.1.1/32",
+                                                                                "prefix": "10.4.1.1/32",
                                                                                 "af": 0,
                                                                                 "route_type": "Intra",
                                                                                 "flags": "N-bit",
@@ -7010,8 +7010,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "7.0.0.0",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.49.0.0",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_id": 0,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xEFA7",
@@ -7019,9 +7019,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "8.0.0.20 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "8.0.0.20",
+                                                        "10.64.0.20 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.20",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -7031,8 +7031,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
                                                                                 "link_type": 1,
-                                                                                "link_id": "2.2.2.2",
-                                                                                "link_data": "200.0.0.1",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.220.1",
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
@@ -7043,7 +7043,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "200.0.0.2",
+                                                                                        "remote_interface_address": "192.168.220.2",
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
@@ -7061,8 +7061,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "8.0.0.20",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.64.0.20",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_id": 20,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xF52F",
@@ -7070,9 +7070,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "8.0.0.21 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "8.0.0.21",
+                                                        "10.64.0.21 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.21",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -7082,8 +7082,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
                                                                                 "link_type": 1,
-                                                                                "link_id": "2.2.2.2",
-                                                                                "link_data": "200.0.1.1",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.111.1",
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
@@ -7094,7 +7094,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "200.0.1.2",
+                                                                                        "remote_interface_address": "192.168.111.2",
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
@@ -7112,8 +7112,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "8.0.0.21",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.64.0.21",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_id": 21,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xB764",
@@ -7121,9 +7121,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "8.0.0.22 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "8.0.0.22",
+                                                        "10.64.0.22 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.22",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -7133,8 +7133,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
                                                                                 "link_type": 1,
-                                                                                "link_id": "2.2.2.2",
-                                                                                "link_data": "200.0.2.1",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.4.1",
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
@@ -7145,7 +7145,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "200.0.2.2",
+                                                                                        "remote_interface_address": "192.168.4.2",
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
@@ -7163,8 +7163,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "8.0.0.22",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.64.0.22",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_id": 22,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xF420",
@@ -7172,9 +7172,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        "8.0.0.23 1.1.1.1": {
-                                                            "adv_router": "1.1.1.1",
-                                                            "lsa_id": "8.0.0.23",
+                                                        "10.64.0.23 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.23",
                                                             "ospfv2": {
                                                                 "body": {
                                                                     "opaque": {
@@ -7184,8 +7184,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 68,
                                                                                 "link_name": "another router (point-to-point)",
                                                                                 "link_type": 1,
-                                                                                "link_id": "2.2.2.2",
-                                                                                "link_data": "200.0.3.1",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.154.1",
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
@@ -7196,7 +7196,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "200.0.3.2",
+                                                                                        "remote_interface_address": "192.168.154.2",
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
@@ -7213,8 +7213,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "option": "None",
                                                                     "option_desc": "No TOS-capability, DC",
                                                                     "type": 10,
-                                                                    "lsa_id": "8.0.0.23",
-                                                                    "adv_router": "1.1.1.1",
+                                                                    "lsa_id": "10.64.0.23",
+                                                                    "adv_router": "10.4.1.1",
                                                                     "opaque_id": 23,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0x32DB",
@@ -7239,42 +7239,42 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
       PE1#show ip ospf database opaque-area self-originate
      
-                OSPF Router with ID (1.1.1.1) (Process ID 9996)
+                OSPF Router with ID (10.4.1.1) (Process ID 65109)
      
                     Type-10 Opaque Area Link States (Area 8)
      
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 1.0.0.0
+      Link State ID: 10.1.0.0
       Opaque Type: 1 (Traffic Engineering)
       Opaque ID: 0
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0x58D1
       Length: 28
       Fragment number : 0
      
-        MPLS TE router ID : 1.1.1.1
+        MPLS TE router ID : 10.4.1.1
      
         Number of Links : 0
      
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 1.0.0.15
+      Link State ID: 10.1.0.15
       Opaque Type: 1 (Traffic Engineering)
       Opaque ID: 15
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0x917E
       Length: 80
       Fragment number : 15
      
         Link connected to Point-to-Point network
-          Link ID : 2.2.2.2
-          Neighbor Address : 200.0.0.2
-          Interface Address : 200.0.0.1
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.220.2
+          Interface Address : 192.168.220.1
           Admin Metric : 1
           Maximum bandwidth : 176258176
           IGP Metric : 1
@@ -7284,19 +7284,19 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 1.0.0.16
+      Link State ID: 10.1.0.16
       Opaque Type: 1 (Traffic Engineering)
       Opaque ID: 16
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0x8A09
       Length: 80
       Fragment number : 16
      
         Link connected to Point-to-Point network
-          Link ID : 2.2.2.2
-          Neighbor Address : 200.0.1.2
-          Interface Address : 200.0.1.1
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.111.2
+          Interface Address : 192.168.111.1
           Admin Metric : 1
           Maximum bandwidth : 125000000
           IGP Metric : 1
@@ -7306,19 +7306,19 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 1.0.0.17
+      Link State ID: 10.1.0.17
       Opaque Type: 1 (Traffic Engineering)
       Opaque ID: 17
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xC2CD
       Length: 80
       Fragment number : 17
      
         Link connected to Point-to-Point network
-          Link ID : 2.2.2.2
-          Neighbor Address : 200.0.2.2
-          Interface Address : 200.0.2.1
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.4.2
+          Interface Address : 192.168.4.1
           Admin Metric : 1
           Maximum bandwidth : 125000000
           IGP Metric : 1
@@ -7328,19 +7328,19 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 1.0.0.18
+      Link State ID: 10.1.0.18
       Opaque Type: 1 (Traffic Engineering)
       Opaque ID: 18
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xFA92
       Length: 80
       Fragment number : 18
      
         Link connected to Point-to-Point network
-          Link ID : 2.2.2.2
-          Neighbor Address : 200.0.3.2
-          Interface Address : 200.0.3.1
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.154.2
+          Interface Address : 192.168.154.1
           Admin Metric : 1
           Maximum bandwidth : 125000000
           IGP Metric : 1
@@ -7350,10 +7350,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 4.0.0.0
+      Link State ID: 10.16.0.0
       Opaque Type: 4 (Router Information)
       Opaque ID: 0
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xD28C
       Length: 76
@@ -7392,17 +7392,17 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 7.0.0.0
+      Link State ID: 10.49.0.0
       Opaque Type: 7 (Extended Prefix)
       Opaque ID: 0
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xEFA7
       Length: 44
      
         TLV Type: Extended Prefix
         Length: 20
-          Prefix    : 1.1.1.1/32
+          Prefix    : 10.4.1.1/32
           AF        : 0
           Route-type: Intra
           Flags     : N-bit
@@ -7417,10 +7417,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 8.0.0.20
+      Link State ID: 10.64.0.20
       Opaque Type: 8 (Extended Link)
       Opaque ID: 20
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xF52F
       Length: 92
@@ -7428,8 +7428,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         TLV Type: Extended Link
         Length: 68
         Link connected to : another Router (point-to-point)
-        (Link ID) Neighboring Router ID: 2.2.2.2
-        (Link Data) Interface IP address: 200.0.0.1
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.220.1
      
           Sub-TLV Type: Adj SID
           Length : 7
@@ -7439,7 +7439,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
             Label  : 19
      
           Sub-TLV Type: Remote Intf Addr
-            Remote Interface Address   : 200.0.0.2
+            Remote Interface Address   : 192.168.220.2
      
           Sub-TLV Type: Local / Remote Intf ID
             Local Interface ID   : 20
@@ -7448,10 +7448,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 8.0.0.21
+      Link State ID: 10.64.0.21
       Opaque Type: 8 (Extended Link)
       Opaque ID: 21
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xB764
       Length: 92
@@ -7459,8 +7459,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         TLV Type: Extended Link
         Length: 68
         Link connected to : another Router (point-to-point)
-        (Link ID) Neighboring Router ID: 2.2.2.2
-        (Link Data) Interface IP address: 200.0.1.1
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.111.1
      
           Sub-TLV Type: Adj SID
           Length : 7
@@ -7470,7 +7470,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
             Label  : 18
      
           Sub-TLV Type: Remote Intf Addr
-            Remote Interface Address   : 200.0.1.2
+            Remote Interface Address   : 192.168.111.2
      
           Sub-TLV Type: Local / Remote Intf ID
             Local Interface ID   : 21
@@ -7479,10 +7479,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 8.0.0.22
+      Link State ID: 10.64.0.22
       Opaque Type: 8 (Extended Link)
       Opaque ID: 22
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0xF420
       Length: 92
@@ -7490,8 +7490,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         TLV Type: Extended Link
         Length: 68
         Link connected to : another Router (point-to-point)
-        (Link ID) Neighboring Router ID: 2.2.2.2
-        (Link Data) Interface IP address: 200.0.2.1
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.4.1
      
           Sub-TLV Type: Adj SID
           Length : 7
@@ -7501,7 +7501,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
             Label  : 17
      
           Sub-TLV Type: Remote Intf Addr
-            Remote Interface Address   : 200.0.2.2
+            Remote Interface Address   : 192.168.4.2
      
           Sub-TLV Type: Local / Remote Intf ID
             Local Interface ID   : 22
@@ -7510,10 +7510,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
       LS age: 49
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
-      Link State ID: 8.0.0.23
+      Link State ID: 10.64.0.23
       Opaque Type: 8 (Extended Link)
       Opaque ID: 23
-      Advertising Router: 1.1.1.1
+      Advertising Router: 10.4.1.1
       LS Seq Number: 80000001
       Checksum: 0x32DB
       Length: 92
@@ -7521,8 +7521,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         TLV Type: Extended Link
         Length: 68
         Link connected to : another Router (point-to-point)
-        (Link ID) Neighboring Router ID: 2.2.2.2
-        (Link Data) Interface IP address: 200.0.3.1
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.154.1
      
           Sub-TLV Type: Adj SID
           Length : 7
@@ -7532,7 +7532,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
             Label  : 16
      
           Sub-TLV Type: Remote Intf Addr
-            Remote Interface Address   : 200.0.3.2
+            Remote Interface Address   : 192.168.154.2
      
           Sub-TLV Type: Local / Remote Intf ID
             Local Interface ID   : 23
@@ -9423,32 +9423,32 @@ class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ip ospf 1234 segment-routing global-block
  
-                    OSPF Router with ID (1.1.1.1) (Process ID 1234)
+                    OSPF Router with ID (10.4.1.1) (Process ID 1234)
          
         OSPF Segment Routing Global Blocks in Area 3
          
           Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
          
-         *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label    
-          2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label  
+         *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label    
+          10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label  
     '''}
 
     golden_parsed_output = {
         'process_id': {
             1234: {
-                'router_id': '1.1.1.1',
+                'router_id': '10.4.1.1',
                 'area': 3,
                 'routers': {
-                    '1.1.1.1': {
-                        'router_id': '1.1.1.1',
+                    '10.4.1.1': {
+                        'router_id': '10.4.1.1',
                         'sr_capable': 'Yes',
                         'sr_algorithm': 'SPF,StrictSPF',
                         'srgb_base': 16000,
                         'srgb_range': 8000,
                         'sid_label': 'Label'
                     },
-                    '2.2.2.2': {
-                        'router_id': '2.2.2.2',
+                    '10.16.2.2': {
+                        'router_id': '10.16.2.2',
                         'sr_capable': 'Yes',
                         'sr_algorithm': 'SPF,StrictSPF',
                         'srgb_base': 16000,
@@ -9463,33 +9463,33 @@ class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         show ip ospf segment-routing global-block
 
-                    OSPF Router with ID (1.1.1.1) (Process ID 1)
+                    OSPF Router with ID (10.4.1.1) (Process ID 1)
         
         OSPF Segment Routing Global Blocks in Area 0
         
           Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
         
-         *1.1.1.1         No
-          2.2.2.2         No
-          3.3.3.3         No
+         *10.4.1.1         No
+          10.16.2.2         No
+          10.36.3.3         No
     '''}
 
     golden_parsed_output_2 = {
         'process_id': {
             1: {
-                'router_id': '1.1.1.1',
+                'router_id': '10.4.1.1',
                 'area': 0,
                 'routers': {
-                    '1.1.1.1': {
-                        'router_id': '1.1.1.1',
+                    '10.4.1.1': {
+                        'router_id': '10.4.1.1',
                         'sr_capable': 'No'
                     },
-                    '2.2.2.2': {
-                        'router_id': '2.2.2.2',
+                    '10.16.2.2': {
+                        'router_id': '10.16.2.2',
                         'sr_capable': 'No'
                     },
-                    '3.3.3.3': {
-                        'router_id': '3.3.3.3',
+                    '10.36.3.3': {
+                        'router_id': '10.36.3.3',
                         'sr_capable': 'No'
                     }
                 }
@@ -9778,25 +9778,25 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
     golden_output = {'execute.return_value': '''
         show ip ospf segment-routing protected-adjacencies
 
-                OSPF Router with ID (1.1.1.1) (Process ID 9996)
+                OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
                             Area with ID (8)
 
         Neighbor ID     Interface          Address         Adj-Sid      Backup Nexthop  Backup Interface
         --------------- ------------------ --------------- ------------ --------------- ------------------
-        22.22.22.22     Gi5                10.0.0.25       20           10.0.0.9        Gi3
-        22.22.22.22     Gi4                10.0.0.13       21           10.0.0.9        Gi3
-        11.11.11.11     Gi3                10.0.0.9        22           10.0.0.13       Gi4
+        10.151.22.22     Gi5                10.0.0.25       20           10.0.0.9        Gi3
+        10.151.22.22     Gi4                10.0.0.13       21           10.0.0.9        Gi3
+        10.229.11.11     Gi3                10.0.0.9        22           10.0.0.13       Gi4
     '''}
 
     golden_parsed_output = {
         'process_id': {
-            9996: {
+            65109: {
                 'areas': {
                     '0.0.0.8': {
-                        'router_id': '1.1.1.1',
+                        'router_id': '10.4.1.1',
                         'neighbors': {
-                            '22.22.22.22': {
+                            '10.151.22.22': {
                                 'interfaces': {
                                     'GigabitEthernet5': {
                                         'address': '10.0.0.25',
@@ -9812,7 +9812,7 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
                                         },
                                     },
                                 },
-                            '11.11.11.11': {
+                            '10.229.11.11': {
                                 'interfaces': {
                                     'GigabitEthernet3': {
                                         'address': '10.0.0.9',
@@ -9852,7 +9852,7 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ip ospf segment-routing sid-database
 
-                    OSPF Router with ID (1.1.1.1) (Process ID 1234)
+                    OSPF Router with ID (10.4.1.1) (Process ID 1234)
 
         OSPF Segment Routing SIDs
 
@@ -9861,28 +9861,28 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
 
         SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
         --------------  ------------------  ---------------  -------  --------  ----
-        1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0  
-        2               2.2.2.2/32          2.2.2.2          8        Intra     0  
+        1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0  
+        2               10.16.2.2/32          10.16.2.2          8        Intra     0  
     '''}
 
     golden_parsed_output = {
         'process_id': {
             1234: {
-                'router_id': '1.1.1.1',
+                'router_id': '10.4.1.1',
                 'sids': {
                     1: {
                         'sid': 1,
                         'codes': 'L',
-                        'prefix': '1.1.1.1/32',
-                        'adv_rtr_id': '1.1.1.1',
+                        'prefix': '10.4.1.1/32',
+                        'adv_rtr_id': '10.4.1.1',
                         'area_id': '0.0.0.8',
                         'type': 'Intra',
                         'algo': 0
                     },
                     2: {
                         'sid': 2,
-                        'prefix': '2.2.2.2/32',
-                        'adv_rtr_id': '2.2.2.2',
+                        'prefix': '10.16.2.2/32',
+                        'adv_rtr_id': '10.16.2.2',
                         'area_id': '0.0.0.8',
                         'type': 'Intra',
                         'algo': 0
@@ -9895,8 +9895,8 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
 
     golden_parsed_output2 = {
         'process_id': {
-            9996: {
-                'router_id': '1.1.1.1',
+            65109: {
+                'router_id': '10.4.1.1',
                 },
             },
         }
@@ -9904,7 +9904,7 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         show ip ospf segment-routing sid-database
 
-            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
     '''}
 
     def test_empty(self):
@@ -9940,7 +9940,7 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ip ospf segment-routing             
     
-                OSPF Router with ID (2.2.2.2) (Process ID 9996)
+                OSPF Router with ID (10.16.2.2) (Process ID 65109)
     
         Global segment-routing state: Enabled
         
@@ -9976,13 +9976,13 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
         Adj Label Bind Retry timer not running
         sr-app locks requested: srgb 0, srlb 0
         TEAPP:
-        TE Router ID 2.2.2.2
+        TE Router ID 10.16.2.2
     '''}
 
     golden_parsed_output = {
         'process_id': {
-            9996: {
-                'router_id': '2.2.2.2',
+            65109: {
+                'router_id': '10.16.2.2',
                 'sr_attributes': {
                     'sr_label_preferred': False,
                     'advertise_explicit_null': False,
@@ -10062,7 +10062,7 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
                     'srlb': 0,
                     },
                 'teapp': {
-                    'te_router_id': '2.2.2.2',
+                    'te_router_id': '10.16.2.2',
                     },
                 },
             },
@@ -10071,15 +10071,15 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
     show ip ospf segment-routing
 
-            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
 
     Global segment-routing state: Not configured
     '''}
 
     golden_parsed_output2 = {
         'process_id': {
-            9996: {
-                'router_id': '1.1.1.1',
+            65109: {
+                'router_id': '10.4.1.1',
                 'sr_attributes': {
                     'sr_label_preferred': True,
                     'advertise_explicit_null': True,
