@@ -137,40 +137,42 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
     """
 
     schema = {
-        'interfaces': {
-            Any(): {
-                'interface': str,
-                Optional('iif_id'): str,
-                'mac_address': str,
-                Optional('ipv6_address'): str,
-                'ipv4_address': str,
-                Optional('user_name'): str,
-                'status': str,
-                'domain': str,
-                'oper_host_mode': str,
-                'oper_control_dir': str,
-                Optional('authorized_by'): str,
-                Optional('vlan_policy'): str,
-                'session_timeout': str,
-                'common_session_id': str,
-                'acct_session_id': str,
-                'handle': str,
-                Optional('idle_timeout'): str,
-                Optional('current_policy'): str,
-                Optional('local_policies'): {
-                    'template': {
-                        Any():{ 
-                            'priority': int,
+        'authentication_sessions': {
+            'index': {
+                Any(): {
+                    'interface': str,
+                    Optional('iif_id'): str,
+                    'mac_address': str,
+                    Optional('ipv6_address'): str,
+                    'ipv4_address': str,
+                    Optional('user_name'): str,
+                    'status': str,
+                    'domain': str,
+                    'oper_host_mode': str,
+                    'oper_control_dir': str,
+                    Optional('authorized_by'): str,
+                    Optional('vlan_policy'): str,
+                    'session_timeout': str,
+                    'common_session_id': str,
+                    'acct_session_id': str,
+                    'handle': str,
+                    Optional('idle_timeout'): str,
+                    Optional('current_policy'): str,
+                    Optional('local_policies'): {
+                        'template': {
+                            Any():{ 
+                                'priority': int,
+                            }
+                        },
+                        'vlan_group': {
+                            'vlan': int,
                         }
                     },
-                    'vlan_group': {
-                        'vlan': int,
-                    }
-                },
-                'method_status': {
-                    Any(): {
-                        'method': str,
-                        'state': str,
+                    'method_status': {
+                        Any(): {
+                            'method': str,
+                            'state': str,
+                        }
                     }
                 }
             }
