@@ -209,3 +209,12 @@
 * IOSXE
     * Updated ShowBgpAllSummary
         removed cmd as param due to missing key error
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated utils.common
+        Added vl = vasileft; vr = vasiright
+    * Updated test_show_vrf.py
+        Replaced output similar to customer's output
