@@ -1537,7 +1537,7 @@ class ShowIpCef(ShowIpCefSchema):
 
         # 10.169.197.104/30
         # 2001:DB8:1:3::/64
-        # 2.2.2.2/32, epoch 2, per-destination sharing
+        # 10.16.2.2/32, epoch 2, per-destination sharing
         p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)'
                          '(?:, +epoch +(?P<epoch>(\d+)))?'
                          '(?:, +(?P<sharing>(per-destination sharing)))?$')
@@ -1553,8 +1553,9 @@ class ShowIpCef(ShowIpCefSchema):
                        '( +label +(?P<outgoing_label>[\w\-\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
 
         #     nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
+        # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
         p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
-                           ' +label +\[(?P<outgoing_label>([0-9\|]+))\]'
+                           ' +label +\[(?P<outgoing_label>([0-9\|\w\-]+))\]'
                            '\-\(local\:(?P<local_label>(\d+))\)$')
 
         #     attached to GigabitEthernet3.100
@@ -1576,7 +1577,7 @@ class ShowIpCef(ShowIpCefSchema):
 
             # 10.169.197.104/30
             # 2001:DB8:1:3::/64
-            # 2.2.2.2/32, epoch 2, per-destination sharing
+            # 10.16.2.2/32, epoch 2, per-destination sharing
             m = p1.match(line)
             if m:
                 group = m.groupdict()
