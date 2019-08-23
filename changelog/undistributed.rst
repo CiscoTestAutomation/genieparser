@@ -230,3 +230,10 @@
 * IOSXE
     * Added ShowModule
         added abstraction for Cat4k (c4507)
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowL2routeMacIpAllDetail
+        fixed regEx to parse properly
