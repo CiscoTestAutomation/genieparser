@@ -158,7 +158,7 @@
     * Added ShowIpOspfDatabaseOpaqueAreaSelfOriginate for:
         * show ip ospf database opaque-area self-originate
     * Added ShowIpOspfDatabaseOpaqueAreaAdvRouter for:
-        * show ip ospf database opaque-area adv-router {router_id}
+        * show ip ospf database opaque-area adv-router {address}
 
 --------------------------------------------------------------------------------
                                 Routing

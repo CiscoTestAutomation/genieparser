@@ -28,7 +28,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf segment-routing global-block
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
-    * show ip ospf database opaque-area adv-router {router_id}
+    * show ip ospf database opaque-area adv-router {address}
 '''
 
 # Python
@@ -8021,13 +8021,13 @@ class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSche
 
 class ShowIpOspfDatabaseOpaqueAreaAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
     ''' Parser for:
-        * 'show ip ospf database opaque-area adv-router {router_id}'
+        * 'show ip ospf database opaque-area adv-router {address}'
     '''
 
-    cli_command = 'show ip ospf database opaque-area adv-router {router_id}'
+    cli_command = 'show ip ospf database opaque-area adv-router {address}'
 
-    def cli(self, router_id, output=None):
+    def cli(self, address, output=None):
         if not output:
-            output = self.device.execute(self.cli_command.format(router_id=router_id))
+            output = self.device.execute(self.cli_command.format(address=address))
 
         return super().cli(db_type='opaque', out=output)
