@@ -239,3 +239,10 @@
 * NXOS
     * Updated ShowL2routeMacIpAllDetail
         fixed regEx to parse properly
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInterfacesSwitchport
+        fixed regEx to parse complex output
