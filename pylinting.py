@@ -1,14 +1,13 @@
 #! /bin/env python
 #!python
 
-import os, re, sys, time
+import os, re, sys
 import fnmatch
 import argparse
 import subprocess
 
 def main(path_dir):
-    # cythonize
-    exclude, modules, result = ([],)*3
+    exclude, modules, result = ([] for i in range(3))
     rate = old_rate = index = flag = 0
 
     # import pdb; pdb.set_trace()
@@ -35,7 +34,7 @@ def main(path_dir):
             else:
                 modules.append(module_file)
 
-    if len(modules) == 0: # 
+    if len(modules) == 0:
         print('-'*30)
         print('Did not lint any files, exited')
         print('-'*30)
@@ -91,16 +90,14 @@ def main(path_dir):
                     rate += float(m.groupdict()['rating'])
                     old_rate += float(m.groupdict()['prev_rating'])
                     flag = 0 # reset flag
-
+            input.close()
         os.unlink('logfile.txt')
             
     print('')
     print('Summary of each file: ')
     print('-'*21)
-    time.sleep(0.4)
 
     for element in result:
-        time.sleep(0.03)
         print(element)
 
     # calculate the avg rates
@@ -109,7 +106,6 @@ def main(path_dir):
     final_old_rate = old_rate/number_of_files
 
 
-    time.sleep(0.03)
     print('-'*26)
     print("Average rate %.3f/10" %final_rate)
     print("Previous average rate %.3f/10" %final_old_rate)
