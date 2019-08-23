@@ -9792,9 +9792,9 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
     golden_parsed_output = {
         'process_id': {
             65109: {
+                'router_id': '10.4.1.1',
                 'areas': {
-                    '0.0.0.8': {
-                        'router_id': '10.4.1.1',
+                    '0.0.0.8': {                        
                         'neighbors': {
                             '10.151.22.22': {
                                 'interfaces': {
@@ -9838,7 +9838,7 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
     parsed_output_2 = {
         'process_id': {
             9996: {
-
+                'router_id': '1.1.1.1'
             }
         }
     }
