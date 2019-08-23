@@ -20,7 +20,13 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
-
+# =============================================================
+# Schema for:
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+# =============================================================
 class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
     ''' Schema for:
         * 'show segment-routing mpls connected-prefix-sid-map ipv4'
@@ -106,7 +112,6 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
             },
         }
 
-
 # ====================================================================
 # Parser for:
 #    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
@@ -120,7 +125,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
     
     cli_command = 'show segment-routing mpls connected-prefix-sid-map {address_family}'
     
-    def cli(self, address_family, output=None):
+    def cli(self, address_family, local=False, output=None):
 
         assert address_family in ['ipv4', 'ipv6']
 
@@ -236,7 +241,6 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 continue
 
         return ret_dict
-
 
 # ==================================
 # Schema for:

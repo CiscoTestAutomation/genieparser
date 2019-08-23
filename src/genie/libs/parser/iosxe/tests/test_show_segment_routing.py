@@ -17,6 +17,7 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
                                                           ShowSegmentRoutingMplsGbLock,
                                                           ShowSegmentRoutingMplsConnectedPrefixSidMapLocal)
 
+
 # =============================================================
 # Unittest for:
 #   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
@@ -118,7 +119,6 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
         obj = ShowSegmentRoutingMplsConnectedPrefixSidMap(device=self.device)
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
 
 # ==================================
 # Unittest for:
@@ -342,6 +342,6 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
         obj = ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(device=self.device)
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
+        
 if __name__ == '__main__':
     unittest.main()
