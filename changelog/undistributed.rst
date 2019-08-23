@@ -237,3 +237,10 @@
 * NXOS
     * Updated ShowL2routeMacIpAllDetail
         fixed regEx to parse properly
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowVrfAllDetail
+        updated regEx to parse 'ip_address' properly
