@@ -31,23 +31,23 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
                 {'connected_prefix_sid_map':
                     {'ipv4':
                         {'ipv4_prefix_sid':
-                            {'1.1.1.1/32':
+                            {'10.4.1.1/32':
                                 {'algorithm':
                                     {'ALGO_0':
                                         {'algorithm': 'ALGO_0',
-                                        'prefix': '1.1.1.1/32',
+                                        'prefix': '10.4.1.1/32',
                                         'range': '1',
-                                        'source': 'OSPF Area 8 1.1.1.1',
+                                        'source': 'OSPF Area 8 10.4.1.1',
                                         'srgb': 'Y',
                                         'sid': '1',
                                         'type': 'Indx'}}},
-                            '2.2.2.2/32': 
+                            '10.16.2.2/32': 
                                 {'algorithm': 
                                     {'ALGO_0': 
                                         {'algorithm': 'ALGO_0',
-                                        'prefix': '2.2.2.2/32',
+                                        'prefix': '10.16.2.2/32',
                                         'range': '1',
-                                        'source': 'OSPF Area 8 2.2.2.2',
+                                        'source': 'OSPF Area 8 10.16.2.2',
                                         'srgb': 'Y',
                                         'sid': '2',
                                         'type': 'Indx'}}}}}}}}}
@@ -58,13 +58,13 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
                        PREFIX_SID_CONN_MAP ALGO_0
          
             Prefix/masklen   SID Type Range Flags SRGB
-                1.1.1.1/32     1 Indx     1         Y
+                10.4.1.1/32     1 Indx     1         Y
          
                        PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
          
             Prefix/masklen   SID Type Range Flags SRGB Source
-                1.1.1.1/32     1 Indx     1         Y  OSPF Area 8 1.1.1.1
-                2.2.2.2/32     2 Indx     1         Y  OSPF Area 8 2.2.2.2
+                10.4.1.1/32     1 Indx     1         Y  OSPF Area 8 10.4.1.1
+                10.16.2.2/32     2 Indx     1         Y  OSPF Area 8 10.16.2.2
          
                        PREFIX_SID_CONN_MAP ALGO_1
          

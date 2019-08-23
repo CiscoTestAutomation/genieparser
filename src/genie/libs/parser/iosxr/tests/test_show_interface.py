@@ -2110,8 +2110,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0000.5960.0051",
             "description": "NPON_Mcast_VLAN",
             "ipv4": {
-                "192.59.200.9/30": {
-                    "ip": "192.59.200.9",
+                "192.168.166.9/30": {
+                    "ip": "192.168.166.9",
                     "prefix_length": "30"
                 }
             },
@@ -2149,8 +2149,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0059.0100.0001",
             "description": "au-hikari-mansion-100",
             "ipv4": {
-                "192.59.100.254/24": {
-                    "ip": "192.59.100.254",
+                "192.168.36.254/24": {
+                    "ip": "192.168.36.254",
                     "prefix_length": "24"
                 }
             },
@@ -2187,8 +2187,8 @@ class test_show_interfaces(unittest.TestCase):
             "type": "Bridge-Group Virtual Interface",
             "mac_address": "0059.0301.0001",
             "ipv4": {
-                "210.59.140.254/24": {
-                    "ip": "210.59.140.254",
+                "192.168.1.254/24": {
+                    "ip": "192.168.1.254",
                     "prefix_length": "24"
                 }
             },
@@ -2226,8 +2226,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0059.1400.0001",
             "description": "au-hikari-home",
             "ipv4": {
-                "210.59.140.254/24": {
-                    "ip": "210.59.140.254",
+                "192.168.1.254/24": {
+                    "ip": "192.168.1.254",
                     "prefix_length": "24"
                 }
             },
@@ -2276,8 +2276,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0059.1403.0001",
             "description": "UQ-BS",
             "ipv4": {
-                "210.59.143.254/24": {
-                    "ip": "210.59.143.254",
+                "192.168.169.254/24": {
+                    "ip": "192.168.169.254",
                     "prefix_length": "24"
                 }
             },
@@ -2315,8 +2315,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0059.1405.0001",
             "description": "au-hikari-mansion-giga",
             "ipv4": {
-                "210.59.145.254/24": {
-                    "ip": "210.59.145.254",
+                "192.168.36.254/24": {
+                    "ip": "192.168.36.254",
                     "prefix_length": "24"
                 }
             },
@@ -2354,8 +2354,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0059.1407.0001",
             "description": "au-hikari-business",
             "ipv4": {
-                "210.59.147.254/24": {
-                    "ip": "210.59.147.254",
+                "192.168.166.254/24": {
+                    "ip": "192.168.166.254",
                     "prefix_length": "24"
                 }
             },
@@ -2393,8 +2393,8 @@ class test_show_interfaces(unittest.TestCase):
             "mac_address": "0059.1410.0001",
             "description": "JCOM",
             "ipv4": {
-                "210.59.150.254/24": {
-                    "ip": "210.59.150.254",
+                "192.168.121.254/24": {
+                    "ip": "192.168.121.254",
                     "prefix_length": "24"
                 }
             },
@@ -3425,12 +3425,12 @@ class test_show_interfaces(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         #show interfaces 
-        Sat Aug  3 03:25:29.028 JST
+        Sat Aug  3 03:25:29.028 EST
         BVI51 is down, line protocol is down 
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0000.5960.0051
           Description: NPON_Mcast_VLAN
-          Internet address is 192.59.200.9/30
+          Internet address is 192.168.166.9/30
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3444,7 +3444,7 @@ class test_show_interfaces(unittest.TestCase):
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.0100.0001
           Description: au-hikari-mansion-100
-          Internet address is 192.59.100.254/24
+          Internet address is 192.168.36.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3457,7 +3457,7 @@ class test_show_interfaces(unittest.TestCase):
         BVI301 is down, line protocol is down 
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.0301.0001
-          Internet address is 210.59.140.254/24
+          Internet address is 192.168.1.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3471,7 +3471,7 @@ class test_show_interfaces(unittest.TestCase):
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.1400.0001
           Description: au-hikari-home
-          Internet address is 210.59.140.254/24
+          Internet address is 192.168.1.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3490,7 +3490,7 @@ class test_show_interfaces(unittest.TestCase):
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.1403.0001
           Description: UQ-BS  
-          Internet address is 210.59.143.254/24
+          Internet address is 192.168.169.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3504,7 +3504,7 @@ class test_show_interfaces(unittest.TestCase):
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.1405.0001
           Description: au-hikari-mansion-giga
-          Internet address is 210.59.145.254/24
+          Internet address is 192.168.36.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3518,7 +3518,7 @@ class test_show_interfaces(unittest.TestCase):
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.1407.0001
           Description: au-hikari-business
-          Internet address is 210.59.147.254/24
+          Internet address is 192.168.166.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,
@@ -3532,7 +3532,7 @@ class test_show_interfaces(unittest.TestCase):
           Interface state transitions: 0
           Hardware is Bridge-Group Virtual Interface, address is 0059.1410.0001
           Description: JCOM  
-          Internet address is 210.59.150.254/24
+          Internet address is 192.168.121.254/24
           MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
              reliability 255/255, txload 0/255, rxload 0/255
           Encapsulation ARPA,  loopback not set,

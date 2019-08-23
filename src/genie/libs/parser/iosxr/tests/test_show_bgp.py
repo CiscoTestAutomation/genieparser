@@ -7903,7 +7903,7 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         #show bgp l2vpn evpn neighbors
-        Tue Aug 13 23:27:23.263 JST
+        Tue Aug 13 23:27:23.263 EST
 
         BGP neighbor is 192.168.99.11
          Remote AS 65001, local AS 65001, internal link
@@ -8249,7 +8249,7 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
 
     golden_output_neighbor = {'execute.return_value': '''
         #show bgp l2vpn evpn neighbors 192.168.99.11
-        Tue Aug 13 04:20:13.553 JST
+        Tue Aug 13 04:20:13.553 EST
 
         BGP neighbor is 192.168.99.11
          Remote AS 65001, local AS 65001, internal link
