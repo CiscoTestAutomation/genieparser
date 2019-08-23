@@ -8026,8 +8026,8 @@ class ShowIpOspfDatabaseOpaqueAreaAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, 
 
     cli_command = 'show ip ospf database opaque-area adv-router {router_id}'
 
-    def cli(self, output=None):
+    def cli(self, router_id, output=None):
         if not output:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(router_id=router_id))
 
         return super().cli(db_type='opaque', out=output)

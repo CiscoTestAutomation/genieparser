@@ -8307,7 +8307,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)        
         obj = ShowIpOspfDatabaseOpaqueAreaAdvRouter(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(router_id='1.1.1.1')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_ip_ospf_database_opaque_area_empty(self):
