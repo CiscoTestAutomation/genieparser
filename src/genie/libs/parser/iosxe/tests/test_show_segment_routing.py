@@ -17,6 +17,7 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
                                                           ShowSegmentRoutingMplsGbLock,
                                                           ShowSegmentRoutingMplsConnectedPrefixSidMapLocal)
 
+
 # =============================================================
 # Unittest for:
 #   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
