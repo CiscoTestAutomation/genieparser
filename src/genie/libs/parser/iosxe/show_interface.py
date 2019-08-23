@@ -1190,6 +1190,7 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                     },
                     Optional('negotiation_of_trunk'): bool,
                     Optional('access_vlan'): str,
+                    Optional('voice_vlan'): str,
                     Optional('native_vlan_tagging'): bool,
                     Optional('private_vlan'): {
                         Optional('host_association'): str,
