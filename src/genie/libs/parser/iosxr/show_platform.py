@@ -740,14 +740,14 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
         # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
         # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
-        p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]+)\",'
-                         ' +DESCR: +\"(?P<descr>[\S\s]+)\"$')
+        p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]*)\",'
+                         ' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+),'
-                         ' +VID: +(?P<vid>[\S\s]+),'
-                         ' +SN: +(?P<sn>[\S\s]+)$')
+        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]*),'
+                         ' +VID: +(?P<vid>[\S\s]*),'
+                         ' +SN: +(?P<sn>[\S\s]*)$')
 
         for line in out.splitlines():
             line = line.strip()

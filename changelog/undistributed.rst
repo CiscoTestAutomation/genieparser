@@ -4,7 +4,12 @@
 | Module                  | Version       |
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
-
+--------------------------------------------------------------------------------
+                                CEF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed ShowIpCef
+        * Changed parser to match more 'outgoing_label' values
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -170,7 +175,7 @@
                                 Authentication Sessions
 --------------------------------------------------------------------------------
 * IOSXE
-   * ShowAuthenticationSessions for: 
+   * ShowAuthenticationSessions for:
         * 'show authentication sessions'
         * 'show authentication sessions interface {interface}'
    * ShowAuthenticationSessionsInterfaceDetails for:
@@ -198,3 +203,40 @@
 * IOSXE
     * Added ShowL2routeEvpnImetAllDetail for
         'show l2route evpn imet all detail'
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowVrfAllDetailSchema
+        updated the schema due to missing key error
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowBgpAllSummary
+        removed cmd as param due to missing key error
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated utils.common
+        Added vl = vasileft; vr = vasiright
+    * Updated test_show_vrf.py
+        Replaced output similar to customer's output
+
+--------------------------------------------------------------------------------
+                                Platform
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowModule
+        added abstraction for Cat4k (c4507)
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowL2routeMacIpAllDetail
+        fixed regEx to parse properly

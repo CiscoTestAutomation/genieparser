@@ -1444,9 +1444,9 @@ class ShowL2routeMacIpAllDetail(ShowL2routeMacIpAllDetailSchema):
         # ----------- -------------- --------------- ------ ---------- ---------------
         # 101         0000.9cfc.2596 10.111.1.3     BGP    --            0         10.76.23.23
         # 201         0011.0100.0001 10.1.1.2       BGP    --            0         2018:1015::abcd:5678:1   
-        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.+)'
+        p5 = re.compile(r'^\s*(?P<topo_id>[\d]+) +(?P<mac_addr>[\w\.]+) +(?P<host_ip>[\w\/\.]+)'
                         ' +(?P<mac_ip_prod_type>[\w\,]+)'
-                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+)')
+                        ' +(?P<mac_ip_flags>[\w\,\-]+) +(?P<seq_num>[\d]+) +(?P<next_hop1>[\w\/\.]+)$')
 
         for line in out.splitlines():
             if line:

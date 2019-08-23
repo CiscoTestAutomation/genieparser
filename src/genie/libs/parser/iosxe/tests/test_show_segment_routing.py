@@ -32,10 +32,10 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
                 'local_prefix_sid': {
                     'ipv4': {
                         'ipv4_prefix_sid_local': {
-                            '1.1.1.1/32': {
+                            '10.4.1.1/32': {
                                 'algorithm': {
                                     'ALGO_0': {
-                                        'prefix': '1.1.1.1/32',
+                                        'prefix': '10.4.1.1/32',
                                         'algorithm': 'ALGO_0',
                                         'value_type': 'Indx',
                                         'sid': '1',
@@ -50,29 +50,29 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
                 'connected_prefix_sid_map': {
                     'ipv4': {
                         'ipv4_prefix_sid': {
-                            '1.1.1.1/32': {
+                            '10.4.1.1/32': {
                                 'algorithm': {
                                     'ALGO_0': {
-                                        'prefix': '1.1.1.1/32',
+                                        'prefix': '10.4.1.1/32',
                                         'algorithm': 'ALGO_0',
                                         'value_type': 'Indx',
                                         'sid': '1',
                                         'range': '1',
                                         'srgb': 'Y',
-                                        'source': 'OSPF Area 8 1.1.1.1',
+                                        'source': 'OSPF Area 8 10.4.1.1',
                                         },
                                     },
                                 },
-                            '2.2.2.2/32': {
+                            '10.16.2.2/32': {
                                 'algorithm': {
                                     'ALGO_0': {
-                                        'prefix': '2.2.2.2/32',
+                                        'prefix': '10.16.2.2/32',
                                         'algorithm': 'ALGO_0',
                                         'value_type': 'Indx',
                                         'sid': '2',
                                         'range': '1',
                                         'srgb': 'Y',
-                                        'source': 'OSPF Area 8 2.2.2.2',
+                                        'source': 'OSPF Area 8 10.16.2.2',
                                         },
                                     },
                                 },
@@ -89,13 +89,13 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
                        PREFIX_SID_CONN_MAP ALGO_0
          
             Prefix/masklen   SID Type Range Flags SRGB
-                1.1.1.1/32     1 Indx     1         Y
+                10.4.1.1/32     1 Indx     1         Y
          
                        PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
          
             Prefix/masklen   SID Type Range Flags SRGB Source
-                1.1.1.1/32     1 Indx     1         Y  OSPF Area 8 1.1.1.1
-                2.2.2.2/32     2 Indx     1         Y  OSPF Area 8 2.2.2.2
+                10.4.1.1/32     1 Indx     1         Y  OSPF Area 8 10.4.1.1
+                10.16.2.2/32     2 Indx     1         Y  OSPF Area 8 10.16.2.2
          
                        PREFIX_SID_CONN_MAP ALGO_1
          
@@ -119,65 +119,6 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-# ====================================================================
-# Unittest for:
-#   * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
-#   * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
-# ====================================================================
-class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
-
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-    
-    golden_parsed_output1 = {
-        'segment_routing': {
-            'bindings': {
-                'local_prefix_sid': {
-                    'ipv4': {
-                        'ipv4_prefix_sid_local': {
-                            '1.1.1.1/32': {
-                                'algorithm': {
-                                    'ALGO_0': {
-                                        'prefix': '1.1.1.1/32',
-                                        'algorithm': 'ALGO_0',
-                                        'value_type': 'Indx',
-                                        'sid': '1',
-                                        'range': '1',
-                                        'srgb': 'Y',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
-        }
-
-    golden_output1 = {'execute.return_value': '''
-        show segment-routing mpls connected-prefix-sid-map local ipv4
-
-               PREFIX_SID_CONN_MAP ALGO_0
-
-        Prefix/masklen   SID Type Range Flags SRGB
-            1.1.1.1/32     1 Indx     1         Y
-
-                PREFIX_SID_CONN_MAP ALGO_1
-
-        Prefix/masklen   SID Type Range Flags SRGB
-        '''}
-
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        obj = ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(address_family='ipv4')
-
-    def test_golden1(self):
-        self.device = Mock(**self.golden_output1)
-        obj = ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(device=self.device)
-        parsed_output = obj.parse(address_family='ipv4')
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 # ==================================
 # Unittest for:
@@ -342,6 +283,65 @@ class test_show_segment_routing_mpls_gb_lock(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+# ====================================================================
+# Unittest for:
+#   * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#   * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+# ====================================================================
+class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 = {
+        'segment_routing': {
+            'bindings': {
+                'local_prefix_sid': {
+                    'ipv4': {
+                        'ipv4_prefix_sid_local': {
+                            '10.4.1.1/32': {
+                                'algorithm': {
+                                    'ALGO_0': {
+                                        'prefix': '10.4.1.1/32',
+                                        'algorithm': 'ALGO_0',
+                                        'value_type': 'Indx',
+                                        'sid': '1',
+                                        'range': '1',
+                                        'srgb': 'Y',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output1 = {'execute.return_value': '''
+        show segment-routing mpls connected-prefix-sid-map local ipv4
+
+               PREFIX_SID_CONN_MAP ALGO_0
+
+        Prefix/masklen   SID Type Range Flags SRGB
+            10.4.1.1/32     1 Indx     1         Y
+
+                PREFIX_SID_CONN_MAP ALGO_1
+
+        Prefix/masklen   SID Type Range Flags SRGB
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(address_family='ipv4')
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 if __name__ == '__main__':
     unittest.main()

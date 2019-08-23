@@ -9,6 +9,8 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls connected-prefix-sid-map ipv6'
     * 'show segment-routing mpls gb'
     * 'show segment-routing mpls gb lock'
+    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
 '''
 
 # Python
@@ -19,13 +21,6 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 
-# =============================================================
-# Schema for:
-#    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
-#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
-#    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
-#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
-# =============================================================
 class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
     ''' Schema for:
         * 'show segment-routing mpls connected-prefix-sid-map ipv4'
@@ -158,14 +153,14 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
         p2 = re.compile(r'^PREFIX_SID_PROTOCOL_ADV_MAP +(?P<algorithm>(.*))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB
-        # 1.1.1.1/32         1 Indx     1         Y
+        # 10.4.1.1/32         1 Indx     1         Y
         p3 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
                          ' +(?P<type>(\S+)) +(?P<range>(\d+))'
                          '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB Source
-        # 1.1.1.1/32         1 Indx     1         Y  OSPF Area 8 1.1.1.1
-        # 2.2.2.2/32         2 Indx     1         Y  OSPF Area 8 2.2.2.2
+        # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
+        # 10.16.2.2/32         2 Indx     1         Y  OSPF Area 8 10.16.2.2
         p4 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
                          ' +(?P<type>(\S+)) +(?P<range>(\d+))'
                          '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
@@ -194,7 +189,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 continue
 
             # Prefix/masklen   SID Type Range Flags SRGB
-            # 1.1.1.1/32         1 Indx     1         Y
+            # 10.4.1.1/32         1 Indx     1         Y
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -214,7 +209,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 continue
 
             # Prefix/masklen   SID Type Range Flags SRGB Source
-            # 1.1.1.1/32         1 Indx     1         Y  OSPF Area 8 1.1.1.1
+            # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -242,29 +237,6 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
 
         return ret_dict
 
-# ====================================================================
-# Parser for:
-#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
-#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
-# ====================================================================
-class ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(ShowSegmentRoutingMplsConnectedPrefixSidMap):
-    ''' Parser for:
-        * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
-        * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
-    '''
-    
-    cli_command = 'show segment-routing mpls connected-prefix-sid-map local {address_family}'
-    
-    def cli(self, address_family, output=None):
-
-        assert address_family in ['ipv4', 'ipv6']
-
-        # Get output
-        if output is None:
-            out = self.device.execute(self.cli_command.format(address_family=address_family))
-        else:
-            out = output
-        return super().cli(address_family=address_family, output=out)
 
 # ==================================
 # Schema for:
@@ -497,3 +469,27 @@ class ShowSegmentRoutingMplsGbLock(ShowSegmentRoutingMplsLbLockSchema):
                 continue
 
         return ret_dict
+
+# ====================================================================
+# Parser for:
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+# ====================================================================
+class ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(ShowSegmentRoutingMplsConnectedPrefixSidMap):
+    ''' Parser for:
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+    '''
+    
+    cli_command = 'show segment-routing mpls connected-prefix-sid-map local {address_family}'
+    
+    def cli(self, address_family, output=None):
+
+        assert address_family in ['ipv4', 'ipv6']
+
+        # Get output
+        if output is None:
+            out = self.device.execute(self.cli_command.format(address_family=address_family))
+        else:
+            out = output
+        return super().cli(address_family=address_family, output=out)

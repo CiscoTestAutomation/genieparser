@@ -81,13 +81,13 @@ class ShowRouteTable(ShowRouteTableSchema):
                          '\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
                          '\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
 
-        # 4.4.4.4/32         *[LDP/9] 03:40:50, metric 110
+        # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         r2 = re.compile(r'(?P<rt_destination>\S+)\s+(?P<active_tag>\*|\-\*)'
                          '\[(?P<protocol_name>\S+)\/(?P<preference>\d+)\]\s+'
                          '(?P<age>\S+)\,\s+metric\s+(?P<metric>\d+)')
 
-        # > to 200.0.0.6 via ge-0/0/1.0
-        # > to 200.0.0.6 via ge-0/0/1.0, Push 305550
+        # > to 192.168.220.6 via ge-0/0/1.0
+        # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
         r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
                          '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>\S+\s+\d+))?')
 
@@ -113,7 +113,7 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 continue
 
-            # 4.4.4.4/32         *[LDP/9] 03:40:50, metric 110
+            # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
             result = r2.match(line)
             if result:
                 group = result.groupdict()
@@ -131,8 +131,8 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 continue
 
-            # > to 200.0.0.6 via ge-0/0/1.0
-            # > to 200.0.0.6 via ge-0/0/1.0, Push 305550
+            # > to 192.168.220.6 via ge-0/0/1.0
+            # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
             # to 10.2.94.2 via lt-1/2/0.49
             result = r3.match(line)
             if result:
