@@ -352,10 +352,10 @@ class test_ifconfig(unittest.TestCase):
             "flags": "4163<UP,BROADCAST,RUNNING,MULTICAST>",
             "mtu": 1500,
             "ipv4": {
-                "161.44.197.208": {
-                    "ip": "161.44.197.208",
+                "172.16.189.208": {
+                    "ip": "172.16.189.208",
                     "netmask": "255.255.255.128",
-                    "broadcast": "161.44.197.255"
+                    "broadcast": "172.16.189.255"
                 }
             },
             "ipv6": {
@@ -405,7 +405,7 @@ class test_ifconfig(unittest.TestCase):
 
     golden_output_interface = {'execute.return_value': '''
         eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-            inet 161.44.197.208  netmask 255.255.255.128  broadcast 161.44.197.255
+            inet 172.16.189.208  netmask 255.255.255.128  broadcast 172.16.189.255
             inet6 2001:420:2840:1312:81f3:ca32:f3fd:6c30  prefixlen 64  scopeid 0x0<global>
             inet6 2001:420:2840:1312:49a5:3e88:bf17:82f2  prefixlen 128  scopeid 0x0<global>
             inet6 2001:420:2840:1312:514c:446:354e:933e  prefixlen 128  scopeid 0x0<global>
