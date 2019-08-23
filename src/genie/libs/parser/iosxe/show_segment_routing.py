@@ -125,7 +125,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
     
     cli_command = 'show segment-routing mpls connected-prefix-sid-map {address_family}'
     
-    def cli(self, address_family, local=False, output=None):
+    def cli(self, address_family, output=None):
 
         assert address_family in ['ipv4', 'ipv6']
 
