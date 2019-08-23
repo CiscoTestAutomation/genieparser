@@ -1537,7 +1537,7 @@ class ShowIpCef(ShowIpCefSchema):
 
         # 10.169.197.104/30
         # 2001:DB8:1:3::/64
-        # 2.2.2.2/32, epoch 2, per-destination sharing
+        # 10.16.2.2/32, epoch 2, per-destination sharing
         p1 = re.compile(r'^(?P<prefix>[\w\:\.]+[\/]+[\d]+)'
                          '(?:, +epoch +(?P<epoch>(\d+)))?'
                          '(?:, +(?P<sharing>(per-destination sharing)))?$')
@@ -1577,7 +1577,7 @@ class ShowIpCef(ShowIpCefSchema):
 
             # 10.169.197.104/30
             # 2001:DB8:1:3::/64
-            # 2.2.2.2/32, epoch 2, per-destination sharing
+            # 10.16.2.2/32, epoch 2, per-destination sharing
             m = p1.match(line)
             if m:
                 group = m.groupdict()
