@@ -7313,9 +7313,9 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
     schema = {
         'process_id': {
             Any(): {
+                'router_id': str,
                 Optional('areas'): {
-                    Any(): {
-                        'router_id': str,
+                    Any(): {                        
                         'neighbors': {
                             Any(): {
                                 'interfaces': {
@@ -7376,6 +7376,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 process_id = int(group['process_id'])
                 process_id_dict = ret_dict.setdefault('process_id', {}). \
                                     setdefault(process_id, {})
+                process_id_dict['router_id'] = router_id
                 continue
 
             # Area with ID (8)
@@ -7384,8 +7385,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 group = m.groupdict()
                 area_id = str(IPAddress(str(group['area_id'])))
                 area_dict = process_id_dict.setdefault('areas', {}). \
-                                setdefault(area_id, {})
-                area_dict.update({'router_id': router_id})
+                                setdefault(area_id, {})                
                 continue
 
             # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
