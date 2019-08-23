@@ -4890,8 +4890,6 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
 
                 continue
 
-        # print(ret_dict)
-        # import pdb; pdb.set_trace()
         return ret_dict
 
 

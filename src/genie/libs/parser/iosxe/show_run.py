@@ -121,7 +121,6 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
 				config_dict['policy_map'].setdefault(policy_map, {})
 				continue
 
-			# import pdb; pdb.set_trace()
 			m = p1_2.match(line)
 			if m:
 				group = m.groupdict()
