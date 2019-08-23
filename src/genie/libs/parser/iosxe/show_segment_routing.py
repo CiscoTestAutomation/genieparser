@@ -115,14 +115,14 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
         p2 = re.compile(r'^PREFIX_SID_PROTOCOL_ADV_MAP +(?P<algorithm>(.*))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB
-        # 1.1.1.1/32         1 Indx     1         Y
+        # 10.4.1.1/32         1 Indx     1         Y
         p3 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
                          ' +(?P<type>(\S+)) +(?P<range>(\d+))'
                          '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB Source
-        # 1.1.1.1/32         1 Indx     1         Y  OSPF Area 8 1.1.1.1
-        # 2.2.2.2/32         2 Indx     1         Y  OSPF Area 8 2.2.2.2
+        # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
+        # 10.16.2.2/32         2 Indx     1         Y  OSPF Area 8 10.16.2.2
         p4 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
                          ' +(?P<type>(\S+)) +(?P<range>(\d+))'
                          '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
@@ -146,7 +146,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 continue
 
             # Prefix/masklen   SID Type Range Flags SRGB
-            # 1.1.1.1/32         1 Indx     1         Y
+            # 10.4.1.1/32         1 Indx     1         Y
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -172,7 +172,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 continue
 
             # Prefix/masklen   SID Type Range Flags SRGB Source
-            # 1.1.1.1/32         1 Indx     1         Y  OSPF Area 8 1.1.1.1
+            # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
             m = p4.match(line)
             if m:
                 group = m.groupdict()

@@ -180,7 +180,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                     device_dict['platform'] = ''
                 continue
 
-        # import pdb; pdb.set_trace()
         return parsed_dict
 
 
