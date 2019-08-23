@@ -1214,28 +1214,28 @@ class test_show_ip_route_word(unittest.TestCase):
     }
 
     golden_output_2 = {'execute.return_value': '''
-        PE1#show ip route 2.2.2.2
-        Routing entry for 2.2.2.2/32
+        PE1#show ip route 10.16.2.2
+        Routing entry for 10.16.2.2/32
           Known via "ospf 1024", distance 95, metric 4, type intra area
           Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
          SR Incoming Label: 52610
           Routing Descriptor Blocks:
-          * 192.168.0.1, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet4, prefer-non-rib-labels, merge-labels
+          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, prefer-non-rib-labels, merge-labels
               Route metric is 5, traffic share count is 1
               MPLS label: 52610
               MPLS Flags: NSF
               Repair Path: 192.168.0.2, via GigabitEthernet3
-            192.168.0.2, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet3, prefer-non-rib-labels, merge-labels
+            192.168.0.2, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet3, prefer-non-rib-labels, merge-labels
               Route metric is 3, traffic share count is 5
               MPLS label: 52610
               MPLS Flags: NSF
               Repair Path: 192.168.0.4, via GigabitEthernet1
-            192.168.0.3, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet2, prefer-non-rib-labels, merge-labels
+            192.168.0.3, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet2, prefer-non-rib-labels, merge-labels
               Route metric is 1, traffic share count is 2
               MPLS label: 52610
               MPLS Flags: NSF
               Repair Path: 192.168.0.1, via GigabitEthernet4
-            192.168.0.4, from 2.2.2.2, 00:00:14 ago, via GigabitEthernet1, prefer-non-rib-labels, merge-labels
+            192.168.0.4, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet1, prefer-non-rib-labels, merge-labels
               Route metric is 2, traffic share count is 1
               MPLS label: 52610
               MPLS Flags: NSF
@@ -1244,8 +1244,8 @@ class test_show_ip_route_word(unittest.TestCase):
 
     golden_parsed_output_2 = {
         'entry': {
-            '2.2.2.2/32': {
-                'ip': '2.2.2.2',
+            '10.16.2.2/32': {
+                'ip': '10.16.2.2',
                 'mask': '32',
                 'known_via': 'ospf 1024',
                 'distance': '95',
@@ -1260,7 +1260,7 @@ class test_show_ip_route_word(unittest.TestCase):
                 'paths': {
                     1: {
                         'nexthop': '192.168.0.1',
-                        'from': '2.2.2.2',
+                        'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet4',
                         'prefer_non_rib_labels': True,
@@ -1276,7 +1276,7 @@ class test_show_ip_route_word(unittest.TestCase):
                     },
                     2: {
                         'nexthop': '192.168.0.2',
-                        'from': '2.2.2.2',
+                        'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet3',
                         'prefer_non_rib_labels': True,
@@ -1292,7 +1292,7 @@ class test_show_ip_route_word(unittest.TestCase):
                     },
                     3: {
                         'nexthop': '192.168.0.3',
-                        'from': '2.2.2.2',
+                        'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet2',
                         'prefer_non_rib_labels': True,
@@ -1308,7 +1308,7 @@ class test_show_ip_route_word(unittest.TestCase):
                     },
                     4: {
                         'nexthop': '192.168.0.4',
-                        'from': '2.2.2.2',
+                        'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet1',
                         'prefer_non_rib_labels': True,
@@ -1639,6 +1639,46 @@ class test_show_ip_cef(unittest.TestCase):
 
               '''}
 
+    golden_parsed_output_5 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "prefix": {
+                            "10.151.22.22/32": {
+                                "epoch": 2,
+                                "sr_local_label_info": "global/16022 [0x1B]",
+                                "nexthop": {
+                                    "10.0.0.9": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet3": {
+                                                "local_label": 16022,
+                                                "outgoing_label": [
+                                                    "16022|implicit-null"
+                                                ],
+                                                "repair": "attached-nexthop 10.0.0.13 GigabitEthernet4"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_5 = {'execute.return_value': '''
+    PE1#show ip cef 10.151.22.22 detail
+    10.151.22.22/32, epoch 2
+      sr local label info: global/16022 [0x1B]
+      nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
+        repair: attached-nexthop 10.0.0.13 GigabitEthernet4
+      nexthop 10.0.0.13 GigabitEthernet4, repair
+
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpCef(device=self.device)
@@ -1672,6 +1712,13 @@ class test_show_ip_cef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 ###################################################
@@ -1814,8 +1861,8 @@ class test_show_ip_cef_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-        PE1#show ip cef 2.2.2.2 detail
-        2.2.2.2/32, epoch 2, per-destination sharing
+        PE1#show ip cef 10.16.2.2 detail
+        10.16.2.2/32, epoch 2, per-destination sharing
           sr local label info: global/16002 [0x1B]
           nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
             repair: attached-nexthop 10.0.0.9 GigabitEthernet3
@@ -1834,7 +1881,7 @@ class test_show_ip_cef_detail(unittest.TestCase):
                 {'address_family': 
                     {'ipv4': 
                         {'prefix': 
-                            {'2.2.2.2/32': 
+                            {'10.16.2.2/32': 
                                 {'epoch': 2,
                                 'nexthop': 
                                     {'10.0.0.13': 
@@ -1868,12 +1915,12 @@ class test_show_ip_cef_detail(unittest.TestCase):
         self.device1 = Mock(**self.empty_output)
         obj = ShowIpCefDetail(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(prefix='2.2.2.2')
+            parsed_output = obj.parse(prefix='10.16.2.2')
 
     def test_golden1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIpCefDetail(device=self.device)
-        parsed_output = obj.parse(prefix='2.2.2.2')
+        parsed_output = obj.parse(prefix='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
