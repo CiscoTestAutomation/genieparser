@@ -15,9 +15,6 @@ def main(path_dir):
         for filename in fnmatch.filter(filenames, '*.py'):
             module_file = os.path.join(root, filename)
 
-            if fnmatch.fnmatch(module_file, '*tests/*'):
-                # ignore test modules
-                continue
             if fnmatch.fnmatch(filename, '__init__.py'):
                 # ignore init files
                 continue
@@ -77,12 +74,18 @@ def main(path_dir):
                 if m:
                     flag += 1
                     if flag > 1:
+                        print('{:<25s}Rate:  {:>15s}'\
+                            .format(modules[index-1].split('/')[-1],\
+                            "No Rating, Error in file"))
                         result.append('{:<25s}Rate:  {:>15s}'\
                             .format(modules[index-1].split('/')[-1],\
                             "No Rating, Error in file"))
 
                 m = p2.match(line)
                 if m:
+                    print('{:<25s}Rate:  {:>15s}'\
+                            .format(modules[index-1].split('/')[-1],\
+                            "No Rating, Error in file"))
                     result.append('{:<25s}Rate:  {:>14s}'\
                         .format(file.split('/')[-1], line[27:]))
 
