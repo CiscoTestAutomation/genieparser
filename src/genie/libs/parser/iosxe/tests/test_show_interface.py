@@ -4682,7 +4682,7 @@ Tunnel10 is up, line protocol is up
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
     '''
-    }
+}
     golden_parsed_output2 = {
         "Vlan1": {
             "port_channel": {
@@ -14710,8 +14710,8 @@ Tunnel10 is up, line protocol is up
 
     golden_interface_output_4 = { 'execute.return_value': '''
         GigabitEthernet0/0/0 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 2c33.1188.a880 (bia 2c33.1188.a880)
-          Description: Connexion to ERIDAN for L2 FIBER lines ***
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
+          Description: Genie to Genie-next for L2 Fiber lines ***
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
           Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
@@ -14738,8 +14738,8 @@ Tunnel10 is up, line protocol is up
              0 lost carrier, 0 no carrier, 0 pause output
              0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/0/0.105 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 2c33.1188.a880 (bia 2c33.1188.a880)
-          Description: PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
+          Description: Another Genie L2 connection
           Internet address is 10.95.2.252/24
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
@@ -14748,8 +14748,8 @@ Tunnel10 is up, line protocol is up
           Keepalive not supported
           Last clearing of "show interface" counters never
         GigabitEthernet0/0/0.1761524 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 2c33.1188.a880 (bia 2c33.1188.a880)
-          Description: *** Connexion to Fuzer for PIL VLAN 1112 MIKROS ***
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
+          Description: *** Genie VLAN  ***
           Internet address is 100.64.113.98/27
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
@@ -14807,7 +14807,7 @@ Tunnel10 is up, line protocol is up
                 }
             },
             "delay": 10,
-            "description": "Connexion to ERIDAN for L2 FIBER lines ***",
+            "description": "Genie to Genie-next for L2 Fiber lines ***",
             "duplex_mode": "full",
             "enabled": True,
             "encapsulations": {
@@ -14822,12 +14822,12 @@ Tunnel10 is up, line protocol is up
             "last_output": "00:00:00",
             "line_protocol": "up",
             "link_type": "auto",
-            "mac_address": "2c33.1188.a880",
+            "mac_address": "1ca1.8811.b008",
             "media_type": "T",
             "mtu": 1500,
             "oper_status": "up",
             "output_hang": "never",
-            "phys_address": "2c33.1188.a880",
+            "phys_address": "1ca1.8811.b008",
             "port_channel": {
                 "port_channel_member": False
             },
@@ -14851,7 +14851,7 @@ Tunnel10 is up, line protocol is up
             "arp_type": "arpa",
             "bandwidth": 100000,
             "delay": 10,
-            "description": "PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH",
+            "description": "Another Genie L2 connection",
             "enabled": True,
             "encapsulations": {
                 "encapsulation": "dot1q",
@@ -14864,10 +14864,10 @@ Tunnel10 is up, line protocol is up
                 }
             },
             "line_protocol": "up",
-            "mac_address": "2c33.1188.a880",
+            "mac_address": "1ca1.8811.b008",
             "mtu": 1500,
             "oper_status": "up",
-            "phys_address": "2c33.1188.a880",
+            "phys_address": "1ca1.8811.b008",
             "port_channel": {
                 "port_channel_member": False
             },
@@ -14881,7 +14881,7 @@ Tunnel10 is up, line protocol is up
             "arp_type": "arpa",
             "bandwidth": 100000,
             "delay": 10,
-            "description": "*** Connexion to Fuzer for PIL VLAN 1112 MIKROS ***",
+            "description": "*** Genie VLAN  ***",
             "enabled": True,
             "encapsulations": {
                 "encapsulation": "qinq virtual lan",
@@ -14895,10 +14895,10 @@ Tunnel10 is up, line protocol is up
                 }
             },
             "line_protocol": "up",
-            "mac_address": "2c33.1188.a880",
+            "mac_address": "1ca1.8811.b008",
             "mtu": 1500,
             "oper_status": "up",
-            "phys_address": "2c33.1188.a880",
+            "phys_address": "1ca1.8811.b008",
             "port_channel": {
                 "port_channel_member": False
             },
@@ -15095,7 +15095,6 @@ Tunnel10 is up, line protocol is up
                 },
             }
         }
-
     def test_show_interfaces_10(self):
         self.device = Mock(**self.golden_interface_output_1)
         interface_obj = ShowInterfaces(device=self.device)
@@ -16804,6 +16803,8 @@ class test_show_interfaces_stats(unittest.TestCase):
             }
         }
     }
+
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
