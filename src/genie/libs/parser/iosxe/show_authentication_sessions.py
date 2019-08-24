@@ -260,11 +260,19 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #        Current Policy:  dot1x_dvlan_reauth_hm
             #         Authorized By:  Guest Vlan
             #                Status:  Authz Success
+            
+            # init vars
+            index_id = 0
+            parsed_dict = {}
+
             m = p1.match(line)
             if m:
-                #import pdb;pdb.set_trace()
+                index_id += 1
+
                 group = m.groupdict()
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict = ret_dict.setdefault('authentication_sessions', {})
+                index_dict = intf_dict.setdefault('index', {}).setdefault(index_id, {})
+
 
                 key = re.sub(r'( |-)', '_',group['argument'].lower())
 
@@ -272,13 +280,13 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 if key == 'ip_address':
                     key = 'ipv4_address'
 
-                intf_dict.update({key: group['value']})
+                index_dict.update({key: group['value']})
+                #intf_dict.update({key: group['value']})
                 continue
 
             # Template: CRITICAL_VLAN (priority 150)
             m = p3.match(line)
             if m:
-                import pdb;pdb.set_trace()
                 group = m.groupdict()
                 template_dict = intf_dict.setdefault('local_policies', {}).setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
@@ -292,6 +300,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 group = m.groupdict()
 
                 vlan_dict = intf_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
+                vlan_group_dict = vlan_dict.setdefault(group['vlan_group'], {})
                 vlan_dict.update({'vlan': int(group['vlan_value'])})
 
                 continue
@@ -299,6 +308,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # dot1x            Authc Failed
             m = p6.match(line)
             if m:
+                import pdb;pdb.set_trace()
                 group = m.groupdict()
                 method_stat = intf_dict.setdefault('method_status', {}).setdefault(group['method'], {})
 

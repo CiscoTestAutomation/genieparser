@@ -131,7 +131,7 @@ class test_show_authentication_sessions_interface(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output_1 = {
-        'interfaces': {
+        'authentication_sessions': {
             'GigabitEthernet3/0/2': {
                 'interface': 'GigabitEthernet3/0/2',
                 'iif_id': '0x1055240000001F6',
@@ -198,7 +198,7 @@ class test_show_authentication_sessions_interface(unittest.TestCase):
     }
 
     golden_parsed_output_2 = {
-        'interfaces': {
+        'authentication_sessions': {
             'GigabitEthernet2/0/47': {
                 'interface': 'GigabitEthernet2/0/47',
                 'mac_address': 'Unknown',   
