@@ -4682,7 +4682,7 @@ Tunnel10 is up, line protocol is up
      0 unknown protocol drops
      0 output buffer failures, 0 output buffers swapped out
     '''
-}
+    }
     golden_parsed_output2 = {
         "Vlan1": {
             "port_channel": {
@@ -10887,7 +10887,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "501"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -10917,7 +10918,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "502"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -10947,7 +10949,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "503"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -10977,7 +10980,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "504"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11007,7 +11011,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "505"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11037,7 +11042,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "506"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11067,7 +11073,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "507"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11097,7 +11104,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "508"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11127,7 +11135,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "509"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11157,7 +11166,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "510"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11187,7 +11197,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "511"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11217,7 +11228,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "512"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11247,7 +11259,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "513"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11277,7 +11290,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "514"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11307,7 +11321,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "515"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11337,7 +11352,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "516"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11367,7 +11383,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "517"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11397,7 +11414,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "518"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11427,7 +11445,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "519"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11457,7 +11476,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "520"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11487,7 +11507,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "101"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11517,7 +11538,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "102"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11547,7 +11569,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "103"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11577,7 +11600,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "104"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11607,7 +11631,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "105"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11637,7 +11662,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "106"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11667,7 +11693,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "107"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11697,7 +11724,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "108"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11727,7 +11755,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "109"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -11757,7 +11786,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "110"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -12921,7 +12951,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "201"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -12951,7 +12982,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "202"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -12981,7 +13013,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "203"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13011,7 +13044,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "204"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13041,7 +13075,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "205"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13071,7 +13106,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "206"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13101,7 +13137,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "207"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13131,7 +13168,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "208"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13161,7 +13199,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "209"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -13191,7 +13230,8 @@ Tunnel10 is up, line protocol is up
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {
-                "encapsulation": "dot1q"
+                "encapsulation": "dot1q",
+                "first_dot1q": "210"
             },
             "arp_type": "arpa",
             "arp_timeout": "04:00:00",
@@ -14668,6 +14708,207 @@ Tunnel10 is up, line protocol is up
     csr1000v-1#
     '''}
 
+    golden_interface_output_4 = { 'execute.return_value': '''
+        GigabitEthernet0/0/0 is up, line protocol is up
+          Hardware is BUILT-IN-EPA-8x1G, address is 2c33.1188.a880 (bia 2c33.1188.a880)
+          Description: Connexion to ERIDAN for L2 FIBER lines ***
+          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+          Keepalive not supported
+          Full Duplex, 1000Mbps, link type is auto, media type is T
+          output flow-control is on, input flow-control is on
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Last input 00:00:00, output 00:00:00, output hang never
+          Last clearing of "show interface" counters never
+          Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
+          Queueing strategy: Class-based queueing
+          Output queue: 0/40 (size/max)
+          5 minute input rate 10684000 bits/sec, 5031 packets/sec
+          5 minute output rate 28954000 bits/sec, 5003 packets/sec
+             37252955968 packets input, 25781698415464 bytes, 0 no buffer
+             Received 110594334 broadcasts (0 IP multicasts)
+             0 runts, 0 giants, 0 throttles
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+             0 watchdog, 1050221981 multicast, 0 pause input
+             35433262342 packets output, 29981591557915 bytes, 0 underruns
+             0 output errors, 0 collisions, 2 interface resets
+             11976504 unknown protocol drops
+             0 babbles, 0 late collision, 0 deferred
+             0 lost carrier, 0 no carrier, 0 pause output
+             0 output buffer failures, 0 output buffers swapped out
+        GigabitEthernet0/0/0.105 is up, line protocol is up
+          Hardware is BUILT-IN-EPA-8x1G, address is 2c33.1188.a880 (bia 2c33.1188.a880)
+          Description: PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH
+          Internet address is 10.95.2.252/24
+          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Keepalive not supported
+          Last clearing of "show interface" counters never
+        GigabitEthernet0/0/0.1761524 is up, line protocol is up
+          Hardware is BUILT-IN-EPA-8x1G, address is 2c33.1188.a880 (bia 2c33.1188.a880)
+          Description: *** Connexion to Fuzer for PIL VLAN 1112 MIKROS ***
+          Internet address is 100.64.113.98/27
+          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Keepalive not supported
+          Last clearing of "show interface" counters never    
+    '''
+    }
+
+    golden_parsed_interface_output_4 = {
+        "GigabitEthernet0/0/0": {
+            "arp_timeout": "04:00:00",
+            "arp_type": "arpa",
+            "auto_negotiate": True,
+            "bandwidth": 1000000,
+            "counters": {
+                "in_broadcast_pkts": 0,
+                "in_crc_errors": 0,
+                "in_errors": 0,
+                "in_frame": 0,
+                "in_giants": 0,
+                "in_ignored": 0,
+                "in_mac_pause_frames": 0,
+                "in_multicast_pkts": 1050221981,
+                "in_no_buffer": 0,
+                "in_octets": 25781698415464,
+                "in_overrun": 0,
+                "in_pkts": 37252955968,
+                "in_runts": 0,
+                "in_throttles": 0,
+                "in_watchdog": 0,
+                "last_clear": "never",
+                "out_babble": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "out_collision": 0,
+                "out_deferred": 0,
+                "out_errors": 0,
+                "out_interface_resets": 2,
+                "out_late_collision": 0,
+                "out_lost_carrier": 0,
+                "out_mac_pause_frames": 0,
+                "out_no_carrier": 0,
+                "out_octets": 29981591557915,
+                "out_pkts": 35433262342,
+                "out_underruns": 0,
+                "out_unknown_protocl_drops": 11976504,
+                "rate": {
+                    "in_rate": 10684000,
+                    "in_rate_pkts": 5031,
+                    "load_interval": 300,
+                    "out_rate": 28954000,
+                    "out_rate_pkts": 5003
+                }
+            },
+            "delay": 10,
+            "description": "Connexion to ERIDAN for L2 FIBER lines ***",
+            "duplex_mode": "full",
+            "enabled": True,
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "first_dot1q": "1"
+            },
+            "flow_control": {
+                "receive": True,
+                "send": True
+            },
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "line_protocol": "up",
+            "link_type": "auto",
+            "mac_address": "2c33.1188.a880",
+            "media_type": "T",
+            "mtu": 1500,
+            "oper_status": "up",
+            "output_hang": "never",
+            "phys_address": "2c33.1188.a880",
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "port_speed": "1000",
+            "queues": {
+                "input_queue_drops": 9483,
+                "input_queue_flushes": 6181,
+                "input_queue_max": 375,
+                "input_queue_size": 0,
+                "output_queue_max": 40,
+                "output_queue_size": 0,
+                "total_output_drop": 85587314
+            },
+            "reliability": "255/255",
+            "rxload": "2/255",
+            "txload": "7/255",
+            "type": "BUILT-IN-EPA-8x1G"
+        },
+        "GigabitEthernet0/0/0.105": {
+            "arp_timeout": "04:00:00",
+            "arp_type": "arpa",
+            "bandwidth": 100000,
+            "delay": 10,
+            "description": "PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH",
+            "enabled": True,
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "first_dot1q": "105"
+            },
+            "ipv4": {
+                "10.95.2.252/24": {
+                    "ip": "10.95.2.252",
+                    "prefix_length": "24"
+                }
+            },
+            "line_protocol": "up",
+            "mac_address": "2c33.1188.a880",
+            "mtu": 1500,
+            "oper_status": "up",
+            "phys_address": "2c33.1188.a880",
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "reliability": "255/255",
+            "rxload": "2/255",
+            "txload": "7/255",
+            "type": "BUILT-IN-EPA-8x1G"
+        },
+        "GigabitEthernet0/0/0.1761524": {
+            "arp_timeout": "04:00:00",
+            "arp_type": "arpa",
+            "bandwidth": 100000,
+            "delay": 10,
+            "description": "*** Connexion to Fuzer for PIL VLAN 1112 MIKROS ***",
+            "enabled": True,
+            "encapsulations": {
+                "encapsulation": "qinq virtual lan",
+                "first_dot1q": "176",
+                "second_dot1q": "1524"
+            },
+            "ipv4": {
+                "100.64.113.98/27": {
+                    "ip": "100.64.113.98",
+                    "prefix_length": "27"
+                }
+            },
+            "line_protocol": "up",
+            "mac_address": "2c33.1188.a880",
+            "mtu": 1500,
+            "oper_status": "up",
+            "phys_address": "2c33.1188.a880",
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "reliability": "255/255",
+            "rxload": "2/255",
+            "txload": "7/255",
+            "type": "BUILT-IN-EPA-8x1G"
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowInterfaces(device=self.device)
@@ -14701,6 +14942,13 @@ Tunnel10 is up, line protocol is up
         parsed_output = interface_obj.parse(interface='GigabitEthernet3')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
+
+    def test_show_interfaces_4(self):
+        self.device = Mock(**self.golden_interface_output_4)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse(interface='GigabitEthernet0/0/0')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_interface_output_4)
 
     golden_interface_output_1 = {'execute.return_value' : '''
     Port-channel10 is up, line protocol is up 
@@ -14847,6 +15095,7 @@ Tunnel10 is up, line protocol is up
                 },
             }
         }
+
     def test_show_interfaces_10(self):
         self.device = Mock(**self.golden_interface_output_1)
         interface_obj = ShowInterfaces(device=self.device)

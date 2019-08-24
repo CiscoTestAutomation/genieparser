@@ -205,6 +205,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
+            line = line.replace(u'\xa0',' ')
 
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
@@ -360,6 +361,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Encapsulation ARPA, medium is broadcast
             # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
             # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+            # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
             p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
                              ' +(?P<rest>.*)$')
             m = p8.match(line)
@@ -387,6 +389,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                 #  Vlan ID  1., loopback not set
                 m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>[0-9]+).?, +'
                                  '(?P<rest>.+)$').match(rest)
+
+                # Vlan ID  105.
+                m5 = re.compile(r'Vlan +ID +(?P<first_dot1q>\d+).$').match(rest)
+
                 if m1:
                     first_dot1q = m1.groupdict()['first_dot1q']
                     if first_dot1q:
@@ -402,6 +408,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                         ['second_dot1q'] = second_dot1q
                 elif m4:
                     first_dot1q = m4.groupdict()['first_dot1q']
+                    if first_dot1q:
+                        interface_dict[interface]['encapsulations']\
+                            ['first_dot1q'] = first_dot1q
+                elif m5:
+                    first_dot1q = m5.groupdict()['first_dot1q']
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
