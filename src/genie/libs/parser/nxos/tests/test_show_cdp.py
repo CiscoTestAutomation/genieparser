@@ -175,7 +175,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                     'port_id': 'Ten-GigabitEthernet2/0/20'
                 }
             }
-        }   
+        }
     }
 
     device_output_4 = {'execute.return_value': '''
@@ -202,6 +202,33 @@ class test_show_cdp_neighbors(unittest.TestCase):
                                                                Ten-GigabitEthernet2/0/20
         
     '''}
+
+    expected_parsed_output_5 = {
+        'cdp': {
+            'index': {
+                1: {
+                    'capability': 'R',
+                    'device_id': '1111-2222-77777',
+                    'hold_time': 172,
+                    'local_interface': 'Ethernet1/5',
+                    'platform': 'NCS-6000',
+                    'port_id': 'HundredGigE0/4/0/6'
+                },
+            }
+        }
+    }
+
+    device_output_5 = {'execute.return_value': '''
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater,
+                          V - VoIP-Phone, D - Remotely-Managed-Device,
+                          s - Supports-STP-Dispute
+
+        Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+        1111-2222-77777
+                    Eth1/5         172    R         NCS-6000
+                                                              HundredGigE0/4/0/6
+        '''}
 
     empty_device_output = {'execute.return_value': '''
         Device# show cdp neighbors
@@ -240,6 +267,13 @@ class test_show_cdp_neighbors(unittest.TestCase):
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_4)
+
+    def test_show_cdp_neighbors_5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_5)
+        obj = ShowCdpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_5)
 
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None
