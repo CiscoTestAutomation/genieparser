@@ -28,6 +28,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf segment-routing global-block
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
+    * show ip ospf database opaque-area adv-router {address}
 '''
 
 # Python
@@ -7313,9 +7314,9 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
     schema = {
         'process_id': {
             Any(): {
-                'areas': {
-                    Any(): {
-                        'router_id': str,
+                'router_id': str,
+                Optional('areas'): {
+                    Any(): {                        
                         'neighbors': {
                             Any(): {
                                 'interfaces': {
@@ -7376,6 +7377,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 process_id = int(group['process_id'])
                 process_id_dict = ret_dict.setdefault('process_id', {}). \
                                     setdefault(process_id, {})
+                process_id_dict['router_id'] = router_id
                 continue
 
             # Area with ID (8)
@@ -7384,8 +7386,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 group = m.groupdict()
                 area_id = str(IPAddress(str(group['area_id'])))
                 area_dict = process_id_dict.setdefault('areas', {}). \
-                                setdefault(area_id, {})
-                area_dict.update({'router_id': router_id})
+                                setdefault(area_id, {})                
                 continue
 
             # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
@@ -8015,5 +8016,18 @@ class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSche
                 output = self.device.execute(self.cli_command[0].format(lsa_id=lsa_id))
             else:
                 output = self.device.execute(self.cli_command[1])
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    ''' Parser for:
+        * 'show ip ospf database opaque-area adv-router {address}'
+    '''
+
+    cli_command = 'show ip ospf database opaque-area adv-router {address}'
+
+    def cli(self, address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(address=address))
 
         return super().cli(db_type='opaque', out=output)
