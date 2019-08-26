@@ -9,6 +9,8 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls connected-prefix-sid-map ipv6'
     * 'show segment-routing mpls gb'
     * 'show segment-routing mpls gb lock'
+    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
 '''
 
 # Python
@@ -18,29 +20,32 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
-
 # =============================================================
 # Schema for:
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
 # =============================================================
 class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
     ''' Schema for:
         * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
         * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
     '''
 
     schema = {
         'segment_routing':
             {'bindings':
-                {'connected_prefix_sid_map':
+                {Optional('connected_prefix_sid_map'):
                     {Optional('ipv4'):
                         {'ipv4_prefix_sid':
                             {Any():
                                 {'algorithm':
                                     {Any():
                                         {'prefix': str,
-                                        'type': str,
+                                        'value_type': str,
                                         'sid': str,
                                         'range': str,
                                         'srgb': str,
@@ -57,7 +62,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
                                 {'algorithm':
                                     {Any():
                                         {'prefix': str,
-                                        'type': str,
+                                        'value_type': str,
                                         'sid': str,
                                         'range': str,
                                         'srgb': str,
@@ -69,31 +74,64 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
                             },
                         },
                     },
+                    Optional('local_prefix_sid'): {
+                        Optional('ipv4'): {
+                            'ipv4_prefix_sid_local':{
+                                Any():{
+                                    'algorithm': {
+                                        Any():{
+                                            'prefix': str,
+                                            'value_type': str,
+                                            'sid': str,
+                                            'range': str,
+                                            'srgb': str,
+                                            'algorithm': str
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Optional('ipv6'): {
+                            'ipv6_prefix_sid_local':{
+                                Any():{
+                                    'algorithm': {
+                                        Any():{
+                                            'prefix': str,
+                                            'value_type': str,
+                                            'sid': str,
+                                            'range': str,
+                                            'srgb': str,
+                                            'algorithm': str
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
             },
         }
 
-
-# =============================================================
+# ====================================================================
 # Parser for:
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv4'
-#   * 'show segment-routing mpls connected-prefix-sid-map ipv6'
-# =============================================================
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map ipv6'
+# ====================================================================
 class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnectedPrefixSidMapSchema):
     ''' Parser for:
         * 'show segment-routing mpls connected-prefix-sid-map ipv4'
         * 'show segment-routing mpls connected-prefix-sid-map ipv6'
     '''
     
-    cli_command = 'show segment-routing mpls connected-prefix-sid-map {af}'
+    cli_command = 'show segment-routing mpls connected-prefix-sid-map {address_family}'
     
-    def cli(self, af, output=None):
+    def cli(self, address_family, output=None):
 
-        assert af in ['ipv4', 'ipv6']
+        assert address_family in ['ipv4', 'ipv6']
 
         # Get output
         if output is None:
-            out = self.device.execute(self.cli_command.format(af=af))
+            out = self.device.execute(self.cli_command.format(address_family=address_family))
         else:
             out = output
 
@@ -101,6 +139,11 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
         mapping_dict = {
             'ipv4': 'ipv4_prefix_sid',
             'ipv6': 'ipv6_prefix_sid',
+        }
+
+        mapping_dict_local = {
+            'ipv4': 'ipv4_prefix_sid_local',
+            'ipv6': 'ipv6_prefix_sid_local',
         }
 
         # Init
@@ -136,6 +179,11 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
             m = p1.match(line)
             if m:
                 algorithm = m.groupdict()['algorithm']
+                address_family_dict = ret_dict.setdefault('segment_routing', {}). \
+                                    setdefault('bindings', {}). \
+                                    setdefault('local_prefix_sid', {}). \
+                                    setdefault(address_family, {}). \
+                                    setdefault(mapping_dict_local[address_family], {})
                 continue
 
             # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
@@ -151,19 +199,13 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
             if m:
                 group = m.groupdict()
                 prefix = group['prefix'] + '/' + group['masklen']
-                # Set dict
-                algo_dict = ret_dict.setdefault('segment_routing', {}).\
-                                     setdefault('bindings', {}).\
-                                     setdefault('connected_prefix_sid_map', {}).\
-                                     setdefault(af, {}).\
-                                     setdefault(mapping_dict[af], {}).\
-                                     setdefault(prefix, {}).\
-                                     setdefault('algorithm', {}).\
-                                     setdefault(algorithm, {})
+                algo_dict = address_family_dict.setdefault(prefix, {}). \
+                                setdefault('algorithm', {}). \
+                                setdefault(algorithm, {})
                 # Set values
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm
-                algo_dict['type'] = group['type']
+                algo_dict['value_type'] = group['type']
                 algo_dict['sid'] = group['sid']
                 algo_dict['range'] = group['range']
                 algo_dict['srgb'] = group['srgb']
@@ -181,15 +223,15 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 algo_dict = ret_dict.setdefault('segment_routing', {}).\
                                      setdefault('bindings', {}).\
                                      setdefault('connected_prefix_sid_map', {}).\
-                                     setdefault(af, {}).\
-                                     setdefault(mapping_dict[af], {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault(mapping_dict[address_family], {}).\
                                      setdefault(prefix, {}).\
                                      setdefault('algorithm', {}).\
                                      setdefault(algorithm, {})
                 # Set values
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm
-                algo_dict['type'] = group['type']
+                algo_dict['value_type'] = group['type']
                 algo_dict['sid'] = group['sid']
                 algo_dict['range'] = group['range']
                 algo_dict['srgb'] = group['srgb']
@@ -199,7 +241,6 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
                 continue
 
         return ret_dict
-
 
 # ==================================
 # Schema for:
@@ -432,3 +473,27 @@ class ShowSegmentRoutingMplsGbLock(ShowSegmentRoutingMplsLbLockSchema):
                 continue
 
         return ret_dict
+
+# ====================================================================
+# Parser for:
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+#    * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+# ====================================================================
+class ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(ShowSegmentRoutingMplsConnectedPrefixSidMap):
+    ''' Parser for:
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+    '''
+    
+    cli_command = 'show segment-routing mpls connected-prefix-sid-map local {address_family}'
+    
+    def cli(self, address_family, output=None):
+
+        assert address_family in ['ipv4', 'ipv6']
+
+        # Get output
+        if output is None:
+            out = self.device.execute(self.cli_command.format(address_family=address_family))
+        else:
+            out = output
+        return super().cli(address_family=address_family, output=out)
