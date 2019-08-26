@@ -214,8 +214,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Current Policy:  dot1x_dvlan_reauth_hm
         # Authorized By:  Guest Vlan
         # Status:  Authz Success
-        p1 = re.compile(r'^(?P<argument>\S[\w\s\-]+): +(?P<value>\S+[\w\s]+)$')
-
+        
+        #old p1 = re.compile(r'^(?P<argument>\S[\w\s\-]+): +(?P<value>\S+[\w\s]+)$')
+        p1 = re.compile(r'^(?P<argument>[\w\s\-]+): +(?P<value>[\w\s\-\.\./]+)$')
         # Local Policies:
         p2 = re.compile(r'^Local +Policies:')
 
@@ -297,18 +298,18 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # Vlan Group:  Vlan: 130
             m = p4.match(line)
             if m:
+                import pdb;pdb.set_trace()
                 group = m.groupdict()
 
                 vlan_dict = intf_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
                 vlan_group_dict = vlan_dict.setdefault(group['vlan_group'], {})
-                vlan_dict.update({'vlan': int(group['vlan_value'])})
+                vlan_group_dict.update({'vlan': int(group['vlan_value'])})
 
                 continue
 
             # dot1x            Authc Failed
             m = p6.match(line)
             if m:
-                import pdb;pdb.set_trace()
                 group = m.groupdict()
                 method_stat = intf_dict.setdefault('method_status', {}).setdefault(group['method'], {})
 
