@@ -14750,7 +14750,7 @@ Tunnel10 is up, line protocol is up
         GigabitEthernet0/0/0.1761524 is up, line protocol is up
           Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.8811.b008 (bia 1ca1.8811.b008)
           Description: *** Genie VLAN  ***
-          Internet address is 100.64.113.98/27
+          Internet address is 10.121.113.98/27
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
           Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
@@ -14889,8 +14889,8 @@ Tunnel10 is up, line protocol is up
                 "second_dot1q": "1524"
             },
             "ipv4": {
-                "100.64.113.98/27": {
-                    "ip": "100.64.113.98",
+                "10.121.113.98/27": {
+                    "ip": "10.121.113.98",
                     "prefix_length": "27"
                 }
             },
