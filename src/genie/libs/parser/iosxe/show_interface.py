@@ -205,8 +205,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
-            line = line.replace(u'\xa0',' ')
-
+            
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
@@ -386,7 +385,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 m3 = re.compile(r'outer +ID +(?P<first>[0-9]+), +'
                                  'inner +ID (?P<second>[0-9]+)$').match(rest)
 
-                #  Vlan ID  1., loopback not set
+                # Vlan ID  1., loopback not set
+                # Vlan ID  105.
                 m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>\d+).'
                                  '|(?:,(?P<rest>[\s\w]+))$').match(rest)
 

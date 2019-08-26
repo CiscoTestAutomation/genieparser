@@ -14714,7 +14714,7 @@ Tunnel10 is up, line protocol is up
           Description: Genie to Genie-next for L2 Fiber lines ***
           MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
           Keepalive not supported
           Full Duplex, 1000Mbps, link type is auto, media type is T
           output flow-control is on, input flow-control is on
@@ -14743,7 +14743,7 @@ Tunnel10 is up, line protocol is up
           Internet address is 10.95.2.252/24
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
           ARP type: ARPA, ARP Timeout 04:00:00
           Keepalive not supported
           Last clearing of "show interface" counters never
@@ -14753,7 +14753,7 @@ Tunnel10 is up, line protocol is up
           Internet address is 100.64.113.98/27
           MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
              reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
+          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
           ARP type: ARPA, ARP Timeout 04:00:00
           Keepalive not supported
           Last clearing of "show interface" counters never    
