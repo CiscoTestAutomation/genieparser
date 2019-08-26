@@ -1640,10 +1640,13 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         show mpls forwarding-table vrf <vrf>
         show mpls forwarding-table vrf <vrf> detail"""
 
-    cli_command = ['show mpls forwarding-table','show mpls forwarding-table detail',
-                   'show mpls forwarding-table vrf {vrf}','show mpls forwarding-table vrf {vrf} detail']
+    cli_command = ['show mpls forwarding-table',
+                   'show mpls forwarding-table detail',
+                   'show mpls forwarding-table vrf {vrf}',
+                   'show mpls forwarding-table vrf {vrf} detail',
+                   'show mpls forwarding-table {prefix}']
 
-    def cli(self, vrf="",detail="", output=None):
+    def cli(self, vrf="",detail="", prefix=None, output=None):
         if output is None:
             if vrf:
                 if detail:
@@ -1653,6 +1656,8 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             else:
                 if detail:
                     cmd = self.cli_command[1]
+                elif prefix:
+                    cmd = self.cli_command[4].format(prefix=prefix)
                 else:
                     cmd = self.cli_command[0]
 
