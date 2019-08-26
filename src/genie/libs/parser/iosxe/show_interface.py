@@ -1329,8 +1329,9 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Access Mode VLAN: 1 (default)
+            # Access Mode VLAN: 100 (Falback-Data)
             p8 =  re.compile(r'^Access +Mode +VLAN: +(?P<access_vlan>[\d\-]+)'
-                              '( *\((?P<dummy>.+)\))?$')
+                              '( *\((?P<access_vlan_name>.+)\))?$')
             m = p8.match(line)
             if m:
                 ret_dict[intf]['access_vlan'] = m.groupdict()['access_vlan']
@@ -1338,7 +1339,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
 
             # Trunking Native Mode VLAN: 1 (default)
             p9 =  re.compile(r'^Trunking +Native +Mode +VLAN: +(?P<native_vlan>[\d\-]+)'
-                              '( *\((?P<dummy>.+)\))?$')
+                              '( *\((?P<native_vlan_name>.+)\))?$')
             m = p9.match(line)
             if m:
                 if 'encapsulation' not in ret_dict[intf]:
@@ -1358,8 +1359,9 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Voice VLAN: none
+            # Voice VLAN: 100 (Fallback-Voice)
             p11 =  re.compile(r'^Voice +VLAN: +(?P<vlan>[\d\-]+)'
-                              '( *\((?P<dummy>.+)\))?$')
+                              '( *\((?P<voice_vlan_name>.+)\))?$')
             m = p11.match(line)
             if m:
                 ret_dict[intf]['voice_vlan'] = m.groupdict()['vlan']
