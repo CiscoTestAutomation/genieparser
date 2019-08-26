@@ -387,11 +387,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                                  'inner +ID (?P<second>[0-9]+)$').match(rest)
 
                 #  Vlan ID  1., loopback not set
-                m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>[0-9]+).?, +'
-                                 '(?P<rest>.+)$').match(rest)
-
-                # Vlan ID  105.
-                m5 = re.compile(r'Vlan +ID +(?P<first_dot1q>\d+).$').match(rest)
+                m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>\d+).'
+                                 '|(?:,(?P<rest>[\s\w]+))$').match(rest)
 
                 if m1:
                     first_dot1q = m1.groupdict()['first_dot1q']
@@ -411,11 +408,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
-                elif m5:
-                    first_dot1q = m5.groupdict()['first_dot1q']
-                    if first_dot1q:
-                        interface_dict[interface]['encapsulations']\
-                            ['first_dot1q'] = first_dot1q
+
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
