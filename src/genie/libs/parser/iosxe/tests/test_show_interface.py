@@ -220,6 +220,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
                  "encapsulation": "dot1q"
             },
             "access_vlan": "1",
+            "access_vlan_name": "default",
             "unknown_unicast_blocked": False,
             "native_vlan_tagging": True,
             "unknown_multicast_blocked": False,
@@ -229,6 +230,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "encapsulation": {
                  "operational_encapsulation": "dot1q",
                  "native_vlan": "1",
+                 "native_vlan_name": "default",
                  "administrative_encapsulation": "dot1q"
             }
        },
@@ -242,6 +244,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
                 "port_channel_member": True
             },
             "access_vlan": "1",
+            "access_vlan_name": "default",
             "operational_mode": "trunk",
             "unknown_unicast_blocked": False,
             "capture_mode": False,
@@ -254,6 +257,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "encapsulation": {
                  "operational_encapsulation": "dot1q",
                  "native_vlan": "1",
+                 "native_vlan_name": "default",
                  "administrative_encapsulation": "dot1q"
             },
             "protected": False,
@@ -274,6 +278,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
                  "encapsulation": "dot1q"
             },
             "access_vlan": "1",
+            "access_vlan_name": "default",
             "unknown_unicast_blocked": False,
             "native_vlan_tagging": True,
             "unknown_multicast_blocked": False,
@@ -282,10 +287,13 @@ class test_show_interfaces_switchport(unittest.TestCase):
             "capture_vlans": "all",
             "encapsulation": {
                  "native_vlan": "1",
+                 "native_vlan_name": "default",
                  "administrative_encapsulation": "dot1q"
             }
        },
        "Port-channel12": {
+            "access_vlan": "100",
+            "access_vlan_name": "Falback-Data",
             "switchport_enable": True,
               "private_vlan": {
                    "encapsulation": "dot1q",
@@ -297,7 +305,8 @@ class test_show_interfaces_switchport(unittest.TestCase):
               "protected": False,
               "encapsulation": {
                    "administrative_encapsulation": "dot1q",
-                   "native_vlan": "0"
+                   "native_vlan": "0",
+                   "native_vlan_name": "Inactive"
               },
               "switchport_mode": "trunk",
               "unknown_multicast_blocked": False,
@@ -309,7 +318,9 @@ class test_show_interfaces_switchport(unittest.TestCase):
                    "port_channel_member_intfs": [
                         "GigabitEthernet1/0/2"
                    ]
-              }
+              },
+              "voice_vlan": "100",
+              "voice_vlan_name": "Fallback-Voice"
          }
     }
 
@@ -412,10 +423,10 @@ class test_show_interfaces_switchport(unittest.TestCase):
         Operational Mode: down
         Administrative Trunking Encapsulation: dot1q
         Negotiation of Trunking: On
-        Access Mode VLAN: unassigned
+        Access Mode VLAN: 100 (Falback-Data)
         Trunking Native Mode VLAN: 0 (Inactive)
         Administrative Native VLAN tagging: disabled
-        Voice VLAN: none
+        Voice VLAN: 100 (Fallback-Voice)
         Administrative private-vlan host-association: none 
         Administrative private-vlan mapping: none 
         Administrative private-vlan trunk native VLAN: none
