@@ -66,8 +66,9 @@ class ShowVrfAllDetail(ShowVrfAllDetailSchema):
             line = line.strip()
 
             # VRF VRF1; RD 200:1; VPN ID not set
+            # RD 172.1.0.0:1000
             p1 = re.compile(r'^VRF +(?P<vrf>[\w\-]+); +'
-                             'RD +(?P<rd>[\w\s\:\<\>]+); +'
+                             'RD +(?P<rd>[\w\s\:\<\>\.]+); +'
                              'VPN +ID +(?P<vpn_id>[\w\s\:]+)$')
             m = p1.match(line)
             if m:
