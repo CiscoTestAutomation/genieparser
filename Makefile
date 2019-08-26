@@ -38,7 +38,7 @@ PYTHON        = python
 TESTCMD       = runAll --path=./tests/
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
-PYLINT_CMD	  = python pylinting.py
+PYLINT_CMD	  = pylintAll
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
