@@ -22,6 +22,7 @@
         *  show mpls ldp statistics
         *  show mpls ldp parameters
         *  show mpls forwarding-table
+        *  show mpls forwarding-table <prefix>
         *  show mpls forwarding-table detail
         *  show mpls forwarding-table vrf <vrf>
         *  show mpls forwarding-table vrf <vrf> detail
@@ -1589,8 +1590,9 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
 class ShowMplsForwardingTableSchema(MetaParser):
     """Schema for
         show mpls forwarding-table
-        show mpls forwarding-table detail
+        show mpls forwarding-table {prefix}
         show mpls forwarding-table vrf <vrf>
+        show mpls forwarding-table detail
         show mpls forwarding-table vrf <vrf> detail"""
 
     schema = {
@@ -1636,25 +1638,21 @@ class ShowMplsForwardingTableSchema(MetaParser):
 class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
     """Parser for
         show mpls forwarding-table
-        show mpls forwarding-table detail
-        show mpls forwarding-table vrf <vrf>
-        show mpls forwarding-table vrf <vrf> detail"""
+        show mpls forwarding-table {prefix}
+        show mpls forwarding-table vrf <vrf>"""
 
-    cli_command = ['show mpls forwarding-table','show mpls forwarding-table detail',
-                   'show mpls forwarding-table vrf {vrf}','show mpls forwarding-table vrf {vrf} detail']
+    cli_command = ['show mpls forwarding-table vrf {vrf}',
+                   'show mpls forwarding-table {prefix}',
+                   'show mpls forwarding-table']
 
-    def cli(self, vrf="",detail="", output=None):
+    def cli(self, vrf="", prefix="", output=None):
         if output is None:
             if vrf:
-                if detail:
-                    cmd = self.cli_command[3].format(vrf=vrf)
-                else:
-                    cmd = self.cli_command[2].format(vrf=vrf)
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif prefix:
+                cmd = self.cli_command[1].format(prefix=prefix)
             else:
-                if detail:
-                    cmd = self.cli_command[1]
-                else:
-                    cmd = self.cli_command[0]
+                cmd = self.cli_command[2]
 
             out = self.device.execute(cmd)
         else:
@@ -1848,6 +1846,28 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 continue
 
         return result_dict
+
+
+class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
+    """Parser for
+        show mpls forwarding-table detail
+        show mpls forwarding-table vrf <vrf> detail"""
+
+    cli_command = ['show mpls forwarding-table detail',
+                   'show mpls forwarding-table vrf {vrf} detail']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(vrf=vrf ,output=out)
+
 
 class ShowMplsInterfaceSchema(MetaParser):
     """Schema for
