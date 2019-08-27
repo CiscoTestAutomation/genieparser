@@ -11,6 +11,61 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
+# =============================================
+# Parser for 'show vtp password'
+# =============================================
+
+class ShowVtpPasswordSchema(MetaParser):
+    """Schema for show vtp password"""
+
+    schema = {'vtp': {
+                'configured': bool,
+                Optional('password'): str,
+        }
+    }
+
+
+class ShowVtpPassword(ShowVtpPasswordSchema):
+    """Parser for show vtp password"""
+
+    cli_command = 'show vtp password'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        # The VTP password is not configured.
+        p1 = re.compile(r'^The +VTP +password +is +not +configured.$')
+
+        # VTP Password: password-string
+        p2 = re.compile(r'^VTP +Password: +(?P<val>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            if 'vtp' not in ret_dict:
+                ret_dict['vtp'] = {}
+
+            # The VTP password is not configured.
+            m = p1.match(line)
+            if m:
+                ret_dict['vtp']['configured'] = False
+                continue
+
+            # VTP Password: password-string
+            m = p2.match(line)
+            if m:
+                ret_dict['vtp']['configured'] = True
+                ret_dict['vtp']['password'] = m.groupdict()['val']
+                continue
+
+        return ret_dict
+
 
 # =============================================
 # Parser for 'show vtp status'

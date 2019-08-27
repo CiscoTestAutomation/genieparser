@@ -10,6 +10,57 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 # Parser
 from genie.libs.parser.ios.show_vtp import ShowVtpStatus
+from genie.libs.parser.ios.show_vtp import ShowVtpPassword
+
+
+# ============================================
+# Parser for 'show vtp password'
+# ============================================
+class test_show_vtp_password(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "vtp": {
+            "configured": False,
+        }
+    }
+
+    golden_output = {'execute.return_value': '''\
+        The VTP password is not configured.
+    '''}
+
+    golden_parsed_output_2 = {
+        "vtp": {
+            "configured": True,
+            "password": 'testing',
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''\
+        VTP Password: testing
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowVtpPassword(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowVtpPassword(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowVtpPassword(device=self.device)
+        parsed_output_2 = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output_2,self.golden_parsed_output_2)
 
 
 # ============================================
