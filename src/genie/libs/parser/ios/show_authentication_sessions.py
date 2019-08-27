@@ -44,12 +44,3 @@ class ShowAuthenticationSessionsInterface(ShowAuthenticationSessionsInterfaceDet
 	    	* show authentication sessions interface {interfaces}
 	'''
 	pass
-	# def cli(self, interface, output=None):
-
-	# 	cli_command = 'show authentication sessions interface {interface}'
-
-	# 	cmd = self.cli_command.format(intf=interface)
-
-	# 	tmp_cmd = super().cli(self, cmd=cmd)
-
-	# 	return tmp_cmd

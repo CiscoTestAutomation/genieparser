@@ -132,39 +132,41 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output_3 = {
-        'interfaces': {
-            'GigabitEthernet3/0/2': {
-                'interface': 'GigabitEthernet3/0/2',
-                'iif_id': '0x1055240000001F6',
-                'mac_address': '0010.0010.0001', 
-                'ipv6_address': 'Unknown',
-                'ipv4_address': '192.0.2.1',
-                'user_name': 'genie123',
-                'status': 'Authorized',
-                'domain': 'DATA',
-                'current_policy': 'dot1x_dvlan_reauth_hm', 
-                'oper_host_mode': 'single-host',
-                'oper_control_dir': 'both',
-                'session_timeout': 'N/A',
-                'common_session_id': 'AC14FC0A0000101200E28D62',
-                'acct_session_id': 'Unknown',
-                'handle': '0xDB003227',
-                'local_policies': {
-                    'template': {
-                        'CRITICAL_VLAN': {
-                            'priority': 150,
+        'authentication_sessions': {
+            'index': {
+                1: {
+                    'interface': 'GigabitEthernet3/0/2',
+                    'iif_id': '0x1055240000001F6',
+                    'mac_address': '0010.0010.0001', 
+                    'ipv6_address': 'Unknown',
+                    'ipv4_address': '192.0.2.1',
+                    'user_name': 'genie123',
+                    'status': 'Authorized',
+                    'domain': 'DATA',
+                    'current_policy': 'dot1x_dvlan_reauth_hm', 
+                    'oper_host_mode': 'single-host',
+                    'oper_control_dir': 'both',
+                    'session_timeout': 'N/A',
+                    'common_session_id': 'AC14FC0A0000101200E28D62',
+                    'acct_session_id': 'Unknown',
+                    'handle': '0xDB003227',
+                    'local_policies': {
+                        'template': {
+                            'CRITICAL_VLAN': {
+                                'priority': 150,
+                            }
+                        },
+                        'vlan_group': {
+                            'vlan': 130,
                         }
                     },
-                    'vlan_group': {
-                        'vlan': 130,
-                    }
-                },
-                'method_status': {
-                    'dot1x': {
-                        'method': 'dot1x',
-                        'state': 'Authc Failed',
-                    }
-                },
+                    'method_status': {
+                        'dot1x': {
+                            'method': 'dot1x',
+                            'state': 'Authc Failed',
+                        }
+                    },
+                }
             }
         }
     }
@@ -199,39 +201,41 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
     }
 
     golden_parsed_output_4 = {
-        'interfaces': {
-            'GigabitEthernet1/0/12': {
-                'interface': 'GigabitEthernet1/0/12',
-                'iif_id': '0x1055240000001F6',
-                'mac_address': '0010.0010.0001',   
-                'ipv6_address': 'Unknown',
-                'ipv4_address': '192.0.2.1',
-                'user_name': 'genie123',
-                'status': 'Authorized',
-                'domain': 'DATA',
-                'current_policy': 'dot1x_dvlan_reauth_hm',
-                'oper_host_mode': 'single-host',
-                'oper_control_dir': 'both',
-                'session_timeout': 'N/A',
-                'common_session_id': 'AC14FC0A0000101200E28D62',
-                'acct_session_id': 'Unknown',
-                'handle': '0xDB003227',
-                'local_policies': {
-                    'template': {
-                        'CRITICAL_VLAN': {
-                            'priority': 170,
+        'authentication_sessions': {
+            'index': {
+                1: {
+                    'interface': 'GigabitEthernet1/0/12',
+                    'iif_id': '0x1055240000001F6',
+                    'mac_address': '0010.0010.0001',   
+                    'ipv6_address': 'Unknown',
+                    'ipv4_address': '192.0.2.1',
+                    'user_name': 'genie123',
+                    'status': 'Authorized',
+                    'domain': 'DATA',
+                    'current_policy': 'dot1x_dvlan_reauth_hm',
+                    'oper_host_mode': 'single-host',
+                    'oper_control_dir': 'both',
+                    'session_timeout': 'N/A',
+                    'common_session_id': 'AC14FC0A0000101200E28D62',
+                    'acct_session_id': 'Unknown',
+                    'handle': '0xDB003227',
+                    'local_policies': {
+                        'template': {
+                            'CRITICAL_VLAN': {
+                                'priority': 170,
+                            }
+                        },
+                        'vlan_group': {
+                            'vlan': 100,
                         }
                     },
-                    'vlan_group': {
-                        'vlan': 100,
-                    }
-                },
-                'method_status': {
-                    'mab': {
-                        'method': 'mab',
-                        'state': 'Running',
-                    }
-                },
+                    'method_status': {
+                        'mab': {
+                            'method': 'mab',
+                            'state': 'Running',
+                        }
+                    },
+                }
             }
         }
     }

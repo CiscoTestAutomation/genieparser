@@ -166,7 +166,7 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         },
                         'vlan_group': {
                             'vlan': int,
-                        }
+                        },
                     },
                     'method_status': {
                         Any(): {
@@ -194,9 +194,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         else:
             out = output
 
-        # initial return dictionary
-        ret_dict = {}
-
         # Interface:  GigabitEthernet3/0/2
         # IIF-ID:  0x1055240000001F6 
         # MAC Address:  0010.0010.0001
@@ -215,8 +212,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Authorized By:  Guest Vlan
         # Status:  Authz Success
         
-        #old p1 = re.compile(r'^(?P<argument>\S[\w\s\-]+): +(?P<value>\S+[\w\s]+)$')
         p1 = re.compile(r'^(?P<argument>[\w\s\-]+): +(?P<value>[\w\s\-\.\./]+)$')
+
         # Local Policies:
         p2 = re.compile(r'^Local +Policies:')
 
@@ -226,7 +223,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
 
-
         # Method status list:
         p5 = re.compile(r'^Method +status +list:')
 
@@ -235,6 +231,15 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
         # Runnable methods list:
         p7 = re.compile(r'^Runnable +methods +list:')
+
+        # For IOS output as this line will determine the index
+        p8 = re.compile(r'^-+$')
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # intial index
+        index_id = 1
 
         for line in out.splitlines():
             line = line.strip()
@@ -262,15 +267,14 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #         Authorized By:  Guest Vlan
             #                Status:  Authz Success
             
-            # init vars
-            index_id = 0
-            parsed_dict = {}
+            # increase index
+            if p8.match(line):
+                index_id += 1
 
             m = p1.match(line)
             if m:
-                index_id += 1
-
                 group = m.groupdict()
+
                 intf_dict = ret_dict.setdefault('authentication_sessions', {})
                 index_dict = intf_dict.setdefault('index', {}).setdefault(index_id, {})
 
@@ -282,14 +286,15 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                     key = 'ipv4_address'
 
                 index_dict.update({key: group['value']})
-                #intf_dict.update({key: group['value']})
+
                 continue
 
             # Template: CRITICAL_VLAN (priority 150)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                template_dict = intf_dict.setdefault('local_policies', {}).setdefault('template', {})
+
+                template_dict = index_dict.setdefault('local_policies', {}).setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
                 priority_dict.update({'priority': int(group['priority'])})
                 continue
@@ -298,12 +303,11 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             # Vlan Group:  Vlan: 130
             m = p4.match(line)
             if m:
-                import pdb;pdb.set_trace()
                 group = m.groupdict()
 
-                vlan_dict = intf_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
-                vlan_group_dict = vlan_dict.setdefault(group['vlan_group'], {})
-                vlan_group_dict.update({'vlan': int(group['vlan_value'])})
+                vlan_dict = index_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
+
+                vlan_dict.update({'vlan': int(group['vlan_value'])})
 
                 continue
 
@@ -311,8 +315,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                method_stat = intf_dict.setdefault('method_status', {}).setdefault(group['method'], {})
 
+                method_stat = index_dict.setdefault('method_status', {}).setdefault(group['method'], {})
                 method_stat.update({'method': group['method']})
                 method_stat.update({'state': group['state']})
                 continue
