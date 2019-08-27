@@ -487,3 +487,77 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
                 node_dict['advertised_prefixes'] = m.groupdict()['adv_prefixes']
 
         return ret_dict
+
+class ShowPceIpv4TopologySummarySchema(MetaParser):
+    ''' Schema for:
+        * show pce ipv4 topology summary
+    '''
+    schema = {
+        'summary' : {
+            'topology_nodes' : int,
+            'prefixes' : {
+                'prefixes' : int,
+                'prefix_sids' : int,
+            },
+            'links' : {
+                'links' : int,
+                'adjancency_sids': int,
+            }
+        }
+    }
+
+class ShowPceIpv4TopologySummary(ShowPceIpv4TopologySummarySchema):
+    ''' parser for:
+        * show pce ipv4 topology summary
+    '''
+
+    cli_command = 'show pce ipv4 topology summary'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        p1 = re.compile(r'^Topology nodes:\s+(?P<topology_nodes>\d+)$')
+
+        p2 = re.compile(r'^Prefixes:\s+(?P<prefixes>\d+)$')
+
+        p3 = re.compile(r'^Prefix SIDs:\s+(?P<prefix_sids>\d+)$')
+        
+        p4 = re.compile(r'^Links:\s+(?P<links>\d+)$')
+
+        p5 = re.compile(r'^Adjacency SIDs:\s+(?P<adj_sids>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                topology_dict = ret_dict.setdefault('summary', {})
+                topology_dict['topology_nodes'] = \
+                                                int(m.groupdict()['topology_nodes'])
+
+            m = p2.match(line)
+            if m:
+                prefix_dict = topology_dict.setdefault('prefixes', {})
+                prefix_dict['prefixes'] = int(m.groupdict()['prefixes'])
+
+            m = p3.match(line)
+            if m:
+                prefix_dict['prefix_sids'] = int(m.groupdict()['prefix_sids'])
+
+            m = p4.match(line)
+            if m:
+                links_dict = topology_dict.setdefault('links', {})
+                links_dict['links'] = int(m.groupdict()['links'])
+
+            m = p5.match(line)
+            if m:
+                links_dict['adjancency_sids'] = int(m.groupdict()['adj_sids'])
+        
+        return ret_dict
+
+

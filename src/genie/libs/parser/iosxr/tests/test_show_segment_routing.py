@@ -9,7 +9,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefixSidMap,\
                                                             ShowPceIPV4Peer,\
                                                             ShowPceIPV4PeerDetail,\
-                                                            ShowPceIPV4PeerPrefix
+                                                            ShowPceIPV4PeerPrefix,\
+                                                            ShowPceIpv4TopologySummary
 
 # =============================================================
 # Unittest for:
@@ -328,8 +329,51 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
         self.assertEqual(parsed, self.golden_parsed_output)
 
 
+class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
 
+    empty_output = {'execute.return_value' : ''}
 
+    golden_output = {'execute.return_value' : '''
+        RP/0/RSP0/CPU0:router# show pce ipv4 topology summary
+
+        PCE's topology database summary:
+        --------------------------------
+
+        Topology nodes:                4
+        Prefixes:                      4
+        Prefix SIDs:                 4
+        Links:                        12
+        Adjacency SIDs:             24
+    '''}
+
+    golden_parsed_output = {
+        'summary': {
+            'topology_nodes': 4,
+            'prefixes': {
+                'prefixes': 4,
+                'prefix_sids': 4
+            }, 
+            'links': {
+                'links': 12,
+                'adjancency_sids': 24
+            }
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowPceIpv4TopologySummary(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowPceIpv4TopologySummary(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
