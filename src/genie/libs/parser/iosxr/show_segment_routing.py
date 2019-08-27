@@ -103,3 +103,77 @@ class ShowSegmentRoutingPrefixSidMap(ShowSegmentRoutingPrefixSidMapSchema):
                 status_dict['entries'] = int(m.groupdict()['entries'])
         
         return ret_dict
+
+
+class ShowPceIPV4PeerSchema(MetaParser):
+    ''' Schema for:
+        * show pce ipv4 peer
+    '''
+    schema = {
+        'database' : {
+            Any() : {
+                'peer_address' : str,
+                'state' : bool,
+                'capabilities' : {
+                    'stateful' : bool,
+                    'segment-routing' : bool,
+                    'update' : bool
+                }
+            },
+        }
+    }
+
+class ShowPceIPV4Peer(ShowPceIPV4PeerSchema):
+    ''' Parser for:
+        * show pce ipv4 peer
+    '''
+    cli_command = 'show pce ipv4 peer'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Peer address: 192.168.0.1
+        p1 = re.compile(r'^Peer address: (?P<address>[\d\.]+)$')
+
+        p2 = re.compile(r'^State: (?P<state>\w+)$')
+
+        p3 = re.compile(r'Capabilities: (?P<stateful>\w+)\,\s+'
+            '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
+            
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                address = m.groupdict()['address']
+                database_dict = ret_dict.setdefault('database', {})
+                address_dict = database_dict.setdefault(address, {})
+                address_dict['peer_address'] = address
+
+            m = p2.match(line)
+            if m:
+                state_bool = True if 'Up' in \
+                    m.groupdict()['state'].lower() else False
+                address_dict['state'] = state_bool
+
+            m = p3.match(line)
+            if m:
+                capabilities_dict = address_dict.setdefault('capabilities', {})
+                
+                stateful_bool = True if 'stateful' in \
+                    m.groupdict()['stateful'].lower() else False
+                segment_bool = True if 'segment-routing' in \
+                    m.groupdict()['segment_routing'].lower() else False
+                update_bool = True if 'update' in \
+                    m.groupdict()['update'].lower() else False
+                
+                capabilities_dict['stateful'] = stateful_bool
+                capabilities_dict['segment-routing'] = segment_bool
+                capabilities_dict['update'] = update_bool
+        return ret_dict

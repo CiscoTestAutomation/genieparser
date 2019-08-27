@@ -6,7 +6,8 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefixSidMap
+from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefixSidMap,\
+                                                            ShowPceIPV4Peer
 
 # =============================================================
 # Unittest for:
@@ -121,6 +122,52 @@ class test_show_routing_prefix_sid_map(unittest.TestCase):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
         obj = ShowSegmentRoutingPrefixSidMap(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+        
+
+
+class test_show_pce_ivp4_peer(unittest.TestCase):
+    
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+    RP/0/RSP0/CPU0:router# show pce ipv4 peer
+
+    PCE's peer database:
+    --------------------
+    Peer address: 192.168.0.1
+    State: Up
+    Capabilities: Stateful, Segment-Routing, Update
+    '''}
+
+    golden_parsed_output = {
+        'database': {
+            '192.168.0.1': {
+                'peer_address': '192.168.0.1',
+                'state': False,
+                'capabilities': {
+                    'stateful': True,
+                    'segment-routing': True,
+                    'update': True
+                }
+            }
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowPceIPV4Peer(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowPceIPV4Peer(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
