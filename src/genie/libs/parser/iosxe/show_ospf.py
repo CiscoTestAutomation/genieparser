@@ -16,12 +16,19 @@ IOSXE parsers for the following show commands:
     * show ip ospf database summary
     * show ip ospf database external
     * show ip ospf database opaque-area
+    * show ip ospf database opaque-area self-originate
     * show ip ospf mpls ldp interface
     * show ip ospf mpls traffic-eng link
     * show ip ospf max-metric
     * show ip ospf traffic
     * show ip ospf interface brief
-
+    * show ip ospf {process_id} segment-routing adjacency-sid
+    * show ip ospf fast-reroute ti-lfa
+    * show ip ospf segment-routing protected-adjacencies
+    * show ip ospf segment-routing global-block
+    * show ip ospf {process_id} segment-routing global-block
+    * show ip ospf segment-routing
+    * show ip ospf database opaque-area adv-router {address}
 '''
 
 # Python
@@ -33,6 +40,108 @@ from netaddr import IPAddress, IPNetwork
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 from genie.libs.parser.utils.common import Common
+
+# ===========================================================
+# Schema for:
+#   * 'show ip ospf {process_id} segment-routing local-block'
+# ===========================================================
+class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf {process_id} segment-routing local-block'
+    '''
+
+    schema = {
+        'instance':
+            {Any():
+                {'router_id': str,
+                'areas':
+                    {Any():
+                        {'router_id':
+                            {Any():
+                                {'sr_capable': str,
+                                'srlb_base': int,
+                                'srlb_range': int,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+
+# ===========================================================
+# Schema for:
+#   * 'show ip ospf {process_id} segment-routing local-block'
+# ===========================================================
+class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchema):
+
+    ''' Parser for:
+        * 'show ip ospf {process_id} segment-routing local-block'
+    '''
+
+    cli_command = 'show ip ospf {process_id} segment-routing local-block'
+
+    def cli(self, process_id, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process_id=process_id))
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                         ' +\(Process +ID +(?P<pid>(\S+))\)$')
+
+        # OSPF Segment Routing Local Blocks in Area 8
+        p2 = re.compile(r'^OSPF +Segment +Routing +Local +Blocks +in +Area'
+                         ' +(?P<area>(\d+))$')
+
+        # Router ID        SR Capable   SRLB Base   SRLB Range
+        # --------------------------------------------------------
+        # *10.4.1.1          Yes          15000       1000
+        # 10.16.2.2          Yes          15000       1000
+        p3 = re.compile(r'^(?:(?P<value>(\*)))?(?P<router_id>(\S+))'
+                         ' +(?P<sr_capable>(Yes|No)) +(?P<srlb_base>(\d+))'
+                         ' +(?P<srlb_range>(\d+))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                inst_dict = ret_dict.setdefault('instance', {}).\
+                                     setdefault(group['pid'], {})
+                inst_dict['router_id'] = group['router_id']
+                continue
+
+            # OSPF Segment Routing Local Blocks in Area 8
+            m = p2.match(line)
+            if m:
+                area_dict = inst_dict.setdefault('areas', {}).\
+                    setdefault(str(IPAddress(str(m.groupdict()['area']))), {})
+                continue
+
+            # Router ID        SR Capable   SRLB Base   SRLB Range
+            # --------------------------------------------------------
+            # *10.4.1.1          Yes          15000       1000
+            # 10.16.2.2          Yes          15000       1000
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                smgt_dict = area_dict.setdefault('router_id', {}).\
+                                      setdefault(group['router_id'], {})
+                smgt_dict['sr_capable'] = group['sr_capable']
+                smgt_dict['srlb_base'] = int(group['srlb_base'])
+                smgt_dict['srlb_range'] = int(group['srlb_range'])
+                continue
+
+        return ret_dict
 
 
 # ==================
@@ -2904,6 +3013,7 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
                                                         'bdr_ip_addr': str,
                                                         Optional('interface_id'): str,
                                                         Optional('hello_options'): str,
+                                                        Optional('sr_adj_label'): str,
                                                         Optional('dbd_options'): str,
                                                         Optional('dead_timer'): str,
                                                         Optional('uptime'): str,
@@ -3064,7 +3174,9 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         p12 = re.compile(r'^Last +retransmission +scan +time +is'
                             ' +(?P<num1>(\d+)) +msec, +maximum +is'
                             ' +(?P<num2>(\d+)) +msec$')
-
+        
+        p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -3368,7 +3480,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                 sub_dict['statistics']['last_retrans_max_scan_time_msec'] = \
                     int(m.groupdict()['num2'])
                 continue
-
+            
+            # SR adj label 10
+            m = p13.match(line)
+            if m:
+                sub_dict['sr_adj_label'] = str(m.groupdict()['sr_adj_label'])
+                continue
+            
         return ret_dict
 
 
@@ -3583,6 +3701,7 @@ class ShowIpOspfDatabase(ShowIpOspfDatabaseSchema):
 #   * 'show ip ospf database summary'
 #   * 'show ip ospf database router'
 #   * 'show ip ospf database opaque'
+#   * 'show ip ospf database opaque-area self-originate'
 # =====================================
 class ShowIpOspfDatabaseTypeParser(MetaParser):
 
@@ -3591,24 +3710,22 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         * 'show ip ospf database network'
         * 'show ip ospf database summary'
         * 'show ip ospf database router'
-        * 'show ip ospf database opaque'
+        * 'show ip ospf database opaque
+        * 'show ip ospf database opaque-area self-originate''
     '''
 
-    def cli(self, cmd, db_type, output=None):
+    def cli(self, db_type, out=None):
 
         assert db_type in ['external', 'network', 'summary', 'router',
                            'opaque']
-
-        if output is None:
-            # Execute command on device
-            out = self.device.execute(cmd)
-        else:
-            out = output
 
         # Init vars
         ret_dict = {}
         af = 'ipv4'
         default_mt_id = 0
+        capabilities_flag = False
+        tlv_type_flag = False
+        sub_tlv_type_flag = False
 
         # Router
         # Network Link
@@ -3673,7 +3790,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
        
-        p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
+        p18_1 = re.compile(r'^Link\s+connected +to\s*: +(?P<type>(.*))$')
        
         p19_1 = re.compile(r'^\(Link +ID\) +Network\/(s|S)ubnet +(n|N)umber:'
                             ' +(?P<link_id>(\S+))$')
@@ -3690,7 +3807,9 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         p20_2 = re.compile(r'^\(Link +Data\) +Router +Interface +address:'
                             ' +(?P<link_data>(\S+))$')
        
-        p21 = re.compile(r'^MTID:? +(?P<mtid>(\d+))(\t+|\s+)(M|m)etric(s?): +(?P<metric>(\d+))$')
+        # MTID 32 Metrics: 1
+        # MTID   : 0
+        p21 = re.compile(r'MTID\s*:*\s*(?P<mtid>\d+)\s*(?:(Metrics*\s*:*\s*(?P<metric>\d+)))?')
        
         p21_1 = re.compile(r'^Number +of +MTID +metrics: +(?P<num>(\d+))$')
        
@@ -3706,7 +3825,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p26_2 = re.compile(r'^Area +Border +Router$')
        
-        p27 = re.compile(r'^Link +connected +to +(?P<link>(.*))$')
+        p27 = re.compile(r'^Link +connected +to\s*\:*\s+(?P<link>(.*))$')
        
         p28 = re.compile(r'^Link +ID *: +(?P<id>(\S+))$')
        
@@ -3738,6 +3857,93 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                             ' +(?P<eag_length>(\d+))$')
        
         p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
+
+        # Neighbor Address : 192.168.220.2
+        p38 = re.compile(r'Neighbor\s+Address\s*:\s*(?P<neighbor_address>\S+)')
+
+        # TLV Type: Router Information
+        # TLV Type: Segment Routing Algorithm
+        p39 = re.compile(r'TLV\s+Type\s*:\s*(?P<tlv_type>.+)')
+
+        # Router Information
+        p39_1 = re.compile(r'(R|r)outer\s+(I|i)nformation')
+
+        # Segment Routing Algorithm
+        p39_2 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(A|a)lgorithm')
+
+        # Segment Routing Range
+        p39_3 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(R|r)ange')
+
+        # Segment Routing Node MSD
+        p39_4 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(N|n)ode\s+MSD')
+
+        # Segment Routing Local Block
+        p39_5 = re.compile(r'(S|s)egment\s+(R|r)outing\s+(L|l)ocal\s+(B|b)lock')
+
+        # Extended Prefix
+        p39_6 = re.compile(r'(E|e)xtended\s+(P|p)refix')
+
+        # Extended Link
+        p39_7 = re.compile(r'(E|e)xtended\s+(L|l)ink')
+
+        # Algorithm: SPF
+        # Algorithm: Strict SPF
+        p40 = re.compile(r'Algo(?:(rithm))?\s*:\s*(?P<algorithm>.+)')
+
+        # Range Size: 1000
+        p41 = re.compile(r'Range\s+Size\s*:\s*(?P<range_size>\d+)')
+
+        # Flags  : L-Bit, V-bit
+        p42 = re.compile(r'Flags\s*\:\s*(?P<flags>.+)')        
+
+        # Weight : 0
+        p44 = re.compile(r'Weight\s*:\s*(?P<weight>\d+)')
+
+        # Label  : 19
+        p45 = re.compile(r'Label\s*:\s*(?P<label>\d+)')       
+        
+        # (Link Data) Interface IP address: 192.168.220.1
+        p46 = re.compile(r'\(Link\s+Data\)\s+Interface\s+IP\s+address\s*:\s*(?P<link_data>\S+)')
+
+        # Prefix    : 10.4.1.1/32
+        p47 = re.compile(r'Prefix\s*:\s*(?P<prefix>\S+)')
+
+        # AF        : 0
+        p48 = re.compile(r'AF\s*:\s*(?P<af>\S+)')
+
+        # Route-type: Intra
+        p49 = re.compile(r'Route\-type\s*:\s*(?P<route_type>.+)')
+
+        # Sub-TLV Type: Remote Intf Addr
+        # Sub-TLV Type: Local / Remote Intf ID
+        p50 = re.compile(r'Sub\-TLV\s+Type\s*:\s*(?P<sub_tlv_type>.+)')
+
+        # Remote Interface Address   : 192.168.0.1
+        p51 = re.compile(r'Remote\s+Interface\s+Address\s*:\s*(?P<remote_interface_address>\S+)')
+
+        # Local Interface ID   : 20
+        p52 = re.compile(r'Local\s+Interface\s+ID\s*:\s*(?P<local_interface_id>\S+)')
+
+        # Remote Interface ID   : 20
+        p53 = re.compile(r'Remote\s+Interface\s+ID\s*:\s*(?P<remote_interface_id>\S+)')
+
+        # SID   : 1
+        p54 = re.compile(r'SID\s*:\s*(?P<sid>\S+)')
+
+        # Graceful Restart Helper                
+        p55 = re.compile(r'(G|g)raceful\s+(R|r)estart\s+(H|h)elper')
+
+        # Stub Router Support
+        p56 = re.compile(r'(S|s)tub\s+(R|r)outer\s+(S|s)upport')
+
+        # SPF
+        p57 = re.compile(r'SPF')
+
+        # Strict SPF
+        p58 = re.compile(r'Strict\s+SPF')
+
+        # Sub-type: Node Max Sid Depth, Value: 13
+        p59 = re.compile(r'Sub\-type\s*:\s*Node\s+Max\s+Sid\s+Depth\,\s+Value:\s*(?P<value>\d+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3829,6 +4035,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # LS age: 1565
             m = p3_2.match(line)
             if m:
+                tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
@@ -3969,7 +4176,13 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Length: 36
             m = p9.match(line)
             if m:
-                header_dict['length'] = int(m.groupdict()['length'])
+                length = int(m.groupdict()['length'])
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['length'] = length
+                elif tlv_type_flag:
+                    tlv_type_dict['length'] = length
+                
+                header_dict['length'] = length
                 continue
 
             # Network Mask: /32
@@ -4054,6 +4267,14 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Link connected to: another Router (point-to-point)
             m = p18_1.match(line)
             if m:
+                if tlv_type_flag:                    
+                    sub_link_type = str(m.groupdict()['type']).lower()
+                    if 'another Router' in sub_link_type:
+                        opaque_link_type = 1
+                    tlv_type_dict['link_name'] = sub_link_type
+                    tlv_type_dict['link_type'] = opaque_link_type
+                    continue
+
                 link_type = str(m.groupdict()['type']).lower()
                 continue
 
@@ -4114,6 +4335,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 link_id = str(m.groupdict()['link_id'])
 
+                if tlv_type_flag:
+                    tlv_type_dict['link_id'] = link_id
+                    continue
+
                 # Create dict structures
                 if 'links' not in db_dict:
                     db_dict['links'] = {}
@@ -4150,9 +4375,15 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 continue
 
             # MTID 32 Metrics: 1
+            # MTID   : 0
             m = p21.match(line)
             if m:
                 mtid = int(m.groupdict()['mtid'])
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['mt_id'] = int(mtid)
+                    continue
+
                 if db_type == 'router':
                     if mtid not in db_dict['links'][link_id]['topologies']:
                         db_dict['links'][link_id]['topologies'][mtid] = {}
@@ -4205,7 +4436,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # MPLS TE router ID : 10.4.1.1
             m = p25.match(line)
             if m:
-                header_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
+                db_dict['mpls_te_router_id'] = str(m.groupdict()['mpls'])
                 continue
 
             # AS Boundary Router
@@ -4392,6 +4623,273 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     ['groups'][group_num]['value'] = int(m.groupdict()['val'])
                 continue
 
+            # Neighbor Address : 192.168.220.2
+            m = p38.match(line)
+            if m:
+                db_dict['link_tlvs'][link_tlv_counter]['remote_if_ipv4_addrs'] = {m.groupdict()['neighbor_address']: {}}
+                
+                continue
+
+            # TLV Type: Extended Link
+            # TLV Type: Segment Routing Node MSD
+            m = p39.match(line)
+            if m:
+                tlv_type_flag = True
+                sub_tlv_type_flag = False
+
+                group = m.groupdict()
+                tlv_type = group['tlv_type']
+                
+                # Router Information
+                if p39_1.match(tlv_type):
+                    tlv_type_field = 'router_capabilities_tlv'
+
+                # Segment Routing Algorithm
+                elif p39_2.match(tlv_type):
+                    tlv_type_field = 'sr_algorithm_tlv'
+
+                # Segment Routing Range
+                elif p39_3.match(tlv_type):
+                    tlv_type_field = 'sid_range_tlvs'
+
+                # Segment Routing Node MSD
+                elif p39_4.match(tlv_type):
+                    tlv_type_field = 'node_msd_tlvs'
+
+                # Segment Routing Local Block
+                elif p39_5.match(tlv_type):
+                    tlv_type_field = 'local_block_tlvs'
+
+                # Extended Prefix
+                elif p39_6.match(tlv_type):
+                    tlv_type_field = 'extended_prefix_tlvs'
+
+                # Extended Link
+                elif p39_7.match(tlv_type):
+                    tlv_type_field = 'extended_link_tlvs'
+                
+                tlv_types_index = db_dict.get(tlv_type_field, {}).keys()
+
+                if tlv_types_index:
+                    index = max(tlv_types_index) + 1
+                else:
+                    index = 1
+                
+                tlv_type_dict = db_dict\
+                    .setdefault(tlv_type_field, {})\
+                    .setdefault(index, {})
+
+                tlv_type_dict['tlv_type'] = tlv_type
+
+                continue
+
+            if 'Capabilities' in line:                
+                capabilities_flag = True
+                continue
+
+            if capabilities_flag:
+
+                if not line:
+                    capabilities_flag = False
+                    continue
+                capability_field = None
+
+                # Graceful Restart Helper
+                if p55.match(line):
+                    capability_field = 'graceful_restart_helper'
+
+                # Stub Router Support
+                elif p56.match(line):
+                    capability_field = 'stub_router'
+
+                if not capability_field:
+                    continue
+
+                capabilities_dict = tlv_type_dict\
+                    .setdefault('information_capabilities', {})                    
+
+                capabilities_dict[capability_field] = True
+
+                continue
+
+            # Algorithm: SPF
+            # Algorithm: Strict SPF
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                algorithm = group['algorithm']
+                algorithm = algorithm.strip()
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['algo'] = algorithm
+                    continue
+
+                algo_field = None
+
+                # SPF
+                if p57.match(algorithm):
+                    algo_field = 'spf'
+
+                # Strict SPF
+                if p58.match(algorithm):
+                    algo_field = 'strict_spf'
+
+                if not algo_field:
+                    continue
+
+                algorithm_dict = tlv_type_dict.setdefault('algorithm', {})
+                algorithm_dict[algo_field] = True
+
+                continue
+
+            # Range Size: 1000
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                range_size = group['range_size']
+                tlv_type_dict['range_size'] = int(range_size)
+
+                continue
+
+            # Flags  : L-Bit, V-bit
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                flags = group['flags']
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['flags'] = flags
+                    continue 
+
+                tlv_type_dict['flags'] = flags
+
+                continue
+
+            # Weight : 0
+            m = p44.match(line)
+            if m:                
+                group = m.groupdict()
+                weight = int(group['weight'])
+
+                if sub_tlv_type_flag:
+                    sub_tlv_types_dict['weight'] = weight
+                    continue
+
+                tlv_type_dict['weight'] = weight
+
+                continue
+
+            # Label  : 19
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                label = group['label']
+
+                sub_tlv_types_dict['label'] = int(label)                                
+
+                continue
+
+            # (Link Data) Interface IP address: 192.168.220.1
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                tlv_type_dict['link_data'] = group['link_data']
+
+                continue
+
+            # Prefix    : 10.4.1.1/32
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+
+                tlv_type_dict['prefix'] = prefix
+
+                continue
+
+            # AF        : 0
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                af = int(group['af'])
+
+                tlv_type_dict['af'] = af
+
+                continue
+
+            # Route-type: Intra
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                route_type = group['route_type']            
+
+                tlv_type_dict['route_type'] = route_type
+
+                continue
+
+            # Sub-TLV Type: Remote Intf Addr
+            # Sub-TLV Type: Local / Remote Intf ID
+            m = p50.match(line)
+            if m:
+                sub_tlv_type_flag = True
+                group = m.groupdict()
+                sub_tlv_type = group['sub_tlv_type']
+
+                sub_tlv_types_index = tlv_type_dict.get('sub_tlvs', {}).keys()
+                if sub_tlv_types_index:
+                    index = max(sub_tlv_types_index) + 1
+                else:
+                    index = 1
+
+                sub_tlv_types_dict = tlv_type_dict.setdefault('sub_tlvs', {}).setdefault(index, {})
+
+                sub_tlv_types_dict['type'] = sub_tlv_type
+
+                continue
+
+            # Remote Interface Address   : 192.168.0.1
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                remote_interface_address = group['remote_interface_address']
+                sub_tlv_types_dict['remote_interface_address'] = remote_interface_address
+                continue
+
+            # Local Interface ID   : 20
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                local_interface_id = int(group['local_interface_id'])
+                sub_tlv_types_dict['local_interface_id'] = local_interface_id
+                continue            
+
+            # Remote Interface ID   : 20
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                remote_interface_id = int(group['remote_interface_id'])
+                sub_tlv_types_dict['remote_interface_id'] = remote_interface_id
+                continue
+
+            # SID   : 1
+            m = p54.match(line)                        
+            if m:
+                group = m.groupdict()
+                sid = int(group['sid'])
+
+                sub_tlv_types_dict['sid'] = sid
+                continue
+
+            # Sub-type: Node Max Sid Depth, Value: 13
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                sub_type_value = int(group['value'])
+
+                sub_type_dict = tlv_type_dict.setdefault('sub_type', {})
+                sub_type_dict['node_max_sid_depth_value'] = sub_type_value
+
+                continue
 
         return ret_dict
 
@@ -4492,8 +4990,10 @@ class ShowIpOspfDatabaseRouter(ShowIpOspfDatabaseRouterSchema, ShowIpOspfDatabas
 
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='router', output=output)
+        return super().cli(db_type='router', out=output)
 
 
 # ====================================
@@ -4579,8 +5079,10 @@ class ShowIpOspfDatabaseExternal(ShowIpOspfDatabaseExternalSchema, ShowIpOspfDat
     cli_command = 'show ip ospf database external'
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='external', output=output)
+        return super().cli(db_type='external', out=output)
 
 
 # ===================================
@@ -4662,8 +5164,10 @@ class ShowIpOspfDatabaseNetwork(ShowIpOspfDatabaseNetworkSchema, ShowIpOspfDatab
     exclude = ['age', 'seq_num', 'checksum', 'lsas']
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='network', output=output)
+        return super().cli(db_type='network', out=output)
 
 
 # ===================================
@@ -4748,8 +5252,10 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
 
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='summary', output=output)
+        return super().cli(db_type='summary', out=output)
 
 
 # =======================================
@@ -4759,29 +5265,30 @@ class ShowIpOspfDatabaseSummary(ShowIpOspfDatabaseSummarySchema, ShowIpOspfDatab
 class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
 
     ''' Schema for:
-        * 'show ip ospf database opaque-area
+        * 'show ip ospf database opaque-area'
+        * 'show ip ospf database opaque-area self-originate'
     '''
 
     schema = {
-        'vrf': 
-            {Any(): 
-                {'address_family': 
-                    {Any(): 
-                        {'instance': 
-                            {Any(): 
-                                {Optional('areas'): 
-                                    {Any(): 
-                                        {'database': 
-                                            {'lsa_types': 
-                                                {Any(): 
-                                                    {'lsa_type': int,
-                                                    'lsas': 
-                                                        {Any(): 
-                                                            {'lsa_id': str,
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'instance': {
+                            Any(): {
+                                Optional('areas'): {
+                                    Any(): {
+                                        'database': {
+                                            'lsa_types': {
+                                                Any(): {
+                                                    'lsa_type': int,
+                                                    'lsas': {
+                                                        Any(): {
+                                                            'lsa_id': str,
                                                             'adv_router': str,
-                                                            'ospfv2': 
-                                                                {'header': 
-                                                                    {'option': str,
+                                                            'ospfv2': {
+                                                                'header': {
+                                                                    'option': str,
                                                                     'option_desc': str,
                                                                     'lsa_id': str,
                                                                     'age': int,
@@ -4790,65 +5297,187 @@ class ShowIpOspfDatabaseOpaqueAreaSchema(MetaParser):
                                                                     'seq_num': str,
                                                                     'checksum': str,
                                                                     'length': int,
-                                                                    'opaque_type': int,
+                                                                    Optional('opaque_type'): int,
                                                                     'opaque_id': int,
-                                                                    'fragment_number': int,
-                                                                    Optional('mpls_te_router_id'): str},
-                                                                'body': 
-                                                                    {'opaque': 
-                                                                        {'num_of_links': int,
-                                                                        Optional('link_tlvs'): 
-                                                                            {Any(): 
-                                                                                {'link_type': int,
-                                                                                'link_name': str,
+                                                                    Optional('fragment_number'): int,
+                                                                },
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        Optional('mpls_te_router_id'): str,
+                                                                        Optional('links'): {
+                                                                            Any(): {
                                                                                 'link_id': str,
-                                                                                'te_metric': int,
-                                                                                'max_bandwidth': int,
-                                                                                'max_reservable_bandwidth': int,
-                                                                                'admin_group': str,
+                                                                                'topologies': {
+                                                                                    Any(): {
+                                                                                        'mt_id': int
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        Optional('num_of_links'): int,                                                                        
+                                                                        Optional('router_capabilities_tlv'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                'tlv_type': str,
+                                                                                Optional('information_capabilities'): {
+                                                                                    Optional('graceful_restart'): bool,       
+                                                                                    Optional('graceful_restart_helper'): bool,
+                                                                                    Optional('stub_router'): bool,            
+                                                                                    Optional('traffic_enginnering'): bool,    
+                                                                                    Optional('p2p_over_lan'): bool,           
+                                                                                    Optional('experimental_te'): bool,
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('sr_algorithm_tlv'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'length': int,
+                                                                                Optional('algorithm'): {
+                                                                                    Optional('spf'): bool,
+                                                                                    Optional('strict_spf'): bool,
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('sid_range_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'length': int,
+                                                                                'range_size': int,
+                                                                                'sub_tlvs': {
+                                                                                    Any(): { 
+                                                                                        'type': str,
+                                                                                        'length': int,
+                                                                                        'label': int,
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('node_msd_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'length': int,
+                                                                                'sub_type': {
+                                                                                    'node_max_sid_depth_value': int
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('local_block_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'range_size': int,
+                                                                                'length': int,
+                                                                                'sub_tlvs': {
+                                                                                    Any(): {
+                                                                                        'type': str,
+                                                                                        'length': int,
+                                                                                        'label': int
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('extended_prefix_tlvs'): {
+                                                                            Any(): {
+                                                                                'tlv_type': str,
+                                                                                'route_type': str,
+                                                                                'length': int,
+                                                                                'flags': str,
+                                                                                'prefix': str,
+                                                                                'af': int,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'type': str,
+                                                                                        'length': int,
+                                                                                        'flags': str,
+                                                                                        Optional('mt_id'): int,
+                                                                                        'algo': str,
+                                                                                        'sid': int,
+                                                                                    }
+                                                                                }
+
+                                                                            }
+                                                                        },
+                                                                        Optional('extended_link_tlvs'): {
+                                                                            Any(): {
+                                                                                'link_id': str,
+                                                                                'link_data': str,
+                                                                                'length': int,
+                                                                                Optional('link_name'): str,
+                                                                                'link_type': int,
+                                                                                'tlv_type': str,
+                                                                                'sub_tlvs': {
+                                                                                    Any(): {
+                                                                                        'type': str,
+                                                                                        Optional('length'): int,
+                                                                                        Optional('flags'): str,
+                                                                                        Optional('mt_id'): int,
+                                                                                        Optional('weight'): int,
+                                                                                        Optional('label'): int,
+                                                                                        Optional('remote_interface_address'): str,
+                                                                                        Optional('local_interface_id'): int,
+                                                                                        Optional('remote_interface_id'): int,
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        Optional('link_tlvs'): {
+                                                                            Any(): {
+                                                                                Optional('link_type'): int,
+                                                                                Optional('link_name'): str,
+                                                                                Optional('link_id'): str,
+                                                                                Optional('te_metric'): int,
+                                                                                Optional('max_bandwidth'): int,
+                                                                                Optional('max_reservable_bandwidth'): int,
+                                                                                Optional('admin_group'): str,
                                                                                 Optional('igp_metric'): int,
                                                                                 Optional('total_priority'): int,
-                                                                                Optional('local_if_ipv4_addrs'): 
-                                                                                    {Any(): {}},
-                                                                                Optional('remote_if_ipv4_addrs'): 
-                                                                                    {Any(): {}},
-                                                                                Optional('unreserved_bandwidths'): 
-                                                                                    {Any(): 
-                                                                                        {'priority': int,
-                                                                                        'unreserved_bandwidth': int},
-                                                                                    },
-                                                                                Optional('unknown_tlvs'): 
-                                                                                    {Any(): 
-                                                                                        {'type': int,
+                                                                                Optional('local_if_ipv4_addrs'): {
+                                                                                    Any(): {}
+                                                                                },
+                                                                                Optional('remote_if_ipv4_addrs'): {
+                                                                                    Any(): {}
+                                                                                },
+                                                                                Optional('unreserved_bandwidths'): {
+                                                                                    Any(): {
+                                                                                        'priority': int,
+                                                                                        'unreserved_bandwidth': int,
+                                                                                    }
+                                                                                },
+                                                                                Optional('unknown_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'type': int,
                                                                                         'length': int,
-                                                                                        'value': str},
-                                                                                    },
-                                                                                Optional('extended_admin_group'):
-                                                                                    {'length': int,
-                                                                                    Optional('groups'): 
-                                                                                        {Any(): 
-                                                                                            {'value': int,},
-                                                                                        },
+                                                                                        'value': str,
+                                                                                    }
+                                                                                },
+                                                                                Optional('extended_admin_group'): {
+                                                                                    'length': int,
+                                                                                    Optional('groups'): {
+                                                                                        Any(): {
+                                                                                            'value': int
+                                                                                        }
                                                                                     },
                                                                                 },
-                                                                            },
+                                                                            }
                                                                         },
-                                                                    },
+                                                                    }
                                                                 },
                                                             },
-                                                        },
+                                                        }
                                                     },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
 
 
 # =======================================
@@ -4864,8 +5493,10 @@ class ShowIpOspfDatabaseOpaqueArea(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOsp
     cli_command = 'show ip ospf database opaque-area'
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='opaque', output=output)
+        return super().cli(db_type='opaque', out=output)
 
 
 # =====================================
@@ -6462,5 +7093,941 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
     exclude = ['age' , 'checksum', 'seq_num', 'dead_time']
 
     def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(cmd=self.cli_command, db_type='router', output=output)
+        return super().cli(db_type='router', out=output)
+
+
+class ShowIpOspfSegmentRoutingSchema(MetaParser):
+    ''' Schema for commands:
+            * show ip ospf {process_id} segment-routing adjacency-sid
+    '''
+    schema = {        
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'adjacency_sids': {
+                    Any(): {
+                        'neighbor_id': str,
+                        'neighbor_address': str,
+                        'interface': str,
+                        'flags': str,
+                        Optional('backup_nexthop'): str,
+                        Optional('backup_interface'): str,
+                    }
+                }
+            }
+        }
+    }
+        
+    
+
+class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+    ''' Parser for commands:
+            * show ip ospf {process_id} segment-routing adjacency-sid
+    '''
+
+    cli_commands = [
+        'show ip ospf {process_id} segment-routing adjacency-sid',
+        'show ip ospf segment-routing adjacency-sid',
+    ]
+
+    def cli(self, process_id=None, output=None):
+
+        if output is None:
+            if process_id:
+                command = self.cli_commands[0].format(process_id=process_id)
+            else:
+                command = self.cli_commands[1]
+
+            out = self.device.execute(command)
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        r1 = re.compile(r'OSPF\s+Router\s+with\s+ID\s+\((?P<router_id>\S+)\)\s+'
+                         '\(Process\s+ID\s+(?P<process_id>\d+)\)')
+
+        # 16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+        # 17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
+        r2 = re.compile(r'(?P<adj_sid>\d+)\s+(?P<neighbor_id>\S+)\s+'
+                         '(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+'
+                         '(?P<flags>[SDPUGL\s]+)\s*(?:(?P<backup_nexthop>\S+))?'
+                         '\s*(?:(?P<backup_interface>\S+))?')
+
+        parsed_output = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+
+                router_id = group['router_id']
+                process_id = group['process_id']
+
+                process_id_dict = parsed_output.setdefault('process_id', {})\
+                .setdefault(process_id, {})
+
+                process_id_dict['router_id'] = router_id
+
+                continue
+
+            # 16       10.16.2.2         Gi0/1/2            192.168.154.2       D U
+            # 17       10.16.2.2         Gi0/1/1            192.168.4.2       D U
+            result = r2.match(line)
+            if result:
+
+                group = result.groupdict()
+                adj_sid = group['adj_sid']
+
+                adjs_sid_dict = process_id_dict.setdefault('adjacency_sids', {})\
+                .setdefault(adj_sid, {})
+
+                adjs_sid_dict['neighbor_id'] = group['neighbor_id']
+                interface = group['interface']
+                adjs_sid_dict['interface'] = Common.convert_intf_name(str(interface))
+                adjs_sid_dict['neighbor_address'] = group['neighbor_address']
+                adjs_sid_dict['flags'] = group['flags']
+
+                backup_nexthop = group['backup_nexthop']                
+                if backup_nexthop:
+                    adjs_sid_dict['backup_nexthop'] = backup_nexthop
+
+                backup_interface = group['backup_interface']
+                if backup_interface:
+                    adjs_sid_dict['backup_interface'] = backup_interface
+
+                continue
+
+        return parsed_output
+
+# =================================================
+# Schema for:
+#   * 'show ip ospf fast-reroute ti-lfa'
+# =================================================
+
+class ShowIpOspfFastRerouteTiLfaSchema(MetaParser):
+    """Schema for show ip ospf fast-reroute ti-lfa
+    """
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'ospf_object': {
+                    Any(): {
+                        'ipfrr_enabled': str,
+                        'sr_enabled': str,
+                        'ti_lfa_configured': str,
+                        'ti_lfa_enabled': str,
+                    }
+                }
+            }
+        }
+    }
+
+# =================================================
+# Parser for:
+#   * 'show ip ospf fast-reroute ti-lfa'
+# =================================================
+
+class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
+    """Parser for show ip ospf fast-reroute ti-lfa
+    """
+
+    cli_command = 'show ip ospf fast-reroute ti-lfa'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)'
+            '\) +\(Process +ID +(?P<process_id>\d+)\)')
+
+        # Process ID (65109)       no       yes      no          no
+        # Area 8                  no       yes      no          no
+        # Loopback0               no       no       no          no
+        # GigabitEthernet0/1/2    no       yes      no          no
+        p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)'
+                         '( +\(inactive\))?) +(?P<sr_enabled>(yes|no)( +\(inactive\))?) '
+                         '+(?P<ti_lfa_configured>(yes|no)( +\(inactive\))?) +'
+                         '(?P<ti_lfa_enabled>(yes|no)( +\(inactive\))?)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                setdefault(process_id, {})
+                process_id_dict.update({'router_id': router_id})
+                ospf_object_dict = process_id_dict.setdefault('ospf_object', {})
+                continue
+
+            # Process ID (65109)       no       yes      no          no
+            # Area 8                  no       yes      no          no
+            # Loopback0               no       no       no          no
+            # GigabitEthernet0/1/2    no       yes      no          no
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_object = group['ospf_object'].strip()
+                ipfrr_enabled = group['ipfrr_enabled']
+                sr_enabled = group['sr_enabled']
+                ti_lfa_configured = group['ti_lfa_configured']
+                ti_lfa_enabled = group['ti_lfa_enabled']
+
+                ospf_object = ospf_object_dict.setdefault(ospf_object, {})
+
+                ospf_object.update({'ipfrr_enabled': ipfrr_enabled })
+                ospf_object.update({'sr_enabled': sr_enabled })
+                ospf_object.update({'ti_lfa_configured': ti_lfa_configured })
+                ospf_object.update({'ti_lfa_enabled': ti_lfa_enabled })
+                continue
+
+        return ret_dict
+
+
+# ===============================================================
+# Schema for 'show ip ospf segment-routing protected-adjacencies'
+# ===============================================================
+
+class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
+
+    ''' Schema for show ip ospf segment-routing protected-adjacencies
+    '''
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                Optional('areas'): {
+                    Any(): {                        
+                        'neighbors': {
+                            Any(): {
+                                'interfaces': {
+                                    Any(): {
+                                        'address': str,
+                                        'adj_sid': int,
+                                        'backup_nexthop': str,
+                                        'backup_interface': str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ========================================================
+# Parser for:
+#   * 'show ip ospf segment-routing protected-adjacencies'
+# ========================================================
+
+class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema):
+    """ Parser for show ip ospf segment-routing protected-adjacencies
+    """
+
+    cli_command = 'show ip ospf segment-routing protected-adjacencies'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
+                         'Process +ID +(?P<process_id>\d+)\)')
+
+        # Area with ID (8)
+        p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
+
+        # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+        p3 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +'
+                         '(?P<adj_sid>\d+) +(?P<backup_nexthop>\S+) +(?P<backup_interface>\S+)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                    setdefault(process_id, {})
+                process_id_dict['router_id'] = router_id
+                continue
+
+            # Area with ID (8)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                area_id = str(IPAddress(str(group['area_id'])))
+                area_dict = process_id_dict.setdefault('areas', {}). \
+                                setdefault(area_id, {})                
+                continue
+
+            # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_id = group['neighbor_id']
+                interface = group['interface']
+                address = group['address']
+                adj_sid = int(group['adj_sid'])
+                backup_nexthop = group['backup_nexthop']
+                backup_interface = group['backup_interface']
+                neighbor_dict = area_dict.setdefault('neighbors', {}). \
+                                    setdefault(neighbor_id, {}). \
+                                    setdefault('interfaces', {}). \
+                                    setdefault(Common.convert_intf_name(interface), {})
+
+                neighbor_dict.update({'address': address})
+                neighbor_dict.update({'adj_sid': adj_sid})
+                neighbor_dict.update({'backup_nexthop': backup_nexthop})
+                neighbor_dict.update({'backup_interface':
+                    Common.convert_intf_name(backup_interface)})
+                continue
+
+        return ret_dict
+
+
+class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
+    ''' Schema for commands:
+            * show ip ospf segment-routing sid-database
+    '''
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                Optional('sids'): {
+                    Any(): {
+                        'sid': int,
+                        Optional('codes'): str,
+                        'prefix': str,
+                        'adv_rtr_id': str,
+                        'area_id': str,
+                        'type': str,
+                        'algo': int
+                    },
+                    'total_entries': int
+                }
+            }
+        }
+    }
+
+
+class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSchema):
+    """ Parser for commands:
+            * show ip ospf segment-routing sid-database
+    """
+
+    cli_command = ['show ip ospf segment-routing sid-database']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
+                        '\(Process +ID +(?P<pid>\d+)\)$')
+
+        # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
+        # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
+        p2 = re.compile(r'^(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
+                        '(?P<prefix>[\d\.\/]+) +(?P<adv_rtr_id>[\d\.]+) +'
+                        '(?P<area_id>\d+) +(?P<type>\w+) +(?P<algo>\d+)$')
+
+        ret_dict = {}
+        sid_entries = 0
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                process_dict = ret_dict.setdefault('process_id', {}).setdefault(int(group['pid']), {})
+                process_dict.update({'router_id': group['router_id']})
+                continue
+
+            # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
+            # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sid_entries += 1
+
+                sids_dict = process_dict.setdefault('sids', {})
+                sids_dict.update({'total_entries': sid_entries})
+
+                sid_dict = sids_dict.setdefault(int(group['sid']), {})
+                sid_dict.update({'sid': int(group['sid'])})
+
+                if group['codes']:
+                    sid_dict.update({'codes': group['codes']})
+
+                sid_dict.update({'prefix': group['prefix']})
+                sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
+                sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                sid_dict.update({'type': group['type']})
+                sid_dict.update({'algo': int(group['algo'])})
+                continue
+
+        return ret_dict
+
+# =====================================================
+# Schema for:
+#   * 'show ip ospf {pid} segment-routing global-block'
+# =====================================================
+class ShowIpOspfSegmentRoutingGlobalBlockSchema(MetaParser):
+    """ Schema for commands:
+            * show ip ospf {pid} segment-routing global-block
+    """
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                'area': int,
+                'routers': {
+                    Any(): {
+                        'router_id': str,
+                        'sr_capable': str,
+                        Optional('sr_algorithm'): str,
+                        Optional('srgb_base'): int,
+                        Optional('srgb_range'): int,
+                        Optional('sid_label'): str
+                    }
+                }
+            }
+        }
+    }
+
+# =====================================================
+# Parser for:
+#   * 'show ip ospf {pid} segment-routing global-block'
+# =====================================================
+class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSchema):
+    """ Parser for commands:
+            * show ip ospf {pid} segment-routing global-block
+    """
+
+    cli_command = ['show ip ospf segment-routing global-block',
+                   'show ip ospf {process_id} segment-routing global-block']
+
+    def cli(self, process_id=None, output=None):
+
+        if not output:
+            if not process_id:
+                cmd = self.cli_command[0]
+            else:
+                cmd = self.cli_command[1].format(process_id=process_id)
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # OSPF Router with ID (10.4.1.1) (Process ID 1234)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
+                         '\(Process +ID +(?P<pid>\d+)\)$')
+
+        # OSPF Segment Routing Global Blocks in Area 3
+        p2 = re.compile(r'^OSPF +Segment +Routing +Global +Blocks +in +Area (?P<area>\d+)$')
+
+        # *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+        # 10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+        # *10.4.1.1         No
+        # 10.16.2.2         No
+        p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+)'
+                         '(?: +(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
+                         '(?P<srgb_range>\d+) +(?P<sid_label>\w+))?$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 1234)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_dict = ret_dict.setdefault('process_id', {}).setdefault(int(group['pid']), {})
+                router_dict.update({'router_id': group['router_id']})
+                continue
+
+            # OSPF Segment Routing Global Blocks in Area 3
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_dict.update({'area': int(group['area'])})
+                continue
+
+            # *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+            # 10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+
+                router_entry_dict = router_dict.setdefault('routers', {}).setdefault(group['router_id'], {})
+                router_entry_dict.update({'router_id': group['router_id']})
+                router_entry_dict.update({'sr_capable': group['sr_capable']})
+
+                if group['sr_algorithm']:
+                    router_entry_dict.update({'sr_algorithm': group['sr_algorithm']})
+
+                if group['srgb_base']:
+                    router_entry_dict.update({'srgb_base': int(group['srgb_base'])})
+
+                if group['srgb_range']:
+                    router_entry_dict.update({'srgb_range': int(group['srgb_range'])})
+
+                if group['sid_label']:
+                    router_entry_dict.update({'sid_label': group['sid_label']})
+                continue
+
+        return ret_dict
+
+# ==========================================
+# Parser for 'show ip ospf segment-routing'
+# ==========================================
+
+class ShowIpOspfSegmentRoutingSchema(MetaParser):
+
+    ''' Schema for show ip ospf segment-routing
+    '''
+
+    schema = {
+        'process_id': {
+            Any(): {
+                'router_id': str,
+                Optional('global_segment_routing_state'): str,
+                Optional('segment_routing_enabled'): {
+                    'area': {
+                        Any(): {
+                            'topology_name': str,
+                            'forwarding': str,
+                            'strict_spf': str
+                        }
+                    }
+                },
+                'sr_attributes': {
+                    'sr_label_preferred': bool,
+                    'advertise_explicit_null': bool,
+                },
+                Optional('global_block_srgb'): {
+                    'range': {
+                        'start': int,
+                        'end': int
+                    },
+                    'state': str,
+                },
+                Optional('local_block_srlb'): {
+                    'range': {
+                        'start': int,
+                        'end': int
+                    },
+                    'state': str,
+                },
+                Optional('registered_with'): {
+                    Any(): {
+                        Optional('client_handle'): int,
+                        Optional('sr_algo'): {
+                            Any(): {
+                                Any(): {
+                                    'handle': str,
+                                    'bit_mask': str,
+                                }
+                            }
+                        },
+                        Optional('client_id'): int,
+                    }
+                },
+                Optional('max_labels'): {
+                    'platform': int,
+                    'available': int,
+                    'pushed_by_ospf': {
+                        'uloop_tunnels': int,
+                        'ti_lfa_tunnels': int
+                    }
+                },
+                'mfi_label_reservation_ack_pending': bool,
+                'bind_retry_timer_running': bool,
+                Optional('bind_retry_timer_left'): str,
+                Optional('adj_label_bind_retry_timer_running'): bool,
+                Optional('adj_label_bind_retry_timer_left'): str,
+                Optional('srp_app_locks_requested'): {
+                    'srgb': int,
+                    'srlb': int
+                },
+                Optional('teapp'): {
+                    'te_router_id': str
+                }
+            }
+        }
+    }
+
+class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+    ''' Parser for show ip ospf segment-routing
+    '''
+
+    cli_command = 'show ip ospf segment-routing'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # OSPF Router with ID (10.16.2.2) (Process ID 65109)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
+                         'Process +ID +(?P<process_id>\d+)\)$')
+
+        # Global segment-routing state: Enabled
+        p2 = re.compile(r'^Global +segment\-routing +state: +'
+                         '(?P<global_segment_routing_state>\S+)$')
+        
+        # Prefer non-SR (LDP) Labels
+        p3 = re.compile(r'^Prefer +non\-SR +\(LDP\) +Labels$')
+
+        # Do not advertise Explicit Null
+        p4 = re.compile(r'^Do +not +advertise +Explicit +Null$')
+
+        # Global Block (SRGB):
+        p5 = re.compile(r'^Global +Block +\(SRGB\):$')
+
+        # Range: 16000 - 23999
+        p6 = re.compile(r'^Range: +(?P<start>\d+) +\- +(?P<end>\d+)$')
+
+        # State: Created
+        p7 = re.compile(r'^State: +(?P<state>\S+)$')
+
+        # Local Block (SRLB):
+        p8 = re.compile(r'^Local +Block +\(SRLB\):$')
+
+        # Registered with SR App, client handle: 2
+        p9 = re.compile(r'^Registered +with +(?P<app_name>[\S\s]+), +'
+                         'client +handle: +(?P<client_handle>\d+)$')
+
+        # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+        p10 = re.compile(r'^SR +algo +(?P<algo>\d+) +(?P<notifications>[\S\s]+) +\('
+                          'handle +(?P<handle>\w+)\), +bitmask +(?P<bitmask>\w+)$')
+
+        # Registered with MPLS, client-id: 100
+        p12 = re.compile(r'^Registered +with +(?P<app_name>[\S\s]+), +client\-id: +'
+                          '(?P<client_id>\d+)$')
+
+        # Max labels: platform 16, available 13
+        p13 = re.compile(r'^Max +labels: +platform +(?P<platform>\d+), available +(?P<available>\d+)$')
+
+        # Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+        p14 = re.compile(r'^Max +labels +pushed +by +OSPF: +uloop +tunnels +(?P<uloop_tunnels>\d+)'
+                          ', +TI\-LFA +tunnels +(?P<ti_lfa_tunnels>\d+)$')
+
+        # mfi label reservation ack not pending
+        p15 = re.compile(r'^mfi +label +reservation +ack +not +pending$')
+
+        # Bind Retry timer not running
+        p16 = re.compile(r'^Bind +Retry +timer +not +running$')
+        
+        # Bind Retry timer running, left ???
+        p16_1 = re.compile(r'^Bind +Retry +timer +running, +left +(?P<bind_retry_timer_left>\S+)$')
+
+        # Adj Label Bind Retry timer not running
+        p17 = re.compile(r'^Adj +Label +Bind +Retry +timer +not +running$')
+
+        # Adj Label Bind Retry timer running, left ???
+        p17_1 = re.compile(r'^Adj +Label +Bind +Retry +timer +running, +left +(?P<adj_label_bind_retry_timer_left>\S+)$')
+
+        # sr-app locks requested: srgb 0, srlb 0
+        p18 = re.compile(r'^sr\-app +locks +requested: +srgb +(?P<srgb>\d+), +srlb +(?P<srlb>\d+)$')
+
+        # TE Router ID 10.16.2.2
+        p19 = re.compile(r'^TE +Router +ID +(?P<te_router_id>\S+)$')
+
+        # Area Topology name Forwarding Strict SPF
+        p20 = re.compile(r'^Area +Topology +name +Forwarding +Strict +SPF$')
+
+        # 8    Base             MPLS          Capable
+        # AS external    Base             MPLS          Not applicable
+        p21 = re.compile(r'^(?P<area>(\d+|(\w+ +\w+))) +(?P<topology_name>\w+)'
+                         ' +(?P<forwarding>\w+) +(?P<strict_spf>\w+( +\w+)?)$')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.16.2.2) (Process ID 65109)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                process_id = int(group['process_id'])
+                process_id_dict = ret_dict.setdefault('process_id', {}). \
+                                    setdefault(process_id, {})
+                process_id_dict.update({'router_id': router_id})
+                sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
+                sr_attributes_dict.update({'sr_label_preferred': True})
+                sr_attributes_dict.update({'advertise_explicit_null': True})
+                process_id_dict.update({'mfi_label_reservation_ack_pending': True})
+                process_id_dict.update({'bind_retry_timer_running': True})
+                process_id_dict.update({'adj_label_bind_retry_timer_running': True})
+                continue
+            
+            # Global segment-routing state: Enabled
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                global_segment_routing_state = group['global_segment_routing_state']
+                process_id_dict.update({'global_segment_routing_state': global_segment_routing_state})
+                continue
+            
+            # Prefer non-SR (LDP) Labels
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
+                sr_attributes_dict.update({'sr_label_preferred': False})
+                continue
+            
+            # Do not advertise Explicit Null
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                sr_attributes_dict = process_id_dict.setdefault('sr_attributes', {})
+                sr_attributes_dict.update({'advertise_explicit_null': False})
+                continue
+            
+            # Global Block (SRGB):
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                block_dict = process_id_dict.setdefault('global_block_srgb', {})
+                continue
+            
+            # Range: 16000 - 23999
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                range_dict = block_dict.setdefault('range', {})
+                range_dict.update({'start': int(group['start'])})
+                range_dict.update({'end': int(group['end'])})
+                continue
+            
+            # State: Created
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                state = group['state']
+                block_dict.update({'state': state})
+                continue
+            
+            # Local Block (SRLB):
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                block_dict = process_id_dict.setdefault('local_block_srlb', {})
+                continue
+            
+            # Registered with SR App, client handle: 2
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                app_name = group['app_name']
+                client_handle = int(group['client_handle'])
+                registered_with_sr_app_dict = process_id_dict.setdefault('registered_with', {}). \
+                                                setdefault(app_name, {})
+                registered_with_sr_app_dict.update({'client_handle': client_handle})
+                continue
+            
+            # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+            # SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                algo = int(group['algo'])
+                notifications = group['notifications'].lower().replace(' ', '_')
+                handle = group['handle']
+                bitmask = group['bitmask']
+
+                sr_algo_dict = registered_with_sr_app_dict.setdefault('sr_algo', {}). \
+                                setdefault(algo, {}). \
+                                setdefault(notifications, {})
+                
+                sr_algo_dict.update({'handle': handle})
+                sr_algo_dict.update({'bit_mask': bitmask})
+                continue
+            
+            # Registered with MPLS, client-id: 100
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                app_name = group['app_name']
+                client_id = int(group['client_id'])
+                registered_with_mpls_dict = process_id_dict.setdefault('registered_with', {}). \
+                                                setdefault(app_name, {})
+                registered_with_mpls_dict.update({'client_id': client_id})
+                continue
+            
+            # Max labels: platform 16, available 13
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                platform = int(group['platform'])
+                available = int(group['available'])
+                match_labels_dict = process_id_dict.setdefault('max_labels', {})
+                match_labels_dict.update({'platform': platform})
+                match_labels_dict.update({'available': available})
+                continue
+            
+            # Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                uloop_tunnels = int(group['uloop_tunnels'])
+                ti_lfa_tunnels = int(group['ti_lfa_tunnels'])
+                match_labels_dict = process_id_dict.setdefault('max_labels', {})
+                pushed_by_ospf_dict = match_labels_dict.setdefault('pushed_by_ospf', {})
+                pushed_by_ospf_dict.update({'uloop_tunnels': uloop_tunnels})
+                pushed_by_ospf_dict.update({'ti_lfa_tunnels': ti_lfa_tunnels})
+                continue
+
+            # mfi label reservation ack not pending
+            m = p15.match(line)
+            if m:
+                process_id_dict.update({'mfi_label_reservation_ack_pending': False})
+                continue
+
+            # Bind Retry timer not running
+            m = p16.match(line)
+            if m:
+                process_id_dict.update({'bind_retry_timer_running': False})
+                continue
+            
+            # Bind Retry timer running, left ???
+            m = p16_1.match(line)
+            if m:
+                group = m.groupdict()
+                bind_retry_timer_left = group['bind_retry_timer_left']
+                process_id_dict.update({'bind_retry_timer_left': bind_retry_timer_left})
+                continue
+
+            # Adj Label Bind Retry timer not running
+            m = p17.match(line)
+            if m:
+                process_id_dict.update({'adj_label_bind_retry_timer_running': False})
+                continue
+            
+            # adj_label_bind_retry_timer_left
+            m = p17_1.match(line)
+            if m:
+                group = m.groupdict()
+                adj_label_bind_retry_timer_left = group['adj_label_bind_retry_timer_left']
+                process_id_dict.update({'adj_label_bind_retry_timer_left': adj_label_bind_retry_timer_left})
+                continue
+
+            # sr-app locks requested: srgb 0, srlb 0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                srgb = int(group['srgb'])
+                srlb = int(group['srlb'])
+                srp_app_locks_requested_dict = process_id_dict.setdefault('srp_app_locks_requested', {})
+                srp_app_locks_requested_dict.update({'srgb': srgb})
+                srp_app_locks_requested_dict.update({'srlb': srlb})
+                continue
+            
+            # TE Router ID 10.16.2.2
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                te_router_id = group['te_router_id']
+                process_id_dict.setdefault('teapp', {}). \
+                    update({'te_router_id': te_router_id})
+                continue
+
+            # Area Topology name Forwarding Strict SPF
+            m = p20.match(line)
+            if m:
+                segment_routing_enabled_dict = process_id_dict.setdefault('segment_routing_enabled', {})
+                continue
+
+            # 8    Base             MPLS          Capable
+            # AS external    Base             MPLS          Not applicable
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                area = group['area']
+                if area.isdigit():
+                    area = str(IPAddress(str(area)))
+                topology_name = group['topology_name']
+                forwarding = group['forwarding']
+                strict_spf = group['strict_spf']
+                area_dict = segment_routing_enabled_dict.setdefault('area', {}). \
+                             setdefault(area, {})
+                area_dict.update({'topology_name' : topology_name})
+                area_dict.update({'forwarding' : forwarding})
+                area_dict.update({'strict_spf' : strict_spf})
+                continue
+        
+        return ret_dict
+
+class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    ''' Parser for:
+        * 'show ip ospf database opaque-area self-originate'
+    '''
+
+    cli_command = ['show ip ospf database opaque-area {lsa_id} self-originate', 
+                   'show ip ospf database opaque-area self-originate']
+
+    def cli(self, lsa_id=None, output=None):
+        if output is None:
+            if lsa_id:
+                output = self.device.execute(self.cli_command[0].format(lsa_id=lsa_id))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    ''' Parser for:
+        * 'show ip ospf database opaque-area adv-router {address}'
+    '''
+
+    cli_command = 'show ip ospf database opaque-area adv-router {address}'
+
+    def cli(self, address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(address=address))
+
+        return super().cli(db_type='opaque', out=output)

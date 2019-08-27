@@ -12,10 +12,6 @@ import importlib
 
 from genie.metaparser import MetaParser
 
-from ats.utils.yaml.loader import Loader
-from ats.datastructures.logic import logic_str
-from ats.datastructures.logic import And, Not, Or
-
 IGNORE_DIR = ['.git', '__pycache__', 'template', 'tests']
 IGNORE_FILE = ['__init__.py', 'base.py', 'utils.py']
 AVAILABLE_FUNC = ['cli', 'xml', 'yang', 'rest']

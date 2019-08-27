@@ -14,13 +14,14 @@ from genie.libs.parser.iosxr.show_interface import ShowInterfacesDetail, \
                                         ShowIpv6VrfAllInterface, \
                                         ShowEthernetTags, \
                                         ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBrief
+                                        ShowIpInterfaceBrief,\
+                                        ShowInterfaces
 
 #############################################################################
 # unitest For Show Interfaces Detail
 #############################################################################
 
-class test_show_interface(unittest.TestCase):
+class test_show_interface_detail(unittest.TestCase):
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -2085,12 +2086,2011 @@ class test_show_ip_interface_brief(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_golden(self):
+    def test_golden1(self):
         self.device = Mock(**self.golden_output_pipe_ip)
         obj = ShowIpInterfaceBrief(device=self.device)
         parsed_output = obj.parse(ip='10.1.17.179')
         self.assertEqual(parsed_output,self.golden_parsed_output_pipe_ip)
 
+
+#############################################################################
+# unitest For show interfaces
+#############################################################################
+class test_show_interfaces(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        "BVI51": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0000.5960.0051",
+            "description": "NPON_Mcast_VLAN",
+            "ipv4": {
+                "192.168.166.9/30": {
+                    "ip": "192.168.166.9",
+                    "prefix_length": "30"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "BVI100": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.0100.0001",
+            "description": "au-hikari-mansion-100",
+            "ipv4": {
+                "192.168.36.254/24": {
+                    "ip": "192.168.36.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "BVI301": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.0301.0001",
+            "ipv4": {
+                "192.168.1.254/24": {
+                    "ip": "192.168.1.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "BVI1401": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.1400.0001",
+            "description": "au-hikari-home",
+            "ipv4": {
+                "192.168.1.254/24": {
+                    "ip": "192.168.1.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 0
+            }
+        },
+        "BVI1403": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.1403.0001",
+            "description": "UQ-BS",
+            "ipv4": {
+                "192.168.169.254/24": {
+                    "ip": "192.168.169.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "BVI1405": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.1405.0001",
+            "description": "au-hikari-mansion-giga",
+            "ipv4": {
+                "192.168.36.254/24": {
+                    "ip": "192.168.36.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "BVI1407": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.1407.0001",
+            "description": "au-hikari-business",
+            "ipv4": {
+                "192.168.166.254/24": {
+                    "ip": "192.168.166.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "00:03:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "BVI1410": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Bridge-Group Virtual Interface",
+            "mac_address": "0059.1410.0001",
+            "description": "JCOM",
+            "ipv4": {
+                "192.168.121.254/24": {
+                    "ip": "192.168.121.254",
+                    "prefix_length": "24"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "loopback": "not set",
+            "arp_type": "arpa",
+            "arp_timeout": "00:03:00",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "Bundle-Ether1": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 9,
+            "type": "Aggregated Ethernet interface(s)",
+            "mac_address": "00bc.603c.d4dc",
+            "description": "to-ML26-BE1",
+            "ipv4": {
+                "192.168.0.25/30": {
+                    "ip": "192.168.0.25",
+                    "prefix_length": "30"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 100000000,
+            "bandwidth_max": 100000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "100000Mb/s",
+            "loopback": "not set",
+            "last_link_flapped": "3w3d",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "port_channel": {
+                "member_count": 1,
+                "members": {
+                    "HundredGigE0/0/1/2/0": {
+                        "interface": "HundredGigE0/0/1/2/0",
+                        "duplex_mode": "Full-duplex",
+                        "speed": "100000Mb/s",
+                        "state": "Active"
+                    }
+                }
+            },
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 30,
+                    "in_rate": 1000,
+                    "in_rate_pkts": 0,
+                    "out_rate": 2000,
+                    "out_rate_pkts": 1
+                },
+                "in_pkts": 1716386544,
+                "in_octets": 751342403591,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 6,
+                "in_multicast_pkts": 642898,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 1714349214,
+                "out_octets": 754526715390,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 12,
+                "out_multicast_pkts": 642896,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        },
+        "Bundle-Ether100": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "Aggregated Ethernet interface(s)",
+            "mac_address": "00bc.603c.d4db",
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "10000Mb/s",
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "port_channel": {
+                "member_count": 1,
+                "members": {
+                    "TenGigE0/0/0/1": {
+                        "interface": "TenGigE0/0/0/1",
+                        "duplex_mode": "Full-duplex",
+                        "speed": "10000Mb/s",
+                        "state": "Active"
+                    }
+                }
+            },
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 313163,
+                "in_octets": 54531145,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 313163,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 178045,
+                "out_octets": 22136962,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 178045,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        },
+        "Bundle-Ether100.12": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4db",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 12",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_drops": 0,
+                "in_queue_drops": 0,
+                "in_errors": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_drops": 0,
+                "out_queue_drops": 0,
+                "out_errors": 0
+            }
+        },
+        "Bundle-Ether100.22": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4db",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 22",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_drops": 0,
+                "in_queue_drops": 0,
+                "in_errors": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_drops": 0,
+                "out_queue_drops": 0,
+                "out_errors": 0
+            }
+        },
+        "Bundle-Ether1001": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Aggregated Ethernet interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "mtu": 1514,
+            "bandwidth": 0,
+            "reliability": "255/255",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "0Kb/s",
+            "loopback": "not set",
+            "port_channel": {
+                "member_count": 0
+            },
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                }
+            }
+        },
+        "Bundle-Ether1001.100": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "description": "Down Mansion-100",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 300",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Bundle-Ether1001.1400": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "description": "Home Downlink",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 3400",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Bundle-Ether1001.1402": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "description": "UQ_BS Downlink",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 3402",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Bundle-Ether1001.1404": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "description": "au-hikari-mansion-giga Downlink",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 3404",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Bundle-Ether1001.1406": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "description": "au Hikari Business Downlink",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 3406",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Bundle-Ether1001.1410": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "VLAN sub-interface(s)",
+            "mac_address": "00bc.603c.d4da",
+            "description": "JCOM Downlink",
+            "layer2": True,
+            "mtu": 1518,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "dot1q",
+                "outer_match": "Dot1Q VLAN 3410",
+                "ethertype": "Any",
+                "mac_match": "src any",
+                "dest": "any"
+            },
+            "loopback": "not set",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Bundle-Ether3333": {
+            "enabled": True,
+            "line_protocol": "down",
+            "oper_status": "down",
+            "interface_state_transitions": 0,
+            "type": "Aggregated Ethernet interface(s)",
+            "mac_address": "00bc.603c.d4d9",
+            "mtu": 1514,
+            "bandwidth": 0,
+            "reliability": "255/255",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "0Kb/s",
+            "loopback": "not set",
+            "port_channel": {
+                "member_count": 1,
+                "members": {
+                    "TenGigE0/0/0/25": {
+                        "interface": "TenGigE0/0/0/25",
+                        "duplex_mode": "Full-duplex",
+                        "speed": "10000Mb/s",
+                        "state": "Configured"
+                    }
+                }
+            },
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 0,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        },
+        "Loopback0": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "Loopback interface(s)",
+            "ipv4": {
+                "192.168.99.25/32": {
+                    "ip": "192.168.99.25",
+                    "prefix_length": "32"
+                }
+            },
+            "mtu": 1500,
+            "bandwidth": 0,
+            "reliability": "Unknown",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "loopback"
+            },
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "last_input": "Unknown",
+            "last_output": "Unknown",
+            "counters": {
+                "last_clear": "Unknown"
+            }
+        },
+        "Null0": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "Null interface",
+            "mtu": 1500,
+            "bandwidth": 0,
+            "reliability": "255/255",
+            "txload": "Unknown",
+            "rxload": "Unknown",
+            "encapsulations": {
+                "encapsulation": "null"
+            },
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 0
+            }
+        },
+        "GigabitEthernet0/0/0/21": {
+            "enabled": False,
+            "line_protocol": "administratively down",
+            "oper_status": "administratively down",
+            "interface_state_transitions": 0,
+            "type": "GigabitEthernet",
+            "mac_address": "00bc.603c.d415",
+            "phys_address": "00bc.603c.d415",
+            "mtu": 1514,
+            "bandwidth": 1000000,
+            "bandwidth_max": 1000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "1000Mb/s",
+            "link_type": "force-up",
+            "auto_negotiate": False,
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay_up": 10,
+            "loopback": "not set",
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 0,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        },
+        "GigabitEthernet0/0/0/23": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 13,
+            "type": "GigabitEthernet",
+            "mac_address": "00bc.603c.d417",
+            "phys_address": "00bc.603c.d417",
+            "mtu": 1514,
+            "bandwidth": 1000000,
+            "bandwidth_max": 1000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "1000Mb/s",
+            "link_type": "force-up",
+            "auto_negotiate": False,
+            "media_type": "TFD",
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay_up": 10,
+            "loopback": "not set",
+            "last_link_flapped": "3w3d",
+            "last_input": "00:03:58",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 209145,
+                "in_octets": 40356542,
+                "in_total_drops": 0,
+                "in_unknown_protos": 209145,
+                "in_broadcast_pkts": 85731,
+                "in_multicast_pkts": 123414,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 0,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 11
+            }
+        },
+        "GigabitEthernet0/0/0/27": {
+            "enabled": False,
+            "line_protocol": "administratively down",
+            "oper_status": "administratively down",
+            "interface_state_transitions": 0,
+            "type": "GigabitEthernet",
+            "mac_address": "00bc.603c.d41b",
+            "phys_address": "00bc.603c.d41b",
+            "mtu": 1514,
+            "bandwidth": 1000000,
+            "bandwidth_max": 1000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "1000Mb/s",
+            "link_type": "force-up",
+            "auto_negotiate": False,
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay_up": 10,
+            "loopback": "not set",
+            "last_input": "never",
+            "last_output": "never",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 0,
+                "in_octets": 0,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 0,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 0,
+                "out_octets": 0,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 0,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        },
+        "TenGigE0/0/0/0": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "TenGigE",
+            "mac_address": "00bc.603c.d400",
+            "phys_address": "00bc.603c.d400",
+            "description": "to-ML24",
+            "ipv4": {
+                "192.168.0.22/30": {
+                    "ip": "192.168.0.22",
+                    "prefix_length": "30"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "10000Mb/s",
+            "link_type": "force-up",
+            "auto_negotiate": False,
+            "media_type": "SR",
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay_up": 10,
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 2000,
+                    "in_rate_pkts": 1,
+                    "out_rate": 1000,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 858438357,
+                "in_octets": 377844978719,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 6,
+                "in_multicast_pkts": 761392,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 860493206,
+                "out_octets": 374682459456,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 6,
+                "out_multicast_pkts": 524312,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 1
+            }
+        },
+        "TenGigE0/0/0/1": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 1,
+            "type": "TenGigE",
+            "mac_address": "00bc.603c.d401",
+            "phys_address": "00bc.603c.d401",
+            "description": "L2SW Po12",
+            "mtu": 1518,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "10000Mb/s",
+            "link_type": "force-up",
+            "auto_negotiate": False,
+            "media_type": "SR",
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay_up": 10,
+            "loopback": "not set",
+            "last_link_flapped": "5w6d",
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 30,
+                    "in_rate": 0,
+                    "in_rate_pkts": 0,
+                    "out_rate": 0,
+                    "out_rate_pkts": 0
+                },
+                "in_pkts": 313163,
+                "in_octets": 54531145,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 313163,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 178045,
+                "out_octets": 22136962,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 178045,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 1
+            }
+        },
+        "TenGigE0/0/0/2": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 3,
+            "type": "TenGigE",
+            "mac_address": "00bc.603c.d402",
+            "phys_address": "00bc.603c.d402",
+            "layer2": True,
+            "mtu": 1514,
+            "bandwidth": 10000000,
+            "bandwidth_max": 10000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "10000Mb/s",
+            "link_type": "force-up",
+            "auto_negotiate": False,
+            "media_type": "SR",
+            "flow_control": {
+                "receive": False,
+                "send": False
+            },
+            "carrier_delay_up": 10,
+            "loopback": "not set",
+            "last_link_flapped": "1w3d",
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 300,
+                    "in_rate": 0,
+                    "in_rate_pkts": 1,
+                    "out_rate": 0,
+                    "out_rate_pkts": 1
+                },
+                "in_pkts": 3800143,
+                "in_octets": 231571320,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 0,
+                "in_multicast_pkts": 3800143,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 3562789,
+                "out_octets": 213767340,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 0,
+                "out_multicast_pkts": 3562789,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 3
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        #show interfaces 
+        Sat Aug  3 03:25:29.028 EST
+        BVI51 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0000.5960.0051
+          Description: NPON_Mcast_VLAN
+          Internet address is 192.168.166.9/30
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+
+        BVI100 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.0100.0001
+          Description: au-hikari-mansion-100
+          Internet address is 192.168.36.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+
+        BVI301 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.0301.0001
+          Internet address is 192.168.1.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+
+        BVI1401 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.1400.0001
+          Description: au-hikari-home
+          Internet address is 192.168.1.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+                  
+        BVI1403 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.1403.0001
+          Description: UQ-BS  
+          Internet address is 192.168.169.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        BVI1405 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.1405.0001
+          Description: au-hikari-mansion-giga
+          Internet address is 192.168.36.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        BVI1407 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.1407.0001
+          Description: au-hikari-business
+          Internet address is 192.168.166.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 00:03:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        BVI1410 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.1410.0001
+          Description: JCOM  
+          Internet address is 192.168.121.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 00:03:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        Bundle-Ether1 is up, line protocol is up 
+          Interface state transitions: 9
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4dc
+          Description: to-ML26-BE1
+          Internet address is 192.168.0.25/30
+          MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 100000Mb/s
+          loopback not set,
+          Last link flapped 3w3d
+          ARP type ARPA, ARP timeout 04:00:00
+            No. of members in this bundle: 1
+              HundredGigE0/0/1/2/0         Full-duplex  100000Mb/s   Active          
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          30 second input rate 1000 bits/sec, 0 packets/sec
+          30 second output rate 2000 bits/sec, 1 packets/sec
+             1716386544 packets input, 751342403591 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 6 broadcast packets, 642898 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             1714349214 packets output, 754526715390 bytes, 0 total output drops
+             Output 12 broadcast packets, 642896 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+
+        Bundle-Ether100 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4db
+          Internet address is Unknown
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s
+          loopback not set,
+          Last link flapped 5w6d
+            No. of members in this bundle: 1
+              TenGigE0/0/0/1               Full-duplex  10000Mb/s    Active          
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             313163 packets input, 54531145 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 313163 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             178045 packets output, 22136962 bytes, 0 total output drops
+             Output 0 broadcast packets, 178045 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        Bundle-Ether100.12 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4db
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 12
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last link flapped 5w6d
+          Last input never, output never
+          Last clearing of "show interface" counters never
+             0 packets input, 0 bytes
+             0 input drops, 0 queue drops, 0 input errors
+             0 packets output, 0 bytes
+             0 output drops, 0 queue drops, 0 output errors
+                  
+        Bundle-Ether100.22 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4db
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 22
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last link flapped 5w6d
+          Last input never, output never
+          Last clearing of "show interface" counters never
+             0 packets input, 0 bytes
+             0 input drops, 0 queue drops, 0 input errors
+             0 packets output, 0 bytes
+             0 output drops, 0 queue drops, 0 output errors
+                  
+        Bundle-Ether1001 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4da
+          Internet address is Unknown
+          MTU 1514 bytes, BW 0 Kbit
+             reliability 255/255, txload Unknown, rxload Unknown
+          Encapsulation ARPA,
+          Full-duplex, 0Kb/s
+          loopback not set,
+            No. of members in this bundle: 0
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        Bundle-Ether1001.100 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Description: Down Mansion-100
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 300
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1400 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Description: Home Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3400
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1402 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Description: UQ_BS Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3402
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1404 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Description: au-hikari-mansion-giga Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3404
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1406 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Description: au Hikari Business Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3406
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1410 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.603c.d4da
+          Description: JCOM Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3410
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether3333 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4d9
+          Internet address is Unknown
+          MTU 1514 bytes, BW 0 Kbit
+             reliability 255/255, txload Unknown, rxload Unknown
+          Encapsulation ARPA,
+          Full-duplex, 0Kb/s
+          loopback not set,
+            No. of members in this bundle: 1
+              TenGigE0/0/0/25              Full-duplex  10000Mb/s    Configured      
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        Loopback0 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is Loopback interface(s)
+          Internet address is 192.168.99.25/32
+          MTU 1500 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation Loopback,  loopback not set,
+          Last link flapped 5w6d
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Null0 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is Null interface
+          Internet address is Unknown
+          MTU 1500 bytes, BW 0 Kbit
+             reliability 255/255, txload Unknown, rxload Unknown
+          Encapsulation Null,  loopback not set,
+          Last link flapped 5w6d
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+                  
+        GigabitEthernet0/0/0/21 is administratively down, line protocol is administratively down 
+          Interface state transitions: 0
+          Hardware is GigabitEthernet, address is 00bc.603c.d415 (bia 00bc.603c.d415)
+          Internet address is Unknown
+          MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 1000Mb/s, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        GigabitEthernet0/0/0/23 is up, line protocol is up 
+          Interface state transitions: 13
+          Hardware is GigabitEthernet, address is 00bc.603c.d417 (bia 00bc.603c.d417)
+          Internet address is Unknown
+          MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 1000Mb/s, TFD, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 3w3d
+          Last input 00:03:58, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             209145 packets input, 40356542 bytes, 0 total input drops
+             209145 drops for unrecognized upper-level protocol
+             Received 85731 broadcast packets, 123414 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             11 carrier transitions
+                  
+        GigabitEthernet0/0/0/27 is administratively down, line protocol is administratively down 
+          Interface state transitions: 0
+          Hardware is GigabitEthernet, address is 00bc.603c.d41b (bia 00bc.603c.d41b)
+          Internet address is Unknown
+          MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 1000Mb/s, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        TenGigE0/0/0/0 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is TenGigE, address is 00bc.603c.d400 (bia 00bc.603c.d400)
+          Description: to-ML24
+          Internet address is 192.168.0.22/30
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s, SR, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 5w6d
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          5 minute input rate 2000 bits/sec, 1 packets/sec
+          5 minute output rate 1000 bits/sec, 0 packets/sec
+             858438357 packets input, 377844978719 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 6 broadcast packets, 761392 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             860493206 packets output, 374682459456 bytes, 0 total output drops
+             Output 6 broadcast packets, 524312 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             1 carrier transitions
+                  
+        TenGigE0/0/0/1 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is TenGigE, address is 00bc.603c.d401 (bia 00bc.603c.d401)
+          Description: L2SW Po12
+          Internet address is Unknown
+          MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s, SR, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 5w6d
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          30 second input rate 0 bits/sec, 0 packets/sec
+          30 second output rate 0 bits/sec, 0 packets/sec
+             313163 packets input, 54531145 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 313163 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             178045 packets output, 22136962 bytes, 0 total output drops
+             Output 0 broadcast packets, 178045 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             1 carrier transitions
+                  
+        TenGigE0/0/0/2 is up, line protocol is up 
+          Interface state transitions: 3
+          Hardware is TenGigE, address is 00bc.603c.d402 (bia 00bc.603c.d402)
+          Layer 2 Transport Mode
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s, SR, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 1w3d
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 1 packets/sec
+          5 minute output rate 0 bits/sec, 1 packets/sec
+             3800143 packets input, 231571320 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 3800143 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             3562789 packets output, 213767340 bytes, 0 total output drops
+             Output 0 broadcast packets, 3562789 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             3 carrier transitions
+    '''}
+
+    golden_interface_parsed_output = {
+        "Bundle-Ether1": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 9,
+            "type": "Aggregated Ethernet interface(s)",
+            "mac_address": "00bc.603c.d4dc",
+            "description": "to-ML26-BE1",
+            "ipv4": {
+                "192.168.0.25/30": {
+                    "ip": "192.168.0.25",
+                    "prefix_length": "30"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 100000000,
+            "bandwidth_max": 100000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "100000Mb/s",
+            "loopback": "not set",
+            "last_link_flapped": "3w3d",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "port_channel": {
+                "member_count": 1,
+                "members": {
+                    "HundredGigE0/0/1/2/0": {
+                        "interface": "HundredGigE0/0/1/2/0",
+                        "duplex_mode": "Full-duplex",
+                        "speed": "100000Mb/s",
+                        "state": "Active"
+                    }
+                }
+            },
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 30,
+                    "in_rate": 1000,
+                    "in_rate_pkts": 0,
+                    "out_rate": 2000,
+                    "out_rate_pkts": 1
+                },
+                "in_pkts": 1716386544,
+                "in_octets": 751342403591,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 6,
+                "in_multicast_pkts": 642898,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 1714349214,
+                "out_octets": 754526715390,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 12,
+                "out_multicast_pkts": 642896,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        }
+    }
+
+    golden_interface_output = {'execute.return_value': '''
+      Bundle-Ether1 is up, line protocol is up 
+      Interface state transitions: 9
+      Hardware is Aggregated Ethernet interface(s), address is 00bc.603c.d4dc
+      Description: to-ML26-BE1
+      Internet address is 192.168.0.25/30
+      MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+      Encapsulation ARPA,
+      Full-duplex, 100000Mb/s
+      loopback not set,
+      Last link flapped 3w3d
+      ARP type ARPA, ARP timeout 04:00:00
+        No. of members in this bundle: 1
+          HundredGigE0/0/1/2/0         Full-duplex  100000Mb/s   Active          
+      Last input 00:00:00, output 00:00:00
+      Last clearing of "show interface" counters never
+      30 second input rate 1000 bits/sec, 0 packets/sec
+      30 second output rate 2000 bits/sec, 1 packets/sec
+         1716386544 packets input, 751342403591 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 6 broadcast packets, 642898 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         1714349214 packets output, 754526715390 bytes, 0 total output drops
+         Output 12 broadcast packets, 642896 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         0 carrier transitions
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaces(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaces(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_interface(self):
+        self.device = Mock(**self.golden_interface_output)
+        obj = ShowInterfaces(device=self.device)
+        parsed_output = obj.parse(interface='Bundle-Ether1')
+        self.assertEqual(parsed_output,self.golden_interface_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

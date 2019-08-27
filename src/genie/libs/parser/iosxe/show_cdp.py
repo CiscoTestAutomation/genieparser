@@ -168,9 +168,10 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         deviceid_re = re.compile(r'Device\s+ID:\s*(?P<device_id>\S+)')
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
-        platf_cap_re = re.compile(r'Platform:\s*(?P<platform>[a-zA-Z\d +\-]+)'
-                                 '\s*\,\s*Capabilities:\s*'
-                                 '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
+        # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_)]+)'
+                                   '\,\s*Capabilities:\s+'
+                                   '(?P<capabilities>[\w+\s\-]+)$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
         interface_port_re = re.compile(r'Interface:\s*'
@@ -182,7 +183,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
                                     '(?P<native_vlan>\d+)')
 
-        # VTP Management Domain: ‘Accounting Group’
+        # VTP Management Domain: ‘Accounting Group’      
         vtp_management_domain_re = re.compile(r'VTP\s*Management\s*'
                                     'Domain\s*:\s*'
                                     '\W*(?P<vtp_management_domain>([a-zA-Z\s]+'
@@ -226,7 +227,6 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         sw_version = []
         parsed_dict = {}
         index_device = 0
-
         for line in out.splitlines():
             line = line.strip()
 
