@@ -22,7 +22,7 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
-                                  ShowBgpL2vpnEvpnNeighbors
+                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors
 
 
 # ==================================
@@ -7596,6 +7596,243 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# =============================================
+# Unit test for 'show bgp l2vpn evpn'
+# =============================================
+class test_show_bgp_l2vpn_evpn(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {'vrf': {'default': {'address_family': {'l2vpn evpn': {'bgp_table_version': 33445,
+                                                       'local_router_id': '2.2.2.1'},
+                                        'l2vpn evpn RD 2.2.2.1:12345': {'bgp_table_version': 33445,
+                                                                        'default_vrf': 'L2',
+                                                                        'local_router_id': '2.2.2.1',
+                                                                        'prefixes': {'[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'l',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1000::abcd:5678:1',
+                                                                                                                                                             'path_type': 'l',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'l',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1000::abcd:5678:1',
+                                                                                                                                                             'path_type': 'l',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2000:1:ab:10::1:2]/368': {'index': {1: {'next_hop': '100',
+                                                                                                                                                                       'origin_codes': 'i',
+                                                                                                                                                                       'path_type': 'l',
+                                                                                                                                                                       'status_codes': '*>'},
+                                                                                                                                                                   2: {'next_hop': '2000:1000::abcd:5678:1',
+                                                                                                                                                                       'path_type': 'l',
+                                                                                                                                                                       'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2000:1:ab:10::1:3]/368': {'index': {1: {'next_hop': '100',
+                                                                                                                                                                       'origin_codes': 'i',
+                                                                                                                                                                       'path_type': 'l',
+                                                                                                                                                                       'status_codes': '*>'},
+                                                                                                                                                                   2: {'next_hop': '2000:1000::abcd:5678:1',
+                                                                                                                                                                       'path_type': 'l',
+                                                                                                                                                                       'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2000:1:ab:10::4:2]/368': {'index': {1: {'next_hop': '100',
+                                                                                                                                                                       'origin_codes': 'i',
+                                                                                                                                                                       'path_type': 'l',
+                                                                                                                                                                       'status_codes': '*>'},
+                                                                                                                                                                   2: {'next_hop': '2000:1000::abcd:5678:1',
+                                                                                                                                                                       'path_type': 'l',
+                                                                                                                                                                       'status_codes': '*>'}}},
+                                                                                     '[3]:[0]:[128]:[2000:1000::abcd:5678:1]/184': {'index': {1: {'next_hop': '100',
+                                                                                                                                                  'origin_codes': 'i',
+                                                                                                                                                  'path_type': 'l',
+                                                                                                                                                  'status_codes': '*>'},
+                                                                                                                                              2: {'next_hop': '2000:1000::abcd:5678:1',
+                                                                                                                                                  'path_type': 'l',
+                                                                                                                                                  'status_codes': '*>'}}}},
+                                                                        'route_distinguisher': '2.2.2.1:12345'},
+                                        'l2vpn evpn RD 2.2.2.1:33333': {'bgp_table_version': 33445,
+                                                                        'default_vrf': 'L2',
+                                                                        'local_router_id': '2.2.2.1',
+                                                                        'prefixes': {'[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1015::abcd:5678:3',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1015::abcd:5678:3',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1015::abcd:5678:3',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1015::abcd:5678:3',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1015::abcd:5678:3',
+                                                                                                                                                             'path_type': 'i',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     '[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272': {'index': {1: {'next_hop': '100',
+                                                                                                                                                             'origin_codes': 'i',
+                                                                                                                                                             'path_type': 'l',
+                                                                                                                                                             'status_codes': '*>'},
+                                                                                                                                                         2: {'next_hop': '2000:1015::abcd:5678:1',
+                                                                                                                                                             'path_type': 'l',
+                                                                                                                                                             'status_codes': '*>'}}},
+                                                                                     'i': {'index': {1: {'next_hop': '100',
+                                                                                                         'origin_codes': 'i',
+                                                                                                         'path_type': 'None',
+                                                                                                         'status_codes': '* '}}}},
+                                                                        'route_distinguisher': '2.2.2.1:33333'}}}}}
+
+    golden_output = {'execute.return_value': '''
+        show bgp l2vpn evpn
+
+        BGP routing table information for VRF default, address family L2VPN EVPN
+
+        BGP table version is 33445, Local Router ID is 2.2.2.1
+
+        Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+
+        Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-injected
+
+        Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - best2
+
+
+
+           Network            Next Hop            Metric     LocPrf     Weight Path
+
+        Route Distinguisher: 2.2.2.1:12345    (L2VNI 10001)
+
+        *>l[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272
+
+                              2000:1000::abcd:5678:1
+
+                                                                100      33445 i
+
+        *>l[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272
+
+                              2000:1000::abcd:5678:1
+
+                                                                100      33445 i
+
+        *>l[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2000:1:ab:10::1:2]/368
+
+                              2000:1000::abcd:5678:1
+
+                                                                100      33445 i
+
+        *>l[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2000:1:ab:10::1:3]/368
+
+                              2000:1000::abcd:5678:1
+
+                                                                100      33445 i
+
+        *>l[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2000:1:ab:10::4:2]/368
+
+                              2000:1000::abcd:5678:1
+
+                                                                100      33445 i
+
+        *>l[3]:[0]:[128]:[2000:1000::abcd:5678:1]/184
+
+                              2000:1000::abcd:5678:1
+
+                                                                100      33445 i
+
+
+
+        Route Distinguisher: 2.2.2.1:33333    (L2VNI 20002)
+
+        *>l[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272
+
+                              2000:1015::abcd:5678:1
+
+                                                                100      33445 i
+
+        *>i[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272
+
+                              2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        * i                   2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        *>i[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272
+
+                              2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        * i                   2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        *>i[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272
+
+                              2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        * i                   2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        *>i[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272
+
+                              2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        * i                   2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        *>i[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272
+
+                              2000:1015::abcd:5678:3
+
+                                                                100          0 i
+
+        * i                   2000:1015::abcd:5678:3
+
+                                                                100          0 i
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
