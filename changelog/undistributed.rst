@@ -24,5 +24,5 @@
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXR
-    * Added ShowBgpL2vpnEvpn for:
-        'show bgp l2vpn evpn'
+    * Updated ShowBgpL2vpnEvpn for:
+        added a schema and unittest, and updated based on the schema
