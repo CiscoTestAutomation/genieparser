@@ -10,7 +10,8 @@ from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefi
                                                             ShowPceIPV4Peer,\
                                                             ShowPceIPV4PeerDetail,\
                                                             ShowPceIPV4PeerPrefix,\
-                                                            ShowPceIpv4TopologySummary
+                                                            ShowPceIpv4TopologySummary,\
+                                                            ShowPceLsp
 
 # =============================================================
 # Unittest for:
@@ -374,6 +375,70 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
         obj = ShowPceIpv4TopologySummary(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
+
+
+class test_show_Pce_Lsp(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value' : ''}
+
+
+    golden_output = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:router# show pce lsp
+
+        PCE's tunnel database:
+        ----------------------
+        PCC 192.168.0.1:
+
+        Tunnel Name: rtrA_t1
+        LSPs:
+        LSP[0]:
+        source 192.168.0.1, destination 192.168.0.4, tunnel ID 1, LSP ID 2
+        State: Admin up, Operation up
+        Setup type: Segment Routing
+        Binding SID: 24013
+    '''}
+
+    golden_parsed_output = {
+        'pcc': {
+            '192.168.0.1': {
+                'pcc': '192.168.0.1',
+                'tunnel_name': 'rtrA_t1',
+                'lsps': {
+                    0: {
+                        'lsp_number': 0,
+                        'source': '192.168.0.1',
+                        'destination': '192.168.0.4',
+                        'tunnel_id': 1,
+                        'lsp_id': 2,
+                        'state': {
+                            'admin': True,
+                            'operation': True
+                        },
+                        'setup_type':
+                        'Segment Routing',
+                        'binding_sid': 24013
+                    }
+                }
+            }
+        }
+    }
+
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowPceLsp(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowPceLsp(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+
 
 
 if __name__ == '__main__':

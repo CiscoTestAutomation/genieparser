@@ -560,4 +560,113 @@ class ShowPceIpv4TopologySummary(ShowPceIpv4TopologySummarySchema):
         
         return ret_dict
 
+class ShowPceLspSchema(MetaParser):
+    ''' Schema for:
+            show pce lsp
+    '''
+    schema = {
+        'pcc' : {
+            Any() : {
+                'pcc' : str,
+                'tunnel_name' : str,
+                'lsps' : {
+                    Any() : {
+                        'lsp_number' : int,
+                        'source': str,
+                        'destination': str,
+                        'tunnel_id' : int,
+                        'lsp_id' : int,
+                        'state' : {
+                            'admin' : bool,
+                            'operation' : bool,
+                        },
+                        'setup_type' : str,
+                        'binding_sid' : int
+                    },
+                }
+            },
+        }
 
+    }
+class ShowPceLsp(ShowPceLspSchema):
+    ''' Parser for:
+            show pce lsp
+    '''
+
+    cli_command = 'show pce lsp'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        p1 = re.compile(r'^PCC (?P<pcc_id>[\d\.]+):$')
+
+        p2 = re.compile(r'^Tunnel Name: (?P<tunnel_name>\w+)$')
+
+        p3 = re.compile(r'^LSP\[(?P<lsp_number>\d+)\]:$')
+
+        p4 = re.compile(r'^source (?P<lsp_source>[\d\.]+), destination (?P<lsp_destination>[\d\.]+), tunnel ID (?P<tunnel_id>\d+), LSP ID (?P<lsp_id>\d+)$')
+
+        p5 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation (?P<operation_state>\w+)$')
+
+        p6 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
+
+        p7 = re.compile(r'^Binding SID: (?P<binding_sid>\d+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                pcc_id = m.groupdict()['pcc_id']
+                pccs_dict = ret_dict.setdefault('pcc', {})
+
+                pcc_dict = pccs_dict.setdefault(pcc_id, {})
+                pcc_dict['pcc'] = pcc_id
+
+            m = p2.match(line)
+            if m:
+                pcc_dict['tunnel_name'] = m.groupdict()['tunnel_name']
+
+            m = p3.match(line)
+            if m:
+                lsp_numb = int(m.groupdict()['lsp_number'])
+
+                lsps_dict = pcc_dict.setdefault('lsps', {})
+                lsp_dict = lsps_dict.setdefault(lsp_numb, {})
+
+                lsp_dict['lsp_number'] = lsp_numb
+
+            m = p4.match(line)
+            if m:
+                lsp_dict['source'] = m.groupdict()['lsp_source']
+                lsp_dict['destination'] = m.groupdict()['lsp_destination']
+                lsp_dict['tunnel_id'] = int(m.groupdict()['tunnel_id'])
+                lsp_dict['lsp_id'] = int(m.groupdict()['lsp_id'])
+
+            m = p5.match(line)
+            if m:
+                admin_bool = True if 'up' in \
+                                m.groupdict()['admin_state'].lower() else False
+                operation_bool = True if 'up' in \
+                            m.groupdict()['operation_state'].lower() else False
+                state_dict = lsp_dict.setdefault('state', {})
+
+                state_dict['admin'] = admin_bool
+                state_dict['operation'] = operation_bool
+
+            m = p6.match(line)
+            if m:
+                lsp_dict['setup_type'] = m.groupdict()['setup_type']
+
+            m = p7.match(line)
+            if m:
+                lsp_dict['binding_sid'] = int(m.groupdict()['binding_sid'])
+                
+        return ret_dict
+
+    
