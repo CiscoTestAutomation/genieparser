@@ -11,6 +11,61 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
+# =============================================
+# Parser for 'show vtp password'
+# =============================================
+
+class ShowVtpPasswordSchema(MetaParser):
+    """Schema for show vtp password"""
+
+    schema = {'vtp': {
+                'configured': bool,
+                Optional('password'): str,
+        }
+    }
+
+
+class ShowVtpPassword(ShowVtpPasswordSchema):
+    """Parser for show vtp password"""
+
+    cli_command = 'show vtp password'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        # The VTP password is not configured.
+        p1 = re.compile(r'^The +VTP +password +is +not +configured.$')
+
+        # VTP Password: password-string
+        p2 = re.compile(r'^VTP +Password: +(?P<val>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            if 'vtp' not in ret_dict:
+                ret_dict['vtp'] = {}
+
+            # The VTP password is not configured.
+            m = p1.match(line)
+            if m:
+                ret_dict['vtp']['configured'] = False
+                continue
+
+            # VTP Password: password-string
+            m = p2.match(line)
+            if m:
+                ret_dict['vtp']['configured'] = True
+                ret_dict['vtp']['password'] = m.groupdict()['val']
+                continue
+
+        return ret_dict
+
 
 # =============================================
 # Parser for 'show vtp status'
@@ -26,18 +81,43 @@ class ShowVtpStatusSchema(MetaParser):
                 'pruning_mode': bool,
                 'traps_generation': bool,
                 Optional('device_id'): str,
-                'conf_last_modified_by': str,
-                'conf_last_modified_time': str,
+                Optional('conf_last_modified_by'): str,
+                Optional('conf_last_modified_time'): str,
                 Optional('updater_id'): str,
                 Optional('updater_interface'): str,
                 Optional('updater_reason'): str,
-                'operating_mode': str,
-                'enabled': bool,
-                'maximum_vlans': int,
-                'existing_vlans': int,
-                'configuration_revision': int,
-                'md5_digest': str,
+                Optional('operating_mode'): str,
+                Optional('enabled'): bool,
+                Optional('maximum_vlans'): int,
+                Optional('existing_vlans'): int,
+                Optional('configuration_revision'): int,
+                Optional('md5_digest'): str,
 
+                Optional('feature'): {
+                    'vlan': {
+                        'enabled': bool,
+                        'operating_mode': str,
+                        'maximum_vlans': int,
+                        'existing_vlans': int,
+                        'existing_extended_vlans': int,
+                        'configuration_revision': int,
+                        'primary_id': str,
+                        Optional('primary_description'): str,
+                        'md5_digest': str,
+                    },
+                    'mst': {
+                        'enabled': bool,
+                        'operating_mode': str,
+                        'configuration_revision': int,
+                        'primary_id': str,
+                        Optional('primary_description'): str,
+                        Optional('md5_digest'): str,
+                    },
+                    'unknown': {
+                        'enabled': bool,
+                        'operating_mode': str,
+                    }
+                },
             }
         }
 
@@ -88,9 +168,10 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                          '(\((?P<reason>[\S\s]+)\))?$')
 
         # Feature VLAN:
+        p17 = re.compile(r'^Feature +VLAN:$')
         # --------------
         # VTP Operating Mode                : Server
-        p9 = re.compile(r'^VTP +Operating +Mode +: (?P<val>\S+)$')
+        p9 = re.compile(r'^VTP +Operating +Mode +: (?P<val>\S+\s?\S*)$')
 
         # Maximum VLANs supported locally   : 1005
         p10 = re.compile(r'^Maximum +VLANs +supported +locally +: (?P<val>\d+)$')
@@ -98,14 +179,29 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         # Number of existing VLANs          : 53
         p11 = re.compile(r'^Number +of +existing +VLANs +: (?P<val>\d+)$')
 
+        # Number of existing extended VLANs : 0
+        p14 = re.compile(r'^Number +of +existing +extended +VLANs +: (?P<val>\d+)$')
+
         # Configuration Revision            : 55
         p12 = re.compile(r'^Configuration +Revision +: (?P<val>\d+)$')
+
+        # Primary ID                        : 0000.0000.0000
+        p15 = re.compile(r'^Primary +ID +: (?P<val>([0-9a-f]{4}.?){3})$')
+
+        # Primary Description               : SW2
+        p16 = re.compile(r'^Primary +Description +: (?P<val>\S*)$')
 
         # MD5 digest                        : 0x9E 0x35 0x3C 0x74 0xDD 0xE9 0x3D 0x62 
         p13 = re.compile(r'^MD5 +digest +: (?P<val>[\w\s]+)$')
 
         #                                     0xDE 0x2D 0x66 0x67 0x70 0x72 0x55 0x38
         p13_1 = re.compile(r'^(?P<val>[\w\s]+)$')
+
+        # Feature MST:
+        p18 = re.compile(r'^Feature +MST:.*$')
+
+        # Feature UNKNOWN:
+        p19 = re.compile(r'^Feature +UNKNOWN:.*$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -138,6 +234,11 @@ class ShowVtpStatus(ShowVtpStatusSchema):
                     ret_dict['vtp']['version'] = version
                 if capable:
                     ret_dict['vtp']['version_capable'] = list(capable)
+
+                if version == '3':
+                    if 'feature' not in ret_dict['vtp']:
+                        ret_dict['vtp']['feature'] = {'vlan': {}, 'mst': {}, 'unknown': {}}
+
                 continue
 
             # VTP Domain Name                 : 
@@ -183,41 +284,105 @@ class ShowVtpStatus(ShowVtpStatusSchema):
 
             # Feature VLAN:
             # --------------
+            m = p17.match(line)
+            if m:
+                if version == '3':
+                    feature = 'vlan'
+
+                continue
+
             # VTP Operating Mode                : Server
             m = p9.match(line)
             if m:
                 status = m.groupdict()['val'].lower()
-                ret_dict['vtp']['operating_mode'] = status
 
-                if status in ['server', 'client']:
-                    ret_dict['vtp']['enabled'] = True
+                if status in ['server', 'primary server', 'client']:
+                    enabled = True
                 else:
-                    ret_dict['vtp']['enabled'] = False
+                    enabled = False
+
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['operating_mode'] = status
+                    ret_dict['vtp']['feature'][feature]['enabled'] = enabled
+
+                else:
+                    ret_dict['vtp']['operating_mode'] = status
+                    ret_dict['vtp']['enabled'] = enabled
+
                 continue
 
             # Maximum VLANs supported locally   : 1005
             m = p10.match(line)
             if m:
-                ret_dict['vtp']['maximum_vlans'] = int(m.groupdict()['val'])
+                max = int(m.groupdict()['val'])
+
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['maximum_vlans'] = max
+                else:
+                    ret_dict['vtp']['maximum_vlans'] = max
+
                 continue
 
             # Number of existing VLANs          : 53
             m = p11.match(line)
             if m:
-                ret_dict['vtp']['existing_vlans'] = int(m.groupdict()['val'])
+                num = int(m.groupdict()['val'])
+
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['existing_vlans'] = num
+                else:
+                    ret_dict['vtp']['existing_vlans'] = num
+
+                continue
+
+            # Number of existing extended VLANs : 0
+            m = p14.match(line)
+            if m:
+                num = int(m.groupdict()['val'])
+
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['existing_extended_vlans'] = num
+
                 continue
 
             # Configuration Revision            : 55
             m = p12.match(line)
             if m:
-                ret_dict['vtp']['configuration_revision'] = int(m.groupdict()['val'])
+                num = int(m.groupdict()['val'])
+
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['configuration_revision'] = num
+                else:
+                    ret_dict['vtp']['configuration_revision'] = num
+
+                continue
+
+            # Primary ID                        : 0000.0000.0000
+            m = p15.match(line)
+            if m:
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['primary_id'] = m.groupdict()['val'].lower()
+
+                continue
+
+            # Primary Description               : SW2
+            m = p16.match(line)
+            if m:
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['primary_description'] = m.groupdict()['val']
+
                 continue
 
             # MD5 digest                        : 0x9E 0x35 0x3C 0x74 0xDD 0xE9 0x3D 0x62 
             m = p13.match(line)
             if m:
                 digest = m.groupdict()['val'].split()
-                ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
+
+                if version == '3':
+                    ret_dict['vtp']['feature'][feature]['md5_digest'] = ' '.join(sorted(digest))
+                else:
+                    ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
+
                 continue
             
             #                                     0xDE 0x2D 0x66 0x67 0x70 0x72 0x55 0x38
@@ -225,7 +390,30 @@ class ShowVtpStatus(ShowVtpStatusSchema):
             if m:
                 if digest:
                     digest.extend(m.groupdict()['val'].split())
-                    ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
+
+                    if version == '3':
+                        ret_dict['vtp']['feature'][feature]['md5_digest'] = ' '.join(sorted(digest))
+                    else:
+                        ret_dict['vtp']['md5_digest'] = ' '.join(sorted(digest))
+
                     continue
+
+            # Feature MST:
+            # --------------
+            m = p18.match(line)
+            if m:
+                if version == '3':
+                    feature = 'mst'
+
+                continue
+
+            # Feature UNKNOWN:
+            # --------------
+            m = p19.match(line)
+            if m:
+                if version == '3':
+                    feature = 'unknown'
+
+                continue
 
         return ret_dict
