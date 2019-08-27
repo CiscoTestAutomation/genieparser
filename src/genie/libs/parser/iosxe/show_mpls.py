@@ -22,6 +22,7 @@
         *  show mpls ldp statistics
         *  show mpls ldp parameters
         *  show mpls forwarding-table
+        *  show mpls forwarding-table <prefix>
         *  show mpls forwarding-table detail
         *  show mpls forwarding-table vrf <vrf>
         *  show mpls forwarding-table vrf <vrf> detail
@@ -1589,8 +1590,9 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
 class ShowMplsForwardingTableSchema(MetaParser):
     """Schema for
         show mpls forwarding-table
-        show mpls forwarding-table detail
+        show mpls forwarding-table {prefix}
         show mpls forwarding-table vrf <vrf>
+        show mpls forwarding-table detail
         show mpls forwarding-table vrf <vrf> detail"""
 
     schema = {
