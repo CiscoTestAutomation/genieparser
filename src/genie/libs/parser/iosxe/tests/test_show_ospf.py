@@ -12,25 +12,90 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # iosxe show_ospf
-from genie.libs.parser.iosxe.show_ospf import ShowIpOspf,\
-                                              ShowIpOspfInterface,\
-                                              ShowIpOspfNeighborDetail,\
-                                              ShowIpOspfShamLinks,\
-                                              ShowIpOspfVirtualLinks,\
-                                              ShowIpOspfDatabase,\
-                                              ShowIpOspfDatabaseRouter,\
-                                              ShowIpOspfDatabaseExternal,\
-                                              ShowIpOspfDatabaseNetwork,\
-                                              ShowIpOspfDatabaseSummary,\
-                                              ShowIpOspfDatabaseOpaqueArea,\
-                                              ShowIpOspfMplsLdpInterface,\
-                                              ShowIpOspfMplsTrafficEngLink,\
-                                              ShowIpOspfMaxMetric,\
-                                              ShowIpOspfTraffic,\
-                                              ShowIpOspfNeighbor,\
-                                              ShowIpOspfDatabaseRouterSelfOriginate, \
-                                              ShowIpOspfInterfaceBrief
+from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
+                                               ShowIpOspfInterface,
+                                               ShowIpOspfNeighborDetail,
+                                               ShowIpOspfShamLinks,
+                                               ShowIpOspfVirtualLinks,
+                                               ShowIpOspfDatabase,
+                                               ShowIpOspfDatabaseRouter,
+                                               ShowIpOspfDatabaseExternal,
+                                               ShowIpOspfDatabaseNetwork,
+                                               ShowIpOspfDatabaseSummary,
+                                               ShowIpOspfDatabaseOpaqueArea,
+                                               ShowIpOspfMplsLdpInterface,
+                                               ShowIpOspfMplsTrafficEngLink,
+                                               ShowIpOspfMaxMetric,
+                                               ShowIpOspfTraffic,
+                                               ShowIpOspfNeighbor,
+                                               ShowIpOspfDatabaseRouterSelfOriginate,
+                                               ShowIpOspfInterfaceBrief,
+                                               ShowIpOspfSegmentRouting,
+                                               ShowIpOspfSegmentRoutingLocalBlock,
+                                               ShowIpOspfSegmentRoutingGlobalBlock,
+                                               ShowIpOspfFastRerouteTiLfa,
+                                               ShowIpOspfDatabaseOpaqueAreaSelfOriginate,
+                                               ShowIpOspfSegmentRoutingProtectedAdjacencies,
+                                               ShowIpOspfSegmentRoutingSidDatabase,
+                                               ShowIpOspfDatabaseOpaqueAreaAdvRouter)
 
+
+# =====================================================================
+# Unit test for 'show ip ospf {process_id} segment-routing local-block'
+# =====================================================================
+class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
+
+    '''Unit test for "show ip ospf" '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = {'execute.return_value': '''
+        PE1#show ip ospf 65109 segment-routing local-block
+ 
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+ 
+        OSPF Segment Routing Local Blocks in Area 8
+         
+          Router ID        SR Capable   SRLB Base   SRLB Range 
+        --------------------------------------------------------
+         *10.4.1.1          Yes          15000       1000       
+          10.16.2.2          Yes          15000       1000       
+         
+        PE1#
+        '''}
+
+    golden_parsed_output1 = {
+        'instance':
+            {'65109':
+                {'router_id': '10.4.1.1',
+                'areas':
+                    {'0.0.0.8':
+                        {'router_id':
+                            {'10.4.1.1':
+                                {'sr_capable': 'Yes',
+                                'srlb_base': 15000,
+                                'srlb_range': 1000},
+                            '10.16.2.2':
+                                {'sr_capable': 'Yes',
+                                'srlb_base': 15000,
+                                'srlb_range': 1000}}}},
+                            }}}
+
+    def test_show_ip_ospf_segment_routing_local_block_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(process_id=65109)
+
+    def test_show_ip_ospf_segment_routing_local_block_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=65109)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ============================
@@ -1469,7 +1534,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         self.maxDiff = None
 
         raw1='''\
-            PE1#show ip ospf interface GigabitEthernet2
+            show ip ospf interface GigabitEthernet2
             Load for five secs: 2%/0%; one minute: 2%; five minutes: 2%
             Time source is NTP, 04:44:14.272 EST Sat Jun 15 2019
 
@@ -1501,7 +1566,7 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         '''
 
         raw2='''\
-         PE1#show running-config | section router ospf 65109
+         show running-config | section router ospf 65109
          router ospf 65109
          router-id 10.169.197.254
          max-metric router-lsa on-startup 300
@@ -2520,6 +2585,360 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
         obj = ShowIpOspfNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+    
+    golden_output4 = {'execute.return_value': '''
+        show ip ospf neighbor detail
+        Neighbor 10.16.2.2, interface address 192.168.154.2, interface-id 24
+            In the area 8 via interface GigabitEthernet0/1/2
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            SR adj label 16
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:38
+            Neighbor is up for 3d16h
+            Index 1/3/3, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 192.168.4.2, interface-id 23
+            In the area 8 via interface GigabitEthernet0/1/1
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            SR adj label 17
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:35
+            Neighbor is up for 1w0d
+            Index 1/4/4, retransmission queue length 0, number of retransmission 2
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 1, maximum is 1
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+    '''}
+    
+    golden_parsed_output4 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '65109': {
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'interfaces': {
+                                            'GigabitEthernet5': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet5',
+                                                        'address': '10.225.0.15',
+                                                        'interface_id': '11',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'sr_adj_label': '16',
+                                                        'dead_timer': '00:00:31',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/4/4,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            'GigabitEthernet4': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet4',
+                                                        'address': '10.225.0.16',
+                                                        'interface_id': '10',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:32',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/3/3,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            'GigabitEthernet3': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet3',
+                                                        'address': '10.225.0.17',
+                                                        'interface_id': '9',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:34',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/2/2,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            'GigabitEthernet2': {
+                                                'neighbors': {
+                                                    '10.16.2.2': {
+                                                        'neighbor_router_id': '10.16.2.2',
+                                                        'interface': 'GigabitEthernet2',
+                                                        'address': '10.225.0.18',
+                                                        'interface_id': '8',
+                                                        'priority': 0,
+                                                        'state': 'full',
+                                                        'statistics': {
+                                                            'nbr_event_count': 6,
+                                                            'nbr_retrans_qlen': 0,
+                                                            'total_retransmission': 0,
+                                                            'last_retrans_scan_length': 0,
+                                                            'last_retrans_max_scan_length': 0,
+                                                            'last_retrans_scan_time_msec': 0,
+                                                            'last_retrans_max_scan_time_msec': 0,
+                                                            },
+                                                        'dr_ip_addr': '0.0.0.0',
+                                                        'bdr_ip_addr': '0.0.0.0',
+                                                        'dead_timer': '00:00:35',
+                                                        'uptime': '6d07h',
+                                                        'index': '1/1/1,',
+                                                        'first': '0x0(0)/0x0(0)/0x0(0)',
+                                                        'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    def test_golden4(self):
+        self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
+        raw1 = '''
+        Neighbor 10.16.2.2, interface address 10.225.0.15, interface-id 11
+            In the area 8 via interface GigabitEthernet5
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            SR adj label 16
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:31
+            Neighbor is up for 6d07h
+            Index 1/4/4, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.225.0.16, interface-id 10
+            In the area 8 via interface GigabitEthernet4
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:32
+            Neighbor is up for 6d07h
+            Index 1/3/3, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.225.0.17, interface-id 9
+            In the area 8 via interface GigabitEthernet3
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:34
+            Neighbor is up for 6d07h
+            Index 1/2/2, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.225.0.18, interface-id 8
+            In the area 8 via interface GigabitEthernet2
+            Neighbor priority is 0, State is FULL, 6 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:35
+            Neighbor is up for 6d07h
+            Index 1/1/1, retransmission queue length 0, number of retransmission 0
+            First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+            Last retransmission scan length is 0, maximum is 0
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+        raw2_1 = '''
+            show ip ospf interface | section GigabitEthernet5
+            GigabitEthernet5 is up, line protocol is up
+            Internet Address 10.225.0.28/30, Interface ID 11, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:01
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/4/4, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 0 msec, maximum is 9 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+        raw2_2 = '''
+            show ip ospf interface | section GigabitEthernet4
+            GigabitEthernet4 is up, line protocol is up
+            Internet Address 10.225.0.29/30, Interface ID 10, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:07
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/3/3, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 0 msec, maximum is 1 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+        raw2_3 = '''
+            show ip ospf interface | section GigabitEthernet3
+            GigabitEthernet3 is up, line protocol is up
+            Internet Address 10.225.0.30/30, Interface ID 9, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:05
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/2/2, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 1 msec, maximum is 1 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+        raw2_4 = '''
+            show ip ospf interface | section GigabitEthernet2
+            GigabitEthernet2 is up, line protocol is up
+            Internet Address 10.225.0.31/30, Interface ID 8, Area 8
+            Attached via Network Statement
+            Process ID 65109, Router ID 10.4.1.1, Network Type POINT_TO_POINT, Cost: 1
+            Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                    0           1         no          no            Base
+            Transmit Delay is 1 sec, State POINT_TO_POINT
+            Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                oob-resync timeout 40
+                Hello due in 00:00:06
+            Supports Link-local Signaling (LLS)
+            Cisco NSF helper support enabled
+            IETF NSF helper support enabled
+            Can be protected by per-prefix Loop-Free FastReroute
+            Can be used for per-prefix Loop-Free FastReroute repair paths
+            Not Protected by per-prefix TI-LFA
+            Index 1/1/1, flood queue length 0
+            Next 0x0(0)/0x0(0)/0x0(0)
+            Last flood scan length is 1, maximum is 10
+            Last flood scan time is 0 msec, maximum is 1 msec
+            Neighbor Count is 1, Adjacent neighbor count is 1
+                Adjacent with neighbor 10.16.2.2
+            Suppress hello for 0 neighbor(s)
+        '''
+
+        raw3_1 = '''
+            show running-config | section router ospf 65109
+            router ospf 65109
+            router-id 10.4.1.1
+            network 0.0.0.0 255.255.255.255 area 8
+        '''
+
+        self.outputs = {}
+        self.outputs['show ip ospf neighbor detail'] = raw1
+        self.outputs['show ip ospf interface | section GigabitEthernet5'] = raw2_1
+        self.outputs['show ip ospf interface | section GigabitEthernet4'] = raw2_2
+        self.outputs['show ip ospf interface | section GigabitEthernet3'] = raw2_3
+        self.outputs['show ip ospf interface | section GigabitEthernet2'] = raw2_4
+
+        self.outputs['show running-config | section router ospf 65109'] = raw3_1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfNeighborDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
     def test_show_ip_ospf_neighbor_detail_empty(self):
         self.maxDiff = None
@@ -5517,7 +5936,11 @@ class test_show_ip_ospf_database_summary(unittest.TestCase):
 # =================================================
 class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
 
-    '''Unit test for "show ip ospf database summary" '''
+    '''Unit test for commands:
+        * 'show ip ospf database opaque-area'
+        * 'show ip ospf database opaque-area self-originate'
+        * 'show ip ospf database opaque-area adv-router {address}'
+    '''
 
     device = Device(name='aDevice')
     
@@ -5543,15 +5966,15 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'opaque': 
-                                                                        {'num_of_links': 0}},
+                                                                        {'num_of_links': 0,
+                                                                         'mpls_te_router_id': '10.4.1.1',}},
                                                                 'header': 
                                                                     {'adv_router': '10.4.1.1',
                                                                     'age': 370,
                                                                     'checksum': '0x56D2',
                                                                     'fragment_number': 0,
                                                                     'length': 28,
-                                                                    'lsa_id': '10.1.0.0',
-                                                                    'mpls_te_router_id': '10.4.1.1',
+                                                                    'lsa_id': '10.1.0.0',                                                                    
                                                                     'opaque_id': 0,
                                                                     'opaque_type': 1,
                                                                     'option': 'None',
@@ -5566,15 +5989,15 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'opaque': 
-                                                                        {'num_of_links': 0}},
+                                                                        {'num_of_links': 0,
+                                                                        'mpls_te_router_id': '10.16.2.2',}},
                                                                 'header': 
                                                                     {'adv_router': '10.16.2.2',
                                                                     'age': 1420,
                                                                     'checksum': '0x1E21',
                                                                     'fragment_number': 0,
                                                                     'length': 28,
-                                                                    'lsa_id': '10.1.0.0',
-                                                                    'mpls_te_router_id': '10.16.2.2',
+                                                                    'lsa_id': '10.1.0.0',                                                                    
                                                                     'opaque_id': 0,
                                                                     'opaque_type': 1,
                                                                     'option': 'None',
@@ -5590,15 +6013,15 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                             'ospfv2': 
                                                                 {'body': 
                                                                     {'opaque': 
-                                                                        {'num_of_links': 0}},
+                                                                        {'num_of_links': 0,
+                                                                         'mpls_te_router_id': '10.36.3.3',}},
                                                                 'header': 
                                                                     {'adv_router': '10.36.3.3',
                                                                     'age': 123,
                                                                     'checksum': '0x5EBA',
                                                                     'fragment_number': 0,
                                                                     'length': 28,
-                                                                    'lsa_id': '10.1.0.0',
-                                                                    'mpls_te_router_id': '10.36.3.3',
+                                                                    'lsa_id': '10.1.0.0',                                                                    
                                                                     'opaque_id': 0,
                                                                     'opaque_type': 1,
                                                                     'option': 'None',
@@ -6273,12 +6696,1619 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
             OSPF Router with ID (10.229.11.11) (Process ID 2)
         '''}
 
+    golden_parsed_output2 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv4": {
+                        "instance": {
+                            "65109": {
+                                "areas": {
+                                    "0.0.0.8": {
+                                        "database": {
+                                            "lsa_types": {
+                                                10: {
+                                                    "lsa_type": 10,
+                                                    "lsas": {
+                                                        "10.1.0.0 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.0",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "mpls_te_router_id": "10.4.1.1",
+                                                                        "num_of_links": 0,
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.1.0.0",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_type": 1,
+                                                                    "opaque_id": 0,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0x58D1",
+                                                                    "length": 28,
+                                                                    "fragment_number": 0,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.1.0.15 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.15",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "link_tlvs": {
+                                                                            1: {
+                                                                                "link_type": 1,
+                                                                                "link_name": "point-to-point network",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "192.168.220.2": {}
+                                                                                },
+                                                                                "local_if_ipv4_addrs": {
+                                                                                    "192.168.220.1": {}
+                                                                                },
+                                                                                "te_metric": 1,
+                                                                                "max_bandwidth": 176258176,
+                                                                                "igp_metric": 1,
+                                                                            }
+                                                                        },
+                                                                        "num_of_links": 1,
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.1.0.15",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_type": 1,
+                                                                    "opaque_id": 15,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0x917E",
+                                                                    "length": 80,
+                                                                    "fragment_number": 15,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.1.0.16 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.16",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "link_tlvs": {
+                                                                            1: {
+                                                                                "link_type": 1,
+                                                                                "link_name": "point-to-point network",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "192.168.111.2": {}
+                                                                                },
+                                                                                "local_if_ipv4_addrs": {
+                                                                                    "192.168.111.1": {}
+                                                                                },
+                                                                                "te_metric": 1,
+                                                                                "max_bandwidth": 125000000,
+                                                                                "igp_metric": 1,
+                                                                            }
+                                                                        },
+                                                                        "num_of_links": 1,
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.1.0.16",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_type": 1,
+                                                                    "opaque_id": 16,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0x8A09",
+                                                                    "length": 80,
+                                                                    "fragment_number": 16,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.1.0.17 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.17",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "link_tlvs": {
+                                                                            1: {
+                                                                                "link_type": 1,
+                                                                                "link_name": "point-to-point network",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "192.168.4.2": {}
+                                                                                },
+                                                                                "local_if_ipv4_addrs": {
+                                                                                    "192.168.4.1": {}
+                                                                                },
+                                                                                "te_metric": 1,
+                                                                                "max_bandwidth": 125000000,
+                                                                                "igp_metric": 1,
+                                                                            }
+                                                                        },
+                                                                        "num_of_links": 1,
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.1.0.17",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_type": 1,
+                                                                    "opaque_id": 17,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xC2CD",
+                                                                    "length": 80,
+                                                                    "fragment_number": 17,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.1.0.18 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.1.0.18",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "link_tlvs": {
+                                                                            1: {
+                                                                                "link_type": 1,
+                                                                                "link_name": "point-to-point network",
+                                                                                "link_id": "10.16.2.2",
+                                                                                "remote_if_ipv4_addrs": {
+                                                                                    "192.168.154.2": {}
+                                                                                },
+                                                                                "local_if_ipv4_addrs": {
+                                                                                    "192.168.154.1": {}
+                                                                                },
+                                                                                "te_metric": 1,
+                                                                                "max_bandwidth": 125000000,
+                                                                                "igp_metric": 1,
+                                                                            }
+                                                                        },
+                                                                        "num_of_links": 1,
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.1.0.18",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_type": 1,
+                                                                    "opaque_id": 18,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xFA92",
+                                                                    "length": 80,
+                                                                    "fragment_number": 18,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.16.0.0 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.16.0.0",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "router_capabilities_tlv": {
+                                                                            1: {
+                                                                                "tlv_type": "Router Information",
+                                                                                "length": 4,
+                                                                                "information_capabilities": {
+                                                                                    "graceful_restart_helper": True,
+                                                                                    "stub_router": True,
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "sr_algorithm_tlv": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Algorithm",
+                                                                                "length": 2,
+                                                                                "algorithm": {
+                                                                                    "spf": True,
+                                                                                    "strict_spf": True,
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "sid_range_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Range",
+                                                                                "length": 12,
+                                                                                "range_size": 8000,
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "SID/Label",
+                                                                                        "length": 3,
+                                                                                        "label": 16000,
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "node_msd_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Node MSD",
+                                                                                "length": 2,
+                                                                                "sub_type": {
+                                                                                    "node_max_sid_depth_value": 13
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                        "local_block_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Segment Routing Local Block",
+                                                                                "length": 12,
+                                                                                "range_size": 1000,
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "SID/Label",
+                                                                                        "length": 44,
+                                                                                        "label": 15000,
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        },
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.16.0.0",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_id": 0,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xD28C",
+                                                                    "length": 3,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.49.0.0 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.49.0.0",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "extended_prefix_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Extended Prefix",
+                                                                                "length": 20,
+                                                                                "prefix": "10.4.1.1/32",
+                                                                                "af": 0,
+                                                                                "route_type": "Intra",
+                                                                                "flags": "N-bit",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Prefix SID",
+                                                                                        "length": 92,
+                                                                                        "flags": "None",
+                                                                                        "mt_id": 0,
+                                                                                        "algo": "SPF",
+                                                                                        "sid": 1,
+                                                                                    }
+                                                                                },
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.49.0.0",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_id": 0,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xEFA7",
+                                                                    "length": 8,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.64.0.20 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.20",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "extended_link_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
+                                                                                "link_name": "another router (point-to-point)",
+                                                                                "link_type": 1,
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.220.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 19,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "192.168.220.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 20,
+                                                                                        "remote_interface_id": 20,
+                                                                                        "length": 92,
+                                                                                    },
+                                                                                },
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.64.0.20",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_id": 20,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xF52F",
+                                                                    "length": 68,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.64.0.21 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.21",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "extended_link_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
+                                                                                "link_name": "another router (point-to-point)",
+                                                                                "link_type": 1,
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.111.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 18,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "192.168.111.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 21,
+                                                                                        "remote_interface_id": 22,
+                                                                                        "length": 92,
+                                                                                    },
+                                                                                },
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.64.0.21",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_id": 21,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xB764",
+                                                                    "length": 68,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.64.0.22 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.22",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "extended_link_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
+                                                                                "link_name": "another router (point-to-point)",
+                                                                                "link_type": 1,
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.4.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 17,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "192.168.4.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 22,
+                                                                                        "remote_interface_id": 23,
+                                                                                        "length": 92,
+                                                                                    },
+                                                                                },
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.64.0.22",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_id": 22,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0xF420",
+                                                                    "length": 68,
+                                                                },
+                                                            },
+                                                        },
+                                                        "10.64.0.23 10.4.1.1": {
+                                                            "adv_router": "10.4.1.1",
+                                                            "lsa_id": "10.64.0.23",
+                                                            "ospfv2": {
+                                                                "body": {
+                                                                    "opaque": {
+                                                                        "extended_link_tlvs": {
+                                                                            1: {
+                                                                                "tlv_type": "Extended Link",
+                                                                                "length": 68,
+                                                                                "link_name": "another router (point-to-point)",
+                                                                                "link_type": 1,
+                                                                                "link_id": "10.16.2.2",
+                                                                                "link_data": "192.168.154.1",
+                                                                                "sub_tlvs": {
+                                                                                    1: {
+                                                                                        "type": "Adj SID",
+                                                                                        "flags": "L-Bit, V-bit",
+                                                                                        "mt_id": 0,
+                                                                                        "weight": 0,
+                                                                                        "label": 16,
+                                                                                    },
+                                                                                    2: {
+                                                                                        "type": "Remote Intf Addr",
+                                                                                        "remote_interface_address": "192.168.154.2",
+                                                                                    },
+                                                                                    3: {
+                                                                                        "type": "Local / Remote Intf ID",
+                                                                                        "local_interface_id": 23,
+                                                                                        "remote_interface_id": 24,
+                                                                                    },
+                                                                                },
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "header": {
+                                                                    "age": 49,
+                                                                    "option": "None",
+                                                                    "option_desc": "No TOS-capability, DC",
+                                                                    "type": 10,
+                                                                    "lsa_id": "10.64.0.23",
+                                                                    "adv_router": "10.4.1.1",
+                                                                    "opaque_id": 23,
+                                                                    "seq_num": "80000001",
+                                                                    "checksum": "0x32DB",
+                                                                    "length": 68,
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+      PE1#show ip ospf database opaque-area self-originate
+     
+                OSPF Router with ID (10.4.1.1) (Process ID 65109)
+     
+                    Type-10 Opaque Area Link States (Area 8)
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.1.0.0
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 0
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x58D1
+      Length: 28
+      Fragment number : 0
+     
+        MPLS TE router ID : 10.4.1.1
+     
+        Number of Links : 0
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.1.0.15
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 15
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x917E
+      Length: 80
+      Fragment number : 15
+     
+        Link connected to Point-to-Point network
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.220.2
+          Interface Address : 192.168.220.1
+          Admin Metric : 1
+          Maximum bandwidth : 176258176
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.1.0.16
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 16
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x8A09
+      Length: 80
+      Fragment number : 16
+     
+        Link connected to Point-to-Point network
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.111.2
+          Interface Address : 192.168.111.1
+          Admin Metric : 1
+          Maximum bandwidth : 125000000
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.1.0.17
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 17
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xC2CD
+      Length: 80
+      Fragment number : 17
+     
+        Link connected to Point-to-Point network
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.4.2
+          Interface Address : 192.168.4.1
+          Admin Metric : 1
+          Maximum bandwidth : 125000000
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.1.0.18
+      Opaque Type: 1 (Traffic Engineering)
+      Opaque ID: 18
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xFA92
+      Length: 80
+      Fragment number : 18
+     
+        Link connected to Point-to-Point network
+          Link ID : 10.16.2.2
+          Neighbor Address : 192.168.154.2
+          Interface Address : 192.168.154.1
+          Admin Metric : 1
+          Maximum bandwidth : 125000000
+          IGP Metric : 1
+     
+        Number of Links : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.16.0.0
+      Opaque Type: 4 (Router Information)
+      Opaque ID: 0
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xD28C
+      Length: 76
+     
+        TLV Type: Router Information
+        Length: 4
+        Capabilities:
+          Graceful Restart Helper
+          Stub Router Support
+     
+        TLV Type: Segment Routing Algorithm
+        Length: 2
+          Algorithm: SPF
+          Algorithm: Strict SPF
+     
+        TLV Type: Segment Routing Range
+        Length: 12
+          Range Size: 8000
+     
+          Sub-TLV Type: SID/Label
+          Length: 3
+            Label: 16000
+     
+        TLV Type: Segment Routing Node MSD
+        Length: 2
+          Sub-type: Node Max Sid Depth, Value: 13
+     
+        TLV Type: Segment Routing Local Block
+        Length: 12
+          Range Size: 1000
+     
+          Sub-TLV Type: SID/Label
+          Length: 3
+            Label: 15000
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.49.0.0
+      Opaque Type: 7 (Extended Prefix)
+      Opaque ID: 0
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xEFA7
+      Length: 44
+     
+        TLV Type: Extended Prefix
+        Length: 20
+          Prefix    : 10.4.1.1/32
+          AF        : 0
+          Route-type: Intra
+          Flags     : N-bit
+     
+          Sub-TLV Type: Prefix SID
+          Length: 8
+            Flags : None
+            MTID  : 0
+            Algo  : SPF
+            SID   : 1
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.64.0.20
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 20
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xF52F
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.220.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 19
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 192.168.220.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 20
+            Remote Interface ID   : 20
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.64.0.21
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 21
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xB764
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.111.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 18
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 192.168.111.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 21
+            Remote Interface ID   : 22
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.64.0.22
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 22
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0xF420
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.4.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 17
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 192.168.4.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 22
+            Remote Interface ID   : 23
+     
+      LS age: 49
+      Options: (No TOS-capability, DC)
+      LS Type: Opaque Area Link
+      Link State ID: 10.64.0.23
+      Opaque Type: 8 (Extended Link)
+      Opaque ID: 23
+      Advertising Router: 10.4.1.1
+      LS Seq Number: 80000001
+      Checksum: 0x32DB
+      Length: 92
+     
+        TLV Type: Extended Link
+        Length: 68
+        Link connected to : another Router (point-to-point)
+        (Link ID) Neighboring Router ID: 10.16.2.2
+        (Link Data) Interface IP address: 192.168.154.1
+     
+          Sub-TLV Type: Adj SID
+          Length : 7
+            Flags  : L-Bit, V-bit
+            MTID   : 0
+            Weight : 0
+            Label  : 16
+     
+          Sub-TLV Type: Remote Intf Addr
+            Remote Interface Address   : 192.168.154.2
+     
+          Sub-TLV Type: Local / Remote Intf ID
+            Local Interface ID   : 23
+            Remote Interface ID   : 24
+    '''}
+
+    golden_output3 = {'execute.return_value': '''
+        show ip ospf database opaque-area adv-router 10.4.1.1
+
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+                Type-10 Opaque Area Link States (Area 8)
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.1.0.0
+        Opaque Type: 1 (Traffic Engineering)
+        Opaque ID: 0
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013B
+        Checksum: 0xE00E
+        Length: 28
+        Fragment number : 0
+
+            MPLS TE router ID : 10.4.1.1
+
+            Number of Links : 0
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.1.0.3
+        Opaque Type: 1 (Traffic Engineering)
+        Opaque ID: 3
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013B
+        Checksum: 0xFF9E
+        Length: 80
+        Fragment number : 3
+
+            Link connected to Point-to-Point network
+            Link ID : 10.229.11.11
+            Neighbor Address : 10.0.0.9
+            Interface Address : 10.0.0.10
+            Admin Metric : 10
+            Maximum bandwidth : 125000000
+            IGP Metric : 10
+
+            Number of Links : 1
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.1.0.4
+        Opaque Type: 1 (Traffic Engineering)
+        Opaque ID: 4
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013B
+        Checksum: 0xAE06
+        Length: 80
+        Fragment number : 4
+
+            Link connected to Point-to-Point network
+            Link ID : 10.151.22.22
+            Neighbor Address : 10.0.0.13
+            Interface Address : 10.0.0.14
+            Admin Metric : 100
+            Maximum bandwidth : 125000000
+            IGP Metric : 100
+
+            Number of Links : 1
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.1.0.5
+        Opaque Type: 1 (Traffic Engineering)
+        Opaque ID: 5
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013B
+        Checksum: 0xFE8D
+        Length: 80
+        Fragment number : 5
+
+            Link connected to Point-to-Point network
+            Link ID : 10.151.22.22
+            Neighbor Address : 10.0.0.25
+            Interface Address : 10.0.0.26
+            Admin Metric : 1000
+            Maximum bandwidth : 125000000
+            IGP Metric : 1000
+
+            Number of Links : 1
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.16.0.0
+        Opaque Type: 4 (Router Information)
+        Opaque ID: 0
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013B
+        Checksum: 0x5BC8
+        Length: 76
+
+            TLV Type: Router Information
+            Length: 4
+            Capabilities:
+            Graceful Restart Helper
+            Stub Router Support
+
+            TLV Type: Segment Routing Algorithm
+            Length: 2
+            Algorithm: SPF
+            Algorithm: Strict SPF
+
+            TLV Type: Segment Routing Range
+            Length: 12
+            Range Size: 8000
+
+            Sub-TLV Type: SID/Label
+            Length: 3
+                Label: 16000
+
+            TLV Type: Segment Routing Node MSD
+            Length: 2
+            Sub-type: Node Max Sid Depth, Value: 13
+
+            TLV Type: Segment Routing Local Block
+            Length: 12
+            Range Size: 1000
+
+            Sub-TLV Type: SID/Label
+            Length: 3
+                Label: 15000
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.49.0.0
+        Opaque Type: 7 (Extended Prefix)
+        Opaque ID: 0
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 80000133
+        Checksum: 0x88DB
+        Length: 44
+
+            TLV Type: Extended Prefix
+            Length: 20
+            Prefix    : 10.4.1.1/32
+            AF        : 0
+            Route-type: Intra
+            Flags     : N-bit
+
+            Sub-TLV Type: Prefix SID
+            Length: 8
+                Flags : None
+                MTID  : 0
+                Algo  : SPF
+                SID   : 1
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.64.0.9
+        Opaque Type: 8 (Extended Link)
+        Opaque ID: 9
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013C
+        Checksum: 0xA666
+        Length: 104
+
+            TLV Type: Extended Link
+            Length: 80
+            Link connected to : another Router (point-to-point)
+            (Link ID) Neighboring Router ID: 10.229.11.11
+            (Link Data) Interface IP address: 10.0.0.10
+
+            Sub-TLV Type: Adj SID
+            Length : 7
+                Flags  : L-Bit, V-bit
+                MTID   : 0
+                Weight : 0
+                Label  : 18
+
+            Sub-TLV Type: Adj SID
+            Length : 7
+                Flags  : L-Bit, V-bit, B-bit
+                MTID   : 0
+                Weight : 0
+                Label  : 19
+
+            Sub-TLV Type: Remote Intf Addr
+                Remote Interface Address   : 10.0.0.9
+
+            Sub-TLV Type: Local / Remote Intf ID
+                Local Interface ID   : 9
+                Remote Interface ID   : 9
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.64.0.10
+        Opaque Type: 8 (Extended Link)
+        Opaque ID: 10
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013C
+        Checksum: 0xEBE6
+        Length: 104
+
+            TLV Type: Extended Link
+            Length: 80
+            Link connected to : another Router (point-to-point)
+            (Link ID) Neighboring Router ID: 10.151.22.22
+            (Link Data) Interface IP address: 10.0.0.14
+
+            Sub-TLV Type: Adj SID
+            Length : 7
+                Flags  : L-Bit, V-bit
+                MTID   : 0
+                Weight : 0
+                Label  : 17
+
+            Sub-TLV Type: Adj SID
+            Length : 7
+                Flags  : L-Bit, V-bit, B-bit
+                MTID   : 0
+                Weight : 0
+                Label  : 21
+
+            Sub-TLV Type: Remote Intf Addr
+                Remote Interface Address   : 10.0.0.13
+
+            Sub-TLV Type: Local / Remote Intf ID
+                Local Interface ID   : 10
+                Remote Interface ID   : 8
+
+        LS age: 1663
+        Options: (No TOS-capability, DC)
+        LS Type: Opaque Area Link
+        Link State ID: 10.64.0.11
+        Opaque Type: 8 (Extended Link)
+        Opaque ID: 11
+        Advertising Router: 10.4.1.1
+        LS Seq Number: 8000013D
+        Checksum: 0xB8F1
+        Length: 104
+
+            TLV Type: Extended Link
+            Length: 80
+            Link connected to : another Router (point-to-point)
+            (Link ID) Neighboring Router ID: 10.151.22.22
+            (Link Data) Interface IP address: 10.0.0.26
+
+            Sub-TLV Type: Adj SID
+            Length : 7
+                Flags  : L-Bit, V-bit
+                MTID   : 0
+                Weight : 0
+                Label  : 16
+
+            Sub-TLV Type: Adj SID
+            Length : 7
+                Flags  : L-Bit, V-bit, B-bit
+                MTID   : 0
+                Weight : 0
+                Label  : 20
+
+            Sub-TLV Type: Remote Intf Addr
+                Remote Interface Address   : 10.0.0.25
+
+            Sub-TLV Type: Local / Remote Intf ID
+                Local Interface ID   : 11
+                Remote Interface ID   : 9
+    '''}
+
+    golden_parsed_output3 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '65109': {
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'database': {
+                                            'lsa_types': {
+                                                10: {
+                                                    'lsa_type': 10,
+                                                    'lsas': {
+                                                        '10.1.0.0 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.0',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'mpls_te_router_id': '10.4.1.1',
+                                                                        'num_of_links': 0,
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.0',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '8000013B',
+                                                                    'checksum': '0xE00E',
+                                                                    'length': 28,
+                                                                    'fragment_number': 0,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.1.0.3 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.3',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 1,
+                                                                                'link_name': 'point-to-point network',
+                                                                                'link_id': '10.229.11.11',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    '10.0.0.9': {
+                                                                                        },
+                                                                                    },
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.0.0.10': {
+                                                                                        },
+                                                                                    },
+                                                                                'te_metric': 10,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'igp_metric': 10,
+                                                                                },
+                                                                            },
+                                                                        'num_of_links': 1,
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.3',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 3,
+                                                                    'seq_num': '8000013B',
+                                                                    'checksum': '0xFF9E',
+                                                                    'length': 80,
+                                                                    'fragment_number': 3,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.1.0.4 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.4',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 1,
+                                                                                'link_name': 'point-to-point network',
+                                                                                'link_id': '10.151.22.22',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    '10.0.0.13': {
+                                                                                        },
+                                                                                    },
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.0.0.14': {
+                                                                                        },
+                                                                                    },
+                                                                                'te_metric': 100,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'igp_metric': 100,
+                                                                                },
+                                                                            },
+                                                                        'num_of_links': 1,
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.4',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 4,
+                                                                    'seq_num': '8000013B',
+                                                                    'checksum': '0xAE06',
+                                                                    'length': 80,
+                                                                    'fragment_number': 4,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.1.0.5 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.1.0.5',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'link_tlvs': {
+                                                                            1: {
+                                                                                'link_type': 1,
+                                                                                'link_name': 'point-to-point network',
+                                                                                'link_id': '10.151.22.22',
+                                                                                'remote_if_ipv4_addrs': {
+                                                                                    '10.0.0.25': {
+                                                                                        },
+                                                                                    },
+                                                                                'local_if_ipv4_addrs': {
+                                                                                    '10.0.0.26': {
+                                                                                        },
+                                                                                    },
+                                                                                'te_metric': 1000,
+                                                                                'max_bandwidth': 125000000,
+                                                                                'igp_metric': 1000,
+                                                                                },
+                                                                            },
+                                                                        'num_of_links': 1,
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.1.0.5',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_type': 1,
+                                                                    'opaque_id': 5,
+                                                                    'seq_num': '8000013B',
+                                                                    'checksum': '0xFE8D',
+                                                                    'length': 80,
+                                                                    'fragment_number': 5,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.16.0.0 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.16.0.0',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'router_capabilities_tlv': {
+                                                                            1: {
+                                                                                'tlv_type': 'Router Information',
+                                                                                'length': 4,
+                                                                                'information_capabilities': {
+                                                                                    'graceful_restart_helper': True,
+                                                                                    'stub_router': True,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        'sr_algorithm_tlv': {
+                                                                            1: {
+                                                                                'tlv_type': 'Segment Routing Algorithm',
+                                                                                'length': 2,
+                                                                                'algorithm': {
+                                                                                    'spf': True,
+                                                                                    'strict_spf': True,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        'sid_range_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Segment Routing Range',
+                                                                                'length': 12,
+                                                                                'range_size': 8000,
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'type': 'SID/Label',
+                                                                                        'length': 3,
+                                                                                        'label': 16000,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        'node_msd_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Segment Routing Node MSD',
+                                                                                'length': 2,
+                                                                                'sub_type': {
+                                                                                    'node_max_sid_depth_value': 13,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        'local_block_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Segment Routing Local Block',
+                                                                                'length': 12,
+                                                                                'range_size': 1000,
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'type': 'SID/Label',
+                                                                                        'length': 44,
+                                                                                        'label': 15000,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.16.0.0',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '8000013B',
+                                                                    'checksum': '0x5BC8',
+                                                                    'length': 3,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.49.0.0 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.49.0.0',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'extended_prefix_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Extended Prefix',
+                                                                                'length': 20,
+                                                                                'prefix': '10.4.1.1/32',
+                                                                                'af': 0,
+                                                                                'route_type': 'Intra',
+                                                                                'flags': 'N-bit',
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'type': 'Prefix SID',
+                                                                                        'length': 104,
+                                                                                        'flags': 'None',
+                                                                                        'mt_id': 0,
+                                                                                        'algo': 'SPF',
+                                                                                        'sid': 1,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.49.0.0',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_id': 0,
+                                                                    'seq_num': '80000133',
+                                                                    'checksum': '0x88DB',
+                                                                    'length': 8,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.64.0.9 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.64.0.9',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'extended_link_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Extended Link',
+                                                                                'length': 80,
+                                                                                'link_name': 'another router (point-to-point)',
+                                                                                'link_type': 1,
+                                                                                'link_id': '10.229.11.11',
+                                                                                'link_data': '10.0.0.10',
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'type': 'Adj SID',
+                                                                                        'flags': 'L-Bit, V-bit',
+                                                                                        'mt_id': 0,
+                                                                                        'weight': 0,
+                                                                                        'label': 18,
+                                                                                        },
+                                                                                    2: {
+                                                                                        'type': 'Adj SID',
+                                                                                        'flags': 'L-Bit, V-bit, B-bit',
+                                                                                        'mt_id': 0,
+                                                                                        'weight': 0,
+                                                                                        'label': 19,
+                                                                                        },
+                                                                                    3: {
+                                                                                        'type': 'Remote Intf Addr',
+                                                                                        'remote_interface_address': '10.0.0.9',
+                                                                                        },
+                                                                                    4: {
+                                                                                        'type': 'Local / Remote Intf ID',
+                                                                                        'local_interface_id': 9,
+                                                                                        'remote_interface_id': 9,
+                                                                                        'length': 104,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.64.0.9',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_id': 9,
+                                                                    'seq_num': '8000013C',
+                                                                    'checksum': '0xA666',
+                                                                    'length': 80,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.64.0.10 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.64.0.10',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'extended_link_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Extended Link',
+                                                                                'length': 80,
+                                                                                'link_name': 'another router (point-to-point)',
+                                                                                'link_type': 1,
+                                                                                'link_id': '10.151.22.22',
+                                                                                'link_data': '10.0.0.14',
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'type': 'Adj SID',
+                                                                                        'flags': 'L-Bit, V-bit',
+                                                                                        'mt_id': 0,
+                                                                                        'weight': 0,
+                                                                                        'label': 17,
+                                                                                        },
+                                                                                    2: {
+                                                                                        'type': 'Adj SID',
+                                                                                        'flags': 'L-Bit, V-bit, B-bit',
+                                                                                        'mt_id': 0,
+                                                                                        'weight': 0,
+                                                                                        'label': 21,
+                                                                                        },
+                                                                                    3: {
+                                                                                        'type': 'Remote Intf Addr',
+                                                                                        'remote_interface_address': '10.0.0.13',
+                                                                                        },
+                                                                                    4: {
+                                                                                        'type': 'Local / Remote Intf ID',
+                                                                                        'local_interface_id': 10,
+                                                                                        'remote_interface_id': 8,
+                                                                                        'length': 104,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.64.0.10',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_id': 10,
+                                                                    'seq_num': '8000013C',
+                                                                    'checksum': '0xEBE6',
+                                                                    'length': 80,
+                                                                    },
+                                                                },
+                                                            },
+                                                        '10.64.0.11 10.4.1.1': {
+                                                            'adv_router': '10.4.1.1',
+                                                            'lsa_id': '10.64.0.11',
+                                                            'ospfv2': {
+                                                                'body': {
+                                                                    'opaque': {
+                                                                        'extended_link_tlvs': {
+                                                                            1: {
+                                                                                'tlv_type': 'Extended Link',
+                                                                                'length': 80,
+                                                                                'link_name': 'another router (point-to-point)',
+                                                                                'link_type': 1,
+                                                                                'link_id': '10.151.22.22',
+                                                                                'link_data': '10.0.0.26',
+                                                                                'sub_tlvs': {
+                                                                                    1: {
+                                                                                        'type': 'Adj SID',
+                                                                                        'flags': 'L-Bit, V-bit',
+                                                                                        'mt_id': 0,
+                                                                                        'weight': 0,
+                                                                                        'label': 16,
+                                                                                        },
+                                                                                    2: {
+                                                                                        'type': 'Adj SID',
+                                                                                        'flags': 'L-Bit, V-bit, B-bit',
+                                                                                        'mt_id': 0,
+                                                                                        'weight': 0,
+                                                                                        'label': 20,
+                                                                                        },
+                                                                                    3: {
+                                                                                        'type': 'Remote Intf Addr',
+                                                                                        'remote_interface_address': '10.0.0.25',
+                                                                                        },
+                                                                                    4: {
+                                                                                        'type': 'Local / Remote Intf ID',
+                                                                                        'local_interface_id': 11,
+                                                                                        'remote_interface_id': 9,
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                'header': {
+                                                                    'age': 1663,
+                                                                    'option': 'None',
+                                                                    'option_desc': 'No TOS-capability, DC',
+                                                                    'type': 10,
+                                                                    'lsa_id': '10.64.0.11',
+                                                                    'adv_router': '10.4.1.1',
+                                                                    'opaque_id': 11,
+                                                                    'seq_num': '8000013D',
+                                                                    'checksum': '0xB8F1',
+                                                                    'length': 80,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
     def test_show_ip_ospf_database_opaque_area_full1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIpOspfDatabaseOpaqueArea(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_database_opaque_area_full2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)        
+        obj = ShowIpOspfDatabaseOpaqueAreaSelfOriginate(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_show_ip_ospf_database_opaque_area_adv_router(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)        
+        obj = ShowIpOspfDatabaseOpaqueAreaAdvRouter(device=self.device)
+        parsed_output = obj.parse(address='10.4.1.1')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_show_ip_ospf_database_opaque_area_empty(self):
         self.maxDiff = None
@@ -7955,7 +9985,7 @@ class test_show_ip_ospf_neighbor(unittest.TestCase):
               'state': 'FULL/  -'}}}}}
 
     golden_output2 = {'execute.return_value':'''
-      PE1#show ip ospf neighbor GigabitEthernet4
+      show ip ospf neighbor GigabitEthernet4
       Neighbor ID     Pri   State           Dead Time   Address         Interface
       10.16.2.2           0   FULL/  -        00:00:32    10.169.197.97  GigabitEthernet4
     '''}
@@ -8136,6 +10166,725 @@ class test_show_ip_ospf_database_router_self_originate(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# ===================================================
+# Unit tests for:
+#   'show ip ospf segment-routing global-block'
+#   'show ip ospf {pid} segment-routing global-block'
+# ===================================================
+class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf 1234 segment-routing global-block
+ 
+                    OSPF Router with ID (10.4.1.1) (Process ID 1234)
+         
+        OSPF Segment Routing Global Blocks in Area 3
+         
+          Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
+         
+         *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label    
+          10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label  
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            1234: {
+                'router_id': '10.4.1.1',
+                'area': 3,
+                'routers': {
+                    '10.4.1.1': {
+                        'router_id': '10.4.1.1',
+                        'sr_capable': 'Yes',
+                        'sr_algorithm': 'SPF,StrictSPF',
+                        'srgb_base': 16000,
+                        'srgb_range': 8000,
+                        'sid_label': 'Label'
+                    },
+                    '10.16.2.2': {
+                        'router_id': '10.16.2.2',
+                        'sr_capable': 'Yes',
+                        'sr_algorithm': 'SPF,StrictSPF',
+                        'srgb_base': 16000,
+                        'srgb_range': 8000,
+                        'sid_label': 'Label'
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show ip ospf segment-routing global-block
+
+                    OSPF Router with ID (10.4.1.1) (Process ID 1)
+        
+        OSPF Segment Routing Global Blocks in Area 0
+        
+          Router ID:      SR Capable: SR Algorithm: SRGB Base: SRGB Range:  SID/Label:
+        
+         *10.4.1.1         No
+          10.16.2.2         No
+          10.36.3.3         No
+    '''}
+
+    golden_parsed_output_2 = {
+        'process_id': {
+            1: {
+                'router_id': '10.4.1.1',
+                'area': 0,
+                'routers': {
+                    '10.4.1.1': {
+                        'router_id': '10.4.1.1',
+                        'sr_capable': 'No'
+                    },
+                    '10.16.2.2': {
+                        'router_id': '10.16.2.2',
+                        'sr_capable': 'No'
+                    },
+                    '10.36.3.3': {
+                        'router_id': '10.36.3.3',
+                        'sr_capable': 'No'
+                    }
+                }
+            }
+        }
+    }
+
+    def test_show_ip_ospf_segment_routing_empty(self):
+        self.maxDiff= None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_segment_routing(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output)
+        obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ip_ospf_segment_routing_pid(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output)
+        obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=1234)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_ip_ospf_segment_routing_pid2(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output_2)
+        obj=ShowIpOspfSegmentRoutingGlobalBlock(device=self.device)
+        parsed_output = obj.parse(process_id=1234)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+class test_show_ip_ospf_segment_routing(unittest.TestCase):
+    ''' Test case for command:
+          * show ip ospf {bgp_as} segment-routing adjacency-sid
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': '''
+        PE1#show ip ospf 65109 segment-routing adjacency-sid
+ 
+                    OSPF Router with ID (10.4.1.1) (Process ID 65109)
+            Flags: S - Static, D - Dynamic,  P - Protected, U - Unprotected, G - Group, L - Adjacency Lost
+         
+        Adj-Sid  Neighbor ID     Interface          Neighbor Addr   Flags   Backup Nexthop  Backup Interface 
+        -------- --------------- ------------------ --------------- ------- --------------- ------------------
+        16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
+        17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
+        18       10.16.2.2         Gi0/1/0            192.168.111.2       D U   
+        19       10.16.2.2         Te0/0/0            192.168.220.2       D U    
+    '''}
+
+    parsed_output_1 = {
+        'process_id': {
+            '65109': {
+                'router_id': '10.4.1.1',
+                'adjacency_sids': {
+                    '16': {
+                       'flags': 'D U',
+                       'interface': 'GigabitEthernet0/1/2',
+                       'neighbor_address': '192.168.154.2',
+                       'neighbor_id': '10.16.2.2'},
+                    '17': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/1',
+                        'neighbor_address': '192.168.4.2',
+                        'neighbor_id': '10.16.2.2'},
+                    '18': {
+                        'flags': 'D U',
+                        'interface': 'GigabitEthernet0/1/0',
+                        'neighbor_address': '192.168.111.2',
+                        'neighbor_id': '10.16.2.2'},
+                    '19': {
+                        'flags': 'D U',
+                        'interface': 'TenGigabitEthernet0/0/0',
+                        'neighbor_address': '192.168.220.2',
+                        'neighbor_id': '10.16.2.2'}}}}}
+
+    def test_show_ip_ospf_segment_routing_empty(self):
+        self.maxDiff = None
+        self.device=Mock(**self.empty_output)
+        obj=ShowIpOspfSegmentRouting(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_ip_ospf_segment_routing_1(self):
+        self.maxDiff = None
+        self.device=Mock(**self.golden_output_1)
+        obj=ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse(process_id=65109)
+        self.assertEqual(parsed_output, self.parsed_output_1)
+
+# ================================================
+# Unit test for 'show ip ospf fast-reroute ti-lfa'
+# ================================================
+
+class test_show_ip_ospf_fast_reroute_ti_lfa(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'ospf_object': {
+                    'Process ID (65109)': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'Area 8': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'Loopback0': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'no',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/2': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/1': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'GigabitEthernet0/1/0': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'TenGigabitEthernet0/0/': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    'AS external': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'no',
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf fast-reroute ti-lfa
+        OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+        OSPF                    IPFRR    SR       TI-LFA      TI-LFA       
+        Object                  enabled  enabled  configured  enabled      
+        --------------------------------------------------------------------
+        Process ID (65109)       no       yes      no          no           
+        Area 8                  no       yes      no          no           
+        Loopback0               no       no       no          no           
+        GigabitEthernet0/1/2    no       yes      no          no           
+        GigabitEthernet0/1/1    no       yes      no          no           
+        GigabitEthernet0/1/0    no       yes      no          no           
+        TenGigabitEthernet0/0/  no       yes      no          no           
+        AS external             no       yes      no          no       
+    '''}
+
+    golden_parsed_output2 = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'ospf_object': {
+                    'Process ID (65109)': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    'Area 8': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'Loopback0': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'no',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    'GigabitEthernet5': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet4': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet3': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'GigabitEthernet2': {
+                        'ipfrr_enabled': 'yes',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'no',
+                        'ti_lfa_enabled': 'yes',
+                        },
+                    'AS external': {
+                        'ipfrr_enabled': 'no',
+                        'sr_enabled': 'yes',
+                        'ti_lfa_configured': 'yes',
+                        'ti_lfa_enabled': 'yes (inactive)',
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output2 = {'execute.return_value': '''
+    show ip ospf fast-reroute ti-lfa
+
+    OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+    OSPF                    IPFRR    SR       TI-LFA      TI-LFA
+    Object                  enabled  enabled  configured  enabled
+    --------------------------------------------------------------------
+    Process ID (65109)       no       yes      yes         yes (inactive)
+    Area 8                  yes      yes      yes         yes
+    Loopback0               yes      no       no          yes (inactive)
+    GigabitEthernet5        yes      yes      no          yes
+    GigabitEthernet4        yes      yes      no          yes
+    GigabitEthernet3        yes      yes      no          yes
+    GigabitEthernet2        yes      yes      no          yes
+    AS external             no       yes      yes         yes (inactive)
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfFastRerouteTiLfa(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+# ===================================================================
+# Unit test for 'show ip ospf segment-routing protected-adjacencies'
+# ===================================================================
+
+class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf segment-routing protected-adjacencies
+
+                OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+                            Area with ID (8)
+
+        Neighbor ID     Interface          Address         Adj-Sid      Backup Nexthop  Backup Interface
+        --------------- ------------------ --------------- ------------ --------------- ------------------
+        10.151.22.22     Gi5                10.0.0.25       20           10.0.0.9        Gi3
+        10.151.22.22     Gi4                10.0.0.13       21           10.0.0.9        Gi3
+        10.229.11.11     Gi3                10.0.0.9        22           10.0.0.13       Gi4
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'areas': {
+                    '0.0.0.8': {                        
+                        'neighbors': {
+                            '10.151.22.22': {
+                                'interfaces': {
+                                    'GigabitEthernet5': {
+                                        'address': '10.0.0.25',
+                                        'adj_sid': 20,
+                                        'backup_nexthop': '10.0.0.9',
+                                        'backup_interface': 'GigabitEthernet3',
+                                        },
+                                    'GigabitEthernet4': {
+                                        'address': '10.0.0.13',
+                                        'adj_sid': 21,
+                                        'backup_nexthop': '10.0.0.9',
+                                        'backup_interface': 'GigabitEthernet3',
+                                        },
+                                    },
+                                },
+                            '10.229.11.11': {
+                                'interfaces': {
+                                    'GigabitEthernet3': {
+                                        'address': '10.0.0.9',
+                                        'adj_sid': 22,
+                                        'backup_nexthop': '10.0.0.13',
+                                        'backup_interface': 'GigabitEthernet4',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output_2 = {'execute.return_value': '''
+        PE1#show ip ospf segment-routing protected-adjacencies
+
+            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+    '''}
+
+    parsed_output_2 = {
+        'process_id': {
+            9996: {
+                'router_id': '1.1.1.1'
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpOspfSegmentRoutingProtectedAdjacencies(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
+
+class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
+    """ Test case for command:
+          * show ip ospf segment-routing sid-database
+    """
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf segment-routing sid-database
+
+                    OSPF Router with ID (10.4.1.1) (Process ID 1234)
+
+        OSPF Segment Routing SIDs
+
+        Codes: L - local, N - label not programmed,
+               M - mapping-server
+
+        SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
+        --------------  ------------------  ---------------  -------  --------  ----
+        1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0  
+        2               10.16.2.2/32          10.16.2.2          8        Intra     0  
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            1234: {
+                'router_id': '10.4.1.1',
+                'sids': {
+                    1: {
+                        'sid': 1,
+                        'codes': 'L',
+                        'prefix': '10.4.1.1/32',
+                        'adv_rtr_id': '10.4.1.1',
+                        'area_id': '0.0.0.8',
+                        'type': 'Intra',
+                        'algo': 0
+                    },
+                    2: {
+                        'sid': 2,
+                        'prefix': '10.16.2.2/32',
+                        'adv_rtr_id': '10.16.2.2',
+                        'area_id': '0.0.0.8',
+                        'type': 'Intra',
+                        'algo': 0
+                    },
+                    'total_entries': 2
+                }
+            }
+        }
+    }
+
+    golden_parsed_output2 = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                },
+            },
+        }
+
+    golden_output2 = {'execute.return_value': '''
+        show ip ospf segment-routing sid-database
+
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+    '''}
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+# =============================================
+# Unit test for 'show ip ospf segment-routing'
+# =============================================
+
+class test_show_ip_ospf_segment_routing(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show ip ospf segment-routing             
+    
+                OSPF Router with ID (10.16.2.2) (Process ID 65109)
+    
+        Global segment-routing state: Enabled
+        
+        Segment Routing enabled:
+                Area    Topology name    Forwarding    Strict SPF   
+                    8    Base             MPLS          Capable
+            AS external    Base             MPLS          Not applicable
+        
+        SR Attributes
+            Prefer non-SR (LDP) Labels
+            Do not advertise Explicit Null
+        
+        Global Block (SRGB):
+            Range: 16000 - 23999
+            State: Created
+        
+        Local Block (SRLB):
+            Range: 15000 - 15999
+            State: Created
+        
+        Registered with SR App, client handle: 2
+        SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+        SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
+        SR algo 1 Connected map notifications active (handle 0x1), bitmask 0x1
+        SR algo 1 Active policy map notifications active (handle 0x3), bitmask 0xC
+        Registered with MPLS, client-id: 100
+        
+        Max labels: platform 16, available 13
+        Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+        mfi label reservation ack not pending
+        
+        Bind Retry timer not running
+        Adj Label Bind Retry timer not running
+        sr-app locks requested: srgb 0, srlb 0
+        TEAPP:
+        TE Router ID 10.16.2.2
+    '''}
+
+    golden_parsed_output = {
+        'process_id': {
+            65109: {
+                'router_id': '10.16.2.2',
+                'sr_attributes': {
+                    'sr_label_preferred': False,
+                    'advertise_explicit_null': False,
+                    },
+                'mfi_label_reservation_ack_pending': False,
+                'bind_retry_timer_running': False,
+                'adj_label_bind_retry_timer_running': False,
+                'global_segment_routing_state': 'Enabled',
+                'segment_routing_enabled': {
+                    'area': {
+                        '0.0.0.8': {
+                            'topology_name': 'Base',
+                            'forwarding': 'MPLS',
+                            'strict_spf': 'Capable',
+                            },
+                        'AS external': {
+                            'topology_name': 'Base',
+                            'forwarding': 'MPLS',
+                            'strict_spf': 'Not applicable',
+                            },
+                        },
+                    },
+                'global_block_srgb': {
+                    'range': {
+                        'start': 16000,
+                        'end': 23999,
+                        },
+                    'state': 'Created',
+                    },
+                'local_block_srlb': {
+                    'range': {
+                        'start': 15000,
+                        'end': 15999,
+                        },
+                    'state': 'Created',
+                    },
+                'registered_with': {
+                    'SR App': {
+                        'client_handle': 2,
+                        'sr_algo': {
+                            0: {
+                                'connected_map_notifications_active': {
+                                    'handle': '0x0',
+                                    'bit_mask': '0x1',
+                                    },
+                                'active_policy_map_notifications_active': {
+                                    'handle': '0x2',
+                                    'bit_mask': '0xC',
+                                    },
+                                },
+                            1: {
+                                'connected_map_notifications_active': {
+                                    'handle': '0x1',
+                                    'bit_mask': '0x1',
+                                    },
+                                'active_policy_map_notifications_active': {
+                                    'handle': '0x3',
+                                    'bit_mask': '0xC',
+                                    },
+                                },
+                            },
+                        },
+                    'MPLS': {
+                        'client_id': 100,
+                        },
+                    },
+                'max_labels': {
+                    'platform': 16,
+                    'available': 13,
+                    'pushed_by_ospf': {
+                        'uloop_tunnels': 10,
+                        'ti_lfa_tunnels': 10,
+                        },
+                    },
+                'srp_app_locks_requested': {
+                    'srgb': 0,
+                    'srlb': 0,
+                    },
+                'teapp': {
+                    'te_router_id': '10.16.2.2',
+                    },
+                },
+            },
+        }
+    
+    golden_output2 = {'execute.return_value': '''
+    show ip ospf segment-routing
+
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+    Global segment-routing state: Not configured
+    '''}
+
+    golden_parsed_output2 = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'sr_attributes': {
+                    'sr_label_preferred': True,
+                    'advertise_explicit_null': True,
+                    },
+                'mfi_label_reservation_ack_pending': True,
+                'bind_retry_timer_running': True,
+                'adj_label_bind_retry_timer_running': True,
+                },
+            },
+        }
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIpOspfSegmentRouting(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfSegmentRouting(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()

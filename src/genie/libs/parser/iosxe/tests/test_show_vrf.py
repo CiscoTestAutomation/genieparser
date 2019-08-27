@@ -1,4 +1,4 @@
-
+#!/bin/env python
 # Python
 import re
 import unittest
@@ -337,27 +337,102 @@ class test_show_vrf_detail(unittest.TestCase):
                     'table_id': '0x1',
                     'vrf_label': {
                         'allocation_mode': 'per-prefix',
-                        },
-                    },
-                },
-            },
+              }
+            }
+          }
         }
 
+    }
+
     golden_output1 = {'execute.return_value': '''
-    VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>
-      New CLI format, supports multiple address-families
-      Flags: 0x1808
-      Interfaces:
-        Gi1                     
-    Address family ipv4 unicast (Table ID = 0x1):
-      Flags: 0x0
-      No Export VPN route-target communities
-      No Import VPN route-target communities
-      No import route-map
-      No global export route-map
-      No export route-map
-      VRF label distribution protocol: not configured
-      VRF label allocation mode: per-prefix
+        VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>
+          New CLI format, supports multiple address-families
+          Flags: 0x1808
+          Interfaces:
+            Gi1                     
+        Address family ipv4 unicast (Table ID = 0x1):
+          Flags: 0x0
+          No Export VPN route-target communities
+          No Import VPN route-target communities
+          No import route-map
+          No global export route-map
+          No export route-map
+          VRF label distribution protocol: not configured
+          VRF label allocation mode: per-prefix
+      '''
+    }
+
+    golden_parsed_output2 = {
+        "GENIE": {
+            "address_family": {
+                "ipv4 unicast": {
+                    "flags": "0x0",
+                    "route_targets": {
+                        "65109:1": {
+                            "route_target": "65109:1",
+                            "rt_type": "export"
+                        },
+                        "65109:110": {
+                            "route_target": "65109:110",
+                            "rt_type": "both"
+                        },
+                        "65109:4094": {
+                            "route_target": "65109:4094",
+                            "rt_type": "import"
+                        }
+                    },
+                    "table_id": "0x11",
+                    "vrf_label": {
+                        "allocation_mode": "per-prefix"
+                    }
+                }
+            },
+            "cli_format": "New",
+            "description": "VPN for GENIE parser",
+            "flags": "0x180C",
+            "interface": {
+                "GigabitEthernet0/0/0.110": {
+                    "vrf": "GENIE"
+                },
+                "TenGigabitEthernet0/1/2.1042": {
+                    "vrf": "GENIE"
+                },
+                "vasileft110": {
+                    "vrf": "GENIE"
+                }
+            },
+            "interfaces": [
+                "GigabitEthernet0/0/0.110",
+                "TenGigabitEthernet0/1/2.1042",
+                "vasileft110"
+            ],
+            "route_distinguisher": "65109:110",
+            "support_af": "multiple address-families",
+            "vrf_id": 17,
+        }
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        VRF GENIE (VRF Id = 17); default RD 65109:110; default VPNID <not set>
+          Description: VPN for GENIE parser
+          New CLI format, supports multiple address-families
+          Flags: 0x180C
+          Interfaces:
+            Gi0/0/0.110              Te0/1/2.1042             vl110
+        Address family ipv4 unicast (Table ID = 0x11):
+          Flags: 0x0
+          Export VPN route-target communities
+            RT:65109:1               RT:65109:110
+          Import VPN route-target communities
+            RT:65109:4094            RT:65109:110
+          No import route-map
+          No global export route-map
+          No export route-map
+          VRF label distribution protocol: not configured
+          VRF label allocation mode: per-prefix
+        Address family ipv6 unicast not active
+        Address family ipv4 multicast not active
+        Address family ipv6 multicast not active
     '''}
 
     def test_golden(self):
@@ -379,6 +454,13 @@ class test_show_vrf_detail(unittest.TestCase):
         obj = ShowVrfDetail(device=self.device)
         parsed_output = obj.parse(vrf='Mgmt-intf')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowVrfDetail(device=self.device)
+        parsed_output = obj.parse(vrf='GENIE')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_empty1(self):
         self.device = Mock(**self.empty_output)

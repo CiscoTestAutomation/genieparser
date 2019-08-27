@@ -35,7 +35,7 @@ DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
 PYTHON        = python
-TESTCMD       = ./tests/runAll --path=./tests/
+TESTCMD       = runAll --path=./tests/
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 
@@ -74,6 +74,14 @@ compile:
 	@echo "Compiling to C code"
 	@echo --------------------------
 	python compile.py 
+	@echo "Done Compiling"
+	@echo ""
+
+coverage_all:
+	@echo ""
+	@echo "Running Code coverage on all unittests"
+	@echo ---------------------------------------
+	@runAll --path tests/ --coverage
 	@echo "Done Compiling"
 	@echo ""
 

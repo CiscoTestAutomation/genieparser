@@ -205,7 +205,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
-
+            
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
@@ -360,6 +360,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Encapsulation ARPA, medium is broadcast
             # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
             # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+            # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
             p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
                              ' +(?P<rest>.*)$')
             m = p8.match(line)
@@ -384,9 +385,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 m3 = re.compile(r'outer +ID +(?P<first>[0-9]+), +'
                                  'inner +ID (?P<second>[0-9]+)$').match(rest)
 
-                #  Vlan ID  1., loopback not set
-                m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>[0-9]+).?, +'
-                                 '(?P<rest>.+)$').match(rest)
+                # Vlan ID  1., loopback not set
+                # Vlan ID  105.
+                m4 = re.compile(r'Vlan +ID +(?P<first_dot1q>\d+).'
+                                 '|(?:,(?P<rest>[\s\w]+))$').match(rest)
+
                 if m1:
                     first_dot1q = m1.groupdict()['first_dot1q']
                     if first_dot1q:
@@ -405,6 +408,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     if first_dot1q:
                         interface_dict[interface]['encapsulations']\
                             ['first_dot1q'] = first_dot1q
+
                 continue
 
             # reliability 255/255, txload 1/255, rxload 1/255
@@ -1187,9 +1191,13 @@ class ShowInterfacesSwitchportSchema(MetaParser):
                         Optional('administrative_encapsulation'): str,
                         Optional('operational_encapsulation'): str,
                         Optional('native_vlan'): str,
+                        Optional('native_vlan_name'): str,
                     },
                     Optional('negotiation_of_trunk'): bool,
                     Optional('access_vlan'): str,
+                    Optional('access_vlan_name'): str,
+                    Optional('voice_vlan'): str,
+                    Optional('voice_vlan_name'): str,
                     Optional('native_vlan_tagging'): bool,
                     Optional('private_vlan'): {
                         Optional('host_association'): str,
@@ -1328,21 +1336,26 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Access Mode VLAN: 1 (default)
+            # Access Mode VLAN: 100 (Falback-Data)
             p8 =  re.compile(r'^Access +Mode +VLAN: +(?P<access_vlan>[\d\-]+)'
-                              '( *\((?P<dummy>\w+)\))?$')
+                              '( *\((?P<access_vlan_name>.+)\))?$')
             m = p8.match(line)
             if m:
                 ret_dict[intf]['access_vlan'] = m.groupdict()['access_vlan']
+                if m.groupdict()['access_vlan_name']:
+                    ret_dict[intf]['access_vlan_name'] = m.groupdict()['access_vlan_name']
                 continue
 
             # Trunking Native Mode VLAN: 1 (default)
             p9 =  re.compile(r'^Trunking +Native +Mode +VLAN: +(?P<native_vlan>[\d\-]+)'
-                              '( *\((?P<dummy>\w+)\))?$')
+                              '( *\((?P<native_vlan_name>.+)\))?$')
             m = p9.match(line)
             if m:
                 if 'encapsulation' not in ret_dict[intf]:
                     ret_dict[intf]['encapsulation'] = {}
                 ret_dict[intf]['encapsulation']['native_vlan'] = m.groupdict()['native_vlan']
+                if m.groupdict()['native_vlan_name']:
+                    ret_dict[intf]['encapsulation']['native_vlan_name'] = m.groupdict()['native_vlan_name']
                 continue
 
             # Administrative Native VLAN tagging: enabled
@@ -1357,10 +1370,14 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
                 continue
 
             # Voice VLAN: none
-            p11 =  re.compile(r'^Voice +VLAN: +(?P<vlan>[\d\-]+)$')
+            # Voice VLAN: 100 (Fallback-Voice)
+            p11 =  re.compile(r'^Voice +VLAN: +(?P<vlan>[\d\-]+)'
+                              '( *\((?P<voice_vlan_name>.+)\))?$')
             m = p11.match(line)
             if m:
                 ret_dict[intf]['voice_vlan'] = m.groupdict()['vlan']
+                if m.groupdict()['voice_vlan_name']:
+                    ret_dict[intf]['voice_vlan_name'] = m.groupdict()['voice_vlan_name']
                 continue
 
             # Administrative private-vlan host-association: none 

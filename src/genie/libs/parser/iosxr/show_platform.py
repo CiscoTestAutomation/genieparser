@@ -735,15 +735,27 @@ class ShowInventory(ShowInventorySchema):
         # Init vars
         inventory_dict = {}
         
-        for line in out.splitlines():
-            line = line.rstrip()
+        # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
+        # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
+        # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
+        # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
+        # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
+        p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]*)\",'
+                         ' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
 
-            # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
-            # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
-            # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
+        # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
+        # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
+        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]*),'
+                         ' +VID: +(?P<vid>[\S\s]*),'
+                         ' +SN: +(?P<sn>[\S\s]*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            
             # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
-            p1 = re.compile(r'\s*NAME: +\"(?P<module_name>[a-zA-Z0-9\/\s]+)\",'
-                             ' +DESCR: +\"(?P<descr>[\w\-\.\:\/\s,&]+)\"$')
+            # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
             m = p1.match(line)
             if m:
                 if 'module_name' not in inventory_dict:
@@ -757,9 +769,6 @@ class ShowInventory(ShowInventorySchema):
 
             # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
             # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-            p2 = re.compile(r'\s*PID: +(?P<pid>[a-zA-Z0-9\/\-\s]+),'
-                             ' +VID: +(?P<vid>[a-zA-Z0-9\.\/\s]+),'
-                             ' +SN: +(?P<sn>[a-zA-Z0-9\/\s]+)$')
             m = p2.match(line)
             if m:
                 inventory_dict['module_name'][module_name]['pid'] = \

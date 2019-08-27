@@ -5,11 +5,9 @@
 
 import os
 import fnmatch
-
-from distutils.core import Extension
 from Cython.Build import cythonize
 
-def generate_cython_modules(src_path, ignore_patterns = []):
+def generate_cython_modules(src_path, files, ignore_patterns = []):
     modules = []
     src = os.getcwd().split('/')[-1]
 
@@ -29,18 +27,37 @@ def generate_cython_modules(src_path, ignore_patterns = []):
                 # ignore setup.py module
                 continue
 
+            if fnmatch.fnmatch(filename, 'compile.py'):
+                # Don't cythonize this module
+                continue
+
             # address ignores
             for pattern in ignore_patterns:
                 if fnmatch.fnmatch(module_file, pattern):
                     # pattern match!
                     break
             else:
-                module_name = os.path.splitext(os.path.basename(module_file))[0] + '.py'
-                modules.append(Extension(module_name, [module_file,]))
-    return modules
+                modules.append(module_file)
+                files.append(os.path.splitext(module_file)[0] + '.c')
+    
+    for file in modules:
+        cythonize(file, language_level = "3")
 
 
 if __name__ == '__main__':
     # cythonize
     exclude = []
-    cisco_cythonized_mods = cythonize(generate_cython_modules(os.getcwd(), exclude))
+    files = []
+    generate_cython_modules(os.getcwd(), files, exclude)
+
+    print("-"*26)
+    print('Cythonized %d files' %len(files))
+    print("")
+
+    for file in files:
+        try:
+            os.remove(file)
+        except FileNotFoundError:
+            print("Couldn't remove %s" %file)
+            
+    print('Removed cythonized files')

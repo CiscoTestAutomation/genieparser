@@ -237,13 +237,13 @@ class test_traceroute(unittest.TestCase):
         '''
     golden_parsed_output4 = {
         'traceroute': {
-            '172.32.0.1': {
-                'address': '172.32.0.1',
+            '172.16.51.1': {
+                'address': '172.16.51.1',
                 'hops': {
                     '1': {
                         'paths': {
                             1: {'address': '*'},
-                            2: {'address': '172.32.0.1',
+                            2: {'address': '172.16.51.1',
                                 'probe_msec': ['41', '*'],
                                 },
                             3: {'address': '*'},
@@ -264,12 +264,12 @@ class test_traceroute(unittest.TestCase):
     }
 
     golden_output4 = '''
-    traceroute vrf CE1test 172.32.0.1
+    traceroute vrf CE1test 172.16.51.1
     Type escape sequence to abort.
-    Tracing the route to 172.32.0.1
+    Tracing the route to 172.16.51.1
     VRF info: (vrf in name/id, vrf out name/id)
       1  *
-        172.32.0.1 41 msec *
+        172.16.51.1 41 msec *
         *
       2 10.1.2.6 148 msec
         10.1.1.6 120 msec
