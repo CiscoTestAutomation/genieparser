@@ -8,7 +8,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 
 from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefixSidMap,\
                                                             ShowPceIPV4Peer,\
-                                                            ShowPceIPV4PeerDetail
+                                                            ShowPceIPV4PeerDetail,\
+                                                            ShowPceIPV4PeerPrefix
 
 # =============================================================
 # Unittest for:
@@ -260,6 +261,76 @@ class test_show_pce_ipv4_peer_detail(unittest.TestCase):
         obj = ShowPceIPV4PeerDetail(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
+
+class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        RP/0/RSP0/CPU0:router# show pce ipv4 prefix
+
+        PCE's prefix database:
+        ----------------------
+        Node 1
+        TE router ID: 192.168.0.1
+        Host name: rtrA
+        ISIS system ID: 1921.6800.1001 level-1
+        Advertised Prefixes:
+        192.168.0.1
+
+        Node 2
+        TE router ID: 192.168.0.2
+        Host name: rtrB
+        ISIS system ID: 1921.6800.1002 level-2
+        Advertised Prefixes:
+        192.168.0.2
+    '''}
+
+    golden_parsed_output = {
+        'prefix': {
+            1: {
+                'node': 1,
+                'te_router_id': '192.168.0.1',
+                'host_name': 'rtrA',
+                '1921.6800.1001': {
+                    'system_id': '1921.6800.1001',
+                    'level': 1
+                },
+                'advertised_prefixes': '192.168.0.1'
+            },
+            2: {
+                'node': 2,
+                'te_router_id': '192.168.0.2',
+                'host_name': 'rtrB',
+                '1921.6800.1002': {
+                    'system_id': '1921.6800.1002',
+                    'level': 2
+                },
+                'advertised_prefixes': '192.168.0.2'
+            }
+        }
+    }
+
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowPceIPV4PeerPrefix(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowPceIPV4PeerPrefix(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

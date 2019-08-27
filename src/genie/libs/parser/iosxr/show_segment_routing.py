@@ -409,3 +409,81 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
                                     int(m.groupdict()['initiate_messages_tx'])
         
         return ret_dict
+
+
+class ShowPceIPV4PeerprefixSchema(MetaParser):
+    ''' Schema for:
+        * show pce ipv4 prefix
+    '''
+    schema = {
+        'prefix' :{
+            Any() : {
+                'node' : int,
+                'te_router_id': str,
+                'host_name': str,
+                Any() : {
+                    'system_id' : str,
+                    'level' : int,
+                },
+                'advertised_prefixes': str,
+            }
+        }
+    }
+
+class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
+    ''' Parser for:
+        * show pce ipv4 prefix
+    '''
+
+    cli_command = 'show pcs ipv4 prefix'
+    
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        p1 = re.compile(r'Node (?P<node_number>\d+)')
+
+        p2 = re.compile(r'^TE router ID: (?P<router_id>[\d\.]+)$')
+
+        p3 = re.compile(r'^Host name: (?P<host_name>\w+)$')
+
+        p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+)\s+level-(?P<system_id_level>\d+)$')
+
+        p5 = re.compile(r'^(?P<adv_prefixes>[\w\.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                node = int(m.groupdict()['node_number'])
+                prefix_dict = ret_dict.setdefault('prefix', {})
+                node_dict = prefix_dict.setdefault(node, {})
+
+                node_dict['node'] = node
+
+            m = p2.match(line)
+            if m:
+                node_dict['te_router_id'] = m.groupdict()['router_id']
+            
+            m = p3.match(line)
+            if m:
+                node_dict['host_name'] = m.groupdict()['host_name']
+            
+            m = p4.match(line)
+            if m:
+                sys_id = m.groupdict()['system_id']
+                sys_dict = node_dict.setdefault(sys_id, {})
+
+                sys_dict['system_id'] = sys_id
+                sys_dict['level'] = int(m.groupdict()['system_id_level'])
+
+            m = p5.match(line)
+            if m:
+                node_dict['advertised_prefixes'] = m.groupdict()['adv_prefixes']
+
+        return ret_dict
