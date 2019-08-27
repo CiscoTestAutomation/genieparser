@@ -104,6 +104,77 @@ class test_show_vtp_status(unittest.TestCase):
          Configuration last modified by 0.0.0.0 at 8-12-99 15:04:49
     '''}
 
+    golden_parsed_output_3 = {
+        'vtp': {
+            'device_id': '3820.5622.a580',
+            'feature': {
+                'mst': {
+                    'configuration_revision': 0,
+                    'enabled': True,
+                    'operating_mode': 'server',
+                    'primary_id': '0000.0000.0000',
+                },
+                'unknown': {
+                    'enabled': False,
+                    'operating_mode': 'transparent',
+                },
+                'vlan': {
+                    'configuration_revision': 2,
+                    'enabled': True,
+                    'existing_extended_vlans': 0,
+                    'existing_vlans': 100,
+                    'maximum_vlans': 4096,
+                    'md5_digest': '0x15 0x17 0x1A 0x1C 0x25 0x2C ' \
+                                  '0x3C 0x48 0x6B 0x70 0x7D 0x87 ' \
+                                  '0x92 0xC2 0xC7 0xFC',
+                    'operating_mode': 'primary server',
+                    'primary_description': 'SW1',
+                    'primary_id': '3820.5622.a580',
+                },
+            },
+
+            'pruning_mode': False,
+            'traps_generation': False,
+            'version': '3',
+            'version_capable': [1, 2, 3]
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''\
+        VTP Version capable             : 1 to 3
+        VTP version running             : 3
+        VTP Domain Name                 : 
+        VTP Pruning Mode                : Disabled
+        VTP Traps Generation            : Disabled
+        Device ID                       : 3820.5622.a580
+
+        Feature VLAN:
+        --------------
+        VTP Operating Mode                : Primary Server
+        Number of existing VLANs          : 100
+        Number of existing extended VLANs : 0
+        Maximum VLANs supported locally   : 4096
+        Configuration Revision            : 2
+        Primary ID                        : 3820.5622.a580
+        Primary Description               : SW1
+        MD5 digest                        : 0xC2 0x3C 0x1A 0x2C 0x1C 0x48 0x7D 0xFC 
+                                            0x6B 0x17 0x15 0x87 0x92 0xC7 0x70 0x25 
+
+
+        Feature MST:
+        --------------
+        VTP Operating Mode                : Server
+        Configuration Revision            : 0
+        Primary ID                        : 0000.0000.0000
+        Primary Description               : 
+        MD5 digest                        : 
+
+
+        Feature UNKNOWN:
+        --------------
+        VTP Operating Mode                : Transparent
+
+    '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -118,6 +189,14 @@ class test_show_vtp_status(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowVtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
 
 if __name__ == '__main__':
