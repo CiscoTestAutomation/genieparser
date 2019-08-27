@@ -7,7 +7,8 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefixSidMap,\
-                                                            ShowPceIPV4Peer
+                                                            ShowPceIPV4Peer,\
+                                                            ShowPceIPV4PeerDetail
 
 # =============================================================
 # Unittest for:
@@ -148,7 +149,7 @@ class test_show_pce_ivp4_peer(unittest.TestCase):
         'database': {
             '192.168.0.1': {
                 'peer_address': '192.168.0.1',
-                'state': False,
+                'state': True,
                 'capabilities': {
                     'stateful': True,
                     'segment-routing': True,
@@ -168,6 +169,95 @@ class test_show_pce_ivp4_peer(unittest.TestCase):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
         obj = ShowPceIPV4Peer(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+
+class test_show_pce_ipv4_peer_detail(unittest.TestCase):
+    
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+    RP/0/RSP0/CPU0:router# show pce ipv4 peer detail
+    PCE's peer database:
+    --------------------
+    Peer address: 192.168.0.1
+    State: Up
+    Capabilities: Stateful, Segment-Routing, Update
+    PCEP has been up for: 00:01:50
+    PCEP session ID: local 0, remote 0
+    Sending KA every 30 seconds
+    Minimum acceptable KA interval: 20 seconds
+    Peer timeout after 120 seconds
+    Statistics:
+        Keepalive messages: rx     4 tx     4
+        Request messages:   rx     3 tx     0
+        Reply messages:     rx     0 tx     3
+        Error messages:     rx     0 tx     0
+        Open messages:      rx     1 tx     1
+        Report messages:    rx     4 tx     0
+        Update messages:    rx     0 tx     2
+        Initiate messages:  rx     0 tx     0
+    '''}
+
+    golden_parsed_output = {
+        'database': {
+            '192.168.0.1': {
+                'peer_address': '192.168.0.1',
+                'state': True,
+                'capabilities': {
+                    'stateful': True,
+                    'segment-routing': True,
+                    'update': True
+                },
+                'pcep': {
+                    'pcep_uptime': '00:01:50',
+                    'pcep_local_id': 0,
+                    'pcep_remote_id': 0
+                },
+                'ka': {
+                    'sending_intervals': 30,
+                    'minimum_acceptable_inteval': 20
+                },
+                'peer_timeout': 120,
+                'statistics': {
+                    'rx': {
+                        'keepalive_messages': 4,
+                        'request_messages': 3,
+                        'reply_messages': 0,
+                        'error_messages': 0,
+                        'open_messages': 1,
+                        'report_messages': 4,
+                        'update_messages': 0,
+                        'initiate_messages': 0
+                    },
+                    'tx': {
+                        'keepalive_messages': 4,
+                        'request_messages': 0,
+                        'reply_messages': 3,
+                        'error_messages': 0,
+                        'open_messages': 1,
+                        'report_messages': 0,
+                        'update_messages': 2,
+                        'initiate_messages': 0
+                    }
+                }
+            }
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowPceIPV4PeerDetail(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowPceIPV4PeerDetail(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 

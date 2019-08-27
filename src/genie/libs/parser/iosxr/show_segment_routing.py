@@ -60,10 +60,12 @@ class ShowSegmentRoutingPrefixSidMap(ShowSegmentRoutingPrefixSidMapSchema):
         for line in out.splitlines():
             line = line.strip()
         
-            # RP/0/0/CPU0:router# show isis segment-routing prefix-sid-map active-policy
+            # RP/0/0/CPU0:router# show isis \
+                        # segment-routing prefix-sid-map active-policy
             m = p1.match(line)
             if m:
-                status_bool = True if 'active' in m.groupdict()['status'].lower()\
+                status_bool = True if 'active' in \
+                        m.groupdict()['status'].lower()\
                     else False
                 name = m.groupdict()['name']
                 status = m.groupdict()['status']
@@ -92,7 +94,8 @@ class ShowSegmentRoutingPrefixSidMap(ShowSegmentRoutingPrefixSidMapSchema):
             if m:
                 algo_dict = status_dict.setdefault('algorithm', {})
                 algo_dict.setdefault('prefix', m.groupdict()['prefix'])
-                algo_dict.setdefault('sid_index', int(m.groupdict()['sid_index']))
+                algo_dict.setdefault('sid_index', \
+                                            int(m.groupdict()['sid_index']))
                 algo_dict.setdefault('range', int(m.groupdict()['range']))
                 if 'flag' in line.lower():
                     algo_dict.setdefault('flags', m.groupdict()['flags'])
@@ -158,7 +161,7 @@ class ShowPceIPV4Peer(ShowPceIPV4PeerSchema):
 
             m = p2.match(line)
             if m:
-                state_bool = True if 'Up' in \
+                state_bool = True if 'up' in \
                     m.groupdict()['state'].lower() else False
                 address_dict['state'] = state_bool
 
@@ -176,4 +179,233 @@ class ShowPceIPV4Peer(ShowPceIPV4PeerSchema):
                 capabilities_dict['stateful'] = stateful_bool
                 capabilities_dict['segment-routing'] = segment_bool
                 capabilities_dict['update'] = update_bool
+        return ret_dict
+
+
+class ShowPceIPV4PeerDetailSchema(MetaParser):
+    ''' Schema for:
+        * show pce ipv4 peer detail
+    '''
+    schema = {
+        'database' : {
+            Any() : {
+                'peer_address' : str,
+                'state' : bool,
+                'capabilities' : {
+                    'stateful' : bool,
+                    'segment-routing' : bool,
+                    'update' : bool
+                },
+                'pcep' : {
+                    'pcep_uptime': str,
+                    'pcep_local_id': int,
+                    'pcep_remote_id': int,              
+                },
+                'ka' : {
+                    'sending_intervals': int,
+                    'minimum_acceptable_inteval': int,
+                },
+                'peer_timeout': int,
+                'statistics' : {
+                    'rx' : {
+                        'keepalive_messages' : int,
+                        'request_messages' : int,
+                        'reply_messages' : int,
+                        'error_messages' : int,
+                        'open_messages' : int,
+                        'report_messages' : int,
+                        'update_messages' : int,
+                        'initiate_messages' : int,
+                    },
+                    'tx' : {
+                        'keepalive_messages' : int,
+                        'request_messages' : int,
+                        'reply_messages' : int,
+                        'error_messages' : int,
+                        'open_messages' : int,
+                        'report_messages' : int,
+                        'update_messages' : int,
+                        'initiate_messages' : int,
+                    },
+                }
+            }
+        }
+    }
+
+class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
+    ''' Parser for:
+        * show pce ipv4 peer detail
+    '''
+
+    cli_command = 'show pce ipv4 peer detail'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        p1 = re.compile(r'^Peer address: (?P<address>[\d\.]+)$')
+
+        p2 = re.compile(r'^State: (?P<state>\w+)$')
+
+        p3 = re.compile(r'^Capabilities: (?P<stateful>\w+)\,\s+'
+                            '(?P<segment_routing>[\w\-]+)\,\s+(?P<update>\w+)$')
+
+        p4 = re.compile(r'^PCEP has been up for: (?P<pcep_up_time>[\w+\:]+)$')
+
+        p5 = re.compile(r'^PCEP session ID: local (?P<local_id>\d+)\, remote '
+                                                        '(?P<remote_id>\d+)$')
+
+        p6 = re.compile(r'^Sending KA every (?P<ka_time_intervals>\d+)'
+                                                                '\s+seconds$')
+
+        p7 = re.compile(r'^Minimum acceptable KA interval: '
+                                    '(?P<minimum_ka_interval>\d+)\s+seconds$')
+
+        p8 = re.compile(r'^Peer timeout after (?P<peer_timeout>\d+)\sseconds$')
+
+        p9 = re.compile(r'^Keepalive messages:\s+rx\s+'
+        '(?P<keepalive_messages_rx>\d+)\s+tx\s+(?P<keepalive_messages_tx>\d+)$')
+
+        p10 = re.compile(r'Request messages:\s+rx\s+(?P<request_messages_rx>'
+                                    '\d+)\s+tx\s+(?P<request_messages_tx>\d+)$')
+
+        p11 = re.compile(r'^Reply messages:\s+rx\s+(?P<reply_messages_rx>\d+)'
+                                        '\s+tx\s+(?P<reply_messages_tx>\d+)$')
+
+        p12 = re.compile(r'^Error messages:\s+rx\s+(?P<error_messages_rx>\d+)'
+                                        '\s+tx\s+(?P<error_messages_tx>\d+)$')
+
+        p13 = re.compile(r'^Open messages:\s+rx\s+(?P<open_messages_rx>\d+)\s+'
+                                            'tx\s+(?P<open_messages_tx>\d+)$')
+
+        p14 = re.compile(r'^Report messages:\s+rx\s+(?P<report_messages_rx>\d+)'
+                                        '\s+tx\s+(?P<report_messages_tx>\d+)$')
+
+        p15 = re.compile(r'^Update messages:\s+rx\s+(?P<update_messages_rx>\d+)'
+                                        '\s+tx\s+(?P<update_messages_tx>\d+)$')
+
+        p16 = re.compile(r'^Initiate messages:\s+rx\s+(?P<initiate_messages_rx>'
+                                '\d+)\s+tx\s+(?P<initiate_messages_tx>\d+)$')
+            
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                address = m.groupdict()['address']
+                database_dict = ret_dict.setdefault('database', {})
+                address_dict = database_dict.setdefault(address, {})
+                address_dict['peer_address'] = address
+
+            m = p2.match(line)
+            if m:
+                state_bool = True if 'up' in \
+                    m.groupdict()['state'].lower() else False
+                address_dict['state'] = state_bool
+
+            m = p3.match(line)
+            if m:
+                capabilities_dict = address_dict.setdefault('capabilities', {})
+                
+                stateful_bool = True if 'stateful' in \
+                    m.groupdict()['stateful'].lower() else False
+                segment_bool = True if 'segment-routing' in \
+                    m.groupdict()['segment_routing'].lower() else False
+                update_bool = True if 'update' in \
+                    m.groupdict()['update'].lower() else False
+                
+                capabilities_dict['stateful'] = stateful_bool
+                capabilities_dict['segment-routing'] = segment_bool
+                capabilities_dict['update'] = update_bool
+
+            m = p4.match(line)
+            if m:
+                pcep_dict = address_dict.setdefault('pcep', {})
+                pcep_dict['pcep_uptime'] = m.groupdict()['pcep_up_time']
+            
+            m = p5.match(line)
+            if m:
+                pcep_dict['pcep_local_id'] = int(m.groupdict()['local_id'])
+                pcep_dict['pcep_remote_id'] = int(m.groupdict()['remote_id'])
+
+            m = p6.match(line)
+            if m:
+                ka_dict = address_dict.setdefault('ka', {})
+                ka_dict['sending_intervals'] = \
+                                        int(m.groupdict()['ka_time_intervals'])
+
+            m = p7.match(line)
+            if m:
+                ka_dict['minimum_acceptable_inteval'] = \
+                                    int(m.groupdict()['minimum_ka_interval'])
+
+            m = p8.match(line)
+            if m:
+                peer_timeout = int(m.groupdict()['peer_timeout'])
+                address_dict.setdefault('peer_timeout', peer_timeout)
+            
+            m = p9.match(line)
+            if m:
+                stats_dict = address_dict.setdefault('statistics', {})
+                rx_dict = stats_dict.setdefault('rx', {})
+                tx_dict = stats_dict.setdefault('tx', {})
+
+                rx_dict['keepalive_messages'] = \
+                                    int(m.groupdict()['keepalive_messages_rx'])
+                tx_dict['keepalive_messages'] = \
+                                    int(m.groupdict()['keepalive_messages_tx'])
+            
+            m = p10.match(line)
+            if m:
+                rx_dict['request_messages'] = \
+                                    int(m.groupdict()['request_messages_rx'])
+                tx_dict['request_messages'] = \
+                                    int(m.groupdict()['request_messages_tx'])
+
+            m = p11.match(line)
+            if m:
+                rx_dict['reply_messages'] = \
+                                        int(m.groupdict()['reply_messages_rx'])
+                tx_dict['reply_messages'] = \
+                                        int(m.groupdict()['reply_messages_tx'])
+
+            m = p12.match(line)
+            if m:
+                rx_dict['error_messages'] = \
+                                        int(m.groupdict()['error_messages_rx'])
+                tx_dict['error_messages'] = \
+                                        int(m.groupdict()['error_messages_tx'])
+
+            m = p13.match(line)
+            if m:
+                rx_dict['open_messages'] = \
+                                        int(m.groupdict()['open_messages_rx'])
+                tx_dict['open_messages'] = \
+                                         int(m.groupdict()['open_messages_tx'])
+
+            m = p14.match(line)
+            if m:
+                rx_dict['report_messages'] = \
+                                     int(m.groupdict()['report_messages_rx'])
+                tx_dict['report_messages'] = \
+                                     int(m.groupdict()['report_messages_tx'])
+
+            m = p15.match(line)
+            if m:
+                rx_dict['update_messages'] = \
+                                       int(m.groupdict()['update_messages_rx'])
+                tx_dict['update_messages'] = \
+                                        int(m.groupdict()['update_messages_tx'])
+
+            m = p16.match(line)
+            if m:
+                rx_dict['initiate_messages'] = \
+                                    int(m.groupdict()['initiate_messages_rx'])
+                tx_dict['initiate_messages'] = \
+                                    int(m.groupdict()['initiate_messages_tx'])
+        
         return ret_dict
