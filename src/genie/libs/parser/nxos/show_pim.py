@@ -149,7 +149,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
             line = line.rstrip()
 
             # PIM6 Interface Status for VRF "VRF1"
-            # PIM Interface Statistics
+            # PIM Interface Status for VRF "VRF1"
             p1 = re.compile(r'^\s*PIM6? +Interface +Status +for +VRF+ \"(?P<vrf>[\w]+)\"$')
             m = p1.match(line)
             if m:
