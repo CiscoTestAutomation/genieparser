@@ -6,15 +6,16 @@ from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefixSidMap,\
+from genie.libs.parser.iosxr.show_segment_routing import ShowPceLsp,\
                                                             ShowPceIPV4Peer,\
+                                                            ShowPceLspDetail,\
                                                             ShowPceIPV4PeerDetail,\
                                                             ShowPceIPV4PeerPrefix,\
                                                             ShowPceIpv4TopologySummary,\
-                                                            ShowPceLsp,\
-                                                            ShowPceLspDetail, \
+                                                            ShowSegmentRoutingPrefixSidMap,\
                                                             ShowSegment_RoutingLocal_BlockInconsistencies,\
-                                                            ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4
+                                                            ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4,\
+                                                            ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail
 
 # =============================================================
 # Unittest for:
@@ -727,6 +728,57 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
         obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
+
+class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value' : '''
+        RP/0/0/CPU0:router# show segment-routing mapping-server prefix-sid-map ipv4 detail
+        Prefix
+        20.1.1.0/24
+            SID Index:      400
+            Range:          300
+            Last Prefix:    20.2.44.0/24
+            Last SID Index: 699
+            Flags:          
+        10.1.1.1/32
+            SID Index:      10
+            Range:          200
+    '''}
+
+    golden_parsed_output = {
+        'ipv4': {
+            '20.1.1.0/24': {
+                'prefix': '20.1.1.0/24',
+                'sid_index': 400,
+                'range': 300,
+                'last_prefix': '20.2.44.0/24',
+                'last_sid_index' : 699
+            },
+            '10.1.1.1/32': {
+                'prefix': '10.1.1.1/32',
+                'sid_index': 10,
+                'range': 200
+            },
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+
 
 
 

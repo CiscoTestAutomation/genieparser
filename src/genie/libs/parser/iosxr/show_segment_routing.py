@@ -1066,3 +1066,89 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMap
 
         return ret_dict
 
+class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4DetailSchema(MetaParser):
+    ''' Schema for:
+        * show segment-routing mapping-server prefix-sid-map ipv4 detail
+    '''
+
+    schema = {
+        'ipv4' : {
+            Any() : {
+                'prefix' : str,
+                'sid_index' : int,
+                'range': int,
+                Optional('last_prefix') : str,
+                Optional('last_sid_index'): int,
+                Optional('flags'): str, 
+            },
+        }
+    }
+
+class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4DetailSchema):
+    ''' Parser for:
+        * show segment-routing mapping-server prefix-sid-map ipv4 detail
+    '''
+
+    cli_command = 'show segment-routing mapping-server prefix-sid-map ipv4 detail'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 20.1.1.0/24
+        p1 = re.compile(r'^(?P<prefix>\d+\.\d\.\d\.\d\/\d+)$')
+
+        # SID Index:      400
+        p2 = re.compile(r'^SID Index:\s+(?P<sid_index>\d+)$')
+
+        # Range:          300
+        p3 = re.compile(r'^Range:\s+(?P<range>\d+)$')
+
+        # Last Prefix:    20.2.44.0/24
+        p4 = re.compile(r'^Last Prefix:\s+(?P<last_prefix>[\d\.\/]+)$')
+
+        # Last SID Index: 699
+        p5 = re.compile(r'^Last SID Index: (?P<last_sid_index>\d+)$')
+
+        # Flags
+        p6 = re.compile(r'^Flags:\s+(?P<flags>\w+)$')
+        
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                prefix = m.groupdict()['prefix']
+                
+                ipv4_dict = ret_dict.setdefault('ipv4', {})
+                prefix_dict = ipv4_dict.setdefault(prefix, {})
+
+                prefix_dict['prefix'] = prefix
+            
+            m = p2.match(line)
+            if m:
+                prefix_dict['sid_index'] = int(m.groupdict()['sid_index'])
+
+            m = p3.match(line)
+            if m:
+                prefix_dict['range'] = int(m.groupdict()['range'])
+
+            m = p4.match(line)
+            if m:
+                prefix_dict['last_prefix'] = m.groupdict()['last_prefix']
+            
+            m = p5.match(line)
+            if m:
+                prefix_dict['last_sid_index'] = \
+                                            int(m.groupdict()['last_sid_index'])
+            
+            m = p6.match(line)
+            if m:
+                prefix_dict['flags'] = m.groupdict()['flags']
+
+        return ret_dict
+
