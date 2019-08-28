@@ -2035,6 +2035,7 @@ class ShowIpv6PimNeighborSchema(MetaParser):
                                         Optional('up_time'): str,
                                         Optional('interface'): str,
                                         Optional('bidir_capable'): bool,
+                                        Optional('ecmp_redirect_capable'): str
                                     },
                                     Optional('secondary_address'): list,
                                 },
@@ -2081,24 +2082,26 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
             line = line.strip()
 
             # PIM Neighbor Status for VRF "VRF1"
-            p1 = re.compile(r'^PIM6 +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
+            p1 = re.compile(r'^PIM(6)? +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf_name']
                 neighbor = ""
                 secondary_address = []
                 continue
-
-            # Neighbor Address              Interface   Uptime    Expires   DR   Bidir-  BFD
-            #                                                               Pri  Capable State
+                       
+            # Neighbor                     Interface            Uptime    Expires   DR       Bidir-  BFD     ECMP Redirect
+            #                                                                       Priority Capable State   Capable
+            # fe80::282:eaff:feed:1b08     Ethernet1/1.10       00:12:53  00:01:38  1        yes     n/a     no
             # fe80::5054:ff:fe5b:aa80       Eth2/2      07:31:36  00:01:28  1    yes     n/a
-            p2 = re.compile(r'^(?P<neighbor>[\S]+)'
-                            ' +(?P<intf_name>[\S]+)'
-                            ' +(?P<up_time>[\S]+)'
-                            ' +(?P<expires>[\S]+)'
-                            ' +(?P<dr_priority>\d+)'
-                            ' +(?P<bidir_capable>\w+)'
-                            ' +(?P<bfd_state>[\S]+)$')
+            p2 = re.compile(r'^(?P<neighbor>[\S]+) +'
+                             '(?P<intf_name>[\S]+) +'
+                             '(?P<up_time>[\S]+) +'
+                             '(?P<expires>[\S]+) +'
+                             '(?P<dr_priority>\d+) +'
+                             '(?P<bidir_capable>\w+) +'
+                             '(?P<bfd_state>[\S]+) *'
+                             '(?:(?P<ecmp_redirect_capable>\S+))?')
             m = p2.match(line)
             if m:
                 second_address_flag = False
@@ -2109,6 +2112,7 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                 dr_priority = int(m.groupdict()['dr_priority'])
                 bidir_capable = True if m.groupdict()['bidir_capable'].lower() == 'yes' else False
                 bfd_state = m.groupdict()['bfd_state']
+                ecmp_redirect_capable = m.groupdict()['ecmp_redirect_capable']
 
                 if intf_name and vrf_name:
                     if 'vrf' not in parsed_output:
@@ -2153,6 +2157,10 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                     parsed_output['vrf'][vrf_name]['interfaces'] \
                         [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
                         ['bidir_capable'] = bidir_capable
+                    if ecmp_redirect_capable:
+                        parsed_output['vrf'][vrf_name]['interfaces'] \
+                            [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
+                            ['ecmp_redirect_capable'] = ecmp_redirect_capable
                     continue
 
             #  Secondary addresses:
