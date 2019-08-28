@@ -186,11 +186,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
     def cli(self, intf, output=None):
 
-        cmd = self.cli_command.format(intf=intf)
-
-        if output is None:
+        if not output:
             # get output from device
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command.format(intf=intf))
         else:
             out = output
 
@@ -321,4 +319,4 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 method_stat.update({'state': group['state']})
                 continue
 
-        return ret_dict;
+        return ret_dict
