@@ -37,37 +37,38 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapSchema(MetaParser):
 
     schema = {
         'segment_routing':
-            {'bindings':
-                {Optional('connected_prefix_sid_map'):
-                    {Optional('ipv4'):
-                        {'ipv4_prefix_sid':
-                            {Any():
-                                {'algorithm':
-                                    {Any():
-                                        {'prefix': str,
-                                        'value_type': str,
-                                        'sid': str,
-                                        'range': str,
-                                        'srgb': str,
-                                        Optional('source'): str,
-                                        'algorithm': str,
+            {
+                'bindings':{
+                    Optional('connected_prefix_sid_map'):{
+                        Optional('ipv4'):{
+                            'ipv4_prefix_sid':{
+                                Any():{
+                                    'algorithm':{
+                                        Any():{
+                                            'prefix': str,
+                                            'value_type': str,
+                                            'sid': str,
+                                            'range': str,
+                                            'srgb': str,
+                                            Optional('source'): str,
+                                            'algorithm': str,
                                         },
                                     },
                                 },
                             },
                         },
-                    Optional('ipv6'):
-                        {'ipv6_prefix_sid':
-                            {Any():
-                                {'algorithm':
-                                    {Any():
-                                        {'prefix': str,
-                                        'value_type': str,
-                                        'sid': str,
-                                        'range': str,
-                                        'srgb': str,
-                                        Optional('source'): str,
-                                        'algorithm': str,
+                        Optional('ipv6'):{
+                            'ipv6_prefix_sid':{
+                                Any():{
+                                    'algorithm':{
+                                        Any():{
+                                            'prefix': str,
+                                            'value_type': str,
+                                            'sid': str,
+                                            'range': str,
+                                            'srgb': str,
+                                            Optional('source'): str,
+                                            'algorithm': str,
                                         },
                                     },
                                 },
@@ -156,6 +157,7 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMap(ShowSegmentRoutingMplsConnecte
         # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
         # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_1
         p2 = re.compile(r'^PREFIX_SID_PROTOCOL_ADV_MAP +(?P<algorithm>(.*))$')
+
 
         # Prefix/masklen   SID Type Range Flags SRGB
         # 10.4.1.1/32         1 Indx     1         Y
@@ -497,3 +499,191 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(ShowSegmentRoutingMplsCon
         else:
             out = output
         return super().cli(address_family=address_family, output=out)
+
+# ====================================================
+# Schema for:
+#   * 'show segment-routing mpls mapping-server ipv4'
+#   * 'show segment-routing mpls mapping-server ipv6'
+# ====================================================
+class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
+    ''' Schema for:
+        * 'show segment-routing mpls mapping-server ipv4'
+        * 'show segment-routing mpls mapping-server ipv6'
+    '''
+
+    schema = {
+        'segment_routing': {
+                'bindings': {
+                    Optional('mapping_server'): {
+                        Any(): {
+                            'policy': {
+                                Any(): {
+                                    'name': str,
+                                    Optional('ipv4'): {
+                                        'mapping_entry': {
+                                            Any(): {
+                                                'algorithm': {
+                                                    Any(): {
+                                                        'prefix': str,
+                                                        'value_type': str,
+                                                        'start_sid': int,
+                                                        'range': str,
+                                                        'algorithm': str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    Optional('ipv6'): {
+                                        'mapping_entry': {
+                                            Any(): {
+                                                'algorithm': {
+                                                    Any(): {
+                                                        'prefix': str,
+                                                        'value_type': str,
+                                                        'start_sid': int,
+                                                        'range': str,
+                                                        'algorithm': str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                },
+            },
+        }
+
+# ====================================================
+# Parser for:
+#   * 'show segment-routing mpls mapping-server ipv4'
+#   * 'show segment-routing mpls mapping-server ipv6'
+# ====================================================
+
+class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSchema):
+    ''' Parser for:
+        * 'show segment-routing mpls mapping-server ipv4'
+        * 'show segment-routing mpls mapping-server ipv6'
+    '''
+    
+    cli_command = 'show segment-routing mpls mapping-server {address_family}'
+    
+    def cli(self, address_family, output=None):
+
+        assert address_family in ['ipv4', 'ipv6']
+
+        # Get output
+        if output is None:
+            out = self.device.execute(self.cli_command.format(address_family=address_family))
+        else:
+            out = output
+        
+        # Mapping dict
+        mapping_dict_export = {
+            'ipv4': 'ipv4_prefix_sid_export_map',
+            'ipv6': 'ipv6_prefix_sid_export_map',
+        }
+
+        mapping_dict_remote = {
+            'ipv4': 'ipv4_prefix_sid_remote_map',
+            'ipv6': 'ipv6_prefix_sid_remote_map',
+        }
+
+        # Init
+        ret_dict = {}
+
+        # PREFIX_SID_EXPORT_MAP ALGO_0
+        # PREFIX_SID_EXPORT_MAP ALGO_1
+        p1 = re.compile(r'^PREFIX_SID_EXPORT_MAP +(?P<algorithm>(.*))$')
+
+        # PREFIX_SID_REMOTE_EXPORT_MAP ALGO_0
+        # PREFIX_SID_REMOTE_EXPORT_MAP ALGO_1
+        p2 = re.compile(r'^PREFIX_SID_REMOTE_EXPORT_MAP +(?P<algorithm>(.*))$')
+
+        # Prefix/masklen   SID Type Range Flags SRGB
+        # 10.4.1.1/32         1 Indx     1         Y
+        p3 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
+                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))$')
+
+        # Prefix/masklen   SID Type Range Flags SRGB Source
+        # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
+        # 10.16.2.2/32         2 Indx     1         Y  OSPF Area 8 10.16.2.2
+        p4 = re.compile(r'(?P<prefix>(\S+))\/(?P<masklen>(\d+)) +(?P<sid>(\d+))'
+                         ' +(?P<type>(\S+)) +(?P<range>(\d+))'
+                         '(?: +(?P<flags>(\S+)))? +(?P<srgb>(Y|N))'
+                         ' +(?P<source>(.*))$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # PREFIX_SID_EXPORT_MAP ALGO_0
+            # PREFIX_SID_EXPORT_MAP ALGO_1
+            m = p1.match(line)
+            if m:
+                algorithm = m.groupdict()['algorithm']
+                address_family_dict = ret_dict.setdefault('segment_routing', {}). \
+                                    setdefault('bindings', {}). \
+                                    setdefault('mapping_server', {}). \
+                                    setdefault(address_family, {}). \
+                                    setdefault(mapping_dict_local[address_family], {})
+                continue
+
+            # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
+            # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_1
+            m = p2.match(line)
+            if m:
+                algorithm = m.groupdict()['algorithm']
+                continue
+
+            # Prefix/masklen   SID Type Range Flags SRGB
+            # 10.4.1.1/32         1 Indx     1         Y
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix'] + '/' + group['masklen']
+                algo_dict = address_family_dict.setdefault(prefix, {}). \
+                                setdefault('algorithm', {}). \
+                                setdefault(algorithm, {})
+                # Set values
+                algo_dict['prefix'] = prefix
+                algo_dict['algorithm'] = algorithm
+                algo_dict['value_type'] = group['type']
+                algo_dict['sid'] = group['sid']
+                algo_dict['range'] = group['range']
+                algo_dict['srgb'] = group['srgb']
+                if group['flags']:
+                    algo_dict['flags'] = group['flags']
+                continue
+
+            # Prefix/masklen   SID Type Range Flags SRGB Source
+            # 10.4.1.1/32         1 Indx     1         Y  OSPF Area 8 10.4.1.1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix'] + '/' + group['masklen']
+                # Set dict
+                algo_dict = ret_dict.setdefault('segment_routing', {}).\
+                                     setdefault('bindings', {}).\
+                                     setdefault('connected_prefix_sid_map', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault(mapping_dict[address_family], {}).\
+                                     setdefault(prefix, {}).\
+                                     setdefault('algorithm', {}).\
+                                     setdefault(algorithm, {})
+                # Set values
+                algo_dict['prefix'] = prefix
+                algo_dict['algorithm'] = algorithm
+                algo_dict['value_type'] = group['type']
+                algo_dict['sid'] = group['sid']
+                algo_dict['range'] = group['range']
+                algo_dict['srgb'] = group['srgb']
+                algo_dict['source'] = group['source']
+                if group['flags']:
+                    algo_dict['flags'] = group['flags']
+                continue
+
+        return ret_dict
