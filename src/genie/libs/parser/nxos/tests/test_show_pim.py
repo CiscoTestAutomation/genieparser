@@ -1182,6 +1182,128 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
 
         '''}
 
+    golden_parsed_output_ipv6_neighbor_4 = {
+        "vrf": {
+            "VRF1": {
+                "interfaces": {
+                    "Ethernet1/1.11": {
+                        "address_family": {
+                            "ipv6": {
+                                "neighbors": {
+                                    "fe80::282:eaff:feed:1b08": {
+                                        "bfd_status": False,
+                                        "expiration": "00:01:37",
+                                        "dr_priority": 1,
+                                        "up_time": "00:12:53",
+                                        "interface": "Ethernet1/1.11",
+                                        "bidir_capable": True,
+                                        "ecmp_redirect_capable": "no",
+                                    },
+                                    "secondary_address": [
+                                        "2001:10:3:5::3",
+                                        "2001:10:4:5::4",
+                                    ],
+                                }
+                            }
+                        }
+                    },
+                    "Ethernet1/3.11": {
+                        "address_family": {
+                            "ipv6": {
+                                "neighbors": {
+                                    "fe80::282:85ff:fe4e:1b08": {
+                                        "bfd_status": False,
+                                        "expiration": "00:01:29",
+                                        "dr_priority": 1,
+                                        "up_time": "00:12:59",
+                                        "interface": "Ethernet1/3.11",
+                                        "bidir_capable": True,
+                                        "ecmp_redirect_capable": "no",
+                                    },
+                                    "secondary_address": [
+                                        "2001:10:3:5::3",
+                                        "2001:10:4:5::4",
+                                    ],
+                                }
+                            }
+                        }
+                    },
+                }
+            },
+            "default": {
+                "interfaces": {
+                    "Ethernet1/1.10": {
+                        "address_family": {
+                            "ipv6": {
+                                "neighbors": {
+                                    "fe80::282:eaff:feed:1b08": {
+                                        "bfd_status": False,
+                                        "expiration": "00:01:38",
+                                        "dr_priority": 1,
+                                        "up_time": "00:12:53",
+                                        "interface": "Ethernet1/1.10",
+                                        "bidir_capable": True,
+                                        "ecmp_redirect_capable": "no",
+                                    },
+                                    "secondary_address": [
+                                        "2001:10:3:5::3",
+                                        "2001:10:4:5::4",
+                                    ],
+                                }
+                            }
+                        }
+                    },
+                    "Ethernet1/3.10": {
+                        "address_family": {
+                            "ipv6": {
+                                "neighbors": {
+                                    "fe80::282:85ff:fe4e:1b08": {
+                                        "bfd_status": False,
+                                        "expiration": "00:01:35",
+                                        "dr_priority": 1,
+                                        "up_time": "00:12:59",
+                                        "interface": "Ethernet1/3.10",
+                                        "bidir_capable": True,
+                                        "ecmp_redirect_capable": "no",
+                                    },
+                                    "secondary_address": [
+                                        "2001:10:3:5::3",
+                                        "2001:10:4:5::4",
+                                    ],
+                                }
+                            }
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+    golden_output_ipv6_neighbor_4 = {'execute.return_value': '''
+        #show ipv6 pim neighbor vrf all
+
+        PIM Neighbor Status for VRF "VRF1"
+        Neighbor                     Interface            Uptime    Expires   DR       Bidir-  BFD     ECMP Redirect
+                                                                              Priority Capable State   Capable
+        fe80::282:eaff:feed:1b08     Ethernet1/1.11       00:12:53  00:01:37  1        yes     n/a     no
+           Secondary addresses:
+            2001:10:3:5::3
+        fe80::282:85ff:fe4e:1b08     Ethernet1/3.11       00:12:59  00:01:29  1        yes     n/a     no
+           Secondary addresses:
+            2001:10:4:5::4
+
+        PIM Neighbor Status for VRF "default"
+        Neighbor                     Interface            Uptime    Expires   DR       Bidir-  BFD     ECMP Redirect
+                                                                              Priority Capable State   Capable
+        fe80::282:eaff:feed:1b08     Ethernet1/1.10       00:12:53  00:01:38  1        yes     n/a     no
+           Secondary addresses:
+            2001:10:3:5::3
+        fe80::282:85ff:fe4e:1b08     Ethernet1/3.10       00:12:59  00:01:35  1        yes     n/a     no
+           Secondary addresses:
+            2001:10:4:5::4
+
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6PimNeighbor(device=self.device)
@@ -1193,7 +1315,6 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
         self.device = Mock(**self.golden_output_ipv6_neighbor_1)
         obj = ShowIpv6PimNeighbor(device=self.device)
         parsed_output = obj.parse()
-
         self.assertEqual(parsed_output, self.golden_parsed_output_ipv6_neighbor_1)
 
     def test_golden_ip_pim_neighbor_2(self):
@@ -1209,6 +1330,13 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
         obj = ShowIpv6PimNeighbor(device=self.device)
         parsed_output = obj.parse(vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output_ipv6_neighbor_3)
+
+    def test_golden_ip_pim_neighbor_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_ipv6_neighbor_4)
+        obj = ShowIpv6PimNeighbor(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_ipv6_neighbor_4)
 
 
 # ============================================

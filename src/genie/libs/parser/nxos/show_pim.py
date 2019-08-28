@@ -2093,7 +2093,7 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
             # Neighbor                     Interface            Uptime    Expires   DR       Bidir-  BFD     ECMP Redirect
             #                                                                       Priority Capable State   Capable
             # fe80::282:eaff:feed:1b08     Ethernet1/1.10       00:12:53  00:01:38  1        yes     n/a     no
-            # fe80::5054:ff:fe5b:aa80       Eth2/2      07:31:36  00:01:28  1    yes     n/a
+            # fe80::282:eaff:feed:1b08        Eth2/2      07:31:36  00:01:28  1    yes     n/a
             p2 = re.compile(r'^(?P<neighbor>[\S]+) +'
                              '(?P<intf_name>[\S]+) +'
                              '(?P<up_time>[\S]+) +'
