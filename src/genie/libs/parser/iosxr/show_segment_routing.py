@@ -28,6 +28,7 @@ class ShowSegmentRoutingPrefixSidMapSchema(MetaParser):
         }
     }
 
+
 class ShowSegmentRoutingPrefixSidMap(ShowSegmentRoutingPrefixSidMapSchema):
     ''' Parser for:
           *  show isis segment-routing prefix-sid-map active-policy
@@ -451,7 +452,8 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
 
         p3 = re.compile(r'^Host name: (?P<host_name>\w+)$')
 
-        p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+)\s+level-(?P<system_id_level>\d+)$')
+        p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+)'
+                                        '\s+level-(?P<system_id_level>\d+)$')
 
         p5 = re.compile(r'^(?P<adv_prefixes>[\w\.]+)$')
 
@@ -538,7 +540,7 @@ class ShowPceIpv4TopologySummary(ShowPceIpv4TopologySummarySchema):
             if m:
                 topology_dict = ret_dict.setdefault('summary', {})
                 topology_dict['topology_nodes'] = \
-                                                int(m.groupdict()['topology_nodes'])
+                                            int(m.groupdict()['topology_nodes'])
 
             m = p2.match(line)
             if m:
@@ -607,9 +609,12 @@ class ShowPceLsp(ShowPceLspSchema):
 
         p3 = re.compile(r'^LSP\[(?P<lsp_number>\d+)\]:$')
 
-        p4 = re.compile(r'^source (?P<lsp_source>[\d\.]+), destination (?P<lsp_destination>[\d\.]+), tunnel ID (?P<tunnel_id>\d+), LSP ID (?P<lsp_id>\d+)$')
+        p4 = re.compile(r'^source (?P<lsp_source>[\d\.]+), destination '
+                '(?P<lsp_destination>[\d\.]+), tunnel ID (?P<tunnel_id>\d+), '
+                'LSP ID (?P<lsp_id>\d+)$')
 
-        p5 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation (?P<operation_state>\w+)$')
+        p5 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation '
+                                                    '(?P<operation_state>\w+)$')
 
         p6 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
 
@@ -666,7 +671,338 @@ class ShowPceLsp(ShowPceLspSchema):
             m = p7.match(line)
             if m:
                 lsp_dict['binding_sid'] = int(m.groupdict()['binding_sid'])
-                
+
+        return ret_dict
+
+class ShowPceLspDetailSchema(MetaParser):
+    ''' Schema for:
+       * show pce lsp detail
+    '''
+    schema = {
+        'pcc' : {
+            Any() : {
+                'pcc' : str,
+                'tunnel_name' : str,
+                'lsps' : {
+                    Any() : {
+                        'lsp_number' : int,
+                        'source': str,
+                        'destination': str,
+                        'tunnel_id' : int,
+                        'lsp_id' : int,
+                        'state' : {
+                            'admin' : bool,
+                            'operation' : bool,
+                        },
+                        'setup_type' : str,
+                        'binding_sid' : int,
+                        'pcep_information' : {
+                            'plsp_id' : int,
+                            'plsp_flags' : str,
+                        },
+                        'paths' : {
+                            Any() : {
+                                Optional('path') : str,
+                                Optional('metric_type') : str,
+                                Optional('accumulated_metric') : int,
+                                Optional('none'): str,
+                                Optional('sids'): {
+                                    Any() : {
+                                        'sid_number' : int,
+                                        'sid_label' : int,
+                                        'sid_local_address': str,
+                                        'sid_remote_address': str,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'event_history' : {
+                        Any() : {
+                            'time' : str,
+                            Any() : {
+                                'event' : str,
+                                'symbolic_name' : str,
+                                Optional('lsp-id'): int,
+                                Optional('plsp-id'): int,
+                                Optional('source') : str,
+                                Optional('destination') : str,
+                                Optional('flags') : {
+                                    'd' : int,
+                                    'r' : int,
+                                    'a' : int,
+                                    'o' : int,
+                                    'sig_bw' : int,
+                                    'act_bw' : int,
+                                },
+                                Optional('peer') : str,
+                            },
+                        },
+                    }
+                }
+            },
+        }
+    }
+
+class ShowPceLspDetail(ShowPceLspDetailSchema):
+    ''' Parser for:
+       * show pce lsp detail
+    '''
+
+    cli_command = 'show pce lsp detail'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out=output
+        
+        p1 = re.compile(r'^PCC (?P<pcc_id>[\d\.]+):$')
+
+        p2 = re.compile(r'^Tunnel Name: (?P<tunnel_name>\w+)$')
+
+        p3 = re.compile(r'^LSP\[(?P<lsp_number>\d+)\]:$')
+
+        p4 = re.compile(r'^source (?P<lsp_source>[\d\.]+), destination '
+                            '(?P<lsp_destination>[\d\.]+), tunnel ID '
+                            '(?P<tunnel_id>\d+), LSP ID (?P<lsp_id>\d+)$')
+
+        p5 = re.compile(r'State: Admin (?P<admin_state>\w+), Operation '
+                                                    '(?P<operation_state>\w+)$')
+
+        p6 = re.compile(r'^Setup type: (?P<setup_type>[\w\s]+)$')
+
+        p7 = re.compile(r'^Binding SID: (?P<binding_sid>\d+)$')
+
+        p8 = re.compile(r'^plsp-id (?P<plsp_id>\d+), flags:'
+                                                ' (?P<plsp_flags>[\w\s\:]+)$')
+
+        #   Reported path: 
+        p9 = re.compile(r'^(?P<specified_path>\w+) path:$')
+
+        p10 = re.compile(r'^Metric type: (?P<metric_type>\w+), '
+                            'Accumulated Metric (?P<accumulated_metric>\d+)$')
+
+        # SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+        p11 = re.compile(r'^SID\[(?P<sid_number>\d+)\]: Adj, Label '
+                            '(?P<sid_label>\d+), Address: local '
+                            '(?P<sid_local_address>[\d\.]+) remote '
+                            '(?P<sid_remote_address>[\d\.]+)$')
+        p11_1 = re.compile(r'None')
+        # June 13 2016 13:28:29     Report
+        p12 = re.compile(r'^(?P<event_time>\w+ \d+ \d+ [\d\:]+)\s+ '
+                                                        '(?P<event_type>\w+)$')
+        # Symbolic-name: rtrA_t1, LSP-ID: 2,
+        p13 = re.compile(r'^Symbolic-name: (?P<symbolic_name>\w+), '
+                                '(?P<id_name>[\w\-]+): (?P<symbolic_id>\d+),$')
+        # Source: 192.168.0.1 Destination: 192.168.0.4,
+        p14 = re.compile(r'^Source: (?P<event_source>[\d\.]+) Destination: '
+                                                '(?P<dest_source>[\d\.]+),$')
+
+        # D:1, R:0, A:1 O:1, Sig.BW: 0, Act.BW: 0
+        p15 = re.compile(r'^D:(?P<d_event>\d+), R:(?P<r_event>\d+), '
+                            'A:(?P<a_event>\d+) O:(?P<o_event>\d+), Sig\.BW: '
+                            '(?P<event_sig>\d+), Act.BW: (?P<event_act>\d+)$')
+
+        p16 = re.compile(r'Peer: (?P<event_peer>[\d\.]+)')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                pcc_id = m.groupdict()['pcc_id']
+                pccs_dict = ret_dict.setdefault('pcc', {})
+
+                pcc_dict = pccs_dict.setdefault(pcc_id, {})
+                pcc_dict['pcc'] = pcc_id
+
+            m = p2.match(line)
+            if m:
+                pcc_dict['tunnel_name'] = m.groupdict()['tunnel_name']
+
+            m = p3.match(line)
+            if m:
+                lsp_numb = int(m.groupdict()['lsp_number'])
+
+                lsps_dict = pcc_dict.setdefault('lsps', {})
+                lsp_dict = lsps_dict.setdefault(lsp_numb, {})
+
+                lsp_dict['lsp_number'] = lsp_numb
+
+            m = p4.match(line)
+            if m:
+                lsp_dict['source'] = m.groupdict()['lsp_source']
+                lsp_dict['destination'] = m.groupdict()['lsp_destination']
+                lsp_dict['tunnel_id'] = int(m.groupdict()['tunnel_id'])
+                lsp_dict['lsp_id'] = int(m.groupdict()['lsp_id'])
+
+            m = p5.match(line)
+            if m:
+                admin_bool = True if 'up' in \
+                                m.groupdict()['admin_state'].lower() else False
+                operation_bool = True if 'up' in \
+                            m.groupdict()['operation_state'].lower() else False
+                state_dict = lsp_dict.setdefault('state', {})
+
+                state_dict['admin'] = admin_bool
+                state_dict['operation'] = operation_bool
+
+            m = p6.match(line)
+            if m:
+                lsp_dict['setup_type'] = m.groupdict()['setup_type'].lower()
+
+            m = p7.match(line)
+            if m:
+                lsp_dict['binding_sid'] = int(m.groupdict()['binding_sid'])
+
+            m = p8.match(line)
+            if m:
+                pcep_info_dict = lsp_dict.setdefault('pcep_information', {})
+                pcep_info_dict['plsp_id'] = int(m.groupdict()['plsp_id'])
+                pcep_info_dict['plsp_flags'] = \
+                                            m.groupdict()['plsp_flags'].lower()
+
+            m = p9.match(line)
+            if m:
+                path = m.groupdict()['specified_path'].lower()
+                path_dict = lsp_dict.setdefault('paths', {}).setdefault(path,{})
+
+                path_dict['path'] = path
+            
+            m = p10.match(line)
+            if m:
+                path_dict['metric_type'] = m.groupdict()['metric_type'].lower()
+                path_dict['accumulated_metric'] = \
+                                        int(m.groupdict()['accumulated_metric'])
+
+            m = p11.match(line)
+            if m:
+                sid_number = int(m.groupdict()['sid_number'])
+                sid_dict = path_dict.setdefault('sids', {}).\
+                                                    setdefault(sid_number, {})
+
+                sid_dict['sid_number'] = sid_number
+                sid_dict['sid_label'] = int(m.groupdict()['sid_label'])
+                sid_dict['sid_local_address']=m.groupdict()['sid_local_address']
+                sid_dict['sid_remote_address'] = \
+                                            m.groupdict()['sid_remote_address']
+
+            m = p11_1.match(line)
+            if m:
+                path_dict['none'] = 'none'
+
+            m = p12.match(line)
+            if m:
+                event_time = m.groupdict()['event_time'].lower()
+                event_type = m.groupdict()['event_type'].lower()
+
+                time_dict = lsps_dict.setdefault('event_history', {}).\
+                                                    setdefault(event_time, {})
+                time_dict['time'] = event_time
+
+                event_dict = time_dict.setdefault(event_type, {})
+                event_dict['event'] = event_type
+            
+            m = p13.match(line)
+            if m:
+                id_name = m.groupdict()['id_name'].lower()
+                event_dict['symbolic_name'] = m.groupdict()['symbolic_name']
+                event_dict[id_name] = int(m.groupdict()['symbolic_id'])
+
+            m = p14.match(line)
+            if m:
+                event_dict['source'] = m.groupdict()['event_source']
+                event_dict['destination'] = m.groupdict()['dest_source']
+
+            m = p15.match(line)
+            if m:
+                flag_dict = event_dict.setdefault('flags', {})
+                flag_dict['d'] = int(m.groupdict()['d_event'])
+                flag_dict['r'] = int(m.groupdict()['r_event'])
+                flag_dict['a'] = int(m.groupdict()['a_event'])
+                flag_dict['o'] = int(m.groupdict()['o_event'])
+                flag_dict['sig_bw'] = int(m.groupdict()['event_sig'])
+                flag_dict['act_bw'] = int(m.groupdict()['event_act'])
+
+            m = p16.match(line)
+            if m:
+                if 'peer' in line.lower():
+                    event_dict['peer'] = m.groupdict()['event_peer']
+
         return ret_dict
 
     
+class ShowSegment_RoutingLocal_BlockInconsistenciesSchema(MetaParser):
+    ''' Schema for:
+        * show segment-routing local-block inconsistencies
+    '''
+
+    schema = {
+        'dates' : {
+            Any() : {
+                'date' : str,
+                'inconsistencies' : {
+                    Any() : {
+                        'inconsistency' : str,
+                        'range' : {
+                            'start': int,
+                            'end' : int,
+                        },
+                    },
+                }
+            },
+        }
+    }
+
+class ShowSegment_RoutingLocal_BlockInconsistencies(ShowSegment_RoutingLocal_BlockInconsistenciesSchema):
+    ''' Parser for: 
+        * show segment-routing local-block inconsistencies
+    '''
+
+    cli_command = 'show segment-routing local-block inconsistencies'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        # Tue Aug 15 13:53:30.555 EDT
+        p1 = re.compile(r'^(?P<inconsistency_date>[\w\s]+[\d\:\.]+\s\w+)$')
+        
+        # SRLB inconsistencies range: Start/End: 30000/30009
+        p2 = re.compile(r'(?P<inconsistency_type>\w+) inconsistencies range: '
+                                    'Start\/End: (?P<start>\d+)\/(?P<end>\d+)')
+        
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                date = m.groupdict()['inconsistency_date'].lower()
+
+                dates_dict = ret_dict.setdefault('dates', {})
+                date_dict = dates_dict.setdefault(date, {})
+
+                date_dict['date'] = date
+            
+            m = p2.match(line)
+            if m:
+                inconsistency = m.groupdict()['inconsistency_type'].lower()
+
+                inconsistency_dict=date_dict.setdefault('inconsistencies', {}).\
+                                    setdefault(inconsistency, {})
+
+                inconsistency_dict['inconsistency'] = inconsistency
+                range_dict = inconsistency_dict.setdefault('range', {})
+
+                range_dict['start'] = int(m.groupdict()['start'])
+                range_dict['end'] = int(m.groupdict()['end'])
+        
+        return ret_dict
+
+

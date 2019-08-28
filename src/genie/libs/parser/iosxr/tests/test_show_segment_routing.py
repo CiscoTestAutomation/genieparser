@@ -11,7 +11,9 @@ from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefi
                                                             ShowPceIPV4PeerDetail,\
                                                             ShowPceIPV4PeerPrefix,\
                                                             ShowPceIpv4TopologySummary,\
-                                                            ShowPceLsp
+                                                            ShowPceLsp,\
+                                                            ShowPceLspDetail, \
+                                                            ShowSegment_RoutingLocal_BlockInconsistencies
 
 # =============================================================
 # Unittest for:
@@ -438,6 +440,251 @@ class test_show_Pce_Lsp(unittest.TestCase):
         obj = ShowPceLsp(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
+
+class test_Show_Pce_Lsp_Detail(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value' : '''
+        RP/0/RSP0/CPU0:router# show pce lsp detail
+
+        PCE's tunnel database:
+        ----------------------
+        PCC 192.168.0.1:
+
+        Tunnel Name: rtrA_t1
+        LSPs:
+        LSP[0]:
+        source 192.168.0.1, destination 192.168.0.4, tunnel ID 1, LSP ID 2
+        State: Admin up, Operation up
+        Setup type: Segment Routing
+        Binding SID: 24013
+        PCEP information:
+            plsp-id 2, flags: D:1 S:0 R:0 A:1 O:1
+        Reported path:
+            Metric type: TE, Accumulated Metric 42
+            SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+        Computed path:
+            Metric type: TE, Accumulated Metric 42
+            SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+        Recorded path:
+            None
+
+        RP/0/RSP0/CPU0:router# show pce lsp detail
+
+        PCE's tunnel database:
+        ----------------------
+        PCC 192.168.0.1:
+
+        Tunnel Name: rtrA_t1
+        LSPs:
+        LSP[0]:
+        source 192.168.0.1, destination 192.168.0.4, tunnel ID 1, LSP ID 2
+        State: Admin up, Operation up
+        Setup type: Segment Routing
+        Binding SID: 24013
+        PCEP information:
+            plsp-id 2, flags: D:1 S:0 R:0 A:1 O:1
+        Reported path:
+            Metric type: TE, Accumulated Metric 42
+            SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+        Computed path:
+            Metric type: TE, Accumulated Metric 42
+            SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
+            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+        Recorded path:
+            None
+        Event history (latest first):
+        Time                      Event
+        June 13 2016 13:28:29     Report
+                                Symbolic-name: rtrA_t1, LSP-ID: 2,
+                                Source: 192.168.0.1 Destination: 192.168.0.4,
+                                D:1, R:0, A:1 O:1, Sig.BW: 0, Act.BW: 0
+        June 13 2016 13:28:28     Report
+                                Symbolic-name: rtrA_t1, LSP-ID: 2,
+                                Source: 192.168.0.1 Destination: 192.168.0.4,
+                                D:1, R:0, A:1 O:1, Sig.BW: 0, Act.BW: 0
+        June 13 2016 13:28:28     Create
+                                Symbolic-name: rtrA_t1, PLSP-ID: 2,
+                                Peer: 192.168.0.1
+    '''}
+
+    golden_parsed_output = {
+        'pcc': {
+            '192.168.0.1': {
+                'pcc': '192.168.0.1',
+                'tunnel_name': 'rtrA_t1',
+                'lsps': {
+                    0: {
+                        'lsp_number': 0,
+                        'source': '192.168.0.1',
+                        'destination': '192.168.0.4',
+                        'tunnel_id': 1,
+                        'lsp_id': 2,
+                        'state': {
+                            'admin': True,
+                            'operation': True
+                        },
+                        'setup_type': 'segment routing',
+                        'binding_sid': 24013,
+                        'pcep_information': {
+                            'plsp_id': 2,
+                            'plsp_flags': 'd:1 s:0 r:0 a:1 o:1'
+                        },
+                        'paths': {
+                            'reported': {
+                                'path': 'reported',
+                                'metric_type': 'te',
+                                'accumulated_metric': 42,
+                                'sids': {
+                                    0: {
+                                        'sid_number': 0,
+                                        'sid_label': 24000,
+                                        'sid_local_address': '10.10.10.1',
+                                        'sid_remote_address': '10.10.10.2'
+                                    },
+                                    1: {
+                                        'sid_number': 1,
+                                        'sid_label': 24000,
+                                        'sid_local_address': '14.14.14.2',
+                                        'sid_remote_address': '14.14.14.4'
+                                    }
+                                }
+                            },
+                            'computed': {
+                                'path': 'computed',
+                                'metric_type': 'te',
+                                'accumulated_metric': 42,
+                                'sids': {
+                                    0: {
+                                        'sid_number': 0,
+                                        'sid_label': 24000,
+                                        'sid_local_address': '10.10.10.1',
+                                        'sid_remote_address': '10.10.10.2'
+                                    },
+                                    1: {
+                                        'sid_number': 1,
+                                        'sid_label': 24000,
+                                        'sid_local_address': '14.14.14.2',
+                                        'sid_remote_address': '14.14.14.4'
+                                    }
+                                }
+                            },
+                            'recorded': {
+                                'path': 'recorded',
+                                'none': 'none'
+                            }
+                        }
+                    },
+                    'event_history': {
+                        'june 13 2016 13:28:29': {
+                            'time': 'june 13 2016 13:28:29',
+                            'report': {
+                                'event': 'report',
+                                'symbolic_name': 'rtrA_t1',
+                                'lsp-id': 2,
+                                'source': '192.168.0.1',
+                                'destination': '192.168.0.4',
+                                'flags': {
+                                    'd': 1,
+                                    'r': 0,
+                                    'a': 1,
+                                    'o': 1,
+                                    'sig_bw': 0,
+                                    'act_bw': 0
+                                }
+                            }
+                        },
+                        'june 13 2016 13:28:28': {
+                            'time': 'june 13 2016 13:28:28',
+                            'report': {
+                                'event': 'report',
+                                'symbolic_name': 'rtrA_t1',
+                                'lsp-id': 2,
+                                'source': '192.168.0.1',
+                                'destination': '192.168.0.4',
+                                'flags': {
+                                    'd': 1,
+                                    'r': 0,
+                                    'a': 1,
+                                    'o': 1,
+                                    'sig_bw': 0,
+                                    'act_bw': 0
+                                }
+                            },
+                            'create': {
+                                'event': 'create',
+                                'symbolic_name': 'rtrA_t1',
+                                'plsp-id': 2,
+                                'peer': '192.168.0.1'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowPceLspDetail(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowPceLspDetail(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+
+class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value' : ''}
+
+    golden_output = {'execute.return_value' : '''
+    RP/0/RSP0/CPU0:router(config)# show segment-routing local-block inconsistencies
+    Tue Aug 15 13:53:30.555 EDT
+    SRLB inconsistencies range: Start/End: 30000/30009
+    '''}
+
+    golden_parsed_output = {
+        'dates' : {
+            'tue aug 15 13:53:30.555 edt' : {
+                'date' : 'tue aug 15 13:53:30.555 edt',
+                'inconsistencies' : {
+                    'srlb' : {
+                        'inconsistency' : 'srlb',
+                        'range' : {
+                            'start' : 30000,
+                            'end' : 30009,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowSegment_RoutingLocal_BlockInconsistencies(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowSegment_RoutingLocal_BlockInconsistencies(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+
 
 
 
