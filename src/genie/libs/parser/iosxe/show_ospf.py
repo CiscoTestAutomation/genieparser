@@ -3767,7 +3767,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
        
-        p9 = re.compile(r'^Length: +(?P<length>(\d+))$')
+        p9 = re.compile(r'^Length *: +(?P<length>(\d+))$')
        
         p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
        
@@ -4036,6 +4036,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p3_2.match(line)
             if m:
                 tlv_type_flag = False
+                sub_tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
@@ -4181,8 +4182,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     sub_tlv_types_dict['length'] = length
                 elif tlv_type_flag:
                     tlv_type_dict['length'] = length
-                
-                header_dict['length'] = length
+                else:
+                    header_dict['length'] = length
                 continue
 
             # Network Mask: /32
@@ -4269,7 +4270,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 if tlv_type_flag:                    
                     sub_link_type = str(m.groupdict()['type']).lower()
-                    if 'another Router' in sub_link_type:
+                    if 'another router' in sub_link_type:
                         opaque_link_type = 1
                     tlv_type_dict['link_name'] = sub_link_type
                     tlv_type_dict['link_type'] = opaque_link_type
@@ -4831,6 +4832,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Sub-TLV Type: Local / Remote Intf ID
             m = p50.match(line)
             if m:
+                tlv_type_flag = False
                 sub_tlv_type_flag = True
                 group = m.groupdict()
                 sub_tlv_type = group['sub_tlv_type']
@@ -8025,6 +8027,42 @@ class ShowIpOspfDatabaseOpaqueAreaAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, 
     '''
 
     cli_command = 'show ip ospf database opaque-area adv-router {address}'
+
+    def cli(self, address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(address=address))
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeExtLink(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type ext-link
+    """
+    cli_command = 'show ip ospf database opaque-area type ext-link'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type ext-link self-originate
+    """
+    cli_command = 'show ip ospf database opaque-area type ext-link self-originate'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type ext-link adv-router {address}
+    """
+    cli_command = 'show ip ospf database opaque-area type ext-link adv-router {address}'
 
     def cli(self, address, output=None):
         if not output:
