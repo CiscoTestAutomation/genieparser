@@ -217,7 +217,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 hello_expiration = m.groupdict()['hello_expiration']
 
             # PIM6 neighbor holdtime: 159 secs
-            p7 = re.compile(r'^\s*PIM6 +neighbor +holdtime: +(?P<holdtime>[\d]+) +secs$')
+            p7 = re.compile(r'^\s*PIM6? +neighbor +holdtime: +(?P<holdtime>[\d]+) +secs$')
             m = p7.match(line)
             if m:
                 neighbor_holdtime = m.groupdict()['holdtime']
@@ -300,7 +300,8 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 bfd = m.groupdict()['bfd_enabled']
 
             # PIM6 passive interface: no
-            p19 = re.compile(r'^\s*PIM(6)? +passive +interface: +(?P<passive>[\w]+)$')
+            # PIM passive interface: no
+            p19 = re.compile(r'^\s*PIM6? +passive +interface: +(?P<passive>[\w]+)$')
             m = p19.match(line)
             if m:
                 passive = m.groupdict()['passive']
@@ -313,7 +314,8 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 vpc_svi = m.groupdict()['vpc_svi']
 
             # PIM6 Auto Enabled: no
-            p21 = re.compile(r'^\s*PIM(6)? +Auto +Enabled: +(?P<auto_enabled>[\w]+)$')
+            # PIM Auto Enabled: no
+            p21 = re.compile(r'^\s*PIM6? +Auto +Enabled: +(?P<auto_enabled>[\w]+)$')
             m = p21.match(line)
             if m:
                 auto_enabled = m.groupdict()['auto_enabled']
