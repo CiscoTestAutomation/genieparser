@@ -190,7 +190,7 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 address_list.append(m.groupdict()['address'])
 
             # PIM6 DR: fe80::5054:ff:fe89:740c, DR's priority: 1
-            # PIM Interface Statistics
+            # PIM DR: fe80::5054:ff:fe89:740c, DR's priority: 1
             p4 = re.compile(r'^\s*PIM6? +DR: +(?P<dr_address>[\w\:]+),'
                             ' +DR\'s +priority: +(?P<dr_priority>[\d]+)$')
             m = p4.match(line)
