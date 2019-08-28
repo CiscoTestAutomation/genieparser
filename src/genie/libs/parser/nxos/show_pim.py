@@ -125,7 +125,6 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
             out = output
 
         af_name = 'ipv6'
-
         # Init dictionary
         parsed_dict = dict()
         address_list = []
