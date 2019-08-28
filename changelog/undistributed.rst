@@ -19,3 +19,9 @@
     * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
         'show segment-routing mpls connected-prefix-sid-map local ipv4'
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
+
+--------------------------------------------------------------------------------
+                              Virtual-Service
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVirtualServiceUtilization for "show virtual-service utilization name {name}"
