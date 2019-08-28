@@ -1868,6 +1868,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                        'up_time': '07:31:36',
                                        'interface': 'Ethernet2/2',
                                        'bidir_capable': True,
+                                       'ecmp_redirect_capable': False
 
                                     },
                                     'secondary_address':['2001:db8:11:33::33','2001:db8:1:3::3']
@@ -1892,6 +1893,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                             'up_time': '6d19h',
                                             'interface': 'Ethernet2/4',
                                             'bidir_capable': True,
+                                            'ecmp_redirect_capable': False
 
                                         },
                                         'secondary_address': ['2001:10:1:2::2']
@@ -1948,6 +1950,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                             'up_time': '6d19h',
                                             'interface': 'Ethernet2/4',
                                             'bidir_capable': True,
+                                            'ecmp_redirect_capable': False
 
                                         },
                                         'secondary_address': ['2001:10:1:2::2']
@@ -1987,7 +1990,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                         "up_time": "00:12:53",
                                         "interface": "Ethernet1/1.11",
                                         "bidir_capable": True,
-                                        "ecmp_redirect_capable": "no",
+                                        "ecmp_redirect_capable": False ,
                                     },
                                     "secondary_address": [
                                         "2001:10:3:5::3",
@@ -2008,7 +2011,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                         "up_time": "00:12:59",
                                         "interface": "Ethernet1/3.11",
                                         "bidir_capable": True,
-                                        "ecmp_redirect_capable": "no",
+                                        "ecmp_redirect_capable": False,
                                     },
                                     "secondary_address": [
                                         "2001:10:3:5::3",
@@ -2033,7 +2036,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                         "up_time": "00:12:53",
                                         "interface": "Ethernet1/1.10",
                                         "bidir_capable": True,
-                                        "ecmp_redirect_capable": "no",
+                                        "ecmp_redirect_capable": False,
                                     },
                                     "secondary_address": [
                                         "2001:10:3:5::3",
@@ -2054,7 +2057,7 @@ class test_show_ipv6_pim_neighbor(unittest.TestCase):
                                         "up_time": "00:12:59",
                                         "interface": "Ethernet1/3.10",
                                         "bidir_capable": True,
-                                        "ecmp_redirect_capable": "no",
+                                        "ecmp_redirect_capable": False,
                                     },
                                     "secondary_address": [
                                         "2001:10:3:5::3",

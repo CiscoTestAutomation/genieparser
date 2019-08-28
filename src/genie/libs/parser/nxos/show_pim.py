@@ -2056,7 +2056,7 @@ class ShowIpv6PimNeighborSchema(MetaParser):
                                         Optional('up_time'): str,
                                         Optional('interface'): str,
                                         Optional('bidir_capable'): bool,
-                                        Optional('ecmp_redirect_capable'): str
+                                        Optional('ecmp_redirect_capable'): bool
                                     },
                                     Optional('secondary_address'): list,
                                 },
@@ -2179,10 +2179,16 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                     parsed_output['vrf'][vrf_name]['interfaces'] \
                         [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
                         ['bidir_capable'] = bidir_capable
-                    if ecmp_redirect_capable:
-                        parsed_output['vrf'][vrf_name]['interfaces'] \
-                            [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
-                            ['ecmp_redirect_capable'] = ecmp_redirect_capable
+                    
+                    if ecmp_redirect_capable == 'no' or not ecmp_redirect_capable:
+                        ecmp_redirect_capable = False
+                    elif ecmp_redirect_capable == 'yes':
+                        ecmp_redirect_capable = True
+
+                    parsed_output['vrf'][vrf_name]['interfaces'] \
+                        [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
+                        ['ecmp_redirect_capable'] = ecmp_redirect_capable
+
                     continue
 
             #  Secondary addresses:
