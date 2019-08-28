@@ -13,7 +13,8 @@ from genie.libs.parser.iosxr.show_segment_routing import ShowSegmentRoutingPrefi
                                                             ShowPceIpv4TopologySummary,\
                                                             ShowPceLsp,\
                                                             ShowPceLspDetail, \
-                                                            ShowSegment_RoutingLocal_BlockInconsistencies
+                                                            ShowSegment_RoutingLocal_BlockInconsistencies,\
+                                                            ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4
 
 # =============================================================
 # Unittest for:
@@ -681,10 +682,51 @@ class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowSegment_RoutingLocal_BlockInconsistencies(device = self.dev2)
+        obj = ShowSegment_RoutingLocal_BlockInconsistencies (device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
+
+    empty_output = {'execute.return_value' : ''}
+
+    golden_output = {'execute.return_value' : '''
+    Prefix               SID Index    Range        Flags
+    20.1.1.0/24          400          300          
+    10.1.1.1/32          10           200          
+    Number of mapping entries: 2
+    '''}
+
+    golden_parsed_output = {
+        'ipv4': {
+            '20.1.1.0/24': {
+                'prefix': '20.1.1.0/24',
+                'sid_index': 400,
+                'range': 300
+            },
+            '10.1.1.1/32': {
+                'prefix': '10.1.1.1/32',
+                'sid_index': 10,
+                'range': 200
+            },
+        'entries': 2
+        }
+    }
+
+    def test_empty_output(self):
+        self.dev1 = Mock(**self.empty_output)
+        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(device = self.dev1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
 
 
 

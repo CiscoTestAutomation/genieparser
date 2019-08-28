@@ -1005,4 +1005,64 @@ class ShowSegment_RoutingLocal_BlockInconsistencies(ShowSegment_RoutingLocal_Blo
         
         return ret_dict
 
+class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Schema(MetaParser):
+    ''' Schema for:
+        * show segment-routing mapping-server prefix-sid-map ipv4
+    '''
+
+    schema = {
+        'ipv4' : {
+            Any() : {
+                'prefix' : str,
+                'sid_index' : int,
+                'range': int,
+                Optional('flags'): str, 
+            },
+            'entries' : int,
+        }
+    }
+
+class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Schema):
+    ''' Parser for:
+        * show segment-routing mapping-server prefix-sid-map ipv4
+    '''
+
+    cli_command = 'show segment-routing mapping-server prefix-sid-map ipv4'
+
+    def cli(self, output = None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # 20.1.1.0/24          400          300          
+        p1 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
+                                '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
+        # Number of mapping entries: 2
+        p2 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                prefix = m.groupdict()['prefix']
+                ipv_dict = ret_dict.setdefault('ipv4', {})
+
+                prefix_dict = ipv_dict.setdefault(prefix, {})
+
+                prefix_dict['prefix'] = m.groupdict()['prefix']
+                prefix_dict['sid_index'] = int(m.groupdict()['sid_index'])
+                prefix_dict['range'] = int(m.groupdict()['range'])
+
+                if m.groupdict()['flags']:
+                    prefix_dict['flags'] = m.groupdict()['flags']
+            
+            m = p2.match(line)
+            if m:
+                ipv_dict.setdefault('entries', int(m.groupdict()['entries']))      
+
+        return ret_dict
 
