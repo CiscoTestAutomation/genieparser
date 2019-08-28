@@ -2082,7 +2082,8 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
             line = line.strip()
 
             # PIM Neighbor Status for VRF "VRF1"
-            p1 = re.compile(r'^PIM(6)? +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
+            # PIM6 Neighbor Status for VRF "VRF1"
+            p1 = re.compile(r'^PIM6? +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf_name']
