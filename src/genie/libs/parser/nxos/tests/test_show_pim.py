@@ -351,6 +351,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 1,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:08",
+                                "neighbor_holdtime": 105,
                                 "configured_dr_priority": 1,
                                 "dr_delay": 3,
                                 "bsr_border": False,
@@ -409,6 +410,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 0,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:17",
+                                "neighbor_holdtime": 105,
                                 "bsr_border": False,
                                 "genid": "0x30aaaac9",
                                 "hello_md5_ah_authentication": "disabled",
@@ -466,6 +468,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 1,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:24",
+                                "neighbor_holdtime": 105,
                                 "bsr_border": False,
                                 "genid": "0x1c0ede6c",
                                 "hello_md5_ah_authentication": "disabled",
@@ -523,6 +526,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 0,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:18",
+                                "neighbor_holdtime": 105,
                                 "bsr_border": False,
                                 "genid": "0x1c0aa317",
                                 "hello_md5_ah_authentication": "disabled",
@@ -583,6 +587,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 1,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:09",
+                                "neighbor_holdtime": 105,
                                 "configured_dr_priority": 1,
                                 "dr_delay": 3,
                                 "bsr_border": False,
@@ -641,6 +646,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 0,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:18",
+                                "neighbor_holdtime": 105,
                                 "bsr_border": False,
                                 "genid": "0x0f5cdda1",
                                 "hello_md5_ah_authentication": "disabled",
@@ -698,6 +704,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 1,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:12",
+                                "neighbor_holdtime": 105,
                                 "bsr_border": False,
                                 "genid": "0x01ea02dd",
                                 "hello_md5_ah_authentication": "disabled",
@@ -755,6 +762,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
                                 "neighbor_count": 0,
                                 "hello_interval": 30,
                                 "hello_expiration": "00:00:16",
+                                "neighbor_holdtime": 105,
                                 "bsr_border": False,
                                 "genid": "0x0cb530a6",
                                 "hello_md5_ah_authentication": "disabled",
@@ -803,6 +811,7 @@ Ethernet2/2, Interface status: protocol-up/link-up/admin-up
             },
         }
     }
+
 
     golden_output_v6_pim_interface_2 = {'execute.return_value': '''
         R1#show ipv6 pim interface vrf all
