@@ -15,7 +15,8 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
                                                           ShowSegmentRoutingMplsConnectedPrefixSidMap,
                                                           ShowSegmentRoutingMplsGb,
                                                           ShowSegmentRoutingMplsGbLock,
-                                                          ShowSegmentRoutingMplsConnectedPrefixSidMapLocal)
+                                                          ShowSegmentRoutingMplsConnectedPrefixSidMapLocal,
+                                                          ShowSegmentRoutingMplsMappingServer)
 
 
 # =============================================================
@@ -342,6 +343,85 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
         obj = ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(device=self.device)
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-        
+
+# ====================================================
+# Unittest for:
+#   * 'show segment-routing mpls mapping-server ipv4'
+#   * 'show segment-routing mpls mapping-server ipv6'
+# ====================================================
+class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 = {
+        'segment_routing': {
+            'bindings': {
+                'mapping_server': {
+                    'prefix_sid_export_map': {
+                        'ipv4': {
+                            'ipv4_prefix_sid_export_map': {
+                                },
+                            },
+                        },
+                    'prefix_sid_remote_export_map': {
+                        'ipv4': {
+                            'ipv4_prefix_sid_remote_export_map': {
+                                'mapping_entry': {
+                                    '201.0.0.1/32': {
+                                        'algorithm': {
+                                            'ALGO_0': {
+                                                'prefix': '201.0.0.1/32',
+                                                'algorithm': 'ALGO_0',
+                                                'value_type': 'Indx',
+                                                'sid': '5001',
+                                                'range': '1',
+                                                'srgb': 'Y',
+                                                'source': 'OSPF Area 8 11.11.11.11',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output1 = {'execute.return_value': '''
+        show segment-routing mpls mapping-server ipv4
+
+                PREFIX_SID_EXPORT_MAP ALGO_0
+
+        Prefix/masklen   SID Type Range Flags SRGB
+
+                PREFIX_SID_REMOTE_EXPORT_MAP ALGO_0
+
+        Prefix/masklen   SID Type Range Flags SRGB Source
+        201.0.0.1/32  5001 Indx     1         Y  OSPF Area 8 11.11.11.11
+
+                PREFIX_SID_EXPORT_MAP ALGO_1
+
+        Prefix/masklen   SID Type Range Flags SRGB
+
+                PREFIX_SID_REMOTE_EXPORT_MAP ALGO_1
+
+        Prefix/masklen   SID Type Range Flags SRGB Source
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingMplsMappingServer(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(address_family='ipv4')
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowSegmentRoutingMplsMappingServer(device=self.device)
+        parsed_output = obj.parse(address_family='ipv4')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 if __name__ == '__main__':
     unittest.main()

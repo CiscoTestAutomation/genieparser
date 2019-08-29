@@ -7427,8 +7427,8 @@ class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
                         'sid': int,
                         Optional('codes'): str,
                         'prefix': str,
-                        'adv_rtr_id': str,
-                        'area_id': str,
+                        Optional('adv_rtr_id'): str,
+                        Optional('area_id'): str,
                         'type': str,
                         'algo': int
                     },
@@ -7459,9 +7459,10 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
 
         # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
         # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
-        p2 = re.compile(r'^(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
-                        '(?P<prefix>[\d\.\/]+) +(?P<adv_rtr_id>[\d\.]+) +'
-                        '(?P<area_id>\d+) +(?P<type>\w+) +(?P<algo>\d+)$')
+        # 3       (M)     10.16.2.3/32                                    Unknown   0  
+        p2 = re.compile(r'(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
+            '(?P<prefix>[\d\.\/]+)( +(?P<adv_rtr_id>[\d\.]+))?'
+            '( +(?P<area_id>\d+))? +(?P<type>\w+) +(?P<algo>\d+)')
 
         ret_dict = {}
         sid_entries = 0
@@ -7480,6 +7481,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
 
             # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
             # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
+            # 3       (M)     10.16.2.3/32                                    Unknown   0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -7495,8 +7497,11 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                     sid_dict.update({'codes': group['codes']})
 
                 sid_dict.update({'prefix': group['prefix']})
-                sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
-                sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                if 'adv_rtr_id' in group and group['adv_rtr_id']:
+                    sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
+                if 'area_id' in group and group['area_id']:
+                    sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                
                 sid_dict.update({'type': group['type']})
                 sid_dict.update({'algo': int(group['algo'])})
                 continue

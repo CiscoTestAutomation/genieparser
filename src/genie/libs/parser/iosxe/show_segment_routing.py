@@ -514,37 +514,76 @@ class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
     schema = {
         'segment_routing': {
                 'bindings': {
-                    Optional('mapping_server'): {
-                        Any(): {
-                            'policy': {
-                                Any(): {
-                                    'name': str,
-                                    Optional('ipv4'): {
-                                        'mapping_entry': {
-                                            Any(): {
-                                                'algorithm': {
-                                                    Any(): {
-                                                        'prefix': str,
-                                                        'value_type': str,
-                                                        'start_sid': int,
-                                                        'range': str,
-                                                        'algorithm': str,
-                                                    }
+                    'mapping_server': {
+                        Optional('prefix_sid_export_map'): {
+                            Optional('ipv4'): {
+                                'ipv4_prefix_sid_export_map': {
+                                    Optional('mapping_entry'): {
+                                        Any(): {
+                                            'algorithm': {
+                                                Any(): {
+                                                    'prefix': str,
+                                                    'value_type': str,
+                                                    'sid': int,
+                                                    'range': str,
+                                                    'algorithm': str,
                                                 }
                                             }
                                         }
-                                    },
-                                    Optional('ipv6'): {
-                                        'mapping_entry': {
-                                            Any(): {
-                                                'algorithm': {
-                                                    Any(): {
-                                                        'prefix': str,
-                                                        'value_type': str,
-                                                        'start_sid': int,
-                                                        'range': str,
-                                                        'algorithm': str,
-                                                    }
+                                    }
+                                }
+                            },
+                            Optional('ipv6'): {
+                                'ipv6_prefix_sid_export_map': {
+                                    Optional('mapping_entry'): {
+                                        Any(): {
+                                            'algorithm': {
+                                                Any(): {
+                                                    'prefix': str,
+                                                    'value_type': str,
+                                                    'sid': int,
+                                                    'range': str,
+                                                    'algorithm': str,
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Optional('prefix_sid_remote_export_map'): {
+                            Optional('ipv4'): {
+                                'ipv4_prefix_sid_remote_export_map': {
+                                    Optional('mapping_entry'): {
+                                        Any(): {
+                                            'algorithm': {
+                                                Any(): {
+                                                    'prefix': str,
+                                                    'value_type': str,
+                                                    'sid': str,
+                                                    'range': str,
+                                                    'algorithm': str,
+                                                    Optional('source'): str,
+                                                    'srgb': str,
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            Optional('ipv6'): {
+                                'ipv6_prefix_sid_remote_export_map': {
+                                    Optional('mapping_entry'): {
+                                        Any(): {
+                                            'algorithm': {
+                                                Any(): {
+                                                    'prefix': str,
+                                                    'value_type': str,
+                                                    'sid': str,
+                                                    'range': str,
+                                                    'algorithm': str,
+                                                    Optional('source'): str,
+                                                    'srgb': str,
                                                 }
                                             }
                                         }
@@ -552,9 +591,9 @@ class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
                                 }
                             }
                         }
-                    },
-                },
-            },
+                    }
+                }
+            }
         }
 
 # ====================================================
@@ -587,9 +626,9 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
             'ipv6': 'ipv6_prefix_sid_export_map',
         }
 
-        mapping_dict_remote = {
-            'ipv4': 'ipv4_prefix_sid_remote_map',
-            'ipv6': 'ipv6_prefix_sid_remote_map',
+        mapping_dict_remote_export = {
+            'ipv4': 'ipv4_prefix_sid_remote_export_map',
+            'ipv6': 'ipv6_prefix_sid_remote_export_map',
         }
 
         # Init
@@ -597,11 +636,11 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
 
         # PREFIX_SID_EXPORT_MAP ALGO_0
         # PREFIX_SID_EXPORT_MAP ALGO_1
-        p1 = re.compile(r'^PREFIX_SID_EXPORT_MAP +(?P<algorithm>(.*))$')
+        p1 = re.compile(r'^PREFIX_SID_EXPORT_MAP +(?P<algorithm>(\S+))$')
 
         # PREFIX_SID_REMOTE_EXPORT_MAP ALGO_0
         # PREFIX_SID_REMOTE_EXPORT_MAP ALGO_1
-        p2 = re.compile(r'^PREFIX_SID_REMOTE_EXPORT_MAP +(?P<algorithm>(.*))$')
+        p2 = re.compile(r'^PREFIX_SID_REMOTE_EXPORT_MAP +(?P<algorithm>(\S+))$')
 
         # Prefix/masklen   SID Type Range Flags SRGB
         # 10.4.1.1/32         1 Indx     1         Y
@@ -628,15 +667,22 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
                 address_family_dict = ret_dict.setdefault('segment_routing', {}). \
                                     setdefault('bindings', {}). \
                                     setdefault('mapping_server', {}). \
+                                    setdefault('prefix_sid_export_map', {}). \
                                     setdefault(address_family, {}). \
-                                    setdefault(mapping_dict_local[address_family], {})
+                                    setdefault(mapping_dict_export[address_family], {})
                 continue
 
-            # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_0
-            # PREFIX_SID_PROTOCOL_ADV_MAP ALGO_1
+            # PREFIX_SID_REMOTE_EXPORT_MAP ALGO_0
+            # PREFIX_SID_REMOTE_EXPORT_MAP ALGO_1
             m = p2.match(line)
             if m:
                 algorithm = m.groupdict()['algorithm']
+                address_family_dict = ret_dict.setdefault('segment_routing', {}). \
+                                    setdefault('bindings', {}). \
+                                    setdefault('mapping_server', {}). \
+                                    setdefault('prefix_sid_remote_export_map', {}). \
+                                    setdefault(address_family, {}). \
+                                    setdefault(mapping_dict_remote_export[address_family], {})
                 continue
 
             # Prefix/masklen   SID Type Range Flags SRGB
@@ -645,7 +691,8 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
             if m:
                 group = m.groupdict()
                 prefix = group['prefix'] + '/' + group['masklen']
-                algo_dict = address_family_dict.setdefault(prefix, {}). \
+                algo_dict = address_family_dict.setdefault('mapping_entry', {}). \
+                                setdefault(prefix, {}). \
                                 setdefault('algorithm', {}). \
                                 setdefault(algorithm, {})
                 # Set values
@@ -666,14 +713,10 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
                 group = m.groupdict()
                 prefix = group['prefix'] + '/' + group['masklen']
                 # Set dict
-                algo_dict = ret_dict.setdefault('segment_routing', {}).\
-                                     setdefault('bindings', {}).\
-                                     setdefault('connected_prefix_sid_map', {}).\
-                                     setdefault(address_family, {}).\
-                                     setdefault(mapping_dict[address_family], {}).\
-                                     setdefault(prefix, {}).\
-                                     setdefault('algorithm', {}).\
-                                     setdefault(algorithm, {})
+                algo_dict = address_family_dict.setdefault('mapping_entry', {}). \
+                                setdefault(prefix, {}). \
+                                setdefault('algorithm', {}). \
+                                setdefault(algorithm, {})
                 # Set values
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm

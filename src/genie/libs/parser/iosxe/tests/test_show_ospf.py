@@ -10684,6 +10684,59 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
             OSPF Router with ID (10.4.1.1) (Process ID 65109)
     '''}
 
+
+    golden_parsed_output3 = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'sids': {
+                    'total_entries': 3,
+                    1: {
+                        'sid': 1,
+                        'codes': 'L',
+                        'prefix': '10.4.1.1/32',
+                        'adv_rtr_id': '10.4.1.1',
+                        'area_id': '0.0.0.8',
+                        'type': 'Intra',
+                        'algo': 0,
+                        },
+                    11: {
+                        'sid': 11,
+                        'prefix': '10.4.1.2/32',
+                        'adv_rtr_id': '10.4.1.2',
+                        'area_id': '0.0.0.8',
+                        'type': 'Intra',
+                        'algo': 0,
+                        },
+                    45: {
+                        'sid': 45,
+                        'codes': 'M',
+                        'prefix': '10.4.1.3/32',
+                        'type': 'Unknown',
+                        'algo': 0,
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output3 = {'execute.return_value': '''
+        show ip ospf segment-routing sid-database
+
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+        OSPF Segment Routing SIDs
+
+        Codes: L - local, N - label not programmed,
+            M - mapping-server
+
+        SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
+        --------------  ------------------  ---------------  -------  --------  ----
+        1       (L)     10.4.1.1/32         10.4.1.1          8        Intra     0
+        11              10.4.1.2/32         10.4.1.2          8        Intra     0
+        45      (M)     10.4.1.3/32                                    Unknown   0
+    '''}
+
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -10704,6 +10757,13 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
         obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =============================================
 # Unit test for 'show ip ospf segment-routing'
