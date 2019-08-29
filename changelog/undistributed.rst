@@ -25,3 +25,10 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Added ShowVirtualServiceUtilization for "show virtual-service utilization name {name}"
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowBgpL2vpnEvpn for:
+        added a schema and unittest, and updated based on the schema
