@@ -497,3 +497,213 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(ShowSegmentRoutingMplsCon
         else:
             out = output
         return super().cli(address_family=address_family, output=out)
+
+
+# ==================================================================
+# Parser for:
+#    * 'show segment-routing traffic-eng topology ipv4'
+# ==================================================================
+class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
+    """ Schema for 
+        'show segment-routing traffic-eng topology ipv4'
+    """
+    schema = {
+        "nodes": {
+            Any(): {
+                "ospf_router_id": str,
+                "area_id": int,
+                "domain_id": int,
+                "asn": int,
+                "prefix_sid": {
+                    "prefix": str,
+                    "label": int,
+                    "label_type": str,
+                    "domain_id": int,
+                    "flags": str,
+                },
+                "links": {
+                    Any(): {
+                        "local_address": str,
+                        "remote_address": str,
+                        "local_node": {
+                            "ospf_router_id": str,
+                            "area_id": int,
+                            "domain_id": int,
+                            "asn": int,
+                        },
+                        "remote_node": {
+                            "ospf_router_id": str,
+                            "area_id": int,
+                            "domain_id": int,
+                            "asn": int,
+                        },
+                        "metric": str,
+                        "bandwidth_total": int,
+                        "bandwidth_reservable": int,
+                        "admin_groups": str,
+                        "adj_sid": str,
+                    },
+                },
+            },
+        },
+    }
+
+class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologySchema):
+    """ Parser for 
+        'show segment-routing traffic-eng topology ipv4'
+    """
+
+    cli_command = 'show segment-routing traffic-eng topology ipv4'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Node 1:
+        p1 = re.compile(r'^Node +(?P<node>\d+):$')
+
+        #   TE router ID: 27.86.198.239
+        p2 = re.compile(r'^TE +router +ID: +(?P<te_router_id>\S+)\)$')
+
+        #   OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+        p3 = re.compile(r'^OSPF router ID: +(?P<ospf_router_id>\S+) +area ID: '
+                         '+(?P<area_id>\d+) +domain ID: +(?P<domain_id>\d+) '
+                         '+ASN: +(?P<asn>\d+)$')
+
+        #   Prefix SID:
+        #     Prefix 27.86.198.239, label 16073 (regular), domain ID 0, flags: N , E
+        p4 = re.compile(r'^Prefix +(?P<prefix>\S+), +label +(?P<label>\d+) '
+                         '+\((?P<label_type>\S+)\), +domain +ID +(?P<domain_id>\d+), '
+                         '+flags: +(?P<flags>[\S\s]+)$')
+
+        #   Link[0]: local address 27.86.198.26, remote address 27.86.198.25
+        p5 = re.compile(r'^Link\[(?P<link>\d+)\]: +local +address +(?P<local_address>\S+), '
+                         '+remote +address +(?P<remote_address>\S+)$')
+
+        #     Local node:
+        p6 = re.compile(r'^Local +node:$')
+
+        #     Remote node:
+        p6_1 = re.compile(r'^Remote +node:$')
+
+        #     Metric: IGP 1000, TE 1000, Delay 1000
+        p7 = re.compile(r'^Metric: +(?P<metric>[\S\s]+)$')
+
+        #     Bandwidth: Total 125000000, Reservable 0
+        p8 = re.compile(r'^Bandwidth: +Total +(?P<total>\d+), +Reservable +(?P<reservable>\d+)$')
+
+        #     Admin-groups: 0x00000000
+        p9 = re.compile(r'^Admin-groups: +(?P<admin_groups>\S+)$')
+
+        #     Adj SID: 18 (unprotected)  36 (protected)
+        p10 = re.compile(r'^Adj +SID: +(?P<adj_sid>[\S\s]+)$')
+
+        # initial variables
+        ret_dict = {}
+        index = 0
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Node 1:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                node = int(group['node'])
+                node_dict = ret_dict.setdefault('nodes', {}).setdefault(node, {})
+                index = 0
+                continue
+
+            #   TE router ID: 27.86.198.239
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if index == 0:
+                    target = node_dict
+                elif index == 1:
+                    target = local_dict
+                else:
+                    target = remote_dict
+                target.update({'te_router_id': group['te_router_id']})
+                continue
+
+            #   OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if index == 0:
+                    target = node_dict
+                elif index == 1:
+                    target = local_dict
+                else:
+                    target = remote_dict
+                target.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
+                continue
+
+            #   Prefix SID:
+            #     Prefix 27.86.198.239, label 16073 (regular), domain ID 0, flags: N , E
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict = node_dict.setdefault('prefix_sid', {})
+                pref_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
+                continue
+
+            #   Link[0]: local address 27.86.198.26, remote address 27.86.198.25
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                link = int(group['link'])
+                link_dict = node_dict.setdefault('links', {}).setdefault(link, {})
+                link_dict.update({'local_address': group['local_address']})
+                link_dict.update({'remote_address': group['remote_address']})
+                continue
+
+            #     Local node:
+            m = p6.match(line)
+            if m:
+                local_dict = link_dict.setdefault('local_node', {})
+                index = 1
+                continue
+
+            #     Remote node:
+            m = p6_1.match(line)
+            if m:
+                remote_dict = link_dict.setdefault('remote_node', {})
+                index = 2
+                continue
+
+            #     Metric: IGP 1000, TE 1000, Delay 1000
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                link_dict.update({'metric': group['metric']})
+                continue
+
+            #     Bandwidth: Total 125000000, Reservable 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                link_dict.update({'bandwidth_total': int(group['total'])})
+                link_dict.update({'bandwidth_reservable': int(group['reservable'])})
+                continue
+
+            #     Admin-groups: 0x00000000
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                link_dict.update({'admin_groups': group['admin_groups']})
+                continue
+
+            #     Adj SID: 18 (unprotected)  36 (protected)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                link_dict.update({'adj_sid': group['adj_sid']})
+                continue
+
+        return ret_dict
