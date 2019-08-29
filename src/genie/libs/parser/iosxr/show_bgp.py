@@ -5341,15 +5341,27 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             '(?P<path_type>(i|e|c|l|a|r|I))?'
                             '(?P<prefix>[\w\.\:\/\[\]\,]{3,})'
                             '(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
-        p3_1_2 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
+        p3_1_1 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
                             '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) '
                             '+(?P<next_hop>[\w\.\/]+) +'
                             '(?P<metric>\d+) +(?P<localprf>\d+) '
                             '+(?P<weight>\d+) +(?P<path>[\d ]+) +'
                             '(?P<origin_codes>(i|e|\?|\||&))$')
-        p3_1_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
+        p3_1_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                             ' (?P<path_type>(i|e|c|l|a|r|I)) '
                             '(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
+        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
+                            '(?P<path_type>(i|e|c|l|a|r|I))'
+                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
+                            ' +(?P<next_hop>[\w\.\:]+)'
+                            ' +(?P<numbers>[\w\s\(\)\{\}]+)'
+                            ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
+        p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
+                            '(?P<path_type>(i|e|c|l|a|r|I))?'
+                            '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
+                            ' +(?P<next_hop>[\w\.\:]+)'
+                            ' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
         p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                             '(?P<path_type>(i|e|c|l|a|r|I))?'
                             ' *(?P<next_hop>[\w\.\:]{8,})'
@@ -5367,18 +5379,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             ' +(?P<route_distinguisher>(\S+))'
                             '(?: +\(((VRF +(?P<default_vrf>\S+))|'
                             '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)))\))?$')
-        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-                            '(?P<path_type>(i|e|c|l|a|r|I))'
-                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
-                            ' +(?P<next_hop>[\w\.\:]+)'
-                            ' +(?P<numbers>[\w\s\(\)\{\}]+)'
-                            ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
-        p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                            '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
-                            ' +(?P<next_hop>[\w\.\:]+)'
-                            ' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
+        
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5431,7 +5432,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 continue
 
             # * i                   2000:1015::abcd:5678:3
-            m = p3_1_3.match(line)
+            m = p3_1_2.match(line)
             if m:
                 # Get keys
                 if 'njected' not in line and 'next_hop' in m.groupdict():
@@ -5461,7 +5462,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             m = p3_1.match(line)
             # *>i10.111.8.3/32     10.84.66.66           2000        100          0 200 i
             # *>i10.111.8.4/32     10.84.66.66           2000        100          0 200 i
-            m1 = p3_1_2.match(line)
+            m1 = p3_1_1.match(line)
 
             m = m if m else m1
             if m:
@@ -5501,13 +5502,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         index_dict.update({'v6_aggregate_address_ipv6_address': prefix})
                         index_dict.update({'v6_aggregate_address_as_set': True})
                         index_dict.update({'v6_aggregate_address_summary_only': True})
-                        continue
                     else:
                         index_dict.update({'aggregate_address_ipv4_address': address})
                         index_dict.update({'aggregate_address_ipv4_mask': mask})
                         index_dict.update({'aggregate_address_as_set': True})
                         index_dict.update({'aggregate_address_summary_only': True})
-                        continue
                 continue
 
 
@@ -5576,7 +5575,6 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     # Set path
                     if m1.groupdict()['path']:
                         index_dict.update({'path': m1.groupdict()['path'].strip()})
-                        continue
                 elif m2:
                     index_dict.update({'weight': int(m2.groupdict()['weight'])})
                     # Set metric or localprf
@@ -5587,11 +5585,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     # Set path
                     if m2.groupdict()['path']:
                         index_dict.update({'path': m.groupdict()['path'].strip()})
-                        continue
                 elif m3:
                     index_dict.update({'weight': int(m3.groupdict()['weight'])})
                     index_dict.update({'path': m3.groupdict()['path'].strip()})
-                    continue
                 continue
 
             # 100      33445 i
@@ -5629,7 +5625,6 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     # Set path
                     if m1.groupdict()['path']:
                         index_dict.update({'path': m1.groupdict()['path'].strip()})
-                        continue
                 elif m2:
                     index_dict.update({'weight': int(m2.groupdict()['weight'])})
                     # Set metric or localprf
@@ -5640,11 +5635,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     # Set path
                     if m2.groupdict()['path']:
                         index_dict.update({'path': m.groupdict()['path'].strip()})
-                        continue
                 elif m3:
                     index_dict.update({'weight': int(m3.groupdict()['weight'])})
                     index_dict.update({'path': m3.groupdict()['path'].strip()})
-                    continue
                 continue
 
 
@@ -5764,13 +5757,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         index_dict.update({'v6_aggregate_address_ipv6_address': prefix})
                         index_dict.update({'v6_aggregate_address_as_set': True})
                         index_dict.update({'v6_aggregate_address_summary_only': True})
-                        continue
                     else:
                         index_dict.update({'aggregate_address_ipv4_address': address})
                         index_dict.update({'aggregate_address_ipv4_mask': mask})
                         index_dict.update({'aggregate_address_as_set': True})
                         index_dict.update({'aggregate_address_summary_only': True})
-                        continue
                 continue
 
         # order the af prefixes index
