@@ -201,7 +201,7 @@ class test_show_isis_database_detail(unittest.TestCase):
         'tag':{
             'VRF1':{
                 'level':{
-                    "1": {
+                    1: {
                         'R2.00-00':{
                             'lsp_sequence_num': '0x00000007',
                             'lsp_checksum': '0x8A6D',
@@ -248,7 +248,7 @@ class test_show_isis_database_detail(unittest.TestCase):
                             },
                         },
                     },
-                    "2": {
+                    2: {
                         'R2.00-00': {
                             'lsp_sequence_num': '0x00000008',
                             'lsp_checksum': '0x621E',
