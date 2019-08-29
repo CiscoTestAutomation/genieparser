@@ -5333,32 +5333,35 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         p = re.compile(r'^\s*Network +Next Hop +Metric +LocPrf +Weight Path$')
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF'
                             ' +(?P<vrf_name>\S+), +address +family'
-                            ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
+                            ' +(?P<address_family>[\w\s\-\_]+)$')
         p2 = re.compile(r'^\s*BGP +table +version +is'
                             ' +(?P<bgp_table_version>[0-9]+), +(L|l)ocal'
                             ' +(R|r)outer +ID +is +(?P<local_router_id>[0-9\.]+)$')
         p3_1 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                             '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]{3,})'
-                            '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
+                            '(?P<prefix>[\w\.\:\/\[\]\,]{3,})'
+                            '(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
         p3_1_2 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>)+)(?P<path_type>'
-            '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) +(?P<next_hop>[\w\.\/]+) +'
-            '(?P<metric>\d+) +(?P<localprf>\d+) +(?P<weight>\d+) +(?P<path>[\d ]+) +'
-            '(?P<origin_codes>(i|e|\?|\||&))$')
+                            '(i|e|c|l|a|r|I))(?P<prefix>[\w\.\/]+) '
+                            '+(?P<next_hop>[\w\.\/]+) +'
+                            '(?P<metric>\d+) +(?P<localprf>\d+) '
+                            '+(?P<weight>\d+) +(?P<path>[\d ]+) +'
+                            '(?P<origin_codes>(i|e|\?|\||&))$')
         p3_1_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                             ' (?P<path_type>(i|e|c|l|a|r|I)) '
-                            '(?: *(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+))?$')
+                            '(?: *(?P<next_hop>[\w\.\:\/\[\]\,]+))?$')
         p3_3 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
                             '(?P<path_type>(i|e|c|l|a|r|I))?'
-                            ' *(?P<next_hop>[a-zA-Z0-9\.\:]{8,})'
-                            '(?: +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+))?'
+                            ' *(?P<next_hop>[\w\.\:]{8,})'
+                            '(?: +(?P<numbers>[\w\s\(\)\{\}]+))?'
                             ' +(?P<origin_codes>(i|e|\?|\|))$')
         p3_3_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                                '(?P<path_type>(i|e|c|l|a|r|I))?'
-                                '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                                ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                                ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
-        p3_3_2 = re.compile(r'^\s*(?P<numbers>[0-9\s\(\)\{\}]+)? +(?P<origin_codes>(i|e|\?|\|))$')
+                            '(?P<path_type>(i|e|c|l|a|r|I))?'
+                            '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            ' +(?P<next_hop>[\w\.\:]+)'
+                            ' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
+        p3_3_2 = re.compile(r'^\s*(?P<numbers>[0-9\s\(\)\{\}]+)? +'
+                            '(?P<origin_codes>(i|e|\?|\|))$')
         p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
         p4 = re.compile(r'^\s*Route +Distinguisher *:'
                             ' +(?P<route_distinguisher>(\S+))'
@@ -5366,16 +5369,16 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)))\))?$')
         p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
                             '(?P<path_type>(i|e|c|l|a|r|I))'
-                            '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
-                            ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                            ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}]+)'
+                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
+                            ' +(?P<next_hop>[\w\.\:]+)'
+                            ' +(?P<numbers>[\w\s\(\)\{\}]+)'
                             ' +(?P<origin_codes>(i|e|\?|\&|\|))$')
         p3_2_1 = re.compile(r'^\s*(?P<status_codes>(\*\>|s|x|S|d|h|\*|\>|\s)+)'
-                                '(?P<path_type>(i|e|c|l|a|r|I))?'
-                                '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
-                                '(?P<prefix>[a-zA-Z0-9\.\:\/\[\]\,]+)'
-                                ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                                ' +(?P<numbers>[a-zA-Z0-9\s\(\)\{\}\?]+)$')
+                            '(?P<path_type>(i|e|c|l|a|r|I))?'
+                            '( *(?P<origin_codes>(i|e|\?|\&|\|)+))'
+                            '(?P<prefix>[\w\.\:\/\[\]\,]+)'
+                            ' +(?P<next_hop>[\w\.\:]+)'
+                            ' +(?P<numbers>[\w\s\(\)\{\}\?]+)$')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -5388,21 +5391,13 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             m = p1.match(line)
             if m:
                 # Get values
-                vrf_name = str(m.groupdict()['vrf_name'])
-                address_family = str(m.groupdict()['address_family']).lower()
+                vrf_name = m.groupdict()['vrf_name']
+                address_family = m.groupdict()['address_family'].lower()
                 original_address_family = address_family
-                if 'vrf' not in parsed_dict:
-                    parsed_dict['vrf'] = {}
-                if vrf_name not in parsed_dict['vrf']:
-                    parsed_dict['vrf'][vrf_name] = {}
-                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
-                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
-                if address_family not in parsed_dict['vrf'][vrf_name]\
-                    ['address_family']:
-                    parsed_dict['vrf'][vrf_name]['address_family'][address_family] = {}
 
                 # Set af_dict
-                af_dict = parsed_dict['vrf'][vrf_name]['address_family'][address_family]
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                  .setdefault('address_family', {}).setdefault(address_family, {})
                 continue
 
             # BGP table version is 35, local router ID is 10.229.11.11
@@ -5410,9 +5405,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             m = p2.match(line)
             if m:
                 bgp_table_version = int(m.groupdict()['bgp_table_version'])
-                local_router_id = str(m.groupdict()['local_router_id'])
-                af_dict['bgp_table_version'] = bgp_table_version
-                af_dict['local_router_id'] = local_router_id
+                local_router_id = m.groupdict()['local_router_id']
+                af_dict.update({'bgp_table_version': bgp_table_version})
+                af_dict.update({'local_router_id': local_router_id})
                 continue
 
             #                     20:47::21a:1ff:fe00:161/128
@@ -5420,7 +5415,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if m:
                 # Get keys
                 if 'njected' not in line and 'next_hop' in m.groupdict():
-                    next_hop = str(m.groupdict()['next_hop'])
+                    next_hop = m.groupdict()['next_hop']
 
                     if data_on_nextline:
                         data_on_nextline =  False
@@ -5432,7 +5427,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                       .setdefault('index', {}).setdefault(index, {})
 
                     # Set keys
-                    index_dict['next_hop'] = next_hop
+                    index_dict.update({'next_hop': next_hop})
                 continue
 
             # * i                   2000:1015::abcd:5678:3
@@ -5440,9 +5435,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if m:
                 # Get keys
                 if 'njected' not in line and 'next_hop' in m.groupdict():
-                    next_hop = str(m.groupdict()['next_hop'])
-                    status_codes = str(m.groupdict()['status_codes'])
-                    path_type = str(m.groupdict()['path_type'])
+                    next_hop = m.groupdict()['next_hop']
+                    status_codes = m.groupdict()['status_codes']
+                    path_type = m.groupdict()['path_type']
 
                     index += 1
 
@@ -5451,9 +5446,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                       .setdefault('index', {}).setdefault(index, {})
 
                     # Set keys
-                    index_dict['next_hop'] = next_hop
-                    index_dict['status_codes'] = status_codes
-                    index_dict['path_type'] = path_type
+                    index_dict.update({'next_hop': next_hop})
+                    index_dict.update({'status_codes': status_codes})
+                    index_dict.update({'path_type': path_type})
                 continue
 
             # Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
@@ -5475,50 +5470,43 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 data_on_nextline = True
 
                 # Get keys
-                status_codes = str(m.groupdict()['status_codes'])
-                path_type = str(m.groupdict()['path_type'])
-                prefix = str(m.groupdict()['prefix'])
+                status_codes = m.groupdict()['status_codes']
+                path_type = m.groupdict()['path_type']
+                prefix = m.groupdict()['prefix']
                 if status_codes == 'None' or path_type == 'None' or prefix == 'None':
                     continue
-                # Init dict
-                if 'prefixes' not in af_dict:
-                    af_dict['prefixes'] = {}
-                if prefix not in af_dict['prefixes']:
-                    af_dict['prefixes'][prefix] = {}
-                if 'index' not in af_dict['prefixes'][prefix]:
-                    af_dict['prefixes'][prefix]['index'] = {}
-                if index not in af_dict['prefixes'][prefix]['index']:
-                    af_dict['prefixes'][prefix]['index'][index] = {}
-
+            
                 # Set keys
-                af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
-                af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
+                index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                  .setdefault('index', {}).setdefault(index, {})
+                index_dict.update({'status_codes': status_codes})
+                index_dict.update({'path_type': path_type})
                 if 'next_hop' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['next_hop'] = str(m.groupdict()['next_hop'])
+                    index_dict.update({'next_hop': m.groupdict()['next_hop']})
                 if 'metric' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m.groupdict()['metric'])
+                    index_dict.update({'metric': int(m.groupdict()['metric'])})
                 if 'localprf' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m.groupdict()['localprf'])
+                    index_dict.update({'localprf': int(m.groupdict()['localprf'])})
                 if 'weight' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m.groupdict()['weight'])
+                    index_dict.update({'weight': int(m.groupdict()['weight'])})
                 if 'path' in m.groupdict():
-                    af_dict['prefixes'][prefix]['index'][index]['path'] = m.groupdict()['path'].strip()
+                    index_dict.update({'path': m.groupdict()['path'].strip()})
                 if 'origin_codes' in m.groupdict():                
-                    af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = str(m.groupdict()['origin_codes'])
+                    index_dict.update({'origin_codes': m.groupdict()['origin_codes']})
                 
                 # Check if aggregate_address_ipv4_address
                 if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
-                        af_dict['v6_aggregate_address_ipv6_address'] = prefix
-                        af_dict['v6_aggregate_address_as_set'] = True
-                        af_dict['v6_aggregate_address_summary_only'] = True
+                        index_dict.update({'v6_aggregate_address_ipv6_address': prefix})
+                        index_dict.update({'v6_aggregate_address_as_set': True})
+                        index_dict.update({'v6_aggregate_address_summary_only': True})
                         continue
                     else:
-                        af_dict['aggregate_address_ipv4_address'] = address
-                        af_dict['aggregate_address_ipv4_mask'] = mask
-                        af_dict['aggregate_address_as_set'] = True
-                        af_dict['aggregate_address_summary_only'] = True
+                        index_dict.update({'aggregate_address_ipv4_address': address})
+                        index_dict.update({'aggregate_address_ipv4_mask': mask})
+                        index_dict.update({'aggregate_address_as_set': True})
+                        index_dict.update({'aggregate_address_summary_only': True})
                         continue
                 continue
 
@@ -5535,35 +5523,24 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if m:
                 # Get keys
                 if m.groupdict()['status_codes']:
-                    status_codes = str(m.groupdict()['status_codes'])
+                    status_codes = m.groupdict()['status_codes']
                 if m.groupdict()['path_type']:
-                    path_type = str(m.groupdict()['path_type'])
-                next_hop = str(m.groupdict()['next_hop'])
-                origin_codes = str(m.groupdict()['origin_codes'])
-
-                # if data_on_nextline:
-                #     data_on_nextline =  False
-                # else:
-                #     index += 1
-
-                # Init dict
-                if 'prefixes' not in af_dict:
-                    af_dict['prefixes'] = {}
-                if prefix not in af_dict['prefixes']:
-                    af_dict['prefixes'][prefix] = {}
-                if 'index' not in af_dict['prefixes'][prefix]:
-                    af_dict['prefixes'][prefix]['index'] = {}
-                if index not in af_dict['prefixes'][prefix]['index']:
-                    af_dict['prefixes'][prefix]['index'][index] = {}
+                    path_type = m.groupdict()['path_type']
+                next_hop = m.groupdict()['next_hop']
+                origin_codes = m.groupdict()['origin_codes']
 
                 # Set keys
-                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
-                af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
+                index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                  .setdefault('index', {}).setdefault(index, {})
+                index_dict.update({'next_hop': next_hop})
+                index_dict.update({'origin_codes': origin_codes})
+                index_dict.update({'status_codes': status_codes})
+                index_dict.update({'path_type': path_type})
 
                 try:
                     # Set values of status_codes and path_type from prefix line
-                    af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
-                    af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
+                    index_dict.update({'status_codes': status_codes})
+                    index_dict.update({'path_type': path_type})
                 except Exception:
                     pass
 
@@ -5593,27 +5570,27 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                                  ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
-                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
+                    index_dict.update({'metric': int(m1.groupdict()['metric'])})
+                    index_dict.update({'localprf': int(m1.groupdict()['localprf'])})
+                    index_dict.update({'weight': int(m1.groupdict()['weight'])})
                     # Set path
                     if m1.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
+                        index_dict.update({'path': m1.groupdict()['path'].strip()})
                         continue
                 elif m2:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
+                    index_dict.update({'weight': int(m2.groupdict()['weight'])})
                     # Set metric or localprf
                     if len(m2.groupdict()['space']) > 10:
-                        af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
+                        index_dict.update({'metric': int(m2.groupdict()['value'])})
                     else:
-                        af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        index_dict.update({'localprf': int(m2.groupdict()['value'])})
                     # Set path
                     if m2.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
                         continue
                 elif m3:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
-                    af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+                    index_dict.update({'weight': int(m3.groupdict()['weight'])})
+                    index_dict.update({'path': m3.groupdict()['path'].strip()})
                     continue
                 continue
 
@@ -5646,27 +5623,27 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                                  ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
-                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
+                    index_dict.update({'metric': int(m1.groupdict()['metric'])})
+                    index_dict.update({'localprf': int(m1.groupdict()['localprf'])})
+                    index_dict.update({'weight': int(m1.groupdict()['weight'])})
                     # Set path
                     if m1.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
+                        index_dict.update({'path': m1.groupdict()['path'].strip()})
                         continue
                 elif m2:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
+                    index_dict.update({'weight': int(m2.groupdict()['weight'])})
                     # Set metric or localprf
                     if len(m2.groupdict()['space']) > 10:
-                        af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
+                        index_dict.update({'metric': int(m2.groupdict()['value'])})
                     else:
-                        af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        index_dict.update({'localprf': int(m2.groupdict()['value'])})
                     # Set path
                     if m2.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
                         continue
                 elif m3:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
-                    af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+                    index_dict.update({'weight': int(m3.groupdict()['weight'])})
+                    index_dict.update({'path': m3.groupdict()['path'].strip()})
                     continue
                 continue
 
@@ -5677,33 +5654,25 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             # Route Distinguisher: 10.49.1.0:3    (L3VNI 9100)
             m = p4.match(line)
             if m:
-                route_distinguisher = str(m.groupdict()['route_distinguisher'])
+                route_distinguisher = m.groupdict()['route_distinguisher']
                 new_address_family = original_address_family + ' RD ' + route_distinguisher
                 
-                # Init dict
-                if 'address_family' not in parsed_dict['vrf'][vrf_name]:
-                    parsed_dict['vrf'][vrf_name]['address_family'] = {}
-                if new_address_family not in parsed_dict['vrf'][vrf_name]['address_family']:
-                    parsed_dict['vrf'][vrf_name]['address_family'][new_address_family] = {}
-                
                 # Set keys
-                parsed_dict['vrf'][vrf_name]['address_family'][new_address_family]['bgp_table_version'] = bgp_table_version
-                parsed_dict['vrf'][vrf_name]['address_family'][new_address_family]['local_router_id'] = local_router_id
-                parsed_dict['vrf'][vrf_name]['address_family'][new_address_family]['route_distinguisher'] = route_distinguisher
-
+                naf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                  .setdefault('address_family', {}).setdefault(new_address_family, {})
+                naf_dict.update({'bgp_table_version': bgp_table_version})
+                naf_dict.update({'local_router_id': local_router_id})
+                naf_dict.update({'route_distinguisher': route_distinguisher})
 
                 if m.groupdict()['default_vrf']:
-                    parsed_dict['vrf'][vrf_name]['address_family']\
-                        [new_address_family]['default_vrf'] = \
-                            str(m.groupdict()['default_vrf'])
+                    naf_dict.update({'default_vrf': m.groupdict()['default_vrf']})
                 elif m.groupdict()['default_vrf1']:
-                    parsed_dict['vrf'][vrf_name]['address_family']\
-                        [new_address_family]['default_vrf'] = \
-                            str(m.groupdict()['default_vrf1'])
+                    naf_dict.update({'default_vrf': m.groupdict()['default_vrf1']})                            
 
                 # Reset address_family key and af_dict for use in other regex
                 address_family = new_address_family
-                af_dict = parsed_dict['vrf'][vrf_name]['address_family'][address_family]
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                  .setdefault('address_family', {}).setdefault(address_family, {})
                 continue
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
@@ -5728,29 +5697,19 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 index = 1
                 
                 # Get keys
-                status_codes = str(m.groupdict()['status_codes'])
-                path_type = str(m.groupdict()['path_type'])
-                prefix = str(m.groupdict()['prefix'])
-                next_hop = str(m.groupdict()['next_hop'])
-                origin_codes = str(m.groupdict()['origin_codes'])
+                status_codes = m.groupdict()['status_codes']
+                path_type = m.groupdict()['path_type']
+                prefix = m.groupdict()['prefix']
+                next_hop = m.groupdict()['next_hop']
+                origin_codes = m.groupdict()['origin_codes']
 
                 # Init dict
-                if 'prefixes' not in af_dict:
-                    af_dict['prefixes'] = {}
-                if prefix not in af_dict['prefixes']:
-                    af_dict['prefixes'][prefix] = {}
-                if 'index' not in af_dict['prefixes'][prefix]:
-                    af_dict['prefixes'][prefix]['index'] = {}
-                if index not in af_dict['prefixes'][prefix]['index']:
-                    af_dict['prefixes'][prefix]['index'][index] = {}
-                if index not in af_dict['prefixes'][prefix]['index']:
-                    af_dict['prefixes'][prefix]['index'][index] = {}
-
-                # Set keys
-                af_dict['prefixes'][prefix]['index'][index]['status_codes'] = status_codes
-                af_dict['prefixes'][prefix]['index'][index]['path_type'] = path_type
-                af_dict['prefixes'][prefix]['index'][index]['next_hop'] = next_hop
-                af_dict['prefixes'][prefix]['index'][index]['origin_codes'] = origin_codes
+                index_dict = af_dict.setdefault('prefixes', {}).setdefault(prefix, {})\
+                  .setdefault('index', {}).setdefault(index, {})
+                index_dict.update({'next_hop': next_hop})
+                index_dict.update({'origin_codes': origin_codes})
+                index_dict.update({'status_codes': status_codes})
+                index_dict.update({'path_type': path_type})
 
                 # Parse numbers
                 numbers = m.groupdict()['numbers']
@@ -5778,39 +5737,39 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                                  ' +(?P<path>[0-9\{\}\s]+)$').match(numbers)
 
                 if m1:
-                    af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m1.groupdict()['metric'])
-                    af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m1.groupdict()['localprf'])
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m1.groupdict()['weight'])
+                    index_dict.update({'metric': int(m1.groupdict()['metric'])})
+                    index_dict.update({'localprf': int(m1.groupdict()['localprf'])})
+                    index_dict.update({'weight': int(m1.groupdict()['weight'])})
                     # Set path
                     if m1.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m1.groupdict()['path'].strip()
+                        index_dict.update({'path': m1.groupdict()['path'].strip()})
                 elif m2:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m2.groupdict()['weight'])
+                    index_dict.update({'weight': int(m2.groupdict()['weight'])})
                     # Set metric or localprf
                     if len(m2.groupdict()['space']) > 10:
-                        af_dict['prefixes'][prefix]['index'][index]['metric'] = int(m2.groupdict()['value'])
+                        index_dict.update({'metric': int(m2.groupdict()['value'])})
                     else:
-                        af_dict['prefixes'][prefix]['index'][index]['localprf'] = int(m2.groupdict()['value'])
+                        index_dict.update({'localprf': int(m2.groupdict()['value'])})
                     # Set path
                     if m2.groupdict()['path']:
-                        af_dict['prefixes'][prefix]['index'][index]['path'] = m2.groupdict()['path'].strip()
+                        index_dict.update({'path': m.groupdict()['path'].strip()})
                 elif m3:
-                    af_dict['prefixes'][prefix]['index'][index]['weight'] = int(m3.groupdict()['weight'])
-                    af_dict['prefixes'][prefix]['index'][index]['path'] = m3.groupdict()['path'].strip()
+                    index_dict.update({'weight': int(m3.groupdict()['weight'])})
+                    index_dict.update({'path': m3.groupdict()['path'].strip()})
 
                 # Check if aggregate_address_ipv4_address
                 if 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
-                        af_dict['v6_aggregate_address_ipv6_address'] = prefix
-                        af_dict['v6_aggregate_address_as_set'] = True
-                        af_dict['v6_aggregate_address_summary_only'] = True
+                        index_dict.update({'v6_aggregate_address_ipv6_address': prefix})
+                        index_dict.update({'v6_aggregate_address_as_set': True})
+                        index_dict.update({'v6_aggregate_address_summary_only': True})
                         continue
                     else:
-                        af_dict['aggregate_address_ipv4_address'] = address
-                        af_dict['aggregate_address_ipv4_mask'] = mask
-                        af_dict['aggregate_address_as_set'] = True
-                        af_dict['aggregate_address_summary_only'] = True
+                        index_dict.update({'aggregate_address_ipv4_address': address})
+                        index_dict.update({'aggregate_address_ipv4_mask': mask})
+                        index_dict.update({'aggregate_address_as_set': True})
+                        index_dict.update({'aggregate_address_summary_only': True})
                         continue
                 continue
 
@@ -5823,10 +5782,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             if 'address_family' not in parsed_dict['vrf'][vrf_name]:
                 continue
             for af in parsed_dict['vrf'][vrf_name]['address_family']:
-                af_dict = parsed_dict['vrf'][vrf_name]['address_family'][af]
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                  .setdefault('address_family', {}).setdefault(af, {})
                 if 'prefixes' in af_dict:
                     for prefixes in af_dict['prefixes']:
-                        if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:                            
+                        if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:
                             ind = 1
                             nexthop_dict = {}
                             sorted_list = sorted(af_dict['prefixes'][prefixes]['index'].items(),
