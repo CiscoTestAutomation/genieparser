@@ -322,6 +322,7 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            line = line.replace('\t', ' ')
             
             # Dot1x Supplicant Port Statistics for GigabitEthernet1/0/9
             # Dot1x Authenticator Port Statistics for GigabitEthernet0/1
