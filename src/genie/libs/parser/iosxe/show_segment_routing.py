@@ -527,6 +527,7 @@ class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
                                                     'sid': int,
                                                     'range': str,
                                                     'algorithm': str,
+                                                    'srgb': str,
                                                 }
                                             }
                                         }
@@ -544,6 +545,7 @@ class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
                                                     'sid': int,
                                                     'range': str,
                                                     'algorithm': str,
+                                                    'srgb': str,
                                                 }
                                             }
                                         }
@@ -560,7 +562,7 @@ class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
                                                 Any(): {
                                                     'prefix': str,
                                                     'value_type': str,
-                                                    'sid': str,
+                                                    'sid': int,
                                                     'range': str,
                                                     'algorithm': str,
                                                     Optional('source'): str,
@@ -579,7 +581,7 @@ class ShowSegmentRoutingMplsMappingServerSchema(MetaParser):
                                                 Any(): {
                                                     'prefix': str,
                                                     'value_type': str,
-                                                    'sid': str,
+                                                    'sid': int,
                                                     'range': str,
                                                     'algorithm': str,
                                                     Optional('source'): str,
@@ -699,7 +701,7 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm
                 algo_dict['value_type'] = group['type']
-                algo_dict['sid'] = group['sid']
+                algo_dict['sid'] = int(group['sid'])
                 algo_dict['range'] = group['range']
                 algo_dict['srgb'] = group['srgb']
                 if group['flags']:
@@ -721,7 +723,7 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
                 algo_dict['prefix'] = prefix
                 algo_dict['algorithm'] = algorithm
                 algo_dict['value_type'] = group['type']
-                algo_dict['sid'] = group['sid']
+                algo_dict['sid'] = int(group['sid'])
                 algo_dict['range'] = group['range']
                 algo_dict['srgb'] = group['srgb']
                 algo_dict['source'] = group['source']
