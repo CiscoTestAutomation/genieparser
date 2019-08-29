@@ -11,6 +11,8 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls gb lock'
     * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
     * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+    * 'show segment-routing traffic-eng policy all'
+    * 'show segment-routing traffic-eng policy name {name}'
 '''
 
 # Python
@@ -497,3 +499,217 @@ class ShowSegmentRoutingMplsConnectedPrefixSidMapLocal(ShowSegmentRoutingMplsCon
         else:
             out = output
         return super().cli(address_family=address_family, output=out)
+
+
+# ==================================================================
+# Parser for:
+#    * 'show segment-routing traffic-eng policy all'
+#    * 'show segment-routing traffic-eng policy name {name}'
+# ==================================================================
+class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
+    """ Schema for 
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
+    """
+
+    schema = {
+        Any(): {
+            "name": str,
+            "color": int,
+            "end_point": str,
+            "admin_status": str,
+            "oper_status": str,
+            "start": str,
+            "up_time": str,
+            "candidate_paths": {
+                Any(): {
+                    "preference": int,
+                    Optional("dynamic"): str,
+                    Optional("explicit"): str,
+                    "weight": int,
+                    "metric_type": str,
+                    Optional("path_accumulated_metric"): int,
+                    Optional("prefix_sid"): {
+                         Any(): str,
+                    },
+                },
+            },
+            "attributes": {
+                "binding_sid": int,
+                "allocation_mode": str,
+                "state": str,
+            },
+        },
+    }
+
+class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchema):
+    """ Parser for 
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
+    """
+
+    cli_command = ['show segment-routing traffic-eng policy all', 
+                   'show segment-routing traffic-eng policy name {name}']
+
+    def cli(self, name=None, output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[1].format(name=name)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Name: test1 (Color: 100 End-point: 106.162.196.241)
+        p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) +End-point: +(?P<end_point>\S+)\)$')
+
+        # Status:
+        #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+        p2 = re.compile(r'^Admin: +(?P<admin>\S+), +Operational: +(?P<oper>\S+) +for +(?P<time>\S+) +\((?P<start>[\S\s]+)\)$')
+
+        # Candidate-paths:
+        #     Preference 400:
+        p3 = re.compile(r'^Preference +(?P<preference>\d+):$')
+
+        #     Dynamic (pce) (inactive)
+        #     Dynamic (active)
+        p4 = re.compile(r'^Dynamic +(?P<dynamic>[\S\s]+)$')
+
+        #         Weight: 0, Metric Type: TE
+        p5 = re.compile(r'^Weight: +(?P<weight>[\d]+), +Metric +Type: +(?P<metric_type>[\S]+)$')
+
+        #         Metric Type: IGP, Path Accumulated Metric: 2200
+        p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+), Path +Accumulated +Metric: +(?P<path_accumulated_metric>[\d]+)$')
+
+        #         16063 [Prefix-SID, 106.162.196.241]
+        p7 = re.compile(r'(?P<prefix_sid>[\d]+) +\[Prefix-SID, +(?P<ip>[\S]+)\]$')
+
+        #     Explicit: segment-list test1 (inactive)
+        p8 = re.compile(r'^Explicit: +(?P<explicit>[\S\s]+)$')
+
+        # Attributes:
+        #     Binding SID: 15000
+        p9 = re.compile(r'^Binding +SID: +(?P<binding_sid>[\d]+)$')
+
+        #     Allocation mode: explicit
+        p10 = re.compile(r'^Allocation +mode: +(?P<allocation_mode>[\S]+)$')
+
+        #     State: Programmed
+        p11 = re.compile(r'^State: +(?P<state>[\S]+)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Name: test1 (Color: 100 End-point: 106.162.196.241)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                policy_dict = ret_dict.setdefault(name, {})
+
+                policy_dict.update({'name': name})
+                policy_dict.update({'color': int(group['color'])})
+                policy_dict.update({'end_point': group['end_point']})
+                continue
+
+            # Status:
+            #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                oper_status = group['oper']
+
+                policy_dict.update({'admin_status': group['admin']})
+                policy_dict.update({'oper_status': oper_status})
+                policy_dict.update({'start': group['start']})
+
+                if 'up' in oper_status:
+                    policy_dict.update({'up_time': group['time']})
+                continue
+
+            # Candidate-paths:
+            #     Preference 400:
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pref = int(group['preference'])
+                pref_dict = policy_dict.setdefault("candidate_paths", {})\
+                                       .setdefault(pref, {})
+                pref_dict.update({'preference': pref})
+                continue
+
+            #     Dynamic (pce) (inactive)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict.update({'dynamic': group['dynamic']})
+                continue
+
+            #         Weight: 0, Metric Type: TE
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict.update({'weight': int(group['weight'])})
+                pref_dict.update({'metric_type': group['metric_type']})
+                continue
+
+            #         Metric Type: IGP, Path Accumulated Metric: 2200
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict.update({'metric_type': group['metric_type']})
+
+                path = int(group['path_accumulated_metric'])
+                pref_dict.update({'path_accumulated_metric': path})
+                continue
+
+            #         16063 [Prefix-SID, 106.162.196.241]
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = int(group['prefix_sid'])
+                ip = group['ip']
+                sid_dict = pref_dict.setdefault("prefix_sid", {})
+                sid_dict.update({prefix: ip})
+                continue
+
+            #     Explicit: segment-list test1 (inactive)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                pref_dict.update({'explicit': group['explicit']})
+                continue
+                
+            # Attributes:
+            #     Binding SID: 15000
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                attr_dict = policy_dict.setdefault("attributes", {})
+                attr_dict.update({'binding_sid': int(group['binding_sid'])})
+                continue
+
+            #     Allocation mode: explicit
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                attr_dict = policy_dict.setdefault("attributes", {})
+                attr_dict.update({'allocation_mode': group['allocation_mode']})
+                continue
+
+            #     State: Programmed
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                attr_dict = policy_dict.setdefault("attributes", {})
+                attr_dict.update({'state': group['state']})
+                continue
+
+        return ret_dict
