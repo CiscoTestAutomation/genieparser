@@ -358,15 +358,9 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
         'segment_routing': {
             'bindings': {
                 'mapping_server': {
-                    'prefix_sid_export_map': {
-                        'ipv4': {
-                            'ipv4_prefix_sid_export_map': {
-                                },
-                            },
-                        },
-                    'prefix_sid_remote_export_map': {
-                        'ipv4': {
-                            'ipv4_prefix_sid_remote_export_map': {
+                    'policy': {
+                        'prefix_sid_remote_export_map': {
+                            'ipv4': {
                                 'mapping_entry': {
                                     '192.168.111.1/32': {
                                         'algorithm': {
@@ -374,7 +368,7 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
                                                 'prefix': '192.168.111.1/32',
                                                 'algorithm': 'ALGO_0',
                                                 'value_type': 'Indx',
-                                                'sid': '5001',
+                                                'sid': 5001,
                                                 'range': '1',
                                                 'srgb': 'Y',
                                                 'source': 'OSPF Area 8 10.229.11.11',
