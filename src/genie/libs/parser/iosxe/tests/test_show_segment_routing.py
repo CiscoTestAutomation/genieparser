@@ -357,12 +357,12 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
     golden_parsed_output = {
         'nodes': {
             1: {
-                'ospf_router_id': '27.86.198.239',
+                'ospf_router_id': '10.19.198.239',
                 'area_id': 8,
                 'domain_id': 0,
-                'asn': 9996,
+                'asn': 65109,
                 'prefix_sid': {
-                    'prefix': '27.86.198.239',
+                    'prefix': '10.19.198.239',
                     'label': 16073,
                     'label_type': 'regular',
                     'domain_id': 0,
@@ -370,19 +370,19 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                 },
                 'links': {
                     0: {
-                        'local_address': '27.86.198.26',
-                        'remote_address': '27.86.198.25',
+                        'local_address': '10.19.198.26',
+                        'remote_address': '10.19.198.25',
                         'local_node': {
-                            'ospf_router_id': '27.86.198.239',
+                            'ospf_router_id': '10.19.198.239',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'remote_node': {
-                            'ospf_router_id': '111.87.5.252',
+                            'ospf_router_id': '10.189.5.252',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'metric': 'IGP 1000, TE 1000, Delay 1000',
                         'bandwidth_total': 125000000,
@@ -391,19 +391,19 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                         'adj_sid': '18 (unprotected)  36 (protected)',
                     },
                     1: {
-                        'local_address': '27.86.198.30',
-                        'remote_address': '27.86.198.29',
+                        'local_address': '10.19.198.30',
+                        'remote_address': '10.19.198.29',
                         'local_node': {
-                            'ospf_router_id': '27.86.198.239',
+                            'ospf_router_id': '10.19.198.239',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'remote_node': {
-                            'ospf_router_id': '111.87.5.253',
+                            'ospf_router_id': '10.189.5.253',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'metric': 'IGP 1000, TE 1000, Delay 1000',
                         'bandwidth_total': 125000000,
@@ -414,12 +414,12 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                 },
             },
             2: {
-                'ospf_router_id': '111.87.5.252',
+                'ospf_router_id': '10.189.5.252',
                 'area_id': 8,
                 'domain_id': 0,
-                'asn': 9996,
+                'asn': 65109,
                 'prefix_sid': {
-                    'prefix': '111.87.5.252',
+                    'prefix': '10.189.5.252',
                     'label': 16071,
                     'label_type': 'regular',
                     'domain_id': 0,
@@ -427,19 +427,19 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                 },
                 'links': {
                     0: {
-                        'local_address': '27.86.198.25',
-                        'remote_address': '27.86.198.26',
+                        'local_address': '10.19.198.25',
+                        'remote_address': '10.19.198.26',
                         'local_node': {
-                            'ospf_router_id': '111.87.5.252',
+                            'ospf_router_id': '10.189.5.252',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'remote_node': {
-                            'ospf_router_id': '27.86.198.239',
+                            'ospf_router_id': '10.19.198.239',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'metric': 'IGP 1000, TE 1000, Delay 1000',
                         'bandwidth_total': 125000000,
@@ -448,19 +448,19 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                         'adj_sid': '24 (protected)',
                     },
                     1: {
-                        'local_address': '106.187.14.122',
-                        'remote_address': '106.187.14.121',
+                        'local_address': '10.169.14.122',
+                        'remote_address': '10.169.14.121',
                         'local_node': {
-                            'ospf_router_id': '111.87.5.252',
+                            'ospf_router_id': '10.189.5.252',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'remote_node': {
-                            'ospf_router_id': '106.187.14.240',
+                            'ospf_router_id': '10.169.14.240',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'metric': 'IGP 100, TE 100, Delay 100',
                         'bandwidth_total': 125000000,
@@ -469,19 +469,19 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                         'adj_sid': '16 (protected)',
                     },
                     2: {
-                        'local_address': '111.87.5.93',
-                        'remote_address': '111.87.5.94',
+                        'local_address': '10.189.5.93',
+                        'remote_address': '10.189.5.94',
                         'local_node': {
-                            'ospf_router_id': '111.87.5.252',
+                            'ospf_router_id': '10.189.5.252',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'remote_node': {
-                            'ospf_router_id': '111.87.5.253',
+                            'ospf_router_id': '10.189.5.253',
                             'area_id': 8,
                             'domain_id': 0,
-                            'asn': 9996,
+                            'asn': 65109,
                         },
                         'metric': 'IGP 5, TE 5, Delay 5',
                         'bandwidth_total': 125000000,
@@ -496,62 +496,62 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         Node 1:
-        TE router ID: 27.86.198.239
-        OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+        TE router ID: 10.19.198.239
+        OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
         Prefix SID:
-            Prefix 27.86.198.239, label 16073 (regular), domain ID 0, flags: N , E
-        Link[0]: local address 27.86.198.26, remote address 27.86.198.25
+            Prefix 10.19.198.239, label 16073 (regular), domain ID 0, flags: N , E
+        Link[0]: local address 10.19.198.26, remote address 10.19.198.25
             Local node:
-            OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+            OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
             Remote node:
-            TE router ID: 111.87.5.252
-            OSPF router ID: 111.87.5.252 area ID: 8 domain ID: 0 ASN: 9996
+            TE router ID: 10.189.5.252
+            OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
             Metric: IGP 1000, TE 1000, Delay 1000
             Bandwidth: Total 125000000, Reservable 0
             Admin-groups: 0x00000000
             Adj SID: 18 (unprotected)  36 (protected)
-        Link[1]: local address 27.86.198.30, remote address 27.86.198.29
+        Link[1]: local address 10.19.198.30, remote address 10.19.198.29
             Local node:
-            OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+            OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
             Remote node:
-            TE router ID: 111.87.5.253
-            OSPF router ID: 111.87.5.253 area ID: 8 domain ID: 0 ASN: 9996
+            TE router ID: 10.189.5.253
+            OSPF router ID: 10.189.5.253 area ID: 8 domain ID: 0 ASN: 65109
             Metric: IGP 1000, TE 1000, Delay 1000
             Bandwidth: Total 125000000, Reservable 0
             Admin-groups: 0x00000000
             Adj SID: 37 (unprotected)  38 (protected)
 
         Node 2:
-        TE router ID: 111.87.5.252
-        OSPF router ID: 111.87.5.252 area ID: 8 domain ID: 0 ASN: 9996
+        TE router ID: 10.189.5.252
+        OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
         Prefix SID:
-            Prefix 111.87.5.252, label 16071 (regular), domain ID 0, flags: N
-        Link[0]: local address 27.86.198.25, remote address 27.86.198.26
+            Prefix 10.189.5.252, label 16071 (regular), domain ID 0, flags: N
+        Link[0]: local address 10.19.198.25, remote address 10.19.198.26
             Local node:
-            OSPF router ID: 111.87.5.252 area ID: 8 domain ID: 0 ASN: 9996
+            OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
             Remote node:
-            TE router ID: 27.86.198.239
-            OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+            TE router ID: 10.19.198.239
+            OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
             Metric: IGP 1000, TE 1000, Delay 1000
             Bandwidth: Total 125000000, Reservable 125000000
             Admin-groups: 0x00000000
             Adj SID: 24 (protected)
-        Link[1]: local address 106.187.14.122, remote address 106.187.14.121
+        Link[1]: local address 10.169.14.122, remote address 10.169.14.121
             Local node:
-            OSPF router ID: 111.87.5.252 area ID: 8 domain ID: 0 ASN: 9996
+            OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
             Remote node:
-            TE router ID: 106.187.14.240
-            OSPF router ID: 106.187.14.240 area ID: 8 domain ID: 0 ASN: 9996
+            TE router ID: 10.169.14.240
+            OSPF router ID: 10.169.14.240 area ID: 8 domain ID: 0 ASN: 65109
             Metric: IGP 100, TE 100, Delay 100
             Bandwidth: Total 125000000, Reservable 125000000
             Admin-groups: 0x00000000
             Adj SID: 16 (protected)
-        Link[2]: local address 111.87.5.93, remote address 111.87.5.94
+        Link[2]: local address 10.189.5.93, remote address 10.189.5.94
             Local node:
-            OSPF router ID: 111.87.5.252 area ID: 8 domain ID: 0 ASN: 9996
+            OSPF router ID: 10.189.5.252 area ID: 8 domain ID: 0 ASN: 65109
             Remote node:
-            TE router ID: 111.87.5.253
-            OSPF router ID: 111.87.5.253 area ID: 8 domain ID: 0 ASN: 9996
+            TE router ID: 10.189.5.253
+            OSPF router ID: 10.189.5.253 area ID: 8 domain ID: 0 ASN: 65109
             Metric: IGP 5, TE 5, Delay 5
             Bandwidth: Total 125000000, Reservable 125000000
             Admin-groups: 0x00000000

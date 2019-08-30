@@ -564,21 +564,21 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
         # Node 1:
         p1 = re.compile(r'^Node +(?P<node>\d+):$')
 
-        #   TE router ID: 27.86.198.239
+        #   TE router ID: 10.19.198.239
         p2 = re.compile(r'^TE +router +ID: +(?P<te_router_id>\S+)\)$')
 
-        #   OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+        #   OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
         p3 = re.compile(r'^OSPF router ID: +(?P<ospf_router_id>\S+) +area ID: '
                          '+(?P<area_id>\d+) +domain ID: +(?P<domain_id>\d+) '
                          '+ASN: +(?P<asn>\d+)$')
 
         #   Prefix SID:
-        #     Prefix 27.86.198.239, label 16073 (regular), domain ID 0, flags: N , E
+        #     Prefix 10.19.198.239, label 16073 (regular), domain ID 0, flags: N , E
         p4 = re.compile(r'^Prefix +(?P<prefix>\S+), +label +(?P<label>\d+) '
                          '+\((?P<label_type>\S+)\), +domain +ID +(?P<domain_id>\d+), '
                          '+flags: +(?P<flags>[\S\s]+)$')
 
-        #   Link[0]: local address 27.86.198.26, remote address 27.86.198.25
+        #   Link[0]: local address 10.19.198.26, remote address 10.19.198.25
         p5 = re.compile(r'^Link\[(?P<link>\d+)\]: +local +address +(?P<local_address>\S+), '
                          '+remote +address +(?P<remote_address>\S+)$')
 
@@ -618,7 +618,7 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
                 index = 0
                 continue
 
-            #   TE router ID: 27.86.198.239
+            #   TE router ID: 10.19.198.239
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -631,7 +631,7 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
                 target.update({'te_router_id': group['te_router_id']})
                 continue
 
-            #   OSPF router ID: 27.86.198.239 area ID: 8 domain ID: 0 ASN: 9996
+            #   OSPF router ID: 10.19.198.239 area ID: 8 domain ID: 0 ASN: 65109
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -645,7 +645,7 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
                 continue
 
             #   Prefix SID:
-            #     Prefix 27.86.198.239, label 16073 (regular), domain ID 0, flags: N , E
+            #     Prefix 10.19.198.239, label 16073 (regular), domain ID 0, flags: N , E
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -653,7 +653,7 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
                 pref_dict.update({k: (int(v) if v.isdigit() else v) for k, v in group.items()})
                 continue
 
-            #   Link[0]: local address 27.86.198.26, remote address 27.86.198.25
+            #   Link[0]: local address 10.19.198.26, remote address 10.19.198.25
             m = p5.match(line)
             if m:
                 group = m.groupdict()
