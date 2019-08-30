@@ -537,11 +537,15 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                             "domain_id": int,
                             "asn": int,
                         },
-                        "metric": str,
+                        "metric": {
+                            Any(): int,
+                        },
                         "bandwidth_total": int,
                         "bandwidth_reservable": int,
                         "admin_groups": str,
-                        "adj_sid": str,
+                        "adj_sid": {
+                            Any(): str,
+                        },
                     },
                 },
             },
@@ -590,6 +594,7 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
 
         #     Metric: IGP 1000, TE 1000, Delay 1000
         p7 = re.compile(r'^Metric: +(?P<metric>[\S\s]+)$')
+        p7_1 = re.compile(r'(?P<type>\w+) +(?P<num>\d+)')
 
         #     Bandwidth: Total 125000000, Reservable 0
         p8 = re.compile(r'^Bandwidth: +Total +(?P<total>\d+), +Reservable +(?P<reservable>\d+)$')
@@ -599,6 +604,7 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
 
         #     Adj SID: 18 (unprotected)  36 (protected)
         p10 = re.compile(r'^Adj +SID: +(?P<adj_sid>[\S\s]+)$')
+        p10_1 = re.compile(r'(?P<num>\d+) +\((?P<state>\S+)\)')
 
         # initial variables
         ret_dict = {}
@@ -680,8 +686,13 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
             #     Metric: IGP 1000, TE 1000, Delay 1000
             m = p7.match(line)
             if m:
-                group = m.groupdict()
-                link_dict.update({'metric': group['metric']})
+                metric = m.groupdict()['metric']
+                metric_dict = link_dict.setdefault('metric', {})
+
+                mlist = p7_1.findall(metric)
+                for item in mlist:
+                    metric_dict.update({item[0].lower(): int(item[1])})
+
                 continue
 
             #     Bandwidth: Total 125000000, Reservable 0
@@ -702,8 +713,13 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
             #     Adj SID: 18 (unprotected)  36 (protected)
             m = p10.match(line)
             if m:
-                group = m.groupdict()
-                link_dict.update({'adj_sid': group['adj_sid']})
+                adj_sid = m.groupdict()['adj_sid']
+                adj_dict = link_dict.setdefault('adj_sid', {})
+
+                adj_list = p10_1.findall(adj_sid)
+                for item in adj_list:
+                    adj_dict.update({item[0]: item[1].lower()})
+
                 continue
 
         return ret_dict
