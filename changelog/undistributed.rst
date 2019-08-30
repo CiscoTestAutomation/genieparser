@@ -53,3 +53,16 @@
 * IOSXE
     * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
         * show ip ospf segment-routing local-block
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLink for:
+        * show ip ospf database opaque-area type ext-link
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate for:
+        * show ip ospf database opaque-area type ext-link self-originate
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
+        * show ip ospf database opaque-area type ext-link adv-router {address}
+
+--------------------------------------------------------------------------------
+                                dot1x
+--------------------------------------------------------------------------------
+* IOSXE
+    * removed tab, replace with space
+    	'show dot1x all statistics'
