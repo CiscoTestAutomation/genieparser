@@ -11,6 +11,7 @@
 * IOSXE
     * Update ShowMplsForwardingTable
         * Add command 'show mpls forwarding-table {prefix}'
+        * update regex to support local label 'None'
 
 --------------------------------------------------------------------------------
                                 Segment Routing
