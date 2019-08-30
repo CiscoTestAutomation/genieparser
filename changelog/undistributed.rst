@@ -22,6 +22,9 @@
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
     * Added ShowSegmentRoutingTrafficEngTopology for:
         'show segment-routing traffic-eng topology ipv4'
+    * Added ShowSegmentRoutingMplsMappingServer for:
+        'show segment-routing mpls mapping-server ipv4'
+        'show segment-routing mpls mapping-server ipv6'
 
 --------------------------------------------------------------------------------
                                 ISSU
