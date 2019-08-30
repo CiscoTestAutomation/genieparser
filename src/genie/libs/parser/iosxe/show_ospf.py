@@ -81,11 +81,17 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         * 'show ip ospf {process_id} segment-routing local-block'
     '''
 
-    cli_command = 'show ip ospf {process_id} segment-routing local-block'
+    cli_command = ['show ip ospf segment-routing local-block',
+                   'show ip ospf {process_id} segment-routing local-block']
 
-    def cli(self, process_id, output=None):
+    def cli(self, process_id=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(process_id=process_id))
+            if process_id:
+                cmd = self.cli_command[1].format(process_id=process_id)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 

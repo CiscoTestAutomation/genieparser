@@ -43,3 +43,10 @@
 * IOSXR
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
+        * show ip ospf segment-routing local-block
