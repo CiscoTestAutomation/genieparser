@@ -19,7 +19,14 @@
     * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
         'show segment-routing mpls connected-prefix-sid-map local ipv4'
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
-
+--------------------------------------------------------------------------------
+                                ISSU
+--------------------------------------------------------------------------------
+* IOS
+	Added ShowIssuStateDetail for:
+		* show issu state detail
+	Added ShowIssuRollbackTimer for:
+	 	* show issu rollback-timer
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
