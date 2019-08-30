@@ -20,14 +20,11 @@
     * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
         'show segment-routing mpls connected-prefix-sid-map local ipv4'
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
-<<<<<<< HEAD
-
+    * Added ShowSegmentRoutingTrafficEngTopology for:
+        'show segment-routing traffic-eng topology ipv4'
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
-=======
-    * Added ShowSegmentRoutingTrafficEngTopology for:
-        'show segment-routing traffic-eng topology ipv4'
 
 --------------------------------------------------------------------------------
                                 ISSU
@@ -49,4 +46,10 @@
 * IOSXR
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
->>>>>>> dev
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
+        * show ip ospf segment-routing local-block
