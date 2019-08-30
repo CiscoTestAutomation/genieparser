@@ -50,3 +50,11 @@
 * IOSXE
     * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
         * show ip ospf segment-routing local-block
+
+--------------------------------------------------------------------------------
+                                dot1x
+--------------------------------------------------------------------------------
+* IOSXE
+    * removed tab, replace with space
+    	'show dot1x all statistics'
+    	
