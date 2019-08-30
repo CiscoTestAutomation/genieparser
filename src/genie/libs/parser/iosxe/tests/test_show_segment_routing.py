@@ -617,64 +617,114 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output = {
-        "test1": {
-            "name": "test1",
-            "color": 100,
-            "end_point": "106.162.196.241",
-            "admin_status": "up",
-            "oper_status": "up",
-            "start": "since 08-28 20:56:55.275",
-            "up_time": "09:38:18",
-            "candidate_paths": {
-                400: {
-                    "preference": 400,
-                    "dynamic": "(pce) (inactive)",
-                    "weight": 0,
-                    "metric_type": "TE"
+        'test1': {
+            'name': 'test1',
+            'color': 100,
+            'end_point': '106.162.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '09:38:18',
+                    'since': '08-28 20:56:55.275',
                 },
-                300: {
-                    "preference": 300,
-                    "dynamic": "(active)",
-                    "weight": 0,
-                    "metric_type": "IGP",
-                    "path_accumulated_metric": 2200,
-                    "prefix_sid": {
-                        16063: "106.162.196.241"
-                    }
-                },
-                200: {
-                    "preference": 200,
-                    "explicit": "segment-list test1 (inactive)",
-                    "weight": 0,
-                    "metric_type": "TE",
-                    "prefix_sid": {
-                        16072: "111.87.5.253",
-                        16052: "106.187.14.241",
-                        16062: "59.128.2.251",
-                        16063: "106.162.196.241"
-                    }
-                },
-                100: {
-                    "preference": 100,
-                    "dynamic": "(inactive)",
-                    "weight": 0,
-                    "metric_type": "IGP",
-                    "path_accumulated_metric": 2200,
-                    "prefix_sid": {
-                        16063: "106.162.196.241"
-                    }
-                }
             },
-            "attributes": {
-                "binding_sid": 15000,
-                "allocation_mode": "explicit",
-                "state": "Programmed"
-            }
-        }
+            'candidate_paths': {
+                'preference': {
+                    400: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'pce': True,
+                                'weight': 0,
+                                'metric_type': 'TE',
+                            },
+                        },
+                    },
+                    300: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'active',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    200: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'test1': {
+                                        'status': 'inactive',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            2: {
+                                                'sid': 16052,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.187.14.241',
+                                            },
+                                            3: {
+                                                'sid': 16062,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '59.128.2.251',
+                                            },
+                                            4: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    100: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15000: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+        },
     }
 
     golden_output = {'execute.return_value': '''
-        # show segment-routing traffic-eng policy all
+        show segment-routing traffic-eng policy all
         Name: test1 (Color: 100 End-point: 106.162.196.241)
         Status:
             Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
