@@ -6717,7 +6717,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 "body": {
                                                                     "opaque": {
                                                                         "mpls_te_router_id": "10.4.1.1",
-                                                                        "num_of_links": 0,
+                                                                        "num_of_links": 0
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6732,9 +6732,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0x58D1",
                                                                     "length": 28,
-                                                                    "fragment_number": 0,
-                                                                },
-                                                            },
+                                                                    "fragment_number": 0
+                                                                }
+                                                            }
                                                         },
                                                         "10.1.0.15 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -6755,10 +6755,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 176258176,
-                                                                                "igp_metric": 1,
+                                                                                "igp_metric": 1
                                                                             }
                                                                         },
-                                                                        "num_of_links": 1,
+                                                                        "num_of_links": 1
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6773,9 +6773,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0x917E",
                                                                     "length": 80,
-                                                                    "fragment_number": 15,
-                                                                },
-                                                            },
+                                                                    "fragment_number": 15
+                                                                }
+                                                            }
                                                         },
                                                         "10.1.0.16 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -6796,10 +6796,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 125000000,
-                                                                                "igp_metric": 1,
+                                                                                "igp_metric": 1
                                                                             }
                                                                         },
-                                                                        "num_of_links": 1,
+                                                                        "num_of_links": 1
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6814,9 +6814,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0x8A09",
                                                                     "length": 80,
-                                                                    "fragment_number": 16,
-                                                                },
-                                                            },
+                                                                    "fragment_number": 16
+                                                                }
+                                                            }
                                                         },
                                                         "10.1.0.17 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -6837,10 +6837,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 125000000,
-                                                                                "igp_metric": 1,
+                                                                                "igp_metric": 1
                                                                             }
                                                                         },
-                                                                        "num_of_links": 1,
+                                                                        "num_of_links": 1
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6855,9 +6855,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xC2CD",
                                                                     "length": 80,
-                                                                    "fragment_number": 17,
-                                                                },
-                                                            },
+                                                                    "fragment_number": 17
+                                                                }
+                                                            }
                                                         },
                                                         "10.1.0.18 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -6878,10 +6878,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 },
                                                                                 "te_metric": 1,
                                                                                 "max_bandwidth": 125000000,
-                                                                                "igp_metric": 1,
+                                                                                "igp_metric": 1
                                                                             }
                                                                         },
-                                                                        "num_of_links": 1,
+                                                                        "num_of_links": 1
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6896,9 +6896,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xFA92",
                                                                     "length": 80,
-                                                                    "fragment_number": 18,
-                                                                },
-                                                            },
+                                                                    "fragment_number": 18
+                                                                }
+                                                            }
                                                         },
                                                         "10.16.0.0 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -6912,8 +6912,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 4,
                                                                                 "information_capabilities": {
                                                                                     "graceful_restart_helper": True,
-                                                                                    "stub_router": True,
-                                                                                },
+                                                                                    "stub_router": True
+                                                                                }
                                                                             }
                                                                         },
                                                                         "sr_algorithm_tlv": {
@@ -6922,8 +6922,8 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 2,
                                                                                 "algorithm": {
                                                                                     "spf": True,
-                                                                                    "strict_spf": True,
-                                                                                },
+                                                                                    "strict_spf": True
+                                                                                }
                                                                             }
                                                                         },
                                                                         "sid_range_tlvs": {
@@ -6935,9 +6935,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                     1: {
                                                                                         "type": "SID/Label",
                                                                                         "length": 3,
-                                                                                        "label": 16000,
+                                                                                        "label": 16000
                                                                                     }
-                                                                                },
+                                                                                }
                                                                             }
                                                                         },
                                                                         "node_msd_tlvs": {
@@ -6946,7 +6946,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "length": 2,
                                                                                 "sub_type": {
                                                                                     "node_max_sid_depth_value": 13
-                                                                                },
+                                                                                }
                                                                             }
                                                                         },
                                                                         "local_block_tlvs": {
@@ -6957,12 +6957,12 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "SID/Label",
-                                                                                        "length": 44,
-                                                                                        "label": 15000,
+                                                                                        "length": 3,
+                                                                                        "label": 15000
                                                                                     }
-                                                                                },
+                                                                                }
                                                                             }
-                                                                        },
+                                                                        }
                                                                     }
                                                                 },
                                                                 "header": {
@@ -6975,9 +6975,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "opaque_id": 0,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xD28C",
-                                                                    "length": 3,
-                                                                },
-                                                            },
+                                                                    "length": 76
+                                                                }
+                                                            }
                                                         },
                                                         "10.49.0.0 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -6996,13 +6996,13 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Prefix SID",
-                                                                                        "length": 92,
+                                                                                        "length": 8,
                                                                                         "flags": "None",
                                                                                         "mt_id": 0,
                                                                                         "algo": "SPF",
-                                                                                        "sid": 1,
+                                                                                        "sid": 1
                                                                                     }
-                                                                                },
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -7017,9 +7017,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "opaque_id": 0,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xEFA7",
-                                                                    "length": 8,
-                                                                },
-                                                            },
+                                                                    "length": 44
+                                                                }
+                                                            }
                                                         },
                                                         "10.64.0.20 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -7038,22 +7038,22 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
+                                                                                        "length": 7,
                                                                                         "flags": "L-Bit, V-bit",
                                                                                         "mt_id": 0,
                                                                                         "weight": 0,
-                                                                                        "label": 19,
+                                                                                        "label": 19
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "192.168.220.2",
+                                                                                        "remote_interface_address": "192.168.220.2"
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
                                                                                         "local_interface_id": 20,
-                                                                                        "remote_interface_id": 20,
-                                                                                        "length": 92,
-                                                                                    },
-                                                                                },
+                                                                                        "remote_interface_id": 20
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -7068,9 +7068,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "opaque_id": 20,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xF52F",
-                                                                    "length": 68,
-                                                                },
-                                                            },
+                                                                    "length": 92
+                                                                }
+                                                            }
                                                         },
                                                         "10.64.0.21 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -7089,22 +7089,22 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
+                                                                                        "length": 7,
                                                                                         "flags": "L-Bit, V-bit",
                                                                                         "mt_id": 0,
                                                                                         "weight": 0,
-                                                                                        "label": 18,
+                                                                                        "label": 18
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "192.168.111.2",
+                                                                                        "remote_interface_address": "192.168.111.2"
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
                                                                                         "local_interface_id": 21,
-                                                                                        "remote_interface_id": 22,
-                                                                                        "length": 92,
-                                                                                    },
-                                                                                },
+                                                                                        "remote_interface_id": 22
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -7119,9 +7119,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "opaque_id": 21,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xB764",
-                                                                    "length": 68,
-                                                                },
-                                                            },
+                                                                    "length": 92
+                                                                }
+                                                            }
                                                         },
                                                         "10.64.0.22 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -7140,22 +7140,22 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
+                                                                                        "length": 7,
                                                                                         "flags": "L-Bit, V-bit",
                                                                                         "mt_id": 0,
                                                                                         "weight": 0,
-                                                                                        "label": 17,
+                                                                                        "label": 17
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "192.168.4.2",
+                                                                                        "remote_interface_address": "192.168.4.2"
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
                                                                                         "local_interface_id": 22,
-                                                                                        "remote_interface_id": 23,
-                                                                                        "length": 92,
-                                                                                    },
-                                                                                },
+                                                                                        "remote_interface_id": 23
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -7170,9 +7170,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "opaque_id": 22,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0xF420",
-                                                                    "length": 68,
-                                                                },
-                                                            },
+                                                                    "length": 92
+                                                                }
+                                                            }
                                                         },
                                                         "10.64.0.23 10.4.1.1": {
                                                             "adv_router": "10.4.1.1",
@@ -7191,21 +7191,22 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 "sub_tlvs": {
                                                                                     1: {
                                                                                         "type": "Adj SID",
+                                                                                        "length": 7,
                                                                                         "flags": "L-Bit, V-bit",
                                                                                         "mt_id": 0,
                                                                                         "weight": 0,
-                                                                                        "label": 16,
+                                                                                        "label": 16
                                                                                     },
                                                                                     2: {
                                                                                         "type": "Remote Intf Addr",
-                                                                                        "remote_interface_address": "192.168.154.2",
+                                                                                        "remote_interface_address": "192.168.154.2"
                                                                                     },
                                                                                     3: {
                                                                                         "type": "Local / Remote Intf ID",
                                                                                         "local_interface_id": 23,
-                                                                                        "remote_interface_id": 24,
-                                                                                    },
-                                                                                },
+                                                                                        "remote_interface_id": 24
+                                                                                    }
+                                                                                }
                                                                             }
                                                                         }
                                                                     }
@@ -7220,11 +7221,11 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     "opaque_id": 23,
                                                                     "seq_num": "80000001",
                                                                     "checksum": "0x32DB",
-                                                                    "length": 68,
-                                                                },
-                                                            },
-                                                        },
-                                                    },
+                                                                    "length": 92
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
@@ -7833,9 +7834,9 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                 'body': {
                                                                     'opaque': {
                                                                         'mpls_te_router_id': '10.4.1.1',
-                                                                        'num_of_links': 0,
-                                                                        },
-                                                                    },
+                                                                        'num_of_links': 0
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -7848,10 +7849,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'seq_num': '8000013B',
                                                                     'checksum': '0xE00E',
                                                                     'length': 28,
-                                                                    'fragment_number': 0,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'fragment_number': 0
+                                                                }
+                                                            }
+                                                        },
                                                         '10.1.0.3 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.1.0.3',
@@ -7864,21 +7865,19 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'link_name': 'point-to-point network',
                                                                                 'link_id': '10.229.11.11',
                                                                                 'remote_if_ipv4_addrs': {
-                                                                                    '10.0.0.9': {
-                                                                                        },
-                                                                                    },
+                                                                                    '10.0.0.9': {}
+                                                                                },
                                                                                 'local_if_ipv4_addrs': {
-                                                                                    '10.0.0.10': {
-                                                                                        },
-                                                                                    },
+                                                                                    '10.0.0.10': {}
+                                                                                },
                                                                                 'te_metric': 10,
                                                                                 'max_bandwidth': 125000000,
-                                                                                'igp_metric': 10,
-                                                                                },
-                                                                            },
-                                                                        'num_of_links': 1,
+                                                                                'igp_metric': 10
+                                                                            }
                                                                         },
-                                                                    },
+                                                                        'num_of_links': 1
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -7891,10 +7890,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'seq_num': '8000013B',
                                                                     'checksum': '0xFF9E',
                                                                     'length': 80,
-                                                                    'fragment_number': 3,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'fragment_number': 3
+                                                                }
+                                                            }
+                                                        },
                                                         '10.1.0.4 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.1.0.4',
@@ -7907,21 +7906,19 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'link_name': 'point-to-point network',
                                                                                 'link_id': '10.151.22.22',
                                                                                 'remote_if_ipv4_addrs': {
-                                                                                    '10.0.0.13': {
-                                                                                        },
-                                                                                    },
+                                                                                    '10.0.0.13': {}
+                                                                                },
                                                                                 'local_if_ipv4_addrs': {
-                                                                                    '10.0.0.14': {
-                                                                                        },
-                                                                                    },
+                                                                                    '10.0.0.14': {}
+                                                                                },
                                                                                 'te_metric': 100,
                                                                                 'max_bandwidth': 125000000,
-                                                                                'igp_metric': 100,
-                                                                                },
-                                                                            },
-                                                                        'num_of_links': 1,
+                                                                                'igp_metric': 100
+                                                                            }
                                                                         },
-                                                                    },
+                                                                        'num_of_links': 1
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -7934,10 +7931,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'seq_num': '8000013B',
                                                                     'checksum': '0xAE06',
                                                                     'length': 80,
-                                                                    'fragment_number': 4,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'fragment_number': 4
+                                                                }
+                                                            }
+                                                        },
                                                         '10.1.0.5 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.1.0.5',
@@ -7950,21 +7947,19 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'link_name': 'point-to-point network',
                                                                                 'link_id': '10.151.22.22',
                                                                                 'remote_if_ipv4_addrs': {
-                                                                                    '10.0.0.25': {
-                                                                                        },
-                                                                                    },
+                                                                                    '10.0.0.25': {}
+                                                                                },
                                                                                 'local_if_ipv4_addrs': {
-                                                                                    '10.0.0.26': {
-                                                                                        },
-                                                                                    },
+                                                                                    '10.0.0.26': {}
+                                                                                },
                                                                                 'te_metric': 1000,
                                                                                 'max_bandwidth': 125000000,
-                                                                                'igp_metric': 1000,
-                                                                                },
-                                                                            },
-                                                                        'num_of_links': 1,
+                                                                                'igp_metric': 1000
+                                                                            }
                                                                         },
-                                                                    },
+                                                                        'num_of_links': 1
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -7977,10 +7972,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'seq_num': '8000013B',
                                                                     'checksum': '0xFE8D',
                                                                     'length': 80,
-                                                                    'fragment_number': 5,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'fragment_number': 5
+                                                                }
+                                                            }
+                                                        },
                                                         '10.16.0.0 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.16.0.0',
@@ -7993,20 +7988,20 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'length': 4,
                                                                                 'information_capabilities': {
                                                                                     'graceful_restart_helper': True,
-                                                                                    'stub_router': True,
-                                                                                    },
-                                                                                },
-                                                                            },
+                                                                                    'stub_router': True
+                                                                                }
+                                                                            }
+                                                                        },
                                                                         'sr_algorithm_tlv': {
                                                                             1: {
                                                                                 'tlv_type': 'Segment Routing Algorithm',
                                                                                 'length': 2,
                                                                                 'algorithm': {
                                                                                     'spf': True,
-                                                                                    'strict_spf': True,
-                                                                                    },
-                                                                                },
-                                                                            },
+                                                                                    'strict_spf': True
+                                                                                }
+                                                                            }
+                                                                        },
                                                                         'sid_range_tlvs': {
                                                                             1: {
                                                                                 'tlv_type': 'Segment Routing Range',
@@ -8016,20 +8011,20 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                     1: {
                                                                                         'type': 'SID/Label',
                                                                                         'length': 3,
-                                                                                        'label': 16000,
-                                                                                        },
-                                                                                    },
-                                                                                },
-                                                                            },
+                                                                                        'label': 16000
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        },
                                                                         'node_msd_tlvs': {
                                                                             1: {
                                                                                 'tlv_type': 'Segment Routing Node MSD',
                                                                                 'length': 2,
                                                                                 'sub_type': {
-                                                                                    'node_max_sid_depth_value': 13,
-                                                                                    },
-                                                                                },
-                                                                            },
+                                                                                    'node_max_sid_depth_value': 13
+                                                                                }
+                                                                            }
+                                                                        },
                                                                         'local_block_tlvs': {
                                                                             1: {
                                                                                 'tlv_type': 'Segment Routing Local Block',
@@ -8038,14 +8033,14 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'sub_tlvs': {
                                                                                     1: {
                                                                                         'type': 'SID/Label',
-                                                                                        'length': 44,
-                                                                                        'label': 15000,
-                                                                                        },
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                        },
-                                                                    },
+                                                                                        'length': 3,
+                                                                                        'label': 15000
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -8056,10 +8051,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'opaque_id': 0,
                                                                     'seq_num': '8000013B',
                                                                     'checksum': '0x5BC8',
-                                                                    'length': 3,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'length': 76
+                                                                }
+                                                            }
+                                                        },
                                                         '10.49.0.0 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.49.0.0',
@@ -8077,17 +8072,17 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'sub_tlvs': {
                                                                                     1: {
                                                                                         'type': 'Prefix SID',
-                                                                                        'length': 104,
+                                                                                        'length': 8,
                                                                                         'flags': 'None',
                                                                                         'mt_id': 0,
                                                                                         'algo': 'SPF',
-                                                                                        'sid': 1,
-                                                                                        },
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                        },
-                                                                    },
+                                                                                        'sid': 1
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -8098,10 +8093,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'opaque_id': 0,
                                                                     'seq_num': '80000133',
                                                                     'checksum': '0x88DB',
-                                                                    'length': 8,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'length': 44
+                                                                }
+                                                            }
+                                                        },
                                                         '10.64.0.9 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.64.0.9',
@@ -8119,33 +8114,34 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'sub_tlvs': {
                                                                                     1: {
                                                                                         'type': 'Adj SID',
+                                                                                        'length': 7,
                                                                                         'flags': 'L-Bit, V-bit',
                                                                                         'mt_id': 0,
                                                                                         'weight': 0,
-                                                                                        'label': 18,
-                                                                                        },
+                                                                                        'label': 18
+                                                                                    },
                                                                                     2: {
                                                                                         'type': 'Adj SID',
+                                                                                        'length': 7,
                                                                                         'flags': 'L-Bit, V-bit, B-bit',
                                                                                         'mt_id': 0,
                                                                                         'weight': 0,
-                                                                                        'label': 19,
-                                                                                        },
+                                                                                        'label': 19
+                                                                                    },
                                                                                     3: {
                                                                                         'type': 'Remote Intf Addr',
-                                                                                        'remote_interface_address': '10.0.0.9',
-                                                                                        },
+                                                                                        'remote_interface_address': '10.0.0.9'
+                                                                                    },
                                                                                     4: {
                                                                                         'type': 'Local / Remote Intf ID',
                                                                                         'local_interface_id': 9,
-                                                                                        'remote_interface_id': 9,
-                                                                                        'length': 104,
-                                                                                        },
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                        },
-                                                                    },
+                                                                                        'remote_interface_id': 9
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -8156,10 +8152,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'opaque_id': 9,
                                                                     'seq_num': '8000013C',
                                                                     'checksum': '0xA666',
-                                                                    'length': 80,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'length': 104
+                                                                }
+                                                            }
+                                                        },
                                                         '10.64.0.10 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.64.0.10',
@@ -8177,33 +8173,34 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'sub_tlvs': {
                                                                                     1: {
                                                                                         'type': 'Adj SID',
+                                                                                        'length': 7,
                                                                                         'flags': 'L-Bit, V-bit',
                                                                                         'mt_id': 0,
                                                                                         'weight': 0,
-                                                                                        'label': 17,
-                                                                                        },
+                                                                                        'label': 17
+                                                                                    },
                                                                                     2: {
                                                                                         'type': 'Adj SID',
+                                                                                        'length': 7,
                                                                                         'flags': 'L-Bit, V-bit, B-bit',
                                                                                         'mt_id': 0,
                                                                                         'weight': 0,
-                                                                                        'label': 21,
-                                                                                        },
+                                                                                        'label': 21
+                                                                                    },
                                                                                     3: {
                                                                                         'type': 'Remote Intf Addr',
-                                                                                        'remote_interface_address': '10.0.0.13',
-                                                                                        },
+                                                                                        'remote_interface_address': '10.0.0.13'
+                                                                                    },
                                                                                     4: {
                                                                                         'type': 'Local / Remote Intf ID',
                                                                                         'local_interface_id': 10,
-                                                                                        'remote_interface_id': 8,
-                                                                                        'length': 104,
-                                                                                        },
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                        },
-                                                                    },
+                                                                                        'remote_interface_id': 8
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -8214,10 +8211,10 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'opaque_id': 10,
                                                                     'seq_num': '8000013C',
                                                                     'checksum': '0xEBE6',
-                                                                    'length': 80,
-                                                                    },
-                                                                },
-                                                            },
+                                                                    'length': 104
+                                                                }
+                                                            }
+                                                        },
                                                         '10.64.0.11 10.4.1.1': {
                                                             'adv_router': '10.4.1.1',
                                                             'lsa_id': '10.64.0.11',
@@ -8235,32 +8232,34 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                                 'sub_tlvs': {
                                                                                     1: {
                                                                                         'type': 'Adj SID',
+                                                                                        'length': 7,
                                                                                         'flags': 'L-Bit, V-bit',
                                                                                         'mt_id': 0,
                                                                                         'weight': 0,
-                                                                                        'label': 16,
-                                                                                        },
+                                                                                        'label': 16
+                                                                                    },
                                                                                     2: {
                                                                                         'type': 'Adj SID',
+                                                                                        'length': 7,
                                                                                         'flags': 'L-Bit, V-bit, B-bit',
                                                                                         'mt_id': 0,
                                                                                         'weight': 0,
-                                                                                        'label': 20,
-                                                                                        },
+                                                                                        'label': 20
+                                                                                    },
                                                                                     3: {
                                                                                         'type': 'Remote Intf Addr',
-                                                                                        'remote_interface_address': '10.0.0.25',
-                                                                                        },
+                                                                                        'remote_interface_address': '10.0.0.25'
+                                                                                    },
                                                                                     4: {
                                                                                         'type': 'Local / Remote Intf ID',
                                                                                         'local_interface_id': 11,
-                                                                                        'remote_interface_id': 9,
-                                                                                        },
-                                                                                    },
-                                                                                },
-                                                                            },
-                                                                        },
-                                                                    },
+                                                                                        'remote_interface_id': 9
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                },
                                                                 'header': {
                                                                     'age': 1663,
                                                                     'option': 'None',
@@ -8271,23 +8270,24 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
                                                                     'opaque_id': 11,
                                                                     'seq_num': '8000013D',
                                                                     'checksum': '0xB8F1',
-                                                                    'length': 80,
-                                                                    },
-                                                                },
-                                                            },
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+                                                                    'length': 104
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
 
     def test_show_ip_ospf_database_opaque_area_full1(self):
         self.maxDiff = None
@@ -10589,13 +10589,13 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
     golden_output_2 = {'execute.return_value': '''
         PE1#show ip ospf segment-routing protected-adjacencies
 
-            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
     '''}
 
     parsed_output_2 = {
         'process_id': {
-            9996: {
-                'router_id': '1.1.1.1'
+            65109: {
+                'router_id': '10.4.1.1'
             }
         }
     }
@@ -10684,6 +10684,59 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
             OSPF Router with ID (10.4.1.1) (Process ID 65109)
     '''}
 
+
+    golden_parsed_output3 = {
+        'process_id': {
+            65109: {
+                'router_id': '10.4.1.1',
+                'sids': {
+                    'total_entries': 3,
+                    1: {
+                        'sid': 1,
+                        'codes': 'L',
+                        'prefix': '10.4.1.1/32',
+                        'adv_rtr_id': '10.4.1.1',
+                        'area_id': '0.0.0.8',
+                        'type': 'Intra',
+                        'algo': 0,
+                        },
+                    11: {
+                        'sid': 11,
+                        'prefix': '10.4.1.2/32',
+                        'adv_rtr_id': '10.4.1.2',
+                        'area_id': '0.0.0.8',
+                        'type': 'Intra',
+                        'algo': 0,
+                        },
+                    45: {
+                        'sid': 45,
+                        'codes': 'M',
+                        'prefix': '10.4.1.3/32',
+                        'type': 'Unknown',
+                        'algo': 0,
+                        },
+                    },
+                },
+            },
+        }
+
+    golden_output3 = {'execute.return_value': '''
+        show ip ospf segment-routing sid-database
+
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
+
+        OSPF Segment Routing SIDs
+
+        Codes: L - local, N - label not programmed,
+            M - mapping-server
+
+        SID             Prefix              Adv-Rtr-Id       Area-Id  Type      Algo
+        --------------  ------------------  ---------------  -------  --------  ----
+        1       (L)     10.4.1.1/32         10.4.1.1          8        Intra     0
+        11              10.4.1.2/32         10.4.1.2          8        Intra     0
+        45      (M)     10.4.1.3/32                                    Unknown   0
+    '''}
+
     def test_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -10704,6 +10757,13 @@ class test_show_ip_ospf_segment_routing_sid_database(unittest.TestCase):
         obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+    
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpOspfSegmentRoutingSidDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # =============================================
 # Unit test for 'show ip ospf segment-routing'

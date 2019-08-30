@@ -22,6 +22,12 @@
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
     * Added ShowSegmentRoutingTrafficEngTopology for:
         'show segment-routing traffic-eng topology ipv4'
+    * Added ShowSegmentRoutingTrafficEngPolicy for:
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
+    * Added ShowSegmentRoutingMplsMappingServer for:
+        'show segment-routing mpls mapping-server ipv4'
+        'show segment-routing mpls mapping-server ipv6'
 
 --------------------------------------------------------------------------------
                                 ISSU
@@ -43,3 +49,23 @@
 * IOSXR
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
+        * show ip ospf segment-routing local-block
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLink for:
+        * show ip ospf database opaque-area type ext-link
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate for:
+        * show ip ospf database opaque-area type ext-link self-originate
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
+        * show ip ospf database opaque-area type ext-link adv-router {address}
+
+--------------------------------------------------------------------------------
+                                dot1x
+--------------------------------------------------------------------------------
+* IOSXE
+    * removed tab, replace with space
+    	'show dot1x all statistics'
