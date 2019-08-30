@@ -19,3 +19,10 @@
     * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
         'show segment-routing mpls connected-prefix-sid-map local ipv4'
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
+
+--------------------------------------------------------------------------------
+                                dot1x
+--------------------------------------------------------------------------------
+* IOSXE
+    * removed tab, replace with space
+    	'show dot1x all statistics'
