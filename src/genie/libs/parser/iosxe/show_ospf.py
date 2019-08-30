@@ -4175,6 +4175,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 continue
 
             # Length: 36
+            # Length : 36
             m = p9.match(line)
             if m:
                 length = int(m.groupdict()['length'])
