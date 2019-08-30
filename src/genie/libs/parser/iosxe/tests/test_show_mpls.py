@@ -2284,7 +2284,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                         "outgoing_label_or_vc": {
                             "Pop Label": {
                                 "prefix_or_tunnel_id": {
-                                    "22.22.22.22/32": {
+                                    "10.151.22.22/32": {
                                         "outgoing_interface": {
                                             "GigabitEthernet4": {
                                                 "next_hop": "10.0.0.13",
@@ -2305,11 +2305,11 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         }
     }
     golden_output_4 = {'execute.return_value':'''
-        #show mpls forwarding-table 22.22.22.22
+        #show mpls forwarding-table 10.151.22.22
         Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    
         Label      Label      or Tunnel Id     Switched      interface              
-        16022      Pop Label  22.22.22.22/32   0             Gi4        10.0.0.13   
-                   Pop Label  22.22.22.22/32   0             Gi5        10.0.0.25    
+        16022      Pop Label  10.151.22.22/32   0             Gi4        10.0.0.13   
+                   Pop Label  10.151.22.22/32   0             Gi5        10.0.0.25    
     '''}
 
     def test_empty(self):
@@ -2343,7 +2343,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output_4)
         obj = ShowMplsForwardingTable(device=self.dev)
-        parsed_output = obj.parse(prefix='2.2.2.2')
+        parsed_output = obj.parse(prefix='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 
