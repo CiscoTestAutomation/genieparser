@@ -10589,13 +10589,13 @@ class test_show_ip_ospf_segment_routing_protected_adjacencies(unittest.TestCase)
     golden_output_2 = {'execute.return_value': '''
         PE1#show ip ospf segment-routing protected-adjacencies
 
-            OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            OSPF Router with ID (10.4.1.1) (Process ID 65109)
     '''}
 
     parsed_output_2 = {
         'process_id': {
-            9996: {
-                'router_id': '1.1.1.1'
+            65109: {
+                'router_id': '10.4.1.1'
             }
         }
     }

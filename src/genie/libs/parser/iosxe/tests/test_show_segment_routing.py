@@ -368,16 +368,16 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
                         'ipv4': {
                             'ipv4_prefix_sid_remote_export_map': {
                                 'mapping_entry': {
-                                    '201.0.0.1/32': {
+                                    '192.168.111.1/32': {
                                         'algorithm': {
                                             'ALGO_0': {
-                                                'prefix': '201.0.0.1/32',
+                                                'prefix': '192.168.111.1/32',
                                                 'algorithm': 'ALGO_0',
                                                 'value_type': 'Indx',
                                                 'sid': '5001',
                                                 'range': '1',
                                                 'srgb': 'Y',
-                                                'source': 'OSPF Area 8 11.11.11.11',
+                                                'source': 'OSPF Area 8 10.229.11.11',
                                                 },
                                             },
                                         },
@@ -400,7 +400,7 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
                 PREFIX_SID_REMOTE_EXPORT_MAP ALGO_0
 
         Prefix/masklen   SID Type Range Flags SRGB Source
-        201.0.0.1/32  5001 Indx     1         Y  OSPF Area 8 11.11.11.11
+        192.168.111.1/32  5001 Indx     1         Y  OSPF Area 8 10.229.11.11
 
                 PREFIX_SID_EXPORT_MAP ALGO_1
 
