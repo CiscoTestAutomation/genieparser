@@ -380,7 +380,6 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['rollback_timer_state'] = group['state']
-                group['state']
                 continue
 
             # Configured Rollback Time = 00:45:00
