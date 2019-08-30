@@ -40,3 +40,14 @@
 * IOSXR
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLink for:
+        * show ip ospf database opaque-area type ext-link
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate for:
+        * show ip ospf database opaque-area type ext-link self-originate
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
+        * show ip ospf database opaque-area type ext-link adv-router {address}
