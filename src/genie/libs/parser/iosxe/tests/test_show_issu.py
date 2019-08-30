@@ -146,6 +146,33 @@ class test_show_issu_state_detail(unittest.TestCase):
             {'1':
                 {'issu_in_progress': False}}}
 
+    golden_output_6 = {'execute.return_value': '''
+                              Slot = 1
+                      RP State = Active
+                    ISSU State = Init
+                 Boot Variable = bootdisk:,1;
+                Operating Mode = sso
+               Primary Version = N/A
+             Secondary Version = N/A
+               Current Version = bootdisk:s2t54-adventerprisek9-mz.SPA.151-1.SY.bin
+                Variable Store = PrstVbl
+    '''}
+
+    golden_parsed_output_6 = {
+        "slot": {
+            "R1": {
+                "rp_state": "Active",
+                "issu_state": "Init",
+                "boot_variable": "bootdisk:,1;",
+                "operating_mode": "sso",
+                "primary_version": "N/A",
+                "secondary_version": "N/A",
+                "running_image": "bootdisk:s2t54-adventerprisek9-mz.SPA.151-1.SY.bin",
+                "variable_store": "PrstVbl",
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIssuStateDetail(device=self.device)
@@ -187,6 +214,12 @@ class test_show_issu_state_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIssuStateDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 # =========================================
 #  Unit test for 'show issu rollback-timer'
@@ -227,6 +260,18 @@ class test_show_issu_rollback_timer(unittest.TestCase):
         'rollback_timer_reason': 'timer canceled by acceptversion',
         'rollback_timer_state': 'inactive'}
 
+    # IOS 
+    golden_output_3 = {'execute.return_value': '''
+        #show issu rollback-timer
+            Rollback Process State = Not in progress
+          Configured Rollback Time = 00:45:00
+    '''}
+
+    golden_parsed_output_3 = {
+        'rollback_timer_state': 'Not in progress', 
+        'rollback_timer_time': '00:45:00'
+    }
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -248,6 +293,12 @@ class test_show_issu_rollback_timer(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIssuRollbackTimer(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()
