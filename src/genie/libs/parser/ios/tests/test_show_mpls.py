@@ -244,7 +244,7 @@ class test_show_mpls_forwarding_table(test_show_mpls_forwarding_table_iosxe):
         self.maxDiff = None
         self.dev = Mock(**self.golden_output_4)
         obj = ShowMplsForwardingTable(device=self.dev)
-        parsed_output = obj.parse(prefix='2.2.2.2')
+        parsed_output = obj.parse(prefix='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 

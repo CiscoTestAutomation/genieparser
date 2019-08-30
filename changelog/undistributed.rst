@@ -11,6 +11,7 @@
 * IOSXE
     * Update ShowMplsForwardingTable
         * Add command 'show mpls forwarding-table {prefix}'
+        * update regex to support local label 'None'
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -19,6 +20,36 @@
     * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
         'show segment-routing mpls connected-prefix-sid-map local ipv4'
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
+    * Added ShowSegmentRoutingTrafficEngTopology for:
+        'show segment-routing traffic-eng topology ipv4'
+
+--------------------------------------------------------------------------------
+                                ISSU
+--------------------------------------------------------------------------------
+* IOS
+	Added ShowIssuStateDetail for:
+		* show issu state detail
+	Added ShowIssuRollbackTimer for:
+	 	* show issu rollback-timer
+--------------------------------------------------------------------------------
+                              Virtual-Service
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVirtualServiceUtilization for "show virtual-service utilization name {name}"
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowBgpL2vpnEvpn for:
+        added a schema and unittest, and updated based on the schema
+
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
+        * show ip ospf segment-routing local-block
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -26,3 +57,4 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+    	
