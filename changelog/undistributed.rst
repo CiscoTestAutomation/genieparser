@@ -19,3 +19,7 @@
     * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
         'show segment-routing mpls connected-prefix-sid-map local ipv4'
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
+
+    * Added ShowSegmentRoutingMplsMappingServer for:
+        'show segment-routing mpls mapping-server ipv4'
+        'show segment-routing mpls mapping-server ipv6'
