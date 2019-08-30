@@ -322,6 +322,8 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # remove tab, replace with space
             line = line.replace('\t', ' ')
             
             # Dot1x Supplicant Port Statistics for GigabitEthernet1/0/9
