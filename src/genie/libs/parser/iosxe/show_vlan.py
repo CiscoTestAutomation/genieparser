@@ -84,9 +84,18 @@ class ShowVlan(ShowVlanSchema):
                 continue
             # VLAN Name                             Status    Ports
             # 1    default                          active    Gi1/0/1, Gi1/0/2, Gi1/0/3, Gi1/0/5, Gi1/0/6, Gi1/0/12,
-            p1 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-]+)'
-                            ' +(?P<status>(active|suspended|act/unsup|(.*)lshut)+) *(?P<interfaces>[\w\s\/\,]+)?$')
+            # 2    VLAN_0002                        active
+            # 20   VLAN-0020                        active
+            # 100  V100                             suspended
+            # 101  VLAN-0101                        active
+            # 102  VLAN_0102                        active
+            # 103  VLAN-0103                        active
+            # 104  VLAN_0104                        act/lshut
+
+            p1 = re.compile(r'^(?P<vlan_id>[0-9]+) +(?P<name>[a-zA-Z0-9\-\_]+)'
+                             ' +(?P<status>(active|suspended|act\/unsup|(.*)lshut)+)(?P<interfaces>[\w\d\/\d, ]+)?$')
             m = p1.match(line)
+
             if m:
                 vlan_id = m.groupdict()['vlan_id']
                 if 'vlans' not in vlan_dict:
@@ -209,8 +218,10 @@ class ShowVlan(ShowVlanSchema):
             #          10        community
             #  none    20        community
 
-            p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
-                            ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
+            #old p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
+            #                ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
+            p5 = re.compile(r'^(?P<primary>[\w]+)? +(?P<secondary>\d+)'
+                             ' +(?P<type>[\w\-\_]+)(?P<interfaces>[\w\d\/\d, ]+)?$')
             m = p5.match(line)
 
             if m:
