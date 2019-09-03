@@ -263,7 +263,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'management_addresses': {'172.16.1.202': {}},
                 'native_vlan': '',
                 'platform': 'Cisco ',
-                'port_id': 'GigabitEthernet0',
+                'port_id': 'GigabitEthernet0/0',
                 'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
         							'Technical Support: http://www.cisco.com/techsupport\n'
         							'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
@@ -342,7 +342,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'management_addresses': {'172.16.1.205': {}},
                     'native_vlan': '',
                     'platform': 'Cisco ',
-                    'port_id': 'GigabitEthernet0',
+                    'port_id': 'GigabitEthernet0/0',
                     'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
         								'Technical Support: http://www.cisco.com/techsupport\n'
         								'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
@@ -359,7 +359,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'management_addresses': {'172.16.1.206': {}},
                     'native_vlan': '',
                     'platform': 'Cisco ',
-                    'port_id': 'GigabitEthernet0',
+                    'port_id': 'GigabitEthernet0/0',
                      'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
         								 'Technical Support: http://www.cisco.com/techsupport\n'
         								 'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
@@ -425,7 +425,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'management_addresses': {},
                     'native_vlan': '42',
                     'platform': 'cisco 3640',
-                    'port_id': 'Ethernet0',
+                    'port_id': 'Ethernet0/1',
                     'software_version': 'Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-M), Version 12.2(25)SEB4, RELE)',
                     'vtp_management_domain': 'Accounting Group'},
                 }
@@ -450,6 +450,86 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     '''}
 
     device_output_4_empty = {'execute.return_value': ''}
+
+    expected_parsed_output_5 = {
+        'total_entries_displayed': 2,
+        'index': {
+                1: {
+                    'advertisement_ver': 2,
+                    'capabilities': 'Router Source-Route-Bridge',
+                    'device_id': 'R8.cisco.com',
+                    'duplex_mode': '',
+                    'entry_addresses': {'172.16.1.205': {}},
+                    'hold_time': 143,
+                    'local_interface': 'GigabitEthernet1/0/3',
+                    'management_addresses': {'172.16.1.205': {}},
+                    'native_vlan': '',
+                    'platform': 'Cisco ',
+                    'port_id': 'GigabitEthernet1/0/3',
+                    'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
+                                        'Technical Support: http://www.cisco.com/techsupport\n'
+                                        'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
+                                        'Compiled Wed 01-Aug-18 16:45 by prod_rel_team',
+                    'vtp_management_domain': ''},
+                2: {
+                    'advertisement_ver': 2,
+                    'capabilities': 'Router Source-Route-Bridge',
+                    'device_id': 'R9.cisco.com',
+                    'duplex_mode': '',
+                    'entry_addresses': {'172.16.1.206': {}},
+                    'hold_time': 151,
+                    'local_interface': 'GigabitEthernet1/2/5',
+                    'management_addresses': {'172.16.1.206': {}},
+                    'native_vlan': '',
+                    'platform': 'Cisco ',
+                    'port_id': 'GigabitEthernet1/2/5',
+                     'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
+                                         'Technical Support: http://www.cisco.com/techsupport\n'
+                                         'Copyright (c) 1986-2018 by Cisco Systems, Inc.\n'
+                                         'Compiled Wed 01-Aug-18 16:45 by prod_rel_team',
+                    'vtp_management_domain': ''},
+                },
+        }
+
+    device_output_5 = {'execute.return_value': '''
+        Device# show cdp neighbors detail
+        Device ID: R8.cisco.com
+        Entry address(es):
+          IP address: 172.16.1.205
+        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge
+        Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): GigabitEthernet1/0/3
+        Holdtime : 143 sec
+
+        Version :
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+
+        advertisement version: 2
+        Management address(es):
+          IP address: 172.16.1.205
+
+        -------------------------
+        Device ID: R9.cisco.com
+        Entry address(es):
+          IP address: 172.16.1.206
+        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge
+        Interface: GigabitEthernet1/2/5,  Port ID (outgoing port): GigabitEthernet1/2/5
+        Holdtime : 151 sec
+
+        Version :
+        Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Wed 01-Aug-18 16:45 by prod_rel_team
+
+        advertisement version: 2
+        Management address(es):
+          IP address: 172.16.1.206
+
+        Total cdp entries displayed : 2
+    '''}
 
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
@@ -479,6 +559,12 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    def test_show_cdp_neighbors_detail_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_5)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_5)
 
 if __name__ == '__main__':
     unittest.main()

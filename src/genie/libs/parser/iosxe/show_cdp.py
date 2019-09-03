@@ -174,10 +174,13 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                                    '+(?P<capabilities>[\w+\s\-]+)$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        # Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
+        # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+        # Interface: GigabitEthernet0/0/2,  Port ID (outgoing port): GigabitEthernet0/0/3
         interface_port_re = re.compile(r'Interface:\s*'
                                       '(?P<interface>[\w\s\-\/\/]+)\s*\,'
                                       '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                      '(?P<port_id>\w+)')
+                                      '(?P<port_id>[\w\/]+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
