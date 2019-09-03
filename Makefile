@@ -90,7 +90,7 @@ coverage_all:
 pylint_all:
 	@echo ""
 	@echo "Running Pylint on all modules"
-    @echo "-----------------------------"
+	@echo "-----------------------------"
 	@$(PYLINT_CMD)
 	@echo "Done linting"
 	@echo ""
