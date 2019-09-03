@@ -59,6 +59,9 @@
         * show ip ospf database opaque-area type ext-link self-originate
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
         * show ip ospf database opaque-area type ext-link adv-router {address}
+    * Added ShowIpOspfSegmentRoutingAdjacencySid for:
+        * show ip ospf segment-routing adjacency-sid
+        * show ip ospf {process_id} segment-routing adjacency-sid
 
 --------------------------------------------------------------------------------
                                 dot1x
