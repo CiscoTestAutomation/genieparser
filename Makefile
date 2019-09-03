@@ -39,6 +39,7 @@ TESTCMD       = runAll --path=./tests/
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 PYLINT_CMD	  = pylintAll
+CYTHON_CMD	  = compileAll
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
@@ -74,7 +75,7 @@ compile:
 	@echo ""
 	@echo "Compiling to C code"
 	@echo --------------------------
-	$(PYTHON) compile.py 
+	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
 
@@ -88,7 +89,6 @@ coverage_all:
 
 pylint:
 	@$(PYLINT_CMD)
-	@rm -f logfile.txt
 
 devnet: package
 	@echo "Completed building DevNet packages"
