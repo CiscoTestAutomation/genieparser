@@ -7108,7 +7108,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
         return super().cli(db_type='router', out=output)
 
 
-class ShowIpOspfSegmentRoutingSchema(MetaParser):
+class ShowIpOspfSegmentRoutingAdjacencySidSchema(MetaParser):
     ''' Schema for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
@@ -7130,9 +7130,8 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
         }
     }
         
-    
 
-class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+class ShowIpOspfSegmentRoutingAdjacencySid(ShowIpOspfSegmentRoutingAdjacencySidSchema):
     ''' Parser for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
