@@ -35,7 +35,7 @@ DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
 PYTHON        = python
-TESTCMD       = runAll --path=./tests/
+TESTCMD       = runAll
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
 PYLINT_CMD	  = pylintAll
