@@ -108,6 +108,9 @@
         'show segment-routing mpls lb lock'
     * Added ShowSegmentRoutingMplsGbLock for:
         'show segment-routing mpls gb lock'
+    * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
+        'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        'show segment-routing mpls connected-prefix-sid-map local ipv6'
 
 --------------------------------------------------------------------------------
                                 Pim
@@ -236,3 +239,24 @@
 * NXOS
     * Updated ShowL2routeMacIpAllDetail
         fixed regEx to parse properly
+
+--------------------------------------------------------------------------------
+                                VRF
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowVrfAllDetail
+        updated regEx to parse 'ip_address' properly
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInterfacesSwitchport
+        fixed regEx to parse complex output
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
+        'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        'show segment-routing mpls connected-prefix-sid-map local ipv6'

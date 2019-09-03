@@ -144,7 +144,8 @@ class test_show_interfaces(unittest.TestCase):
             "txload": "1/255",
             "arp_type": "arpa",
             "encapsulations": {
-               "encapsulation": "dot1q"
+               "encapsulation": "dot1q",
+               "first_dot1q": "300"
             },
             "keepalive": 10,
             "mtu": 1500,
