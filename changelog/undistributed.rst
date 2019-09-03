@@ -66,3 +66,23 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                PIM
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigPim:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								VRF
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigVrf:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								common.py
+--------------------------------------------------------------------------------
+* updated _find_command to escape "^"
+* disallow spaces in key "feature"
