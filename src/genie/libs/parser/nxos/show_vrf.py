@@ -35,7 +35,7 @@ class ShowVrfSchema(MetaParser):
 class ShowVrf(ShowVrfSchema):
     """Parser for show vrf"""
 
-    cli_command = ['show vrf', 'show vrf {vrf}']
+    cli_command = ['show blablablabla', 'show vrf {vrf}']
 
     def cli(self, vrf='', output=None):
         if output is None:
@@ -271,7 +271,7 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
     """Parser for show running-config vrf <vrf> | sec '^vrf' """
 
     cli_command = "show running-config vrf {vrf} | sec '^vrf'"
-    def cli(self):
+    def cli(self, vrf=None):
         # Init vars
         vrf_list = []
         result_dict = {}
@@ -294,10 +294,14 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
         p5 = re.compile(r'^\s*route-target +(?P<rt_type>\w+) +(?P<rt>\w+)( +(?P<rt_evpn_mvpn>\w+))?$')
 
         # find all list of vrfs
-        showVrf = ShowVrf(device=self.device)
-        vrfs = showVrf.parse()
-        for vrf in vrfs['vrfs'].keys():
+        if vrf:
             vrf_list.append(vrf)
+
+        else:
+            showVrf = ShowVrf(device=self.device)
+            vrfs = showVrf.parse()
+            for vrf in vrfs['vrfs'].keys():
+                vrf_list.append(vrf)
 
 
         for vrf in vrf_list:

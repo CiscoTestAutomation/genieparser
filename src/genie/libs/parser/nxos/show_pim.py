@@ -4249,16 +4249,20 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
                    "show running-config {feature} | sec {vrf} | inc {pip_str}",
                    "show running-config {feature} | inc {pip_str}"]
 
-    def cli(self, address_family=None, pip_str=None, vrf=None):
+    def cli(self, address_family=None, pip_str=None, feature=None, vrf=None):
 
         assert address_family in ['ipv4', 'ipv6', None]
 
-        if address_family == 'ipv4':
-            features = ['pim']
-        elif address_family == 'ipv6':
-            features = ['pim6']
+        if feature:
+            features = [feature]
+
         else:
-            features = ['pim', 'pim6']
+            if address_family == 'ipv4':
+                features = ['pim']
+            elif address_family == 'ipv6':
+                features = ['pim6']
+            else:
+                features = ['pim', 'pim6']
 
         out = ''
         for ft in features:
