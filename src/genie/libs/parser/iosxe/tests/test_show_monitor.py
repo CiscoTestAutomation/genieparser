@@ -9,8 +9,9 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,SchemaMissingKeyError
 
-# iosxe show_flow
-from genie.libs.parser.iosxe.show_monitor import ShowFlowMonitor
+# iosxe show_monitor
+from genie.libs.parser.iosxe.show_monitor import ShowMonitor,ShowMonitorCapture
+
 
 # ============================
 # Unit test for 'show monitor'

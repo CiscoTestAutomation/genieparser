@@ -30,9 +30,9 @@ class test_show_monitor(unittest.TestCase):
         'flows_added': 1,
         'flows_aged': 0,
         'ipv4_src_addr': {
-            '10.0.0.6': {
+            '1.1.1.10': {
                 'ipv4_dst_addr': {
-                    '224.0.0.5': {
+                    '22.10.10.1': {
                         'trns_src_port': 0,
                         'trns_dst_port': 0,
                         'ip_tos': '0xC0',
@@ -40,13 +40,17 @@ class test_show_monitor(unittest.TestCase):
                         'bytes_long': 100,
                         'pkts_long': 1,
                     },
-                    '224.0.0.2': {
-                        'trns_src_port': 646,
-                        'trns_dst_port': 646,
+                },
+            },
+            '1.1.1.11': {
+                'ipv4_dst_addr': {
+                    '22.10.10.2': {
+                        'trns_src_port': 0,
+                        'trns_dst_port': 0,
                         'ip_tos': '0xC0',
-                        'ip_port': 17,
-                        'bytes_long': 124,
-                        'pkts_long': 2,
+                        'ip_port': 89,
+                        'bytes_long': 100,
+                        'pkts_long': 1,
                     },
                 },
             },
@@ -65,8 +69,8 @@ class test_show_monitor(unittest.TestCase):
     
     IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP TOS  IP PROT            bytes long             pkts long
     ===============  ===============  =============  =============  ======  =======  ====================  ====================
-    10.0.0.6         224.0.0.5                    0              0  0xC0         89                   100                     1
-    10.0.0.6         224.0.0.2                  646            646  0xC0         17                   124                     2
+    1.1.1.10         22.10.10.1                    0              0  0xC0         89                   100                     1
+    1.1.1.11         22.10.10.2                    0              0  0xC0         89                   100                     1
     
     Device#
     '''}
