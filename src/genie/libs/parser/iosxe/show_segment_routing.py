@@ -782,6 +782,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                                         "sid": int,
                                         "sid_type": str,
                                         "local_address": str,
+                                        Optional("remote_address"): str,
                                     },
                                 },
                             },
@@ -796,6 +797,7 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                                                 "sid": int,
                                                 "sid_type": str,
                                                 "local_address": str,
+                                                Optional("remote_address"): str,
                                             },
                                         },
                                     },
@@ -862,8 +864,9 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                          '+Metric: +(?P<path_accumulated_metric>[\d]+)$')
 
         #         16063 [Prefix-SID, 106.162.196.241]
-        p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), '
-                         '+(?P<local_address>[\S]+)\]$')
+        #         16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+        p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
+                         '( +- +(?P<remote_address>[\S]+))?\]$')
 
         #     Explicit: segment-list test1 (inactive)
         p8 = re.compile(r'^Explicit: +(?P<category>\S+) +(?P<name>\S+) +\((?P<status>\w+)\)$')
@@ -957,14 +960,12 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 hop_index += 1
                 group = m.groupdict()
                 hop_dict = path_dict.setdefault('hops', {}).setdefault(hop_index, {})
-
-                sid = int(group['sid'])
-                sid_type = group['sid_type']
-                local_address = group['local_address']
                 
-                hop_dict.update({'sid': sid})
-                hop_dict.update({'sid_type': sid_type})
-                hop_dict.update({'local_address': local_address})
+                hop_dict.update({'sid': int(group['sid'])})
+                hop_dict.update({'sid_type': group['sid_type']})
+                hop_dict.update({'local_address': group['local_address']})
+                if group['remote_address']:
+                    hop_dict.update({'remote_address': group['remote_address']})
                 continue
 
             #   Explicit: segment-list test1 (inactive)

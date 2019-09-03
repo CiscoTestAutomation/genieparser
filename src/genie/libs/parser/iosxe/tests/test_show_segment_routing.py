@@ -655,6 +655,12 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                         'sid_type': 'Prefix-SID',
                                         'local_address': '106.162.196.241',
                                     },
+                                    2: {
+                                        'sid': 16072,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '111.87.5.253',
+                                        'remote_address': '111.87.6.253',
+                                    },
                                 },
                             },
                         },
@@ -672,6 +678,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
                                                 'local_address': '111.87.5.253',
+                                                'remote_address': '111.87.6.253',
                                             },
                                             2: {
                                                 'sid': 16052,
@@ -738,10 +745,11 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                 Weight: 0, Metric Type: IGP
                 Metric Type: IGP, Path Accumulated Metric: 2200
                 16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
             Preference 200:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
+                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
                 16052 [Prefix-SID, 106.187.14.241]
                 16062 [Prefix-SID, 59.128.2.251]
                 16063 [Prefix-SID, 106.162.196.241]
