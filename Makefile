@@ -88,7 +88,12 @@ coverage_all:
 	@echo ""
 
 pylint_all:
+	@echo ""
+	@echo "Running Pylint on all modules"
+    @echo "-----------------------------"
 	@$(PYLINT_CMD)
+	@echo "Done linting"
+	@echo ""
 
 devnet: package
 	@echo "Completed building DevNet packages"
