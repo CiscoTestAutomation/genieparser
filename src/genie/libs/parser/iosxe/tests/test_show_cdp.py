@@ -456,7 +456,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         'index': {
                 1: {
                     'advertisement_ver': 2,
-                    'capabilities': 'Router Source-Route-Bridge',
+                    'capabilities': 'Router Switch-6506 IGMP',
                     'device_id': 'R8.cisco.com',
                     'duplex_mode': '',
                     'entry_addresses': {'172.16.1.205': {}},
@@ -464,7 +464,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'local_interface': 'GigabitEthernet1/0/3',
                     'management_addresses': {'172.16.1.205': {}},
                     'native_vlan': '',
-                    'platform': 'Cisco ',
+                    'platform': 'cisco WS_C6506_E',
                     'port_id': 'GigabitEthernet1/0/3',
                     'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
                                         'Technical Support: http://www.cisco.com/techsupport\n'
@@ -473,7 +473,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'vtp_management_domain': ''},
                 2: {
                     'advertisement_ver': 2,
-                    'capabilities': 'Router Source-Route-Bridge',
+                    'capabilities': 'Router Switch_6506 IGMP',
                     'device_id': 'R9.cisco.com',
                     'duplex_mode': '',
                     'entry_addresses': {'172.16.1.206': {}},
@@ -481,7 +481,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                     'local_interface': 'GigabitEthernet1/2/5',
                     'management_addresses': {'172.16.1.206': {}},
                     'native_vlan': '',
-                    'platform': 'Cisco ',
+                    'platform': 'cisco WS-C6506-E',
                     'port_id': 'GigabitEthernet1/2/5',
                      'software_version': 'Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.7(3)M3, RELEASE SOFTWARE (fc2)\n'
                                          'Technical Support: http://www.cisco.com/techsupport\n'
@@ -496,7 +496,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Device ID: R8.cisco.com
         Entry address(es):
           IP address: 172.16.1.205
-        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge
+        Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
         Interface: GigabitEthernet1/0/3,  Port ID (outgoing port): GigabitEthernet1/0/3
         Holdtime : 143 sec
 
@@ -514,7 +514,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Device ID: R9.cisco.com
         Entry address(es):
           IP address: 172.16.1.206
-        Platform: Cisco ,  Capabilities: Router Source-Route-Bridge
+        Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         Interface: GigabitEthernet1/2/5,  Port ID (outgoing port): GigabitEthernet1/2/5
         Holdtime : 151 sec
 
