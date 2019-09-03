@@ -99,8 +99,10 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
         show ipv6 pim interface <interface>
         show ipv6 pim interface <interface> vrf <vrf>"""
 
-    cli_command = ['show ipv6 pim interface {interface} vrf {vrf}', 'show ipv6 pim interface vrf {vrf}',
-                   'show ipv6 pim interface {interface}','show ipv6 pim interface']
+    cli_command = ['show ipv6 pim interface {interface} vrf {vrf}', 
+                   'show ipv6 pim interface vrf {vrf}',
+                   'show ipv6 pim interface {interface}',
+                   'show ipv6 pim interface']
     exclude = [
         'hello_expiration',
         'hellos',
@@ -125,7 +127,6 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
             out = output
 
         af_name = 'ipv6'
-
         # Init dictionary
         parsed_dict = dict()
         address_list = []
@@ -146,8 +147,9 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-            #PIM6 Interface Status for VRF "VRF1"
-            p1 = re.compile(r'^\s*PIM6 +Interface +Status +for +VRF+ \"(?P<vrf>[\w]+)\"$')
+            # PIM6 Interface Status for VRF "VRF1"
+            # PIM Interface Status for VRF "VRF1"
+            p1 = re.compile(r'^\s*PIM6? +Interface +Status +for +VRF+ \"(?P<vrf>[\w]+)\"$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -187,7 +189,8 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 address_list.append(m.groupdict()['address'])
 
             # PIM6 DR: fe80::5054:ff:fe89:740c, DR's priority: 1
-            p4 = re.compile(r'^\s*PIM6 +DR: +(?P<dr_address>[\w\:]+),'
+            # PIM DR: fe80::5054:ff:fe89:740c, DR's priority: 1
+            p4 = re.compile(r'^\s*PIM6? +DR: +(?P<dr_address>[\w\:]+),'
                             ' +DR\'s +priority: +(?P<dr_priority>[\d]+)$')
             m = p4.match(line)
             if m:
@@ -195,14 +198,16 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 dr_priority = m.groupdict()['dr_priority']
 
             # PIM6 neighbor count: 1
-            p5 = re.compile(r'^\s*PIM6 +neighbor +count: +(?P<nbr_count>[\d]+)$')
+            # PIM neighbor count: 1
+            p5 = re.compile(r'^\s*PIM6? +neighbor +count: +(?P<nbr_count>[\d]+)$')
 
             m = p5.match(line)
             if m:
                 nbr_count = m.groupdict()['nbr_count']
 
             # PIM6 hello interval: 45 secs (configured 44444 ms), next hello sent in: 00:00:05
-            p6 = re.compile(r'^\s*PIM6 +hello +interval: +(?P<hello_interval>[\d]+) +secs'
+            # PIM hello interval: 45 secs (configured 44444 ms), next hello sent in: 00:00:05
+            p6 = re.compile(r'^\s*PIM6? +hello +interval: +(?P<hello_interval>[\d]+) +secs'
                             '( +\(configured +(?P<configured_interval_ms>\d+) +ms\))?,'
                             ' +next +hello +sent +in: +(?P<hello_expiration>[\w\:]+)$')
             m = p6.match(line)
@@ -211,98 +216,114 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
                 hello_expiration = m.groupdict()['hello_expiration']
 
             # PIM6 neighbor holdtime: 159 secs
-            p7 = re.compile(r'^\s*PIM6 +neighbor +holdtime: +(?P<holdtime>[\d]+) +secs$')
+            p7 = re.compile(r'^\s*PIM6? +neighbor +holdtime: +(?P<holdtime>[\d]+) +secs$')
             m = p7.match(line)
             if m:
                 neighbor_holdtime = m.groupdict()['holdtime']
 
             # PIM6 configured DR priority: 144
-            p8 = re.compile(r'^\s*PIM6 +configured +DR +priority: +(?P<configured_dr_priority>[\d]+)$')
+            # PIM configured DR priority: 144
+            p8 = re.compile(r'^\s*PIM6? +configured +DR +priority: +(?P<configured_dr_priority>[\d]+)$')
             m = p8.match(line)
             if m:
                 configured_dr_priority = m.groupdict()['configured_dr_priority']
 
             # PIM6 configured DR delay: 3 secs
-            p9 = re.compile(r'^\s*PIM6 +configured +DR +delay: +(?P<configured_dr_delay>[\d]+) +secs$')
+            # PIM configured DR delay: 3 secs
+            p9 = re.compile(r'^\s*PIM6? +configured +DR +delay: +(?P<configured_dr_delay>[\d]+) +secs$')
             m = p9.match(line)
             if m:
                 configured_dr_delay = m.groupdict()['configured_dr_delay']
 
             # PIM6 border interface: yes
-            p10 = re.compile(r'^\s*PIM6 +border +interface: +(?P<border_interface>[\w]+)$')
+            # PIM border interface: yes
+            p10 = re.compile(r'^\s*PIM6? +border +interface: +(?P<border_interface>[\w]+)$')
             m = p10.match(line)
             if m:
                 bsr_border = m.groupdict()['border_interface']
 
             # PIM6 GenID sent in Hellos: 0x26fae674
-            p11 = re.compile(r'^\s*PIM6 +GenID +sent +in +Hellos: +(?P<genid>[\S]+)$')
+            # PIM GenID sent in Hellos: 0x26fae674
+            p11 = re.compile(r'^\s*PIM6? +GenID +sent +in +Hellos: +(?P<genid>[\S]+)$')
             m = p11.match(line)
             if m:
                 genid = m.groupdict()['genid']
 
             # PIM6 Hello MD5-AH Authentication: disabled
-            p12 = re.compile(r'^\s*PIM6 +Hello +MD5-AH +Authentication: +(?P<md5_authentication>[\w]+)$')
+            # PIM Hello MD5-AH Authentication: disabled
+            p12 = re.compile(r'^\s*PIM6? +Hello +MD5-AH +Authentication: +(?P<md5_authentication>[\w]+)$')
             m = p12.match(line)
             if m:
                 hello_md5_ah_authentication = m.groupdict()['md5_authentication']
 
             # PIM6 Neighbor policy: v4neighbor-policy
-            p13 = re.compile(r'^\s*PIM6 +Neighbor +policy: +(?P<nbr_policy>(?!none +configured)[\w\-\s]+)$')
+            # PIM Neighbor policy: v4neighbor-policy
+            p13 = re.compile(r'^\s*PIM6? +Neighbor +policy: +(?P<nbr_policy>(?!none +configured)[\w\-\s]+)$')
             m = p13.match(line)
             if m:
                 neighbor_filter = m.groupdict()['nbr_policy']
 
             # PIM6 Join-Prune inbound policy: v4jp-policy
-            p14 = re.compile(r'^\s*PIM6 +Join-Prune +inbound +policy: +(?P<jp_inbound_policy>(?!none)[\w\-\s]+)$')
+            # PIM Join-Prune inbound policy: v4jp-policy
+            p14 = re.compile(r'^\s*PIM6? +Join-Prune +inbound +policy: +(?P<jp_inbound_policy>(?!none)[\w\-\s]+)$')
             m = p14.match(line)
             if m:
                 jp_inbound_policy = m.groupdict()['jp_inbound_policy']
 
             # PIM6 Join-Prune outbound policy: v4jp-policy
-            p15 = re.compile(r'^\s*PIM6 +Join-Prune +outbound +policy: +(?P<jp_outbound_policy>(?!none)[\w\-\s]+)$')
+            # PIM Join-Prune outbound policy: v4jp-policy
+            p15 = re.compile(r'^\s*PIM6? +Join-Prune +outbound +policy: +(?P<jp_outbound_policy>(?!none)[\w\-\s]+)$')
             m = p15.match(line)
             if m:
                 jp_outbound_policy = m.groupdict()['jp_outbound_policy']
 
             # PIM6 Join-Prune interval: 1 minutes
-            p16 = re.compile(r'^\s*PIM6 +Join-Prune +interval: +(?P<jp_interval>[\d]+) +minutes$')
+            # PIM Join-Prune interval: 1 minutes
+            p16 = re.compile(r'^\s*PIM6? +Join-Prune +interval: +(?P<jp_interval>[\d]+) +minutes$')
             m = p16.match(line)
             if m:
                 jp_interval = m.groupdict()['jp_interval']
 
             # PIM6 Join-Prune next sending: 1 minutes
-            p17 = re.compile(r'^\s*PIM6 +Join-Prune +next +sending: +(?P<jp_next_sending>[\d]+) +minutes$')
+            # PIM Join-Prune next sending: 1 minutes
+            p17 = re.compile(r'^\s*PIM6? +Join-Prune +next +sending: +(?P<jp_next_sending>[\d]+) +minutes$')
             m = p17.match(line)
             if m:
                 jp_next_sending = m.groupdict()['jp_next_sending']
 
             # PIM6 BFD enabled: no
-            p18 = re.compile(r'^\s*PIM6 +BFD +enabled: +(?P<bfd_enabled>[\w]+)$')
+            # PIM BFD enabled: no
+            p18 = re.compile(r'^\s*PIM6? +BFD +enabled: +(?P<bfd_enabled>[\w]+)$')
             m = p18.match(line)
             if m:
                 bfd = m.groupdict()['bfd_enabled']
 
             # PIM6 passive interface: no
-            p19 = re.compile(r'^\s*PIM(6)? +passive +interface: +(?P<passive>[\w]+)$')
+            # PIM passive interface: no
+            p19 = re.compile(r'^\s*PIM6? +passive +interface: +(?P<passive>[\w]+)$')
             m = p19.match(line)
             if m:
                 passive = m.groupdict()['passive']
 
             # PIM6 VPC SVI: no
-            p20 = re.compile(r'^\s*PIM6 +VPC +SVI: +(?P<vpc_svi>[\w]+)$')
+            # PIM VPC SVI: no
+            p20 = re.compile(r'^\s*PIM6? +VPC +SVI: +(?P<vpc_svi>[\w]+)$')
             m = p20.match(line)
             if m:
                 vpc_svi = m.groupdict()['vpc_svi']
 
             # PIM6 Auto Enabled: no
-            p21 = re.compile(r'^\s*PIM(6)? +Auto +Enabled: +(?P<auto_enabled>[\w]+)$')
+            # PIM Auto Enabled: no
+            p21 = re.compile(r'^\s*PIM6? +Auto +Enabled: +(?P<auto_enabled>[\w]+)$')
             m = p21.match(line)
             if m:
                 auto_enabled = m.groupdict()['auto_enabled']
 
             # PIM6 Interface Statistics, last reset: never
+            # PIM Interface Statistics, last reset: never
             # PIM6 Interface Statistics
-            p22 = re.compile(r'^\s*PIM6 +Interface +Statistics+(, +last +reset: +(?P<last_reset>[\w\:]+))?$')
+            # PIM Interface Statistics
+            p22 = re.compile(r'^\s*PIM6? +Interface +Statistics+(, +last +reset: +(?P<last_reset>[\w\:]+))?$')
             m = p22.match(line)
             if m:
                 statistic = True
@@ -2035,6 +2056,7 @@ class ShowIpv6PimNeighborSchema(MetaParser):
                                         Optional('up_time'): str,
                                         Optional('interface'): str,
                                         Optional('bidir_capable'): bool,
+                                        Optional('ecmp_redirect_capable'): bool
                                     },
                                     Optional('secondary_address'): list,
                                 },
@@ -2081,24 +2103,27 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
             line = line.strip()
 
             # PIM Neighbor Status for VRF "VRF1"
-            p1 = re.compile(r'^PIM6 +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
+            # PIM6 Neighbor Status for VRF "VRF1"
+            p1 = re.compile(r'^PIM6? +Neighbor +Status +for +VRF +\"(?P<vrf_name>[\S]+)\"$')
             m = p1.match(line)
             if m:
                 vrf_name = m.groupdict()['vrf_name']
                 neighbor = ""
                 secondary_address = []
                 continue
-
-            # Neighbor Address              Interface   Uptime    Expires   DR   Bidir-  BFD
-            #                                                               Pri  Capable State
-            # fe80::5054:ff:fe5b:aa80       Eth2/2      07:31:36  00:01:28  1    yes     n/a
-            p2 = re.compile(r'^(?P<neighbor>[\S]+)'
-                            ' +(?P<intf_name>[\S]+)'
-                            ' +(?P<up_time>[\S]+)'
-                            ' +(?P<expires>[\S]+)'
-                            ' +(?P<dr_priority>\d+)'
-                            ' +(?P<bidir_capable>\w+)'
-                            ' +(?P<bfd_state>[\S]+)$')
+                       
+            # Neighbor                     Interface            Uptime    Expires   DR       Bidir-  BFD     ECMP Redirect
+            #                                                                       Priority Capable State   Capable
+            # fe80::282:eaff:feed:1b08     Ethernet1/1.10       00:12:53  00:01:38  1        yes     n/a     no
+            # fe80::282:eaff:feed:1b08        Eth2/2      07:31:36  00:01:28  1    yes     n/a
+            p2 = re.compile(r'^(?P<neighbor>[\S]+) +'
+                             '(?P<intf_name>[\S]+) +'
+                             '(?P<up_time>[\S]+) +'
+                             '(?P<expires>[\S]+) +'
+                             '(?P<dr_priority>\d+) +'
+                             '(?P<bidir_capable>\w+) +'
+                             '(?P<bfd_state>[\S]+) *'
+                             '(?:(?P<ecmp_redirect_capable>\S+))?')
             m = p2.match(line)
             if m:
                 second_address_flag = False
@@ -2109,6 +2134,7 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                 dr_priority = int(m.groupdict()['dr_priority'])
                 bidir_capable = True if m.groupdict()['bidir_capable'].lower() == 'yes' else False
                 bfd_state = m.groupdict()['bfd_state']
+                ecmp_redirect_capable = m.groupdict()['ecmp_redirect_capable']
 
                 if intf_name and vrf_name:
                     if 'vrf' not in parsed_output:
@@ -2153,6 +2179,16 @@ class ShowIpv6PimNeighbor(ShowIpv6PimNeighborSchema):
                     parsed_output['vrf'][vrf_name]['interfaces'] \
                         [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
                         ['bidir_capable'] = bidir_capable
+                    
+                    if ecmp_redirect_capable == 'no' or not ecmp_redirect_capable:
+                        ecmp_redirect_capable = False
+                    elif ecmp_redirect_capable == 'yes':
+                        ecmp_redirect_capable = True
+
+                    parsed_output['vrf'][vrf_name]['interfaces'] \
+                        [intf_name]['address_family'][af_name]['neighbors'][neighbor]\
+                        ['ecmp_redirect_capable'] = ecmp_redirect_capable
+
                     continue
 
             #  Secondary addresses:

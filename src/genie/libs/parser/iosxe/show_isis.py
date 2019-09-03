@@ -440,3 +440,59 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         return result_dict
 
+
+class ShowRunSectionIsisSchema(MetaParser):
+    """Schema for show run | sec isis"""
+
+    schema = {
+        'instance':{
+            Any(): {
+                'vrf': {
+                    Any():{}
+                }
+            }
+        }
+    }
+
+class ShowRunSectionIsis(ShowRunSectionIsisSchema):
+    """Parser for show run | sec isis"""
+
+    cli_command = 'show run | sec isis'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+
+        # router isis VRF1
+        p1 = re.compile(r'^router +isis +(?P<instance>\S+)$')
+        # vrf VRF1
+        p2 = re.compile(r'^vrf +(?P<vrf>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # router isis VRF1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                tag_dict = result_dict.setdefault('instance', {}).setdefault(group['instance'],{})
+                continue
+
+            # vrf VRF1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_dict = tag_dict.setdefault('vrf', {}).\
+                                         setdefault(group['vrf'], {})
+                continue
+
+        for k in result_dict['instance']:
+            if 'vrf' not in result_dict['instance'][k]:
+                result_dict['instance'][k].setdefault('vrf',{}).setdefault('default' ,{})
+
+        return result_dict

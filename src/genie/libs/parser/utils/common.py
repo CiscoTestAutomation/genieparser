@@ -49,7 +49,7 @@ def get_parser_commands(device, data=parser_data):
         commands.append(command)
     return commands
 
-def format_output(parser_data, tab=0):
+def format_output(parser_data, tab=2):
     '''Format the parsed output in an aligned intended structure'''
 
     s = ['{\n']
@@ -61,7 +61,7 @@ def format_output(parser_data, tab=0):
         else:
             v = repr(v)
         s.append('%s%r: %s,\n' % ('  '*tab, k, v))
-    s.append('%s}' % ('  '*tab))
+    s.append('%s}' % ('  '*(tab-2)))
     return ''.join(s)
 
 def get_parser_exclude(command, device):
