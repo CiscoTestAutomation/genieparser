@@ -87,7 +87,7 @@ coverage_all:
 	@echo "Done Compiling"
 	@echo ""
 
-pylint:
+pylint_all:
 	@$(PYLINT_CMD)
 
 devnet: package
