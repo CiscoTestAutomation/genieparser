@@ -66,3 +66,10 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                FLOW MONITOR
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowFlowMonitor for:
+        * show flow monitor {name} cache format table

@@ -1,0 +1,89 @@
+# Python
+import unittest
+from unittest.mock import Mock
+
+# Metaparser
+from genie.metaparser.util.exceptions import SchemaEmptyParserError,SchemaMissingKeyError
+
+# ATS
+from ats.topology import Device
+from ats.topology import loader
+
+# iosxe show_flow
+from genie.libs.parser.iosxe.show_flow import ShowFlowMonitor
+
+# ==============================================================
+# Unit test for 'show flow monitor {name} cache format table'
+# ==============================================================
+class test_show_monitor(unittest.TestCase):
+    '''Unit test for "show flow monitor {name} cache format table"
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output1 = {
+        'cache_type': 'Normal (Platform cache)',
+        'cache_size': 16,
+        'current_entries': 1,
+        'high_water_mark': 1,
+        'flows_added': 1,
+        'flows_aged': 0,
+        'ipv4_src_addr': {
+            '10.0.0.6': {
+                'ipv4_dst_addr': {
+                    '224.0.0.5': {
+                        'trns_src_port': 0,
+                        'trns_dst_port': 0,
+                        'ip_tos': '0xC0',
+                        'ip_port': 89,
+                        'bytes_long': 100,
+                        'pkts_long': 1,
+                    },
+                    '224.0.0.2': {
+                        'trns_src_port': 646,
+                        'trns_dst_port': 646,
+                        'ip_tos': '0xC0',
+                        'ip_port': 17,
+                        'bytes_long': 124,
+                        'pkts_long': 2,
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 ={'execute.return_value':'''
+    Device#show flow monitor FLOW-MONITOR-1 cache format table
+    Cache type:                               Normal (Platform cache)
+    Cache size:                                   16
+    Current entries:                               1
+    High Watermark:                                1
+    
+    Flows added:                                   1
+    Flows aged:                                    0
+    
+    IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP TOS  IP PROT            bytes long             pkts long
+    ===============  ===============  =============  =============  ======  =======  ====================  ====================
+    10.0.0.6         224.0.0.5                    0              0  0xC0         89                   100                     1
+    10.0.0.6         224.0.0.2                  646            646  0xC0         17                   124                     2
+    
+    Device#
+    '''}
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowFlowMonitor(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(name='FLOW-MONITOR-1')
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowFlowMonitor(device=self.device)
+        parsed_output = obj.parse(name='FLOW-MONITOR-1')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+    
+if __name__ == '__main__':
+    unittest.main()
