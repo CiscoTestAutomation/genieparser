@@ -49,13 +49,13 @@ Remote SPAN VLANs
 Primary Secondary Type              Ports
 ------- --------- ----------------- ------------------------------------------
 2       301       community         Fa5/3, Fa5/25
-2       302       community
-        10        community
-20      105       isolated
-100     151       non-operational
-none    202       community
-        303       community
-101     402       non-operational
+ 2       302       community
+         10        community
+ 20      105       isolated
+ 100     151       non-operational
+ none    202       community
+         303       community
+ 101     402       non-operational
 
     '''
 }
@@ -216,7 +216,7 @@ VLAN Name                             Status    Ports
 100  V100                             suspended
 101  VLAN-0101                        active
 102  VLAN_0102                        active
-103  VLAN-0103                        active
+103  VLAN-0103                        act/unsup
 104  VLAN_0104                        act/lshut
 
 VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
@@ -379,7 +379,7 @@ none    202       community
                 'vlan_id': '103',
                 'shutdown': False,
                 'name': 'VLAN-0103',
-                'state': 'active',
+                'state': 'unsupport',
                 },
             '104': {
                 'vlan_id': '104',
