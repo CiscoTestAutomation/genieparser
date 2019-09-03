@@ -12,16 +12,17 @@ from genie.libs.parser.iosxr.show_segment_routing import ShowPceLsp,\
                                                             ShowPceIPV4PeerDetail,\
                                                             ShowPceIPV4PeerPrefix,\
                                                             ShowPceIpv4TopologySummary,\
-                                                            ShowSegmentRoutingPrefixSidMap,\
+                                                            ShowIsisSegmentRoutingPrefixSidMap,\
+                                                            ShowOspfSegmentRoutingPrefixSidMap,\
                                                             ShowSegment_RoutingLocal_BlockInconsistencies,\
                                                             ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4,\
                                                             ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail
 
 # =============================================================
 # Unittest for:
-#   * 'Show Segment Routing Prefix Sid Map'
+#   * 'Show Isis Segment Routing Prefix Sid Map'
 # =============================================================
-class test_show_routing_prefix_sid_map(unittest.TestCase):
+class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
     
     device = Device(name='DeviceA')
     dev2 = Device(name='DeviceB')
@@ -33,7 +34,7 @@ class test_show_routing_prefix_sid_map(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         RP/0/0/CPU0:router# show isis segment-routing prefix-sid-map active-policy
 
-            IS-IS 1 active policy
+        IS-IS 1 active policy
         Prefix               SID Index    Range        Flags
         1.1.1.100/32         100          20          
         1.1.1.150/32         150          10          
@@ -48,7 +49,72 @@ class test_show_routing_prefix_sid_map(unittest.TestCase):
         1.1.1.150/32         150          10          
 
         Number of mapping entries: 2
+    '''}
 
+    golden_parsed_output = {
+        'process_id': {
+            1: {
+                'policy': {
+                    'active': {
+                        'sid': {
+                            100: {
+                                'prefix': '1.1.1.100/32',
+                                'range': 20,
+                            },
+                            150: {
+                                'prefix': '1.1.1.150/32',
+                                'range': 10,
+                            }
+                        },
+                        'number_of_mapping_entries': 2,
+                    },
+                    'backup': {
+                        'sid': {
+                            100: {
+                                'prefix': '1.1.1.100/32',
+                                'range': 20,
+                            },
+                            150: {
+                                'prefix': '1.1.1.150/32',
+                                'range': 10,
+                            }
+                        },
+                        'number_of_mapping_entries': 2,
+                    },
+                }
+            }
+        }
+    }
+        
+
+    def test_empty_output(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowIsisSegmentRoutingPrefixSidMap(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed = obj.parse()
+
+    def test_golden_output(self):
+        self.maxDiff = None
+        self.dev2 = Mock(**self.golden_output)
+        obj = ShowIsisSegmentRoutingPrefixSidMap(device = self.dev2)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output)
+        
+
+# =============================================================
+# Unittest for:
+#   * 'Show Ospf Segment Routing Prefix Sid Map'
+# =============================================================
+class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
+    
+    device = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
+
+
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
         RP/0/0/CPU0:router# show ospf segment-routing prefix-sid-map active-policy
 
                 SRMS active policy for Process ID 1
@@ -71,68 +137,53 @@ class test_show_routing_prefix_sid_map(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'isis': {
-        'name': 'isis',
-        'active': {
-            'status': True,
-            'isis_id': 1,
-            'algorithm': {
-                'prefix': '1.1.1.100/32',
-                'sid_index': 100,
-                'range': 20
-            },
-            'entries': 2
-            },
-            'backup': {
-                'status': False,
-                'isis_id': 1,
-                'algorithm': {
-                    'prefix': '1.1.1.100/32',
-                    'sid_index': 100,
-                    'range': 20
-                },
-                'entries': 2
-            }
-        },
-        'ospf': {
-            'name': 'ospf',
-            'active': {
-                'status': True,
-                'algorithm': {
-                    'prefix': '1.1.1.100/32',
-                    'sid_index': 100,
-                    'range': 20
-                },
-                'process_id': 1,
-                'entries': 2
-            },
-            'backup': {
-                'status': False,
-                'algorithm': {
-                    'prefix': '1.1.1.100/32',
-                    'sid_index': 100,
-                    'range': 20
-                },
-                'process_id': 1,
-                'entries': 2
+        'process_id': {
+            1: {
+                'policy': {
+                    'active': {
+                        'sid': {
+                            100: {
+                                'prefix': '1.1.1.100/32',
+                                'range': 20,
+                            },
+                            150: {
+                                'prefix': '1.1.1.150/32',
+                                'range': 10,
+                            }
+                        },
+                        'number_of_mapping_entries': 2,
+                    },
+                    'backup': {
+                        'sid': {
+                            100: {
+                                'prefix': '1.1.1.100/32',
+                                'range': 20,
+                            },
+                            150: {
+                                'prefix': '1.1.1.150/32',
+                                'range': 10,
+                            }
+                        },
+                        'number_of_mapping_entries': 2,
+                    },
+                }
             }
         }
     }
-
+        
 
     def test_empty_output(self):
         self.device1 = Mock(**self.empty_output)
-        obj = ShowSegmentRoutingPrefixSidMap(device=self.device1)
+        obj = ShowOspfSegmentRoutingPrefixSidMap(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowSegmentRoutingPrefixSidMap(device = self.dev2)
+        obj = ShowOspfSegmentRoutingPrefixSidMap(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
-        
 
 
 class test_show_pce_ivp4_peer(unittest.TestCase):
@@ -153,10 +204,9 @@ class test_show_pce_ivp4_peer(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'database': {
+        'pce_peer_database': {
             '192.168.0.1': {
-                'peer_address': '192.168.0.1',
-                'state': True,
+                'state': 'Up',
                 'capabilities': {
                     'stateful': True,
                     'segment-routing': True,
@@ -220,9 +270,9 @@ class test_show_pce_ipv4_peer_detail(unittest.TestCase):
                     'update': True
                 },
                 'pcep': {
-                    'pcep_uptime': '00:01:50',
-                    'pcep_local_id': 0,
-                    'pcep_remote_id': 0
+                    'uptime': '00:01:50',
+                    'session_id_local': 0,
+                    'session_id_remote': 0
                 },
                 'ka': {
                     'sending_intervals': 30,
@@ -280,45 +330,61 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
         PCE's prefix database:
         ----------------------
         Node 1
-        TE router ID: 192.168.0.1
-        Host name: rtrA
-        ISIS system ID: 1921.6800.1001 level-1
+        TE router ID: 192.168.0.4
+        Host name: rtrD
+        ISIS system ID: 1921.6800.1004 level-1 ASN: 65001 domain ID: 1111
+        ISIS system ID: 1921.6800.1004 level-2 ASN: 65001 domain ID: 1111
+        ISIS system ID: 1921.6800.1004 level-2 ASN: 65001 domain ID: 9999
         Advertised Prefixes:
-        192.168.0.1
+        192.168.0.4
+        192.168.0.4
+        192.168.0.4
+        192.168.0.6
 
         Node 2
-        TE router ID: 192.168.0.2
-        Host name: rtrB
-        ISIS system ID: 1921.6800.1002 level-2
+        TE router ID: 192.168.0.1
+        Host name: rtrA
+        ISIS system ID: 1921.6800.1001 level-2
         Advertised Prefixes:
-        192.168.0.2
+        192.168.0.1
     '''}
 
     golden_parsed_output = {
-        'prefix': {
-            1: {
-                'node': 1,
-                'te_router_id': '192.168.0.1',
-                'host_name': 'rtrA',
-                '1921.6800.1001': {
-                    'system_id': '1921.6800.1001',
-                    'level': 1
-                },
-                'advertised_prefixes': '192.168.0.1'
+    'prefix': {
+        1: {
+            'node': 1,
+            'te_router_id': '192.168.0.4',
+            'host_name': 'rtrD',
+            '1921.6800.1004 level-1': {
+                'isis_system_id': '1921.6800.1004 level-1',
+                'asn': 65001,
+                1111: {
+                    'domain_id': 1111
+                }
             },
-            2: {
-                'node': 2,
-                'te_router_id': '192.168.0.2',
-                'host_name': 'rtrB',
-                '1921.6800.1002': {
-                    'system_id': '1921.6800.1002',
-                    'level': 2
+            '1921.6800.1004 level-2': {
+                'isis_system_id': '1921.6800.1004 level-2',
+                'asn': 65001,
+                1111: {
+                    'domain_id': 1111
                 },
-                'advertised_prefixes': '192.168.0.2'
-            }
+                9999: {
+                    'domain_id': 9999
+                }
+            },
+            'advertised_prefixes': '192.168.0.6'
+        },
+        2: {
+            'node': 2,
+            'te_router_id': '192.168.0.1',
+            'host_name': 'rtrA',
+            '1921.6800.1001 level-2': {
+                'isis_system_id': '1921.6800.1001 level-2'
+            },
+            'advertised_prefixes': '192.168.0.1'
         }
     }
-
+}
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)

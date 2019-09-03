@@ -5,31 +5,32 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
-class ShowSegmentRoutingPrefixSidMapSchema(MetaParser):
+class ShowIsisSegmentRoutingPrefixSidMapSchema(MetaParser):
     ''' Schema for:
           *  show isis segment-routing prefix-sid-map active-policy
           *  show isis segment-routing prefix-sid-map backup-policy
         '''
     schema = {
-        Any() : {
-            'name' : str,
+        'process_id' : {
             Any() : {
-                'status' : bool,
-                'entries' : int,
-                'algorithm' : {
-                    'prefix' : str,
-                    'sid_index' : int,
-                    'range' : int,
-                    Optional('flags'): str,
-                },
-                Optional('isis_id'): int,
-                Optional('process_id') : int,
+                'policy' : {
+                    Any() : {
+                        'sid' : {
+                            Any() : {
+                                'prefix' : str,
+                                'range' : int,
+                                Optional('flags'): str,
+                            },
+                        },
+                        'number_of_mapping_entries' : int,
+                    },
+                }
             },
         }
     }
 
 
-class ShowSegmentRoutingPrefixSidMap(ShowSegmentRoutingPrefixSidMapSchema):
+class ShowIsisSegmentRoutingPrefixSidMap(ShowIsisSegmentRoutingPrefixSidMapSchema):
     ''' Parser for:
           *  show isis segment-routing prefix-sid-map active-policy
           *  show isis segment-routing prefix-sid-map backup-policy
@@ -43,70 +44,137 @@ class ShowSegmentRoutingPrefixSidMap(ShowSegmentRoutingPrefixSidMapSchema):
         else:
             out = output
         
-        ret_dict = {}
-
-        p1 = re.compile(r'RP\/0\/0\/CPU0:router# show '
-            '(?P<name>\w+)\s+segment-routing prefix-sid-map '
-            '(?P<status>\w+)-policy$')
+        ret_dict = {}        
+        # # SRMS active policy for Process ID 1
+        # p2 = re.compile(r'^SRMS \w+ policy for Process ID (?P<process_id>\d+)$')
         
-        p2 = re.compile(r'^SRMS \w+ policy for Process ID (?P<process_id>\d+)$')
-        
-        p3 = re.compile(r'^IS-IS (?P<isis_id>\d+) \w+ policy$')
+        # IS-IS 1 active policy
+        p1 = re.compile(r'^IS-IS (?P<isis_id>\d+) (?P<status>\w+) policy$')
 
-        p4 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
+        # Prefix               SID Index    Range        Flags
+        # 1.1.1.100/32         100          20          
+        # 1.1.1.150/32         150          10          
+        p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
             '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         
-        p5 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
+        # Number of mapping entries: 2
+        p3 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
 
         for line in out.splitlines():
             line = line.strip()
         
-            # RP/0/0/CPU0:router# show isis \
-                        # segment-routing prefix-sid-map active-policy
             m = p1.match(line)
             if m:
-                status_bool = True if 'active' in \
-                        m.groupdict()['status'].lower()\
-                    else False
-                name = m.groupdict()['name']
+                isis_id = int(m.groupdict()['isis_id'])
                 status = m.groupdict()['status']
 
-                router_dict = ret_dict.setdefault(name, {})
-                router_dict['name'] = name
-                status_dict = router_dict.setdefault(status, {})
-                status_dict['status'] = status_bool
-
-            # SRMS active policy for Process ID 1
+                process_dict = ret_dict.setdefault('process_id', {})
+                isis_dict = process_dict.setdefault(isis_id, {})
+                policy_dict = isis_dict.setdefault('policy', {})
+                status_dict = policy_dict.setdefault(status, {})
+            
             m = p2.match(line)
             if m:
-                status_dict.setdefault('process_id', \
-                    int(m.groupdict()['process_id']))
-            
-            # IS-IS 1 active policy
+                sid_index = int(m.groupdict()['sid_index'])
+
+                sid_dict = status_dict.setdefault('sid', {})
+                index_dict = sid_dict.setdefault(sid_index, {})
+                index_dict['prefix'] = m.groupdict()['prefix']
+                index_dict['range'] = int(m.groupdict()['range'])
+                if 'flag' in line.lower():
+                    index_dict['flags'] = m.groupdict()['flags']
+
             m = p3.match(line)
             if m:
-                status_dict.setdefault('isis_id', int(m.groupdict()['isis_id']))
+                status_dict['number_of_mapping_entries'] = \
+                                                int(m.groupdict()['entries'])
 
-
-            # Prefix               SID Index    Range        Flags
-            # 1.1.1.100/32         100          20          
-            # 1.1.1.150/32         150          10          
-            m = p4.match(line)
-            if m:
-                algo_dict = status_dict.setdefault('algorithm', {})
-                algo_dict.setdefault('prefix', m.groupdict()['prefix'])
-                algo_dict.setdefault('sid_index', \
-                                            int(m.groupdict()['sid_index']))
-                algo_dict.setdefault('range', int(m.groupdict()['range']))
-                if 'flag' in line.lower():
-                    algo_dict.setdefault('flags', m.groupdict()['flags'])
-
-            # Number of mapping entries: 2
-            m = p5.match(line)
-            if m:
-                status_dict['entries'] = int(m.groupdict()['entries'])
-        
         return ret_dict
+
+class ShowOspfSegmentRoutingPrefixSidMapSchema(MetaParser):
+    ''' Schema for:
+          *  show ospf segment-routing prefix-sid-map active-policy
+          *  show ospf segment-routing prefix-sid-map backup-policy
+        '''
+    schema = {
+        'process_id' : {
+            Any() : {
+                'policy' : {
+                    Any() : {
+                        'sid' : {
+                            Any() : {
+                                'prefix' : str,
+                                'range' : int,
+                                Optional('flags'): str,
+                            },
+                        },
+                        'number_of_mapping_entries' : int,
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowOspfSegmentRoutingPrefixSidMap(ShowOspfSegmentRoutingPrefixSidMapSchema):
+    ''' Parser for:
+          *  show ospf segment-routing prefix-sid-map active-policy
+          *  show ospf segment-routing prefix-sid-map backup-policy
+        '''
+
+    cli_command = 'show ospf segment-routing prefix-sid-map {status}'
+
+    def cli(self, output= None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}        
+        # SRMS active policy for Process ID 1
+        p1 = re.compile(r'^SRMS (?P<status>\w+) policy for Process '
+                                                    'ID (?P<process_id>\d+)$')
+
+        # Prefix               SID Index    Range        Flags
+        # 1.1.1.100/32         100          20          
+        # 1.1.1.150/32         150          10          
+        p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
+            '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
+        
+        # Number of mapping entries: 2
+        p3 = re.compile(r'Number of mapping entries:\s+(?P<entries>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+        
+            m = p1.match(line)
+            if m:
+                process_id = int(m.groupdict()['process_id'])
+                status = m.groupdict()['status']
+
+                process_dict = ret_dict.setdefault('process_id', {})
+                isis_dict = process_dict.setdefault(process_id, {})
+                policy_dict = isis_dict.setdefault('policy', {})
+                status_dict = policy_dict.setdefault(status, {})
+            
+            m = p2.match(line)
+            if m:
+                sid_index = int(m.groupdict()['sid_index'])
+
+                sid_dict = status_dict.setdefault('sid', {})
+                index_dict = sid_dict.setdefault(sid_index, {})
+                index_dict['prefix'] = m.groupdict()['prefix']
+                index_dict['range'] = int(m.groupdict()['range'])
+                if 'flag' in line.lower():
+                    index_dict['flags'] = m.groupdict()['flags']
+
+            m = p3.match(line)
+            if m:
+                status_dict['number_of_mapping_entries'] = \
+                                                int(m.groupdict()['entries'])
+
+        return ret_dict
+
 
 
 class ShowPceIPV4PeerSchema(MetaParser):
@@ -114,14 +182,13 @@ class ShowPceIPV4PeerSchema(MetaParser):
         * show pce ipv4 peer
     '''
     schema = {
-        'database' : {
+        'pce_peer_database' : {
             Any() : {
-                'peer_address' : str,
-                'state' : bool,
+                'state' : str,
                 'capabilities' : {
-                    'stateful' : bool,
-                    'segment-routing' : bool,
-                    'update' : bool
+                    Optional('stateful') : bool,
+                    Optional('segment-routing'): bool,
+                    Optional('update') : bool
                 }
             },
         }
@@ -156,14 +223,12 @@ class ShowPceIPV4Peer(ShowPceIPV4PeerSchema):
             m = p1.match(line)
             if m:
                 address = m.groupdict()['address']
-                database_dict = ret_dict.setdefault('database', {})
+                database_dict = ret_dict.setdefault('pce_peer_database', {})
                 address_dict = database_dict.setdefault(address, {})
-                address_dict['peer_address'] = address
 
             m = p2.match(line)
             if m:
-                state_bool = True if 'up' in \
-                    m.groupdict()['state'].lower() else False
+                state_bool = m.groupdict()['state']
                 address_dict['state'] = state_bool
 
             m = p3.match(line)
@@ -198,9 +263,9 @@ class ShowPceIPV4PeerDetailSchema(MetaParser):
                     'update' : bool
                 },
                 'pcep' : {
-                    'pcep_uptime': str,
-                    'pcep_local_id': int,
-                    'pcep_remote_id': int,              
+                    'uptime': str,
+                    'session_id_local': int,
+                    'session_id_remote': int,              
                 },
                 'ka' : {
                     'sending_intervals': int,
@@ -326,12 +391,12 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
             m = p4.match(line)
             if m:
                 pcep_dict = address_dict.setdefault('pcep', {})
-                pcep_dict['pcep_uptime'] = m.groupdict()['pcep_up_time']
+                pcep_dict['uptime'] = m.groupdict()['pcep_up_time']
             
             m = p5.match(line)
             if m:
-                pcep_dict['pcep_local_id'] = int(m.groupdict()['local_id'])
-                pcep_dict['pcep_remote_id'] = int(m.groupdict()['remote_id'])
+                pcep_dict['session_id_local'] = int(m.groupdict()['local_id'])
+                pcep_dict['session_id_remote'] = int(m.groupdict()['remote_id'])
 
             m = p6.match(line)
             if m:
@@ -423,11 +488,14 @@ class ShowPceIPV4PeerprefixSchema(MetaParser):
                 'te_router_id': str,
                 'host_name': str,
                 Any() : {
-                    'system_id' : str,
-                    'level' : int,
+                    'isis_system_id' : str,
+                    Optional('asn'): int,
+                    Any() :{
+                        Optional('domain_id') : int,
+                    },
                 },
                 'advertised_prefixes': str,
-            }
+            },
         }
     }
 
@@ -452,8 +520,8 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
 
         p3 = re.compile(r'^Host name: (?P<host_name>\w+)$')
 
-        p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+)'
-                                        '\s+level-(?P<system_id_level>\d+)$')
+        p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+\s+level-\d+)'
+                    '( ASN: (?P<asn>\w+) domain ID: (?P<domain_id>\d+))*')
 
         p5 = re.compile(r'^(?P<adv_prefixes>[\w\.]+)$')
 
@@ -480,9 +548,14 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
             if m:
                 sys_id = m.groupdict()['system_id']
                 sys_dict = node_dict.setdefault(sys_id, {})
+                sys_dict['isis_system_id'] = sys_id
+                
+                if 'asn' in line.lower():
+                    domain = int(m.groupdict()['domain_id'])
+                    sys_dict['asn'] = int(m.groupdict()['asn'])
 
-                sys_dict['system_id'] = sys_id
-                sys_dict['level'] = int(m.groupdict()['system_id_level'])
+                    domain_dict = sys_dict.setdefault(domain, {})
+                    domain_dict['domain_id'] = domain
 
             m = p5.match(line)
             if m:
