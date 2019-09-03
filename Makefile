@@ -35,9 +35,11 @@ DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
 PYTHON        = python
-TESTCMD       = runAll --path=./tests/
+TESTCMD       = runAll
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
+PYLINT_CMD	  = pylintAll
+CYTHON_CMD	  = compileAll
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
@@ -73,7 +75,7 @@ compile:
 	@echo ""
 	@echo "Compiling to C code"
 	@echo --------------------------
-	python compile.py 
+	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
 
@@ -83,6 +85,14 @@ coverage_all:
 	@echo ---------------------------------------
 	@runAll --path tests/ --coverage
 	@echo "Done Compiling"
+	@echo ""
+
+pylint_all:
+	@echo ""
+	@echo "Running Pylint on all modules"
+    @echo "-----------------------------"
+	@$(PYLINT_CMD)
+	@echo "Done linting"
 	@echo ""
 
 devnet: package
