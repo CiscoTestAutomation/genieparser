@@ -185,7 +185,10 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
-
+# =============================================================
+# Unittest for:
+#   * 'Show pce ipv4 peer'
+# =============================================================
 class test_show_pce_ivp4_peer(unittest.TestCase):
     
     dev1 = Device(name = 'DeviceA')
@@ -229,6 +232,11 @@ class test_show_pce_ivp4_peer(unittest.TestCase):
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+
+# =============================================================
+# Unittest for:
+#   * 'show pce ipv4 peer detail'
+# =============================================================
 class test_show_pce_ipv4_peer_detail(unittest.TestCase):
     
     dev1 = Device(name = 'DeviceA')
@@ -318,6 +326,11 @@ class test_show_pce_ipv4_peer_detail(unittest.TestCase):
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+
+# =============================================================
+# Unittest for:
+#   * 'show pce ipv4 prefix'
+# =============================================================
 class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -350,41 +363,25 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-    'prefix': {
-        1: {
-            'node': 1,
-            'te_router_id': '192.168.0.4',
-            'host_name': 'rtrD',
-            '1921.6800.1004 level-1': {
-                'isis_system_id': '1921.6800.1004 level-1',
-                'asn': 65001,
-                1111: {
-                    'domain_id': 1111
-                }
+        'prefix': {
+            1: {
+                'node': 1,
+                'te_router_id': '192.168.0.4',
+                'host_name': 'rtrD',
+                'isis_system_id': ['1921.6800.1004 level-1', '1921.6800.1004 level-2', '1921.6800.1004 level-2'],
+                'asn': [65001, 65001, 65001],
+                'domain_id': [1111, 1111, 9999],
+                'advertised_prefixes': ['192.168.0.4', '192.168.0.4', '192.168.0.4', '192.168.0.6']
             },
-            '1921.6800.1004 level-2': {
-                'isis_system_id': '1921.6800.1004 level-2',
-                'asn': 65001,
-                1111: {
-                    'domain_id': 1111
-                },
-                9999: {
-                    'domain_id': 9999
-                }
-            },
-            'advertised_prefixes': '192.168.0.6'
-        },
-        2: {
-            'node': 2,
-            'te_router_id': '192.168.0.1',
-            'host_name': 'rtrA',
-            '1921.6800.1001 level-2': {
-                'isis_system_id': '1921.6800.1001 level-2'
-            },
-            'advertised_prefixes': '192.168.0.1'
+            2: {
+                'node': 2,
+                'te_router_id': '192.168.0.1',
+                'host_name': 'rtrA',
+                'isis_system_id': ['1921.6800.1001 level-2'],
+                'advertised_prefixes': ['192.168.0.1']
+            }
         }
     }
-}
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
@@ -400,6 +397,10 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
         self.assertEqual(parsed, self.golden_parsed_output)
 
 
+# =============================================================
+# Unittest for:
+#   * 'show pce ipv4 topology summary'
+# =============================================================
 class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -420,16 +421,12 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'summary': {
+        'pce_topology_database_summary': {
             'topology_nodes': 4,
-            'prefixes': {
-                'prefixes': 4,
-                'prefix_sids': 4
-            }, 
-            'links': {
-                'links': 12,
-                'adjancency_sids': 24
-            }
+            'prefixes': 4,
+            'prefix_sids': 4,
+            'links': 12,
+            'adjancency_sids': 24
         }
     }
 
@@ -447,6 +444,10 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
         self.assertEqual(parsed, self.golden_parsed_output)
 
 
+# =============================================================
+# Unittest for:
+#   * 'show pce lsp'
+# =============================================================
 class test_show_Pce_Lsp(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -473,22 +474,20 @@ class test_show_Pce_Lsp(unittest.TestCase):
     golden_parsed_output = {
         'pcc': {
             '192.168.0.1': {
-                'pcc': '192.168.0.1',
-                'tunnel_name': 'rtrA_t1',
-                'lsps': {
-                    0: {
-                        'lsp_number': 0,
-                        'source': '192.168.0.1',
-                        'destination': '192.168.0.4',
-                        'tunnel_id': 1,
-                        'lsp_id': 2,
-                        'state': {
-                            'admin': True,
-                            'operation': True
-                        },
-                        'setup_type':
-                        'Segment Routing',
-                        'binding_sid': 24013
+                'tunnel_name': {
+                    'rtrA_t1': {
+                        'lsps': {
+                            0: {
+                                'source': '192.168.0.1',
+                                'destination': '192.168.0.4',
+                                'tunnel_id': 1,
+                                'lsp_id': 2,
+                                'admin_state': 'up',
+                                'operation_state': 'up',
+                                'setup_type': 'Segment Routing',
+                                'binding_sid': 24013
+                            }
+                        }
                     }
                 }
             }
@@ -509,6 +508,10 @@ class test_show_Pce_Lsp(unittest.TestCase):
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+# =============================================================
+# Unittest for:
+#   * 'show pce lsp detail'
+# =============================================================
 class test_Show_Pce_Lsp_Detail(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -585,75 +588,70 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
     golden_parsed_output = {
         'pcc': {
             '192.168.0.1': {
-                'pcc': '192.168.0.1',
                 'tunnel_name': 'rtrA_t1',
                 'lsps': {
                     0: {
-                        'lsp_number': 0,
                         'source': '192.168.0.1',
                         'destination': '192.168.0.4',
                         'tunnel_id': 1,
                         'lsp_id': 2,
-                        'state': {
-                            'admin': True,
-                            'operation': True
-                        },
+                        'admin_state': 'up',
+                        'operation_state': 'up',
                         'setup_type': 'segment routing',
                         'binding_sid': 24013,
                         'pcep_information': {
                             'plsp_id': 2,
-                            'plsp_flags': 'd:1 s:0 r:0 a:1 o:1'
+                            'flags': {
+                                'd' : 1,
+                                's' : 0,
+                                'r' : 0, 
+                                'a' : 1,
+                                'o' : 1,
+                            }
                         },
                         'paths': {
                             'reported': {
-                                'path': 'reported',
-                                'metric_type': 'te',
+                                'metric': 'TE',
                                 'accumulated_metric': 42,
                                 'sids': {
                                     0: {
-                                        'sid_number': 0,
-                                        'sid_label': 24000,
-                                        'sid_local_address': '10.10.10.1',
-                                        'sid_remote_address': '10.10.10.2'
+                                        'number': 0,
+                                        'label': 24000,
+                                        'local_address': '10.10.10.1',
+                                        'remote_address': '10.10.10.2'
                                     },
                                     1: {
-                                        'sid_number': 1,
-                                        'sid_label': 24000,
-                                        'sid_local_address': '14.14.14.2',
-                                        'sid_remote_address': '14.14.14.4'
+                                        'number': 1,
+                                        'label': 24000,
+                                        'local_address': '14.14.14.2',
+                                        'remote_address': '14.14.14.4'
                                     }
                                 }
                             },
                             'computed': {
-                                'path': 'computed',
-                                'metric_type': 'te',
+                                'metric': 'TE',
                                 'accumulated_metric': 42,
                                 'sids': {
                                     0: {
-                                        'sid_number': 0,
-                                        'sid_label': 24000,
-                                        'sid_local_address': '10.10.10.1',
-                                        'sid_remote_address': '10.10.10.2'
+                                        'number': 0,
+                                        'label': 24000,
+                                        'local_address': '10.10.10.1',
+                                        'remote_address': '10.10.10.2'
                                     },
                                     1: {
-                                        'sid_number': 1,
-                                        'sid_label': 24000,
-                                        'sid_local_address': '14.14.14.2',
-                                        'sid_remote_address': '14.14.14.4'
+                                        'number': 1,
+                                        'label': 24000,
+                                        'local_address': '14.14.14.2',
+                                        'remote_address': '14.14.14.4'
                                     }
                                 }
                             },
-                            'recorded': {
-                                'path': 'recorded',
-                                'none': 'none'
-                            }
+                            'recorded': {}
                         }
                     },
                     'event_history': {
-                        'june 13 2016 13:28:29': {
-                            'time': 'june 13 2016 13:28:29',
+                        'June 13 2016 13:28:29': {
                             'report': {
-                                'event': 'report',
                                 'symbolic_name': 'rtrA_t1',
                                 'lsp-id': 2,
                                 'source': '192.168.0.1',
@@ -668,10 +666,8 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                 }
                             }
                         },
-                        'june 13 2016 13:28:28': {
-                            'time': 'june 13 2016 13:28:28',
+                        'June 13 2016 13:28:28': {
                             'report': {
-                                'event': 'report',
                                 'symbolic_name': 'rtrA_t1',
                                 'lsp-id': 2,
                                 'source': '192.168.0.1',
@@ -686,7 +682,6 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                 }
                             },
                             'create': {
-                                'event': 'create',
                                 'symbolic_name': 'rtrA_t1',
                                 'plsp-id': 2,
                                 'peer': '192.168.0.1'
@@ -711,6 +706,10 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+# =============================================================
+# Unittest for:
+#   * 'show segment-routing local-block inconsistencies'
+# =============================================================
 class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -724,20 +723,10 @@ class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'dates' : {
-            'tue aug 15 13:53:30.555 edt' : {
-                'date' : 'tue aug 15 13:53:30.555 edt',
-                'inconsistencies' : {
-                    'srlb' : {
-                        'inconsistency' : 'srlb',
-                        'range' : {
-                            'start' : 30000,
-                            'end' : 30009,
-                        }
-                    }
-                }
+        'srlb_inconsistencies_range' : {
+            'start' : 30000,
+            'end' : 30009,
             }
-        }
     }
 
     def test_empty_output(self):
@@ -753,6 +742,11 @@ class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+
+# ====================================================================
+# Unittest for:
+#   * 'show segment-routing mapping-server prefix-sid-map ipv4'
+# ====================================================================
 class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -768,17 +762,17 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
 
     golden_parsed_output = {
         'ipv4': {
-            '20.1.1.0/24': {
-                'prefix': '20.1.1.0/24',
-                'sid_index': 400,
-                'range': 300
+            'number_of_mapping_entries': 2,
+            'prefix' : {
+                '20.1.1.0/24': {
+                    'sid_index': 400,
+                    'range': 300
+                },
+                '10.1.1.1/32': {
+                    'sid_index': 10,
+                    'range': 200
+                }
             },
-            '10.1.1.1/32': {
-                'prefix': '10.1.1.1/32',
-                'sid_index': 10,
-                'range': 200
-            },
-        'entries': 2
         }
     }
 
@@ -795,6 +789,10 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
+# ====================================================================
+# Unittest for:
+#   * 'show segment-routing mapping-server prefix-sid-map ipv4 detail'
+# ====================================================================
 class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
@@ -817,18 +815,18 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
 
     golden_parsed_output = {
         'ipv4': {
-            '20.1.1.0/24': {
-                'prefix': '20.1.1.0/24',
-                'sid_index': 400,
-                'range': 300,
-                'last_prefix': '20.2.44.0/24',
-                'last_sid_index' : 699
-            },
-            '10.1.1.1/32': {
-                'prefix': '10.1.1.1/32',
-                'sid_index': 10,
-                'range': 200
-            },
+            'prefix' : {
+                '20.1.1.0/24': {
+                    'sid_index': 400,
+                    'range': 300,
+                    'last_prefix': '20.2.44.0/24',
+                    'last_sid_index' : 699
+                },
+                '10.1.1.1/32': {
+                    'sid_index': 10,
+                    'range': 200
+                },
+            }
         }
     }
 
@@ -844,9 +842,6 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
         obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(device = self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
-
-
-
 
 if __name__ == '__main__':
     unittest.main()

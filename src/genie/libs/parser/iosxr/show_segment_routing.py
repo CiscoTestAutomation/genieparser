@@ -487,14 +487,10 @@ class ShowPceIPV4PeerprefixSchema(MetaParser):
                 'node' : int,
                 'te_router_id': str,
                 'host_name': str,
-                Any() : {
-                    'isis_system_id' : str,
-                    Optional('asn'): int,
-                    Any() :{
-                        Optional('domain_id') : int,
-                    },
-                },
-                'advertised_prefixes': str,
+                'isis_system_id' : list,
+                Optional('asn'): list,
+                Optional('domain_id') : list,
+                'advertised_prefixes': list,
             },
         }
     }
@@ -523,7 +519,7 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
         p4 = re.compile(r'^ISIS system ID: (?P<system_id>[\w\.]+\s+level-\d+)'
                     '( ASN: (?P<asn>\w+) domain ID: (?P<domain_id>\d+))*')
 
-        p5 = re.compile(r'^(?P<adv_prefixes>[\w\.]+)$')
+        p5 = re.compile(r'^(?P<adv_prefixes>\d+\.\d+\.\d+\.\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -547,19 +543,21 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
             m = p4.match(line)
             if m:
                 sys_id = m.groupdict()['system_id']
-                sys_dict = node_dict.setdefault(sys_id, {})
-                sys_dict['isis_system_id'] = sys_id
+                node_dict.setdefault('isis_system_id', []).append(sys_id)
                 
                 if 'asn' in line.lower():
                     domain = int(m.groupdict()['domain_id'])
-                    sys_dict['asn'] = int(m.groupdict()['asn'])
+                    node_dict.setdefault('asn', []).\
+                                            append(int(m.groupdict()['asn']))
 
-                    domain_dict = sys_dict.setdefault(domain, {})
-                    domain_dict['domain_id'] = domain
+                    node_dict.setdefault('domain_id', []).\
+                                        append(int(m.groupdict()['domain_id']))
 
             m = p5.match(line)
             if m:
-                node_dict['advertised_prefixes'] = m.groupdict()['adv_prefixes']
+                node_dict.setdefault('advertised_prefixes', [])
+                node_dict['advertised_prefixes'].\
+                                        append(m.groupdict()['adv_prefixes'])
 
         return ret_dict
 
@@ -568,16 +566,12 @@ class ShowPceIpv4TopologySummarySchema(MetaParser):
         * show pce ipv4 topology summary
     '''
     schema = {
-        'summary' : {
+        'pce_topology_database_summary' : {
             'topology_nodes' : int,
-            'prefixes' : {
-                'prefixes' : int,
-                'prefix_sids' : int,
-            },
-            'links' : {
-                'links' : int,
-                'adjancency_sids': int,
-            }
+            'prefixes' : int,
+            'prefix_sids' : int,
+            'links' : int,
+            'adjancency_sids': int,
         }
     }
 
@@ -611,28 +605,27 @@ class ShowPceIpv4TopologySummary(ShowPceIpv4TopologySummarySchema):
 
             m = p1.match(line)
             if m:
-                topology_dict = ret_dict.setdefault('summary', {})
+                topology_dict = ret_dict.setdefault\
+                                        ('pce_topology_database_summary', {})
                 topology_dict['topology_nodes'] = \
                                             int(m.groupdict()['topology_nodes'])
 
             m = p2.match(line)
             if m:
-                prefix_dict = topology_dict.setdefault('prefixes', {})
-                prefix_dict['prefixes'] = int(m.groupdict()['prefixes'])
+                topology_dict['prefixes'] = int(m.groupdict()['prefixes'])
 
             m = p3.match(line)
             if m:
-                prefix_dict['prefix_sids'] = int(m.groupdict()['prefix_sids'])
+                topology_dict['prefix_sids'] = int(m.groupdict()['prefix_sids'])
 
             m = p4.match(line)
             if m:
-                links_dict = topology_dict.setdefault('links', {})
-                links_dict['links'] = int(m.groupdict()['links'])
+                topology_dict['links'] = int(m.groupdict()['links'])
 
             m = p5.match(line)
             if m:
-                links_dict['adjancency_sids'] = int(m.groupdict()['adj_sids'])
-        
+                topology_dict['adjancency_sids'] = int(m.groupdict()['adj_sids'])
+
         return ret_dict
 
 class ShowPceLspSchema(MetaParser):
@@ -641,22 +634,21 @@ class ShowPceLspSchema(MetaParser):
     '''
     schema = {
         'pcc' : {
-            Any() : {
-                'pcc' : str,
-                'tunnel_name' : str,
-                'lsps' : {
+            Any() :{
+                'tunnel_name' : {
                     Any() : {
-                        'lsp_number' : int,
-                        'source': str,
-                        'destination': str,
-                        'tunnel_id' : int,
-                        'lsp_id' : int,
-                        'state' : {
-                            'admin' : bool,
-                            'operation' : bool,
-                        },
-                        'setup_type' : str,
-                        'binding_sid' : int
+                        'lsps' : {
+                            Any() : {
+                                'source': str,
+                                'destination': str,
+                                'tunnel_id' : int,
+                                'lsp_id' : int,
+                                'admin_state' : str,
+                                'operation_state' : str,
+                                'setup_type' : str,
+                                'binding_sid' : int
+                            },
+                        }
                     },
                 }
             },
@@ -704,20 +696,21 @@ class ShowPceLsp(ShowPceLspSchema):
                 pccs_dict = ret_dict.setdefault('pcc', {})
 
                 pcc_dict = pccs_dict.setdefault(pcc_id, {})
-                pcc_dict['pcc'] = pcc_id
 
             m = p2.match(line)
             if m:
-                pcc_dict['tunnel_name'] = m.groupdict()['tunnel_name']
+                tunnel_name = m.groupdict()['tunnel_name']
+
+                tunnels_dict = pcc_dict.setdefault('tunnel_name', {})
+                tunnel_dict = tunnels_dict.setdefault(tunnel_name, {})
+                
 
             m = p3.match(line)
             if m:
                 lsp_numb = int(m.groupdict()['lsp_number'])
 
-                lsps_dict = pcc_dict.setdefault('lsps', {})
+                lsps_dict = tunnel_dict.setdefault('lsps', {})
                 lsp_dict = lsps_dict.setdefault(lsp_numb, {})
-
-                lsp_dict['lsp_number'] = lsp_numb
 
             m = p4.match(line)
             if m:
@@ -728,14 +721,11 @@ class ShowPceLsp(ShowPceLspSchema):
 
             m = p5.match(line)
             if m:
-                admin_bool = True if 'up' in \
-                                m.groupdict()['admin_state'].lower() else False
-                operation_bool = True if 'up' in \
-                            m.groupdict()['operation_state'].lower() else False
-                state_dict = lsp_dict.setdefault('state', {})
+                admin_state = m.groupdict()['admin_state'].lower()
+                operation_state = m.groupdict()['operation_state'].lower()
 
-                state_dict['admin'] = admin_bool
-                state_dict['operation'] = operation_bool
+                lsp_dict['admin_state'] = admin_state
+                lsp_dict['operation_state'] = operation_state
 
             m = p6.match(line)
             if m:
@@ -754,37 +744,38 @@ class ShowPceLspDetailSchema(MetaParser):
     schema = {
         'pcc' : {
             Any() : {
-                'pcc' : str,
                 'tunnel_name' : str,
                 'lsps' : {
                     Any() : {
-                        'lsp_number' : int,
                         'source': str,
                         'destination': str,
                         'tunnel_id' : int,
                         'lsp_id' : int,
-                        'state' : {
-                            'admin' : bool,
-                            'operation' : bool,
-                        },
+                        'admin_state' : str,
+                        'operation_state' : str,
                         'setup_type' : str,
                         'binding_sid' : int,
                         'pcep_information' : {
                             'plsp_id' : int,
-                            'plsp_flags' : str,
+                            'flags' : {
+                                'd': int,
+                                's': int,
+                                'r': int,
+                                'a': int,
+                                'o': int,
+                            }
                         },
                         'paths' : {
                             Any() : {
-                                Optional('path') : str,
-                                Optional('metric_type') : str,
+                                Optional('metric') : str,
                                 Optional('accumulated_metric') : int,
                                 Optional('none'): str,
                                 Optional('sids'): {
                                     Any() : {
-                                        'sid_number' : int,
-                                        'sid_label' : int,
-                                        'sid_local_address': str,
-                                        'sid_remote_address': str,
+                                        'number' : int,
+                                        'label' : int,
+                                        'local_address': str,
+                                        'remote_address': str,
                                     },
                                 },
                             },
@@ -792,9 +783,7 @@ class ShowPceLspDetailSchema(MetaParser):
                     },
                     'event_history' : {
                         Any() : {
-                            'time' : str,
                             Any() : {
-                                'event' : str,
                                 'symbolic_name' : str,
                                 Optional('lsp-id'): int,
                                 Optional('plsp-id'): int,
@@ -847,8 +836,9 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
 
         p7 = re.compile(r'^Binding SID: (?P<binding_sid>\d+)$')
 
-        p8 = re.compile(r'^plsp-id (?P<plsp_id>\d+), flags:'
-                                                ' (?P<plsp_flags>[\w\s\:]+)$')
+        p8 = re.compile(r'^plsp-id (?P<plsp_id>\d+), flags: D:(?P<d_flag>\d+) '
+                            'S:(?P<s_flag>\d+) R:(?P<r_flag>\d+) A:'
+                            '(?P<a_flag>\d+) O:(?P<o_flag>\d+)$')
 
         #   Reported path: 
         p9 = re.compile(r'^(?P<specified_path>\w+) path:$')
@@ -861,7 +851,6 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                             '(?P<sid_label>\d+), Address: local '
                             '(?P<sid_local_address>[\d\.]+) remote '
                             '(?P<sid_remote_address>[\d\.]+)$')
-        p11_1 = re.compile(r'None')
         # June 13 2016 13:28:29     Report
         p12 = re.compile(r'^(?P<event_time>\w+ \d+ \d+ [\d\:]+)\s+ '
                                                         '(?P<event_type>\w+)$')
@@ -890,7 +879,6 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                 pccs_dict = ret_dict.setdefault('pcc', {})
 
                 pcc_dict = pccs_dict.setdefault(pcc_id, {})
-                pcc_dict['pcc'] = pcc_id
 
             m = p2.match(line)
             if m:
@@ -903,8 +891,6 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                 lsps_dict = pcc_dict.setdefault('lsps', {})
                 lsp_dict = lsps_dict.setdefault(lsp_numb, {})
 
-                lsp_dict['lsp_number'] = lsp_numb
-
             m = p4.match(line)
             if m:
                 lsp_dict['source'] = m.groupdict()['lsp_source']
@@ -914,14 +900,10 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
 
             m = p5.match(line)
             if m:
-                admin_bool = True if 'up' in \
-                                m.groupdict()['admin_state'].lower() else False
-                operation_bool = True if 'up' in \
-                            m.groupdict()['operation_state'].lower() else False
-                state_dict = lsp_dict.setdefault('state', {})
-
-                state_dict['admin'] = admin_bool
-                state_dict['operation'] = operation_bool
+                admin_state = m.groupdict()['admin_state'].lower()
+                operation_state = m.groupdict()['operation_state'].lower()
+                lsp_dict.setdefault('admin_state', admin_state)
+                lsp_dict.setdefault('operation_state', operation_state)
 
             m = p6.match(line)
             if m:
@@ -935,19 +917,21 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
             if m:
                 pcep_info_dict = lsp_dict.setdefault('pcep_information', {})
                 pcep_info_dict['plsp_id'] = int(m.groupdict()['plsp_id'])
-                pcep_info_dict['plsp_flags'] = \
-                                            m.groupdict()['plsp_flags'].lower()
+                flags_dict = pcep_info_dict.setdefault('flags', {})
+                flags_dict['d'] = int(m.groupdict()['d_flag'])
+                flags_dict['s'] = int(m.groupdict()['s_flag'])
+                flags_dict['r'] = int(m.groupdict()['r_flag'])
+                flags_dict['a'] = int(m.groupdict()['a_flag'])
+                flags_dict['o'] = int(m.groupdict()['o_flag'])
 
             m = p9.match(line)
             if m:
                 path = m.groupdict()['specified_path'].lower()
                 path_dict = lsp_dict.setdefault('paths', {}).setdefault(path,{})
 
-                path_dict['path'] = path
-            
             m = p10.match(line)
             if m:
-                path_dict['metric_type'] = m.groupdict()['metric_type'].lower()
+                path_dict['metric'] = m.groupdict()['metric_type']
                 path_dict['accumulated_metric'] = \
                                         int(m.groupdict()['accumulated_metric'])
 
@@ -957,27 +941,21 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                 sid_dict = path_dict.setdefault('sids', {}).\
                                                     setdefault(sid_number, {})
 
-                sid_dict['sid_number'] = sid_number
-                sid_dict['sid_label'] = int(m.groupdict()['sid_label'])
-                sid_dict['sid_local_address']=m.groupdict()['sid_local_address']
-                sid_dict['sid_remote_address'] = \
+                sid_dict['number'] = sid_number
+                sid_dict['label'] = int(m.groupdict()['sid_label'])
+                sid_dict['local_address']=m.groupdict()['sid_local_address']
+                sid_dict['remote_address'] = \
                                             m.groupdict()['sid_remote_address']
-
-            m = p11_1.match(line)
-            if m:
-                path_dict['none'] = 'none'
 
             m = p12.match(line)
             if m:
-                event_time = m.groupdict()['event_time'].lower()
+                event_time = m.groupdict()['event_time']
                 event_type = m.groupdict()['event_type'].lower()
 
                 time_dict = lsps_dict.setdefault('event_history', {}).\
                                                     setdefault(event_time, {})
-                time_dict['time'] = event_time
 
                 event_dict = time_dict.setdefault(event_type, {})
-                event_dict['event'] = event_type
             
             m = p13.match(line)
             if m:
@@ -1014,19 +992,9 @@ class ShowSegment_RoutingLocal_BlockInconsistenciesSchema(MetaParser):
     '''
 
     schema = {
-        'dates' : {
-            Any() : {
-                'date' : str,
-                'inconsistencies' : {
-                    Any() : {
-                        'inconsistency' : str,
-                        'range' : {
-                            'start': int,
-                            'end' : int,
-                        },
-                    },
-                }
-            },
+        'srlb_inconsistencies_range' : {
+            'start': int,
+            'end' : int,
         }
     }
 
@@ -1042,11 +1010,8 @@ class ShowSegment_RoutingLocal_BlockInconsistencies(ShowSegment_RoutingLocal_Blo
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        # Tue Aug 15 13:53:30.555 EDT
-        p1 = re.compile(r'^(?P<inconsistency_date>[\w\s]+[\d\:\.]+\s\w+)$')
-        
         # SRLB inconsistencies range: Start/End: 30000/30009
-        p2 = re.compile(r'(?P<inconsistency_type>\w+) inconsistencies range: '
+        p1 = re.compile(r'(?P<inconsistency_type>\w+) inconsistencies range: '
                                     'Start\/End: (?P<start>\d+)\/(?P<end>\d+)')
         
         ret_dict = {}
@@ -1056,25 +1021,11 @@ class ShowSegment_RoutingLocal_BlockInconsistencies(ShowSegment_RoutingLocal_Blo
 
             m = p1.match(line)
             if m:
-                date = m.groupdict()['inconsistency_date'].lower()
+                inconsistency_dict=ret_dict.\
+                                setdefault('srlb_inconsistencies_range', {})
 
-                dates_dict = ret_dict.setdefault('dates', {})
-                date_dict = dates_dict.setdefault(date, {})
-
-                date_dict['date'] = date
-            
-            m = p2.match(line)
-            if m:
-                inconsistency = m.groupdict()['inconsistency_type'].lower()
-
-                inconsistency_dict=date_dict.setdefault('inconsistencies', {}).\
-                                    setdefault(inconsistency, {})
-
-                inconsistency_dict['inconsistency'] = inconsistency
-                range_dict = inconsistency_dict.setdefault('range', {})
-
-                range_dict['start'] = int(m.groupdict()['start'])
-                range_dict['end'] = int(m.groupdict()['end'])
+                inconsistency_dict['start'] = int(m.groupdict()['start'])
+                inconsistency_dict['end'] = int(m.groupdict()['end'])
         
         return ret_dict
 
@@ -1085,13 +1036,14 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Schema(MetaParser):
 
     schema = {
         'ipv4' : {
-            Any() : {
-                'prefix' : str,
-                'sid_index' : int,
-                'range': int,
-                Optional('flags'): str, 
-            },
-            'entries' : int,
+            'number_of_mapping_entries' : int,
+            'prefix' :{
+                Any() : {
+                    'sid_index' : int,
+                    'range': int,
+                    Optional('flags'): str, 
+                },
+            }
         }
     }
 
@@ -1123,10 +1075,10 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMap
             if m:
                 prefix = m.groupdict()['prefix']
                 ipv_dict = ret_dict.setdefault('ipv4', {})
+                prefixes_dict = ipv_dict.setdefault('prefix', {})
 
-                prefix_dict = ipv_dict.setdefault(prefix, {})
+                prefix_dict = prefixes_dict.setdefault(prefix, {})
 
-                prefix_dict['prefix'] = m.groupdict()['prefix']
                 prefix_dict['sid_index'] = int(m.groupdict()['sid_index'])
                 prefix_dict['range'] = int(m.groupdict()['range'])
 
@@ -1135,7 +1087,8 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMap
             
             m = p2.match(line)
             if m:
-                ipv_dict.setdefault('entries', int(m.groupdict()['entries']))      
+                ipv_dict.setdefault('number_of_mapping_entries',\
+                                                int(m.groupdict()['entries']))      
 
         return ret_dict
 
@@ -1146,14 +1099,15 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4DetailSchema(MetaParser
 
     schema = {
         'ipv4' : {
-            Any() : {
-                'prefix' : str,
-                'sid_index' : int,
-                'range': int,
-                Optional('last_prefix') : str,
-                Optional('last_sid_index'): int,
-                Optional('flags'): str, 
-            },
+            'prefix' : {
+                Any() : {
+                    'sid_index' : int,
+                    'range': int,
+                    Optional('last_prefix') : str,
+                    Optional('last_sid_index'): int,
+                    Optional('flags'): str, 
+                },
+            }
         }
     }
 
@@ -1198,10 +1152,9 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(ShowSegment_Rout
                 prefix = m.groupdict()['prefix']
                 
                 ipv4_dict = ret_dict.setdefault('ipv4', {})
-                prefix_dict = ipv4_dict.setdefault(prefix, {})
+                prefixes_dict = ipv4_dict.setdefault('prefix', {})
+                prefix_dict = prefixes_dict.setdefault(prefix, {})
 
-                prefix_dict['prefix'] = prefix
-            
             m = p2.match(line)
             if m:
                 prefix_dict['sid_index'] = int(m.groupdict()['sid_index'])
