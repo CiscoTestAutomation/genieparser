@@ -7137,7 +7137,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
 
-    cli_commands = [
+    cli_command = [
         'show ip ospf {process_id} segment-routing adjacency-sid',
         'show ip ospf segment-routing adjacency-sid',
     ]
@@ -7146,9 +7146,9 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
         if output is None:
             if process_id:
-                command = self.cli_commands[0].format(process_id=process_id)
+                command = self.cli_command[0].format(process_id=process_id)
             else:
-                command = self.cli_commands[1]
+                command = self.cli_command[1]
 
             out = self.device.execute(command)
         else:
