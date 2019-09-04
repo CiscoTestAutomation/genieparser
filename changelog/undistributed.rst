@@ -6,6 +6,22 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                EIGRP
+--------------------------------------------------------------------------------
+* IOS
+        * Added ShowIpEigrpNeighbors for commands
+                * 'show ip eigrp vrf {vrf} neighbors'
+                * 'show ip eigrp neighbors'
+        * Added ShowIpv6EigrpNeighbors for commands:
+                * 'show ipv6 eigrp vrf {vrf} neighbors'
+                * 'show ipv6 eigrp neighbors'
+        * Added ShowIpEigrpNeighborsDetail for commands:
+                * 'show ip eigrp neighbors detail'
+                * 'show ip eigrp vrf {vrf} neighbors detail'
+        * Added ShowIpv6EigrpNeighborsDetail for commands:
+                * 'show ipv6 eigrp neighbors detail'
+
+--------------------------------------------------------------------------------
                                 MPLS
 --------------------------------------------------------------------------------
 * IOSXE
