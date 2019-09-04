@@ -362,7 +362,7 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'prefix': {
+        'nodes': {
             1: {
                 'te_router_id': '192.168.0.4',
                 'host_name': 'rtrD',

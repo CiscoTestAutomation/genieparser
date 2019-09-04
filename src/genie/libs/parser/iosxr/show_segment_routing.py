@@ -498,7 +498,7 @@ class ShowPceIPV4PeerprefixSchema(MetaParser):
         * show pce ipv4 prefix
     '''
     schema = {
-        'prefix' :{
+        'nodes' :{
             Any() : {
                 'te_router_id': str,
                 'host_name': str,
@@ -542,7 +542,7 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
             m = p1.match(line)
             if m:
                 node = int(m.groupdict()['node_number'])
-                prefix_dict = ret_dict.setdefault('prefix', {})
+                prefix_dict = ret_dict.setdefault('nodes', {})
                 node_dict = prefix_dict.setdefault(node, {})
 
             m = p2.match(line)
