@@ -16349,7 +16349,7 @@ class test_show_interfaces_trunk(unittest.TestCase):
         Gi1/0/23    on               802.1q         trunking      1
         Gi1/0/24    auto             n-isl          trunking      1
         Po12        auto             isl            trunking      1
-        Po14        on               802.1q         trunking      1
+        Po14        on               802.1q/q         trunking      1
 
         Port        Vlans allowed on trunk
         Gi1/0/4     200-211
@@ -16426,7 +16426,7 @@ class test_show_interfaces_trunk(unittest.TestCase):
                "status": "trunking",
                "vlans_in_stp_forwarding_not_pruned": '200-211',
                "name": "Port-channel14",
-               "encapsulation": "802.1q"
+               "encapsulation": "802.1q/q"
             }
         }
     }

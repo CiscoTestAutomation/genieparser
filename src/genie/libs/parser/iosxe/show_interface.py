@@ -2730,7 +2730,7 @@ class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
             out = output
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>[n\-\w\.]+) +'
+        p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>\S+) +'
                          '(?P<status>\w+) +(?P<native_vlan>\d+)$')
         p2 = re.compile('^Port +Vlans +allowed +on +trunk$')
         p3 = re.compile('^Port +Vlans +allowed +and +active +in +management +domain$')
