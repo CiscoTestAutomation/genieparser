@@ -268,10 +268,9 @@ class test_show_pce_ipv4_peer_detail(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'database': {
+        'pce_peer_database': {
             '192.168.0.1': {
-                'peer_address': '192.168.0.1',
-                'state': True,
+                'state': 'Up',
                 'capabilities': {
                     'stateful': True,
                     'segment-routing': True,
@@ -365,7 +364,6 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
     golden_parsed_output = {
         'prefix': {
             1: {
-                'node': 1,
                 'te_router_id': '192.168.0.4',
                 'host_name': 'rtrD',
                 'isis_system_id': ['1921.6800.1004 level-1', '1921.6800.1004 level-2', '1921.6800.1004 level-2'],
@@ -374,7 +372,6 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
                 'advertised_prefixes': ['192.168.0.4', '192.168.0.4', '192.168.0.4', '192.168.0.6']
             },
             2: {
-                'node': 2,
                 'te_router_id': '192.168.0.1',
                 'host_name': 'rtrA',
                 'isis_system_id': ['1921.6800.1001 level-2'],
@@ -611,17 +608,17 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                         },
                         'paths': {
                             'reported': {
-                                'metric': 'TE',
+                                'metric_type': 'TE',
                                 'accumulated_metric': 42,
                                 'sids': {
                                     0: {
-                                        'number': 0,
+                                        'type' : 'Adj',
                                         'label': 24000,
                                         'local_address': '10.10.10.1',
                                         'remote_address': '10.10.10.2'
                                     },
                                     1: {
-                                        'number': 1,
+                                        'type' : 'Adj',
                                         'label': 24000,
                                         'local_address': '14.14.14.2',
                                         'remote_address': '14.14.14.4'
@@ -629,17 +626,17 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                 }
                             },
                             'computed': {
-                                'metric': 'TE',
+                                'metric_type': 'TE',
                                 'accumulated_metric': 42,
                                 'sids': {
                                     0: {
-                                        'number': 0,
+                                        'type' : 'Adj',
                                         'label': 24000,
                                         'local_address': '10.10.10.1',
                                         'remote_address': '10.10.10.2'
                                     },
                                     1: {
-                                        'number': 1,
+                                        'type' : 'Adj',
                                         'label': 24000,
                                         'local_address': '14.14.14.2',
                                         'remote_address': '14.14.14.4'
@@ -754,6 +751,7 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
     empty_output = {'execute.return_value' : ''}
 
     golden_output = {'execute.return_value' : '''
+    show segment-routing mapping-server prefix-sid-map ipv4
     Prefix               SID Index    Range        Flags
     20.1.1.0/24          400          300          
     10.1.1.1/32          10           200          

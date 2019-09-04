@@ -1,3 +1,22 @@
+''' show_segment_routing.py
+
+Parser for the following show commands:
+    * show isis segment-routing prefix-sid-map active-policy
+    *  show isis segment-routing prefix-sid-map backup-policy
+    *  show isis segment-routing prefix-sid-map active-policy
+    *  show isis segment-routing prefix-sid-map backup-policy
+    *  show ospf segment-routing prefix-sid-map active-policy
+    *  show ospf segment-routing prefix-sid-map backup-policy
+    * show segment-routing mapping-server prefix-sid-map ipv4 detail
+    * show segment-routing mapping-server prefix-sid-map ipv4
+    * show segment-routing local-block inconsistencies
+    * show pce lsp detail
+    * show pce lsp
+    * show pce ipv4 prefix
+    * show pce ipv4 peer detail
+    * show pce ipv4 peer
+'''
+
 #!/bin/env python
 import re
 
@@ -253,10 +272,9 @@ class ShowPceIPV4PeerDetailSchema(MetaParser):
         * show pce ipv4 peer detail
     '''
     schema = {
-        'database' : {
+        'pce_peer_database' : {
             Any() : {
-                'peer_address' : str,
-                'state' : bool,
+                'state' : str,
                 'capabilities' : {
                     'stateful' : bool,
                     'segment-routing' : bool,
@@ -363,14 +381,12 @@ class ShowPceIPV4PeerDetail(ShowPceIPV4PeerDetailSchema):
             m = p1.match(line)
             if m:
                 address = m.groupdict()['address']
-                database_dict = ret_dict.setdefault('database', {})
+                database_dict = ret_dict.setdefault('pce_peer_database', {})
                 address_dict = database_dict.setdefault(address, {})
-                address_dict['peer_address'] = address
 
             m = p2.match(line)
             if m:
-                state_bool = True if 'up' in \
-                    m.groupdict()['state'].lower() else False
+                state_bool = m.groupdict()['state']
                 address_dict['state'] = state_bool
 
             m = p3.match(line)
@@ -484,7 +500,6 @@ class ShowPceIPV4PeerprefixSchema(MetaParser):
     schema = {
         'prefix' :{
             Any() : {
-                'node' : int,
                 'te_router_id': str,
                 'host_name': str,
                 'isis_system_id' : list,
@@ -529,8 +544,6 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
                 node = int(m.groupdict()['node_number'])
                 prefix_dict = ret_dict.setdefault('prefix', {})
                 node_dict = prefix_dict.setdefault(node, {})
-
-                node_dict['node'] = node
 
             m = p2.match(line)
             if m:
@@ -767,12 +780,12 @@ class ShowPceLspDetailSchema(MetaParser):
                         },
                         'paths' : {
                             Any() : {
-                                Optional('metric') : str,
+                                Optional('metric_type') : str,
                                 Optional('accumulated_metric') : int,
                                 Optional('none'): str,
                                 Optional('sids'): {
                                     Any() : {
-                                        'number' : int,
+                                        'type' : str,
                                         'label' : int,
                                         'local_address': str,
                                         'remote_address': str,
@@ -847,8 +860,8 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                             'Accumulated Metric (?P<accumulated_metric>\d+)$')
 
         # SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
-        p11 = re.compile(r'^SID\[(?P<sid_number>\d+)\]: Adj, Label '
-                            '(?P<sid_label>\d+), Address: local '
+        p11 = re.compile(r'^SID\[(?P<sid_number>\d+)\]: (?P<sid_type>\w+), '
+                            'Label (?P<sid_label>\d+), Address: local '
                             '(?P<sid_local_address>[\d\.]+) remote '
                             '(?P<sid_remote_address>[\d\.]+)$')
         # June 13 2016 13:28:29     Report
@@ -931,7 +944,7 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
 
             m = p10.match(line)
             if m:
-                path_dict['metric'] = m.groupdict()['metric_type']
+                path_dict['metric_type'] = m.groupdict()['metric_type']
                 path_dict['accumulated_metric'] = \
                                         int(m.groupdict()['accumulated_metric'])
 
@@ -941,7 +954,7 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
                 sid_dict = path_dict.setdefault('sids', {}).\
                                                     setdefault(sid_number, {})
 
-                sid_dict['number'] = sid_number
+                sid_dict['type'] = m.groupdict()['sid_type']
                 sid_dict['label'] = int(m.groupdict()['sid_label'])
                 sid_dict['local_address']=m.groupdict()['sid_local_address']
                 sid_dict['remote_address'] = \
