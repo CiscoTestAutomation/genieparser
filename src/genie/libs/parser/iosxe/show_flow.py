@@ -156,6 +156,8 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
                 ipv4_dst_addr_dict.update({'pkts_long': int(group['pkts_long'])})
 
+                dst_addr_index.update({group['ipv4_dst_addr']: index})
+
                 continue
 
         return ret_dict

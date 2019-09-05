@@ -41,7 +41,15 @@ class test_show_monitor(unittest.TestCase):
                                 'ip_port': 89,
                                 'bytes_long': 100,
                                 'pkts_long': 1,
-                            }
+                            },
+                            2: {
+                                'trns_src_port': 1,
+                                'trns_dst_port': 1,
+                                'ip_tos': '0xC0',
+                                'ip_port': 89,
+                                'bytes_long': 100,
+                                'pkts_long': 1,
+                            },
                         }
                     },
                 },
@@ -78,6 +86,7 @@ class test_show_monitor(unittest.TestCase):
     IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP TOS  IP PROT            bytes long             pkts long
     ===============  ===============  =============  =============  ======  =======  ====================  ====================
     1.1.1.10         22.10.10.1                    0              0  0xC0         89                   100                     1
+    1.1.1.10         22.10.10.1                    1              1  0xC0         89                   100                     1
     1.1.1.11         22.10.10.2                    0              0  0xC0         89                   100                     1
     
     Device#
