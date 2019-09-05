@@ -18,9 +18,7 @@ class ShowIpMsdpPeer(ShowIpMsdpPeer_iosxe):
         * 'show ip msdp peer'
         * 'show ip msdp vrf <vrf> peer'
     """
-
-    def cli(self, vrf="", output=None):
-        return super().cli(vrf=vrf, output=output)
+    pass
 
 
 class ShowIpMsdpSaCache(ShowIpMsdpSaCache_iosxe):
@@ -28,6 +26,4 @@ class ShowIpMsdpSaCache(ShowIpMsdpSaCache_iosxe):
 		* 'show ip msdp vrf {vrf} sa-cache'
         * 'show ip msdp sa-cache'
 	"""
-
-    def cli(self, vrf="", output=None):
-        return super().cli(vrf=vrf, output=output)
+    pass
