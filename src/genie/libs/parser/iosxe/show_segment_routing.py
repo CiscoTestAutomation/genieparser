@@ -11,6 +11,9 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls gb lock'
     * 'show segment-routing mpls connected-prefix-sid-map local ipv4'
     * 'show segment-routing mpls connected-prefix-sid-map local ipv6'
+    * 'show segment-routing traffic-eng topology ipv4'
+    * 'show segment-routing traffic-eng policy all'
+    * 'show segment-routing traffic-eng policy name {name}'
     * 'show segment-routing mpls mapping-server ipv4'
     * 'show segment-routing mpls mapping-server ipv6'
 '''
@@ -722,6 +725,285 @@ class ShowSegmentRoutingTrafficEngTopology(ShowSegmentRoutingTrafficEngTopologyS
                 for item in adj_list:
                     adj_dict.update({item[0]: item[1].lower()})
 
+                continue
+
+        return ret_dict
+
+
+# ==================================================================
+# Parser for:
+#    * 'show segment-routing traffic-eng policy all'
+#    * 'show segment-routing traffic-eng policy name {name}'
+# ==================================================================
+class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
+    """ Schema for 
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
+    """
+
+    schema = {
+        Any(): {
+            "name": str,
+            "color": int,
+            "end_point": str,
+            "status": {
+                "admin": str,
+                "operational": {
+                    "state": str,
+                    "time_for_state": str,
+                    "since": str,
+                },
+            },
+            "candidate_paths": {
+                Any(): {
+                    "preference": int,
+                    Optional("dynamic"): str,
+                    Optional("explicit"): str,
+                    "weight": int,
+                    "metric_type": str,
+                    Optional("path_accumulated_metric"): int,
+                    Optional("prefix_sid"): {
+                         Any(): str,
+                    },
+                },
+            },
+            "candidate_paths": {
+                "preference": {
+                    Any(): {
+                        "path_type": {
+                            Optional("dynamic"): {
+                                "status": str,
+                                Optional("pce"): bool,
+                                "weight": int,
+                                "metric_type": str,
+                                Optional("path_accumulated_metric"): int,
+                                Optional("hops"): {
+                                    Any(): {
+                                        "sid": int,
+                                        "sid_type": str,
+                                        "local_address": str,
+                                        Optional("remote_address"): str,
+                                    },
+                                },
+                            },
+                            Optional("explicit"): {
+                                Any(): {
+                                    Any(): {
+                                        "status": str,
+                                        "weight": int,
+                                        "metric_type": str,
+                                        Optional("hops"): {
+                                            Any(): {
+                                                "sid": int,
+                                                "sid_type": str,
+                                                "local_address": str,
+                                                Optional("remote_address"): str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            "attributes": {
+                "binding_sid": {
+                    Any(): {
+                        "allocation_mode": str,
+                        "state": str,
+                    },
+                },
+            },
+        },
+    }
+
+class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchema):
+    """ Parser for 
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
+    """
+
+    cli_command = ['show segment-routing traffic-eng policy all', 
+                   'show segment-routing traffic-eng policy name {name}']
+
+    def cli(self, name=None, output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[1].format(name=name)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Name: test1 (Color: 100 End-point: 106.162.196.241)
+        p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
+                         '+End-point: +(?P<end_point>\S+)\)$')
+
+        # Status:
+        #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+        p2 = re.compile(r'^Admin: +(?P<admin>\S+), +Operational: +(?P<oper>\S+) '
+                         '+for +(?P<time>\S+) +\(since +(?P<since>[\S\s]+)\)$')
+
+        # Candidate-paths:
+        #     Preference 400:
+        p3 = re.compile(r'^Preference +(?P<preference>\d+):$')
+
+        #     Dynamic (pce) (inactive)
+        #     Dynamic (active)
+        p4 = re.compile(r'^Dynamic( +(?P<pce>\(pce\)))? +\((?P<status>\w+)\)$')
+
+        #         Weight: 0, Metric Type: TE
+        p5 = re.compile(r'^Weight: +(?P<weight>[\d]+), +Metric +Type: '
+                         '+(?P<metric_type>[\S]+)$')
+
+        #         Metric Type: IGP, Path Accumulated Metric: 2200
+        p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+), Path +Accumulated '
+                         '+Metric: +(?P<path_accumulated_metric>[\d]+)$')
+
+        #         16063 [Prefix-SID, 106.162.196.241]
+        #         16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+        p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
+                         '( +- +(?P<remote_address>[\S]+))?\]$')
+
+        #     Explicit: segment-list test1 (inactive)
+        p8 = re.compile(r'^Explicit: +(?P<category>\S+) +(?P<name>\S+) +\((?P<status>\w+)\)$')
+
+        # Attributes:
+        #     Binding SID: 15000
+        p9 = re.compile(r'^Binding +SID: +(?P<binding_sid>[\d]+)$')
+
+        #     Allocation mode: explicit
+        p10 = re.compile(r'^Allocation +mode: +(?P<allocation_mode>[\S]+)$')
+
+        #     State: Programmed
+        p11 = re.compile(r'^State: +(?P<state>[\S]+)$')
+
+        # initial variables
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Name: test1 (Color: 100 End-point: 106.162.196.241)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                policy_dict = ret_dict.setdefault(name, {})
+
+                policy_dict.update({'name': name})
+                policy_dict.update({'color': int(group['color'])})
+                policy_dict.update({'end_point': group['end_point']})
+                continue
+
+            # Status:
+            #     Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                status_dict = policy_dict.setdefault('status', {})
+                status_dict.update({'admin': group['admin']})
+
+                oper_dict = status_dict.setdefault('operational', {})
+                oper_dict.update({'state': group['oper']})
+                oper_dict.update({'time_for_state': group['time']})
+                oper_dict.update({'since': group['since']})
+                continue
+
+            # Candidate-paths:
+            #   Preference 400:
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                pref = int(group['preference'])
+                pref_dict = policy_dict.setdefault("candidate_paths", {}).\
+                            setdefault('preference', {}).setdefault(pref, {})
+                hop_index = 0
+                continue
+
+            #   Dynamic (pce) (inactive)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict = pref_dict.setdefault('path_type', {}).setdefault('dynamic', {})
+                path_dict.update({'status': group['status']})
+                if group['pce']:
+                    path_dict.update({'pce': True})
+                continue
+
+            #   Weight: 0, Metric Type: TE
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'weight': int(group['weight'])})
+                path_dict.update({'metric_type': group['metric_type']})
+                continue
+
+            #   Metric Type: IGP, Path Accumulated Metric: 2200
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict.update({'metric_type': group['metric_type']})
+
+                metric = int(group['path_accumulated_metric'])
+                path_dict.update({'path_accumulated_metric': metric})
+                continue
+
+            #   16063 [Prefix-SID, 106.162.196.241]
+            m = p7.match(line)
+            if m:
+                hop_index += 1
+                group = m.groupdict()
+                hop_dict = path_dict.setdefault('hops', {}).setdefault(hop_index, {})
+                
+                hop_dict.update({'sid': int(group['sid'])})
+                hop_dict.update({'sid_type': group['sid_type']})
+                hop_dict.update({'local_address': group['local_address']})
+                if group['remote_address']:
+                    hop_dict.update({'remote_address': group['remote_address']})
+                continue
+
+            #   Explicit: segment-list test1 (inactive)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                category = group['category'].replace('-', '_')
+                name = group['name']
+
+                path_dict = pref_dict.setdefault('path_type', {}).\
+                            setdefault('explicit', {}).\
+                            setdefault(category, {}).\
+                            setdefault(name, {})
+                path_dict.update({'status': group['status']})
+                continue
+                
+            # Attributes:
+            #   Binding SID: 15000
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                sid = int(group['binding_sid'])
+                bind_dict = policy_dict.setdefault("attributes", {}).\
+                            setdefault('binding_sid', {}).setdefault(sid, {})
+                continue
+
+            #   Allocation mode: explicit
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict.update({'allocation_mode': group['allocation_mode'].lower()})
+                continue
+
+            #   State: Programmed
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                bind_dict.update({'state': group['state'].lower()})
                 continue
 
         return ret_dict
