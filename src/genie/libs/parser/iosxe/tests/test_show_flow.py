@@ -33,24 +33,32 @@ class test_show_monitor(unittest.TestCase):
             '1.1.1.10': {
                 'ipv4_dst_addr': {
                     '22.10.10.1': {
-                        'trns_src_port': 0,
-                        'trns_dst_port': 0,
-                        'ip_tos': '0xC0',
-                        'ip_port': 89,
-                        'bytes_long': 100,
-                        'pkts_long': 1,
+                        'index': {
+                            1: {
+                                'trns_src_port': 0,
+                                'trns_dst_port': 0,
+                                'ip_tos': '0xC0',
+                                'ip_port': 89,
+                                'bytes_long': 100,
+                                'pkts_long': 1,
+                            }
+                        }
                     },
                 },
             },
             '1.1.1.11': {
                 'ipv4_dst_addr': {
                     '22.10.10.2': {
-                        'trns_src_port': 0,
-                        'trns_dst_port': 0,
-                        'ip_tos': '0xC0',
-                        'ip_port': 89,
-                        'bytes_long': 100,
-                        'pkts_long': 1,
+                        'index': {
+                            1: {
+                                'trns_src_port': 0,
+                                'trns_dst_port': 0,
+                                'ip_tos': '0xC0',
+                                'ip_port': 89,
+                                'bytes_long': 100,
+                                'pkts_long': 1,
+                            }
+                        }
                     },
                 },
             },

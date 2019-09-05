@@ -29,12 +29,16 @@ class ShowFlowMonitorSchema(MetaParser):
             Any(): {
                 'ipv4_dst_addr': {
                     Any(): {
-                        'trns_src_port': int,
-                        'trns_dst_port': int,
-                        'ip_tos': str,
-                        'ip_port': int,
-                        'bytes_long': int,
-                        'pkts_long': int
+                        'index': {
+                            Any(): {
+                                'trns_src_port': int,
+                                'trns_dst_port': int,
+                                'ip_tos': str,
+                                'ip_port': int,
+                                'bytes_long': int,
+                                'pkts_long': int,
+                            }
+                        }
                     }
                 }
             }
@@ -60,6 +64,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 
         # Init vars
         ret_dict = {}
+        dst_addr_index = {}
 
         # Cache type:                               Normal (Platform cache)
         p1 = re.compile(r'^Cache +type: +(?P<cache_type>[\S\s]+)$')
@@ -134,17 +139,23 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
+
+                index = dst_addr_index.get(group['ipv4_dst_addr'], 0) + 1
+                
                 ipv4_dst_addr_dict = ret_dict.setdefault('ipv4_src_addr', {}).\
                     setdefault(group['ipv4_src_addr'], {}).\
                     setdefault('ipv4_dst_addr', {}).\
-                    setdefault(group['ipv4_dst_addr'], {})
-                
+                    setdefault(group['ipv4_dst_addr'], {}).\
+                    setdefault('index', {}).\
+                    setdefault(index, {})
+
                 ipv4_dst_addr_dict.update({'trns_src_port': int(group['trns_src_port'])})
                 ipv4_dst_addr_dict.update({'trns_dst_port': int(group['trns_dst_port'])})
                 ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
                 ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
                 ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
                 ipv4_dst_addr_dict.update({'pkts_long': int(group['pkts_long'])})
+
                 continue
 
         return ret_dict
