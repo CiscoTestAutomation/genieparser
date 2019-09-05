@@ -67,9 +67,9 @@ help:
 	@echo "devnet                Build DevNet package."
 	@echo "install_build_deps    install pyats-distutils"
 	@echo "uninstall_build_deps  remove pyats-distutils"
-	@echo compile				 compile all python modules to c
-	@echo coverage_all			 run code coverage on all test files
-	@echo pylint_all			 run python linter on all python modules
+	@echo "compile		 		 compile all python modules to c"
+	@echo "coverage_all			 run code coverage on all test files"
+	@echo "pylint_all			 run python linter on all python modules"
 	@echo ""
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
