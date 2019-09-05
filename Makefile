@@ -66,10 +66,10 @@ help:
 	@echo "docs                  Build Sphinx documentation for this package"
 	@echo "devnet                Build DevNet package."
 	@echo "install_build_deps    install pyats-distutils"
-	@echo "uninstall_build_deps  remove pyats-distutils"
-	@echo "compile		 		 compile all python modules to c"
-	@echo "coverage_all			 run code coverage on all test files"
-	@echo "pylint_all			 run python linter on all python modules"
+	@echo "uninstall_build_deps  Remove pyats-distutils"
+	@echo "compile		 		 Compile all python modules to c"
+	@echo "coverage_all			 Run code coverage on all test files"
+	@echo "pylint_all			 Run python linter on all python modules"
 	@echo ""
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
@@ -86,7 +86,7 @@ coverage_all:
 	@echo ""
 	@echo "Running Code coverage on all unittests"
 	@echo ---------------------------------------
-	@runAll --path tests/ --coverage
+	@$(TESTCMD) --coverage
 	@echo "Done Compiling"
 	@echo ""
 
