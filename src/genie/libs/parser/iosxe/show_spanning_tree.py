@@ -92,6 +92,8 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         p7 = re.compile(r'Total +(?P<blockings>\d+) +(?P<listenings>\d+)'
                          ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
+        p8 = re.compile(r'^(?P<root_bridge_for>(?:(?:[\w-]+, +)+)?[\w-]+)$')
+
         key_map = {'EtherChannel misconfig guard': 'etherchannel_misconfig_guard',
                    'Extended system ID': 'extended_system_id',
                    'Portfast Default': 'portfast_default',
@@ -121,6 +123,13 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 ret_dict['root_bridge_for'] = m.groupdict()['root_bridge_for']
                 continue
             
+            # VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, VLAN0521-VLAN0522
+            # VLAN0540, VLAN0601-VLAN0604, VLAN0606, VLAN0701, VLAN0801-VLAN0806
+            # VLAN1111-VLAN1116, VLAN1506, VLAN1509, VLAN1601
+            m = p8.match(line)
+            if m:
+                ret_dict['root_bridge_for'] += ', {}'.format(m.groupdict()['root_bridge_for'])
+
             # EtherChannel misconfig guard is disabled
             # Extended system ID           is enabled
             # Portfast Default             is disabled
@@ -289,7 +298,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 
         p3 = re.compile(r'^Configured +hello +time +(?P<hello_time>\d+), +'
                          'max +age +(?P<max_age>\d+), +forward +delay +(?P<forwarding_delay>\d+)(, +'
-                         'transmit +hold\-count +(?P<hold_count>\d+))?$')
+                         '(transmit|tranmsit) +hold\-count +(?P<hold_count>\d+))?$')
 
         p4 = re.compile(r'^We +are +the +root +of +the +spanning +tree$')
 
