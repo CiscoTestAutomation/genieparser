@@ -93,7 +93,7 @@ class ShowVlan(ShowVlanSchema):
             # 104  VLAN_0104                        act/lshut
 
             p1 = re.compile(r'^(?P<vlan_id>[0-9]+) +(?P<name>\S+)'
-                             ' +(?P<status>(active|suspended|\/|(.*)lshut|(.*)unsup)+)(?P<interfaces>[\w\d\/\d, ]+)?$')
+                             ' +(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)(?P<interfaces>[\w\d\/\d, ]+)?$')
             m = p1.match(line)
 
             if m:
