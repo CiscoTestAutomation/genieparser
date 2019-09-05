@@ -75,6 +75,7 @@
         * show ip ospf database opaque-area type ext-link self-originate
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
         * show ip ospf database opaque-area type ext-link adv-router {address}
+    * Updated ShowIpOspfDatabaseTypeParser to parse more varied output
 
 --------------------------------------------------------------------------------
                                 dot1x
