@@ -81,3 +81,9 @@
         * Added ShowIpMsdpPeer for commands:
                 * show ip msdp peer
                 * show ip msdp vrf {vrf} peer
+
+--------------------------------------------------------------------------------
+                                vlan
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed regex in ShowVlan
