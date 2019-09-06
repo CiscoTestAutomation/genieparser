@@ -1668,17 +1668,17 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # Label      Label      or Tunnel Id     Switched      interface
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
-
+        # None       No Label   10.0.0.16/30     0             Gi3        10.0.0.9
         #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+        p1 = re.compile(r'^(?P<local_label>\w+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
+        p2_2 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
+        p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
@@ -1707,7 +1707,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                local_label = int(group['local_label'])
+                local_label = group['local_label']
+                if local_label.isdigit():
+                    local_label = int(local_label)
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
                 continue
@@ -1738,7 +1740,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             if m:
                 group = m.groupdict()
                 if group['local_label']:
-                    local_label = int(group['local_label'])
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
+                
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
@@ -1768,7 +1773,9 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p2_3.match(line)
             if m:
                 group = m.groupdict()
-                local_label = int(group['local_label'])
+                local_label = group['local_label']
+                if local_label.isdigit():
+                    local_label = int(local_label)
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
