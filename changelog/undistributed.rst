@@ -66,3 +66,10 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                INTERFACE
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigInterface for:
+        * updated schema to support more outputs
