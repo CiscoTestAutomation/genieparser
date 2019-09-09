@@ -1141,7 +1141,99 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
     """
     }
 
+    expected_parsed_output_7 = {
+        "eigrp_instance": {
+            "100": {
+                "vrf": {
+                    "default": {
+                        "address_family": {"ipv4": {"name": "test", "named_mode": True}}
+                    },
+                    "VRF1": {
+                        "address_family": {
+                            "ipv4": {
+                                "name": "test",
+                                "named_mode": True,
+                                "eigrp_interface": {
+                                    "GigabitEthernet0/2.390": {
+                                        "eigrp_nbr": {
+                                            "10.12.90.2": {
+                                                "peer_handle": 1,
+                                                "hold": 14,
+                                                "uptime": "1d17h",
+                                                "srtt": 21.0,
+                                                "rto": 126,
+                                                "q_cnt": 0,
+                                                "last_seq_number": 8,
+                                                "topology_advert_to_peer": "base",
+                                                "nbr_sw_ver": {
+                                                    "os_majorver": 3,
+                                                    "os_minorver": 3,
+                                                    "tlv_majorrev": 2,
+                                                    "tlv_minorrev": 0,
+                                                },
+                                                "retransmit_count": 3,
+                                                "retry_count": 0,
+                                                "prefixes": 3,
+                                                "topology_ids_from_peer": 0,
+                                            }
+                                        }
+                                    },
+                                    "GigabitEthernet0/3.390": {
+                                        "eigrp_nbr": {
+                                            "10.13.90.3": {
+                                                "peer_handle": 0,
+                                                "hold": 13,
+                                                "uptime": "1d17h",
+                                                "srtt": 990.0,
+                                                "rto": 5000,
+                                                "q_cnt": 0,
+                                                "last_seq_number": 11,
+                                                "topology_advert_to_peer": "base",
+                                                "nbr_sw_ver": {
+                                                    "os_majorver": 8,
+                                                    "os_minorver": 0,
+                                                    "tlv_majorrev": 1,
+                                                    "tlv_minorrev": 2,
+                                                },
+                                                "retransmit_count": 0,
+                                                "retry_count": 0,
+                                                "prefixes": 3,
+                                                "topology_ids_from_peer": 0,
+                                            }
+                                        }
+                                    },
+                                },
+                            }
+                        }
+                    },
+                }
+            }
+        }
+    }
+
+
+    device_output_7 = {"execute.return_value": """
+        show ip eigrp vrf VRF1 neighbors detail
+        EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100)
+                   VRF(VRF1)
+        H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                           (sec)         (ms)       Cnt Num
+        1   10.12.90.2              Gi0/2.390                14 1d17h      21   126  0  8
+           Version 3.3/2.0, Retrans: 3, Retries: 0, Prefixes: 3
+           Topology-ids from peer - 0
+           Topologies advertised to peer:   base
+
+        0   10.13.90.3              Gi0/3.390                13 1d17h     990  5000  0  11
+           Version 8.0/1.2, Retrans: 0, Retries: 0, Prefixes: 3
+           Topology-ids from peer - 0
+           Topologies advertised to peer:   base
+
+        Max Nbrs: 0, Current Nbrs: 0
+    """}
+
     device_output_empty = {"execute.return_value": ""}
+
+
 
     def test_show_eigrp_neighbors_detail_1(self):
         self.maxDiff = None
@@ -1184,6 +1276,13 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
         obj = ShowIpEigrpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_6)
+
+    def test_show_eigrp_neighbors_detail_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_7)
+        obj = ShowIpEigrpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.expected_parsed_output_7)
 
     def test_show_eigrp_neighbors_detail_empty(self):
         self.maxDiff = None
