@@ -12,7 +12,10 @@ import importlib
 
 from genie.libs import parser
 from genie.abstract import Lookup
-
+try:
+    from genie_internal import parsers as internal_parser
+except:
+    pass
 log = logging.getLogger(__name__)
 
 
@@ -147,7 +150,12 @@ def _find_command(command, data, device):
 
 def _find_parser_cls(device, data):
     lookup = Lookup.from_device(device, packages={'parser':parser})
-    return getattr(getattr(lookup.parser, data['module_name']), data['class'])
+
+    try:
+        return getattr(getattr(lookup.parser, data['module_name']), data['class'])
+    except:
+        lookup_internal = Lookup.from_device(device, packages={'parser': internal_parser})
+        return getattr(getattr(lookup_internal.parser, data['module_name']), data['class'])
 
 class Common():
     '''Common functions to be used in parsers.'''
