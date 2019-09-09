@@ -112,12 +112,39 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         route = ""
 
         result_dict = {}
+
+        # VRF: VRF501
+        p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
+
+        # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
+        # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
+        # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
+        # i L1 10.76.23.23/32 [115/11] via 10.2.3.3, 00:52:41, GigabitEthernet0/0/0/1
+        # S*   192.168.4.4/10 [111/10] via 172.16.84.11, 1w0d
+        # L    ::ffff:192.168.13.12/19 
+        # O E1 2001:db8::/39
+        # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
+        # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h
+        p2 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>'
+                         '[\w\*\(\>\)\!]+)? +(?P<network>\S+\.\S+\.\S+\.\S+)'
+                         '( +is +directly +connected)?( +\[(?P<route_preference>[\d\/]+)\]?'
+                         '( +via )?(?P<next_hop>[\w\/\:\.]+)?)?\s*'
+                         '(:?\(nexthop +in +vrf +default\))?,'
+                         '( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+
+        #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
+        p3 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
+                         ' +via +(?P<next_hop>[\d\.]+)?,?( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+
+        #       is directly connected, 01:51:13, GigabitEthernet0/0/0/3
+        p4 = re.compile(r'^\s*is +directly +connected,'
+                         '( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+        
         for line in out.splitlines():
             line = line.strip()
             next_hop = interface = updated = metrics = route_preference = ""
 
             # VRF: VRF501
-            p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -131,11 +158,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # L    ::ffff:192.168.13.12/19 
             # O E1 2001:db8::/39
             # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
-            p3 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>[\w\*\(\>\)\!]+)? +(?P<network>[\w\/\:\.]+)'
-                            '( +is +directly +connected,)?( +\[(?P<route_preference>[\d\/]+)\]?'
-                            '( +via )?(?P<next_hop>[\w\/\:\.]+)?,)?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
-            m = p3.match(line)
-            if m:
+            # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h            
+            m = p2.match(line)
+            if m and not p4.match(line):
+
                 group = m.groupdict()
                 if line == cmd:
                     continue
@@ -251,11 +277,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                                 ['next_hop_list'][index]['outgoing_interface'] = interface
 
                 continue
-
+            
             #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
-            p4 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
-                            ' +via +(?P<next_hop>[\d\.]+)?,?( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 updated = ""
                 routepreference = m.groupdict()['route_preference']
@@ -340,8 +364,6 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 continue
 
             #       is directly connected, 01:51:13, GigabitEthernet0/0/0/3
-            p4 = re.compile(r'^\s*is +directly +connected,'
-                            '( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
             m = p4.match(line)
             if m:
                 updated = ""
