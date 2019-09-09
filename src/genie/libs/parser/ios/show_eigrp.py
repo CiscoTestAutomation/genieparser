@@ -4,7 +4,6 @@ IOS parsers for the following commands
     * 'show ip eigrp neighbors'
     * 'show ip eigrp vrf {vrf} neighbors'
     * 'show ipv6 eigrp neighbors'
-    * 'show ipv6 eigrp vrf {vrf} neighbors'
     * 'show ip eigrp neighbors detail'
     * 'show ip eigrp vrf {vrf} neighbors detail'
     * 'show ipv6 eigrp neighbors detail'
@@ -25,10 +24,18 @@ class ShowIpEigrpNeighbors(ShowIpEigrpNeighbors_iosxe):
     pass
 
 class ShowIpv6EigrpNeighbors(ShowIpv6EigrpNeighbors_iosxe):
-    # Parser for:
-    #   * 'show ipv6 eigrp vrf {vrf} neighbors'
+    # Parser for:    
     #   * 'show ipv6 eigrp neighbors'
-    pass
+
+    cli_command = 'show ipv6 eigrp neighbors'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+
 
 class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetail_iosxe):
     # Parser for:
