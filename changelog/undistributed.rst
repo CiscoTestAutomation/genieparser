@@ -49,6 +49,9 @@
 * IOSXR
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
+* IOS
+    * Added ShowBgpSummary for:
+        * show bgp summary
 
 --------------------------------------------------------------------------------
                                 OSPF
