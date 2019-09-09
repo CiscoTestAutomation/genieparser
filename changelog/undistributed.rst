@@ -86,3 +86,20 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOS
+        * Added ShowIpMsdpSaCache for commands:
+                * show ip msdp sa-cache
+                * show ip msdb vrf {vrf} sa-cache
+        * Added ShowIpMsdpPeer for commands:
+                * show ip msdp peer
+                * show ip msdp vrf {vrf} peer
+
+--------------------------------------------------------------------------------
+                                vlan
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed regex in ShowVlan
