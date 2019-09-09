@@ -94,3 +94,9 @@
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+
+--------------------------------------------------------------------------------
+                                ARP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowArpTrafficDetail to parse drop_adj key from output
