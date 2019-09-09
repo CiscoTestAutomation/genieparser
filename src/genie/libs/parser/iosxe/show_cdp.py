@@ -207,15 +207,19 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
         # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
+        # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
+        # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_)]+)'
-                                   '\,\s*Capabilities:\s+'
-                                   '(?P<capabilities>[\w+\s\-]+)$')
+                                   '\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+)$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        # Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
+        # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+        # Interface: GigabitEthernet0/0/2,  Port ID (outgoing port): GigabitEthernet0/0/3
         interface_port_re = re.compile(r'Interface:\s*'
                                       '(?P<interface>[\w\s\-\/\/]+)\s*\,'
                                       '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                      '(?P<port_id>\w+)')
+                                      '(?P<port_id>\S+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
