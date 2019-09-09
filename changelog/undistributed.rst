@@ -22,6 +22,9 @@
         'show segment-routing mpls connected-prefix-sid-map local ipv6'
     * Added ShowSegmentRoutingTrafficEngTopology for:
         'show segment-routing traffic-eng topology ipv4'
+    * Added ShowSegmentRoutingTrafficEngPolicy for:
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
@@ -59,6 +62,7 @@
         * show ip ospf database opaque-area type ext-link self-originate
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
         * show ip ospf database opaque-area type ext-link adv-router {address}
+    * Updated ShowIpOspfDatabaseTypeParser to parse more varied output
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -86,3 +90,28 @@
 --------------------------------------------------------------------------------
 * updated _find_command to escape "^"
 * disallow spaces in key "feature"
+
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOS
+        * Added ShowIpMsdpSaCache for commands:
+                * show ip msdp sa-cache
+                * show ip msdb vrf {vrf} sa-cache
+        * Added ShowIpMsdpPeer for commands:
+                * show ip msdp peer
+                * show ip msdp vrf {vrf} peer
+
+--------------------------------------------------------------------------------
+                                vlan
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed regex in ShowVlan
+    
+--------------------------------------------------------------------------------
+                                FLOW MONITOR
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowFlowMonitor for:
+        * show flow monitor {name} cache format table
+

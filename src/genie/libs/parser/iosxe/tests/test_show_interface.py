@@ -16343,6 +16343,94 @@ class test_show_interfaces_trunk(unittest.TestCase):
         Po14        200-211
     '''}
 
+    golden_output_1 = {'execute.return_value': '''
+        Port        Mode             Encapsulation  Status        Native vlan
+        Gi1/0/4     auto             n-802.1q       trunking      1
+        Gi1/0/23    on               802.1q         trunking      1
+        Gi1/0/24    auto             n-isl          trunking      1
+        Po12        auto             isl            trunking      1
+        Po14        on               802.1q         trunking      1
+
+        Port        Vlans allowed on trunk
+        Gi1/0/4     200-211
+        Gi1/0/23    200-211
+        Gi1/0/24    200-211
+        Po12        100-110
+        Po14        200-211
+
+        Port        Vlans allowed and active in management domain
+        Gi1/0/4     200-211
+        Gi1/0/23    200-211
+        Gi1/0/24    200-211
+        Po12        100-110
+        Po14        200-211, 300-302
+
+        Port        Vlans in spanning tree forwarding state and not pruned
+        Gi1/0/4     200-211
+        Gi1/0/23    200-211
+        Gi1/0/24    none
+        Po12        100-110
+                  
+        Port        Vlans in spanning tree forwarding state and not pruned
+        Po14        200-211
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        "interface": {
+            "GigabitEthernet1/0/4": {
+               "vlans_allowed_active_in_mgmt_domain": '200-211',
+               "vlans_allowed_on_trunk": '200-211',
+               "mode": "auto",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": '200-211',
+               "name": "GigabitEthernet1/0/4",
+               "encapsulation": "n-802.1q"
+            },
+            "GigabitEthernet1/0/23": {
+               "vlans_allowed_active_in_mgmt_domain": '200-211',
+               "vlans_allowed_on_trunk": '200-211',
+               "mode": "on",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": '200-211',
+               "name": "GigabitEthernet1/0/23",
+               "encapsulation": "802.1q"
+            },
+            "GigabitEthernet1/0/24": {
+                "vlans_allowed_active_in_mgmt_domain": '200-211',
+                "vlans_allowed_on_trunk": '200-211',
+                "mode": "auto",
+                "native_vlan": "1",
+                "status": "trunking",
+                "vlans_in_stp_forwarding_not_pruned": 'none',
+                "name": "GigabitEthernet1/0/24",
+                "encapsulation": "n-isl"
+            },
+            "Port-channel12": {
+               "vlans_allowed_active_in_mgmt_domain": '100-110',
+               "vlans_allowed_on_trunk": '100-110',
+               "mode": "auto",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": '100-110',
+               "name": "Port-channel12",
+               "encapsulation": "isl"
+            },
+            "Port-channel14": {
+               "vlans_allowed_active_in_mgmt_domain": '200-211, 300-302',
+               "vlans_allowed_on_trunk": '200-211',
+               "mode": "on",
+               "native_vlan": "1",
+               "status": "trunking",
+               "vlans_in_stp_forwarding_not_pruned": '200-211',
+               "name": "Port-channel14",
+               "encapsulation": "802.1q"
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowInterfacesTrunk(device=self.device)
@@ -16355,6 +16443,11 @@ class test_show_interfaces_trunk(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        interface_obj = ShowInterfacesTrunk(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 #############################################################################
 # unitest For show interfaces <WORD> counters
