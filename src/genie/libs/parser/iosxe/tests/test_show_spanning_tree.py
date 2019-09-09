@@ -165,6 +165,7 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         "bpdu_filter": False,
         "bpdu_guard": False,
         "bridge_assurance": True,
+        "pvst_simulation": False,
         "configured_pathcost": {
             "method": "short"
         },
@@ -375,6 +376,7 @@ class test_show_spanning_tree_summary(unittest.TestCase):
 'bpdu_filter': False,
 'bpdu_guard': False,
 'bridge_assurance': True,
+'configured_pathcost': {'method': 'short'},
 'etherchannel_misconfig_guard': True,
 'extended_system_id': True,
 'loop_guard': False,
@@ -619,6 +621,7 @@ class test_show_spanning_tree_summary(unittest.TestCase):
                                       'listening': 0,
                                       'stp_active': 1}}},
     'portfast_default': False,
+    'pvst_simulation': False,
     'root_bridge_for': 'VLAN0001, VLAN0115-VLAN0116, VLAN0118-VLAN0119, VLAN0121, '
                         'VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, '
                         'VLAN0521-VLAN0522, VLAN0540, VLAN0601-VLAN0604, VLAN0606, '

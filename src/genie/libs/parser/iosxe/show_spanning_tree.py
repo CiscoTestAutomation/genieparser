@@ -82,13 +82,17 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         # initial regexp pattern
         p1 = re.compile(r'^Switch +is +in +(?P<mode>[\w\-]+) +mode( *\(IEEE +Standard\))?$')
         p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+).?$')
-        p3 = re.compile(r'^(?P<name>[\w\s]+) +is +(?P<value>disabled|enabled)$')
+        p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is '
+                         '+(?P<value>disabled|enabled)(?: +but +inactive +in (?P<simulation_value>\S+) +mode)?$')
+
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
         p5 = re.compile(r'^(?P<num>\d+) +(msts?|vlans?) +(?P<blockings>\d+) +(?P<listenings>\d+)'
                          ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
-        p6 = re.compile(r'^Configured +Pathcost +method +used +is +(?P<method>\w+) *'
-                         '(\(Operational +value +is +(?P<operational_value>\w+)\))?$')
+
+        p6 = re.compile(r'^(?:Configured +)?Pathcost +method +used +is '
+                         '+(?P<method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
+
         p7 = re.compile(r'Total +(?P<blockings>\d+) +(?P<listenings>\d+)'
                          ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
@@ -123,9 +127,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 ret_dict['root_bridge_for'] = m.groupdict()['root_bridge_for']
                 continue
             
-            # VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, VLAN0521-VLAN0522
-            # VLAN0540, VLAN0601-VLAN0604, VLAN0606, VLAN0701, VLAN0801-VLAN0806
-            # VLAN1111-VLAN1116, VLAN1506, VLAN1509, VLAN1601
+            # VLAN0780, VLAN0801-VLAN0803, VLAN0806, VLAN0808-VLAN0818, VLAN0821-VLAN0822
             m = p8.match(line)
             if m:
                 ret_dict['root_bridge_for'] += ', {}'.format(m.groupdict()['root_bridge_for'])
@@ -139,10 +141,21 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             # UplinkFast                   is disabled
             # BackboneFast                 is disabled
             # PVST Simulation              is enabled
+            # PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict[key_map[group['name'].strip()]] = True if 'enabled' in group['value'].lower() else False
+                if 'PVST Simulation Default' in group['name']:
+                    group['name'] = 'PVST Simulation'
+
+                if 'enabled' in group['value'].lower():
+                    if group['simulation_value']:
+                        ret_dict[key_map[group['name'].strip()]] = False
+                    else:
+                        ret_dict[key_map[group['name'].strip()]] = True
+                else:
+                    ret_dict[key_map[group['name'].strip()]] = False
+                
                 continue
 
             # VLAN0100                     0         1        0          0          1
@@ -172,6 +185,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
             # Configured Pathcost method used is short
             # Configured Pathcost method used is short (Operational value is long)
+            # Pathcost method used                     is long
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -377,6 +391,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 continue
 
             # Configured hello time 10, max age 40, forward delay 30, transmit hold-count 20
+            # Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
             m = p3.match(line)
             if m:
                 group = m.groupdict()
