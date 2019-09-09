@@ -94,3 +94,11 @@
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Matching more routes
+        * Optimized parser moving regex compilation out of for loop
