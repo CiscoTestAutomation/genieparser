@@ -4278,19 +4278,19 @@ class ShowRunningConfigPimSchema(MetaParser):
 class ShowRunningConfigPim(ShowRunningConfigPimSchema):
     """Parser for show running-config pim"""
 
-    cli_command = ["show running-config {feature}",\
-                   "show running-config {feature} | sec '^i'", \
-                   "show running-config {feature} | sec {vrf}", \
-                   "show running-config {feature} | sec '^i' | inc {pip_str}", \
-                   "show running-config {feature} | sec {vrf} | inc {pip_str}",
-                   "show running-config {feature} | inc {pip_str}"]
+    cli_command = ["show running-config {pim}",\
+                   "show running-config {pim} | sec '^i'", \
+                   "show running-config {pim} | sec {vrf}", \
+                   "show running-config {pim} | sec '^i' | inc {pip_str}", \
+                   "show running-config {pim} | sec {vrf} | inc {pip_str}",
+                   "show running-config {pim} | inc {pip_str}"]
 
-    def cli(self, address_family=None, pip_str=None, feature=None, vrf=None):
+    def cli(self, address_family=None, pip_str=None, pim=None, vrf=None):
 
         assert address_family in ['ipv4', 'ipv6', None]
 
-        if feature:
-            features = [feature]
+        if pim:
+            features = [pim]
 
         else:
             if address_family == 'ipv4':
@@ -4305,18 +4305,18 @@ class ShowRunningConfigPim(ShowRunningConfigPimSchema):
             if vrf and not  pip_str :
                 if vrf == 'default':
                     # command start with ip pim, or interface without spaces
-                    cmd = self.cli_command[1].format(feature=ft)
+                    cmd = self.cli_command[1].format(pim=ft)
                 else:
-                    cmd = self.cli_command[2].format(vrf=vrf,feature=ft)
+                    cmd = self.cli_command[2].format(vrf=vrf,pim=ft)
             if pip_str and vrf:
                 if vrf == 'default':
-                    cmd = self.cli_command[3].format(pip_str=pip_str,feature=ft)
+                    cmd = self.cli_command[3].format(pip_str=pip_str,pim=ft)
                 else:
-                    cmd = self.cli_command[4].format(vrf=vrf,pip_str=pip_str,feature=ft)
+                    cmd = self.cli_command[4].format(vrf=vrf,pip_str=pip_str,pim=ft)
             if not vrf and not pip_str:
-                cmd = self.cli_command[0].format(feature=ft)
+                cmd = self.cli_command[0].format(pim=ft)
             if not vrf and pip_str:
-                cmd = self.cli_command[5].format(pip_str=pip_str,feature=ft)
+                cmd = self.cli_command[5].format(pip_str=pip_str,pim=ft)
 
             out += '\n' + self.device.execute(cmd)
 
