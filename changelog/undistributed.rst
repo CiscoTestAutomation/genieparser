@@ -94,3 +94,9 @@
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+    
+--------------------------------------------------------------------------------
+                                INTERFACE
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowIpv6VrfAllInterface for to avoid empty lines
