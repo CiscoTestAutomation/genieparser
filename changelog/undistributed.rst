@@ -25,6 +25,9 @@
     * Added ShowSegmentRoutingTrafficEngPolicy for:
         'show segment-routing traffic-eng policy all'
         'show segment-routing traffic-eng policy name {name}'
+    * Added ShowSegmentRoutingTrafficEngPolicyDetail for:
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
