@@ -10,7 +10,8 @@ from ats.topology import Device
 from ats.topology import loader
 
 # iosxe show_flow
-from genie.libs.parser.iosxe.show_flow import ShowFlowMonitor
+from genie.libs.parser.iosxe.show_flow import (ShowFlowMonitor,
+                                               ShowFlowExporterStatistics)
 
 # ==============================================================
 # Unit test for 'show flow monitor {name} cache format table'
@@ -105,6 +106,172 @@ class test_show_monitor(unittest.TestCase):
         obj = ShowFlowMonitor(device=self.device)
         parsed_output = obj.parse(name='FLOW-MONITOR-1')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-    
+
+
+class test_show_flow_exporter_statistics(unittest.TestCase):
+    """ Unit tests for:
+            * show flow exporter statistics
+            * show flow exporter {exporter} statistics
+    """
+    device = Device(name="aDevice")
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {"execute.return_value": """
+        show flow exporter statistics
+        Flow Exporter test:
+          Packet send statistics (last cleared 00:10:17 ago):
+            Successfully sent:         6                     (410 bytes)
+            Reason not given:          163                   (7820 bytes)
+         
+          Client send statistics:
+            Client: Flow Monitor Test
+              Records added:           21
+                - sent:                8
+                - failed to send:      13
+              Bytes added:             1260
+                - sent:                145
+                - failed to send:      1115
+    """}
+
+    golden_parsed_output = {
+        "flow_exporter": {
+            "test": {
+                "pkt_send_stats": {
+                    "last_cleared": "00:10:17",
+                    "pkts_sent": 6,
+                    "bytes_sent": 410,
+                    "pkts_failed": 163,
+                    "bytes_failed": 7820
+                },
+                "client_send_stats": {
+                    "Flow Monitor Test": {
+                        "client": "Flow Monitor Test",
+                        "records_added": {
+                            "total": 21,
+                            "sent": 8,
+                            "failed": 13
+                        },
+                        "bytes_added": {
+                            "total": 1260,
+                            "sent": 145,
+                            "failed": 1115
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_exporter = {"execute.return_value": """
+        show flow exporter rest statistics
+        Flow Exporter rest:
+          Packet send statistics (last cleared 00:10:17 ago):
+            Successfully sent:         6                     (410 bytes)
+            Reason not given:          163                   (7820 bytes)
+
+          Client send statistics:
+            Client: Flow Monitor Test
+              Records added:           21
+                - sent:                8
+                - failed to send:      13
+              Bytes added:             1260
+                - sent:                145
+                - failed to send:      1115
+    """}
+
+    golden_parsed_output_exporter = {
+        "flow_exporter": {
+            "rest": {
+                "pkt_send_stats": {
+                    "last_cleared": "00:10:17",
+                    "pkts_sent": 6,
+                    "bytes_sent": 410,
+                    "pkts_failed": 163,
+                    "bytes_failed": 7820
+                },
+                "client_send_stats": {
+                    "Flow Monitor Test": {
+                        "client": "Flow Monitor Test",
+                        "records_added": {
+                            "total": 21,
+                            "sent": 8,
+                            "failed": 13
+                        },
+                        "bytes_added": {
+                            "total": 1260,
+                            "sent": 145,
+                            "failed": 1115
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_partial = {"execute.return_value": """
+        flow exporter statistics
+        Flow Exporter test:
+          Packet send statistics (last cleared 00:12:12 ago):
+            Successfully sent:         0                     (0 bytes)
+         
+          Client send statistics:
+            Client: Flow Monitor Test
+              Records added:           0
+              Bytes added:             0
+    """}
+
+    golden_parsed_output_partial = {
+        "flow_exporter": {
+            "test": {
+                "pkt_send_stats": {
+                    "last_cleared": "00:12:12",
+                    "pkts_sent": 0,
+                    "bytes_sent": 0
+                },
+                "client_send_stats": {
+                    "Flow Monitor Test": {
+                        "client": "Flow Monitor Test",
+                        "records_added": {
+                            "total": 0
+                        },
+                        "bytes_added": {
+                            "total": 0
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowFlowExporterStatistics(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowFlowExporterStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_exporter(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_exporter)
+        obj = ShowFlowExporterStatistics(device=self.device)
+        parsed_output = obj.parse(exporter='rest')
+        self.assertEqual(parsed_output, self.golden_parsed_output_exporter)
+
+    def test_golden_partial(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_partial)
+        obj = ShowFlowExporterStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_partial)
+
 if __name__ == '__main__':
     unittest.main()

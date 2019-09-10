@@ -130,11 +130,14 @@
 * IOSXE
     * Fixed regex in ShowVlan
 --------------------------------------------------------------------------------
-                                FLOW MONITOR
+                                FLOW
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+    * Added ShowFlowExporterStatistics for:
+        * show flow exporter statistics
+        * show flow exporter {name} statistics
 --------------------------------------------------------------------------------
                                 ROUTING
 --------------------------------------------------------------------------------
