@@ -277,7 +277,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                                 ['next_hop_list'][index]['outgoing_interface'] = interface
 
                 continue
-            
+
             #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
             m = p3.match(line)
             if m:
