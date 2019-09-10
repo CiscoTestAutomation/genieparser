@@ -439,6 +439,82 @@ class test_show_inventory(unittest.TestCase):
         PID: IOSv              , VID: 1.0, SN: 9K66Z7TOKAACDEQA24N7S
     '''}
 
+    golden_parsed_output_2 = {}
+
+    golden_output_2 = {'execute.return_value': '''
+        NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
+        PID: WS-C6504-E        ,                     VID: V01, SN: FXS1712Q1R8
+
+        NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+        PID: CLK-7600          ,                     VID:    , SN: FXS170802GL
+
+        NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+        PID: CLK-7600          ,                     VID:    , SN: FXS170802GL
+
+        NAME: "1", DESCR: "VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5"
+        PID: VS-SUP2T-10G      ,                     VID: V05, SN: SAL17152N0F
+
+        NAME: "msfc sub-module of 1", DESCR: "VS-F6K-MSFC5 CPU Daughterboard Rev. 2.0"
+        PID: VS-F6K-MSFC5      ,                     VID:    , SN: SAL17142D06
+
+        NAME: "VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1", DESCR: "VS-F6K-PFC4 Policy Feature Card 4 Rev. 2.0"
+        PID: VS-F6K-PFC4       ,                     VID: V03, SN: SAL17163901
+
+        NAME: "Transceiver Te1/4", DESCR: "X2 Transceiver 10Gbase-SR Te1/4"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT170202T1
+
+        NAME: "Transceiver Te1/5", DESCR: "X2 Transceiver 10Gbase-SR Te1/5"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT1702033D
+
+        NAME: "2", DESCR: "WS-X6816-10GE CEF720 16 port 10GE Rev. 2.0"
+        PID: WS-X6816-10GE     ,                     VID: V02, SN: SAL17152QB3
+
+        NAME: "WS-F6K-DFC4-E Distributed Forwarding Card 4 EARL sub-module of 2", DESCR: "WS-F6K-DFC4-E Distributed Forwarding Card 4 Rev. 1.2"
+        PID: WS-F6K-DFC4-E     ,                     VID: V02, SN: SAL171846RF
+
+        NAME: "Transceiver Te2/1", DESCR: "X2 Transceiver 10Gbase-SR Te2/1"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT17020338
+
+        NAME: "Transceiver Te2/2", DESCR: "X2 Transceiver 10Gbase-SR Te2/2"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT1702020H
+
+        NAME: "Transceiver Te2/3", DESCR: "X2 Transceiver 10Gbase-SR Te2/3"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT170202UU
+
+        NAME: "Transceiver Te2/4", DESCR: "X2 Transceiver 10Gbase-SR Te2/4"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT170202T5
+
+        NAME: "Transceiver Te2/5", DESCR: "X2 Transceiver 10Gbase-SR Te2/5"
+        PID: X2-10GB-SR        ,                     VID: V05 , SN: AGA1515XZE2
+
+        NAME: "Transceiver Te2/6", DESCR: "X2 Transceiver 10Gbase-SR Te2/6"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: FNS153920YJ
+
+        NAME: "Transceiver Te2/16", DESCR: "X2 Transceiver 10Gbase-SR Te2/16"
+        PID: X2-10GB-SR        ,                     VID: V06 , SN: ONT170201TT
+
+        NAME: "3", DESCR: "WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0"
+        PID: WS-X6824-SFP      ,                     VID: V01, SN: SAL17152EG9
+
+        NAME: "WS-F6K-DFC4-A Distributed Forwarding Card 4 EARL sub-module of 3", DESCR: "WS-F6K-DFC4-A Distributed Forwarding Card 4 Rev. 1.0"
+        PID: WS-F6K-DFC4-A     ,                     VID: V04, SN: SAL171848KL
+
+        NAME: "4", DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4"
+        PID: WS-X6748-GE-TX    ,                     VID: V04, SN: SAL14017TWF
+
+        NAME: "WS-F6700-CFC Centralized Forwarding Card EARL sub-module of 4", DESCR: "WS-F6700-CFC Centralized Forwarding Card Rev. 4.1"
+        PID: WS-F6700-CFC      ,                     VID: V06, SN: SAL13516QS8
+
+        NAME: "FAN-MOD-4HS 1", DESCR: "High Speed Fan Module for CISCO7604 1"
+        PID: FAN-MOD-4HS       ,                     VID: V01, SN: DCH170900PF
+
+        NAME: "PS 1 PWR-2700-AC/4", DESCR: "2700W AC power supply for CISCO7604 1"
+        PID: PWR-2700-AC/4     ,                     VID: V03, SN: APS1707008Y
+
+        NAME: "PS 2 PWR-2700-AC/4", DESCR: "2700W AC power supply for CISCO7604 2"
+        PID: PWR-2700-AC/4     ,                     VID: V03, SN: APS17070093
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -451,6 +527,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.dev_iosv)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_iosv)
+
+    def test_golden_output_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 class test_show_bootvar(unittest.TestCase):
