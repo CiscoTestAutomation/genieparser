@@ -391,6 +391,11 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
                         'Neighbors\s*for \w+\(\s*(?P<as_num>\d+)\)\s*'
                         '(?:VRF\((?P<vrf>\S+)\))?')
 
+        # When VRF is alone in a line
+        # VRF(VRF1)
+        r2_1 = re.compile(r'VRF\((?P<vrf>\w+)\)')
+
+
         # H     Address     Interface   Hold    Uptime   SRTT   RTO     Q       Seq
         #                               (sec)                   (ms)    Cnt     Num
         # 0     10.1.2.1    Et1/0       11      00:02:31 12     200     0       6
@@ -412,7 +417,7 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
                         '(?P<last_seq_number>\d+)$')
         # fe80::5c00:ff:fe02:7
         # fe80::5c00:ff:fe02:7
-        r5 = re.compile(r'^(?P<nbr_address>\S+)$')
+        r5 = re.compile(r'^(?P<nbr_address>\S+:\S*:\S*:\S*:\S*:\S+)$')
 
         # Version 8.0/2.0, Retrans: 0, Retries: 0, Prefixes: 1
         # Version 5.1/3.0, Retrans: 2, Retries: 0, Prefixes: 1
@@ -492,6 +497,24 @@ class ShowIpEigrpNeighborsDetailSuperParser(ShowIpEigrpNeighborsDetailSchema):
                 eigrp_instance_dict['named_mode'] = named_mode
 
                 continue
+
+            # VRF(VRF1)
+            result = r2_1.match(line)
+            if result:
+                group = result.groupdict()
+                vrf = group['vrf'] if group['vrf'] else 'default'
+
+                eigrp_instance_dict = parsed_dict\
+                    .setdefault('eigrp_instance', {})\
+                    .setdefault(as_num, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})
+
+                eigrp_instance_dict['name'] = name
+                eigrp_instance_dict['named_mode'] = named_mode
+
 
             # H     Address     Interface   Hold    Uptime   SRTT   RTO     Q       Seq
             #                               (sec)                   (ms)    Cnt     Num
