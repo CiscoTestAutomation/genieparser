@@ -4049,6 +4049,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # LS age: MAXAGE(3601)
             m = p3_2_1.match(line)
             if m:
+                tlv_type_flag = False
+                sub_tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
@@ -4290,6 +4292,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p19_1.match(line)
             if m:
                 link_id = str(m.groupdict()['link_id'])
+
+                if tlv_type_flag:
+                    tlv_type_dict['link_id'] = link_id
+                    continue
 
                 # Create dict structures
                 if 'links' not in db_dict:
