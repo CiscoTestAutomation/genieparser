@@ -937,7 +937,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     },
                 },
             },
-            'forwarding_id': '65537 (0x1C)',
+            'forwarding_id': '65537',
             'stats': {
                 'packets': 1878,
                 'bytes': 295606,
@@ -1154,7 +1154,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     },
                 },
             },
-            'forwarding_id': '65536 (0x18)',
+            'forwarding_id': '65536',
             'stats': {
                 'packets': 44,
                 'bytes': 1748,
@@ -1752,7 +1752,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     },
                 },
             },
-            'forwarding_id': '65537 (0x1C)',
+            'forwarding_id': '65537',
             'stats': {
                 'packets': 2520,
                 'bytes': 397042,

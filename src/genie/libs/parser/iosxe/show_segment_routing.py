@@ -897,7 +897,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p11 = re.compile(r'^State: +(?P<state>[\S]+)$')
 
         #  Forwarding-ID: 65536 (0x18)
-        p12 = re.compile(r'^Forwarding-ID: +(?P<id>[\S\s]+)$')
+        #  Forwarding-ID: 65536
+        p12 = re.compile(r'^Forwarding-ID: +(?P<id>[\d]+)(?P<extra>[\S\s]+)?$')
 
         # Stats:
         #   Packets: 44         Bytes: 1748
@@ -913,6 +914,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         ret_dict = {}
 
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.strip()
             if not line:
                 continue
@@ -1082,7 +1084,7 @@ class ShowSegmentRoutingTrafficEngPolicyDetail(ShowSegmentRoutingTrafficEngPolic
         else:
             out = output
 
-        return super().cli(output=out) 
+        return super().cli(output=out)
 
 
 # ====================================================
