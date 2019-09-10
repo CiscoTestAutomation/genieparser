@@ -41,6 +41,9 @@
     * Added ShowSegmentRoutingTrafficEngPolicy for:
         'show segment-routing traffic-eng policy all'
         'show segment-routing traffic-eng policy name {name}'
+    * Added ShowSegmentRoutingTrafficEngPolicyDetail for:
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
@@ -79,6 +82,9 @@
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
         * show ip ospf database opaque-area type ext-link adv-router {address}
     * Updated ShowIpOspfDatabaseTypeParser to parse more varied output
+    * Added ShowIpOspfSegmentRoutingAdjacencySid for:
+        * show ip ospf segment-routing adjacency-sid
+        * show ip ospf {process_id} segment-routing adjacency-sid
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -86,6 +92,26 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                PIM
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigPim:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								VRF
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigVrf:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								common.py
+--------------------------------------------------------------------------------
+* updated _find_command to escape "^"
+* disallow spaces in key "feature"
 
 --------------------------------------------------------------------------------
                                 MPLS
@@ -103,13 +129,16 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed regex in ShowVlan
-<<<<<<< HEAD
-=======
-    
 --------------------------------------------------------------------------------
                                 FLOW MONITOR
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
->>>>>>> dev
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Matching more routes
+        * Optimized parser moving regex compilation out of for loop
