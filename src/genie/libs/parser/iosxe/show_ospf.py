@@ -4293,10 +4293,6 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 link_id = str(m.groupdict()['link_id'])
 
-                if tlv_type_flag:
-                    tlv_type_dict['link_id'] = link_id
-                    continue
-
                 # Create dict structures
                 if 'links' not in db_dict:
                     db_dict['links'] = {}

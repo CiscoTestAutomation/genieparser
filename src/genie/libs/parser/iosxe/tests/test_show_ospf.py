@@ -7463,7 +7463,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
         TLV Type: Extended Link
         Length: 68
         Link connected to : another Router (point-to-point)
-        (Link ID) Network/subnet number: 10.16.2.2
+        (Link ID) Neighboring Router ID: 10.16.2.2
         (Link Data) Interface IP address: 192.168.111.1
      
           Sub-TLV Type: Adj SID
