@@ -320,6 +320,129 @@ class testShowSpanningTreeSummary(unittest.TestCase):
     }
 
     empty_output = {'execute.return_value': '       '}
+
+    golden_output_1 = {'execute.return_value': '''\
+        S1-R101# show spann sum
+        Switch is in rapid-pvst mode 
+        Root bridge for: VLAN0109-VLAN0110, VLAN0122, VLAN0202-VLAN0205
+          VLAN0207-VLAN0209, VLAN0212-VLAN0215, VLAN0222-VLAN0224, VLAN0232-VLAN0234
+          VLAN0242, VLAN0244, VLAN0253-VLAN0254, VLAN0264, VLAN0274, VLAN0280
+
+        Port Type Default                        is disable
+        Edge Port [PortFast] BPDU Guard Default  is disabled
+        Edge Port [PortFast] BPDU Filter Default is disabled
+        Bridge Assurance                         is enabled
+        Loopguard Default                        is disabled
+        Pathcost method used                     is short
+        vPC peer-switch                          is enabled (operational)
+        STP-Lite                                 is enabled
+
+        Name                   Blocking Listening Learning Forwarding STP Active
+        ---------------------- -------- --------- -------- ---------- ----------
+        VLAN0109                     0         0        0          3          3
+        VLAN0110                     0         0        0          2          2
+        VLAN0122                     0         0        0          2          2
+        VLAN0202                     0         0        0          2          2
+        VLAN0203                     0         0        0          1          1
+        VLAN0204                     0         0        0          2          2
+        VLAN0205                     0         0        0          2          2
+        VLAN0207                     0         0        0          2          2
+        VLAN0208                     0         0        0          2          2
+        ---------------------- -------- --------- -------- ---------- ----------
+        117 vlans                    0         0        0        280        280
+        DS1-R101#        exit
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        'bpdu_filter': False,
+        'bpdu_guard': False,
+        'bridge_assurance': True,
+        'loop_guard': False,
+        'mode': {
+            'rapid-pvst': {
+                'VLAN0109': {
+                    'blocking': 0,
+                    'forwarding': 3,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 3
+                },
+                'VLAN0110': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0122': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0202': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0203': {
+                    'blocking': 0,
+                    'forwarding': 1,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 1
+                },
+                'VLAN0204': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0205': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0207': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0208': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+            }
+        },
+        'path_cost_method': 'short',
+        'port_type_default': False,
+        'root_bridge_for': 'VLAN0109-VLAN0110, VLAN0122, VLAN0202-VLAN0205, '
+                            'VLAN0207-VLAN0209, VLAN0212-VLAN0215, VLAN0222-VLAN0224, '
+                            'VLAN0232-VLAN0234, VLAN0242, VLAN0244, VLAN0253-VLAN0254, '
+                            'VLAN0264, VLAN0274, VLAN0280',
+        'stp_lite': True,
+        'total_statistics': {
+            'blockings': 0,
+            'forwardings': 280,
+            'learnings': 0,
+            'listenings': 0,
+            'stp_actives': 280
+        },
+        'vpc_peer_switch': True,
+        'vpc_peer_switch_status': 'operational'
+    }
     
     def test_empty(self):
         self.dev2 = Mock(**self.empty_output)
@@ -341,6 +464,12 @@ class testShowSpanningTreeSummary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_mstp_2)
 
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_1)
+        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 class TestShowSpanningTreeDetail(unittest.TestCase):
     dev_c3850 = Device(name = 'c3850')
