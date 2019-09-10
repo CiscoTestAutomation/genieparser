@@ -35,9 +35,11 @@ DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages/cisco-shared/genie/libs
 PYTHON        = python
-TESTCMD       = runAll --path=./tests/
+TESTCMD       = runAll
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
+PYLINT_CMD	  = pylintAll
+CYTHON_CMD	  = compileAll
 
 # Development pkg requirements
 RELATED_PKGS = genie.libs.parser
@@ -64,7 +66,10 @@ help:
 	@echo "docs                  Build Sphinx documentation for this package"
 	@echo "devnet                Build DevNet package."
 	@echo "install_build_deps    install pyats-distutils"
-	@echo "uninstall_build_deps  remove pyats-distutils"
+	@echo "uninstall_build_deps  Remove pyats-distutils"
+	@echo "compile		 		 Compile all python modules to c"
+	@echo "coverage_all			 Run code coverage on all test files"
+	@echo "pylint_all			 Run python linter on all python modules"
 	@echo ""
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
@@ -73,7 +78,7 @@ compile:
 	@echo ""
 	@echo "Compiling to C code"
 	@echo --------------------------
-	python compile.py 
+	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
 
@@ -81,21 +86,20 @@ coverage_all:
 	@echo ""
 	@echo "Running Code coverage on all unittests"
 	@echo ---------------------------------------
-	@runAll --path tests/ --coverage
+	@$(TESTCMD) --coverage
 	@echo "Done Compiling"
+	@echo ""
+
+pylint_all:
+	@echo ""
+	@echo "Running Pylint on all modules"
+	@echo "-----------------------------"
+	@$(PYLINT_CMD)
+	@echo "Done linting"
 	@echo ""
 
 devnet: package
 	@echo "Completed building DevNet packages"
-	@echo ""
-
-package_compile:
-	@echo ""
-	@echo "Compiling to C code"
-	@echo --------------------------
-	$(BUILD_CMD) --cythonize
-	@echo --------------------------
-	@echo "Done Compiling"
 	@echo ""
 
 install_build_deps:

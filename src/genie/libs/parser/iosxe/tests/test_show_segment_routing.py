@@ -16,6 +16,7 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
                                                           ShowSegmentRoutingMplsGb,
                                                           ShowSegmentRoutingMplsGbLock,
                                                           ShowSegmentRoutingMplsConnectedPrefixSidMapLocal,
+                                                          ShowSegmentRoutingTrafficEngPolicy,
                                                           ShowSegmentRoutingTrafficEngTopology,
                                                           ShowSegmentRoutingMplsMappingServer)
 
@@ -122,6 +123,7 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+
 # ==================================
 # Unittest for:
 #   * 'show segment-routing mpls gb'
@@ -226,7 +228,6 @@ class test_show_routing_mpls_state(unittest.TestCase):
 # ==============================================
 # Parser for 'show segment-routing mpls lb lock'
 # ==============================================
-
 class test_show_routing_mpls_lb_lock(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -284,6 +285,7 @@ class test_show_segment_routing_mpls_gb_lock(unittest.TestCase):
         obj = ShowSegmentRoutingMplsGbLock(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 # ====================================================================
 # Unittest for:
@@ -605,12 +607,190 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# ====================================================================
+# Unittest for:
+#   * 'show segment-routing traffic-eng policy all'
+# ====================================================================
+class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'test1': {
+            'name': 'test1',
+            'color': 100,
+            'end_point': '106.162.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '09:38:18',
+                    'since': '08-28 20:56:55.275',
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    400: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'pce': True,
+                                'weight': 0,
+                                'metric_type': 'TE',
+                            },
+                        },
+                    },
+                    300: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'active',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                    2: {
+                                        'sid': 16072,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '111.87.5.253',
+                                        'remote_address': '111.87.6.253',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    200: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'test1': {
+                                        'status': 'inactive',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                                'remote_address': '111.87.6.253',
+                                            },
+                                            2: {
+                                                'sid': 16052,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.187.14.241',
+                                            },
+                                            3: {
+                                                'sid': 16062,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '59.128.2.251',
+                                            },
+                                            4: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    100: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15000: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+        show segment-routing traffic-eng policy all
+        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Status:
+            Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+        Candidate-paths:
+            Preference 400:
+            Dynamic (pce) (inactive)
+                Weight: 0, Metric Type: TE
+            Preference 300:
+            Dynamic (active)
+                Weight: 0, Metric Type: IGP
+                Metric Type: IGP, Path Accumulated Metric: 2200
+                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+            Preference 200:
+            Explicit: segment-list test1 (inactive)
+                Weight: 0, Metric Type: TE
+                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+                16052 [Prefix-SID, 106.187.14.241]
+                16062 [Prefix-SID, 59.128.2.251]
+                16063 [Prefix-SID, 106.162.196.241]
+            Preference 100:
+            Dynamic (inactive)
+                Weight: 0, Metric Type: IGP
+                Metric Type: IGP, Path Accumulated Metric: 2200
+                16063 [Prefix-SID, 106.162.196.241]
+        Attributes:
+            Binding SID: 15000
+            Allocation mode: explicit
+            State: Programmed
+        '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_name(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
+        parsed_output = obj.parse(name='test1')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
 # ====================================================
 # Unittest for:
 #   * 'show segment-routing mpls mapping-server ipv4'
 #   * 'show segment-routing mpls mapping-server ipv6'
 # ====================================================
-class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
+class test_show_segment_routing_mpls_mapping_server(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -677,5 +857,6 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
         obj = ShowSegmentRoutingMplsMappingServer(device=self.device)
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 if __name__ == '__main__':
     unittest.main()

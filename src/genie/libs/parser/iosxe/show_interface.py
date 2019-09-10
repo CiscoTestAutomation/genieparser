@@ -2730,7 +2730,7 @@ class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
             out = output
 
         # initial regexp pattern
-        p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>[\w\.]+) +'
+        p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>\S+) +'
                          '(?P<status>\w+) +(?P<native_vlan>\d+)$')
         p2 = re.compile('^Port +Vlans +allowed +on +trunk$')
         p3 = re.compile('^Port +Vlans +allowed +and +active +in +management +domain$')
@@ -2744,6 +2744,10 @@ class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
             line = line.strip()
 
             # Gi1/0/4     on               802.1q         trunking      1
+            # Gi1/0/4     auto             n-isl          trunking      1
+            # Gi1/0/23    on               isl            trunking      1
+            # Gi1/0/24    on               802.1q         trunking      1
+            # Po12        auto             n-802.1q       trunking      1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
