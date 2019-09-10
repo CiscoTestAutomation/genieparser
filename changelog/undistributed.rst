@@ -6,6 +6,22 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                EIGRP
+--------------------------------------------------------------------------------
+* IOS
+        * Added ShowIpEigrpNeighbors for commands
+                * 'show ip eigrp vrf {vrf} neighbors'
+                * 'show ip eigrp neighbors'
+        * Added ShowIpv6EigrpNeighbors for commands:
+                * 'show ipv6 eigrp vrf {vrf} neighbors'
+                * 'show ipv6 eigrp neighbors'
+        * Added ShowIpEigrpNeighborsDetail for commands:
+                * 'show ip eigrp neighbors detail'
+                * 'show ip eigrp vrf {vrf} neighbors detail'
+        * Added ShowIpv6EigrpNeighborsDetail for commands:
+                * 'show ipv6 eigrp neighbors detail'
+
+--------------------------------------------------------------------------------
                                 MPLS
 --------------------------------------------------------------------------------
 * IOSXE
@@ -25,6 +41,9 @@
     * Added ShowSegmentRoutingTrafficEngPolicy for:
         'show segment-routing traffic-eng policy all'
         'show segment-routing traffic-eng policy name {name}'
+    * Added ShowSegmentRoutingTrafficEngPolicyDetail for:
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
@@ -63,6 +82,9 @@
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
         * show ip ospf database opaque-area type ext-link adv-router {address}
     * Updated ShowIpOspfDatabaseTypeParser to parse more varied output
+    * Added ShowIpOspfSegmentRoutingAdjacencySid for:
+        * show ip ospf segment-routing adjacency-sid
+        * show ip ospf {process_id} segment-routing adjacency-sid
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -107,11 +129,16 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed regex in ShowVlan
-    
 --------------------------------------------------------------------------------
                                 FLOW MONITOR
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
-
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Matching more routes
+        * Optimized parser moving regex compilation out of for loop
