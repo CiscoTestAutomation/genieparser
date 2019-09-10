@@ -6,6 +6,15 @@
 | ``genie.libs.parser``   |               |
 
 --------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* NXOS
+    * Update ShowInterfaceBrief
+        * Add command 'show interface {interface} brief'
+    * Update ShowRunningConfigInterface
+        * Update regex to support more interface names
+
+--------------------------------------------------------------------------------
                                 EIGRP
 --------------------------------------------------------------------------------
 * IOS

@@ -2734,7 +2734,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         return interface_dict
 
-
 # =================================================
 # Schema for 'show running-config interface <WORD>'
 # =================================================
