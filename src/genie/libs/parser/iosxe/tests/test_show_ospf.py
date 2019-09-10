@@ -7263,7 +7263,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
      
         Number of Links : 0
      
-      LS age: 49
+      LS age: MAXAGE(49)
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
       Link State ID: 10.1.0.15

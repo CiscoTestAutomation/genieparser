@@ -4049,6 +4049,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # LS age: MAXAGE(3601)
             m = p3_2_1.match(line)
             if m:
+                tlv_type_flag = False
+                sub_tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
