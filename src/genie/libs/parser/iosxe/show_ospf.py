@@ -7119,7 +7119,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
         return super().cli(db_type='router', out=output)
 
 
-class ShowIpOspfSegmentRoutingSchema(MetaParser):
+class ShowIpOspfSegmentRoutingAdjacencySidSchema(MetaParser):
     ''' Schema for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
@@ -7141,14 +7141,13 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
         }
     }
         
-    
 
-class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+class ShowIpOspfSegmentRoutingAdjacencySid(ShowIpOspfSegmentRoutingAdjacencySidSchema):
     ''' Parser for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
 
-    cli_commands = [
+    cli_command = [
         'show ip ospf {process_id} segment-routing adjacency-sid',
         'show ip ospf segment-routing adjacency-sid',
     ]
@@ -7157,9 +7156,9 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
         if output is None:
             if process_id:
-                command = self.cli_commands[0].format(process_id=process_id)
+                command = self.cli_command[0].format(process_id=process_id)
             else:
-                command = self.cli_commands[1]
+                command = self.cli_command[1]
 
             out = self.device.execute(command)
         else:
