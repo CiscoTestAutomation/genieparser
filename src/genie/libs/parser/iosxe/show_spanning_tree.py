@@ -39,6 +39,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         'backbone_fast': bool,
         Optional('root_bridge_for'): str,
         Optional('pvst_simulation'): bool,
+        Optional('pvst_simulation_status'): str,
         Optional("configured_pathcost"): {
             'method': str,
             Optional('operational_value'): str,
@@ -82,8 +83,10 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         # initial regexp pattern
         p1 = re.compile(r'^Switch +is +in +(?P<mode>[\w\-]+) +mode( *\(IEEE +Standard\))?$')
         p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\w\-\,\s]+).?$')
-        p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is '
-                         '+(?P<value>disabled|enabled)(?: +but +inactive +in (?P<simulation_value>\S+) +mode)?$')
+        #p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is '
+        #                 '+(?P<value>disabled|enabled)(?: +but +inactive +in (?P<simulation_value>\S+) +mode)?$')
+        p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is +(?P<value>disable|disabled|enabled)'
+                         '(?: +but (?P<simulation_value>active|inactive) +in +rapid-pvst +mode)?$')
 
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
                          ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
@@ -150,7 +153,8 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
                 if 'enabled' in group['value'].lower():
                     if group['simulation_value']:
-                        ret_dict[key_map[group['name'].strip()]] = False
+                        ret_dict[key_map[group['name'].strip()]] = True
+                        ret_dict['pvst_simulation_status'] = group['simulation_value']
                     else:
                         ret_dict[key_map[group['name'].strip()]] = True
                 else:
