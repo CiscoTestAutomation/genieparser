@@ -66,6 +66,9 @@
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
         * show ip ospf database opaque-area type ext-link adv-router {address}
     * Updated ShowIpOspfDatabaseTypeParser to parse more varied output
+    * Added ShowIpOspfSegmentRoutingAdjacencySid for:
+        * show ip ospf segment-routing adjacency-sid
+        * show ip ospf {process_id} segment-routing adjacency-sid
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -73,6 +76,26 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                PIM
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigPim:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								VRF
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigVrf:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								common.py
+--------------------------------------------------------------------------------
+* updated _find_command to escape "^"
+* disallow spaces in key "feature"
 
 --------------------------------------------------------------------------------
                                 MPLS
@@ -90,3 +113,11 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed regex in ShowVlan
+
+--------------------------------------------------------------------------------
+                                FLOW MONITOR
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowFlowMonitor for:
+        * show flow monitor {name} cache format table
+
