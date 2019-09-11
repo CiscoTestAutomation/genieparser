@@ -172,3 +172,10 @@
         * add support for rstp 
         * chnaged some fields in schema to Optional
 
+--------------------------------------------------------------------------------
+                                Spanning-Tree
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowSpanningTreeSummary:
+        * Changed some schema keywords to Optional
+        * Refined regex for various formats
