@@ -1924,7 +1924,6 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                     ipv6_groups.append(group)
                 ipv6_vrf_all_interface_dict.setdefault(interface, {}). \
                     setdefault('ipv6', {})
-                # ipv6_vrf_all_interface_dict[interface]['ipv6'] = {}
                 ipv6_vrf_all_interface_dict[interface]['ipv6']['ipv6_groups'] = ipv6_groups
                 continue
 
