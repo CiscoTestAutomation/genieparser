@@ -657,7 +657,6 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             if m:
                 group = m.groupdict()
                 mode = group['mode']
-                #import pdb;pdb.set_trace()
                 domain_dict = ret_dict.setdefault(self.MODE_NAME_MAP[mode], {})
                 inst_dict = domain_dict.setdefault(self.MODE_INST_MAP[mode], {}).\
                     setdefault(int(group['inst']), {})
@@ -812,7 +811,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             if m:
                 intf_dict['link_type'] = m.groupdict()['link_type']
                 if m.groupdict()['internal'] == None:
-                    internal_bool = False #if 'internal' in m.groupdict()['internal'].lower() else False
+                    internal_bool = False 
                 else:
                     internal_bool = True
 

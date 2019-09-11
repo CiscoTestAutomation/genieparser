@@ -70,3 +70,15 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                Spanning-tree
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowSpanningTreeSummary to:
+        * regex to accommodate different formats
+        * changed some fields in schema to Optional
+    * Updated ShowSpanningTreeDetail to:
+        * updated regex to accommodate more formats
+        * add support for rstp 
+        * chnaged some fields in schema to Optional
