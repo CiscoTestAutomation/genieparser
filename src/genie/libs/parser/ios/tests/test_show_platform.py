@@ -452,7 +452,7 @@ class test_show_inventory(unittest.TestCase):
             }
         },
         "slot": {
-            "oc": {
+            "CLK-7600 1": {
                 "other": {
                     "CLK-7600 1": {
                         "name": "CLK-7600 1",
@@ -460,35 +460,51 @@ class test_show_inventory(unittest.TestCase):
                         "pid": "CLK-7600",
                         "vid": "",
                         "sn": "FXS170802GL",
-                    },
+                    }
+                }
+            },
+            "CLK-7600 2": {
+                "other": {
                     "CLK-7600 2": {
                         "name": "CLK-7600 2",
                         "descr": "OSR-7600 Clock FRU 2",
                         "pid": "CLK-7600",
                         "vid": "",
                         "sn": "FXS170802GL",
-                    },
+                    }
+                }
+            },
+            "FAN-MOD-4HS 1": {
+                "other": {
                     "FAN-MOD-4HS 1": {
                         "name": "FAN-MOD-4HS 1",
                         "descr": "High Speed Fan Module for CISCO7604 1",
                         "pid": "FAN-MOD-4HS",
                         "vid": "V01",
                         "sn": "DCH170900PF",
-                    },
+                    }
+                }
+            },
+            "PS 1 PWR-2700-AC/4": {
+                "other": {
                     "PS 1 PWR-2700-AC/4": {
                         "name": "PS 1 PWR-2700-AC/4",
                         "descr": "2700W AC power supply for CISCO7604 1",
                         "pid": "PWR-2700-AC/4",
                         "vid": "V03",
                         "sn": "APS1707008Y",
-                    },
+                    }
+                }
+            },
+            "PS 2 PWR-2700-AC/4": {
+                "other": {
                     "PS 2 PWR-2700-AC/4": {
                         "name": "PS 2 PWR-2700-AC/4",
                         "descr": "2700W AC power supply for CISCO7604 2",
                         "pid": "PWR-2700-AC/4",
                         "vid": "V03",
                         "sn": "APS17070093",
-                    },
+                    }
                 }
             },
             1: {
@@ -669,6 +685,7 @@ class test_show_inventory(unittest.TestCase):
             },
         },
     }
+
 
     golden_output_2 = {'execute.return_value': '''
         NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
