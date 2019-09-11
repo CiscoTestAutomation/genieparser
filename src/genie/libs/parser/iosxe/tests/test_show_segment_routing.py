@@ -19,7 +19,8 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
                                                           ShowSegmentRoutingTrafficEngPolicy,
                                                           ShowSegmentRoutingTrafficEngPolicyDetail,
                                                           ShowSegmentRoutingTrafficEngTopology,
-                                                          ShowSegmentRoutingMplsMappingServer)
+                                                          ShowSegmentRoutingMplsMappingServer,
+                                                          ShowSegmentRoutingMplsLbAssignedSids)
 
 
 # =============================================================
@@ -1999,6 +2000,79 @@ class test_show_segment_routing_mpls_mapping_server(unittest.TestCase):
         obj = ShowSegmentRoutingMplsMappingServer(device=self.device)
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+class test_show_segment_routing_mpls_lb_assigned_sids(unittest.TestCase):
+    """ Unit tests for:
+            * show segment-routing mpls lb assigned-sids
+    """
+    device = Device(name="aDevice")
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {"execute.return_value": """
+        show segment-routing mpls lb assigned-sids
+        Adjacency SID Database
+          C=> In conflict
+          S=> Shared
+          R=> In range
+        SID    STATE PROTOCOL TOPOID   LAN PRO NEIGHBOR INTERFACE
+         12345  R     ISIS     2        N   N   192.168.0.1 Ethernet1
+    """}
+
+    golden_parsed_output = {
+        "segment_routing": {
+            "sid": {
+                "12345": {
+                    "state": "In range",
+                    "protocol": "ISIS",
+                    "topoid": 2,
+                    "lan": "N",
+                    "pro": "N",
+                    "neighbor": "192.168.0.1",
+                    "interface": "Ethernet1"
+                }
+            }
+        }
+    }
+
+    golden_output_partial = {"execute.return_value": """
+        show segment-routing mpls lb assigned-sids
+        Adjacency SID Database
+          C=> In conflict
+          S=> Shared
+          R=> In range
+        SID    STATE PROTOCOL TOPOID   LAN PRO NEIGHBOR INTERFACE
+         12345   S
+    """}
+
+    golden_parsed_output_partial = {
+        "segment_routing": {
+            "sid": {
+                "12345": {
+                    "state": "Shared",
+                }
+            }
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingMplsLbAssignedSids(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowSegmentRoutingMplsLbAssignedSids(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_partial(self):
+        self.device = Mock(**self.golden_output_partial)
+        obj = ShowSegmentRoutingMplsLbAssignedSids(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_partial)
+
 
 if __name__ == '__main__':
     unittest.main()

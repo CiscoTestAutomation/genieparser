@@ -56,6 +56,8 @@
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
+    * Added ShowSegmentRoutingMplsLbAssignedSids for:
+        'show segment-routing mpls lb assigned-sids'
 
 --------------------------------------------------------------------------------
                                 ISSU

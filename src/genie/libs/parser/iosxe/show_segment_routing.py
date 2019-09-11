@@ -5,6 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls lb'
     * 'show segment-routing mpls state'
     * 'show segment-routing mpls lb lock'
+    * 'show segment-routing mpls lb assigned-sids'
     * 'show segment-routing mpls connected-prefix-sid-map ipv4'
     * 'show segment-routing mpls connected-prefix-sid-map ipv6'
     * 'show segment-routing mpls gb'
@@ -1313,5 +1314,77 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
                 if group['flags']:
                     algo_dict['flags'] = group['flags']
                 continue
+
+        return ret_dict
+
+
+class ShowSegmentRoutingMplsLbAssignedSidsSchema(MetaParser):
+    """ Schema for:
+            * show segment-routing mpls lb assigned-sids
+    """
+    schema = {
+        'segment_routing': {
+            'sid': {
+                Any(): {
+                    'state': str,
+                    Optional('protocol'): str,
+                    Optional('topoid'): int,
+                    Optional('lan'): str,
+                    Optional('pro'): str,
+                    Optional('neighbor'): str,
+                    Optional('interface'): str
+                }
+            }
+        }
+    }
+
+
+class ShowSegmentRoutingMplsLbAssignedSids(ShowSegmentRoutingMplsLbAssignedSidsSchema):
+    """ Parser for:
+            * show segment-routing mpls lb assigned-sids
+    """
+
+    cli_command = "show segment-routing mpls lb assigned-sids"
+
+    state_mapping = {
+        "C": "In conflict",
+        "S": "Shared",
+        "R": "In range"
+    }
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # 12345   R
+        # 12345    S ISIS     2        N   N   192.168.0.1 Ethernet1
+        p1 = re.compile(r"^(?P<sid>\d+) +(?P<state>[CSR])(?: +(?P<protocol>\w+) +"
+                        r"(?P<topoid>\d+) +(?P<lan>\w+) +(?P<pro>\w+) +"
+                        r"(?P<neighbor>[\d\.]+) +(?P<interface>[\w\/\.]+))?$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 12345   R
+            # 12345    S ISIS     2        N   N   192.168.0.1 Ethernet1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+
+                sid_dict = ret_dict.setdefault("segment_routing", {})\
+                                   .setdefault("sid", {})\
+                                   .setdefault(groups["sid"], {})
+
+                sid_dict.update({"state": self.state_mapping[groups["state"]]})
+
+                if groups["protocol"]:
+                    sid_dict.update({"protocol": groups["protocol"]})
+                    sid_dict.update({"topoid": int(groups['topoid'])})
+                    sid_dict.update({"lan": groups["lan"]})
+                    sid_dict.update({"pro": groups["pro"]})
+                    sid_dict.update({"neighbor": groups["neighbor"]})
+                    sid_dict.update({"interface": groups["interface"]})
 
         return ret_dict
