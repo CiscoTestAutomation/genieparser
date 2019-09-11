@@ -148,6 +148,7 @@
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+
 --------------------------------------------------------------------------------
                                 ROUTING
 --------------------------------------------------------------------------------
@@ -182,3 +183,9 @@
     * Updated ShowSpanningTreeSummary:
         * Changed some schema keywords to Optional
         * Refined regex for various formats
+
+--------------------------------------------------------------------------------
+                                ARP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowArpTrafficDetail to parse drop_adj key from output
