@@ -264,14 +264,14 @@ class ShowSpanningTreeSummarySchema(MetaParser):
 
     schema = {
         'root_bridge_for': str,
-        'mst_type': str,
+        Optional('mst_type'): str,
         'port_type_default': bool,
         'bpdu_guard':bool,
         'bpdu_filter': bool,
         'bridge_assurance': bool,
         'loop_guard': bool,
         'path_cost_method': str,
-        'pvst_simulation': bool,
+        Optional('pvst_simulation'): bool,
         'vpc_peer_switch': bool,
         'vpc_peer_switch_status': str,
         'stp_lite': bool,
@@ -315,17 +315,18 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
         ret_dict = {}
 
-        p1 = re.compile(r'^Switch\s+is\s+in\s+(?P<mode>\w+)\s+mode\s+\((?P<mst_type>[\w+\-\s+]+)\)$')
-        p2 = re.compile(r'^Root\s+bridge\s+for\:\s+(?P<root_bridge_for>\w+)$')
-        p3 = re.compile(r'^Port\s+Type\s+Default +\s+is\s+(?P<port_type_default>\w+)$')
+        p1 = re.compile(r'^Switch +is +in +(?P<mode>[\S]+) +mode(?: +\((?P<mst_type>[\w\s]+)\))?$')
+        p2 = re.compile(r'^Root +bridge +for: +(?P<root_bridge_for>[\S, ]+)$')
+        p3 = re.compile(r'^Port +Type +Default\s+is +(?P<port_type_default>\w+)$')
         p4 = re.compile(r'^Edge\s+Port\s+\[PortFast\]\s+BPDU\s+(?P<port_type>\w+)'
                         '\s+Default\s+is\s+(?P<bpdu_bool>\w+)$')
-        p5 = re.compile(r'^Bridge\s+Assurance +\s+is\s+(?P<bridge_assurance>\w+)$')
-        p6 = re.compile(r'^Loopguard\s+Default +\s+is\s+(?P<loop_guard>\w+)$')
-        p7 = re.compile(r'^Pathcost\smethod\s+used +\s+is\s+(?P<path_cost_method>\w+)$')
+        p5 = re.compile(r'^Bridge +Assurance\s+is +(?P<bridge_assurance>\w+)$')
+        p6 = re.compile(r'^Loopguard +Default\s+is +(?P<loop_guard>\w+)$')
+        p7 = re.compile(r'^(?:Configured +)?Pathcost +method +used\s+is '
+                         '+(?P<path_cost_method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
         p8 = re.compile(r'^PVST\s+Simulation +\s+is\s+(?P<pvst_simulation>\w+)$')
-        p9 = re.compile(r'^vPC\s+peer-switch +\s+is\s+(?P<vpc_peer_switch>\w+)\s+\((?P<vpc_peer_switch_status>[\w+\-]+)\)$')
-        p10 = re.compile(r'^STP-Lite +\s+is\s+(?P<stp_lite>\w+)$')
+        p9 = re.compile(r'^vPC +peer-switch\s+is +(?P<vpc_peer_switch>\w+)(?: +\((?P<vpc_peer_switch_status>[\S]+)?\))$')
+        p10 = re.compile(r'^STP-Lite\s+is +(?P<stp_lite>\w+)$')
         p11 = re.compile(r'^(?P<mode_name>\w+) *\s+(?P<blocking>\d+) '
                         '*\s+(?P<listening>\d+) *\s+(?P<learning>\d+) '
                         '*\s+(?P<forwarding>\d+) *\s+(?P<stp_active>\d+)$')
@@ -333,27 +334,46 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                         '*\s+(?P<listenings>\d+) *\s+(?P<learnings>\d+) '
                         '*\s+(?P<forwardings>\d+) *\s+(?P<stp_actives>\d+)$')
 
+        p13 = re.compile(r'^(?P<root_bridge_for>(?:(?:[\w-]+, +)+)?[\w-]+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
+            # Switch is in rapid-pvst mode
+            # Switch is in mst mode (IEEE Standard)
             m = p1.match(line)
             if m:
                 mode = m.groupdict()['mode']
                 mode_dict = ret_dict.setdefault('mode', {}).setdefault(mode, {})
-                ret_dict['mst_type'] = m.groupdict()['mst_type']
+                if m.groupdict()['mst_type']:
+                    ret_dict['mst_type'] = m.groupdict()['mst_type']
+
                 continue
 
+            # Root bridge for: MST0000
+            # Root bridge for: VLAN0002
+            # Root bridge for: VLAN0109-VLAN0110, VLAN0122, VLAN0202-VLAN0205
             m = p2.match(line)
             if m:
                 ret_dict['root_bridge_for'] = m.groupdict()['root_bridge_for']
                 continue
-            
+
+            # VLAN0207-VLAN0209, VLAN0212-VLAN0215, VLAN0222-VLAN0224, VLAN0232-VLAN0234
+            # VLAN0242, VLAN0244, VLAN0253-VLAN0254, VLAN0264, VLAN0274, VLAN0280-VLAN028
+            m = p13.match(line)
+            if m:
+                ret_dict['root_bridge_for'] += ', {}'.format(m.groupdict()['root_bridge_for'])
+                continue
+
+            # Port Type Default                        is disable
             m = p3.match(line)
             if m:
                 availability = True if 'enabled' in line.lower() else False
                 ret_dict['port_type_default'] = availability
                 continue
 
+            # Edge Port [PortFast] BPDU Guard Default  is disabled
+            # Edge Port [PortFast] BPDU Filter Default is disabled
             m = p4.match(line)
             if m:
                 bpdu_type = m.groupdict()['bpdu_bool'].lower()
@@ -367,6 +387,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                     ret_dict['bpdu_filter'] = availability
                 continue
 
+            # Bridge Assurance                         is enabled
             m = p5.match(line)
             if m:
                 bridge_assurance = m.groupdict()['bridge_assurance']
@@ -374,6 +395,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 ret_dict['bridge_assurance'] = availability
                 continue
 
+            # Loopguard Default                        is disabled
             m = p6.match(line)
             if m:
                 loop_guard = m.groupdict()['loop_guard']
@@ -381,18 +403,24 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 ret_dict['loop_guard'] = availability
                 continue
 
+            # Configured Pathcost method used is short (Operational value is long)
+            # Pathcost method used                     is short
             m = p7.match(line)
             if m:
                 ret_dict['path_cost_method'] = m.groupdict()['path_cost_method']
                 continue
 
+            # PVST Simulation              is enabled
+            # PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
             m = p8.match(line)
             if m:
                 pvst_simulation = m.groupdict()['pvst_simulation']
                 availability = True if 'enabled' in line else False
                 ret_dict['pvst_simulation'] = availability
                 continue
-            
+
+            # vPC peer-switch                          is enabled (non-operational)
+            # vPC peer-switch                          is enabled (operational)
             m = p9.match(line)
             if m:
                 availability = True if 'enabled' in line else False
@@ -400,6 +428,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 ret_dict['vpc_peer_switch_status'] = m.groupdict()['vpc_peer_switch_status']
                 continue
 
+            # STP-Lite                                 is enabled
             m = p10.match(line)
             if m:
                 stp_lite = m.groupdict()['stp_lite']
@@ -407,12 +436,16 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 ret_dict['stp_lite'] = availability
                 continue
 
+            # VLAN0109                     0         0        0          3          3
+            # VLAN0110                     0         0        0          2          2
             m = p11.match(line)
             if m:
                 mode_name_dict = mode_dict.setdefault(m.groupdict()['mode_name'], {})
                 group = m.groupdict()
                 mode_name_dict.update({k: int(v) for k,v in group.items() if 'mode_name' not in k})
                 continue
+
+            # 1 mst                        1         0        0          0          1   
             m = p12.match(line)
             if m:
                 stats_dict = ret_dict.setdefault('total_statistics', {})
@@ -477,8 +510,8 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                         Any(): {
                             'status': str,
                             'name': str,
-                            'bridge_assurance_inconsistent': bool,
-                            'vpc_peer_link_inconsistent': bool,
+                            Optional('bridge_assurance_inconsistent'): bool,
+                            Optional('vpc_peer_link_inconsistent'): bool,
                             'cost': int,
                             'port_priority': int,
                             'port_num': int,
@@ -495,10 +528,10 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                                 'forward_delay': int,
                                 'hold': int,
                             },
-                            'port_type' : str,
+                            Optional('port_type'): str,
                             'link_type': str,
                             Optional('internal'): bool,
-                            Optional('loop_guard'): bool,
+                            Optional('root_guard'): bool,
                             Optional('pvst_simulation'): bool,
                             'counters': {
                                 'bpdu_sent': int,
@@ -515,6 +548,15 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
     '''Parser for:
             show spanning-­tree detail
     '''
+    MODE_NAME_MAP = {'mstp': 'mstp',
+                     'ieee': 'pvst',
+                     'rstp': 'rapid_pvst'}
+    MODE_INST_MAP = {'mstp': 'mst_instances',
+                     'ieee': 'vlans',
+                     'rstp': 'vlans'}
+    MODE_KEY_MAP = {'mstp': 'mst_id',
+                     'ieee': 'vlan_id',
+                     'rstp': 'vlan_id'}
 
     cli_command = 'show spanning-­tree detail'
 
@@ -549,22 +591,20 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                         '\s+last\s+change\s+occurred\s+(?P<time_since_topology_change>'
                         '[\w\.\:]+)(\s+ago)?$')
 
-        p6 = re.compile(r'^Times\:  hold\s+(?P<hold>\d+),\s+topology'
+        p6 = re.compile(r'^Times\:\s+hold\s+(?P<hold>\d+),\s+topology'
                         '\s+change\s+(?P<topology_change>\d+),'
                         '\s+notification\s+(?P<notification>\d+)$')
 
-        p7 = re.compile(r'^hello\s+(?P<hello>\d+),\smax\s+age\s+'
-                        '(?P<max_age>\d+),\s+forward\s+delay\s+'
-                        '(?P<forwarding_delay>\d+)$')
+        p7 = re.compile(r'^hello +(?P<hello>\d+), +max +age +(?P<max_age>\d+),'
+                         ' +forward +delay +(?P<forwarding_delay>[\d]+)')
 
         p8 = re.compile(r'^Timers:\s+hello\s+(?P<hello>\d+),'
                         '\s+topology\s+change\s+(?P<topology_change>\d+)'
                         ',\s+notification\s+(?P<notification>\d+)'
                         '(,\s+aging\s+(?P<aging>\d+))?$')
 
-        p9 = re.compile(r'^Port\s+(?P<port_num>\d+)\s*'
-                        '\((?P<name>(\w+\-\w+))+(,\s\w+\s\w+\-\w+)*'
-                        '\)\s+of\s+(?P<inst>\w+)\s+is\s+(?P<status>\w+)')
+        p9 = re.compile(r'^Port +(?P<port_num>\d+) +\((?P<name>[\S]+)'
+                         '(?:(, +[\w\s\-]+))?\) +of +(?P<inst>\w+) +is +(?P<status>\w+)')
 
         p9_1 = re.compile(r'^ce (?P<bridge_assurance_inconsistent>\w+)\,\s+VPC\sPeer'
                         '\-link\s+(?P<vpc_peer_link_inconsistent>\w+)\)$')
@@ -592,10 +632,10 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
         p15 = re.compile(r'^Number\s+of\s+transitions\s+to\s+forwarding'
                         '\s+state:\s+(?P<number_of_forward_transitions>\d+)$')
 
-        p15_1 = re.compile(r'^The port type is (?P<port_type>\w+)$')
+        p15_1 = re.compile(r'^The +port +type +is +(?P<port_type>[\S]+)$')
 
-        p16 = re.compile(r'^Link\s+type\s+is\s+(?P<link_type>[\w\-]+)'
-                        '\s+by\s+default,\s*(?P<internal>\w+)$')
+        p16 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+)'
+                          '(?: +by +default(?:, +(?P<internal>\S+))?)?$')
 
         p17 = re.compile(r'^PVST\s+Simulation\s+is\s+'
                         '(?P<pvst_simulation>\w+)\s+by\s+default$')
@@ -603,30 +643,32 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
         p18 = re.compile(r'^BPDU:\s+sent\s+(?P<bpdu_sent>\d+),'
                         '\s+received\s+(?P<bpdu_received>\d+)$')
 
+        p19 = re.compile(r'^from +(?P<topology_from_port>[\w\.\/\-]+)$')
+
+        p20 = re.compile(r'^Root +guard +is (?P<root_guard>\S+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
 
         #  MST0000 is executing the mstp compatible Spanning Tree protocol
+        # VLAN0109 is executing the rstp compatible Spanning Tree protocol
             m = p1.match(line)
             if m:
-                domain = m.groupdict()['mode']
-                inst = m.groupdict()['inst']
-                if 'mstp' in line.lower():
-                    domain_dict = ret_dict.setdefault(domain, {})
-                    inst_dict = ret_dict.setdefault(domain, {})\
-                        .setdefault('mst_instances', {}).setdefault(int(inst), {})
-                    inst_dict.setdefault('mst_id', int(inst))
-                elif 'ieee' in line.lower():
-                    inst_dict = ret_dict.setdefault(domain, {}).setdefault('vlans', {}).setdefault(inst, {})
-                    inst_dict.setdefault('vlan', inst)
+                group = m.groupdict()
+                mode = group['mode']
+                domain_dict = ret_dict.setdefault(self.MODE_NAME_MAP[mode], {})
+                inst_dict = domain_dict.setdefault(self.MODE_INST_MAP[mode], {}).\
+                    setdefault(int(group['inst']), {})
+                inst_dict[self.MODE_KEY_MAP[mode]] = int(group['inst'])
                 continue
 
             #   Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                inst_dict.update({k: int(v) if 'bridge_address' not in k else v for k,v in group.items()})
+                inst_dict['bridge_address'] = group.pop('bridge_address')
+                inst_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
             #   Configured hello time 10, max age 40, forward delay 30
@@ -636,10 +678,12 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 domain_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
+            # We are the root of the spanning tree
             m = p3_1.match(line)
             if m:
                 root_bool = True if m.groupdict()['root_of_the_spanning_tree'] == 'are' else False
                 inst_dict['root_of_the_spanning_tree'] = root_bool
+                continue
 
             # Topology change flag not set, detected flag not set
             m = p4.match(line)
@@ -655,6 +699,12 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             if m:
                 inst_dict['topology_changes']  = int(m.groupdict()['topology_changes'])
                 inst_dict['time_since_topology_change'] = m.groupdict()['time_since_topology_change']
+                continue
+
+            #       from Port-channel24
+            m = p19.match(line)
+            if m:
+                inst_dict['topology_from_port'] = m.groupdict()['topology_from_port']
                 continue
 
             # Times:  hold 1, topology change 70, notification 10
@@ -754,14 +804,28 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             if m:
                 intf_dict['port_type'] = m.groupdict()['port_type']
                 continue
-            
+
+            # Link type is point-to-point by default
+            # Link type is point-to-point by default, Internal
             m = p16.match(line)
             if m:
                 intf_dict['link_type'] = m.groupdict()['link_type']
-                internal_bool = True if 'internal' in m.groupdict()['internal'].lower() else False
+                if m.groupdict()['internal'] == None:
+                    internal_bool = False 
+                else:
+                    internal_bool = True
+
                 intf_dict['internal'] = internal_bool
                 continue
-            
+
+            # Root guard is enabled
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['root_guard'] = True if 'enabled' in m.groupdict()['root_guard'].lower() \
+                    else False
+                continue
+
             # PVST Simulation is enabled by default
             m = p17.match(line)
             if m:

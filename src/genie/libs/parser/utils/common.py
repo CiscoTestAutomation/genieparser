@@ -117,17 +117,22 @@ def _find_command(command, data, device):
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
-            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) if word == 'vrf' or word == 'rd' or word == 'instance' or word=='vrf_type' else '(?P<{p}>.*)'.format(p=word)
+            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) \
+                if word == 'vrf' \
+                   or word == 'rd' \
+                   or word == 'instance' \
+                   or word == 'vrf_type' \
+                   or word == 'feature' \
+                else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
-        # Convert | to \|
-        reg = reg.replace('|', '\|')
+        # Convert | to \|, and ^ to \^
+        reg = reg.replace('|', '\|').replace('^', '\^')
 
         match = re.match(reg, command)
         if match:
             if device.os not in data[key].keys():
                 continue
-
             # Found a match!
             lookup = Lookup.from_device(device, packages={'parser':parser})
             # Check if all the tokens exists; take the farthest one

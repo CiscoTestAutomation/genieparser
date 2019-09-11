@@ -739,6 +739,8 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
     """ Schema for 
         'show segment-routing traffic-eng policy all'
         'show segment-routing traffic-eng policy name {name}'
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
     """
 
     schema = {
@@ -815,6 +817,19 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     },
                 },
             },
+            Optional("forwarding_id"): str,
+            Optional("stats"): {
+                "packets": int,
+                "bytes": int,
+            },
+            Optional("event_history"): {
+                Any(): {
+                    "timestamp": str,
+                    "client": str,
+                    "event_type": str,
+                    "context": str,
+                },
+            },
         },
     }
 
@@ -881,10 +896,25 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         #     State: Programmed
         p11 = re.compile(r'^State: +(?P<state>[\S]+)$')
 
+        #  Forwarding-ID: 65536 (0x18)
+        #  Forwarding-ID: 65536
+        p12 = re.compile(r'^Forwarding-ID: +(?P<id>[\d]+)(?P<extra>[\S\s]+)?$')
+
+        # Stats:
+        #   Packets: 44         Bytes: 1748
+        p13 = re.compile(r'^Packets: +(?P<packets>[\d]+) +Bytes: +(?P<bytes>[\d]+)$')
+
+        # Event history:
+        #   Timestamp                   Client                  Event type              Context: Value
+        #   08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+        p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+) +(?P<client>(?:[\S]+ )+) '
+                          '+(?P<event_type>(?:[\S]+ )+) +(?P<context>(?: [\S]+)+: +(?:[\s\S]+))$')
+
         # initial variables
         ret_dict = {}
 
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.strip()
             if not line:
                 continue
@@ -899,6 +929,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 policy_dict.update({'name': name})
                 policy_dict.update({'color': int(group['color'])})
                 policy_dict.update({'end_point': group['end_point']})
+                event_index = 0
                 continue
 
             # Status:
@@ -1006,7 +1037,54 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 bind_dict.update({'state': group['state'].lower()})
                 continue
 
+            #   Forwarding-ID: 65536 (0x18)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                policy_dict.update({'forwarding_id': group['id']})
+                continue
+
+            #   Packets: 44         Bytes: 1748
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                stats = policy_dict.setdefault('stats', {})
+                stats.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # Timestamp                   Client                  Event type              Context: Value 
+            # 08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            m = p14.match(line)
+            if m:
+                event_index += 1
+                group = m.groupdict()
+                event = policy_dict.setdefault('event_history', {}).setdefault(event_index, {})
+                event.update({k: v.strip() for k, v in group.items()})
+                continue
+
         return ret_dict
+
+class ShowSegmentRoutingTrafficEngPolicyDetail(ShowSegmentRoutingTrafficEngPolicy):
+    """ Parser for 
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
+    """
+
+    cli_command = ['show segment-routing traffic-eng policy all detail',
+                   'show segment-routing traffic-eng policy name {name} detail']
+
+    def cli(self, name=None, output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[1].format(name=name)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out)
 
 
 # ====================================================
