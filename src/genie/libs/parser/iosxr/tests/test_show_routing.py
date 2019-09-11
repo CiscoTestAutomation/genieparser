@@ -412,6 +412,155 @@ class test_show_route_ipv4(unittest.TestCase):
         },
     }
 
+    golden_output_3_with_vrf = {'execute.return_value':'''
+        show route vrf VRF1 ipv4
+
+        Thu Sep  5 14:14:08.981 UTC
+
+        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+               D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+               N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+               E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+               i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+               ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+               U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+               A - access/subscriber, a - Application route
+               M - mobile route, r - RPL, (!) - FRR Backup path
+
+        Gateway of last resort is 192.168.1.1 to network 0.0.0.0
+
+        B*   0.0.0.0/0 [200/0] via 192.168.4.4 (nexthop in vrf default), 08:11:19
+        B    192.168.1.2/18 [200/0] via 192.168.4.5 (nexthop in vrf default), 1w5d
+        B    192.168.1.3/27 [20/0] via 192.168.4.6, 5d13h        
+        L    192.168.1.4/32 is directly connected, 36w5d, GigabitEthernet0/0/1/8        
+        C    192.168.1.5/29 is directly connected, 36w5d, BVI3001
+        L    192.168.1.6/32 [0/0] via 192.168.4.7, 36w5d, BVI3001
+        L    192.168.1.7/32 is directly connected, 36w5d, BVI3001       
+    '''}
+
+    golden_parsed_output_3_with_vrf = {
+        "vrf": {
+            "VRF1": {
+                "address_family": {
+                    "ipv4": {
+                        "routes": {
+                            "0.0.0.0/0": {
+                                "route": "0.0.0.0/0",
+                                "active": True,
+                                "metric": 0,
+                                "route_preference": 200,
+                                "source_protocol_codes": "B*",
+                                "source_protocol": "bgp",
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "192.168.4.4",
+                                            "updated": "08:11:19",
+                                        }
+                                    }
+                                },
+                            },
+                            "192.168.1.2/18": {
+                                "route": "192.168.1.2/18",
+                                "active": True,
+                                "metric": 0,
+                                "route_preference": 200,
+                                "source_protocol_codes": "B",
+                                "source_protocol": "bgp",
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "192.168.4.5",
+                                            "updated": "1w5d",
+                                        }
+                                    }
+                                },
+                            },
+                            "192.168.1.3/27": {
+                                "route": "192.168.1.3/27",
+                                "active": True,
+                                "metric": 0,
+                                "route_preference": 20,
+                                "source_protocol_codes": "B",
+                                "source_protocol": "bgp",
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "192.168.4.6",
+                                            "updated": "5d13h",
+                                        }
+                                    }
+                                },
+                            },
+                            "192.168.1.4/32": {
+                                "route": "192.168.1.4/32",
+                                "active": True,
+                                "source_protocol_codes": "L",
+                                "source_protocol": "local",
+                                "next_hop": {
+                                    "outgoing_interface": {
+                                        "GigabitEthernet0/0/1/8": {
+                                            "outgoing_interface": "GigabitEthernet0/0/1/8",
+                                            "updated": "36w5d",
+                                        }
+                                    }
+                                },
+                            },
+                            "192.168.1.5/29": {
+                                "route": "192.168.1.5/29",
+                                "active": True,
+                                "source_protocol_codes": "C",
+                                "source_protocol": "connected",
+                                "next_hop": {
+                                    "outgoing_interface": {
+                                        "BVI3001": {
+                                            "outgoing_interface": "BVI3001",
+                                            "updated": "36w5d",
+                                        }
+                                    }
+                                },
+                            },
+                            "192.168.1.6/32": {
+                                "route": "192.168.1.6/32",
+                                "active": True,
+                                "metric": 0,
+                                "source_protocol_codes": "L",
+                                "source_protocol": "local",
+                                "next_hop": {
+                                    "next_hop_list": {
+                                        1: {
+                                            "index": 1,
+                                            "next_hop": "192.168.4.7",
+                                            "updated": "36w5d",
+                                            "outgoing_interface": "BVI3001",
+                                        }
+                                    }
+                                },
+                            },
+                            "192.168.1.7/32": {
+                                "route": "192.168.1.7/32",
+                                "active": True,
+                                "source_protocol_codes": "L",
+                                "source_protocol": "local",
+                                "next_hop": {
+                                    "outgoing_interface": {
+                                        "BVI3001": {
+                                            "outgoing_interface": "BVI3001",
+                                            "updated": "36w5d",
+                                        }
+                                    }
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteIpv4(device=self.device)
@@ -432,6 +581,14 @@ class test_show_route_ipv4(unittest.TestCase):
         obj = ShowRouteIpv4(device=self.device)
         parsed_output = obj.parse(vrf='all')
         self.assertEqual(parsed_output, self.golden_parsed_output_2_with_vrf)
+
+
+    def test_show_route_ipv4_3_with_vrf(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3_with_vrf)
+        obj = ShowRouteIpv4(device=self.device)        
+        parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3_with_vrf)
 
 
 # ============================================
