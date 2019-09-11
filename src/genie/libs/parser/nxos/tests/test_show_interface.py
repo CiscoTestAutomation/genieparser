@@ -3306,11 +3306,39 @@ Lo0           up         --
 
 '''}
 
+    golden_output2 = {'execute.return_value': '''
+        show interface Ethernet1/1 brief
+
+        --------------------------------------------------------------------------------
+        Ethernet        VLAN  Type Mode   Status  Reason                   Speed     Port
+        Interface                                                                    Ch #
+        --------------------------------------------------------------------------------
+        Eth1/1          --    eth  routed up      none                       1000(D) --
+                '''}
+
+    golden_parsed_output2 = {
+        'interface': 
+            {'ethernet': 
+                {'Eth1/1': 
+                    {'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'none',
+                    'speed': '1000(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '--'}}}}
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse(interface="Ethernet1/1")
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
