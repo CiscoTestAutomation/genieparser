@@ -1,4 +1,4 @@
-"""show_interface.py
+'''show_interface.py
 
 NXOS parsers for the following show commands:
     * show interface
@@ -6,8 +6,12 @@ NXOS parsers for the following show commands:
     * show ip interface vrf all
     * show ipv6 interface detail vrf all
     * show interface switchport
-    * show running-config interface <word>
-"""
+    * show ip interface brief
+    * show ip interface brief | vlan
+    * show interface brief
+    * show interface {interface} brief
+    * show running-config interface {intf}
+'''
 
 # python
 import re
@@ -2573,36 +2577,33 @@ class ShowInterfaceBriefSchema(MetaParser):
 # Parser for 'show interface brief'
 # =================================
 class ShowInterfaceBrief(ShowInterfaceBriefSchema):
-    """Parser for show interface brief"""
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    cli_command = 'show interface brief'
-    exclude = [
-    'reason']
+    '''Parser for:
+        * show interface brief
+        * show interface {interface} brief
+    '''
 
-    def __init__ (self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.cmd = self.cli_command
+    cli_command = ['show interface brief',
+                   'show interface {interface} brief']
 
-    def cli(self, output=None):
-        ''' parsing mechanism: cli
+    exclude = ['reason']
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
+    def cli(self, interface=None, output=None):
+
         if output is None:
-            out = self.device.execute(self.cmd)
+            # Determine command
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            # Execute command
+            out = self.device.execute(cmd)
         else:
             out = output
 
         interface_dict = {}
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
+
             p1 = re.compile(r'^\s*Port +VRF +Status +IP Address +Speed +MTU$')
             m = p1.match(line)
             if m:
@@ -2744,12 +2745,11 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                     {Optional('shutdown'): bool,
                      Optional('switchport'): bool,
                      Optional('switchport_mode'): str,
-                     Optional('switchport_trunck_allowed_vlan'): str,
-                     Optional('channel_group'): {
-                         Any(): {
-                             'mode': str,
-                         }
-                     },
+                     Optional('trunk_vlans'): str,
+                     Optional('port_channel'):{
+                        Optional('port_channel_mode'): str,
+                        Optional('port_channel_int'): str,
+                    },
                      Optional('host_reachability_protocol'): str,
                      Optional('source_interface'): str,
                      Optional('member_vni'):
@@ -2774,11 +2774,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
     def cli(self, intf, output=None):
 
-        cmd = ""
         if output is None:
-            if intf:
-                cmd = self.cli_command.format(intf=intf)
-                out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command.format(intf=intf))
         else:
             out = output
 
@@ -2789,6 +2786,7 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             line = line.strip()
 
             # interface nve1
+            # interface Ethernet1/1
             p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
             m = p1.match(line)
             if m:
@@ -2894,22 +2892,21 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 continue
             
             # switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
-            p10 = re.compile(r'^switchport +trunk +allowed +vlan +(?P<switchport_trunck_allowed_vlan>\S+)$')
+            p10 = re.compile(r'^switchport +trunk +allowed +vlan +(?P<trunk_vlans>\S+)$')
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                interface_dict.update({'switchport_trunck_allowed_vlan': group['switchport_trunck_allowed_vlan']})
+                interface_dict.update({'trunk_vlans': group['trunk_vlans']})
                 continue
             
             # channel-group 1 mode active
-            p11 = re.compile(r'^channel-group +(?P<channel_group>\d+) +mode +(?P<mode>\S+)$')
+            p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                mode_dict = interface_dict.setdefault('channel_group', {}). \
-                                setdefault(int(group['channel_group']), {})
-                
-                mode_dict.update({'mode': group['mode']})
+                port_channel_dict = interface_dict.setdefault('port_channel', {})
+                port_channel_dict.update({'port_channel_int': group['port_channel_int']})
+                port_channel_dict.update({'port_channel_mode': group['mode']})
                 continue
 
         return ret_dict

@@ -4782,7 +4782,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         p1 = re.compile(r'^\s*BGP *instance *(?P<instance_number>[0-9]+):'
                         ' *(?P<instance>[a-zA-Z0-9\-\_\']+)$')
         p2 = re.compile(r'^\s*VRF: *(?P<vrf>[a-zA-Z0-9\_]+)$')
-        p3 = re.compile(r'^\s*Address *Family: *(?P<address_family>[a-zA-Z0-9\s]+)$')
+        p3 = re.compile(r'^\s*Address *Family: *(?P<address_family>[\S\s]+)$')
         p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
                             ' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-zA-Z0-9]+)$')
@@ -4869,7 +4869,7 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
                    
             # Address Family: VPNv4 Unicast
-
+            # Address family: IPv6 Labeled-unicast
             m = p3.match(line)
             if m:
                 address_family = m.groupdict()['address_family'].lower()

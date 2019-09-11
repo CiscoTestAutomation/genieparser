@@ -165,6 +165,8 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         "bpdu_filter": False,
         "bpdu_guard": False,
         "bridge_assurance": True,
+        "pvst_simulation": True,
+        "pvst_simulation_status": "inactive",
         "configured_pathcost": {
             "method": "short"
         },
@@ -295,6 +297,346 @@ class test_show_spanning_tree_summary(unittest.TestCase):
 
      '''
     }
+    
+    golden_output_1 = {'execute.return_value': '''\
+        show spanning-tree summary
+        Switch is in rapid-pvst mode
+        Root bridge for: VLAN0001, VLAN0115-VLAN0116, VLAN0118-VLAN0119, VLAN0121
+          VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, VLAN0521-VLAN0522
+          VLAN0540, VLAN0601-VLAN0604, VLAN0606, VLAN0701, VLAN0801-VLAN0806
+          VLAN1111-VLAN1116, VLAN1506, VLAN1509, VLAN1601
+        EtherChannel misconfig guard            is enabled
+        Extended system ID                      is enabled
+        Portfast Default                        is disabled
+        Portfast Edge BPDU Guard Default        is disabled
+        Portfast Edge BPDU Filter Default       is disabled
+        Loopguard Default                       is disabled
+        PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
+        Bridge Assurance                        is enabled
+        UplinkFast                              is disabled
+        BackboneFast                            is disabled
+        Pathcost method used                    is short
+
+        Name                   Blocking Listening Learning Forwarding STP Active
+        ---------------------- -------- --------- -------- ---------- ----------
+        VLAN0001                     0         0        0          2          2
+        VLAN0115                     0         0        0          1          1
+        VLAN0116                     0         0        0          1          1
+        VLAN0118                     0         0        0          1          1
+        VLAN0119                     0         0        0          1          1
+        VLAN0121                     0         0        0          1          1
+        VLAN0180                     0         0        0          1          1
+        VLAN0501                     0         0        0          1          1
+        VLAN0502                     0         0        0          1          1
+        VLAN0503                     0         0        0          3          3
+        VLAN0506                     0         0        0          1          1
+        VLAN0508                     0         0        0          1          1
+        VLAN0509                     0         0        0          1          1
+        VLAN0510                     0         0        0          1          1
+        VLAN0511                     0         0        0          1          1
+        VLAN0512                     0         0        0          1          1
+        VLAN0513                     0         0        0          1          1
+        VLAN0514                     0         0        0          1          1
+        VLAN0515                     0         0        0          1          1
+        VLAN0516                     0         0        0          1          1
+        VLAN0517                     0         0        0          1          1
+        VLAN0518                     0         0        0          1          1
+        VLAN0521                     0         0        0          1          1
+        VLAN0522                     0         0        0          1          1
+        VLAN0540                     0         0        0          3          3
+        VLAN0601                     0         0        0          1          1
+        VLAN0602                     0         0        0          1          1
+        VLAN0603                     0         0        0          2          2
+        VLAN0604                     0         0        0          1          1
+        VLAN0606                     0         0        0          2          2
+        VLAN0701                     0         0        0          1          1
+        VLAN0801                     0         0        0          1          1
+        VLAN0802                     0         0        0          1          1
+        VLAN0803                     0         0        0          1          1
+        VLAN0804                     0         0        0          1          1
+        VLAN0805                     0         0        0          1          1
+        VLAN0806                     0         0        0          1          1
+        VLAN0916                     0         0        0          2          2
+        VLAN1111                     0         0        0          2          2
+        VLAN1112                     0         0        0          2          2
+        VLAN1113                     0         0        0          2          2
+        VLAN1114                     0         0        0          2          2
+        VLAN1115                     0         0        0          2          2
+        VLAN1116                     0         0        0          2          2
+        VLAN1125                     0         0        0          1          1
+        VLAN1506                     0         0        0          1          1
+        VLAN1509                     0         0        0          1          1
+        VLAN1601                     0         0        0          1          1
+        ---------------------- -------- --------- -------- ---------- ----------
+        48 vlans                     0         0        0         62         62
+     '''
+    }
+
+    golden_parsed_output_1 = {
+        'backbone_fast': False,
+        'bpdu_filter': False,
+        'bpdu_guard': False,
+        'bridge_assurance': True,
+        'configured_pathcost': {'method': 'short'},
+        'etherchannel_misconfig_guard': True,
+        'extended_system_id': True,
+        'loop_guard': False,
+        'mode': {'rapid_pvst': {'VLAN0001': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN0115': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0116': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0118': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0119': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0121': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0180': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0501': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0502': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0503': {'blocking': 0,
+                                              'forwarding': 3,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 3},
+                                'VLAN0506': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0508': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0509': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0510': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0511': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0512': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0513': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0514': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0515': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0516': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0517': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0518': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0521': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0522': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0540': {'blocking': 0,
+                                             'forwarding': 3,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 3},
+                                'VLAN0601': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0602': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0603': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN0604': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0606': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN0701': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0801': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0802': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0803': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0804': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0805': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0806': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN0916': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1111': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1112': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1113': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1114': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1115': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1116': {'blocking': 0,
+                                              'forwarding': 2,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 2},
+                                'VLAN1125': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN1506': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN1509': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1},
+                                'VLAN1601': {'blocking': 0,
+                                              'forwarding': 1,
+                                              'learning': 0,
+                                              'listening': 0,
+                                              'stp_active': 1}}},
+            'portfast_default': False,
+            'pvst_simulation': True,
+            'pvst_simulation_status': 'inactive',
+            'root_bridge_for': 'VLAN0001, VLAN0115-VLAN0116, VLAN0118-VLAN0119, VLAN0121, '
+                                'VLAN0180, VLAN0501-VLAN0503, VLAN0506, VLAN0508-VLAN0518, '
+                                'VLAN0521-VLAN0522, VLAN0540, VLAN0601-VLAN0604, VLAN0606, '
+                                'VLAN0701, VLAN0801-VLAN0806, VLAN1111-VLAN1116, VLAN1506, '
+                                'VLAN1509, VLAN1601',
+            'total_statistics': {'blockings': 0,
+                              'forwardings': 62,
+                              'learnings': 0,
+                              'listenings': 0,
+                              'num_of_vlans': 48,
+                              'stp_actives': 62},
+            'uplink_fast': False
+    }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -329,6 +671,13 @@ class test_show_spanning_tree_summary(unittest.TestCase):
         obj = ShowSpanningTreeSummary(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_rpvst)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_1)
+        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 class test_show_spanning_tree_detail(unittest.TestCase):
     dev1 = Device(name='empty')
@@ -690,6 +1039,340 @@ class test_show_spanning_tree_detail(unittest.TestCase):
 
     '''
     }
+    golden_output_1 = {'execute.return_value': '''\
+        VLAN0001 is executing the rstp compatible Spanning Tree protocol
+          Bridge Identifier has priority 24576, sysid 1, address 000e.3962.0f40
+          Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+          We are the root of the spanning tree
+          Topology change flag not set, detected flag not set
+          Number of topology changes 10 last change occurred 38w1d ago
+                  from GigabitEthernet8/10
+          Times:  hold 1, topology change 35, notification 2
+                  hello 2, max age 20, forward delay 15 
+          Timers: hello 0, topology change 0, notification 0, aging 480
+
+         Port 1671 (Port-channel220) of VLAN0001 is designated forwarding 
+           Port path cost 1, Port priority 128, Port Identifier 128.1671.
+           Designated root has priority 24577, address 000e.3962.0f40
+           Designated bridge has priority 24577, address 000e.3962.0f40
+           Designated port id is 128.1671, designated path cost 0
+           Timers: message age 0, forward delay 0, hold 0
+           Number of transitions to forwarding state: 1
+           Link type is point-to-point by default
+           BPDU: sent 20120147, received 0
+
+         Port 1673 (Port-channel265) of VLAN0001 is designated forwarding 
+           Port path cost 3, Port priority 128, Port Identifier 128.1673.
+           Designated root has priority 24577, address 000e.3962.0f40
+           Designated bridge has priority 24577, address 000e.3962.0f40
+           Designated port id is 128.1673, designated path cost 0
+           Timers: message age 0, forward delay 0, hold 0
+           Number of transitions to forwarding state: 1
+           The port is in the portfast edge trunk mode
+           Link type is point-to-point by default
+           BPDU: sent 21320048, received 0
+
+                  
+        VLAN0115 is executing the rstp compatible Spanning Tree protocol
+          Bridge Identifier has priority 24576, sysid 115, address 000e.3962.0f40
+          Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+          We are the root of the spanning tree
+          Topology change flag not set, detected flag not set
+          Number of topology changes 2 last change occurred 33w6d ago
+                  from Port-channel210
+          Times:  hold 1, topology change 35, notification 2
+                  hello 2, max age 20, forward delay 15 
+          Timers: hello 0, topology change 0, notification 0, aging 480
+
+         Port 1670 (Port-channel210) of VLAN0115 is designated forwarding 
+           Port path cost 2, Port priority 128, Port Identifier 128.1670.
+           Designated root has priority 24691, address 000e.3962.0f40
+           Designated bridge has priority 24691, address 000e.3962.0f40
+           Designated port id is 128.1670, designated path cost 0
+           Timers: message age 0, forward delay 0, hold 0
+           Number of transitions to forwarding state: 1
+           Link type is point-to-point by default
+           BPDU: sent 10172865, received 4
+
+                  
+        VLAN0116 is executing the rstp compatible Spanning Tree protocol
+          Bridge Identifier has priority 24576, sysid 116, address 000e.3962.0f40
+          Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+          We are the root of the spanning tree
+          Topology change flag not set, detected flag not set
+          Number of topology changes 2 last change occurred 33w6d ago
+                  from Port-channel210
+          Times:  hold 1, topology change 35, notification 2
+                  hello 2, max age 20, forward delay 15 
+          Timers: hello 0, topology change 0, notification 0, aging 480
+
+         Port 1670 (Port-channel210) of VLAN0116 is designated forwarding 
+           Port path cost 2, Port priority 128, Port Identifier 128.1670.
+           Designated root has priority 24692, address 000e.3962.0f40
+           Designated bridge has priority 24692, address 000e.3962.0f40
+           Designated port id is 128.1670, designated path cost 0
+           Timers: message age 0, forward delay 0, hold 0
+           Number of transitions to forwarding state: 1
+           Link type is point-to-point by default
+           BPDU: sent 10172829, received 4
+
+                  
+        VLAN0118 is executing the rstp compatible Spanning Tree protocol
+          Bridge Identifier has priority 24576, sysid 118, address 000e.3962.0f40
+          Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+          We are the root of the spanning tree
+          Topology change flag not set, detected flag not set
+          Number of topology changes 2 last change occurred 33w6d ago
+                  from Port-channel210
+          Times:  hold 1, topology change 35, notification 2
+                  hello 2, max age 20, forward delay 15 
+          Timers: hello 0, topology change 0, notification 0, aging 480
+
+         Port 1670 (Port-channel210) of VLAN0118 is designated forwarding 
+           Port path cost 2, Port priority 128, Port Identifier 128.1670.
+           Designated root has priority 24694, address 000e.3962.0f40
+           Designated bridge has priority 24694, address 000e.3962.0f40
+           Designated port id is 128.1670, designated path cost 0
+           Timers: message age 0, forward delay 0, hold 0
+           Number of transitions to forwarding state: 1
+           Link type is point-to-point by default
+           BPDU: sent 10172791, received 4
+        '''
+    }
+
+    golden_parsed_output_1 = {
+        'rapid_pvst': {
+            'forwarding_delay': 15,
+            'hello_time': 2,
+            'hold_count': 6,
+            'max_age': 20,
+            'vlans': {
+                1: {
+                    'aging_timer': 480,
+                    'bridge_address': '000e.3962.0f40',
+                    'bridge_priority': 24576,
+                    'bridge_sysid': 1,
+                    'forwarding_delay': 15,
+                    'hello_time': 2,
+                    'hello_timer': 0,
+                    'hold_count': 6,
+                    'hold_time': 1,
+                    'interfaces': {
+                        'Port-channel220': {
+                            'cost': 1,
+                            'counters': {
+                                'bpdu_received': 0,
+                                'bpdu_sent': 20120147
+                            },
+                            'designated_bridge_address': '000e.3962.0f40',
+                            'designated_bridge_priority': 24577,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.1671',
+                            'designated_root_address': '000e.3962.0f40',
+                            'designated_root_priority': 24577,
+                            'forward_delay': 0,
+                            'hold': 0,
+                            'link_type': 'point-to-point',
+                            'message_age': 0,
+                            'name': 'Port-channel220',
+                            'number_of_forward_transitions': 1,
+                            'port_identifier': '128.1671.',
+                            'port_num': 1671,
+                            'port_priority': 128,
+                            'status': 
+                                'designated '
+                                'forwarding'
+                        },
+                        'Port-channel265': {
+                            'cost': 3,
+                            'counters': {
+                                'bpdu_received': 0,
+                                'bpdu_sent': 21320048
+                            },
+                            'designated_bridge_address': '000e.3962.0f40',
+                            'designated_bridge_priority': 24577,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.1673',
+                            'designated_root_address': '000e.3962.0f40',
+                            'designated_root_priority': 24577,
+                            'forward_delay': 0,
+                            'hold': 0,
+                            'link_type': 'point-to-point',
+                            'message_age': 0,
+                            'name': 'Port-channel265',
+                            'number_of_forward_transitions': 1,
+                            'port_identifier': '128.1673.',
+                            'port_num': 1673,
+                            'port_priority': 128,
+                            'status': 
+                                'designated '
+                                'forwarding'
+                            }
+                        },
+                        'max_age': 20,
+                        'notification_timer': 0,
+                        'notification_times': 2,
+                        'root_of_spanning_tree': True,
+                        'time_since_topology_change': '38w1d',
+                        'topology_change_flag': False,
+                        'topology_change_timer': 0,
+                        'topology_change_times': 35,
+                        'topology_changes': 10,
+                        'topology_detected_flag': False,
+                        'topology_from_port': 'GigabitEthernet8/10',
+                        'vlan_id': 1
+                },
+                115: {
+                    'aging_timer': 480,
+                    'bridge_address': '000e.3962.0f40',
+                    'bridge_priority': 24576,
+                    'bridge_sysid': 115,
+                    'forwarding_delay': 15,
+                    'hello_time': 2,
+                    'hello_timer': 0,
+                    'hold_count': 6,
+                    'hold_time': 1,
+                    'interfaces': {
+                        'Port-channel210': {
+                            'cost': 2,
+                            'counters': {
+                                'bpdu_received': 4,
+                                'bpdu_sent': 10172865
+                            },
+                           'designated_bridge_address': '000e.3962.0f40',
+                           'designated_bridge_priority': 24691,
+                           'designated_path_cost': 0,
+                           'designated_port_id': '128.1670',
+                           'designated_root_address': '000e.3962.0f40',
+                           'designated_root_priority': 24691,
+                           'forward_delay': 0,
+                           'hold': 0,
+                           'link_type': 'point-to-point',
+                           'message_age': 0,
+                           'name': 'Port-channel210',
+                           'number_of_forward_transitions': 1,
+                           'port_identifier': '128.1670.',
+                           'port_num': 1670,
+                           'port_priority': 128,
+                           'status':
+                                'designated '
+                                'forwarding'
+                        }
+                    },
+                    'max_age': 20,
+                    'notification_timer': 0,
+                    'notification_times': 2,
+                    'root_of_spanning_tree': True,
+                    'time_since_topology_change': '33w6d',
+                    'topology_change_flag': False,
+                    'topology_change_timer': 0,
+                    'topology_change_times': 35,
+                    'topology_changes': 2,
+                    'topology_detected_flag': False,
+                    'topology_from_port': 'Port-channel210',
+                    'vlan_id': 115
+                },
+                116: {
+                    'aging_timer': 480,
+                    'bridge_address': '000e.3962.0f40',
+                    'bridge_priority': 24576,
+                    'bridge_sysid': 116,
+                    'forwarding_delay': 15,
+                    'hello_time': 2,
+                    'hello_timer': 0,
+                    'hold_count': 6,
+                    'hold_time': 1,
+                    'interfaces': {
+                        'Port-channel210': {
+                            'cost': 2,
+                            'counters': {
+                                'bpdu_received': 4,
+                                'bpdu_sent': 10172829
+                            },
+                           'designated_bridge_address': '000e.3962.0f40',
+                           'designated_bridge_priority': 24692,
+                           'designated_path_cost': 0,
+                           'designated_port_id': '128.1670',
+                           'designated_root_address': '000e.3962.0f40',
+                           'designated_root_priority': 24692,
+                           'forward_delay': 0,
+                           'hold': 0,
+                           'link_type': 'point-to-point',
+                           'message_age': 0,
+                           'name': 'Port-channel210',
+                           'number_of_forward_transitions': 1,
+                           'port_identifier': '128.1670.',
+                           'port_num': 1670,
+                           'port_priority': 128,
+                           'status': 'designated '
+                                     'forwarding'
+                            }
+                        },
+                        'max_age': 20,
+                        'notification_timer': 0,
+                        'notification_times': 2,
+                        'root_of_spanning_tree': True,
+                        'time_since_topology_change': '33w6d',
+                        'topology_change_flag': False,
+                        'topology_change_timer': 0,
+                        'topology_change_times': 35,
+                        'topology_changes': 2,
+                        'topology_detected_flag': False,
+                        'topology_from_port': 'Port-channel210',
+                        'vlan_id': 116
+                    },
+                    118: {
+                        'aging_timer': 480,
+                        'bridge_address': '000e.3962.0f40',
+                        'bridge_priority': 24576,
+                        'bridge_sysid': 118,
+                        'forwarding_delay': 15,
+                        'hello_time': 2,
+                        'hello_timer': 0,
+                        'hold_count': 6,
+                        'hold_time': 1,
+                        'interfaces': {
+                            'Port-channel210': {
+                                'cost': 2,
+                                'counters': {
+                                    'bpdu_received': 4,
+                                    'bpdu_sent': 10172791
+                                },
+                               'designated_bridge_address': '000e.3962.0f40',
+                               'designated_bridge_priority': 24694,
+                               'designated_path_cost': 0,
+                               'designated_port_id': '128.1670',
+                               'designated_root_address': '000e.3962.0f40',
+                               'designated_root_priority': 24694,
+                               'forward_delay': 0,
+                               'hold': 0,
+                               'link_type': 'point-to-point',
+                               'message_age': 0,
+                               'name': 'Port-channel210',
+                               'number_of_forward_transitions': 1,
+                               'port_identifier': '128.1670.',
+                               'port_num': 1670,
+                               'port_priority': 128,
+                               'status': 'designated '
+                                         'forwarding'
+                            }
+                        },
+                        'max_age': 20,
+                        'notification_timer': 0,
+                        'notification_times': 2,
+                        'root_of_spanning_tree': True,
+                        'time_since_topology_change': '33w6d',
+                        'topology_change_flag': False,
+                        'topology_change_timer': 0,
+                        'topology_change_times': 35,
+                        'topology_changes': 2,
+                        'topology_detected_flag': False,
+                        'topology_from_port': 'Port-channel210',
+                        'vlan_id': 118
+                    }
+                }
+            }
+        }
 
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
@@ -708,6 +1391,7 @@ class test_show_spanning_tree_detail(unittest.TestCase):
         self.dev_c3850 = Mock(**self.golden_output_pvst)
         obj = ShowSpanningTreeDetail(device=self.dev_c3850)
         parsed_output = obj.parse()
+
         self.assertEqual(parsed_output,self.golden_parsed_output_pvst)    
 
     def test_golden_rapid_pvst(self):
@@ -717,6 +1401,12 @@ class test_show_spanning_tree_detail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_rapid_pvst)
 
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_1)
+        obj = ShowSpanningTreeDetail(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 class test_show_spanning_tree_mst_detail(unittest.TestCase):
     dev1 = Device(name='empty')
