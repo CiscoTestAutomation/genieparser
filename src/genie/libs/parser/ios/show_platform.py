@@ -282,9 +282,9 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 if any(key in descr.lower() for key in oc_key_values):
                     other_dict = parsed_output\
                         .setdefault('slot', {})\
-                        .setdefault('oc', {})\
+                        .setdefault(name, {})\
                         .setdefault('other', {})\
-                        .setdefault(name, {})                    
+                        .setdefault(name, {})
 
                     other_dict['name'] = name
                     other_dict['descr'] = descr
