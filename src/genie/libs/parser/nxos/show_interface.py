@@ -1,4 +1,4 @@
-"""show_interface.py
+'''show_interface.py
 
 NXOS parsers for the following show commands:
     * show interface
@@ -6,8 +6,12 @@ NXOS parsers for the following show commands:
     * show ip interface vrf all
     * show ipv6 interface detail vrf all
     * show interface switchport
-    * show running-config interface <word>
-"""
+    * show ip interface brief
+    * show ip interface brief | vlan
+    * show interface brief
+    * show interface {interface} brief
+    * show running-config interface {intf}
+'''
 
 # python
 import re
@@ -2573,36 +2577,33 @@ class ShowInterfaceBriefSchema(MetaParser):
 # Parser for 'show interface brief'
 # =================================
 class ShowInterfaceBrief(ShowInterfaceBriefSchema):
-    """Parser for show interface brief"""
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    cli_command = 'show interface brief'
-    exclude = [
-    'reason']
+    '''Parser for:
+        * show interface brief
+        * show interface {interface} brief
+    '''
 
-    def __init__ (self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.cmd = self.cli_command
+    cli_command = ['show interface brief',
+                   'show interface {interface} brief']
 
-    def cli(self, output=None):
-        ''' parsing mechanism: cli
+    exclude = ['reason']
 
-        Function cli() defines the cli type output parsing mechanism which
-        typically contains 3 steps: exe
-        cuting, transforming, returning
-        '''
+    def cli(self, interface=None, output=None):
+
         if output is None:
-            out = self.device.execute(self.cmd)
+            # Determine command
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            # Execute command
+            out = self.device.execute(cmd)
         else:
             out = output
 
         interface_dict = {}
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
+
             p1 = re.compile(r'^\s*Port +VRF +Status +IP Address +Speed +MTU$')
             m = p1.match(line)
             if m:
@@ -2765,11 +2766,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
     def cli(self, intf, output=None):
 
-        cmd = ""
         if output is None:
-            if intf:
-                cmd = self.cli_command.format(intf=intf)
-                out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command.format(intf=intf))
         else:
             out = output
 
@@ -2777,10 +2775,11 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
         interface_dict = {}
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # interface nve1
-            p1 = re.compile(r'^\s*interface +(?P<intf_name>[a-zA-Z0-9\-]+)$')
+            # interface Ethernet1/1
+            p1 = re.compile(r'^\s*interface +(?P<intf_name>(\S+))$')
             m = p1.match(line)
             if m:
 

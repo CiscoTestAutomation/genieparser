@@ -7585,6 +7585,57 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         Processed 15 prefixes, 15 paths
         '''}
 
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:ML26#
+        +++ ML26: executing command 'show bgp instance all all all' +++
+        show bgp instance all all all
+
+        BGP instance 0: 'default'
+        =========================
+
+        Address Family: IPv6 Labeled-unicast
+        ------------------------------------
+
+        BGP router identifier 192.168.87.47, local AS number 123123
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0800000   RD version: 41
+        BGP main routing table version 41
+        BGP NSR Initial initsync version 9 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+    '''}
+
+    golden_parsed_output2 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'ipv6 labeled-unicast': {
+                                'instance_number': '0',
+                                'router_identifier': '192.168.87.47',
+                                'local_as': 123123,
+                                'generic_scan_interval': '60',
+                                'non_stop_routing': True,
+                                'table_state': 'active',
+                                'table_id': '0xe0800000',
+                                'rd_version': 41,
+                                'bgp_table_version': 41,
+                                'nsr_initial_initsync_version': '9',
+                                'nsr_initial_init_ver_status': 'reached',
+                                'nsr_issu_sync_group_versions': '0/0',
+                                'scan_interval': 60,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device1)
@@ -7597,6 +7648,13 @@ class test_show_bgp_instance_all_vrf_all(unittest.TestCase):
         bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
         parsed_output = bgp_instance_all_all_obj.parse(vrf_type='vrf')
         self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden_all(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        bgp_instance_all_all_obj = ShowBgpInstanceAllAll(device=self.device)
+        parsed_output = bgp_instance_all_all_obj.parse(instance='all')
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # =============================================

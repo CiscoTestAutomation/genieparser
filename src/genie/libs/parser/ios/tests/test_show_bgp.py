@@ -19,7 +19,8 @@ from genie.libs.parser.ios.show_bgp import ShowBgpAllSummary,\
                                            ShowBgpAllNeighborsRoutes,\
                                            ShowBgpAllNeighborsPolicy,\
                                            ShowBgpAll,\
-                                           ShowBgpAllDetail
+                                           ShowBgpAllDetail, \
+                                           ShowBgpSummary
 
 # iosxe tests/test_show_bgp
 from genie.libs.parser.iosxe.tests.test_show_bgp import \
@@ -34,8 +35,8 @@ from genie.libs.parser.iosxe.tests.test_show_bgp import \
                                 test_show_bgp_all_neighbors_routes as test_show_bgp_all_neighbors_routes_iosxe,\
                                 test_show_ip_bgp_template_peer_policy as test_show_ip_bgp_template_peer_policy_iosxe,\
                                 test_show_ip_bgp_all_dampening_parameters as test_show_ip_bgp_all_dampening_parameters_iosxe,\
-                                test_show_bgp_all as test_show_bgp_all_iosxe
-
+                                test_show_bgp_all as test_show_bgp_all_iosxe, \
+                                test_show_bgp_summary as test_show_bgp_summary_iosxe
 
 # ===================================
 # Unit test for 'show bgp all detail'
@@ -396,6 +397,31 @@ class test_show_bgp_all(test_show_bgp_all_iosxe):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
+# ===============================================================
+# Unit test for 'show bgp summary'
+# ===============================================================
+
+class test_show_bgp_summary(test_show_bgp_summary_iosxe):
+
+    def test_show_bgp_summary_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        bgp_summary_obj = ShowBgpSummary(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = bgp_summary_obj.parse()
+
+    def test_show_bgp_summary_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpSummary(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4 unicast', rd='5918:51')
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_bgp_summary_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpSummary(device=self.device)
+        parsed_output = obj.parse(address_family='vpnv4 unicast', vrf='L3VPN-0051')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
