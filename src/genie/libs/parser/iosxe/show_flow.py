@@ -173,14 +173,35 @@ class ShowFlowExporterStatisticsSchema(MetaParser):
             Any(): {
                 'pkt_send_stats': {
                     'last_cleared': str,
-                    'pkts_sent': int,
-                    'bytes_sent': int,
-                    Optional('pkts_failed'): int,
-                    Optional('bytes_failed'): int
+                    'successfully_sent': int,
+                    'successfully_sent_bytes': int,
+                    Optional('no_fib'): int,
+                    Optional('no_fib_bytes'): int,
+                    Optional('adjacency_failure'): int,
+                    Optional('adjacency_failure_bytes'): int,
+                    Optional('enqueued_to_process_level'): int,
+                    Optional('enqueued_to_process_level_bytes'): int,
+                    Optional('enqueueing_failed'): int,
+                    Optional('enqueueing_failed_bytes'): int,
+                    Optional('ipc_failed'): int,
+                    Optional('ipc_failed_bytes'): int,
+                    Optional('output_failed'): int,
+                    Optional('output_failed_bytes'): int,
+                    Optional('fragmentation_failed'): int,
+                    Optional('fragmentation_failed_bytes'): int,
+                    Optional('encap_fixup_failed'): int,
+                    Optional('encap_fixup_failed_bytes'): int,
+                    Optional('cef_not_enabled'): int,
+                    Optional('cef_not_enabled_bytes'): int,
+                    Optional('reason_not_given'): int,
+                    Optional('reason_not_given_bytes'): int,
+                    Optional('rate_limited'): int,
+                    Optional('rate_limited_bytes'): int,
+                    Optional('no_destination_address'): int,
+                    Optional('no_destination_address_bytes'): int
                 },
                 'client_send_stats': {
                     Any(): {
-                        'client': str,
                         'records_added': {
                             'total': int,
                             Optional('sent'): int,
@@ -222,25 +243,34 @@ class ShowFlowExporterStatistics(ShowFlowExporterStatisticsSchema):
         p2 = re.compile(r"^Packet +send +statistics +\(last +cleared +(?P<last_cleared>[\d:]+) +ago\):$")
 
         # Successfully sent:         10                     (1000 bytes)
-        p3 = re.compile(r"^Successfully +sent: +(?P<pkts>\d+) +\((?P<bytes>\d+) +bytes\)$")
-
-        # Reason not given:          10                   (1000 bytes)
-        p4 = re.compile(r"^Reason +not +given: +(?P<pkts>\d+) +\((?P<bytes>\d+) +bytes\)$")
+        # No FIB:                    10                     (1000 bytes)
+        # Adjacency failure:         10                     (1000 bytes)
+        # Enqueued to process level: 10                     (1000 bytes)
+        # Enqueueing failed:         10                     (1000 bytes)
+        # IPC failed:                10                     (1000 bytes)
+        # Output failed:             10                     (1000 bytes)
+        # Fragmentation failed:      10                     (1000 bytes)
+        # Encap fixup failed:        10                     (1000 bytes)
+        # CEF not enabled:           10                     (1000 bytes)
+        # Reason not given:          10                     (1000 bytes)
+        # Rate limited:              10                     (1000 bytes)
+        # No destination address:    10                     (1000 bytes)
+        p3 = re.compile(r"^(?P<statistic>[\w\s]+): +(?P<pkts>\d+) +\((?P<bytes>\d+) +bytes\)$")
 
         # Client: client_name
-        p5 = re.compile(r"^Client: +(?P<client>[\S\s]+)$")
+        p4 = re.compile(r"^Client: +(?P<client>[\S\s]+)$")
 
         # Records added:             10
-        p6 = re.compile(r"^Records +added: +(?P<total>\d+)$")
+        p5 = re.compile(r"^Records +added: +(?P<total>\d+)$")
 
         # Bytes added:               10
-        p7 = re.compile(r"^Bytes +added: +(?P<total>\d+)$")
+        p6 = re.compile(r"^Bytes +added: +(?P<total>\d+)$")
 
         # - sent:                20
-        p8 = re.compile(r"^- +sent: +(?P<sent>\d+)$")
+        p7 = re.compile(r"^- +sent: +(?P<sent>\d+)$")
 
         # - failed to send:      30
-        p9 = re.compile(r"^- +failed +to +send: +(?P<failed>\d+)$")
+        p8 = re.compile(r"^- +failed +to +send: +(?P<failed>\d+)$")
 
         records_flag = False
         bytes_flag = False
@@ -264,29 +294,35 @@ class ShowFlowExporterStatistics(ShowFlowExporterStatisticsSchema):
                 continue
 
             # Successfully sent:         10                     (1000 bytes)
+            # No FIB:                    10                     (1000 bytes)
+            # Adjacency failure:         10                     (1000 bytes)
+            # Enqueued to process level: 10                     (1000 bytes)
+            # Enqueueing failed:         10                     (1000 bytes)
+            # IPC failed:                10                     (1000 bytes)
+            # Output failed:             10                     (1000 bytes)
+            # Fragmentation failed:      10                     (1000 bytes)
+            # Encap fixup failed:        10                     (1000 bytes)
+            # CEF not enabled:           10                     (1000 bytes)
+            # Reason not given:          10                     (1000 bytes)
+            # Rate limited:              10                     (1000 bytes)
+            # No destination address:    10                     (1000 bytes)
             m = p3.match(line)
             if m:
-                pkt_stats_dict.update({'pkts_sent': int(m.groupdict()['pkts'])})
-                pkt_stats_dict.update({'bytes_sent': int(m.groupdict()['bytes'])})
-                continue
-
-            # Reason not given:          10                   (1000 bytes)
-            m = p4.match(line)
-            if m:
-                pkt_stats_dict.update({'pkts_failed': int(m.groupdict()['pkts'])})
-                pkt_stats_dict.update({'bytes_failed': int(m.groupdict()['bytes'])})
+                key = re.sub(' ', '_', m.groupdict()['statistic']).lower()
+                bytes_key = '{key}_bytes'.format(key=key)
+                pkt_stats_dict.update({key: int(m.groupdict()['pkts'])})
+                pkt_stats_dict.update({bytes_key: int(m.groupdict()['bytes'])})
                 continue
 
             # Client: client_name
-            m = p5.match(line)
+            m = p4.match(line)
             if m:
                 client_dict = exporter_dict.setdefault('client_send_stats', {})\
                                            .setdefault(m.groupdict()['client'], {})
-                client_dict.update({'client': m.groupdict()['client']})
                 continue
 
             # Records added:             10
-            m = p6.match(line)
+            m = p5.match(line)
             if m:
                 records_flag = True
                 bytes_flag = False
@@ -296,7 +332,7 @@ class ShowFlowExporterStatistics(ShowFlowExporterStatisticsSchema):
                 continue
 
             # Bytes added:               10
-            m = p7.match(line)
+            m = p6.match(line)
             if m:
                 records_flag = False
                 bytes_flag = True
@@ -306,7 +342,7 @@ class ShowFlowExporterStatistics(ShowFlowExporterStatisticsSchema):
                 continue
 
             # - sent:                20
-            m = p8.match(line)
+            m = p7.match(line)
             if m:
                 if records_flag:
                     records_dict.update({'sent': int(m.groupdict()['sent'])})
@@ -315,7 +351,7 @@ class ShowFlowExporterStatistics(ShowFlowExporterStatisticsSchema):
                 continue
 
             # - failed to send:      30
-            m = p9.match(line)
+            m = p8.match(line)
             if m:
                 if records_flag:
                     records_dict.update({'failed': int(m.groupdict()['failed'])})

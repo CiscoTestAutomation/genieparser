@@ -123,6 +123,7 @@ class test_show_flow_exporter_statistics(unittest.TestCase):
           Packet send statistics (last cleared 00:10:17 ago):
             Successfully sent:         6                     (410 bytes)
             Reason not given:          163                   (7820 bytes)
+            No destination address:     421                   (10423 bytes)
          
           Client send statistics:
             Client: Flow Monitor Test
@@ -139,14 +140,15 @@ class test_show_flow_exporter_statistics(unittest.TestCase):
             "test": {
                 "pkt_send_stats": {
                     "last_cleared": "00:10:17",
-                    "pkts_sent": 6,
-                    "bytes_sent": 410,
-                    "pkts_failed": 163,
-                    "bytes_failed": 7820
+                    "successfully_sent": 6,
+                    "successfully_sent_bytes": 410,
+                    "reason_not_given": 163,
+                    "reason_not_given_bytes": 7820,
+                    "no_destination_address": 421,
+                    "no_destination_address_bytes": 10423
                 },
                 "client_send_stats": {
                     "Flow Monitor Test": {
-                        "client": "Flow Monitor Test",
                         "records_added": {
                             "total": 21,
                             "sent": 8,
@@ -185,14 +187,13 @@ class test_show_flow_exporter_statistics(unittest.TestCase):
             "rest": {
                 "pkt_send_stats": {
                     "last_cleared": "00:10:17",
-                    "pkts_sent": 6,
-                    "bytes_sent": 410,
-                    "pkts_failed": 163,
-                    "bytes_failed": 7820
+                    "successfully_sent": 6,
+                    "successfully_sent_bytes": 410,
+                    "reason_not_given": 163,
+                    "reason_not_given_bytes": 7820
                 },
                 "client_send_stats": {
                     "Flow Monitor Test": {
-                        "client": "Flow Monitor Test",
                         "records_added": {
                             "total": 21,
                             "sent": 8,
@@ -226,12 +227,11 @@ class test_show_flow_exporter_statistics(unittest.TestCase):
             "test": {
                 "pkt_send_stats": {
                     "last_cleared": "00:12:12",
-                    "pkts_sent": 0,
-                    "bytes_sent": 0
+                    "successfully_sent": 0,
+                    "successfully_sent_bytes": 0
                 },
                 "client_send_stats": {
                     "Flow Monitor Test": {
-                        "client": "Flow Monitor Test",
                         "records_added": {
                             "total": 0
                         },
