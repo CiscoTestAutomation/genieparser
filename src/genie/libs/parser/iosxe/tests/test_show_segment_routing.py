@@ -16,6 +16,8 @@ from genie.libs.parser.iosxe.show_segment_routing import (ShowSegmentRoutingMpls
                                                           ShowSegmentRoutingMplsGb,
                                                           ShowSegmentRoutingMplsGbLock,
                                                           ShowSegmentRoutingMplsConnectedPrefixSidMapLocal,
+                                                          ShowSegmentRoutingTrafficEngPolicy,
+                                                          ShowSegmentRoutingTrafficEngPolicyDetail,
                                                           ShowSegmentRoutingTrafficEngTopology,
                                                           ShowSegmentRoutingMplsMappingServer)
 
@@ -122,6 +124,7 @@ class test_show_routing_mpls_connected_prefix_sid_map(unittest.TestCase):
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+
 # ==================================
 # Unittest for:
 #   * 'show segment-routing mpls gb'
@@ -226,7 +229,6 @@ class test_show_routing_mpls_state(unittest.TestCase):
 # ==============================================
 # Parser for 'show segment-routing mpls lb lock'
 # ==============================================
-
 class test_show_routing_mpls_lb_lock(unittest.TestCase):
 
     device = Device(name='aDevice')
@@ -284,6 +286,7 @@ class test_show_segment_routing_mpls_gb_lock(unittest.TestCase):
         obj = ShowSegmentRoutingMplsGbLock(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 # ====================================================================
 # Unittest for:
@@ -590,7 +593,7 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
                 Bandwidth: Total 125000000, Reservable 125000000
                 Admin-groups: 0x00000000
                 Adj SID: 19 (protected)
-        '''}
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -605,12 +608,1331 @@ class test_show_segment_routing_traffic_eng_topology(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# ====================================================================
+# Unittest for:
+#   * 'show segment-routing traffic-eng policy all'
+#   * 'show segment-routing traffic-eng policy name {name}'
+# ====================================================================
+class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'test1': {
+            'name': 'test1',
+            'color': 100,
+            'end_point': '106.162.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '09:38:18',
+                    'since': '08-28 20:56:55.275',
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    400: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'pce': True,
+                                'weight': 0,
+                                'metric_type': 'TE',
+                            },
+                        },
+                    },
+                    300: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'active',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                    2: {
+                                        'sid': 16072,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '111.87.5.253',
+                                        'remote_address': '111.87.6.253',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    200: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'test1': {
+                                        'status': 'inactive',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                                'remote_address': '111.87.6.253',
+                                            },
+                                            2: {
+                                                'sid': 16052,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.187.14.241',
+                                            },
+                                            3: {
+                                                'sid': 16062,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '59.128.2.251',
+                                            },
+                                            4: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    100: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'weight': 0,
+                                'metric_type': 'IGP',
+                                'path_accumulated_metric': 2200,
+                                'hops': {
+                                    1: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15000: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+        show segment-routing traffic-eng policy all
+        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Status:
+            Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
+        Candidate-paths:
+            Preference 400:
+            Dynamic (pce) (inactive)
+                Weight: 0, Metric Type: TE
+            Preference 300:
+            Dynamic (active)
+                Weight: 0, Metric Type: IGP
+                Metric Type: IGP, Path Accumulated Metric: 2200
+                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+            Preference 200:
+            Explicit: segment-list test1 (inactive)
+                Weight: 0, Metric Type: TE
+                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+                16052 [Prefix-SID, 106.187.14.241]
+                16062 [Prefix-SID, 59.128.2.251]
+                16063 [Prefix-SID, 106.162.196.241]
+            Preference 100:
+            Dynamic (inactive)
+                Weight: 0, Metric Type: IGP
+                Metric Type: IGP, Path Accumulated Metric: 2200
+                16063 [Prefix-SID, 106.162.196.241]
+        Attributes:
+            Binding SID: 15000
+            Allocation mode: explicit
+            State: Programmed
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_name(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowSegmentRoutingTrafficEngPolicy(device=self.device)
+        parsed_output = obj.parse(name='test1')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ====================================================================
+# Unittest for:
+#   * 'show segment-routing traffic-eng policy all detail'
+#   * 'show segment-routing traffic-eng policy name {name} detail'
+# ====================================================================
+class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        'maxsid': {
+            'name': 'maxsid',
+            'color': 100,
+            'end_point': '106.162.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '04:54:31',
+                    'since': '09-09 20:19:30.195',
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    200: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'maxsid': {
+                                        'status': 'active',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            2: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            3: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            4: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            5: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            6: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            7: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            8: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            9: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            10: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            11: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            12: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            13: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    100: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'test1': {
+                                        'status': 'inactive',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            2: {
+                                                'sid': 16052,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.187.14.241',
+                                            },
+                                            3: {
+                                                'sid': 16062,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '59.128.2.251',
+                                            },
+                                            4: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15001: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+            'forwarding_id': '65537',
+            'stats': {
+                'packets': 1878,
+                'bytes': 295606,
+            },
+            'event_history': {
+                1: {
+                    'timestamp': '09-09 20:15:58.969',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Policy created',
+                    'context': 'Name: maxsid',
+                },
+                2: {
+                    'timestamp': '09-09 20:16:09.573',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set colour',
+                    'context': 'Colour: 100',
+                },
+                3: {
+                    'timestamp': '09-09 20:16:09.573',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set end point',
+                    'context': 'End-point: 106.162.196.241',
+                },
+                4: {
+                    'timestamp': '09-09 20:16:23.728',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set explicit path',
+                    'context': 'Path option: maxsid',
+                },
+                5: {
+                    'timestamp': '09-09 20:19:30.195',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+                6: {
+                    'timestamp': '09-09 20:19:30.202',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                7: {
+                    'timestamp': '09-09 20:56:19.877',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                8: {
+                    'timestamp': '09-09 20:57:51.007',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set binding SID',
+                    'context': 'BSID: Binding SID set',
+                },
+                9: {
+                    'timestamp': '09-09 21:15:51.840',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set explicit path',
+                    'context': 'Path option: test1',
+                },
+                10: {
+                    'timestamp': '09-09 21:19:04.452',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set explicit path',
+                    'context': 'Path option: test1',
+                },
+                11: {
+                    'timestamp': '09-09 21:19:04.454',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+                12: {
+                    'timestamp': '09-09 21:19:04.458',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                13: {
+                    'timestamp': '09-09 21:20:20.811',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Remove path option',
+                    'context': 'Path option: 300',
+                },
+                14: {
+                    'timestamp': '09-09 21:20:20.812',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+            },
+        },
+        'test1': {
+            'name': 'test1',
+            'color': 100,
+            'end_point': '106.162.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '03:48:03',
+                    'since': '09-09 21:25:58.933',
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    400: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'pce': True,
+                                'weight': 0,
+                                'metric_type': 'TE',
+                            },
+                        },
+                    },
+                    300: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'active',
+                                'weight': 0,
+                                'metric_type': 'TE',
+                                'path_accumulated_metric': 2115,
+                                'hops': {
+                                    1: {
+                                        'sid': 16052,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.187.14.241',
+                                    },
+                                    2: {
+                                        'sid': 24,
+                                        'sid_type': 'Adjacency-SID',
+                                        'local_address': '106.187.14.33',
+                                        'remote_address': '106.187.14.34',
+                                    },
+                                    3: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    200: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'test1': {
+                                        'status': 'inactive',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            2: {
+                                                'sid': 16052,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.187.14.241',
+                                            },
+                                            3: {
+                                                'sid': 16062,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '59.128.2.251',
+                                            },
+                                            4: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    100: {
+                        'path_type': {
+                            'dynamic': {
+                                'status': 'inactive',
+                                'weight': 0,
+                                'metric_type': 'TE',
+                                'path_accumulated_metric': 2115,
+                                'hops': {
+                                    1: {
+                                        'sid': 16052,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.187.14.241',
+                                    },
+                                    2: {
+                                        'sid': 24,
+                                        'sid_type': 'Adjacency-SID',
+                                        'local_address': '106.187.14.33',
+                                        'remote_address': '106.187.14.34',
+                                    },
+                                    3: {
+                                        'sid': 16063,
+                                        'sid_type': 'Prefix-SID',
+                                        'local_address': '106.162.196.241',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15000: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+            'forwarding_id': '65536',
+            'stats': {
+                'packets': 44,
+                'bytes': 1748,
+            },
+            'event_history': {
+                1: {
+                    'timestamp': '08-29 14:51:29.074',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                2: {
+                    'timestamp': '08-29 14:51:29.099',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                3: {
+                    'timestamp': '08-29 14:51:29.114',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                4: {
+                    'timestamp': '08-29 14:51:29.150',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                5: {
+                    'timestamp': '08-29 14:51:29.199',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                6: {
+                    'timestamp': '08-29 14:51:29.250',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                7: {
+                    'timestamp': '08-29 14:51:29.592',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                8: {
+                    'timestamp': '08-29 14:51:29.733',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                9: {
+                    'timestamp': '08-29 14:51:29.873',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                10: {
+                    'timestamp': '08-29 14:51:30.013',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                11: {
+                    'timestamp': '08-29 14:51:30.162',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                12: {
+                    'timestamp': '08-29 14:51:33.875',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                13: {
+                    'timestamp': '08-29 14:51:33.879',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                14: {
+                    'timestamp': '08-29 14:51:33.919',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                15: {
+                    'timestamp': '08-29 14:51:33.978',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                16: {
+                    'timestamp': '08-29 14:51:33.982',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                17: {
+                    'timestamp': '08-29 14:51:34.724',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                18: {
+                    'timestamp': '08-29 14:51:35.227',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                19: {
+                    'timestamp': '09-03 13:06:47.604',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                20: {
+                    'timestamp': '09-03 13:06:47.607',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                21: {
+                    'timestamp': '09-09 20:15:36.537',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                22: {
+                    'timestamp': '09-09 20:15:36.541',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                23: {
+                    'timestamp': '09-09 20:15:36.545',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                24: {
+                    'timestamp': '09-09 20:15:36.557',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                25: {
+                    'timestamp': '09-09 20:15:36.571',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                26: {
+                    'timestamp': '09-09 20:15:36.598',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                27: {
+                    'timestamp': '09-09 20:15:36.614',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                28: {
+                    'timestamp': '09-09 20:15:36.629',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                29: {
+                    'timestamp': '09-09 20:15:36.641',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                30: {
+                    'timestamp': '09-09 20:15:36.667',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                31: {
+                    'timestamp': '09-09 20:15:36.698',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                32: {
+                    'timestamp': '09-09 20:15:36.734',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                33: {
+                    'timestamp': '09-09 20:15:36.764',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                34: {
+                    'timestamp': '09-09 20:15:36.789',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                35: {
+                    'timestamp': '09-09 20:15:36.800',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                36: {
+                    'timestamp': '09-09 20:15:36.823',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                37: {
+                    'timestamp': '09-09 20:16:23.743',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                38: {
+                    'timestamp': '09-09 20:16:23.745',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                39: {
+                    'timestamp': '09-09 20:19:30.199',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                40: {
+                    'timestamp': '09-09 20:19:30.205',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                41: {
+                    'timestamp': '09-09 20:50:52.378',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set colour',
+                    'context': 'Colour: 200',
+                },
+                42: {
+                    'timestamp': '09-09 20:52:04.236',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Policy ADMIN DOWN',
+                    'context': 'shutdown: test1',
+                },
+                43: {
+                    'timestamp': '09-09 20:59:06.432',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Policy state DOWN',
+                    'context': 'no shutdown: test1',
+                },
+                44: {
+                    'timestamp': '09-09 20:59:06.434',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+                45: {
+                    'timestamp': '09-09 20:59:06.442',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                46: {
+                    'timestamp': '09-09 21:17:36.909',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set colour',
+                    'context': 'Colour: 100',
+                },
+                47: {
+                    'timestamp': '09-09 21:18:39.057',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Policy ADMIN DOWN',
+                    'context': 'shutdown: test1',
+                },
+                48: {
+                    'timestamp': '09-09 21:25:58.931',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Policy state DOWN',
+                    'context': 'no shutdown: test1',
+                },
+                49: {
+                    'timestamp': '09-09 21:25:58.933',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+                50: {
+                    'timestamp': '09-09 21:25:58.945',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+        sr_ve-hkgasr01#show segment-routing traffic-eng policy all detail
+
+        Name: maxsid (Color: 100 End-point: 106.162.196.241)
+        Status:
+            Admin: up, Operational: up for 04:54:31 (since 09-09 20:19:30.195)
+        Candidate-paths:
+            Preference 200:
+            Explicit: segment-list maxsid (active)
+                Weight: 0, Metric Type: TE
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16063 [Prefix-SID, 106.162.196.241]
+            Preference 100:
+            Explicit: segment-list test1 (inactive)
+                Weight: 0, Metric Type: TE
+                16072 [Prefix-SID, 111.87.5.253]
+                16052 [Prefix-SID, 106.187.14.241]
+                16062 [Prefix-SID, 59.128.2.251]
+                16063 [Prefix-SID, 106.162.196.241]
+        Attributes:
+            Binding SID: 15001
+            Allocation mode: explicit
+            State: Programmed
+        Forwarding-ID: 65537 (0x1C)
+        Stats:
+            Packets: 1878       Bytes: 295606
+
+        Event history:
+            Timestamp                   Client                  Event type              Context: Value
+            ---------                   ------                  ----------              -------: -----
+            09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
+            09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
+            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 106.162.196.241
+            09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
+            09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
+            09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:56:19.877          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:57:51.007          CLI AGENT               Set binding SID         BSID: Binding SID set
+            09-09 21:15:51.840          CLI AGENT               Set explicit path       Path option: test1
+            09-09 21:19:04.452          CLI AGENT               Set explicit path       Path option: test1
+            09-09 21:19:04.454          FH Resolution           Policy state UP         Status: PATH RESOLVED
+            09-09 21:19:04.458          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
+            09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
+
+        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Status:
+            Admin: up, Operational: up for 03:48:03 (since 09-09 21:25:58.933)
+        Candidate-paths:
+            Preference 400:
+            Dynamic (pce) (inactive)
+                Weight: 0, Metric Type: TE
+            Preference 300:
+            Dynamic (active)
+                Weight: 0, Metric Type: TE
+                Metric Type: TE, Path Accumulated Metric: 2115
+                16052 [Prefix-SID, 106.187.14.241]
+                24 [Adjacency-SID, 106.187.14.33 - 106.187.14.34]
+                16063 [Prefix-SID, 106.162.196.241]
+            Preference 200:
+            Explicit: segment-list test1 (inactive)
+                Weight: 0, Metric Type: TE
+                16072 [Prefix-SID, 111.87.5.253]
+                16052 [Prefix-SID, 106.187.14.241]
+                16062 [Prefix-SID, 59.128.2.251]
+                16063 [Prefix-SID, 106.162.196.241]
+            Preference 100:
+            Dynamic (inactive)
+                Weight: 0, Metric Type: TE
+                Metric Type: TE, Path Accumulated Metric: 2115
+                16052 [Prefix-SID, 106.187.14.241]
+                24 [Adjacency-SID, 106.187.14.33 - 106.187.14.34]
+                16063 [Prefix-SID, 106.162.196.241]
+        Attributes:
+            Binding SID: 15000
+            Allocation mode: explicit
+            State: Programmed
+        Forwarding-ID: 65536 (0x18)
+        Stats:
+            Packets: 44         Bytes: 1748
+
+        Event history:
+            Timestamp                   Client                  Event type              Context: Value
+            ---------                   ------                  ----------              -------: -----
+            08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.099          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.114          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.150          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.250          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.592          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.733          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:29.873          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:30.013          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:30.162          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:33.875          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:33.879          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:33.919          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:33.978          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:33.982          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:34.724          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            08-29 14:51:35.227          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-03 13:06:47.604          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-03 13:06:47.607          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.537          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.541          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.545          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.557          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.571          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.598          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.614          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.629          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.641          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.667          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.698          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.734          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.764          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.789          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.800          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:15:36.823          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:16:23.743          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:16:23.745          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:19:30.199          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:19:30.205          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:50:52.378          CLI AGENT               Set colour              Colour: 200
+            09-09 20:52:04.236          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
+            09-09 20:59:06.432          CLI AGENT               Policy state DOWN       no shutdown: test1
+            09-09 20:59:06.434          FH Resolution           Policy state UP         Status: PATH RESOLVED
+            09-09 20:59:06.442          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 21:17:36.909          CLI AGENT               Set colour              Colour: 100
+            09-09 21:18:39.057          CLI AGENT               Policy ADMIN DOWN       shutdown: test1
+            09-09 21:25:58.931          CLI AGENT               Policy state DOWN       no shutdown: test1
+            09-09 21:25:58.933          FH Resolution           Policy state UP         Status: PATH RESOLVED
+            09-09 21:25:58.945          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+        sr_ve-hkgasr01#
+    '''}
+
+    golden_parsed_output_name = {
+        'maxsid': {
+            'name': 'maxsid',
+            'color': 100,
+            'end_point': '106.162.196.241',
+            'status': {
+                'admin': 'up',
+                'operational': {
+                    'state': 'up',
+                    'time_for_state': '06:35:58',
+                    'since': '09-09 20:19:30.195',
+                },
+            },
+            'candidate_paths': {
+                'preference': {
+                    200: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'maxsid': {
+                                        'status': 'active',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            2: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            3: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            4: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            5: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            6: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            7: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            8: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            9: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            10: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            11: {
+                                                'sid': 16071,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.252',
+                                            },
+                                            12: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            13: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    100: {
+                        'path_type': {
+                            'explicit': {
+                                'segment_list': {
+                                    'test1': {
+                                        'status': 'inactive',
+                                        'weight': 0,
+                                        'metric_type': 'TE',
+                                        'hops': {
+                                            1: {
+                                                'sid': 16072,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '111.87.5.253',
+                                            },
+                                            2: {
+                                                'sid': 16052,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.187.14.241',
+                                            },
+                                            3: {
+                                                'sid': 16062,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '59.128.2.251',
+                                            },
+                                            4: {
+                                                'sid': 16063,
+                                                'sid_type': 'Prefix-SID',
+                                                'local_address': '106.162.196.241',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'attributes': {
+                'binding_sid': {
+                    15001: {
+                        'allocation_mode': 'explicit',
+                        'state': 'programmed',
+                    },
+                },
+            },
+            'forwarding_id': '65537',
+            'stats': {
+                'packets': 2520,
+                'bytes': 397042,
+            },
+            'event_history': {
+                1: {
+                    'timestamp': '09-09 20:15:58.969',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Policy created',
+                    'context': 'Name: maxsid',
+                },
+                2: {
+                    'timestamp': '09-09 20:16:09.573',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set colour',
+                    'context': 'Colour: 100',
+                },
+                3: {
+                    'timestamp': '09-09 20:16:09.573',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set end point',
+                    'context': 'End-point: 106.162.196.241',
+                },
+                4: {
+                    'timestamp': '09-09 20:16:23.728',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set explicit path',
+                    'context': 'Path option: maxsid',
+                },
+                5: {
+                    'timestamp': '09-09 20:19:30.195',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+                6: {
+                    'timestamp': '09-09 20:19:30.202',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                7: {
+                    'timestamp': '09-09 20:56:19.877',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                8: {
+                    'timestamp': '09-09 20:57:51.007',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set binding SID',
+                    'context': 'BSID: Binding SID set',
+                },
+                9: {
+                    'timestamp': '09-09 21:15:51.840',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set explicit path',
+                    'context': 'Path option: test1',
+                },
+                10: {
+                    'timestamp': '09-09 21:19:04.452',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Set explicit path',
+                    'context': 'Path option: test1',
+                },
+                11: {
+                    'timestamp': '09-09 21:19:04.454',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+                12: {
+                    'timestamp': '09-09 21:19:04.458',
+                    'client': 'FH Resolution',
+                    'event_type': 'REOPT triggered',
+                    'context': 'Status: REOPTIMIZED',
+                },
+                13: {
+                    'timestamp': '09-09 21:20:20.811',
+                    'client': 'CLI AGENT',
+                    'event_type': 'Remove path option',
+                    'context': 'Path option: 300',
+                },
+                14: {
+                    'timestamp': '09-09 21:20:20.812',
+                    'client': 'FH Resolution',
+                    'event_type': 'Policy state UP',
+                    'context': 'Status: PATH RESOLVED',
+                },
+            },
+        },
+    }
+
+    golden_output_name = {'execute.return_value': '''
+        sr_ve-hkgasr01#show segment-routing traffic-eng policy name maxsid detail
+
+        Name: maxsid (Color: 100 End-point: 106.162.196.241)
+        Status:
+            Admin: up, Operational: up for 06:35:58 (since 09-09 20:19:30.195)
+        Candidate-paths:
+            Preference 200:
+            Explicit: segment-list maxsid (active)
+                Weight: 0, Metric Type: TE
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16071 [Prefix-SID, 111.87.5.252]
+                16072 [Prefix-SID, 111.87.5.253]
+                16063 [Prefix-SID, 106.162.196.241]
+            Preference 100:
+            Explicit: segment-list test1 (inactive)
+                Weight: 0, Metric Type: TE
+                16072 [Prefix-SID, 111.87.5.253]
+                16052 [Prefix-SID, 106.187.14.241]
+                16062 [Prefix-SID, 59.128.2.251]
+                16063 [Prefix-SID, 106.162.196.241]
+        Attributes:
+            Binding SID: 15001
+            Allocation mode: explicit
+            State: Programmed
+        Forwarding-ID: 65537 (0x1C)
+        Stats:
+            Packets: 2520       Bytes: 397042
+
+        Event history:
+            Timestamp                   Client                  Event type              Context: Value
+            ---------                   ------                  ----------              -------: -----
+            09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
+            09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
+            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 106.162.196.241
+            09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
+            09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
+            09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:56:19.877          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 20:57:51.007          CLI AGENT               Set binding SID         BSID: Binding SID set
+            09-09 21:15:51.840          CLI AGENT               Set explicit path       Path option: test1
+            09-09 21:19:04.452          CLI AGENT               Set explicit path       Path option: test1
+            09-09 21:19:04.454          FH Resolution           Policy state UP         Status: PATH RESOLVED
+            09-09 21:19:04.458          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
+            09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
+
+
+        sr_ve-hkgasr01#
+    '''}
+
+    def test_empty(self):
+        self.device1 = Mock(**self.empty_output)
+        obj = ShowSegmentRoutingTrafficEngPolicyDetail(device=self.device1)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowSegmentRoutingTrafficEngPolicyDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_name(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_name)
+        obj = ShowSegmentRoutingTrafficEngPolicyDetail(device=self.device)
+        parsed_output = obj.parse(name='maxsid')
+        self.assertEqual(parsed_output, self.golden_parsed_output_name)
+
+
 # ====================================================
 # Unittest for:
 #   * 'show segment-routing mpls mapping-server ipv4'
 #   * 'show segment-routing mpls mapping-server ipv6'
 # ====================================================
-class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
+class test_show_segment_routing_mpls_mapping_server(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -677,5 +1999,6 @@ class test_show_routing_mpls_connected_prefix_sid_map_local(unittest.TestCase):
         obj = ShowSegmentRoutingMplsMappingServer(device=self.device)
         parsed_output = obj.parse(address_family='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 if __name__ == '__main__':
     unittest.main()
