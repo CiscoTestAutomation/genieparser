@@ -66,3 +66,11 @@
 * IOSXE
     * removed tab, replace with space
     	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                Spanning-Tree
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowSpanningTreeSummary:
+        * Changed some schema keywords to Optional
+        * Refined regex for various formats
