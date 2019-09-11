@@ -464,7 +464,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
 
 class ShowSpanningTreeDetailSchema(MetaParser):
     '''Schema for:
-            show spanning-­tree detail
+            show spanning-tree detail
     '''
     schema = {
         Any(): {     # mstp, pvst, rapid_pvst
@@ -546,7 +546,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
 
 class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
     '''Parser for:
-            show spanning-­tree detail
+            show spanning-tree detail
     '''
     MODE_NAME_MAP = {'mstp': 'mstp',
                      'ieee': 'pvst',
@@ -558,7 +558,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                      'ieee': 'vlan_id',
                      'rstp': 'vlan_id'}
 
-    cli_command = 'show spanning-­tree detail'
+    cli_command = 'show spanning-tree detail'
 
     def cli(self, output = None):
         if output is None:
