@@ -31,6 +31,7 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfDatabaseRouterSelfOriginate,
                                                ShowIpOspfInterfaceBrief,
                                                ShowIpOspfSegmentRouting,
+                                               ShowIpOspfSegmentRoutingAdjacencySid,
                                                ShowIpOspfSegmentRoutingLocalBlock,
                                                ShowIpOspfSegmentRoutingGlobalBlock,
                                                ShowIpOspfFastRerouteTiLfa,
@@ -7262,7 +7263,7 @@ class test_show_ip_ospf_database_opaque_area(unittest.TestCase):
      
         Number of Links : 0
      
-      LS age: 49
+      LS age: MAXAGE(49)
       Options: (No TOS-capability, DC)
       LS Type: Opaque Area Link
       Link State ID: 10.1.0.15
@@ -10282,7 +10283,7 @@ class show_ip_ospf_segment_routing_global_block(unittest.TestCase):
         parsed_output = obj.parse(process_id=1234)
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-class test_show_ip_ospf_segment_routing(unittest.TestCase):
+class test_show_ip_ospf_segment_routing_adjacency_sid(unittest.TestCase):
     ''' Test case for command:
           * show ip ospf {bgp_as} segment-routing adjacency-sid
     '''
@@ -10334,14 +10335,14 @@ class test_show_ip_ospf_segment_routing(unittest.TestCase):
     def test_show_ip_ospf_segment_routing_empty(self):
         self.maxDiff = None
         self.device=Mock(**self.empty_output)
-        obj=ShowIpOspfSegmentRouting(device=self.device)
+        obj=ShowIpOspfSegmentRoutingAdjacencySid(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_ip_ospf_segment_routing_1(self):
         self.maxDiff = None
         self.device=Mock(**self.golden_output_1)
-        obj=ShowIpOspfSegmentRouting(device=self.device)
+        obj=ShowIpOspfSegmentRoutingAdjacencySid(device=self.device)
         parsed_output = obj.parse(process_id=65109)
         self.assertEqual(parsed_output, self.parsed_output_1)
 
