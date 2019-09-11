@@ -151,3 +151,10 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
+
+--------------------------------------------------------------------------------
+                                INVENTORY
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowInventory:
+        * Matching more slots
