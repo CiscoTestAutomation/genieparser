@@ -174,6 +174,7 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         p9 = re.compile(r'^VTP +Operating +Mode +: (?P<val>\S+\s?\S*)$')
 
         # Maximum VLANs supported locally   : 1005
+        # Maximum VLANs supported locally   :  2048
         p10 = re.compile(r'^Maximum +VLANs +supported +locally +: +(?P<val>\d+)$')
 
         # Number of existing VLANs          : 53
