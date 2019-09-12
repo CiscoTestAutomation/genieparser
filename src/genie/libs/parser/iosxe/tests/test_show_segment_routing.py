@@ -2023,7 +2023,8 @@ class test_show_segment_routing_mpls_lb_assigned_sids(unittest.TestCase):
         "segment_routing": {
             "sid": {
                 "12345": {
-                    "state": "In range",
+                    "state": "R",
+                    "state_info": "In range",
                     "protocol": "ISIS",
                     "topoid": 2,
                     "lan": "N",
@@ -2049,7 +2050,8 @@ class test_show_segment_routing_mpls_lb_assigned_sids(unittest.TestCase):
         "segment_routing": {
             "sid": {
                 "12345": {
-                    "state": "Shared",
+                    "state": "S",
+                    "state_info": "Shared",
                 }
             }
         }

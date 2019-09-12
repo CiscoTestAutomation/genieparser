@@ -1327,6 +1327,7 @@ class ShowSegmentRoutingMplsLbAssignedSidsSchema(MetaParser):
             'sid': {
                 Any(): {
                     'state': str,
+                    'state_info': str,
                     Optional('protocol'): str,
                     Optional('topoid'): int,
                     Optional('lan'): str,
@@ -1358,7 +1359,7 @@ class ShowSegmentRoutingMplsLbAssignedSids(ShowSegmentRoutingMplsLbAssignedSidsS
 
         # 12345   R
         # 12345    S ISIS     2        N   N   192.168.0.1 Ethernet1
-        p1 = re.compile(r"^(?P<sid>\d+) +(?P<state>[CSR])(?: +(?P<protocol>\w+) +"
+        p1 = re.compile(r"^(?P<sid>\d+) +(?P<state>\w)(?: +(?P<protocol>\w+) +"
                         r"(?P<topoid>\d+) +(?P<lan>\w+) +(?P<pro>\w+) +"
                         r"(?P<neighbor>[\d\.]+) +(?P<interface>[\w\/\.]+))?$")
 
@@ -1377,7 +1378,8 @@ class ShowSegmentRoutingMplsLbAssignedSids(ShowSegmentRoutingMplsLbAssignedSidsS
                                    .setdefault("sid", {})\
                                    .setdefault(groups["sid"], {})
 
-                sid_dict.update({"state": self.state_mapping[groups["state"]]})
+                sid_dict.update({"state": groups["state"]})
+                sid_dict.update({"state_info": self.state_mapping[groups["state"]]})
 
                 if groups["protocol"]:
                     sid_dict.update({"protocol": groups["protocol"]})
