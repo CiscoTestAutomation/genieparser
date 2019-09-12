@@ -173,32 +173,7 @@ class ShowFlowExporterStatisticsSchema(MetaParser):
             Any(): {
                 'pkt_send_stats': {
                     'last_cleared': str,
-                    'successfully_sent': int,
-                    'successfully_sent_bytes': int,
-                    Optional('no_fib'): int,
-                    Optional('no_fib_bytes'): int,
-                    Optional('adjacency_failure'): int,
-                    Optional('adjacency_failure_bytes'): int,
-                    Optional('enqueued_to_process_level'): int,
-                    Optional('enqueued_to_process_level_bytes'): int,
-                    Optional('enqueueing_failed'): int,
-                    Optional('enqueueing_failed_bytes'): int,
-                    Optional('ipc_failed'): int,
-                    Optional('ipc_failed_bytes'): int,
-                    Optional('output_failed'): int,
-                    Optional('output_failed_bytes'): int,
-                    Optional('fragmentation_failed'): int,
-                    Optional('fragmentation_failed_bytes'): int,
-                    Optional('encap_fixup_failed'): int,
-                    Optional('encap_fixup_failed_bytes'): int,
-                    Optional('cef_not_enabled'): int,
-                    Optional('cef_not_enabled_bytes'): int,
-                    Optional('reason_not_given'): int,
-                    Optional('reason_not_given_bytes'): int,
-                    Optional('rate_limited'): int,
-                    Optional('rate_limited_bytes'): int,
-                    Optional('no_destination_address'): int,
-                    Optional('no_destination_address_bytes'): int
+                    Optional(Any()): int
                 },
                 'client_send_stats': {
                     Any(): {
