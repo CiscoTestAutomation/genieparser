@@ -2,7 +2,8 @@
 
 IOSXE parsers for the following show commands:
     * show flow monitor {name} cache format table
-
+    * show flow exporter statistics
+    * show flow exporter {exporter} statistics
 '''
 
 # Python
@@ -166,7 +167,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
 class ShowFlowExporterStatisticsSchema(MetaParser):
     """ Schema for:
             * show flow exporter statistics
-            * show flow exporter {name} statistics
+            * show flow exporter {exporter} statistics
     """
     schema = {
         'flow_exporter': {
