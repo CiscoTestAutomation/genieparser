@@ -2743,6 +2743,13 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
     schema = {'interface':
                 {Any():
                     {Optional('shutdown'): bool,
+                     Optional('switchport'): bool,
+                     Optional('switchport_mode'): str,
+                     Optional('trunk_vlans'): str,
+                     Optional('port_channel'):{
+                        Optional('port_channel_mode'): str,
+                        Optional('port_channel_int'): str,
+                    },
                      Optional('host_reachability_protocol'): str,
                      Optional('source_interface'): str,
                      Optional('member_vni'):
@@ -2755,6 +2762,7 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                     }
                 },
             }
+
 
 # =================================================
 # Parser for 'show running-config interface <WORD>'
@@ -2772,23 +2780,21 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             out = output
 
         # Init vars
-        interface_dict = {}
+        ret_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
 
             # interface nve1
             # interface Ethernet1/1
-            p1 = re.compile(r'^\s*interface +(?P<intf_name>(\S+))$')
+            p1 = re.compile(r'^interface +(?P<intf_name>\S+)$')
             m = p1.match(line)
             if m:
 
                 interface = str(m.groupdict()['intf_name'])
-
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-
-                interface_dict['interface'][interface] = {}
+                
+                interface_dict = ret_dict.setdefault('interface', {}). \
+                    setdefault(interface, {})
 
                 continue
 
@@ -2797,7 +2803,7 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p2.match(line)
             if m:
 
-                interface_dict['interface'][interface]['shutdown'] = False
+                interface_dict['shutdown'] = False
 
                 continue
 
@@ -2806,7 +2812,7 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p3.match(line)
             if m:
 
-                interface_dict['interface'][interface]['host_reachability_protocol'] = \
+                interface_dict['host_reachability_protocol'] = \
                     str(m.groupdict()['protocol'])
 
                 continue
@@ -2816,7 +2822,7 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p4.match(line)
             if m:
 
-                interface_dict['interface'][interface]['source_interface'] = \
+                interface_dict['source_interface'] = \
                     str(m.groupdict()['src_intf'])
 
                 continue
@@ -2828,8 +2834,8 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             m = p5.match(line)
             if m:
 
-                if 'member_vni' not in interface_dict['interface'][interface]:
-                    interface_dict['interface'][interface]['member_vni'] = {}
+                if 'member_vni' not in interface_dict:
+                    interface_dict['member_vni'] = {}
 
                 vni = str(m.groupdict()['vni'])
 
@@ -2840,10 +2846,10 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                     members = [vni]
 
                 for memb in members:
-                    interface_dict['interface'][interface]['member_vni'][str(memb)] = {}
+                    interface_dict['member_vni'][str(memb)] = {}
 
                     if m.groupdict()['associate_vrf']:
-                        interface_dict['interface'][interface]['member_vni'][str(memb)]['associate_vrf'] = \
+                        interface_dict['member_vni'][str(memb)]['associate_vrf'] = \
                             True
 
                 continue
@@ -2854,7 +2860,7 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             if m:
 
                 for memb in members:
-                    interface_dict['interface'][interface]['member_vni'][str(memb)]['mcast_group'] = \
+                    interface_dict['member_vni'][str(memb)]['mcast_group'] = \
                         str(m.groupdict()['ip'])
 
                 continue
@@ -2865,12 +2871,45 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
             if m:
 
                 for memb in members:
-                    interface_dict['interface'][interface]['member_vni'][str(memb)]['suppress_arp'] = \
+                    interface_dict['member_vni'][str(memb)]['suppress_arp'] = \
                         True
 
                 continue
+            
+            # switchport
+            p8 = re.compile(r'^switchport$')
+            m = p8.match(line)
+            if m:
+                interface_dict.update({'switchport': True})
+                continue
+            
+            # switchport mode trunk
+            p9 = re.compile(r'^switchport +mode +(?P<mode>\S+)$')
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'switchport_mode': group['mode']})
+                continue
+            
+            # switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+            p10 = re.compile(r'^switchport +trunk +allowed +vlan +(?P<trunk_vlans>\S+)$')
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'trunk_vlans': group['trunk_vlans']})
+                continue
+            
+            # channel-group 1 mode active
+            p11 = re.compile(r'^channel-group +(?P<port_channel_int>\d+) +mode +(?P<mode>\S+)$')
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                port_channel_dict = interface_dict.setdefault('port_channel', {})
+                port_channel_dict.update({'port_channel_int': group['port_channel_int']})
+                port_channel_dict.update({'port_channel_mode': group['mode']})
+                continue
 
-        return interface_dict
+        return ret_dict
 
 # ===============================
 # Schema for 'show nve interface'

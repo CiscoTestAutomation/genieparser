@@ -92,15 +92,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         p5 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+)$')
-
-        # p3, p6, p3 (again) when device id AND port id are on separate lines
-        # 1111-2222-3333
-        #               Eth1/30        156    R         ASR9K Series
-        #                                            Ten-GigabitEthernet2/0/30
-        p6 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        r'(?P<hold_time>\d+)\s+(?P<capability>[RTBSHIVDrs\s]+)\s+'
-                        r'(?P<platform>.+)$')
+                        '(?P<platform>[\S\s]+)$')        
 
         device_id_index = 0
 
@@ -140,21 +132,14 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             result = p3.match(line)
             if result:
                 group = result.groupdict()
-                # NOTE:
-                # this detection of whether p3 matched a device id or port ID
-                # is rather error prone.
-                if 'Eth' not in group['device_id'] and '/' not in group['device_id']:
+                if 'Eth' not in group['device_id']:
                     device_id_index += 1
                     device_dict = parsed_dict.setdefault('cdp', {})\
                         .setdefault('index', {}).setdefault(device_id_index, {})
                     device_dict['device_id'] = group['device_id'].strip()
                 else:
-                    device_dict = parsed_dict.setdefault('cdp', {}) \
-                        .setdefault('index', {}).setdefault(device_id_index, {})
-                    # Note: dict key mismatch is intentional.
-                    # p3 matches both device and port IDs.
                     device_dict['port_id'] = Common\
-                        .convert_intf_name(intf=group['device_id'].strip())
+                    .convert_intf_name(intf=group['device_id'].strip())
 
                 continue
 
@@ -186,23 +171,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
                 device_dict['device_id'] = group['device_id'].strip()
                 device_dict['local_interface'] = Common\
-                    .convert_intf_name(intf=group['local_interface'].strip())
-                device_dict['hold_time'] = int(group['hold_time'])
-                device_dict['capability'] = group['capability'].strip()
-                if group['platform']:
-                    device_dict['platform'] = group['platform'].strip()
-                elif not group['platform']:
-                    device_dict['platform'] = ''
-                continue
-
-            result = p6.match(line)
-            if result:
-                device_dict = parsed_dict.setdefault('cdp', {}) \
-                    .setdefault('index', {}).setdefault(device_id_index, {})
-
-                group = result.groupdict()
-
-                device_dict['local_interface'] = Common \
                     .convert_intf_name(intf=group['local_interface'].strip())
                 device_dict['hold_time'] = int(group['hold_time'])
                 device_dict['capability'] = group['capability'].strip()

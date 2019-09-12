@@ -1467,33 +1467,35 @@ class ShowIpCefSchema(MetaParser):
                   show ip cef <prefix> detail
                   show ip cef vrf <vrf> <prefix>"""
     schema = {
-        'vrf':
-            {Any():
-                {'address_family':
-                    {Any():
-                        {'prefix':
-                            {Any():
-                                {'nexthop':
-                                    {Any():
-                                        {Optional('outgoing_interface'):
-                                            {Any():
-                                                {Optional('local_label'): int,
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'prefix': {
+                            Any(): {
+                                'nexthop': {
+                                    Any(): {
+                                        Optional('outgoing_interface'): {
+                                            Any(): {
+                                                Optional('local_label'): int,
                                                 Optional('outgoing_label'): list,
+                                                Optional('outgoing_label_backup'): str,
+                                                Optional('outgoing_label_info'): str,
                                                 Optional('repair'): str,
-                                                },
                                             },
                                         },
                                     },
+                                },
                                 Optional('epoch'): int,
                                 Optional('per_destination_sharing'): bool,
                                 Optional('sr_local_label_info'): str,
-                                },
                             },
                         },
                     },
                 },
             },
-        }
+        },
+    }
 
 # ====================================================
 #  parser  for show ip cef <ip>
@@ -1549,13 +1551,15 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop 10.1.2.2 GigabitEthernet2.100
         #     nexthop FE80::A8BB:CCFF:FE03:2101 FastEthernet0/0/0 label 18
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
-        p2 = re.compile(r'^nexthop +(?P<nexthop>[\w\.\:]+) +(?P<interface>\S+)'
-                       '( +label +(?P<outgoing_label>[\w\-\ ]+)(-\(local:(?P<local_label>\w+)\))?)?$')
+        #     nexthop 10.1.2.2 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
+        p2 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
+                       '( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
+                       '(-\(local:(?P<local_label>\w+)\))?)?$')
 
-        #     nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
+        # nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
         # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
         p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
-                           ' +label +\[(?P<outgoing_label>([0-9\|\w\-]+))\]'
+                           ' +label +\[(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)\]'
                            '\-\(local\:(?P<local_label>(\d+))\)$')
 
         #     attached to GigabitEthernet3.100
@@ -1617,6 +1621,8 @@ class ShowIpCef(ShowIpCefSchema):
                     nexthop_dict.update({'local_label': int(group['local_label'])})
                 if group['outgoing_label']:
                     nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
+                if group['outgoing_label_info']:
+                    nexthop_dict.update({'outgoing_label_info': group['outgoing_label_info']})
                 continue
 
             #     nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
@@ -1630,6 +1636,7 @@ class ShowIpCef(ShowIpCefSchema):
 
                 nexthop_dict.update({'local_label': int(group['local_label'])})
                 nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
+                nexthop_dict.update({'outgoing_label_backup': group['outgoing_label_backup']})
                 continue
 
             # attached to GigabitEthernet3.100
