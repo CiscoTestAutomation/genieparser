@@ -355,6 +355,7 @@ class ShowIpv6NdInterfaceVrfAll(ShowIpv6NdInterfaceVrfAllSchema):
         p6_2 = re.compile(r'^Last +Neighbor-Advertisement +sent: +(?P<last_neighbor_advertisement_sent>([\w\:]+))$')
 
         # Last Router-Advertisement sent: 1d18h
+        # Last Router-Advertisement sent: 0.00000
         p6_3 = re.compile(r'^Last +Router-Advertisement +sent: +(?P<last_router_advertisement_sent>([\w\:\.]+))$')
 
         # Next Router-Advertisement sent in: 0.000000
