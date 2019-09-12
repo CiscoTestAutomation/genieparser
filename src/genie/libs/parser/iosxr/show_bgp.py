@@ -5264,9 +5264,21 @@ class ShowBgpL2vpnEvpnSchema(MetaParser):
             {Any(): 
                 {'address_family': 
                     {Any(): 
-                        {'bgp_table_version': int,
-                         'local_router_id': str,
+                        {
+                         Optional('router_identifier'): str,
+                         Optional('local_as'): int,
+                         Optional('generic_scan_interval'): str,
+                         Optional('non_stop_routing'): str,
+                         Optional('table_state'): str,
+                         Optional('table_id'): str,
+                         Optional('rd_version'): int,
+                         Optional('bgp_table_version'): int,
+                         Optional('local_router_id'): str,
                          Optional('route_distinguisher'): str,
+                         Optional('nsr_initial_initsync_version'): str,
+                         Optional('nsr_initial_init_ver_status'): str,
+                         Optional('nsr_issu_sync_group_versions'): str,
+                         Optional('scan_interval'): int,
                          Optional('default_vrf'): str,
                          Optional('aggregate_address_ipv4_address'): str,
                          Optional('aggregate_address_ipv4_mask'): str,
@@ -5323,7 +5335,8 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         parsed_dict = {}
         af_dict = {}
         prefix_dict = {}
-
+        vrf_name = 'default'
+        address_family = 'l2vpn evpn'
         # Init vars
         index = 1
         data_on_nextline = False
@@ -5380,9 +5393,139 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             '(?: +\(((VRF +(?P<default_vrf>\S+))|'
                             '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)))\))?$')
         
-
+        p5 = re.compile(r'^\s*BGP *router *identifier *(?P<router_identifier>[0-9\.]+)'
+                         ', *local *AS *number *(?P<local_as>[0-9]+)$')
+        p6 =  re.compile(r'^\s*BGP *generic *scan *interval *(?P<generic_scan_interval>[0-9]+) *secs$')
+        p7 = re.compile(r'^\s*Non-stop *routing *is'
+                        ' *(?P<non_stop_routing>[A-Za-z]+)$')
+        p8 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
+        p9 = re.compile(r'^\s*Table *ID: *(?P<table_id>[a-z0-9]+)'
+                         ' *RD *version: (?P<rd_version>[0-9]+)$')
+        p10 = re.compile(r'^\s*BGP *main *routing *table *version'
+                         ' *(?P<bgp_table_version>[0-9]+)$')
+        p11 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *(?P<nsr_initial_initsync_version>[0-9]+)'
+                          ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
+        p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+        p13 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
+        # *> [3][0][32][192.168.99.25]/80
+        p14 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+) *(?P<prefix>[\w\.\/\[\]\,]+)$')
+        
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
+
+            # BGP router identifier 10.4.1.1, local AS number 100
+
+            m = p5.match(line)
+            if m:
+                router_identifier = m.groupdict()['router_identifier']
+                local_as = int(m.groupdict()['local_as'])
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'router_identifier': router_identifier})
+                af_dict.update({'local_as': local_as})
+                continue
+            
+            # BGP generic scan interval 60 secs 
+
+            m = p6.match(line)
+            if m:
+                generic_scan_interval = m.groupdict()['generic_scan_interval']
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'generic_scan_interval': generic_scan_interval})
+                continue
+            
+            # Non-stop routing is enabled
+
+            m = p7.match(line)
+            if m:
+                non_stop_routing = str(m.groupdict()['non_stop_routing'])
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'non_stop_routing': non_stop_routing})
+                continue
+            
+            # BGP table state: Active
+
+            m = p8.match(line)
+            if m:
+                table_state = m.groupdict()['table_state'].lower()
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'table_state': table_state})
+                continue
+            
+            # Table ID: 0x0   RD version: 0
+
+            m = p9.match(line)
+            if m:
+                table_id = str(m.groupdict()['table_id'])
+                rd_version = int(m.groupdict()['rd_version'])
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'table_id': table_id})
+                af_dict.update({'rd_version': rd_version})
+                continue
+            
+            # BGP main routing table version 43
+
+            m = p10.match(line)
+            if m:
+                bgp_table_version = int(m.groupdict()['bgp_table_version'])
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'bgp_table_version': bgp_table_version})
+                continue
+            
+            # BGP NSR Initial initsync version 11 (Reached)
+
+            m = p11.match(line)
+            if m:
+                nsr_initial_initsync_version = m.groupdict()['nsr_initial_initsync_version']
+                nsr_initial_init_ver_status = str(m.groupdict()['nsr_initial_init_ver_status']).lower()
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'nsr_initial_initsync_version': nsr_initial_initsync_version})
+                af_dict.update({'nsr_initial_init_ver_status': nsr_initial_init_ver_status})
+                continue
+            
+            # BGP NSR/ISSU Sync-Group versions 0/0
+
+            m = p12.match(line)
+            if m:
+                nsr_issu_sync_group_versions = m.groupdict()['nsr_issu_sync_group_versions']
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+                af_dict.update({'nsr_issu_sync_group_versions': nsr_issu_sync_group_versions})
+                continue
+            
+            # BGP scan interval 60 secs
+
+            m = p13.match(line)
+            if m:
+               scan_interval = int(m.groupdict()['scan_interval'])
+               # Set af_dict
+               af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                    .setdefault('address_family', {}).setdefault(address_family, {})
+               af_dict.update({'scan_interval': scan_interval})
+               continue
+            
+            # *> [3][0][32][192.168.19.35]/70
+            m = p14.match(line)
+            if m:
+                # Set af_dict
+                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
+                        .setdefault('address_family', {}).setdefault(address_family, {})
+                
+
             # Network            Next Hop            Metric     LocPrf     Weight Path
             m = p.match(line)
             if m:
@@ -5474,7 +5617,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 status_codes = m.groupdict()['status_codes']
                 path_type = m.groupdict()['path_type']
                 prefix = m.groupdict()['prefix']
-                if status_codes == 'None' or path_type == 'None' or prefix == 'None':
+                if status_codes == None or path_type == None or prefix == None:
                     continue
             
                 # Set keys
@@ -5496,7 +5639,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     index_dict.update({'origin_codes': m.groupdict()['origin_codes']})
                 
                 # Check if aggregate_address_ipv4_address
-                if 'a' in path_type:
+                if path_type and 'a' in path_type:
                     address, mask = prefix.split("/")
                     if ':' in prefix:
                         index_dict.update({'v6_aggregate_address_ipv6_address': prefix})

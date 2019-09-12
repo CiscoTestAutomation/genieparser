@@ -7977,6 +7977,35 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                                 100          0 i
     '''}
 
+    golden_output2 = {'execute.return_value': '''
+        +++ ML25: executing command 'show bgp l2vpn evpn' +++
+        show bgp l2vpn evpn
+
+        Fri Sep  6 10:39:01.396 JST
+        BGP router identifier 192.168.99.25, local AS number 65001
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 2
+        BGP NSR Initial initsync version 2 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 192.168.99.25:100 (default for vrf Mansion-100)
+        *> [3][0][32][192.168.99.25]/80
+                            0.0.0.0                                0 i
+
+        Processed 1 prefixes, 1 paths
+        RP/0/RP0/CPU0:ML25#
+
+    '''}
+    golden_parsed_output2 = {}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpL2vpnEvpn(device=self.device)
@@ -7989,6 +8018,18 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # =============================================
