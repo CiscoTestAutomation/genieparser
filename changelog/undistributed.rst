@@ -147,11 +147,14 @@
 * IOSXE
     * Fixed regex in ShowVlan
 --------------------------------------------------------------------------------
-                                FLOW MONITOR
+                                FLOW
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+    * Added ShowFlowExporterStatistics for:
+        * show flow exporter statistics
+        * show flow exporter {exporter} statistics
 
 --------------------------------------------------------------------------------
                                 ROUTING
@@ -159,7 +162,6 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
-
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
@@ -181,7 +183,7 @@
         * changed some fields in schema to Optional
     * Updated ShowSpanningTreeDetail to:
         * updated regex to accommodate more formats
-        * add support for rstp 
+        * add support for rstp
         * chnaged some fields in schema to Optional
 
 --------------------------------------------------------------------------------
