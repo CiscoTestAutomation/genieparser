@@ -152,6 +152,10 @@
 --------------------------------------------------------------------------------
                                 ROUTING
 --------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpCef
+        * update regex to support outgoing_label_backup and outgoing_label_info
+
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
