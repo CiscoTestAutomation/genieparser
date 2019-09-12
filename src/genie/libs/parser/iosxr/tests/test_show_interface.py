@@ -1685,7 +1685,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                           }
 
     golden_output2 = {'execute.return_value': '''
-        +++ ML26: executing command 'show ipv6 vrf all interface' +++d.parse()
+        +++ XR1: executing command 'show ipv6 vrf all interface' +++d.parse()
         show ipv6 vrf all interface
 
         Fri Sep  6 09:50:49.892 JST
@@ -2046,7 +2046,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         HundredGigE0/0/1/2/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
         IPv6 is disabled, link-local address unassigned
         No global unicast address is configured
-        RP/0/RP0/CPU0:ML26#
+        RP/0/RP0/CPU0:XR1#
 
             '''}
 
