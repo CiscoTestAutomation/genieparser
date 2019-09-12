@@ -3306,11 +3306,39 @@ Lo0           up         --
 
 '''}
 
+    golden_output2 = {'execute.return_value': '''
+        show interface Ethernet1/1 brief
+
+        --------------------------------------------------------------------------------
+        Ethernet        VLAN  Type Mode   Status  Reason                   Speed     Port
+        Interface                                                                    Ch #
+        --------------------------------------------------------------------------------
+        Eth1/1          --    eth  routed up      none                       1000(D) --
+                '''}
+
+    golden_parsed_output2 = {
+        'interface': 
+            {'ethernet': 
+                {'Eth1/1': 
+                    {'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'none',
+                    'speed': '1000(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '--'}}}}
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse(interface="Ethernet1/1")
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -3453,6 +3481,38 @@ class test_show_run_interface(unittest.TestCase):
           member vni 3003002-3003010 associate-vrf
     '''}
 
+    golden_parsed_output_2 = {
+        'interface': {
+            'Ethernet1/1': {
+                'switchport': True,
+                'switchport_mode': 'trunk',
+                'trunk_vlans': '1-99,101-199,201-1399,1401-4094',
+                'port_channel':{
+                    'port_channel_mode': 'active',
+                    'port_channel_int': '1',
+                },
+                'shutdown': False,
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+      !Command: show running-config interface Ethernet1/1
+        !Running configuration last done at: Sun Aug 18 23:22:42 2019
+        !Time: Tue Sep  3 23:25:59 2019
+
+        version 7.0(3)I7(6) Bios:version 08.35
+
+        interface Ethernet1/1
+          description *** Peer Link ***
+          switchport
+          switchport mode trunk
+          switchport trunk allowed vlan 1-99,101-199,201-1399,1401-4094
+          channel-group 1 mode active
+          no shutdown
+    '''
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowRunningConfigInterface(device=self.device)
@@ -3464,6 +3524,12 @@ class test_show_run_interface(unittest.TestCase):
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(intf='nve1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+      
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        intf_obj = ShowRunningConfigInterface(device=self.device)
+        parsed_output = intf_obj.parse(intf='Ethernet1/1')
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
