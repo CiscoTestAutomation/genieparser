@@ -189,3 +189,11 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowArpTrafficDetail to parse drop_adj key from output
+
+
+--------------------------------------------------------------------------------
+                                VTP
+--------------------------------------------------------------------------------
+* IOSXE:
+    * Updated ShowVtpStatusSchema to:
+        * Changed schema keywords to Optional
