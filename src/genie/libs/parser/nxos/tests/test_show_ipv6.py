@@ -613,7 +613,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
             ICMPv6 active timers:
                 Last Neighbor-Solicitation sent: 00:07:39
                 Last Neighbor-Advertisement sent: 02:39:27
-                Last Router-Advertisement sent: 00:01:33
+                Last Router-Advertisement sent: 0.13256
                 Next Router-Advertisement sent in: 00:03:50
             Router-Advertisement parameters:
                 Periodic interval: 200 to 600 seconds

@@ -199,3 +199,8 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowArpTrafficDetail to parse drop_adj key from output
+------------------------------------------------------
+                         IPV6
+------------------------------------------------------
+* NXOS
+    * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
