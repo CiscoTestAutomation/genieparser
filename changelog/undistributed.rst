@@ -13,6 +13,7 @@
         * Add command 'show interface {interface} brief'
     * Update ShowRunningConfigInterface
         * Update regex to support more interface names
+        * Updated schema to support more outputs
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
