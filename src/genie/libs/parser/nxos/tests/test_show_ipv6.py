@@ -332,7 +332,7 @@ class test_show_ipv6_nd_interface_vrf_all(unittest.TestCase):
                 'icmpv6_active_timers': {
                     'last_neighbor_solicitation_sent': '00:07:39',
                     'last_neighbor_advertisement_sent': '02:39:27',
-                    'last_router_advertisement_sent': '00:01:33',
+                    'last_router_advertisement_sent': '0.13256',
                     'next_router_advertisement_sent': '00:03:50'
                 },
                 'router_advertisement': {
