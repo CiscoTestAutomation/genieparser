@@ -78,6 +78,8 @@
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
+    * Updated ShowBgpL2vpnEvpn:
+        * updated schema to support more output
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
