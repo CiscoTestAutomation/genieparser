@@ -208,6 +208,18 @@
     * Updated ShowVtpStatusSchema to:
         * Changed schema keywords to Optional
 
+                                IPV6
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
+
+--------------------------------------------------------------------------------
+                                MLD
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowMldGroupsDetail to support empty output
+    * Updated ShowMldGroupsDetail to support empty output
+    
 --------------------------------------------------------------------------------
                                 lldp
 --------------------------------------------------------------------------------
