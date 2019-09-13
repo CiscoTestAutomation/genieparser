@@ -223,4 +223,13 @@
                                 MLD
 --------------------------------------------------------------------------------
 * IOSXR
+
     * Updated ShowMldGroupsDetail to support empty output
+    * Updated ShowMldGroupsDetail to support empty output
+    
+--------------------------------------------------------------------------------
+                                lldp
+--------------------------------------------------------------------------------
+* IOS  
+    * Updated ShowLlpdEntry to:
+        * Updated regex to accommodate more formats
