@@ -76,7 +76,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
     def cli(self,output=None):
         if output is None:
-            out = self.device.execute()
+            out = self.device.execute(self.cli_command)
         else:
             out = output
 
