@@ -218,3 +218,10 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
+
+--------------------------------------------------------------------------------
+                                RPL
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRplRoutePolicy:
+        * Bad code issue - now passing command in device.parse()
