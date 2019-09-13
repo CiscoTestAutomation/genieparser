@@ -218,6 +218,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
 
             # System Name: R5
+            # System Name - not advertised
             m = p4.match(line)
             if m:
                 name = m.groupdict()['name']
