@@ -207,3 +207,9 @@
 * IOSXE:
     * Updated ShowVtpStatusSchema to:
         * Changed schema keywords to Optional
+
+--------------------------------------------------------------------------------
+                                IPV6
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
