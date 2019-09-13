@@ -140,6 +140,9 @@
         * Added ShowIpMsdpPeer for commands:
                 * show ip msdp peer
                 * show ip msdp vrf {vrf} peer
+* IOSXE
+        * Update ShowMplsLdpNeighborDetail:
+                * fix cli wrong command parser error
 
 --------------------------------------------------------------------------------
                                 vlan
