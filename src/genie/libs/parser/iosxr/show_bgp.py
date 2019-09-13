@@ -5158,24 +5158,83 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
 ################################################################################
 
+"""Schema for 'show bgp sessions'"""
+class ShowBgpSessionsSchema(MetaParser):
+    schema = {
+        'vrf': {
+            Any(): {
+                'neighbors': {
+                    Any(): {
+                        'spk': int,
+                        'as_number': int,
+                        'in_q': int,
+                        'out_q': int,
+                        'nbr_state': str,
+                        'nsr_state': str
+                    }
+                }
+            }
+        }
+    }
+
+
 # ==============================
 # Parser for 'show bgp sessions'
 # ==============================
 
-class ShowBgpSessions(MetaParser):
+class ShowBgpSessions(ShowBgpSessionsSchema):
     """Parser for show bgp sessions"""
 
     # TODO schema
     cli_command = 'show bgp sessions'
-    def cli(self):
-        """parsing mechanism: cli
-        """
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
+    def cli(self, output=None):
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # 3.3.3.3         default                 0 65000     0     0  Established  None
+        # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
 
-        return kl
+        p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
+            '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
+            '(?P<nbr_state>\w+) +(?P<nsr_state>\w+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
 
+            # 3.3.3.3         default                 0 65000     0     0  Established  None
+            # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                neighbor = group['neighbor']
+                spk = int(group['spk'])
+                as_number = int(group['as_number'])
+                in_q = int(group['in_q'])
+                out_q = int(group['out_q'])
+                nbr_state = group['nbr_state']
+                nsr_state = group['nsr_state']
+
+                neighbor_dict = ret_dict.setdefault('vrf', {}). \
+                                    setdefault(vrf, {}). \
+                                    setdefault('neighbors', {}). \
+                                    setdefault(neighbor, {})
+
+                neighbor_dict.update({'spk': spk})
+                neighbor_dict.update({'as_number': as_number})
+                neighbor_dict.update({'in_q': in_q})
+                neighbor_dict.update({'out_q': out_q})
+                neighbor_dict.update({'nbr_state': nbr_state})
+                neighbor_dict.update({'nsr_state': nsr_state})
+                continue
+
+        return ret_dict
 
 # ====================================
 # Parser for 'show bgp vrf-db vrf all'

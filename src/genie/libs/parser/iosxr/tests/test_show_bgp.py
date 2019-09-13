@@ -22,7 +22,8 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
-                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors
+                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
+                                  ShowBgpSessions
 
 
 # ==================================
@@ -8756,6 +8757,113 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
         parsed_output = obj.parse(neighbor='192.168.99.11')
         self.assertEqual(parsed_output,self.golden_parsed_output_neighbor)
 
+"""
+Unit test for 'show spanning-tree mst <mst_id>'
+"""
+class show_bgp_sessions(unittest.TestCase):
+    dev = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'vrf': {
+            'default': {
+                'neighbors': {
+                    '1.1.1.1': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                    '3.3.3.3': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                    '2001:1:1:1::1': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                    '2001:3:3:3::3': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                },
+            },
+            'VRF1': {
+                'neighbors': {
+                    '1.1.1.1': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                    '3.3.3.3': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                    '2001:1:1:1::1': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                    '2001:3:3:3::3': {
+                        'spk': 0,
+                        'as_number': 65000,
+                        'in_q': 0,
+                        'out_q': 0,
+                        'nbr_state': 'Established',
+                        'nsr_state': 'None',
+                    },
+                },
+            },
+        },
+    }
+    golden_output = {'execute.return_value': '''\
+        show bgp sessions
+        Fri Sep 13 19:10:54.578 UTC
+
+        Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+        1.1.1.1         default                 0 65000     0     0  Established  None
+        3.3.3.3         default                 0 65000     0     0  Established  None
+        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:3:3:3::3   default                 0 65000     0     0  Established  None
+        1.1.1.1         VRF1                    0 65000     0     0  Established  None
+        3.3.3.3         VRF1                    0 65000     0     0  Established  None
+        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
+        '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpSessions(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
