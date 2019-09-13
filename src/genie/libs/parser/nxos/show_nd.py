@@ -615,7 +615,6 @@ class ShowIpv6RoutersSchema(MetaParser):
                     Any(): {
                         'ip': str,
                         'is_router': bool,
-                        'prefix': str,
                         'last_update': str,
                         'current_hop_limit': int,
                         'addr_flag': int,
@@ -626,15 +625,19 @@ class ShowIpv6RoutersSchema(MetaParser):
                         'homeagent_flag':int,
                         'retransmission_time': int,
                         'reachable_time': int,
-                        'autonomous_flag': int,
-                        'onlink_flag': int,
-                        'preferred_lifetime': int,
-                        'valid_lifetime': int,
-                        },
+                        Optional('prefix'): {
+                            Any(): {
+                                'autonomous_flag': int,
+                                'onlink_flag': int,
+                                'preferred_lifetime': int,
+                                'valid_lifetime': int,
+                            }
+                        }
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ====================================================
@@ -668,6 +671,7 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         p1 = re.compile(r'^\s*((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
                         ' +(?P<interface>[\S]+) +,'
                         ' +last +update +time +(?P<last_update>[\d\.]+) +min$')
+
         # Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
         p2 = re.compile(r'^\s*Current_hop_limit +(?P<current_hop_limit>\d+), +Lifetime +(?P<lifetime>\d+),'
                         ' +AddrFlag +(?P<addr_flag>\d+), +OtherFlag +(?P<other_flag>\d+),'
@@ -675,10 +679,13 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
 
         #  HomeAgentFlag 0, Preference Medium
         p3 = re.compile(r'^\s*HomeAgentFlag +(?P<homeagentflag>\d+), +Preference +(?P<preference>\w+)$')
+
         # Reachable time 0 msec, Retransmission time 0 msec
         p4 = re.compile(r'^\s*Reachable time +(?P<reachable_time>\d+) +msec, +Retransmission time +(?P<retransmission_time>\d+) +msec$')
+
         #   Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
-        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/\s]+)onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
+        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/]+) +onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
+
         #   valid lifetime 2592000, preferred lifetime 604800
         p6 = re.compile(r'^\s*valid lifetime +(?P<valid_lifetime>\d+), +preferred lifetime +(?P<preferred_lifetime>\d+)$')
 
@@ -688,6 +695,8 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
             else:
                 continue
 
+            # Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
+            # Router fe80::e6c7:22ff:fe15:4cc1 on port-channel1.100 , last update time 1.3 min
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -701,12 +710,14 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
                 neighbor_dict.update({'ip': neighbor})
                 continue
 
+            # Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 neighbor_dict.update({k:int(v) for k,v in group.items()})
                 continue
 
+            #  HomeAgentFlag 0, Preference Medium
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -714,22 +725,26 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
                 neighbor_dict.update({'preference': group.pop('preference').lower()})
                 continue
 
+            # Reachable time 0 msec, Retransmission time 0 msec
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 neighbor_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
+            #   Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                neighbor_dict.update({'prefix':group.pop('prefix').strip()})
-                neighbor_dict.update({k: int(v) for k, v in group.items()})
+                prefix_dict = neighbor_dict.setdefault('prefix', {}).setdefault(group.pop('prefix'), {})
+                # neighbor_dict.update({'prefix':group.pop('prefix').strip()})
+                prefix_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
+            #   valid lifetime 2592000, preferred lifetime 604800
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                neighbor_dict.update({k: int(v) for k, v in group.items()})
+                prefix_dict.update({k: int(v) for k, v in group.items()})
                 continue
         return result_dict
