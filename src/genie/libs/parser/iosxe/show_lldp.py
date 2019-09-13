@@ -155,7 +155,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
 
         p3 = re.compile(r'^Port +Description: +(?P<desc>[\w\/\.\-]+)$')
 
-        p4 = re.compile(r'^System +Name: +(?P<name>\S+)$')
+        p4 = re.compile(r'^System +Name(?: +-|:) +(?P<name>[\S ]+)$')
 
         p5 = re.compile(r'^System +Description:.*$')
         p5_1 = re.compile(r'^(?P<msg>Cisco +IOS +Software.*)$')
