@@ -272,8 +272,8 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         'loop_guard': bool,
         'path_cost_method': str,
         Optional('pvst_simulation'): bool,
-        'vpc_peer_switch': bool,
-        'vpc_peer_switch_status': str,
+        Optional('vpc_peer_switch'): bool,
+        Optional('vpc_peer_switch_status'): str,
         'stp_lite': bool,
         Optional('portfast_default'): bool,
         Optional('uplink_fast'): bool,
@@ -572,10 +572,11 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                         '+the\s+(?P<mode>\w+)\s+compatible\s+Spanning\s+'
                         'Tree\s+protocol$')
 
+        # Bridge Identifier has priority 12345, sysid 0, address aa00.aa00.aa00
         p2 = re.compile(r'^Bridge\s+Identifier\s+has\s+priority\s+'
                         '(?P<bridge_priority>\d+),\s+sysid\s+'
                         '(?P<bridge_sysid>\d+),\s+address\s+'
-                        '(?P<bridge_address>\d+\.\w+.\w+)$')
+                        '(?P<bridge_address>\w+\.\w+\.\w+)$')
 
         p3 = re.compile(r'^Configured\s+hello\s+time\s+(?P<hello_time>\d+),'
                         '\s+max\s+age\s+(?P<max_age>\d+),\s+forward\s+delay'

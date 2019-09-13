@@ -589,13 +589,12 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
     cli_command = ['show mpls ldp neighbor', 'show mpls ldp neighbor vrf {vrf}']
 
-    def cli(self, vrf="",cmd="",output=None):
+    def cli(self, vrf="", output=None):
         if output is None:
-            if not cmd:
-                if vrf:
-                    cmd = self.cli_command[1].format(vrf=vrf)
-                else:
-                    cmd = self.cli_command[0]
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -848,8 +847,17 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
 
     cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp neighbor vrf {vrf} detail']
 
-    def cli(self, vrf="", cmd ="",output=None):
-        return super().cli(cmd=self.cli_command,vrf=vrf,output=output)
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(vrf=vrf, output=out)
 
 
 class ShowMplsLdpBindingsSchema(MetaParser):

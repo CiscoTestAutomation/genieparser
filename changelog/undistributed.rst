@@ -60,6 +60,8 @@
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
+    * Added ShowSegmentRoutingMplsLbAssignedSids for:
+        'show segment-routing mpls lb assigned-sids'
 
 --------------------------------------------------------------------------------
                                 ISSU
@@ -140,6 +142,9 @@
         * Added ShowIpMsdpPeer for commands:
                 * show ip msdp peer
                 * show ip msdp vrf {vrf} peer
+* IOSXE
+        * Update ShowMplsLdpNeighborDetail:
+                * fix cli wrong command parser error
 
 --------------------------------------------------------------------------------
                                 vlan
@@ -208,6 +213,7 @@
     * Updated ShowVtpStatusSchema to:
         * Changed schema keywords to Optional
 
+--------------------------------------------------------------------------------
                                 IPV6
 --------------------------------------------------------------------------------
 * NXOS
@@ -217,6 +223,7 @@
                                 MLD
 --------------------------------------------------------------------------------
 * IOSXR
+
     * Updated ShowMldGroupsDetail to support empty output
     * Updated ShowMldGroupsDetail to support empty output
     

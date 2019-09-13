@@ -334,7 +334,6 @@ class testShowSpanningTreeSummary(unittest.TestCase):
         Bridge Assurance                         is enabled
         Loopguard Default                        is disabled
         Pathcost method used                     is short
-        vPC peer-switch                          is enabled (operational)
         STP-Lite                                 is enabled
 
         Name                   Blocking Listening Learning Forwarding STP Active
@@ -439,9 +438,7 @@ class testShowSpanningTreeSummary(unittest.TestCase):
             'learnings': 0,
             'listenings': 0,
             'stp_actives': 280
-        },
-        'vpc_peer_switch': True,
-        'vpc_peer_switch_status': 'operational'
+        }
     }
     
     def test_empty(self):
@@ -481,7 +478,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         P1# show spanning-tree detail
 
          MST0000 is executing the mstp compatible Spanning Tree protocol
-      Bridge Identifier has priority 32768, sysid 0, address 0023.04ee.be14
+      Bridge Identifier has priority 32768, sysid 0, address 00e3.04ee.be14
       Configured hello time 10, max age 40, forward delay 30
       We are the root of the spanning tree
       Topology change flag not set, detected flag not set
@@ -511,7 +508,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
                     'mst_id': 0,
                     'bridge_priority': 32768,
                     'bridge_sysid': 0,
-                    'bridge_address': '0023.04ee.be14',
+                    'bridge_address': '00e3.04ee.be14',
                     'topology_change_flag': False,
                     'topology_detected_flag': False,
                     'topology_changes': 0,
