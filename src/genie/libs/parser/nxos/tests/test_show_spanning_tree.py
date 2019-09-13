@@ -334,7 +334,6 @@ class testShowSpanningTreeSummary(unittest.TestCase):
         Bridge Assurance                         is enabled
         Loopguard Default                        is disabled
         Pathcost method used                     is short
-        vPC peer-switch                          is enabled (operational)
         STP-Lite                                 is enabled
 
         Name                   Blocking Listening Learning Forwarding STP Active
@@ -439,9 +438,7 @@ class testShowSpanningTreeSummary(unittest.TestCase):
             'learnings': 0,
             'listenings': 0,
             'stp_actives': 280
-        },
-        'vpc_peer_switch': True,
-        'vpc_peer_switch_status': 'operational'
+        }
     }
     
     def test_empty(self):
