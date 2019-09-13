@@ -320,6 +320,129 @@ class testShowSpanningTreeSummary(unittest.TestCase):
     }
 
     empty_output = {'execute.return_value': '       '}
+
+    golden_output_1 = {'execute.return_value': '''\
+        S1-R101# show spann sum
+        Switch is in rapid-pvst mode 
+        Root bridge for: VLAN0109-VLAN0110, VLAN0122, VLAN0202-VLAN0205
+          VLAN0207-VLAN0209, VLAN0212-VLAN0215, VLAN0222-VLAN0224, VLAN0232-VLAN0234
+          VLAN0242, VLAN0244, VLAN0253-VLAN0254, VLAN0264, VLAN0274, VLAN0280
+
+        Port Type Default                        is disable
+        Edge Port [PortFast] BPDU Guard Default  is disabled
+        Edge Port [PortFast] BPDU Filter Default is disabled
+        Bridge Assurance                         is enabled
+        Loopguard Default                        is disabled
+        Pathcost method used                     is short
+        vPC peer-switch                          is enabled (operational)
+        STP-Lite                                 is enabled
+
+        Name                   Blocking Listening Learning Forwarding STP Active
+        ---------------------- -------- --------- -------- ---------- ----------
+        VLAN0109                     0         0        0          3          3
+        VLAN0110                     0         0        0          2          2
+        VLAN0122                     0         0        0          2          2
+        VLAN0202                     0         0        0          2          2
+        VLAN0203                     0         0        0          1          1
+        VLAN0204                     0         0        0          2          2
+        VLAN0205                     0         0        0          2          2
+        VLAN0207                     0         0        0          2          2
+        VLAN0208                     0         0        0          2          2
+        ---------------------- -------- --------- -------- ---------- ----------
+        117 vlans                    0         0        0        280        280
+        DS1-R101#        exit
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        'bpdu_filter': False,
+        'bpdu_guard': False,
+        'bridge_assurance': True,
+        'loop_guard': False,
+        'mode': {
+            'rapid-pvst': {
+                'VLAN0109': {
+                    'blocking': 0,
+                    'forwarding': 3,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 3
+                },
+                'VLAN0110': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0122': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0202': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0203': {
+                    'blocking': 0,
+                    'forwarding': 1,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 1
+                },
+                'VLAN0204': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0205': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0207': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+                'VLAN0208': {
+                    'blocking': 0,
+                    'forwarding': 2,
+                    'learning': 0,
+                    'listening': 0,
+                    'stp_active': 2
+                },
+            }
+        },
+        'path_cost_method': 'short',
+        'port_type_default': False,
+        'root_bridge_for': 'VLAN0109-VLAN0110, VLAN0122, VLAN0202-VLAN0205, '
+                            'VLAN0207-VLAN0209, VLAN0212-VLAN0215, VLAN0222-VLAN0224, '
+                            'VLAN0232-VLAN0234, VLAN0242, VLAN0244, VLAN0253-VLAN0254, '
+                            'VLAN0264, VLAN0274, VLAN0280',
+        'stp_lite': True,
+        'total_statistics': {
+            'blockings': 0,
+            'forwardings': 280,
+            'learnings': 0,
+            'listenings': 0,
+            'stp_actives': 280
+        },
+        'vpc_peer_switch': True,
+        'vpc_peer_switch_status': 'operational'
+    }
     
     def test_empty(self):
         self.dev2 = Mock(**self.empty_output)
@@ -341,6 +464,12 @@ class testShowSpanningTreeSummary(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_mstp_2)
 
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_1)
+        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 class TestShowSpanningTreeDetail(unittest.TestCase):
     dev_c3850 = Device(name = 'c3850')
@@ -577,6 +706,402 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         }
     }
 
+    golden_output_3 = {'execute.return_value': '''\
+DS1-R101# sh spanning-tree detail 
+
+ VLAN0109 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 20480, sysid 109, address 0023.04ee.be1f
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 8 last change occurred 126:41:16 ago
+          from port-channel31
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0
+
+ Port 4126 (port-channel31, vPC Peer-link) of VLAN0109 is root forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.4126
+   Designated root has priority 20589, address 0023.04ee.be1f
+   Designated bridge has priority 0, address 0026.981e.c642
+   Designated port id is 128.4126, designated path cost 0
+   Timers: message age 3, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port type is network
+   Link type is point-to-point by default
+   BPDU: sent 3245614, received 3245744
+
+ Port 4194 (port-channel99, vPC) of VLAN0109 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4194
+   Designated root has priority 20589, address 0023.04ee.be1f
+   Designated bridge has priority 20589, address 0026.981e.c642
+   Designated port id is 128.4194, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default
+   Root guard is enabled
+   BPDU: sent 2725887, received 0
+
+ Port 4196 (port-channel101, vPC) of VLAN0109 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4196
+   Designated root has priority 20589, address 0023.04ee.be1f
+   Designated bridge has priority 20589, address 0026.981e.c642
+   Designated port id is 128.4196, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is shared
+   BPDU: sent 231106, received 0
+
+
+ VLAN0110 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 20480, sysid 110, address 0023.04ee.be1f
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 9 last change occurred 123:32:30 ago
+          from port-channel31
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0
+
+ Port 4126 (port-channel31, vPC Peer-link) of VLAN0110 is root forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.4126
+   Designated root has priority 20590, address 0023.04ee.be1f
+   Designated bridge has priority 0, address 0026.981e.c642
+   Designated port id is 128.4126, designated path cost 0
+   Timers: message age 3, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port type is network
+   Link type is point-to-point by default
+   BPDU: sent 3245614, received 3245745
+
+ Port 4194 (port-channel99, vPC) of VLAN0110 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4194
+   Designated root has priority 20590, address 0023.04ee.be1f
+   Designated bridge has priority 20590, address 0026.981e.c642
+   Designated port id is 128.4194, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default
+   Root guard is enabled
+   BPDU: sent 2725886, received 0
+
+
+ VLAN0122 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 20480, sysid 122, address 0023.04ee.be1f
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 9 last change occurred 123:10:02 ago
+          from port-channel31
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0
+
+ Port 4126 (port-channel31, vPC Peer-link) of VLAN0122 is root forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.4126
+   Designated root has priority 20602, address 0023.04ee.be1f
+   Designated bridge has priority 0, address 0026.981e.c642
+   Designated port id is 128.4126, designated path cost 0
+   Timers: message age 3, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port type is network
+   Link type is point-to-point by default
+   BPDU: sent 3245614, received 3245745
+
+ Port 4194 (port-channel99, vPC) of VLAN0122 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.4194
+   Designated root has priority 20602, address 0023.04ee.be1f
+   Designated bridge has priority 20602, address 0026.981e.c642
+   Designated port id is 128.4194, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 0
+   Link type is point-to-point by default
+   Root guard is enabled
+   BPDU: sent 2725887, received 0
+
+    '''
+    }
+
+    golden_parsed_output_3 = {
+        'rapid_pvst': {
+            'forwarding_delay': 15,
+            'hello_time': 2,
+            'max_age': 20,
+            'vlans': {
+                109: {
+                    'bridge_address': '0023.04ee.be1f',
+                    'bridge_priority': 20480,
+                    'bridge_sysid': 109,
+                    'interfaces': {
+                        'Port-channel101': {
+                            'cost': 1,
+                            'counters': {
+                                'bpdu_received': 0,
+                                'bpdu_sent': 231106
+                            },
+                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_priority': 20589,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.4196',
+                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_priority': 20589,
+                            'internal': False,
+                            'link_type': 'shared',
+                            'name': 'Port-channel101',
+                            'number_of_forward_transitions': 0,
+                            'port_identifier': '128.4196',
+                            'port_num': 4196,
+                            'port_priority': 128,
+                            'status': 'designated',
+                            'timers': {
+                                'forward_delay': 0,
+                                'hold': 0,
+                                'message_age': 0
+                            }
+                        },
+                        'Port-channel31': {
+                            'cost': 2,
+                            'counters': {
+                                'bpdu_received': 3245744,
+                                'bpdu_sent': 3245614
+                            },
+                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_priority': 0,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.4126',
+                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_priority': 20589,
+                            'internal': False,
+                            'link_type': 'point-to-point',
+                            'name': 'Port-channel31',
+                            'number_of_forward_transitions': 1,
+                            'port_identifier': '128.4126',
+                            'port_num': 4126,
+                            'port_priority': 128,
+                            'port_type': 'network',
+                            'status': 'root',
+                            'timers': {
+                                'forward_delay': 0,
+                                'hold': 0,
+                                'message_age': 3
+                            }
+                        },
+                       'Port-channel99': {
+                            'cost': 1,
+                            'counters': {
+                                'bpdu_received': 0,
+                                'bpdu_sent': 2725887
+                            },
+                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_priority': 20589,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.4194',
+                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_priority': 20589,
+                            'internal': False,
+                            'link_type': 'point-to-point',
+                            'name': 'Port-channel99',
+                            'number_of_forward_transitions': 0,
+                            'port_identifier': '128.4194',
+                            'port_num': 4194,
+                            'port_priority': 128,
+                            'root_guard': True,
+                            'status': 'designated',
+                            'timers': {
+                                'forward_delay': 0,
+                                'hold': 0,
+                                'message_age': 0
+                            }
+                        }
+                    },
+                    'root_of_the_spanning_tree': True,
+                    'time_since_topology_change': '126:41:16',
+                    'timers': {
+                        'hello': 0,
+                        'notification': 0,
+                        'topology_change': 0
+                    },
+                    'times': {
+                        'forwarding_delay': 15,
+                        'hello': 2,
+                        'hold': 1,
+                        'max_age': 20,
+                        'notification': 2,
+                        'topology_change': 35
+                    },
+                    'topology_change_flag': False,
+                    'topology_changes': 8,
+                    'topology_detected_flag': False,
+                    'topology_from_port': 'port-channel31',
+                    'vlan_id': 109
+                },
+                110: {
+                    'bridge_address': '0023.04ee.be1f',
+                    'bridge_priority': 20480,
+                    'bridge_sysid': 110,
+                    'interfaces': {
+                        'Port-channel31': {
+                        'cost': 2,
+                        'counters': {
+                            'bpdu_received': 3245745,
+                            'bpdu_sent': 3245614
+                        },
+                        'designated_bridge_address': '0026.981e.c642',
+                        'designated_bridge_priority': 0,
+                        'designated_path_cost': 0,
+                        'designated_port_id': '128.4126',
+                        'designated_root_address': '0023.04ee.be1f',
+                        'designated_root_priority': 20590,
+                        'internal': False,
+                        'link_type': 'point-to-point',
+                        'name': 'Port-channel31',
+                        'number_of_forward_transitions': 1,
+                        'port_identifier': '128.4126',
+                        'port_num': 4126,
+                        'port_priority': 128,
+                        'port_type': 'network',
+                        'status': 'root',
+                        'timers': {
+                            'forward_delay': 0,
+                            'hold': 0,
+                            'message_age': 3
+                            }
+                        },
+                       'Port-channel99': {
+                            'cost': 1,
+                            'counters': {
+                                'bpdu_received': 0,
+                                'bpdu_sent': 2725886
+                            },
+                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_priority': 20590,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.4194',
+                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_priority': 20590,
+                            'internal': False,
+                            'link_type': 'point-to-point',
+                            'name': 'Port-channel99',
+                            'number_of_forward_transitions': 0,
+                            'port_identifier': '128.4194',
+                            'port_num': 4194,
+                            'port_priority': 128,
+                            'root_guard': True,
+                            'status': 'designated',
+                            'timers': {
+                                'forward_delay': 0,
+                                'hold': 0,
+                                'message_age': 0
+                            }
+                        }
+                    },
+                    'root_of_the_spanning_tree': True,
+                    'time_since_topology_change': '123:32:30',
+                    'timers': {
+                        'hello': 0,
+                        'notification': 0,
+                        'topology_change': 0
+                    },
+                    'times': {
+                        'forwarding_delay': 15,
+                        'hello': 2,
+                        'hold': 1,
+                        'max_age': 20,
+                        'notification': 2,
+                        'topology_change': 35
+                    },
+                    'topology_change_flag': False,
+                    'topology_changes': 9,
+                    'topology_detected_flag': False,
+                    'topology_from_port': 'port-channel31',
+                    'vlan_id': 110
+                },
+                122: {
+                    'bridge_address': '0023.04ee.be1f',
+                    'bridge_priority': 20480,
+                    'bridge_sysid': 122,
+                    'interfaces': {
+                        'Port-channel31': {
+                            'cost': 2,
+                            'counters': {  
+                                'bpdu_received': 3245745,
+                                'bpdu_sent': 3245614
+                            },
+                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_priority': 0,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.4126',
+                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_priority': 20602,
+                            'internal': False,
+                            'link_type': 'point-to-point',
+                            'name': 'Port-channel31',
+                            'number_of_forward_transitions': 1,
+                            'port_identifier': '128.4126',
+                            'port_num': 4126,
+                            'port_priority': 128,
+                            'port_type': 'network',
+                            'status': 'root',
+                            'timers': {
+                                'forward_delay': 0,
+                                'hold': 0,
+                                'message_age': 3
+                            }
+                        },
+                        'Port-channel99': {
+                            'cost': 1,
+                            'counters': {
+                                'bpdu_received': 0,
+                                'bpdu_sent': 2725887
+                            },
+                            'designated_bridge_address': '0026.981e.c642',
+                            'designated_bridge_priority': 20602,
+                            'designated_path_cost': 0,
+                            'designated_port_id': '128.4194',
+                            'designated_root_address': '0023.04ee.be1f',
+                            'designated_root_priority': 20602,
+                            'internal': False,
+                            'link_type': 'point-to-point',
+                            'name': 'Port-channel99',
+                            'number_of_forward_transitions': 0,
+                            'port_identifier': '128.4194',
+                            'port_num': 4194,
+                            'port_priority': 128,
+                            'root_guard': True,
+                            'status': 'designated',
+                            'timers': {
+                                'forward_delay': 0,
+                                'hold': 0,
+                                'message_age': 0
+                            }
+                        }
+                    },
+                    'root_of_the_spanning_tree': True,
+                    'time_since_topology_change': '123:10:02',
+                    'timers': {
+                        'hello': 0,
+                        'notification': 0,
+                        'topology_change': 0
+                    },
+                    'times': {
+                        'forwarding_delay': 15,
+                        'hello': 2,
+                        'hold': 1,
+                        'max_age': 20,
+                        'notification': 2,
+                        'topology_change': 35
+                    },
+                    'topology_change_flag': False,
+                    'topology_changes': 9,
+                    'topology_detected_flag': False,
+                    'topology_from_port': 'port-channel31',
+                    'vlan_id': 122
+                }
+            }
+        }
+    }
+
     def test_detail_output_1(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_1)
@@ -597,7 +1122,13 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         obj = ShowSpanningTreeDetail(device = self.dev2)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
-        
+
+    def test_detail_output_3(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_3)
+        obj = ShowSpanningTreeDetail(device = self.dev_c3850)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.golden_parsed_output_3)    
 
 if __name__ == '__main__':
     unittest.main()

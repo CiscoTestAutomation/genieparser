@@ -13,6 +13,10 @@
         * Add command 'show interface {interface} brief'
     * Update ShowRunningConfigInterface
         * Update regex to support more interface names
+        * Updated schema to support more outputs
+* IOSXR
+    * Update ShowIpv6VrfAllInterface
+        * Update regex to avoid empty lines and command itself
 
 --------------------------------------------------------------------------------
                                 EIGRP
@@ -79,7 +83,11 @@
 * IOSXR
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
-
+    * Updated ShowBgpInstanceAllAll for address family regex issue
+* IOS
+    * Added ShowBgpSummary for:
+        * show bgp summary
+        * show bgp all summary
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
@@ -134,6 +142,9 @@
         * Added ShowIpMsdpPeer for commands:
                 * show ip msdp peer
                 * show ip msdp vrf {vrf} peer
+* IOSXE
+        * Update ShowMplsLdpNeighborDetail:
+                * fix cli wrong command parser error
 
 --------------------------------------------------------------------------------
                                 vlan
@@ -141,14 +152,21 @@
 * IOSXE
     * Fixed regex in ShowVlan
 --------------------------------------------------------------------------------
-                                FLOW MONITOR
+                                FLOW
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+    * Added ShowFlowExporterStatistics for:
+        * show flow exporter statistics
+        * show flow exporter {exporter} statistics
+
 --------------------------------------------------------------------------------
                                 ROUTING
 --------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpCef
+        * update regex to support outgoing_label_backup and outgoing_label_info
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
@@ -160,3 +178,43 @@
 * IOS
     * Updated ShowInventory:
         * Matching more slots
+
+--------------------------------------------------------------------------------
+                                Spanning-tree
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowSpanningTreeSummary to:
+        * regex to accommodate different formats
+        * changed some fields in schema to Optional
+    * Updated ShowSpanningTreeDetail to:
+        * updated regex to accommodate more formats
+        * add support for rstp
+        * chnaged some fields in schema to Optional
+
+--------------------------------------------------------------------------------
+                                Spanning-Tree
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowSpanningTreeSummary:
+        * Changed some schema keywords to Optional
+        * Refined regex for various formats
+
+--------------------------------------------------------------------------------
+                                ARP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowArpTrafficDetail to parse drop_adj key from output
+
+
+--------------------------------------------------------------------------------
+                                VTP
+--------------------------------------------------------------------------------
+* IOSXE:
+    * Updated ShowVtpStatusSchema to:
+        * Changed schema keywords to Optional
+
+--------------------------------------------------------------------------------
+                                IPV6
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
