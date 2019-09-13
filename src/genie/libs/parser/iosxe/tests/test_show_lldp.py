@@ -319,27 +319,6 @@ class test_show_lldp_entry(unittest.TestCase):
     }
 
     golden_output_1 = {'execute.return_value': '''\
-        show lldp
-
-        Global LLDP Information:
-            Status: ACTIVE
-            LLDP advertisements are sent every 30 seconds
-            LLDP hold time advertised is 120 seconds
-            LLDP interface reinitialisation delay is 2 seconds
-        SDA-3650-Mgmt#
-        +++ SDA-3650-Mgmt: executing command 'show lldp traffic' +++
-        show lldp traffic
-
-        LLDP traffic statistics:
-            Total frames out: 264226
-            Total entries aged: 0
-            Total frames in: 70185
-            Total frames received in error: 0
-            Total frames discarded: 3
-            Total TLVs discarded: 17334
-            Total TLVs unrecognized: 17334
-        SDA-3650-Mgmt#
-        +++ SDA-3650-Mgmt: executing command 'show lldp entry *' +++
         show lldp entry *
 
         Capability codes:
@@ -347,10 +326,10 @@ class test_show_lldp_entry(unittest.TestCase):
             (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
         ------------------------------------------------
         Local Intf: Gi1/0/13
-        Chassis id: 700b.4f81.7f00
+        Chassis id: 00fe.4fe1.7834e
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
-        System Name: C9300-Edge-3
+        System Name: C9300-genie-3
 
         System Description: 
         Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 16.9.3s, RELEASE SOFTWARE (fc3)
@@ -362,7 +341,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 10.56.142.103
+            IP: 10.1.2.203
         Auto Negotiation - not supported
         Physical media capabilities - not advertised
         Media Attachment Unit type - not advertised
@@ -370,10 +349,10 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/11
-        Chassis id: 0045.1ded.9880
+        Chassis id: 4500.1ede.8800
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
-        System Name: C9300-FiaB.lab.cisco.com
+        System Name: C9300-genie.lab
 
         System Description: 
         Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 16.9.3, RELEASE SOFTWARE (fc2)
@@ -385,7 +364,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 10.56.142.102
+            IP: 10.1.23.23
         Auto Negotiation - not supported
         Physical media capabilities - not advertised
         Media Attachment Unit type - not advertised
@@ -393,8 +372,8 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Te1/1/3
-        Chassis id: 7069.5a3e.51a8
-        Port id: 7069.5a3e.51ac
+        Chassis id: 5a3e.7069.ed49
+        Port id: 5169.53ae.51ac
         Port Description - not advertised
         System Name - not advertised
         System Description - not advertised
@@ -410,10 +389,10 @@ class test_show_lldp_entry(unittest.TestCase):
 
         ------------------------------------------------
         Local Intf: Gi1/0/10
-        Chassis id: 848a.8dc3.4200
+        Chassis id: 8dc3.4100.2988
         Port id: Gi0/0
         Port Description: GigabitEthernet0/0
-        System Name: C9300-Edge.lab.cisco.com
+        System Name: C9300-Edge.genie
 
         System Description: 
         Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 16.9.3s, RELEASE SOFTWARE (fc3)
@@ -425,7 +404,7 @@ class test_show_lldp_entry(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses:
-            IP: 10.56.142.101
+            IP: 10.1.23.102
         Auto Negotiation - not supported
         Physical media capabilities - not advertised
         Media Attachment Unit type - not advertised
@@ -443,121 +422,121 @@ class test_show_lldp_entry(unittest.TestCase):
                 'port_id': {
                     'GigabitEthernet0/0': {
                         'neighbors': {
-                        'C9300-Edge.lab.cisco.com': {
-                            'auto_negotiation': 'not supported',
-                            'capabilities': {
-                            'mac_bridge': {
-                                'enabled': True,
-                                'name': 'mac_bridge',
-                                'system': True
-                            },
-                            'router': {
-                                'enabled': True,
-                                'name': 'router',
-                                'system': True
+                            'C9300-Edge.genie': {
+                                'auto_negotiation': 'not supported',
+                                'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True
+                                    },
+                                'router': {
+                                    'enabled': True,
+                                    'name': 'router',
+                                    'system': True
+                                    }
+                                },
+                            'chassis_id': '8dc3.4100.2988',
+                            'management_address': '10.1.23.102',
+                            'neighbor_id': 'C9300-Edge.genie',
+                            'port_description': 'GigabitEthernet0/0',
+                            'port_id': 'GigabitEthernet0/0',
+                            'system_description': 'Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 16.9.3s, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2019 by Cisco Systems, Inc.\nCompiled Sun 02-Jun-19 06:34 by mcpre',
+                            'system_name': 'C9300-Edge.genie',
+                            'time_remaining': 92
                             }
-                        },
-                        'chassis_id': '848a.8dc3.4200',
-                        'management_address': '10.56.142.101',
-                        'neighbor_id': 'C9300-Edge.lab.cisco.com',
-                        'port_description': 'GigabitEthernet0/0',
-                        'port_id': 'GigabitEthernet0/0',
-                        'system_description': 'Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 16.9.3s, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2019 by Cisco Systems, Inc.\nCompiled Sun 02-Jun-19 06:34 by mcpre',
-                        'system_name': 'C9300-Edge.lab.cisco.com',
-                        'time_remaining': 92
+                        }
                     }
-                }
-            }
-        },
-    },
+                },
+            },
             'GigabitEthernet1/0/11': {
                 'if_name': 'GigabitEthernet1/0/11',
                 'port_id': {
                     'GigabitEthernet0/0': {
                         'neighbors': {
-                            'C9300-FiaB.lab.cisco.com': {
+                            'C9300-genie.lab': {
                                 'auto_negotiation': 'not supported',
                                 'capabilities': {
                                     'mac_bridge': {
                                         'enabled': True,
                                         'name': 'mac_bridge',
                                         'system': True
-                                    },
+                                        },
                                     'router': {
                                         'enabled': True,
                                         'name': 'router',
                                         'system': True
-                                    }
-                                },
-                                'chassis_id': '0045.1ded.9880',
-                                'management_address': '10.56.142.102',
-                                'neighbor_id': 'C9300-FiaB.lab.cisco.com',
+                                        }
+                                    },
+                                'chassis_id': '4500.1ede.8800',
+                                'management_address': '10.1.23.23',
+                                'neighbor_id': 'C9300-genie.lab',
                                 'port_description': 'GigabitEthernet0/0',
                                 'port_id': 'GigabitEthernet0/0',
                                 'system_description': 'Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version '
-                                                      '16.9.3, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\n'
-                                                      'Copyright (c) 1986-2019 by Cisco Systems, Inc.\nCompiled Wed 20-Mar-19 08:02 by mcpre',
-                                'system_name': 'C9300-FiaB.lab.cisco.com',
+                                                    '16.9.3, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\n'
+                                                    'Copyright (c) 1986-2019 by Cisco Systems, Inc.\nCompiled Wed 20-Mar-19 08:02 by mcpre',
+                                'system_name': 'C9300-genie.lab',
                                 'time_remaining': 101
+                                },
                             },
                         },
                     },
                 },
-            },
             'GigabitEthernet1/0/13': {
-            'if_name': 'GigabitEthernet1/0/13',
-            'port_id': {
-                'GigabitEthernet0/0': {
-                'neighbors': {
-                    'C9300-Edge-3': {
-                        'auto_negotiation': 'not supported',
-                        'capabilities': {
-                            'mac_bridge': {
-                                'enabled': True,
-                                'name': 'mac_bridge',
-                                'system': True
+                'if_name': 'GigabitEthernet1/0/13',
+                'port_id': {
+                    'GigabitEthernet0/0': {
+                        'neighbors': {
+                            'C9300-genie-3': {
+                            'auto_negotiation': 'not supported',
+                            'capabilities': {
+                                'mac_bridge': {
+                                    'enabled': True,
+                                    'name': 'mac_bridge',
+                                    'system': True
+                                    },
+                                'router': {
+                                    'enabled': True,
+                                    'name': 'router',
+                                    'system': True
+                                    }
+                                },
+                            'chassis_id': '00fe.4fe1.7834e',
+                            'management_address': '10.1.2.203',
+                            'neighbor_id': 'C9300-genie-3',
+                            'port_description': 'GigabitEthernet0/0',
+                            'port_id': 'GigabitEthernet0/0',
+                            'system_description': 'Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version '
+                                                '16.9.3s, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\n'
+                                                'Copyright (c) 1986-2019 by Cisco Systems, Inc.\n'
+                                                'Compiled Sun 02-Jun-19 06:34 by mcpre',
+                            'system_name': 'C9300-genie-3',
+                            'time_remaining': 93
                             },
-                            'router': {
-                                'enabled': True,
-                                'name': 'router',
-                                'system': True
-                            }
                         },
-                        'chassis_id': '700b.4f81.7f00',
-                        'management_address': '10.56.142.103',
-                        'neighbor_id': 'C9300-Edge-3',
-                        'port_description': 'GigabitEthernet0/0',
-                        'port_id': 'GigabitEthernet0/0',
-                        'system_description': 'Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT9K_IOSXE), Version '
-                                              '16.9.3s, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\n'
-                                              'Copyright (c) 1986-2019 by Cisco Systems, Inc.\n'
-                                              'Compiled Sun 02-Jun-19 06:34 by mcpre',
-                        'system_name': 'C9300-Edge-3',
-                        'time_remaining': 93
                     },
                 },
             },
-        },
-    },
         'TenGigabitEthernet1/1/3': {
             'if_name': 'TenGigabitEthernet1/1/3',
             'port_id': {
-                '7069.5a3e.51ac': {
+                '5169.53ae.51ac': {
                     'neighbors': {
                         'not advertised': {
-                        'auto_negotiation': 'not supported',
-                        'chassis_id': '7069.5a3e.51a8',
-                        'neighbor_id': 'not advertised',
-                        'port_id': '7069.5a3e.51ac',
-                        'system_name': 'not advertised',
-                        'time_remaining': 97
+                            'auto_negotiation': 'not supported',
+                            'chassis_id': '5a3e.7069.ed49',
+                            'neighbor_id': 'not advertised',
+                            'port_id': '5169.53ae.51ac',
+                            'system_name': 'not advertised',
+                            'time_remaining': 97
+                            },
+                        },
                     },
                 },
             },
         },
-    },
-    },
-    'total_entries': 4
+        'total_entries': 4
     }
 
     def test_empty(self):

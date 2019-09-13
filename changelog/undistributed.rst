@@ -207,3 +207,10 @@
 * IOSXE:
     * Updated ShowVtpStatusSchema to:
         * Changed schema keywords to Optional
+
+--------------------------------------------------------------------------------
+                                lldp
+--------------------------------------------------------------------------------
+* IOS  
+    * Updated ShowLlpdEntry to:
+        * Updated regex to accommodate more formats
