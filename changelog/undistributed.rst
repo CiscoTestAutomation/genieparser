@@ -235,3 +235,10 @@
 * IOS  
     * Updated ShowLlpdEntry to:
         * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                Ethernet
+--------------------------------------------------------------------------------
+* IOSXR  
+    * Added ShowEthernetCfmMeps for:
+        * show ethernet cfm peer meps
