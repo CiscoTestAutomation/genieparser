@@ -3,16 +3,15 @@
 show l2vpn parser class
 
 """
-
+# Python
 import re
 from netaddr import EUI
 from ipaddress import ip_address
 
+# Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any
-
-from genie.libs.parser.base import *
-
+from genie.libs.parser.utils.common import Common
 
 class ShowL2vpnMacLearning(MetaParser):
     """Parser for show l2vpn mac-learning <mac_type> all location <location>"""
@@ -257,3 +256,206 @@ class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
         return result
 
 # vim: ft=python ts=8 sw=4 et
+
+# ====================================
+# Parser for 'show l2vpn bridge-domain'
+# ====================================
+
+class ShowL2vpnBridgeDomainSchema(MetaParser):
+    """Schema for show l2vpn bridge-domain
+    """
+
+    schema = {
+        'bridge_group': {
+            Any(): {
+                'bridge_domain': {
+                    Any(): {
+                        'id': int,
+                        'state': str,
+                        'shg_id': int,
+                        'mst_i': int,
+                        'aging': int,
+                        'mac_limit': int,
+                        'action': str,
+                        'notification': str,
+                        'filter_mac_address': int,
+                        'ac': {
+                            'ac': int,
+                            'ac_up': int,
+                            'interfaces': {
+                                Any(): {
+                                    'state': str,
+                                    'static_mac_address': int,
+                                    'mst_i': int,
+                                    'unprotected': bool
+                                }
+                            }
+                        },
+                        'vfi': {
+                            'vfi': int,
+                            Any(): {
+                                'neighbor': {
+                                    Any(): {
+                                        'pw_id': int,
+                                        'state': str,
+                                        'static_mac_address': int
+                                    }
+                                }
+                            }
+                        },
+                        'pw': {
+                            'pw': int,
+                            'pw_up': int
+                        },
+                    },
+                }
+            }
+        }
+    }
+
+class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
+    """Parser for show l2vpn bridge-domain"""
+
+    cli_command = 'show l2vpn bridge-domain'
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
+        p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\w+), +bridge\-domain: +'
+            '(?P<bridge_domain>\w+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
+            'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
+
+        # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+        p2 = re.compile(r'^Aging: +(?P<aging>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), '
+            '+Action: +(?P<action>\w+), +Notification: +(?P<notification>\w+)$')
+
+        # Filter MAC addresses: 0
+        p3 = re.compile(r'^Filter +MAC +addresses: +(?P<filter_mac_address>\d+)$')
+
+        # ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
+        p4 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +'
+            '(?P<vfi>\d+), +PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +\w+\)$')
+
+        # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
+        p5 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +Static +MAC +addresses: +'
+            '(?P<static_mac_address>\d+), +MSTi: +(?P<mst_i>\d+) +\((?P<unprotected>\w+)\)$')
+        
+        # VFI 1
+        p6 = re.compile(r'^VFI +(?P<vfi>\d+)$')
+
+        # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
+        p7 = re.compile(r'Neighbor +(?P<neighbor>\S+) +pw-id +(?P<pw_id>\d+), +state: +'
+            '(?P<state>\w+), +Static +MAC +addresses: +(?P<static_mac_address>\d+)$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                bridge_group = group['bridge_group']
+                bridge_domain = group['bridge_domain']
+                id = int(group['id'])
+                state = group['state']
+                shg_id = int(group['shg_id'])
+                mst_i = int(group['mst_i'])
+
+                bridge_domain_dict = ret_dict.setdefault('bridge_group', {}). \
+                    setdefault(bridge_group, {}). \
+                    setdefault('bridge_domain', {}). \
+                    setdefault(bridge_domain, {})
+
+                bridge_domain_dict.update({'id': id})  
+                bridge_domain_dict.update({'state': state}) 
+                bridge_domain_dict.update({'shg_id': shg_id}) 
+                bridge_domain_dict.update({'mst_i': mst_i}) 
+                continue
+            
+            # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                for k,v in group.items():
+                    bridge_domain_dict.update({k: int(v) if v.isdigit() else v})
+                continue
+            
+            # Filter MAC addresses: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                filter_mac_address = int(group['filter_mac_address'])
+                bridge_domain_dict.update({'filter_mac_address': filter_mac_address})
+                continue
+                
+            # ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ac = int(group['ac'])
+                ac_up = int(group['ac_up'])
+                vfi = int(group['vfi'])
+                pw = int(group['pw'])
+                pw_up = int(group['pw_up'])
+                
+                ac_dict = bridge_domain_dict.setdefault('ac', {})
+                ac_dict.update({'ac': ac})
+                ac_dict.update({'ac_up': ac_up})
+
+                vfi_dict = bridge_domain_dict.setdefault('vfi', {})
+                vfi_dict.update({'vfi': vfi})
+
+                pw_dict = bridge_domain_dict.setdefault('pw', {})
+                pw_dict.update({'pw': pw})
+                pw_dict.update({'pw_up': pw_up})
+                continue
+            
+            # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                state = group['state']
+                static_mac_address = int(group['static_mac_address'])
+                mst_i = int(group['mst_i'])
+                unprotected = group['unprotected']
+
+                interface_dict = ac_dict.setdefault('interfaces', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'state': state})
+                interface_dict.update({'static_mac_address': static_mac_address})
+                interface_dict.update({'mst_i': mst_i})
+                interface_dict.update({'unprotected': True if unprotected == 'unprotected' else False})
+                continue
+
+            # VFI 1
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                vfi = int(group['vfi'])
+                vfi_dict = bridge_domain_dict.setdefault('vfi', {}). \
+                    setdefault(vfi, {})
+                continue
+
+            # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                pw_id = int(group['pw_id'])
+                state = group['state']
+                static_mac_address = int(group['static_mac_address'])
+
+                neighbor_dict = vfi_dict.setdefault('neighbor', {}). \
+                    setdefault(neighbor, {})
+
+                neighbor_dict.update({'pw_id': pw_id})
+                neighbor_dict.update({'state': state})
+                neighbor_dict.update({'static_mac_address': static_mac_address})
+                continue
+
+        return ret_dict
