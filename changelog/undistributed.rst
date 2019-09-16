@@ -240,5 +240,11 @@
                                 EVPN
 --------------------------------------------------------------------------------
 * IOSXR:
+    * Added ShowEvpnEthernetSegment for:
+        * show evpn ethernet-segment
     * Added ShowEvpnEthernetSegmentDetail for:
         * show evpn ethernet-segment detail
+    * Added ShowEvpnEthernetSegmentPrivate for:
+        * show evpn ethernet-segment private
+    * Added ShowEvpnEthernetSegmentEsiDetail for:
+        * show evpn ethernet-segment esi {esi} detail
