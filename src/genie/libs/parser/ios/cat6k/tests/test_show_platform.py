@@ -42,7 +42,7 @@ class test_show_module(unittest.TestCase):
             },
             2: {
                 "port": 0,
-                "card_type": "Supervisor-Other                     ",
+                "card_type": "Supervisor-Other",
                 "model": "unknown",
                 "serial_number": "unknown",
                 "mac_address_from": "0000.0000.0000",
@@ -54,7 +54,7 @@ class test_show_module(unittest.TestCase):
             },
             3: {
                 "port": 16,
-                "card_type": "Pure SFM-mode 16 port 1000mb GBIC    ",
+                "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                 "model": "WS-X6816-GBIC",
                 "serial_number": "SAL061218K3",
                 "mac_address_from": "0005.7485.9518",
@@ -74,7 +74,7 @@ class test_show_module(unittest.TestCase):
             },
             4: {
                 "port": 16,
-                "card_type": "Pure SFM-mode 16 port 1000mb GBIC    ",
+                "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                 "model": "WS-X6816-GBIC",
                 "serial_number": "SAL061218K8",
                 "mac_address_from": "0005.7485.9548",
@@ -106,7 +106,7 @@ class test_show_module(unittest.TestCase):
             },
             6: {
                 "port": 1,
-                "card_type": "1 port 10-Gigabit Ethernet Module    ",
+                "card_type": "1 port 10-Gigabit Ethernet Module",
                 "model": "WS-X6502-10GE",
                 "serial_number": "SAD062003CM",
                 "mac_address_from": "0002.7ec2.95f2",
