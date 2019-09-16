@@ -191,11 +191,7 @@
     * Updated ShowSpanningTreeDetail to:
         * updated regex to accommodate more formats
         * add support for rstp
-        * chnaged some fields in schema to Optional
-
---------------------------------------------------------------------------------
-                                Spanning-Tree
---------------------------------------------------------------------------------
+        * changed some fields in schema to Optional
 * IOSXE
     * Updated ShowSpanningTreeSummary:
         * Changed some schema keywords to Optional

@@ -263,7 +263,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
     '''
 
     schema = {
-        'root_bridge_for': str,
+        Optional('root_bridge_for'): str,
         Optional('mst_type'): str,
         'port_type_default': bool,
         'bpdu_guard':bool,
@@ -289,7 +289,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
                 },
             },
         },
-        'total_statistics': {
+        Optional('total_statistics'): {
             'blockings': int,
             'listenings': int,
             'learnings': int,
