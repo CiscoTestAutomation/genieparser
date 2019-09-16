@@ -260,7 +260,7 @@ class ShowNveVniSchema(MetaParser):
                     'vni_state': str,
                     'mode': str,
                     'type': str,
-                    Optional('flags'): str,
+                    'flags': str,
                 }
             }
         }
@@ -307,6 +307,8 @@ class ShowNveVni(ShowNveVniSchema):
                 nve_dict.update({'type': group.pop('type')})
                 if group.get('flags'):
                     nve_dict.update({'flags': group.pop('flags')})
+                else:
+                    nve_dict.update({'flags': ''})
 
                 continue
 
@@ -1711,15 +1713,14 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                 Optional('adv_vmac'): bool,
                 Optional('source_if'): str,
                 Optional('multisite_bgw_if'): str,
-                Optional('global_suppress_arp'): bool,
-                Optional('mcast_group_address'): str,
-                Optional('mcast_group_layer'): str,
+                Optional('nve_type'): str,
                 Optional('vni'):{
                     Any():{
                         Optional('vni'): int,
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
-                        Optional('mcast_group'): str
+                        Optional('mcast_group'): str,
+                        Optional('suppress_arp'): bool,
                     },
                 },
             },
@@ -1813,6 +1814,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
 
             m = p3.match(line)
             if m:
+                global_suppress_arp_flag = False
+                global_mcast_group_flag = False
                 nve_name = m.groupdict().pop('nve_name')
                 nve_dict = result_dict.setdefault(nve_name, {})
                 nve_dict.update({'nve_name': nve_name})
@@ -1865,6 +1868,12 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                     else:
                         vni_dict.update({'associated_vrf': False})
 
+                    if global_suppress_arp_flag:
+                        vni_dict.update({'suppress_arp': True})
+
+                    if global_mcast_group_flag:
+                        vni_dict.update({'mcast_group': global_mcast_group_flag})
+
                 continue
 
             m = p10.match(line)
@@ -1904,13 +1913,13 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
 
             m = p14.match(line)
             if m:
-                nve_dict.update({'global_suppress_arp': True})
+                global_suppress_arp_flag = True
                 continue
 
             m = p15.match(line)
             if m:
-                nve_dict.update({'mcast_group_address': m.groupdict()['address']})
-                nve_dict.update({'mcast_group_layer': m.groupdict()['layer']})
+                global_mcast_group_flag = m.groupdict()['address']
+                nve_dict.update({'nve_type': m.groupdict()['layer']})
 
         return result_dict
 

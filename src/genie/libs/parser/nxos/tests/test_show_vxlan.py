@@ -238,6 +238,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1001]",
+                    'flags': '',
                 },
                 5002: {
                     'vni': 5002,
@@ -245,6 +246,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1002]",
+                    'flags': '',
                 },
                 5003: {
                     'vni': 5003,
@@ -252,6 +254,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1003]",
+                    'flags': '',
                 },
                 5004: {
                     'vni': 5004,
@@ -259,6 +262,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1004]",
+                    'flags': '',
                 },
                 6004: {
                     'vni': 6004,
@@ -266,6 +270,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1014]",
+                    'flags': '',
                 },
                 6005: {
                     'vni': 6005,
@@ -273,6 +278,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1015]",
+                    'flags': '',
                 },
                 7001: {
                     'vni': 7001,
@@ -280,6 +286,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1103]",
+                    'flags': '',
                 },
                 7002: {
                     'vni': 7002,
@@ -287,6 +294,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1104]",
+                    'flags': '',
                 },
                 7003: {
                     'vni': 7003,
@@ -294,6 +302,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1105]",
+                    'flags': '',
                 },
                 10001: {
                     'vni': 10001,
@@ -309,6 +318,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L3 [vni_10002]",
+                    'flags': '',
                 },
                 10005: {
                     'vni': 10005,
@@ -316,6 +326,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L3 [vni_10005]",
+                    'flags': '',
                 },
             },
         },
@@ -1550,9 +1561,7 @@ interface Ethernet1/6
             'nve_name': 'nve1',
             'if_state': "up",
             'host_reachability_protocol': "bgp",
-            'global_suppress_arp': True,
-            'mcast_group_address': '192.168.0.1',
-            'mcast_group_layer': 'L3',
+            'nve_type': 'L3',
             'adv_vmac': True,
             'source_if': "loopback1",
             'multisite_bgw_if': "loopback3",
@@ -1560,54 +1569,68 @@ interface Ethernet1/6
                 10100: {
                     'vni': 10100,
                     'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 10101: {
                     'vni': 10101,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
-                    'mcast_group': "231.100.1.1"
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 10102: {
                     'vni': 10102,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
-                    'mcast_group': "231.100.1.1"
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 100000: {
                     'vni': 100000,
                     'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 100001: {
                     'vni': 100001,
                     'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 100002: {
                     'vni': 100002,
                     'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 100004: {
                     'vni': 100004,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
-                    'mcast_group': "231.200.1.1"
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 100005: {
                     'vni': 100005,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
-                    'mcast_group': "231.200.1.1"
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 100006: {
                     'vni': 100006,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
-                    'mcast_group': "231.200.1.1"
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
                 10202: {
                     'vni': 10202,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
-                    'mcast_group': "231.200.1.1"
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1"
                 },
             },
         },
@@ -1656,17 +1679,13 @@ interface Ethernet1/6
       member vni 10100 associate-vrf
       member vni 10101
         multisite ingress-replication
-        mcast-group 231.100.1.1
       member vni 10102
         multisite ingress-replication
-        mcast-group 231.100.1.1
       member vni 100000-100002 associate-vrf
       member vni 100004-100006
         multisite ingress-replication
-        mcast-group 231.200.1.1
       member vni 10202
         multisite ingress-replication
-        mcast-group 231.200.1.1
      
     interface Ethernet1/1
       evpn multisite fabric-tracking
