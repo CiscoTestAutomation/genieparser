@@ -235,3 +235,10 @@
 * IOS  
     * Updated ShowLlpdEntry to:
         * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                platform vm
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowPlatformVm to:
+        * Updated regex to accommodate different formats from the outputs
