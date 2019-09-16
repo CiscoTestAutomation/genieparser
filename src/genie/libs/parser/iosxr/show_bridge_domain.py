@@ -40,8 +40,6 @@ from genie.libs.parser.base import *
 # XR command: "show l2vpn bridge-domain group <grp> detail"
 """
 
-class ShowL2vpnBridgeDomainSchema(MetaParser):
-
 
 class ShowL2VpnBridgeDomainSummary(MetaParser):
     """Parser for show l2vpn bridge-domain summary"""
