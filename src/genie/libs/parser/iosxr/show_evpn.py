@@ -1,7 +1,10 @@
 """ show_evpn.py
 
 show evpn parser class
+show evpn ethernet-segment
 show evpn ethernet-segment detail
+show evpn ethernet-segment private
+show evpn ethernet-segment esi {esi} detail
 """
 
 from netaddr import EUI
@@ -302,49 +305,65 @@ class ShowEvpnEviMac(MetaParser):
 
         return result
 
-class ShowEvpnEthernetSegmentDetailSchema(MetaParser):
+class ShowEvpnEthernetSegmentSchema(MetaParser):
     schema = {
         'segment_id': {
             Any(): {
                 'interface': {
                     Any(): {
                         'next_hops': list,
-                        'es_to_bgp_gates': str,
-                        'es_to_l2fib_gates': str,
-                        'main_port': {
+                        Optional('es_to_bgp_gates'): str,
+                        Optional('es_to_l2fib_gates'): str,
+                        Optional('main_port'): {
                             'interface': str,
+                            Optional('interface_mac'): str,
                             'if_handle': str,
                             'state': str,
                             'redundancy': str,
                         },
-                        'source_mac': str,
-                        'topology': {
+                        Optional('esi_type'): int,
+                        Optional('value'): str,
+                        Optional('es_import_rt'): str,
+                        Optional('source_mac'): str,
+                        Optional('topology'): {
                             'operational': str,
                             'configured': str,
                         },
-                        'primary_services': str,
-                        'secondary_services': str,
-                        'service_carving_results': {
-                            'bridge_ports': int,
+                        Optional('primary_services'): str,
+                        Optional('secondary_services'): str,
+                        Optional('service_carving'): str,
+                        Optional('peering_details'): str,
+                        Optional('service_carving_results'): {
+                            Optional('forwarders'): int,
+                            Optional('permanent'): int,
+                            Optional('bridge_ports'): int,
                             'elected': int,
                             'not_elected': int,
                             Optional('i_sid_ne'): str,
                             Optional('i_sid_e'): str,
                         },
-                        'mac_flushing_mode': str,
-                        'peering_timer': str,
-                        'recovery_timer': str,
-                        'flush_again_timer': str
+                        Optional('mac_flushing_mode'): str,
+                        Optional('peering_timer'): str,
+                        Optional('recovery_timer'): str,
+                        Optional('carving_timer'): str,
+                        Optional('local_shg_label'): int,
+                        Optional('remote_shg_label'): int,
+                        Optional('flush_again_timer'): str,
+                        Optional('shg_label'): {
+                            Any(): {
+                                'next_hop': str
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
-    """Parser class for 'show evpn ethernet-segment detail' CLI."""
+class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
+    """Parser class for 'show evpn ethernet-segment' CLI."""
 
-    cli_command = 'show evpn ethernet-segment detail'
+    cli_command = 'show evpn ethernet-segment'
     def cli(self, output=None):
         """parsing mechanism: cli
         """
@@ -371,6 +390,9 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
         # Interface name : GigabitEthernet0/3/0/0
         p4 = re.compile(r'^Interface name +: +(?P<interface>\S+)$')
 
+        # Interface MAC  : 008a.9644.d8dd
+        p4_1 = re.compile(r'^Interface +MAC *: +(?P<interface_mac>[\S ]+)$')
+
         # IfHandle       : 0x1800300
         p5 = re.compile(r'^IfHandle +: +(?P<if_handle>\S+)$')
 
@@ -384,7 +406,8 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
         p8 = re.compile(r'^Source +MAC +: +(?P<source_mac>[\S ]+)$')
 
         # Operational    : MHN
-        p9 = re.compile(r'^Operational +: +(?P<operational>\S+)$')
+        # Operational    : MH, All-active
+        p9 = re.compile(r'^Operational +: +(?P<operational>[\S+ ]+)$')
 
         # Configured     : A/A per service (default)
         p10 = re.compile(r'^Configured +: +(?P<configured>[\S ]+)$')
@@ -422,6 +445,39 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
         # Flushagain timer  : 60 sec
         p20 = re.compile(r'^Flushagain +timer +: +(?P<flush_again_timer>[\S ]+)$')
 
+        # ESI type          : 0
+        p21 = re.compile(r'^ESI +type *: +(?P<esi_type>\d+)$')
+
+        # Value          : 36.3700.0000.0000.1100
+        p22 = re.compile(r'^Value *: +(?P<value>[\S ]+)$')
+
+        # ES Import RT      : 3637.0000.0000 (from ESI)
+        p23 = re.compile(r'^ES +Import +RT *: +(?P<es_import_rt>[\S ]+)$')
+
+        # Service Carving   : Auto-selection
+        p24 = re.compile(r'^Service +Carving *: +(?P<service_carving>[\S ]+)$')
+
+        # Peering Details   : 3.3.3.36[MOD:P:00] 3.3.3.37[MOD:P:00]
+        p25 = re.compile(r'^Peering +Details *: +(?P<peering_details>[\S ]+)$')
+
+        # Forwarders     : 1
+        p26 = re.compile(r'^Forwarders *: +(?P<forwarders>\d+)$')
+
+        # Permanent      : 0
+        p27 = re.compile(r'^Permanent *: +(?P<permanent>\d+)$')
+
+        # Carving timer     : 0 sec [not running]
+        p28 = re.compile(r'^Carving +timer *: +(?P<carving_timer>[\S ]+)$')
+
+        # Local SHG label   : 64005
+        p29 = re.compile(r'^Local +SHG +label *: +(?P<local_shg_label>\d+)$')
+
+        # Remote SHG labels : 1
+        p30 = re.compile(r'^Remote +SHG +label *: +(?P<remote_shg_label>\d+)$')
+
+        # 64005 : nexthop 3.3.3.37
+        p31 = re.compile(r'^(?P<shg_label>\d+) *: +nexthop +(?P<next_hop>\S+)$')
+
         for line in out.splitlines():
             line = line.strip()
             
@@ -441,6 +497,14 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
             
             # Interface name : GigabitEthernet0/3/0/0
             m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Interface MAC  : 008a.9644.d8dd
+            m = p4_1.match(line)
             if m:
                 group = m.groupdict()
                 main_port_dict = interface_dict.setdefault('main_port', {})
@@ -576,6 +640,89 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
                 interface_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
 
+            # ESI type          : 0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Value          : 36.3700.0000.0000.1100
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # ES Import RT      : 3637.0000.0000 (from ESI)
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Service Carving   : Auto-selection
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Peering Details   : 3.3.3.36[MOD:P:00] 3.3.3.37[MOD:P:00]
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Forwarders     : 1
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Permanent      : 0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Carving timer     : 0 sec [not running]
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Local SHG label   : 64005
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Remote SHG labels : 1
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # 64005 : nexthop 3.3.3.37
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                shg_label = int(group['shg_label'])
+                next_hop = group['next_hop']
+                next_hop_dict = interface_dict.setdefault('shg_label', {}). \
+                    setdefault(shg_label, {})
+                next_hop_dict.update({'next_hop': next_hop})
+                continue
+
             # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
             m = p1.match(line)
             if m:
@@ -600,7 +747,48 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
 
         return ret_dict
 
+class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegment):
+    """Parser class for 'show evpn ethernet-segment detail' CLI."""
 
+    cli_command = 'show evpn ethernet-segment detail'
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=output)
+
+class ShowEvpnEthernetSegmentPrivate(ShowEvpnEthernetSegment):
+    """Parser class for 'show evpn ethernet-segment private' CLI."""
+
+    cli_command = 'show evpn ethernet-segment private'
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=output)
+
+class ShowEvpnEthernetSegmentEsiDetail(ShowEvpnEthernetSegment):
+    """Parser class for 'show evpn ethernet-segment esi {esi} detail' CLI."""
+
+    cli_command = 'show evpn ethernet-segment esi {esi} detail'
+    def cli(self, esi, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                    esi=esi))
+        else:
+            out = output
+        return super().cli(output=output)
 
 class ShowEvpnInternalLabelDetail(MetaParser):
 
