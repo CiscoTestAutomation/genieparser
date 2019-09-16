@@ -567,7 +567,7 @@ class test_show_platform_vm(unittest.TestCase):
         0/0/CPU0        LC (ACTIVE)     NONE            FINAL Band      192.0.0.6
         '''}
 
-    golden_output_thaing = {'execute.return_value': '''\
+    golden_output_2 = {'execute.return_value': '''\
         RP/0/RSP0/CPU0:ios#show platform vm
         Sat Sep  7 18:34:53.949 UTC
         Node name       Node type       Partner name    SW status       IP address
@@ -609,7 +609,7 @@ class test_show_platform_vm(unittest.TestCase):
 
     def test_show_platform_vm_golden_thaing(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_thaing)
+        self.device = Mock(**self.golden_output_2)
         obj = ShowPlatformVm(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
