@@ -1717,7 +1717,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                 Optional('multisite_bgw_if'): str,
                 Optional('vni'):{
                     Any():{
-                        Optional('vni'): str,
+                        Optional('vni'): int,
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
                         Optional('mcast_group'): str
@@ -1849,27 +1849,38 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                nve_vni = group.pop('nve_vni')
-                vni_dict = nve_dict.setdefault('vni',{}).setdefault(nve_vni,{})
-                vni_dict.update({'vni':nve_vni})
 
-                if group.get('associated_vrf'):
-                    vni_dict.update({'associated_vrf':True})
-                    group.pop('associated_vrf')
+                nve_vni = group.pop('nve_vni')
+                if '-' in nve_vni:
+                    nve_vni = nve_vni.split('-')
+                    nve_vni_list = list(range(int(nve_vni[0]), int(nve_vni[1])+1))
                 else:
-                    vni_dict.update({'associated_vrf': False})
+                    nve_vni_list = [int(nve_vni)]
+
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'vni': vni})
+                    if group.get('associated_vrf'):
+                        vni_dict.update({'associated_vrf': True})
+                    else:
+                        vni_dict.update({'associated_vrf': False})
 
                 continue
 
             m = p10.match(line)
             if m:
-                vni_dict.update({'multisite_ingress_replication': True})
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'multisite_ingress_replication': True})
                 continue
 
             m = p11.match(line)
             if m:
                 mcast = m.groupdict().pop('mcast_group')
-                vni_dict.update({'mcast_group': mcast})
+
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'mcast_group': mcast})
                 continue
 
             m = p12.match(line)
