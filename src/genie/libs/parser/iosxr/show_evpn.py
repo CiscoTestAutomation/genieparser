@@ -9,8 +9,9 @@ from ipaddress import ip_address
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
-
+from genie.metaparser.util.schemaengine import (Any,
+                                                Optional)
+from genie.libs.parser.utils.common import Common
 from genie.libs.parser.base import *
 
 re_8bit_u = r'(?:' + r'|'.join([
@@ -301,42 +302,304 @@ class ShowEvpnEviMac(MetaParser):
 
         return result
 
+class ShowEvpnEthernetSegmentDetailSchema(MetaParser):
+    schema = {
+        'segment_id': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'next_hops': list,
+                        'es_to_bgp_gates': str,
+                        'es_to_l2fib_gates': str,
+                        'main_port': {
+                            'interface': str,
+                            'if_handle': str,
+                            'state': str,
+                            'redundancy': str,
+                        },
+                        'source_mac': str,
+                        'topology': {
+                            'operational': str,
+                            'configured': str,
+                        },
+                        'primary_services': str,
+                        'secondary_services': str,
+                        'service_carving_results': {
+                            'bridge_ports': int,
+                            'elected': int,
+                            'not_elected': int,
+                            Optional('i_sid_ne'): str,
+                            Optional('i_sid_e'): str,
+                        },
+                        'mac_flushing_mode': str,
+                        'peering_timer': str,
+                        'recovery_timer': str,
+                        'flush_again_timer': str
+                    }
+                }
+            }
+        }
+    }
 
-class ShowEvpnEthernetSegment(MetaParser):
-    """Parser class for 'show evpn ethernet-segment' CLI."""
+class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
+    """Parser class for 'show evpn ethernet-segment detail' CLI."""
 
-    # TODO schema
-
-    def __init__(self, detail=False, private=False, carving=False, esi=None, **kwargs):
-        self.esi = esi
-        self.detail = detail
-        self.private = private
-        self.carving = carving
-        super().__init__(**kwargs)
-
-    cli_command = ['show evpn ethernet-segment esi {esi}','show evpn ethernet-segment']
-    def cli(self):
+    cli_command = 'show evpn ethernet-segment detail'
+    def cli(self, output=None):
         """parsing mechanism: cli
         """
-
-        if self.esi:
-            cmd = self.cli_command[0].format(esi=self.esi)
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
         else:
-            cmd = self.cli_command[1]
+            out = output
+        
+        ret_dict = {}
 
-        if self.carving:
-            cmd += ' carving'
+        # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+        p1 = re.compile(r'^(?P<segment_id>\S+) +(?P<interface>\S+) +(?P<next_hop>[\d\.]+)$')
 
-        if self.private:
-            cmd += ' private'
-        elif self.detail:
-            cmd += ' detail'
+        # 2.100.100.100   
+        p1_1 = re.compile(r'^(?P<next_hop>[\d\.]+)$')
 
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
+        # ES to BGP Gates   : Ready
+        p2 = re.compile(r'^ES +to +BGP +Gates +: +(?P<es_to_bgp_gates>\S+)$')
 
-        return kl
+        # ES to L2FIB Gates : Ready
+        p3 = re.compile(r'^ES +to +L2FIB +Gates +: +(?P<es_to_l2fib_gates>\S+)$')
+
+        # Interface name : GigabitEthernet0/3/0/0
+        p4 = re.compile(r'^Interface name +: +(?P<interface>\S+)$')
+
+        # IfHandle       : 0x1800300
+        p5 = re.compile(r'^IfHandle +: +(?P<if_handle>\S+)$')
+
+        # State          : Up
+        p6 = re.compile(r'^State + : +(?P<state>\S+)$')
+
+        # Redundancy     : Not Defined
+        p7 = re.compile(r'^Redundancy +: +(?P<redundancy>[\S ]+)$')
+
+        # Source MAC        : 0001.ed9e.0001 (PBB BSA)
+        p8 = re.compile(r'^Source +MAC +: +(?P<source_mac>[\S ]+)$')
+
+        # Operational    : MHN
+        p9 = re.compile(r'^Operational +: +(?P<operational>\S+)$')
+
+        # Configured     : A/A per service (default)
+        p10 = re.compile(r'^Configured +: +(?P<configured>[\S ]+)$')
+
+        # Primary Services  : Auto-selection
+        p11 = re.compile(r'^Primary +Services +: +(?P<primary_services>\S+)$')
+        
+        # Secondary Services: Auto-selection
+        p12 = re.compile(r'^Secondary +Services *: +(?P<secondary_services>\S+)$')
+
+        # Bridge ports   : 3
+        p13 = re.compile(r'^Bridge +ports +: +(?P<bridge_ports>\d+)$')
+
+        # Elected        : 0
+        p14 = re.compile(r'^Elected +: +(?P<elected>\d+)$')
+
+        # Not Elected    : 3
+        p15 = re.compile(r'^Not +Elected +: +(?P<not_elected>\d+)$')
+
+        # I-Sid E  :  1450101, 1650205, 1850309
+        p16 = re.compile(r'^I-Sid +E +: +(?P<i_sid_ne>[\S ]+)$')
+
+        # I-Sid NE  :  1450101, 1650205, 1850309
+        p16_1 = re.compile(r'^I-Sid +NE +: +(?P<i_sid_e>[\S ]+)$')
+        
+        # MAC Flushing mode : STP-TCN
+        p17 = re.compile(r'^MAC +Flushing +mode +: +(?P<mac_flushing_mode>\S+)$')
+
+        # Peering timer     : 45 sec [not running]
+        p18 = re.compile(r'^Peering +timer +: +(?P<peering_timer>[\S ]+)$')
+
+        # Recovery timer    : 20 sec [not running]
+        p19 = re.compile(r'^Recovery +timer +: +(?P<recovery_timer>[\S ]+)$')
+
+        # Flushagain timer  : 60 sec
+        p20 = re.compile(r'^Flushagain +timer +: +(?P<flush_again_timer>[\S ]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # ES to L2FIB Gates : Ready
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # ES to L2FIB Gates : Ready
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Interface name : GigabitEthernet0/3/0/0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # IfHandle       : 0x1800300
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # State          : Up
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Redundancy     : Not Defined
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Source MAC        : 0001.ed9e.0001 (PBB BSA)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Operational    : MHN
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                topology_dict = interface_dict.setdefault('topology', {})
+                topology_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Configured     : A/A per service (default)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                topology_dict = interface_dict.setdefault('topology', {})
+                topology_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Primary Services  : Auto-selection
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Secondary Services: Auto-selection
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Bridge ports   : 3
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # Elected        : 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # Not Elected    : 3
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # I-Sid E  :  1450101, 1650205, 1850309
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # I-Sid NE  :  1450101, 1650205, 1850309
+            m = p16_1.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # MAC Flushing mode : STP-TCN
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Peering timer     : 45 sec [not running]
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Recovery timer    : 20 sec [not running]
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Flushagain timer  : 60 sec
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                segment_id = group['segment_id']
+                interface = Common.convert_intf_name(group['interface'])
+                next_hop = group['next_hop']
+                interface_dict = ret_dict.setdefault('segment_id', {}). \
+                    setdefault(segment_id, {}). \
+                    setdefault('interface', {}). \
+                    setdefault(interface, {})
+                next_hop_list = interface_dict.setdefault('next_hops', [next_hop])
+                continue
+            
+            # 2.100.100.100
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop = group['next_hop']
+                next_hop_list.append(next_hop)
+                continue
+            
+        return ret_dict
+
 
 
 class ShowEvpnInternalLabelDetail(MetaParser):

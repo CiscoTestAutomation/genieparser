@@ -235,3 +235,10 @@
 * IOS  
     * Updated ShowLlpdEntry to:
         * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                EVPN
+--------------------------------------------------------------------------------
+* IOSXR:
+    * Added ShowEvpnEthernetSegmentDetail for:
+        * show evpn ethernet-segment detail
