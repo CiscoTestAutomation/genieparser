@@ -260,7 +260,7 @@ class ShowNveVniSchema(MetaParser):
                     'vni_state': str,
                     'mode': str,
                     'type': str,
-                    'flags': str,
+                    Optional('flags'): str,
                 }
             }
         }
@@ -287,15 +287,12 @@ class ShowNveVni(ShowNveVniSchema):
         # Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
         #  --------- -------- ----------------- ----- ---- ------------------ -----
         # nve1      5001     234.1.1.1         Up    CP   L2 [1001]
-
-        p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+)'
-                        ' +(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>[\w\s\-\[\]]+)( +(?P<flags>[\w]+))?$')
+        # nve1      5001     192.168.0.1         Up    CP   L2 [1001]          SA MS-IR
+        p1 = re.compile(r'^(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+) +'
+                        r'(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>\w+ +\[[\w\-]+\])'
+                        r'(?: +(?P<flags>[\w\-\s]+))?$')
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
-
+            line = line.strip()
 
             m = p1.match(line)
             if m:
@@ -310,8 +307,7 @@ class ShowNveVni(ShowNveVniSchema):
                 nve_dict.update({'type': group.pop('type')})
                 if group.get('flags'):
                     nve_dict.update({'flags': group.pop('flags')})
-                else:
-                    nve_dict.update({'flags': ""})
+
                 continue
 
         return result_dict
@@ -1715,6 +1711,9 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                 Optional('adv_vmac'): bool,
                 Optional('source_if'): str,
                 Optional('multisite_bgw_if'): str,
+                Optional('global_suppress_arp'): bool,
+                Optional('mcast_group_address'): str,
+                Optional('mcast_group_layer'): str,
                 Optional('vni'):{
                     Any():{
                         Optional('vni'): int,
@@ -1787,12 +1786,13 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   evpn multisite fabric-tracking
         #   evpn multisite dci-tracking
         p13 = re.compile(r'^\s*evpn multisite +(?P<fabric_dci_tracking>[\w\-]+)$')
+        # global suppress-arp
+        p14 = re.compile(r'^global +suppress-arp$')
+        # global mcast-group 192.168.0.1 L2
+        p15 = re.compile(r'^global +mcast-group +(?P<address>[\d\.]+) +(?P<layer>L2|L3)')
 
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
 
             m = p0.match(line)
             if m:
@@ -1901,6 +1901,17 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                     dci_dict.update({'if_name': interface})
                     dci_dict.update({'if_state': 'up'})
                 continue
+
+            m = p14.match(line)
+            if m:
+                nve_dict.update({'global_suppress_arp': True})
+                continue
+
+            m = p15.match(line)
+            if m:
+                nve_dict.update({'mcast_group_address': m.groupdict()['address']})
+                nve_dict.update({'mcast_group_layer': m.groupdict()['layer']})
+
         return result_dict
 
 # ====================================================
