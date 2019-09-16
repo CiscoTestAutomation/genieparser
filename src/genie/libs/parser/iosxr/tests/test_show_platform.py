@@ -567,6 +567,33 @@ class test_show_platform_vm(unittest.TestCase):
         0/0/CPU0        LC (ACTIVE)     NONE            FINAL Band      192.0.0.6
         '''}
 
+    golden_output_thaing = {'execute.return_value': '''\
+        RP/0/RSP0/CPU0:ios#show platform vm
+        Sat Sep  7 18:34:53.949 UTC
+        Node name       Node type       Partner name    SW status       IP address
+        --------------- --------------- --------------- --------------- ---------------
+        0/RSP0/CPU0     RP (ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
+        0/RSP1/CPU0     RP (STANDBY)    0/RSP0/CPU0     FINAL Band      192.0.4.4
+    '''
+    }
+
+    golden_parsed_output_2 = {
+        'node': {
+            '0/RSP0/CPU0': {
+                'ip_address': '192.0.0.4',
+                'partner_name': '0/RSP1/CPU0',
+                'sw_status': 'FINAL Band',
+                'type': 'RP (ACTIVE)'
+            },
+            '0/RSP1/CPU0': {
+                'ip_address': '192.0.4.4',
+                'partner_name': '0/RSP0/CPU0',
+                'sw_status': 'FINAL Band',
+                'type': 'RP (STANDBY)'
+            }
+        }
+    }
+
     def test_show_platform_vm_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -579,6 +606,13 @@ class test_show_platform_vm(unittest.TestCase):
         show_platform_vm_obj = ShowPlatformVm(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = show_platform_vm_obj.parse()
+
+    def test_show_platform_vm_golden_thaing(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_thaing)
+        obj = ShowPlatformVm(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # ============================================
 #  Unit test for 'show install active summary'       
