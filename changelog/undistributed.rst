@@ -235,3 +235,9 @@
 * IOS  
     * Updated ShowLlpdEntry to:
         * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output

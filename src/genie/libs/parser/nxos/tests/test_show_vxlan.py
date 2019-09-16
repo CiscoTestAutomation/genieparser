@@ -1432,34 +1432,34 @@ class test_show_running_config_nv_overlay(unittest.TestCase):
             'source_if': "loopback1",
             'multisite_bgw_if': "loopback3",
             'vni': {
-                10100: {
-                    'vni': 10100,
+                '10100': {
+                    'vni': '10100',
                     'associated_vrf': True,
                 },
-                10101: {
-                    'vni': 10101,
+                '10101': {
+                    'vni': '10101',
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.100.1.1"
                 },
-                10102: {
-                    'vni': 10102,
+                '10102': {
+                    'vni': '10102',
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.100.1.1"
                 },
-                10200: {
-                    'vni': 10200,
+                '100000-100003': {
+                    'vni': '100000-100003',
                     'associated_vrf': True,
                 },
-                10201: {
-                    'vni': 10201,
+                '100004-100006': {
+                    'vni': '100004-100006',
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.200.1.1"
                 },
-                10202: {
-                    'vni': 10202,
+                '10202': {
+                    'vni': '10202',
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.200.1.1"
@@ -1513,8 +1513,8 @@ interface nve1
   member vni 10102
     multisite ingress-replication
     mcast-group 231.100.1.1
-  member vni 10200 associate-vrf
-  member vni 10201
+  member vni 100000-100003 associate-vrf
+  member vni 100004-100006
     multisite ingress-replication
     mcast-group 231.200.1.1
   member vni 10202

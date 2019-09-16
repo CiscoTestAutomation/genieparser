@@ -1717,7 +1717,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                 Optional('multisite_bgw_if'): str,
                 Optional('vni'):{
                     Any():{
-                        Optional('vni'): int,
+                        Optional('vni'): str,
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
                         Optional('mcast_group'): str
@@ -1776,7 +1776,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   multisite border-gateway interface loopback3
         p8 = re.compile(r'^\s*multisite +border\-gateway +interface +(?P<multisite_bgw_if>[\w]+)$')
         #   member vni 10100 associate-vrf
-        p9 = re.compile(r'^\s*member vni +(?P<nve_vni>[\d]+)( +(?P<associated_vrf>[\w\-]+))?$')
+        #   member vni 10100-10105 associate-vrf
+        p9 = re.compile(r'^\s*member vni +(?P<nve_vni>[\d-]+)( +(?P<associated_vrf>[\w\-]+))?$')
         #   multisite ingress-replication
         p10 = re.compile(r'^\s*multisite ingress-replication$')
         #   mcast-group 231.100.1.1
@@ -1848,7 +1849,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                nve_vni = int(group.pop('nve_vni'))
+                nve_vni = group.pop('nve_vni')
                 vni_dict = nve_dict.setdefault('vni',{}).setdefault(nve_vni,{})
                 vni_dict.update({'vni':nve_vni})
 
