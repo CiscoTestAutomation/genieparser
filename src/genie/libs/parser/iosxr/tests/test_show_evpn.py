@@ -10,17 +10,17 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_pim
+# iosxr show_evpn
 from genie.libs.parser.iosxr.show_evpn import (ShowEvpnEthernetSegmentDetail)
 
 
 # ===================================================
-#  Unit test for 'show ethernet cfm peer meps'
+#  Unit test for 'show evpn ethernet-segment detail'
 # ===================================================
 
-class test_show_pim_vrf_mstatic(unittest.TestCase):
+class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
-    '''Unit test for 'show ethernet cfm peer meps'''
+    '''Unit test for 'show evpn ethernet-segment detail'''
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}

@@ -1,7 +1,7 @@
 """ show_evpn.py
 
 show evpn parser class
-
+show evpn ethernet-segment detail
 """
 
 from netaddr import EUI
@@ -597,7 +597,7 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
                 next_hop = group['next_hop']
                 next_hop_list.append(next_hop)
                 continue
-            
+
         return ret_dict
 
 
