@@ -135,46 +135,45 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
 class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
     """Schema for 'show authentication sessions interface {intf} details'
     """
-
     schema = {
-        'authentication_sessions': {
-            'index': {
-                Any(): {
-                    'interface': str,
-                    Optional('iif_id'): str,
-                    'mac_address': str,
-                    Optional('ipv6_address'): str,
-                    'ipv4_address': str,
-                    Optional('user_name'): str,
-                    'status': str,
-                    'domain': str,
-                    'oper_host_mode': str,
-                    'oper_control_dir': str,
-                    Optional('authorized_by'): str,
-                    Optional('vlan_policy'): str,
-                    'session_timeout': str,
-                    'common_session_id': str,
-                    'acct_session_id': str,
-                    'handle': str,
-                    Optional('idle_timeout'): str,
-                    Optional('current_policy'): str,
-                    Optional('local_policies'): {
-                        'template': {
-                            Any():{ 
-                                'priority': int,
+        'interface': {
+            Any(): {
+                'mac_address': {
+                    Any(): {
+                        Optional('iif_id'): str,
+                        Optional('ipv6_address'): str,
+                        'ipv4_address': str,
+                        Optional('user_name'): str,
+                        'status': str,
+                        'domain': str,
+                        'oper_host_mode': str,
+                        'oper_control_dir': str,
+                        Optional('authorized_by'): str,
+                        Optional('vlan_policy'): str,
+                        'session_timeout': str,
+                        'common_session_id': str,
+                        'acct_session_id': str,
+                        'handle': str,
+                        Optional('idle_timeout'): str,
+                        Optional('current_policy'): str,
+                        Optional('local_policies'): {
+                            'template': {
+                                Any(): {
+                                    'priority': int,
+                                }
+                            },
+                            'vlan_group': {
+                                'vlan': int,
+                            },
+                        },
+                        'method_status': {
+                            Any(): {
+                                'method': str,
+                                'state': str,
                             }
-                        },
-                        'vlan_group': {
-                            'vlan': int,
-                        },
-                    },
-                    'method_status': {
-                        Any(): {
-                            'method': str,
-                            'state': str,
                         }
                     }
-                }
+                },
             }
         }
     }
@@ -216,7 +215,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         p2 = re.compile(r'^Local +Policies:')
 
         # Template: CRITICAL_VLAN (priority 150)
-        p3 = re.compile(r'^Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
+        # Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+        p3 = re.compile(r'^(?:Service)|Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
 
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
@@ -235,6 +235,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
         # initial return dictionary
         ret_dict = {}
+        hold_dict = {}
+        mac_dict = {}
 
         # intial index
         index_id = 1
@@ -273,17 +275,33 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             if m:
                 group = m.groupdict()
 
-                intf_dict = ret_dict.setdefault('authentication_sessions', {})
-                index_dict = intf_dict.setdefault('index', {}).setdefault(index_id, {})
-
-
-                key = re.sub(r'( |-)', '_',group['argument'].lower())
+                key = re.sub(r'( |-)', '_', group['argument'].lower())
 
                 # to keep pv4_address as common key
                 if key == 'ip_address':
                     key = 'ipv4_address'
 
-                index_dict.update({key: group['value']})
+                if 'interface' in ret_dict.keys():
+                    if key == 'mac_address':
+                        mac_dict = intf_dict.setdefault(group['value'], {})
+                    elif key == 'iif_id':
+                        hold_dict.update({'argument': key, 'value': group['value']})
+                    else:
+                        if hold_dict:
+                            mac_dict.update({key: group['value']})
+                            tmp_keys = hold_dict.pop('argument')
+                            tmp_values = hold_dict.pop('value')
+                            mac_dict.update({tmp_keys: tmp_values})
+                        else:
+                            if key != 'interface':
+                                mac_dict.update({key: group['value']})
+                else: 
+                    intf_dict = ret_dict.setdefault('interface', {}).setdefault(group['value'], \
+                        {}).setdefault('mac_address', {})
+                    
+                # else:
+                #     if key != 'interface':
+                #         hold_dict.update({group['value']: key})
 
                 continue
 
@@ -292,7 +310,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             if m:
                 group = m.groupdict()
 
-                template_dict = index_dict.setdefault('local_policies', {}).setdefault('template', {})
+                template_dict = mac_dict.setdefault('local_policies', {}).setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
                 priority_dict.update({'priority': int(group['priority'])})
                 continue
@@ -303,7 +321,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             if m:
                 group = m.groupdict()
 
-                vlan_dict = index_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
+                vlan_dict = mac_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
 
                 vlan_dict.update({'vlan': int(group['vlan_value'])})
 
@@ -314,7 +332,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             if m:
                 group = m.groupdict()
 
-                method_stat = index_dict.setdefault('method_status', {}).setdefault(group['method'], {})
+                method_stat = mac_dict.setdefault('method_status', {}).setdefault(group['method'], {})
                 method_stat.update({'method': group['method']})
                 method_stat.update({'state': group['state']})
                 continue

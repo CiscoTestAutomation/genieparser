@@ -98,33 +98,33 @@ class test_show_authentication_sessions_interface(unittest.TestCase):
 
 
     golden_parsed_output_1 = {
-        'authentication_sessions': {
-            'index': {
-                1: {
-                    'interface': 'GigabitEthernet2/0/47',
-                    'mac_address': 'Unknown',   
-                    'ipv4_address': 'Unknown',
-                    'status': 'Authz Success',
-                    'domain': 'DATA',
-                    'oper_host_mode': 'multi-host',
-                    'oper_control_dir': 'both',
-                    'authorized_by': 'Guest Vlan',
-                    'vlan_policy': '20',
-                    'session_timeout': 'N/A',
-                    'idle_timeout': 'N/A',
-                    'common_session_id': '0A3462C8000000000002763C',
-                    'acct_session_id': '0x00000002',
-                    'handle': '0x25000000',
-                    'method_status': {
-                        'mab': {
-                            'method': 'mab',
-                            'state': 'Failed over',
+        'interface': {
+            'GigabitEthernet2/0/47': {
+                'mac_address': {
+                    'Unknown': {
+                        'ipv4_address': 'Unknown',
+                        'status': 'Authz Success',
+                        'domain': 'DATA',
+                        'oper_host_mode': 'multi-host',
+                        'oper_control_dir': 'both',
+                        'authorized_by': 'Guest Vlan',
+                        'vlan_policy': '20',
+                        'session_timeout': 'N/A',
+                        'idle_timeout': 'N/A',
+                        'common_session_id': '0A3462C8000000000002763C',
+                        'acct_session_id': '0x00000002',
+                        'handle': '0x25000000',
+                        'method_status': {
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Failed over',
+                            },
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Failed over',
+                            },
                         },
-                        'dot1x': {
-                            'method': 'dot1x',
-                            'state': 'Failed over',
-                        },
-                    },
+                    }
                 }
             }
         }
@@ -198,65 +198,66 @@ Runnable methods list:
     '''
     }
     golden_parsed_output_2 = {
-        'authentication_sessions': {
-            'index': {
-                1: {
-                    'interface':  'GigabitEthernet2/0/47',
-                    'mac_address':  'Unknown',
-                    'ipv4_address':  'Unknown',
-                    'status':  'Authz Success',
-                    'domain':  'DATA',
-                    'oper_host_mode':  'multi-host',
-                    'oper_control_dir':  'both',
-                    'authorized_by':  'Guest Vlan',
-                    'vlan_policy':  '20',
-                    'session_timeout':  'N/A',
-                    'idle_timeout':  'N/A',
-                    'common_session_id':  '0A3462C8000000000002763C',
-                    'acct_session_id':  '0x00000002',
-                    'handle':  '0x25000000',
-                    'method_status': {
-                        'mab': {
-                            'method': 'mab',
-                            'state': 'Failed over',
+        'interface': {
+            'GigabitEthernet2/0/47': {
+                'mac_address': {
+                    '0005.5e7c.da05': {
+                        'acct_session_id': '0x00000003',
+                        'authorized_by': 'Authentication '
+                        'Server',
+                        'common_session_id': '0A3462C8000000010002A238',
+                        'domain': 'VOICE',
+                        'handle': '0x91000001',
+                        'idle_timeout': 'N/A',
+                        'ipv4_address': 'Unknown',
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Not '
+                                'run'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Authc Success'
+                            }
                         },
-                        'dot1x': {
-                            'method': 'dot1x',
-                            'state': 'Failed over',
-                        },
+                        'oper_control_dir': 'both',
+                        'oper_host_mode': 'multi-domain',
+                        'session_timeout': 'N/A',
+                        'status': 'Authz '
+                        'Success',
+                        'user_name': '00055e7cda05'
                     },
-                },
-                2:  {
-                    'interface':  'GigabitEthernet2/0/47',
-                    'mac_address':  '0005.5e7c.da05',
-                    'ipv4_address':  'Unknown',
-                    'user_name':  '00055e7cda05',
-                    'status':  'Authz Success',
-                    'domain':  'VOICE',
-                    'oper_host_mode':  'multi-domain',
-                    'oper_control_dir':  'both',
-                    'authorized_by':  'Authentication Server',
-                    'session_timeout':  'N/A',
-                    'idle_timeout':  'N/A',
-                    'common_session_id':  '0A3462C8000000010002A238',
-                    'acct_session_id':  '0x00000003',
-                    'handle':  '0x91000001',
-                    'method_status': {
-                        'mab': {
-                            'method': 'mab',
-                            'state': 'Authc Success',
+                    'Unknown': {
+                        'acct_session_id': '0x00000002',
+                        'authorized_by': 'Guest Vlan',
+                        'common_session_id': '0A3462C8000000000002763C',
+                        'domain': 'DATA',
+                        'handle': '0x25000000',
+                        'idle_timeout': 'N/A',
+                        'ipv4_address': 'Unknown',
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Failed over'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Failed over'
+                            }
                         },
-                        'dot1x': {
-                            'method': 'dot1x',
-                            'state': 'Not run',
-                        },
-                    },
-                },
+                        'oper_control_dir': 'both',
+                        'oper_host_mode': 'multi-host',
+                        'session_timeout': 'N/A',
+                        'status': 'Authz '
+                        'Success',
+                        'vlan_policy': '20'
+                    }
+                }
             }
         }
     }
-
-
+    
     def test_authentication_sessions_interface_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterface(device=self.dev1)
