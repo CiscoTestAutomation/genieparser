@@ -292,6 +292,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # i L1     10.151.22.22 [115/20] via 10.186.2.2, 06:47:04, GigabitEthernet0/1
             # D        192.168.205.1
             # S*       0.0.0.0/0 [1/0] via 10.50.15.1
+            # L        FF00::/8 [0/0]
             p3 = re.compile(
                 r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
                 r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
@@ -605,40 +606,26 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if m.groupdict()['vrf']:
                     vrf_val = m.groupdict()['vrf']
                 index += 1
-                if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
-                if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
+                route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                                        .setdefault('address_family', {}).setdefault(af, {})\
+                                        .setdefault('routes', {}).setdefault(route, {})
 
-                result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
-                    'route'] = route
-
-                result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                    ['active'] = active
+                route_dict['route'] = route
+                route_dict['active'] = active
 
                 if metrics:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['metric'] = int(metrics)
+                    route_dict['metric'] = int(metrics)
                 if route_preference:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['route_preference'] = route_preference
+                    route_dict['route_preference'] = route_preference
                 if source_protocol_codes:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['source_protocol_codes'] = source_protocol_codes
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['source_protocol'] = source_protocol
+                    route_dict['source_protocol_codes'] = source_protocol_codes
+                    route_dict['source_protocol'] = source_protocol
 
-                if 'next_hop' not in \
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
-                        'next_hop'] = {}
+                if 'next_hop' not in route_dict:
+                    route_dict['next_hop'] = {}
 
-                if 'next_hop_list' not in \
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
-                            'next_hop']:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
-                        'next_hop'][
-                        'next_hop_list'] = {}
+                if 'next_hop_list' not in route_dict['next_hop']:
+                    route_dict['next_hop']['next_hop_list'] = {}
 
                 if index not in \
                         result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
@@ -657,9 +644,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                     ['next_hop_list'][index]['next_hop'] = next_hop
 
                 if vrf_val:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route][
-                        'next_hop'] \
-                        ['next_hop_list'][index]['vrf'] = vrf_val
+                    route_dict['next_hop']['next_hop_list'][index]['vrf'] = vrf_val
 
                 continue
             # Routing entry for 10.151.0.0/24, 1 known subnets
@@ -948,7 +933,7 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
             #   via 2001:10:1:2::2, GigabitEthernet0/0
             #   via GigabitEthernet0/2, directly connected
             #   via 192.168.51.1%default, indirectly connected
-            p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+)?,)?'
+            p3 = re.compile(r'^\s*via( +(?P<next_hop>[0-9][\w\:\.\%]+),?)?'
                             '( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?( +directly connected)?( +indirectly connected)?$')
             m = p3.match(line)
             if m:

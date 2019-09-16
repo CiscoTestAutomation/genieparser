@@ -1039,11 +1039,10 @@ class ShowMplsLdpCapabilitiesSchema(MetaParser):
             Optional('iccp_type'): str,
             Optional('maj_version'): int,
             Optional('min_version'): int,
-            'dynamic_anouncement': str,
+            Optional('dynamic_anouncement'): str,
             Optional('mldp_point_to_multipoint'): str,
             Optional('mldp_multipoint_to_multipoint'): str,
-            'typed_wildcard': str,
-
+            Optional('typed_wildcard'): str,
         }
     }
 
