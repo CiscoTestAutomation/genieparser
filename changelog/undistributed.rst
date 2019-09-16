@@ -143,6 +143,8 @@
 * IOSXE
         * Update ShowMplsLdpNeighborDetail:
                 * fix cli wrong command parser error
+        * Update ShowMplsForwardingTable:
+                * update regex to support more output pattern
 
 --------------------------------------------------------------------------------
                                 vlan
