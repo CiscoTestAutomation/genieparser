@@ -87,7 +87,7 @@ class ShowModule(ShowModuleSchema):
 
                 mod = int(group['mod'])
                 ports = int(group['ports'])
-                card_type = group['card_type']
+                card_type = group['card_type'].strip()
                 model = group['model']
                 serial_number = group['serial_number']
 
@@ -111,7 +111,7 @@ class ShowModule(ShowModuleSchema):
                 group = result.groupdict()
                 mod = int(group['mod'])
                 ports = int(group['ports'])
-                card_type = group['card_type']
+                card_type = group['card_type'].strip()
                 model = group['model']
                 serial_number = group['serial_number']
 
