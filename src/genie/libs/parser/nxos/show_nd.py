@@ -32,7 +32,7 @@ class ShowIpv6NeighborDetailSchema(MetaParser):
         show ipv6 neighbor detail vrf <vrf>"""
 
     schema = {
-        'interfaces':{
+        Optional('interfaces'): {
             Any(): {
                 'interface': str,
                 'neighbors': {
@@ -51,6 +51,14 @@ class ShowIpv6NeighborDetailSchema(MetaParser):
                 },
             },
         },
+        'adjacency_hit': {
+            Any(): {
+                'packet_count': int,
+                'byte_count': int
+            },
+        },
+        'adjacency_statistics_last_updated_before': str,
+        'total_number_of_entries': int
     }
 
 
@@ -81,8 +89,26 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
 
         result_dict = {}
         interface = ""
-        # IPv6 Adjacency Table for all VRFs
-        # IPv6 Adjacency Table for VRF VRF1
+
+
+        origin_list = ['dynamic', 'static']
+
+        # No. of Adjacency hit with type INVALID: Packet count 0, Byte count 0
+        # No. of Adjacency hit with type GLOBAL DROP: Packet count 0, Byte count 0
+        # No. of Adjacency hit with type GLOBAL PUNT: Packet count 0, Byte count 0
+        # No. of Adjacency hit with type GLOBAL GLEAN: Packet count 0, Byte count 0
+        # No. of Adjacency hit with type GLEAN: Packet count 0, Byte count 0
+        # No. of Adjacency hit with type NORMAL: Packet count 0, Byte count 0
+        p1 = re.compile(r'^No. +of +Adjacency +hit +with +type +(?P<adjacency>([\w\s]+)): +Packet +count +'
+                        '(?P<packet_count>(\d+)), +Byte +count +(?P<byte_count>(\d+))$')
+
+        # Adjacency statistics last updated before: never
+        p2 = re.compile(r'^Adjacency +statistics +last +updated +before: '
+                        r'+(?P<adjacency_statistics_last_updated_before>(\w+))$')
+
+        # Total number of entries: 11
+        p3 = re.compile(r'^Total +number +of +entries: +(?P<total_number_of_entries>(\d+))$')
+
         # Address :            2010:2:3::2
         # Age :                00:09:27
         # MacAddr :            fa16.3e82.6320
@@ -94,10 +120,7 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
         # Byte C#ount :         0
         # Best :               Yes
         # Throttled :          No
-
-        origin_list = ['dynamic', 'static']
-        p1 = re.compile(r'^\s*IPv6 +Adjacency +Table +for +(?P<vrfs>[\w\s]+)$')
-        p2 = re.compile(r'^\s*(?P<neighbor_key>(?!Total number of entries)[A-Za-z\s]+) +: +(?P<neighbor_value>[\w\/\.\:]+)$')
+        p4 = re.compile(r'^\s*(?P<neighbor_key>(?!Total number of entries)[A-Za-z\s]+) +: +(?P<neighbor_value>[\w\/\.\:]+)$')
 
         for line in out.splitlines():
             if line:
@@ -107,15 +130,29 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
 
             m = p1.match(line)
             if m:
-                group = m.groupdict()
-                vrfs = group.pop('vrfs')
-                if 'all' in vrfs:
-                    vrf = 'all'
-                else:
-                    vrf = vrfs.split(" ")[1]
+                adjacency = m.groupdict()['adjacency']
+                packet_count = int(m.groupdict()['packet_count'])
+                byte_count = int(m.groupdict()['byte_count'])
+
+                adjacency_dict = result_dict.setdefault('adjacency_hit', {}).setdefault(adjacency, {})
+                adjacency_dict.update({'packet_count': packet_count})
+                adjacency_dict.update({'byte_count': byte_count})
                 continue
 
+            # Adjacency statistics last updated before: never
             m = p2.match(line)
+            if m:
+                result_dict.update({'adjacency_statistics_last_updated_before': m.groupdict()[
+                    'adjacency_statistics_last_updated_before']})
+                continue
+
+            # Total number of entries: 11
+            m = p3.match(line)
+            if m:
+                result_dict.update({'total_number_of_entries': int(m.groupdict()['total_number_of_entries'])})
+                continue
+
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 neighbor_key = group.pop('neighbor_key').lower().replace(" ","_")
@@ -683,8 +720,9 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
         # Reachable time 0 msec, Retransmission time 0 msec
         p4 = re.compile(r'^\s*Reachable time +(?P<reachable_time>\d+) +msec, +Retransmission time +(?P<retransmission_time>\d+) +msec$')
 
-        #   Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
-        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/]+) +onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
+        # Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
+        # Prefix 2010:2:3::/64onlink_flag 1 autonomous_flag 1
+        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/]+) *onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
 
         #   valid lifetime 2592000, preferred lifetime 604800
         p6 = re.compile(r'^\s*valid lifetime +(?P<valid_lifetime>\d+), +preferred lifetime +(?P<preferred_lifetime>\d+)$')

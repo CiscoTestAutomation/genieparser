@@ -98,6 +98,34 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                 },
             },
         },
+        'adjacency_hit': {
+            'GLEAN': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'GLOBAL DROP': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'GLOBAL GLEAN': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'GLOBAL PUNT': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'INVALID': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'NORMAL': {
+                'byte_count': 0,
+                'packet_count': 0
+            }
+        },
+        'adjacency_statistics_last_updated_before': 'never',
+	    'total_number_of_entries': 11
     }
 
     golden_output = {'execute.return_value': '''
