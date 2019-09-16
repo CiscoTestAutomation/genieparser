@@ -405,10 +405,10 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegmentDetailSchema):
         p15 = re.compile(r'^Not +Elected +: +(?P<not_elected>\d+)$')
 
         # I-Sid E  :  1450101, 1650205, 1850309
-        p16 = re.compile(r'^I-Sid +E +: +(?P<i_sid_ne>[\S ]+)$')
+        p16 = re.compile(r'^I-Sid +E +: +(?P<i_sid_e>[\S ]+)$')
 
         # I-Sid NE  :  1450101, 1650205, 1850309
-        p16_1 = re.compile(r'^I-Sid +NE +: +(?P<i_sid_e>[\S ]+)$')
+        p16_1 = re.compile(r'^I-Sid +NE +: +(?P<i_sid_ne>[\S ]+)$')
         
         # MAC Flushing mode : STP-TCN
         p17 = re.compile(r'^MAC +Flushing +mode +: +(?P<mac_flushing_mode>\S+)$')

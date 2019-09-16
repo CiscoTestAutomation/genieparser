@@ -50,7 +50,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'bridge_ports': 3,
                             'elected': 0,
                             'not_elected': 3,
-                            'i_sid_e': '1450101, 1650205, 1850309',
+                            'i_sid_ne': '1450101, 1650205, 1850309',
                         },
                         'mac_flushing_mode': 'STP-TCN',
                         'peering_timer': '45 sec [not running]',
@@ -81,7 +81,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                         'service_carving_results': {
                             'bridge_ports': 3,
                             'elected': 3,
-                            'i_sid_ne': '1450102, 1650206, 1850310',
+                            'i_sid_e': '1450102, 1650206, 1850310',
                             'not_elected': 0,
                         },
                         'mac_flushing_mode': 'STP-TCN',
