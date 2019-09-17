@@ -249,3 +249,12 @@
 * IOSXR
     * Updated ShowRplRoutePolicy:
         * Updated passing command in device.parse()
+
+--------------------------------------------------------------------------------
+                                EVPN
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowEvpnEvi for:
+        * show evpn evi
+    * Added ShowEvpnEviDetail for:
+        * show evpn evi detail
