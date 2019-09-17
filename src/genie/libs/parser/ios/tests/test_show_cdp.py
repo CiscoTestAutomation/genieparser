@@ -1,13 +1,6 @@
 # Python
 import unittest
 from unittest.mock import Mock
-
-from ats.topology import Device
-
-# Metaparser
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-    SchemaMissingKeyError
-
 # iosxe tests/test_show_cdp
 from genie.libs.parser.iosxe.tests.test_show_cdp import test_show_cdp_neighbors as test_show_cdp_neighbors_iosxe
 
