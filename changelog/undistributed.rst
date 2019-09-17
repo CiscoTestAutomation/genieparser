@@ -242,3 +242,10 @@
 * IOSXR
     * Updated ShowPlatformVm to:
         * Updated regex to accommodate different formats from the outputs
+
+--------------------------------------------------------------------------------
+                                RPL
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRplRoutePolicy:
+        * Updated passing command in device.parse()
