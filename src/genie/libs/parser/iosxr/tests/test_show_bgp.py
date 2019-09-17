@@ -7978,7 +7978,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
     '''}
 
     golden_output2 = {'execute.return_value': '''
-        +++ ML25: executing command 'show bgp l2vpn evpn' +++
+        +++ Router2: executing command 'show bgp l2vpn evpn' +++
         show bgp l2vpn evpn
 
         Fri Sep  6 10:39:01.396 JST
@@ -8001,7 +8001,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                             0.0.0.0                                0 i
 
         Processed 1 prefixes, 1 paths
-        RP/0/RP0/CPU0:ML25#
+        RP/0/RP0/CPU0:Router2#
 
     '''}
     golden_parsed_output2 = {
