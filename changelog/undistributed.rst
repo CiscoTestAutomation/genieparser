@@ -84,6 +84,8 @@
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
+    * Updated ShowBgpL2vpnEvpn:
+        * updated schema to support more output
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -242,3 +244,16 @@
 * IOSXR
     * Updated ShowPlatformVm to:
         * Updated regex to accommodate different formats from the outputs
+
+--------------------------------------------------------------------------------
+                                RPL
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRplRoutePolicy:
+        * Updated passing command in device.parse()
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
