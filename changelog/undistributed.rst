@@ -249,3 +249,9 @@
 * IOSXR
     * Updated ShowRplRoutePolicy:
         * Updated passing command in device.parse()
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
