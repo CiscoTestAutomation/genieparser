@@ -3141,6 +3141,48 @@ class test_show_policy_map(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output14 = {
+        "policy_map": {
+            "policy_4-6-3~6": {
+                "class": {
+                    "class_4-6-3": {
+                        "average_rate_traffic_shaping": True,
+                        "cir_bps": 100000000,
+                        "bc_bits": 80000000,
+                    },
+                    "class_4-6-4~6": {
+                        "average_rate_traffic_shaping": True,
+                        "cir_bps": 100000000,
+                        "bc_bits": 80000000,
+                        "be_bits": 60000000,
+                    },
+                    "system-cpp-police-sys-data": {
+                        "police": {
+                            "rate": 100,
+                            "conform_action": ["transmit"],
+                            "exceed_action": ["drop"],
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output14 = {'execute.return_value':'''
+        show policy-map
+
+        Policy Map policy_4-6-3~6
+            Class class_4-6-3
+            Average Rate Traffic Shaping
+            cir 100000000 (bps) bc 80000000 (bits)
+            Class class_4-6-4~6
+            Average Rate Traffic Shaping
+            cir 100000000 (bps) bc 80000000 (bits) be 60000000 (bits)
+            Class system-cpp-police-sys-data
+            police rate 100 pps
+            conform-action transmit
+            exceed-action drop
+    '''}
+
     def test_show_policy_map_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -3238,6 +3280,13 @@ class test_show_policy_map(unittest.TestCase):
         obj = ShowPolicyMap(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output13)
+
+    def test_show_policy_map_golden14(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output14)
+        obj = ShowPolicyMap(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output14)
 
 if __name__ == '__main__':
     unittest.main()
