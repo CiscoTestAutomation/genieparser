@@ -67,14 +67,14 @@ class ShowModule(ShowModuleSchema):
         # 1  0001.6416.0342 to 0001.6416.0343   3.9   6.1(3)       7.5(0.6)HUB9 Ok    
         r3 = re.compile(r'(?P<mod>\d+)\s+(?P<mac_from>\S+)\s+to\s+(?P<mac_to>\S+)'
                          '\s+(?P<hw>\S+)\s+(?P<fw>\S+)\s+(?P<sw>[\d\.\(\)\w]+)\,'
-                         '*\s+(?P<status>\S+)')
+                         '*\s+(?P<status>(Ok|Unknown))')
 
         # 1 Policy Feature Card 2       WS-F6K-PFC2     SAD062802AV      3.2    Ok     
         # 1 Cat6k MSFC 2 daughterboard  WS-F6K-MSFC2    SAD062803TX      2.5    Ok   
         # 6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok     
         # 6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
         r4 = re.compile(r'(?P<mod>\d+)\s+(?P<sub_mod>.+)\s+(?P<model>\S+)\s+'
-                         '(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>\S+)')
+                         '(?P<serial>\S+)\s+(?P<hw>\S+)\s+(?P<status>(Ok|Unknown))')
 
         for line in output.splitlines():
             line = line.strip()
