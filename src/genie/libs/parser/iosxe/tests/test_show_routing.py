@@ -1163,7 +1163,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
 ###################################################
 # unit test for show ip route <WROD>
 ####################################################
-class test_show_ip_route_word(unittest.TestCase):
+class Test_Show_Ip_Route_Word(unittest.TestCase):
     """unit test for show ip route <WORD>"""
 
     device = Device(name='aDevice')
@@ -1328,6 +1328,58 @@ class test_show_ip_route_word(unittest.TestCase):
         'total_prefixes': 4
     }
 
+    golden_output_thaing = {'execute.return_value': '''\
+        Routing entry for 0.0.0.0/0, supernet
+            Known via "bgp 65161", distance 20, metric 0, candidate default path
+            Tag 65161, type external
+            Redistributing via ospf 1
+            Last update from 10.101.146.10 2d07h ago
+            Routing Descriptor Blocks:
+            * 10.101.146.10, from 10.101.146.10, 2d07h ago
+                Route metric is 0, traffic share count is 1
+                AS Hops 9
+                Route tag 65161
+                MPLS label: none 
+    '''
+    }
+
+    golden_parsed_output_thaing = {
+        'entry': {
+            '0.0.0.0/0': {
+                'distance': '20',
+                'ip': '0.0.0.0',
+                'known_via': 'bgp 65161',
+                'mask': '0',
+                'metric': '0',
+                'net': 'supernet',
+                'paths': {
+                    1: {
+                        'age': '2d07h',
+                        'as_hops': '9',
+                        'from': '10.101.146.10',
+                        'merge_labels': False,
+                        'metric': '0',
+                        'mpls_label': 'none',
+                        'nexthop': '10.101.146.10',
+                        'prefer_non_rib_labels': False,
+                        'route_tag': '65161',
+                        'share_count': '1'
+                    }
+                },
+                'redist_via': 'ospf',
+                'redist_via_tag': '1',
+                'tag_name': '65161',
+                'tag_type': 'external',
+                'type': 'default path',
+                'update': {
+                    'age': '2d07h', 
+                    'from': '10.101.146.10'
+                }
+            }
+        },
+        'total_prefixes': 1
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1355,6 +1407,12 @@ class test_show_ip_route_word(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+    def test_golden_thaing(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_thaing)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_thaing)
 
 ###################################################
 # unit test for show ipv6 route <WROD>

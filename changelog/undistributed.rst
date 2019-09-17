@@ -257,3 +257,13 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowRunningConfigNvOverlay for more varied output
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE:
+    * Updated ShowIpRouteWord:
+        * Updated regex for various formats
+        * Added fields to schema
+        * Changed fields in schema to Optional
+        * Added regex for additional outputs
