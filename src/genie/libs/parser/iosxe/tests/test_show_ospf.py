@@ -65,7 +65,7 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
           10.16.2.2          Yes          15000       1000       
          
         PE1#
-        '''}
+    '''}
 
     golden_parsed_output1 = {
         'instance':
@@ -84,6 +84,54 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
                                 'srlb_range': 1000}}}},
                             }}}
 
+    golden_parsed_output2 = {
+        "instance": {
+            "88": {
+                "router_id": "111.112.113.144",
+                "areas": {
+                    "0.0.0.8": {
+                        "router_id": {
+                            "2.2.2.2": {
+                                "sr_capable": "No"
+                            },
+                            "3.3.3.3": {
+                                "sr_capable": "No"
+                            },
+                            "4.4.4.4": {
+                                "sr_capable": "No"
+                            },
+                            "111.112.113.142": {
+                                "sr_capable": "No"
+                            },
+                            "111.112.113.144": {
+                                "sr_capable": "No"
+                            },
+                            "111.112.113.99": {
+                                "sr_capable": "No"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output2 = {'execute.return_value': '''
+        show ip ospf segment-routing local-block
+      
+                OSPF Router with ID (111.112.113.144) (Process ID 88)
+
+                OSPF Segment Routing Local Blocks in Area 8
+
+        Router ID        SR Capable   SRLB Base   SRLB Range
+        --------------------------------------------------------
+        2.2.2.2          No
+        3.3.3.3          No
+        4.4.4.4          No
+        111.112.113.142  No
+       *111.112.113.144  No
+        111.112.113.99   No
+    '''}
+
     def test_show_ip_ospf_segment_routing_local_block_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -97,6 +145,13 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
         obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
         parsed_output = obj.parse(process_id=65109)
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfSegmentRoutingLocalBlock(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ============================

@@ -52,23 +52,23 @@ class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
     '''
 
     schema = {
-        'instance':
-            {Any():
-                {'router_id': str,
-                'areas':
-                    {Any():
-                        {'router_id':
-                            {Any():
-                                {'sr_capable': str,
-                                'srlb_base': int,
-                                'srlb_range': int,
-                                },
+        'instance': {
+            Any(): {
+                'router_id': str,
+                'areas': {
+                    Any(): {
+                        'router_id': {
+                            Any(): {
+                                'sr_capable': str,
+                                Optional('srlb_base'): int,
+                                Optional('srlb_range'): int,
                             },
                         },
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ===========================================================
@@ -110,9 +110,9 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         # --------------------------------------------------------
         # *10.4.1.1          Yes          15000       1000
         # 10.16.2.2          Yes          15000       1000
-        p3 = re.compile(r'^(?:(?P<value>(\*)))?(?P<router_id>(\S+))'
-                         ' +(?P<sr_capable>(Yes|No)) +(?P<srlb_base>(\d+))'
-                         ' +(?P<srlb_range>(\d+))$')
+        # 106.162.197.252    No 
+        p3 = re.compile(r'^(?P<value>\*)?(?P<router_id>\S+) +(?P<sr_capable>Yes|No)'
+                         '( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -143,8 +143,10 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
                 smgt_dict = area_dict.setdefault('router_id', {}).\
                                       setdefault(group['router_id'], {})
                 smgt_dict['sr_capable'] = group['sr_capable']
-                smgt_dict['srlb_base'] = int(group['srlb_base'])
-                smgt_dict['srlb_range'] = int(group['srlb_range'])
+                if group['srlb_base']:
+                    smgt_dict['srlb_base'] = int(group['srlb_base'])
+                if group['srlb_range']:
+                    smgt_dict['srlb_range'] = int(group['srlb_range'])
                 continue
 
         return ret_dict
