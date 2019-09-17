@@ -1683,6 +1683,1102 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
       Dropped glean request: 0
       '''
                           }
+
+    golden_output2 = {'execute.return_value': '''
+        +++ XR1: executing command 'show ipv6 vrf all interface' +++d.parse()
+        show ipv6 vrf all interface
+
+        Fri Sep  6 09:50:49.892 JST
+        BVI100 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        BVI1401 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::259:14ff:fe00:1 [TENTATIVE]
+        No global unicast address is configured
+        Joined group address(es): ff02::2 ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        BVI1403 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::259:14ff:fe03:1 [TENTATIVE]
+        Global unicast address(es):
+            2001:60:1403::1, subnet is 2001:60:1403::/64 [TENTATIVE]
+        Joined group address(es): ff02::2 ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        BVI1405 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::259:14ff:fe05:1 [TENTATIVE]
+        Global unicast address(es):
+            2001:59:1405::1, subnet is 2001:59:1405::/64 [TENTATIVE]
+        Joined group address(es): ff02::2 ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        BVI1407 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::259:14ff:fe07:1 [TENTATIVE]
+        Global unicast address(es):
+            2001:60:1407::1, subnet is 2001:60:1407::/64 [TENTATIVE]
+        Joined group address(es): ff02::2 ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        BVI1410 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::259:14ff:fe10:1 [TENTATIVE]
+        Global unicast address(es):
+            2001:60:1410::1, subnet is 2001:60:1410::/64 [TENTATIVE]
+        Joined group address(es): ff02::2 ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        Bundle-Ether1 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::2bc:60ff:fe38:a8dc 
+        Global unicast address(es):
+            2001:db80:910::10, subnet is 2001:db80:910::/64 
+        Joined group address(es): ff02::1:ff00:10 ff02::1:ff38:a8dc ff02::2
+            ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        Bundle-Ether100 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether100.12 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether100.22 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether100.32 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001.100 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001.1400 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001.1402 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001.1404 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001.1406 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Bundle-Ether1001.1410 is Down, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        Loopback0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::d121:1bff:fea4:a9f7 
+        Global unicast address(es):
+            1000::10, subnet is 1000::10/128 
+        Joined group address(es): ff02::1:ff00:10 ff02::1:ffa4:a9f7 ff02::2
+            ff02::1
+        MTU is 1500 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are always on
+        ND DAD is disabled, number of DAD attempts 0
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 0
+        ND advertised retransmit interval is 0 milliseconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        MgmtEth0/RP0/CPU0/0 is Up, ipv6 protocol is Up, Vrfid is Mgmt (0x60000001)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::2bc:60ff:fe38:a800 
+        Global unicast address(es):
+            2001:db80:410::10, subnet is 2001:db80:410::/64 
+        Joined group address(es): ff02::1:ff00:10 ff02::1:ff38:a800 ff02::2
+            ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0
+        TenGigE0/0/0/1 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/2 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/3 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/4 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/5 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/6 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/7 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/8 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/9 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/10 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/11 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/12 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/13 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/14 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/15 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/16 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/17 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/18 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/19 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/20 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/21 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/22 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TenGigE0/0/0/23 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/24 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/25 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/26 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/27 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/28 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/29 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/30 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/31 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/32 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/33 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/34 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/35 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/36 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/37 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/38 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        TwentyFiveGigE0/0/0/39 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        HundredGigE0/0/1/0 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        HundredGigE0/0/1/1 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        HundredGigE0/0/1/2/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is disabled, link-local address unassigned
+        No global unicast address is configured
+        RP/0/RP0/CPU0:XR1#
+
+            '''}
+
+    golden_parsed_output2 = {
+            'BVI100': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'BVI1401': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    'ipv6_groups': ['ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'BVI1403': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '2001:60:1403::1/64': {
+                        'ipv6': '2001:60:1403::1',
+                        'ipv6_prefix_length': '64',
+                        'ipv6_status': 'tentative',
+                        'ipv6_subnet': '2001:60:1403::',
+                    },
+                    'ipv6_link_local_state': 'tentative',
+                    'ipv6_link_local': 'fe80::259:14ff:fe03:1',
+                    'ipv6_groups': ['ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'BVI1405': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '2001:59:1405::1/64': {
+                        'ipv6': '2001:59:1405::1',
+                        'ipv6_prefix_length': '64',
+                        'ipv6_status': 'tentative',
+                        'ipv6_subnet': '2001:59:1405::',
+                    },
+                    'ipv6_link_local_state': 'tentative',
+                    'ipv6_link_local': 'fe80::259:14ff:fe05:1',
+                    'ipv6_groups': ['ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'BVI1407': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '2001:60:1407::1/64': {
+                        'ipv6': '2001:60:1407::1',
+                        'ipv6_prefix_length': '64',
+                        'ipv6_status': 'tentative',
+                        'ipv6_subnet': '2001:60:1407::',
+                    },
+                    'ipv6_link_local_state': 'tentative',
+                    'ipv6_link_local': 'fe80::259:14ff:fe07:1',
+                    'ipv6_groups': ['ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'BVI1410': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '2001:60:1410::1/64': {
+                        'ipv6': '2001:60:1410::1',
+                        'ipv6_prefix_length': '64',
+                        'ipv6_status': 'tentative',
+                        'ipv6_subnet': '2001:60:1410::',
+                    },
+                    'ipv6_link_local_state': 'tentative',
+                    'ipv6_link_local': 'fe80::259:14ff:fe10:1',
+                    'ipv6_groups': ['ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'Bundle-Ether1': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '2001:db80:910::10/64': {
+                        'ipv6': '2001:db80:910::10',
+                        'ipv6_prefix_length': '64',
+                        'ipv6_subnet': '2001:db80:910::',
+                    },
+                    'ipv6_link_local': 'fe80::2bc:60ff:fe38:a8dc',
+                    'ipv6_groups': ['ff02::1:ff00:10', 'ff02::1:ff38:a8dc', 'ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'Bundle-Ether100': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether100.12': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether100.22': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether100.32': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001.100': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001.1400': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001.1402': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001.1404': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001.1406': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Bundle-Ether1001.1410': {
+                'ipv6_enabled': False,
+                'int_status': 'down',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'Loopback0': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '1000::10/128': {
+                        'ipv6': '1000::10',
+                        'ipv6_prefix_length': '128',
+                        'ipv6_subnet': '1000::10',
+                    },
+                    'ipv6_link_local': 'fe80::d121:1bff:fea4:a9f7',
+                    'ipv6_groups': ['ff02::1:ff00:10', 'ff02::1:ffa4:a9f7', 'ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1500',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'nd_dad': 'disabled',
+                    'dad_attempts': '0',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '0',
+                    'nd_adv_retrans_int': '0',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'MgmtEth0/RP0/CPU0/0': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'Mgmt',
+                'vrf_id': '0x60000001',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/0': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': True,
+                'ipv6': {
+                    '2001:db80:410::10/64': {
+                        'ipv6': '2001:db80:410::10',
+                        'ipv6_prefix_length': '64',
+                        'ipv6_subnet': '2001:db80:410::',
+                    },
+                    'ipv6_link_local': 'fe80::2bc:60ff:fe38:a800',
+                    'ipv6_groups': ['ff02::1:ff00:10', 'ff02::1:ff38:a800', 'ff02::2', 'ff02::1'],
+                    'ipv6_mtu': '1514',
+                    'ipv6_mtu_available': '1500',
+                    'icmp_redirects': 'disabled',
+                    'icmp_unreachables': 'enabled',
+                    'nd_dad': 'enabled',
+                    'dad_attempts': '1',
+                    'nd_reachable_time': '0',
+                    'nd_cache_limit': '1000000000',
+                    'nd_adv_retrans_int': '0',
+                    'nd_adv_duration': '160-240',
+                    'nd_router_adv': '1800',
+                    'stateless_autoconfig': True,
+                    'table_id': '0xe0800000',
+                    'complete_protocol_adj': '0',
+                    'complete_glean_adj': '0',
+                    'incomplete_protocol_adj': '0',
+                    'incomplete_glean_adj': '0',
+                    'dropped_protocol_req': '0',
+                    'dropped_glean_req': '0',
+                },
+            },
+            'TenGigE0/0/0/1': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/2': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/3': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/4': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/5': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/6': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/7': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/8': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/9': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/10': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/11': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/12': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/13': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/14': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/15': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/16': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/17': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/18': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/19': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/20': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/21': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/22': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TenGigE0/0/0/23': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/24': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/25': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/26': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/27': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/28': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/29': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/30': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/31': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/32': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/33': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/34': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/35': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/36': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/37': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/38': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'TwentyFiveGigE0/0/0/39': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'HundredGigE0/0/1/0': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'HundredGigE0/0/1/1': {
+                'ipv6_enabled': False,
+                'int_status': 'shutdown',
+                'oper_status': 'down',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+            'HundredGigE0/0/1/2/0': {
+                'ipv6_enabled': True,
+                'int_status': 'up',
+                'oper_status': 'up',
+                'vrf': 'default',
+                'vrf_id': '0x60000000',
+                'enabled': False,
+            },
+        }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device1)
@@ -1700,6 +2796,13 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
+        parsed_output = ipv6_vrf_all_interface_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+
     def test_golden_custom(self):
         self.device = Mock(**self.golden_output_custom)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)

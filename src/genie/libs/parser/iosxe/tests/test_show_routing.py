@@ -1653,9 +1653,8 @@ class test_show_ip_cef(unittest.TestCase):
                                         "outgoing_interface": {
                                             "GigabitEthernet3": {
                                                 "local_label": 16022,
-                                                "outgoing_label": [
-                                                    "16022|implicit-null"
-                                                ],
+                                                "outgoing_label": ["16022"],
+                                                "outgoing_label_backup": "implicit-null",
                                                 "repair": "attached-nexthop 10.0.0.13 GigabitEthernet4"
                                             }
                                         }
@@ -1677,6 +1676,50 @@ class test_show_ip_cef(unittest.TestCase):
         repair: attached-nexthop 10.0.0.13 GigabitEthernet4
       nexthop 10.0.0.13 GigabitEthernet4, repair
 
+    '''}
+
+    golden_parsed_output_6 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '106.162.196.241/32': {
+                                'nexthop': {
+                                    '27.86.198.25': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/1/6': {
+                                                'local_label': 17063,
+                                                'outgoing_label': ['16063'],
+                                                'outgoing_label_info': 'elc',
+                                            },
+                                        },
+                                    },
+                                    '27.86.198.26': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/1/7': {
+                                                'local_label': 17063,
+                                                'outgoing_label': ['16063'],
+                                                'outgoing_label_backup': '16063',
+                                                'repair': 'attached-nexthop 27.86.198.29 GigabitEthernet0/1/8',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_6 = {'execute.return_value': '''
+    show ip cef 106.162.196.241
+    106.162.196.241/32
+        nexthop 27.86.198.25 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
+        nexthop 27.86.198.26 GigabitEthernet0/1/7 label [16063|16063]-(local:17063)
+            repair: attached-nexthop 27.86.198.29 GigabitEthernet0/1/8
     '''}
 
     def test_empty(self):
@@ -1719,6 +1762,13 @@ class test_show_ip_cef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='106.162.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 
 ###################################################
@@ -1888,25 +1938,29 @@ class test_show_ip_cef_detail(unittest.TestCase):
                                         {'outgoing_interface': 
                                             {'GigabitEthernet4': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.5 GigabitEthernet2'}}},
                                     '10.0.0.25': 
                                         {'outgoing_interface': 
                                             {'GigabitEthernet5': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.13 GigabitEthernet4'}}},
                                     '10.0.0.5': 
                                         {'outgoing_interface': 
                                             {'GigabitEthernet2': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.9 GigabitEthernet3'}}},
                                     '10.0.0.9': 
                                         {'outgoing_interface': 
                                             {'GigabitEthernet3': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.25 GigabitEthernet5'}}}},
                             'per_destination_sharing': True,
                             'sr_local_label_info': 'global/16002 [0x1B]'}}}}}}}

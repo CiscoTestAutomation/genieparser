@@ -571,9 +571,9 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
 
         # Source Address                          Uptime    Expires   Fwd  Flags
         p8_1 = re.compile(r'^Source +Address +Uptime +Expires +Fwd +Flags$')
-
+        
         # 2001:db8:2:2::2                       08:06:00  01:00:00  Yes  Remote Local 2d
-        p8 = re.compile(r'^(?P<source>[\w\.\:]+) +'
+        p8 = re.compile(r'^(?P<source>(?!No)[\w\.\:]+) +'
                          '(?P<up_time>[\w\.\:]+) +'
                          '(?P<expire>[\w\.\:]+) +'
                          '(?P<forward>\w+) +'

@@ -218,6 +218,72 @@ class test_show_vtp_status(unittest.TestCase):
 
         '''}
 
+    golden_output_4 = {'execute.return_value': '''\
+        show vtp status
+        VTP Version capable             : 1 to 3
+        VTP version running             : 3
+        VTP Domain Name                 : GENIE
+        VTP Pruning Mode                : Disabled
+        VTP Traps Generation            : Disabled
+        Device ID                       : 02da.308e.1ae9
+
+        Feature VLAN:
+        --------------
+        VTP Operating Mode                : Primary Server
+        Number of existing VLANs          : 40
+        Number of existing extended VLANs : 0
+        Maximum VLANs supported locally   : 2048
+        Configuration Revision            : 25
+        Primary ID                        : 02da.308e.1ae9
+        Primary Description               : genie
+        MD5 digest                        : 0x3D 0x05 0xEE 0x1F 0x35 0xCC 0x7C 0x74
+                                            0x41 0x7A 0xB2 0x1F 0xE9 0x77 0x9A 0xCD
+
+
+        Feature MST:
+        --------------
+        VTP Operating Mode                : Transparent
+
+
+        Feature UNKNOWN:
+        --------------
+        VTP Operating Mode                : Transparent
+
+    '''
+    }
+
+    golden_parsed_output_4 = {
+        'vtp': {
+            'device_id': '02da.308e.1ae9',
+            'domain_name': 'GENIE',
+            'feature': {
+                'mst': {
+                    'enabled': False, 'operating_mode': 'transparent'
+                },
+                'unknown': {
+                    'enabled': False,
+                    'operating_mode': 'transparent'
+                },
+                'vlan': {
+                    'configuration_revision': 25,
+                    'enabled': True,
+                    'existing_extended_vlans': 0,
+                    'existing_vlans': 40,
+                    'maximum_vlans': 2048,
+                    'md5_digest': '0x05 0x1F 0x1F 0x35 0x3D 0x41 '
+                                  '0x74 0x77 0x7A 0x7C 0x9A 0xB2 '
+                                  '0xCC 0xCD 0xE9 0xEE',
+                    'operating_mode': 'primary server',
+                    'primary_description': 'genie',
+                    'primary_id': '02da.308e.1ae9'
+                }
+            },
+            'pruning_mode': False,
+            'traps_generation': False,
+            'version': '3',
+            'version_capable': [1, 2, 3]
+        }
+    }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowVtpStatus(device=self.device1)
@@ -245,6 +311,12 @@ class test_show_vtp_status(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowVtpStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
 if __name__ == '__main__':
     unittest.main()
