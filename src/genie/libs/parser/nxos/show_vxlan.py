@@ -1713,7 +1713,6 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                 Optional('adv_vmac'): bool,
                 Optional('source_if'): str,
                 Optional('multisite_bgw_if'): str,
-                Optional('nve_type'): str,
                 Optional('vni'):{
                     Any():{
                         Optional('vni'): int,
@@ -1721,6 +1720,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                         Optional('multisite_ingress_replication'): bool,
                         Optional('mcast_group'): str,
                         Optional('suppress_arp'): bool,
+                        Optional('vni_type'): str,
                     },
                 },
             },
@@ -1872,7 +1872,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                         vni_dict.update({'suppress_arp': True})
 
                     if global_mcast_group_flag:
-                        vni_dict.update({'mcast_group': global_mcast_group_flag})
+                        vni_dict.update({'mcast_group': global_mcast_group_flag[0]})
+                        vni_dict.update({'vni_type': global_mcast_group_flag[1]})
 
                 continue
 
@@ -1918,8 +1919,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
 
             m = p15.match(line)
             if m:
-                global_mcast_group_flag = m.groupdict()['address']
-                nve_dict.update({'nve_type': m.groupdict()['layer']})
+                global_mcast_group_flag = (m.groupdict()['address'], m.groupdict()['layer'])
 
         return result_dict
 
