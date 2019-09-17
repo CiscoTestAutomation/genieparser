@@ -238,6 +238,139 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1001]",
+                    'flags': '',
+                },
+                5002: {
+                    'vni': 5002,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1002]",
+                    'flags': '',
+                },
+                5003: {
+                    'vni': 5003,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1003]",
+                    'flags': '',
+                },
+                5004: {
+                    'vni': 5004,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1004]",
+                    'flags': '',
+                },
+                6004: {
+                    'vni': 6004,
+                    'mcast': "231.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1014]",
+                    'flags': '',
+                },
+                6005: {
+                    'vni': 6005,
+                    'mcast': "231.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1015]",
+                    'flags': '',
+                },
+                7001: {
+                    'vni': 7001,
+                    'mcast': "235.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1103]",
+                    'flags': '',
+                },
+                7002: {
+                    'vni': 7002,
+                    'mcast': "235.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1104]",
+                    'flags': '',
+                },
+                7003: {
+                    'vni': 7003,
+                    'mcast': "235.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1105]",
+                    'flags': '',
+                },
+                10001: {
+                    'vni': 10001,
+                    'mcast': "n/a",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L3 [vni_10001]",
+                    'flags': '',
+                },
+                10002: {
+                    'vni': 10002,
+                    'mcast': "n/a",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L3 [vni_10002]",
+                    'flags': '',
+                },
+                10005: {
+                    'vni': 10005,
+                    'mcast': "n/a",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L3 [vni_10005]",
+                    'flags': '',
+                },
+            },
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+    show nve vni
+
+
+    Codes: CP - Control Plane        DP - Data Plane          
+    
+           UC - Unconfigured         SA - Suppress ARP        
+    
+           SU - Suppress Unknown Unicast 
+    
+           Xconn - Crossconnect      
+    
+           MS-IR - Multisite Ingress Replication
+           
+    Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+    --------- -------- ----------------- ----- ---- ------------------ -----
+    nve1      5001     234.1.1.1         Up    CP   L2 [1001]
+    nve1      5002     234.1.1.1         Up    CP   L2 [1002]
+    nve1      5003     234.1.1.1         Up    CP   L2 [1003]
+    nve1      5004     234.1.1.1         Up    CP   L2 [1004]
+    nve1      6004     231.1.1.1         Up    CP   L2 [1014]
+    nve1      6005     231.1.1.1         Up    CP   L2 [1015]
+    nve1      7001     235.1.1.1         Up    CP   L2 [1103]
+    nve1      7002     235.1.1.1         Up    CP   L2 [1104]
+    nve1      7003     235.1.1.1         Up    CP   L2 [1105]
+    nve1      10001    n/a               Up    CP   L3 [vni_10001]
+    nve1      10002    n/a               Up    CP   L3 [vni_10002]
+    nve1      10005    n/a               Up    CP   L3 [vni_10005]
+        '''}
+
+    golden_parsed_output_2 = {
+        'nve1': {
+            'vni': {
+                5001: {
+                    'vni': 5001,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1001]",
                     'flags': 'SA MS-IR',
                 },
                 5002: {
@@ -302,7 +435,7 @@ class test_show_nve_vni(unittest.TestCase):
                     'vni_state': "up",
                     'mode': "CP",
                     'type': "L2 [1105]",
-                    'flags': '',
+                    'flags': 'SA MS-IR',
                 },
                 10001: {
                     'vni': 10001,
@@ -332,35 +465,35 @@ class test_show_nve_vni(unittest.TestCase):
         },
     }
 
-    golden_output = {'execute.return_value': '''
-    show nve vni
+    golden_output_2 = {'execute.return_value': '''
+        show nve vni
 
 
-    Codes: CP - Control Plane        DP - Data Plane          
-    
-           UC - Unconfigured         SA - Suppress ARP        
-    
-           SU - Suppress Unknown Unicast 
-    
-           Xconn - Crossconnect      
-    
-           MS-IR - Multisite Ingress Replication
-           
-    Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
-    --------- -------- ----------------- ----- ---- ------------------ -----
-    nve1      5001     234.1.1.1         Up    CP   L2 [1001]          SA MS-IR
-    nve1      5002     234.1.1.1         Up    CP   L2 [1002]          SA MS-IR
-    nve1      5003     234.1.1.1         Up    CP   L2 [1003]          SA MS-IR
-    nve1      5004     234.1.1.1         Up    CP   L2 [1004]          SA MS-IR
-    nve1      6004     231.1.1.1         Up    CP   L2 [1014]          SA MS-IR
-    nve1      6005     231.1.1.1         Up    CP   L2 [1015]          SA MS-IR
-    nve1      7001     235.1.1.1         Up    CP   L2 [1103]          SA MS-IR
-    nve1      7002     235.1.1.1         Up    CP   L2 [1104]          SA MS-IR
-    nve1      7003     235.1.1.1         Up    CP   L2 [1105]
-    nve1      10001    n/a               Up    CP   L3 [vni_10001]
-    nve1      10002    n/a               Up    CP   L3 [vni_10002]
-    nve1      10005    n/a               Up    CP   L3 [vni_10005]
-        '''}
+        Codes: CP - Control Plane        DP - Data Plane          
+
+               UC - Unconfigured         SA - Suppress ARP        
+
+               SU - Suppress Unknown Unicast 
+
+               Xconn - Crossconnect      
+
+               MS-IR - Multisite Ingress Replication
+
+        Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+        --------- -------- ----------------- ----- ---- ------------------ -----
+        nve1      5001     234.1.1.1         Up    CP   L2 [1001]          SA MS-IR 
+        nve1      5002     234.1.1.1         Up    CP   L2 [1002]          SA MS-IR 
+        nve1      5003     234.1.1.1         Up    CP   L2 [1003]          SA MS-IR 
+        nve1      5004     234.1.1.1         Up    CP   L2 [1004]          SA MS-IR 
+        nve1      6004     231.1.1.1         Up    CP   L2 [1014]          SA MS-IR 
+        nve1      6005     231.1.1.1         Up    CP   L2 [1015]          SA MS-IR 
+        nve1      7001     235.1.1.1         Up    CP   L2 [1103]          SA MS-IR 
+        nve1      7002     235.1.1.1         Up    CP   L2 [1104]          SA MS-IR 
+        nve1      7003     235.1.1.1         Up    CP   L2 [1105]          SA MS-IR 
+        nve1      10001    n/a               Up    CP   L3 [vni_10001]
+        nve1      10002    n/a               Up    CP   L3 [vni_10002]
+        nve1      10005    n/a               Up    CP   L3 [vni_10005]
+            '''}
 
     def test_show_nve_vni_golden(self):
         self.maxDiff = None
@@ -368,6 +501,13 @@ class test_show_nve_vni(unittest.TestCase):
         obj = ShowNveVni(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_nve_vni_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowNveVni(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_nve_vni_empty(self):
         self.device = Mock(**self.empty_output)
