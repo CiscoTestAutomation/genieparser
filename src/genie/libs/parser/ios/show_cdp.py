@@ -3,14 +3,7 @@
         * show cdp neighbors
 '''
 
-# Python
-import re
-
-# Metaparser
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
-
-# import iosxs parser
+# import iosxe parser
 from genie.libs.parser.iosxe.show_cdp import ShowCdpNeighbors as ShowCdpNeighbors_iosxe
 
 
