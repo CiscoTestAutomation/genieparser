@@ -145,7 +145,9 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
                     'current_policy': 'dot1x_dvlan_reauth_hm', 
                     'oper_host_mode': 'single-host',
                     'oper_control_dir': 'both',
-                    'session_timeout': 'N/A',
+                    'session_timeout': {
+                        'type': 'N/A',
+                    },
                     'common_session_id': 'AC14FC0A0000101200E28D62',
                     'acct_session_id': 'Unknown',
                     'handle': '0xDB003227',
@@ -231,7 +233,9 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
                         },
                         'oper_control_dir': 'both',
                         'oper_host_mode': 'single-host',
-                        'session_timeout': 'N/A',
+                        'session_timeout': {
+                            'type': 'N/A',
+                        },
                         'status': 'Authorized',
                         'user_name': 'genie123'
                     }
@@ -268,6 +272,96 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
            mab              Running
         '''
     }
+    
+    golden_output_5 = {'execute.return_value': '''\
+        show authentication sessions interface gigabitEthernet 1/12 details
+        Load for five secs: 30%/7%; one minute: 24%; five minutes: 23%
+        Time source is NTP, 13:51:25.306 EDT Wed Sep 11 2019
+
+                    Interface:  GigabitEthernet1/12
+                MAC Address:  6390.c2f7.5d21
+                IPv6 Address:  Unknown
+                IPv4 Address:  10.1.2.102
+                    User-Name:  host/genie.cisco.corp
+                    Status:  Authorized
+                    Domain:  DATA
+            Oper host mode:  single-host
+            Oper control dir:  in
+            Session timeout:  43200s (local), Remaining: 31799s
+            Timeout action:  Reauthenticate
+            Restart timeout:  N/A
+        Periodic Acct timeout:  N/A
+            Session Uptime:  22444s
+            Common Session ID:  0A805A0A000012C8FDF2EF40
+            Acct Session ID:  Unknown
+                    Handle:  0x3F000FC8
+            Current Policy:  POLICY_Gi1/12
+
+        Local Policies:
+            Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+            Security Policy:  Should Secure
+            Security Status:  Link Unsecure
+
+        Server Policies:
+
+        Method status list: 
+            Method           State 
+
+            dot1x            Authc Success
+            mab              Stopped
+        '''
+    }
+
+    golden_parsed_output_5 = {
+        'interface': {
+            'GigabitEthernet1/12': {
+                'mac_address': {
+                    '6390.c2f7.5d21': {
+                        'acct_session_id': 'Unknown',
+                        'common_session_id': '0A805A0A000012C8FDF2EF40',
+                        'current_policy': 'POLICY_Gi1/12',
+                        'domain': 'DATA',
+                        'handle': '0x3F000FC8',
+                        'ipv4_address': '10.1.2.102',
+                        'ipv6_address': 'Unknown',
+                        'local_policies': {
+                            'security_policy': 'Should Secure',
+                            'security_status': 'Link Unsecure',
+                            'template': {
+                                'DEFAULT_LINKSEC_POLICY_SHOULD_SECURE': {
+                                    'priority': 150
+                                }
+                            }
+                        },
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Authc Success'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Stopped'
+                            }
+                        },
+                        'oper_control_dir': 'in',
+                        'oper_host_mode': 'single-host',
+                        'periodic_acct_timeout': 'N/A',
+                        'restart_timeout': 'N/A',
+                        'session_timeout': {
+                            'remaining': '31799s',
+                            'timeout': '43200s',
+                            'type': 'local'
+                        },
+                        'session_uptime': '22444s',
+                        'status': 'Authorized',
+                        'timeout_action': 'Reauthenticate',
+                        'user_name': 'host/genie.cisco.corp'
+                    }
+                }
+            }
+        }
+    }
+
     def test_empty_3(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev1)
@@ -287,6 +381,13 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(intf='GigabitEthernet1/0/12')
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
+
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_5)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(intf='GigabitEthernet1/12')
+        self.assertEqual(parsed_output,self.golden_parsed_output_5)
 
 if __name__ == '__main__':
     unittest.main()

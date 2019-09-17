@@ -144,13 +144,21 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         Optional('ipv6_address'): str,
                         'ipv4_address': str,
                         Optional('user_name'): str,
+                        Optional('periodic_acct_timeout'): str,
+                        Optional('timeout_action'): str,
+                        Optional('restart_timeout'): str,
+                        Optional('session_uptime'): str,
                         'status': str,
                         'domain': str,
                         'oper_host_mode': str,
                         'oper_control_dir': str,
                         Optional('authorized_by'): str,
                         Optional('vlan_policy'): str,
-                        'session_timeout': str,
+                        'session_timeout': {
+                            'type': str,  # local, N/A
+                            Optional('timeout'): str,
+                            Optional('remaining'): str,
+                        },
                         'common_session_id': str,
                         'acct_session_id': str,
                         'handle': str,
@@ -162,9 +170,11 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                                     'priority': int,
                                 }
                             },
-                            'vlan_group': {
+                            Optional('vlan_group'): {
                                 'vlan': int,
                             },
+                            Optional('security_policy'): str,
+                            Optional('security_status'): str,
                         },
                         'method_status': {
                             Any(): {
@@ -216,7 +226,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
         # Template: CRITICAL_VLAN (priority 150)
         # Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
-        p3 = re.compile(r'^(?:Service)|Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
+        p3 = re.compile(r'^(?:Service +)?Template: +(?P<template>\w+) +\(priority +(?P<priority>[0-9]+)\)$')
 
         # Vlan Group:  Vlan: 130
         p4 = re.compile(r'^Vlan +Group: +(?P<vlan_name>\w+): +(?P<vlan_value>[0-9]+)$')
@@ -233,19 +243,56 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # For IOS output as this line will determine the index
         p8 = re.compile(r'^-+$')
 
+        # Session timeout:  43200s(local), Remaining: 31799s
+        # Session timeout:  N/A
+        p9 = re.compile(r'^Session +timeout: +(?P<value>\S+)(?:\s*\((?P<name>\w+)\), +Remaining: +(?P<remaining>[\S]+))?')
+
+        #   Security Policy:  Should Secure
+        #   Security Status:  Link Unsecure
+        p10 = re.compile(r'^Security +(?P<security_name>\S+): +(?P<policy_status>[\S ]+)$')
+
         # initial return dictionary
         ret_dict = {}
         hold_dict = {}
         mac_dict = {}
-
-        # intial index
-        index_id = 1
 
         for line in out.splitlines():
             line = line.strip()
 
             # Ignore all titles
             if p2.match(line) or p5.match(line) or p7.match(line):
+                continue
+
+            #   Security Policy:  Should Secure
+            #   Security Status:  Link Unsecure
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+
+                security_dict = mac_dict.setdefault('local_policies', {})
+                if group['security_name'] == 'Policy':
+                    security_dict.update(
+                        {'security_policy': group['policy_status']})
+                elif group['security_name'] == 'Status':
+                    security_dict.update(
+                        {'security_status': group['policy_status']})
+
+                continue
+
+            # Session timeout:  43200s(local), Remaining: 31799s
+            # Session timeout:  N/A
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict = mac_dict.setdefault('session_timeout', {})
+                if group['value'] == 'N/A':
+                    session_dict.update({'type': r'N/A'})
+                else:
+                    session_dict.update({'type': group['name']})
+                    session_dict.update({'timeout': group['value']})
+                    session_dict.update({'remaining': group['remaining']})
+                
                 continue
 
             # match these lines:
@@ -266,11 +313,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #        Current Policy:  dot1x_dvlan_reauth_hm
             #         Authorized By:  Guest Vlan
             #                Status:  Authz Success
-            
-            # increase index
-            if p8.match(line):
-                index_id += 1
-
+                
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -309,18 +352,15 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-
                 template_dict = mac_dict.setdefault('local_policies', {}).setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
                 priority_dict.update({'priority': int(group['priority'])})
                 continue
 
-
             # Vlan Group:  Vlan: 130
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-
                 vlan_dict = mac_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
 
                 vlan_dict.update({'vlan': int(group['vlan_value'])})

@@ -109,7 +109,9 @@ class test_show_authentication_sessions_interface(unittest.TestCase):
                         'oper_control_dir': 'both',
                         'authorized_by': 'Guest Vlan',
                         'vlan_policy': '20',
-                        'session_timeout': 'N/A',
+                        'session_timeout': {
+                            'type': 'N/A',
+                        },
                         'idle_timeout': 'N/A',
                         'common_session_id': '0A3462C8000000000002763C',
                         'acct_session_id': '0x00000002',
@@ -223,7 +225,9 @@ Runnable methods list:
                         },
                         'oper_control_dir': 'both',
                         'oper_host_mode': 'multi-domain',
-                        'session_timeout': 'N/A',
+                        'session_timeout': {
+                            'type': 'N/A',
+                        },
                         'status': 'Authz '
                         'Success',
                         'user_name': '00055e7cda05'
@@ -248,7 +252,9 @@ Runnable methods list:
                         },
                         'oper_control_dir': 'both',
                         'oper_host_mode': 'multi-host',
-                        'session_timeout': 'N/A',
+                        'session_timeout': {
+                            'type': 'N/A',
+                        },
                         'status': 'Authz '
                         'Success',
                         'vlan_policy': '20'
