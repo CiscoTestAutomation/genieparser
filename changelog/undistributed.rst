@@ -235,3 +235,10 @@
 * IOS  
     * Updated ShowLlpdEntry to:
         * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                CDP
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
