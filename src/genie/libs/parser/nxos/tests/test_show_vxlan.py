@@ -1723,7 +1723,7 @@ interface Ethernet1/6
                     'associated_vrf': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 10101: {
                     'vni': 10101,
@@ -1731,7 +1731,7 @@ interface Ethernet1/6
                     'multisite_ingress_replication': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 10102: {
                     'vni': 10102,
@@ -1739,28 +1739,28 @@ interface Ethernet1/6
                     'multisite_ingress_replication': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 100000: {
                     'vni': 100000,
                     'associated_vrf': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 100001: {
                     'vni': 100001,
                     'associated_vrf': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 100002: {
                     'vni': 100002,
                     'associated_vrf': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 100004: {
                     'vni': 100004,
@@ -1768,7 +1768,7 @@ interface Ethernet1/6
                     'multisite_ingress_replication': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 100005: {
                     'vni': 100005,
@@ -1776,7 +1776,7 @@ interface Ethernet1/6
                     'multisite_ingress_replication': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 100006: {
                     'vni': 100006,
@@ -1784,7 +1784,7 @@ interface Ethernet1/6
                     'multisite_ingress_replication': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
                 10202: {
                     'vni': 10202,
@@ -1792,7 +1792,7 @@ interface Ethernet1/6
                     'multisite_ingress_replication': True,
                     'suppress_arp': True,
                     'mcast_group': "192.168.0.1",
-                    'vni_type': 'L3',
+                    'vni_type': 'L2',
                 },
             },
         },
@@ -1836,7 +1836,7 @@ interface Ethernet1/6
       advertise virtual-rmac
       source-interface loopback1
       global suppress-arp 
-      global mcast-group 192.168.0.1 L3
+      global mcast-group 192.168.0.1 L2
       multisite border-gateway interface loopback3
       member vni 10100 associate-vrf
       member vni 10101
