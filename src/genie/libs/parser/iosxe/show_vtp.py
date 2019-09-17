@@ -108,8 +108,8 @@ class ShowVtpStatusSchema(MetaParser):
                     'mst': {
                         'enabled': bool,
                         'operating_mode': str,
-                        'configuration_revision': int,
-                        'primary_id': str,
+                        Optional('configuration_revision'): int,
+                        Optional('primary_id'): str,
                         Optional('primary_description'): str,
                         Optional('md5_digest'): str,
                     },
@@ -174,7 +174,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         p9 = re.compile(r'^VTP +Operating +Mode +: (?P<val>\S+\s?\S*)$')
 
         # Maximum VLANs supported locally   : 1005
-        p10 = re.compile(r'^Maximum +VLANs +supported +locally +: (?P<val>\d+)$')
+        # Maximum VLANs supported locally   :  2048
+        p10 = re.compile(r'^Maximum +VLANs +supported +locally +: +(?P<val>\d+)$')
 
         # Number of existing VLANs          : 53
         p11 = re.compile(r'^Number +of +existing +VLANs +: (?P<val>\d+)$')

@@ -60,6 +60,8 @@
     * Added ShowSegmentRoutingMplsMappingServer for:
         'show segment-routing mpls mapping-server ipv4'
         'show segment-routing mpls mapping-server ipv6'
+    * Added ShowSegmentRoutingMplsLbAssignedSids for:
+        'show segment-routing mpls lb assigned-sids'
 
 --------------------------------------------------------------------------------
                                 ISSU
@@ -82,6 +84,8 @@
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
+    * Updated ShowBgpL2vpnEvpn:
+        * updated schema to support more output
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -140,6 +144,11 @@
         * Added ShowIpMsdpPeer for commands:
                 * show ip msdp peer
                 * show ip msdp vrf {vrf} peer
+* IOSXE
+        * Update ShowMplsLdpNeighborDetail:
+                * fix cli wrong command parser error
+        * Update ShowMplsForwardingTable:
+                * update regex to support more output pattern
 
 --------------------------------------------------------------------------------
                                 vlan
@@ -147,11 +156,14 @@
 * IOSXE
     * Fixed regex in ShowVlan
 --------------------------------------------------------------------------------
-                                FLOW MONITOR
+                                FLOW
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowFlowMonitor for:
         * show flow monitor {name} cache format table
+    * Added ShowFlowExporterStatistics for:
+        * show flow exporter statistics
+        * show flow exporter {exporter} statistics
 
 --------------------------------------------------------------------------------
                                 ROUTING
@@ -159,7 +171,6 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
-
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
@@ -181,7 +192,7 @@
         * changed some fields in schema to Optional
     * Updated ShowSpanningTreeDetail to:
         * updated regex to accommodate more formats
-        * add support for rstp 
+        * add support for rstp
         * chnaged some fields in schema to Optional
 
 --------------------------------------------------------------------------------
@@ -197,3 +208,52 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowArpTrafficDetail to parse drop_adj key from output
+
+
+--------------------------------------------------------------------------------
+                                VTP
+--------------------------------------------------------------------------------
+* IOSXE:
+    * Updated ShowVtpStatusSchema to:
+        * Changed schema keywords to Optional
+
+--------------------------------------------------------------------------------
+                                IPV6
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
+
+--------------------------------------------------------------------------------
+                                MLD
+--------------------------------------------------------------------------------
+* IOSXR
+
+    * Updated ShowMldGroupsDetail to support empty output
+    * Updated ShowMldGroupsDetail to support empty output
+    
+--------------------------------------------------------------------------------
+                                lldp
+--------------------------------------------------------------------------------
+* IOS  
+    * Updated ShowLlpdEntry to:
+        * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                platform vm
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowPlatformVm to:
+        * Updated regex to accommodate different formats from the outputs
+
+--------------------------------------------------------------------------------
+                                RPL
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRplRoutePolicy:
+        * Updated passing command in device.parse()
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
