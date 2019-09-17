@@ -145,6 +145,8 @@
 * IOSXE
         * Update ShowMplsLdpNeighborDetail:
                 * fix cli wrong command parser error
+        * Update ShowMplsForwardingTable:
+                * update regex to support more output pattern
 
 --------------------------------------------------------------------------------
                                 vlan
@@ -220,8 +222,30 @@
     * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
 
 --------------------------------------------------------------------------------
+                                MLD
+--------------------------------------------------------------------------------
+* IOSXR
+
+    * Updated ShowMldGroupsDetail to support empty output
+    * Updated ShowMldGroupsDetail to support empty output
+    
+--------------------------------------------------------------------------------
+                                lldp
+--------------------------------------------------------------------------------
+* IOS  
+    * Updated ShowLlpdEntry to:
+        * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                platform vm
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowPlatformVm to:
+        * Updated regex to accommodate different formats from the outputs
+
+--------------------------------------------------------------------------------
                                 RPL
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowRplRoutePolicy:
-        * Bad code issue - now passing command in device.parse()
+        * Updated passing command in device.parse()
