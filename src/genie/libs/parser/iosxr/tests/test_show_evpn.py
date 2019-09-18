@@ -90,7 +90,7 @@ class test_show_evpn_evi_mac(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 # ===================================================
-#  Unit test for 'show evpn evi mac'
+#  Unit test for 'show evpn evi mac private'
 # ===================================================
 
 class test_show_evpn_evi_mac_private(unittest.TestCase):
