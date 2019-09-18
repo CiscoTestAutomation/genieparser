@@ -2865,7 +2865,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         show interfaces accounting
         show interfaces <interface> accounting
     """
-    cli_command = ['show interfaces {intf} accounting','show interfaces accounting']
+    cli_command = ['show interfaces {interface} accounting','show interfaces accounting']
     exclude = ['pkts_in', 'pkts_out', 'chars_in', 'chars_out']
 
     def cli(self, intf=None,output=None):
@@ -2873,7 +2873,7 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
             if not intf:
                 cmd = self.cli_command[1]
             else:
-                cmd = self.cli_command[0].format(intf=intf)
+                cmd = self.cli_command[0].format(interface=intf)
             out = self.device.execute(cmd)
         else:
             out = output

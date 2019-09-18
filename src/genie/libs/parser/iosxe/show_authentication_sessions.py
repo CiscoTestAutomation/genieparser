@@ -2,8 +2,8 @@
 
 IOSXE parsers for the following show commands:
     * show authentication sessions
-    * show authentication sessions interface {intf}
-    * show authentication sessions interface {intf} details
+    * show authentication sessions interface {interface}
+    * show authentication sessions interface {interface} details
 
 '''
 # Python
@@ -34,7 +34,7 @@ Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E2981
 #==============================================
 class ShowAuthenticationSessionsSchema(MetaParser):
     """Schema for show authentication sessions
-                  show authentication sessions interface {intf}
+                  show authentication sessions interface {interface}
     """
 
     schema = {
@@ -60,14 +60,14 @@ class ShowAuthenticationSessionsSchema(MetaParser):
 
 class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
     """Parser for 'show authentication sessions'
-                  'show authentication sessions interface {intf}''
+                  'show authentication sessions interface {interface}''
     """
 
-    cli_command = ['show authentication sessions', 'show authentication sessions interface {intf}']
+    cli_command = ['show authentication sessions', 'show authentication sessions interface {interface}']
 
     def cli(self,intf=None,output=None):
         if intf:
-            cmd = self.cli_command[1].format(intf=intf)
+            cmd = self.cli_command[1].format(interface=intf)
         else:
             cmd = self.cli_command[0]
 
@@ -130,10 +130,10 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         return ret_dict
 
 #==================================================================================
-# Parser for 'show authentication sessions interface {intf} details'
+# Parser for 'show authentication sessions interface {interface} details'
 #==================================================================================
 class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
-    """Schema for 'show authentication sessions interface {intf} details'
+    """Schema for 'show authentication sessions interface {interface} details'
     """
 
     schema = {
@@ -175,13 +175,13 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
     }
 
 class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
-    """Parser for 'show authentication sessions interface {intf} details'
+    """Parser for 'show authentication sessions interface {interface} details'
     """
-    cli_command = 'show authentication sessions interface {intf} details'
+    cli_command = 'show authentication sessions interface {interface} details'
 
     def cli(self, intf, output=None):
 
-        cmd = self.cli_command.format(intf=intf)
+        cmd = self.cli_command.format(interface=intf)
 
         if output is None:
             # get output from device

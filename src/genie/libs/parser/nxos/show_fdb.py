@@ -125,7 +125,7 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSche
         'show mac address-table vni <WORD> | grep <WORD>'
         'show mac address-table local vni <WORD>'"""
 
-    cli_command = ['show mac address-table vni {vni} | grep {intf}', 
+    cli_command = ['show mac address-table vni {vni} | grep {interface}',
                    'show mac address-table local vni {vni}']
 
 
@@ -134,7 +134,7 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSche
         cmd = ""
         if output is None:
             if vni and intf:
-                cmd = self.cli_command[0].format(vni=vni, intf=intf)
+                cmd = self.cli_command[0].format(vni=vni, interface=intf)
             if vni and not intf:
                 cmd = self.cli_command[1].format(vni=vni)
             out = self.device.execute(cmd)

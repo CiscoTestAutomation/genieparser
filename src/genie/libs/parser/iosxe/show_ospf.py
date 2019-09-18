@@ -1914,7 +1914,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     vl_transit_area_id = None
 
                     # Execute command to get virtual-link address
-                    cmd = 'show ip ospf virtual-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf virtual-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -1955,7 +1955,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
-                    cmd = 'show ip ospf sham-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf sham-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -3270,7 +3270,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     vl_transit_area_id = None
 
                     # Execute command to get virtual-link address
-                    cmd = 'show ip ospf virtual-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf virtual-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -3311,7 +3311,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
-                    cmd = 'show ip ospf sham-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf sham-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
