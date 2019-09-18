@@ -9,7 +9,8 @@ from ipaddress import ip_address
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import (Any,
+                                                Optional)
 
 from genie.libs.parser.base import *
 
@@ -338,173 +339,76 @@ class ShowEvpnEthernetSegment(MetaParser):
 
         return kl
 
-
-class ShowEvpnInternalLabelDetail(MetaParser):
-
-    # TODO schema
-
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
-
-    cli_command = 'show evpn internal-label detail'
-
-    def cli(self,output=None):
-        """parsing mechanism: cli
-        """
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-        res = {
-            'entries': [],
+class ShowEvpnInternalLabelSchema(MetaParser):
+    schema = {
+        'evi':{
+            Any(): {
+                'ethernet_segment_id': {
+                    Any(): {
+                        'index': {
+                            Any(): {
+                                'ether_tag': str,
+                                'label': str,
+                                Optional('encap'): str
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+
+class ShowEvpnInternalLabel(ShowEvpnInternalLabelSchema):
+
+    cli_command = 'show evpn internal-label'
+    def cli(self, output=None):
+        
+        ret_dict = {}
+        index_dict = {}
+
+        out = output if output else self.device.execute(self.cli_command)
+        
+        # 1000 0000.0102.0304.0506.07aa 0 None
+        # 1000 0000.0102.0304.0506.07aa 200 24011
+        p1 = re.compile(r'^(?P<evi>\d+)( +(?P<encap>\S+))? +'
+                '(?P<ethernet_segment_id>[\w\.]+) +(?P<ether_tag>\S+) +(?P<label>\S+)$')
 
         for line in out.splitlines():
-            line = line.rstrip()
-
-            # 5     0012.1200.0000.0000.0002                0        24114
-            m = re.match(r'^\s*(?P<evi>\d+)\s+'
-                          '(?P<esi>[\w.]+)\s+'
-                          '(?P<eth_tag>\d+)\s+'
-                          '(?P<internal_label>\w+)$',line)
-
+            line = line.strip()
+            
+            # 1000 0000.0102.0304.0506.07aa 0 None
+            # 1000 0000.0102.0304.0506.07aa 200 24011
+            # 100        MPLS   0036.3700.0000.0000.1100    0          64006
+            m = p1.match(line)
             if m:
-                # create new record
-                record = { 'evi' : m.group('evi'),
-                           'esi' : m.group('esi'),
-                           'eth_tag' : m.group('eth_tag'),
-                           'internal_label' : m.group('internal_label'),
-                           'pathlists' : {
-                                'mac' : [],
-                                'es_ead' : [],
-                                'evi_ead' : [],
-                                'summary' : []
-                            }
-                         }
+                group = m.groupdict()
+                evi = int(group['evi'])
+                ethernet_segment_id = group['ethernet_segment_id']
+                ether_tag = group['ether_tag']
+                label = group['label']
 
-                res['entries'].append(record)
+                index = index_dict.get(ethernet_segment_id, 0) + 1
+                
+                segment_id_dict = ret_dict.setdefault('evi', {}). \
+                    setdefault(evi, {}). \
+                    setdefault('ethernet_segment_id', {}). \
+                    setdefault(ethernet_segment_id, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
 
+                segment_id_dict.update({'ether_tag': ether_tag})
+                segment_id_dict.update({'label': label})
+
+                if group['encap']:
+                    segment_id_dict.update({'encap': group['encap']})
+
+                index_dict.update({ethernet_segment_id: index})
+
+                continue
+            
             # Multi-paths resolved: TRUE
-            m = re.match(r'^\s+Multi-paths resolved: '
-                          '(?P<mp_resolved>\w+)$',line)
-
-            if m:
-                res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
 
 
-            # Multi-paths resolved: TRUE (Remote single-active)
-            m = re.match(r'^\s+Multi-paths resolved: '
-                          '(?P<mp_resolved>\w+) '
-                          '\((?P<mp_single_active>.+)\)$',line)
-
-            if m:
-                res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
-                res['entries'][-1]['mp_single_active'] = m.group('mp_single_active')
-
-            # MAC     10.70.20.20                              24212
-            m = re.match(r'^\s+MAC\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = True
-                es_ead_flag = False
-                evi_ead_flag = False
-                summary_flag = False
-
-                res['entries'][-1]['pathlists']['mac'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
-            # EAD/ES  10.10.10.10                              0
-            m = re.match(r'^\s+EAD/ES\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = False
-                es_ead_flag = True
-                evi_ead_flag = False
-                summary_flag = False
-
-                res['entries'][-1]['pathlists']['es_ead'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
-            # EAD/EVI 10.10.10.10                              24012
-            m = re.match(r'^\s+EAD/EVI\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = False
-                es_ead_flag = False
-                evi_ead_flag = True
-                summary_flag = False
-
-                res['entries'][-1]['pathlists']['evi_ead'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
-            # Summary 10.70.20.20                              24212
-            m = re.match(r'^\s+Summary\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = False
-                es_ead_flag = False
-                evi_ead_flag = False
-                summary_flag = True
-
-                res['entries'][-1]['pathlists']['summary'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
-            #         10.70.20.20                              0
-            m = re.match(r'^\s+'
-                         '(?P<nexthop>[\d.]+)\s+'
-                         '(?P<label>\d+)$',line)
-
-            if m:
-               if mac_flag:
-                   res['entries'][-1]['pathlists']['mac'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-               elif es_ead_flag:
-                   res['entries'][-1]['pathlists']['es_ead'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-               elif evi_ead_flag:
-                   res['entries'][-1]['pathlists']['evi_ead'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-               elif summary_flag:
-                   res['entries'][-1]['pathlists']['summary'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-
-            #         10.10.10.10 (B)                          24012
-            m = re.match(r'^\s+'
-                         '(?P<nexthop>[\d.]+)\s+'
-                         '\((?P<flag>\w+)\)\s+'
-                         '(?P<label>\d+)$',line)
-
-            if m:
-               res['entries'][-1]['pathlists']['summary'].append(
-                   {'nexthop' : m.group('nexthop'),
-                    'label' : m.group('label'),
-                    'flag' : m.group('flag')}
-               )
-
-        return res
+        return ret_dict
 
 # vim: ft=python ts=8 sw=4 et
