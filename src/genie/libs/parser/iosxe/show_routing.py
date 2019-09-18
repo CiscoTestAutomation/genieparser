@@ -259,7 +259,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             next_hop = interface = updated = metrics = route_preference = ""
             # Routing Table: VRF1
-            p1 = re.compile(r'^\s*Routing Table: +(?P<vrf>[\w]+)$')
+            p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -267,8 +267,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             # 10.1.0.0/32 is subnetted, 1 subnets
             # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
-            p2 = re.compile(r'^\s*(?P<subnetted_ip>[\d\/\.]+) +is +(variably )?subnetted, '
-                             '+(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
+            p2 = re.compile(r'^(?P<subnetted_ip>[\d\/\.]+) +is +(variably )?subnetted, '
+                            r'+(?P<number_of_subnets>[\d]+) +subnets(, +(?P<number_of_masks>[\d]+) +masks)?$')
             m = p2.match(line)
             if m:
                 # if you see the issue by "show ip route", it means that active is True.
@@ -295,12 +295,12 @@ class ShowIpRoute(ShowIpRouteSchema):
             # L        FF00::/8 [0/0]
             if self.IP_VER == 'ipv4':
                 p3 = re.compile(
-                    r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
                     r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             else:
                 p3 = re.compile(
-                    r'^\s*(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\w\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\w\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
                     r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
@@ -379,11 +379,10 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
-            p4 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
-                            ' +via +(?P<next_hop>[\d\.]+)?,?( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+            p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
+                            r'( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
             m = p4.match(line)
             if m:
-
                 routepreference = m.groupdict()['route_preference']
                 if routepreference and '/' in routepreference:
                     route_preference = routepreference.split('/')[0]
@@ -431,8 +430,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                 continue
 
             #       is directly connected, GigabitEthernet0/2
-            p5 = re.compile(r'^\s*is +directly +connected,( +\[(?P<route_preference>[\d\/]+)\]'
-                            ' +via +(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+            p5 = re.compile(r'^is +directly +connected,( +\[(?P<route_preference>[\d\/]+)\] '
+                            r'+via +(?P<next_hop>[\d\.]+)?,)?( +(?P<date>[0-9][\w\:]+),)?'
+                            r'( +(?P<interface>[\S]+))?$')
             m = p5.match(line)
             if m:
 
@@ -484,9 +484,9 @@ class ShowIpRoute(ShowIpRouteSchema):
             #      via 2001:DB8:4:6::6
             #      via 2001:DB8:20:4:6::6%VRF2
             #      via Null0, receive
-            p6 = re.compile(r'^\s*via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]+),?)?'
-                             '( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?'
-                             '( +directly connected)?( +indirectly connected)?$')
+            p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]+),?)?'
+                            r'( +(?P<interface>[\w\.\/\-\_]+))?,?( +receive)?'
+                            r'( +directly connected)?( +indirectly connected)?$')
             m = p6.match(line)
             if m:
                 vrf_val = ''
