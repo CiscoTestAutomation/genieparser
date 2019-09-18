@@ -2,15 +2,20 @@
 import unittest
 from unittest.mock import Mock
 # iosxe tests/test_show_cdp
-from genie.libs.parser.iosxe.tests.test_show_cdp import test_show_cdp_neighbors as test_show_cdp_neighbors_iosxe
+from genie.libs.parser.iosxe.tests.test_show_cdp import test_show_cdp_neighbors as test_show_cdp_neighbors_iosxe,\
+ test_show_cdp_neighbors_detail as test_show_cdp_neighbors_detail_iosxe
 
 # Parser
-from genie.libs.parser.ios.show_cdp import ShowCdpNeighbors
+from genie.libs.parser.ios.show_cdp import ShowCdpNeighbors, \
+                                           ShowCdpNeighborsDetail
 
 
 # ==================================
 # Unit test for 'show cdp neighbors'
 # ==================================
+from genie.metaparser import SchemaEmptyParserError
+
+
 class test_show_cdp_neighbors(test_show_cdp_neighbors_iosxe):
 
     def test_show_cdp_neighbors_1(self):
@@ -45,6 +50,42 @@ class test_show_cdp_neighbors(test_show_cdp_neighbors_iosxe):
         self.maxDiff = None
         self.device = Mock(**self.device_output_5)
         obj = ShowCdpNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_5)
+
+class test_show_cdp_neighbors_detail(test_show_cdp_neighbors_detail_iosxe):
+    def test_show_cdp_neighbors_detail_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
+
+    def test_show_cdp_neighbors_detail_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_2)
+
+    def test_show_cdp_neighbors_detail_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_3)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_3)
+
+    def test_show_cdp_neighbors_detail_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_4_empty)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_cdp_neighbors_detail_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_5)
+        obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_5)
 
