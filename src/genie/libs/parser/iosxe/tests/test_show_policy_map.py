@@ -3158,7 +3158,7 @@ class test_show_policy_map(unittest.TestCase):
                     },
                     "system-cpp-police-sys-data": {
                         "police": {
-                            "rate": 100,
+                            "rate_pps": 100,
                             "conform_action": ["transmit"],
                             "exceed_action": ["drop"],
                         }

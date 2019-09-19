@@ -1407,7 +1407,7 @@ class ShowPolicyMapSchema(MetaParser):
                             Any(): {
                                 'kbps': int}},
                         Optional('police'): {
-                            Optional('rate'): int,
+                            Optional('rate_pps'): int,
                             Optional('cir_bps'): int,
                             Optional('cir_bc_bytes'): int,
                             Optional('cir_be_bytes'): int,
@@ -1541,7 +1541,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
         p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<pir_be_bytes>(\d+))$')
 
         # police rate 2000 pps
-        p2_3 = re.compile(r'^police +rate +(?P<rate>\d+) +pps$')
+        p2_3 = re.compile(r'^police +rate +(?P<rate_pps>\d+) +pps$')
 
         # police cir 445500 bc 83619
         p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+))$')
@@ -1729,7 +1729,7 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 exceed_list = []
                 vioate_list = []
                 police_dict = class_map_dict.setdefault('police', {})
-                police_dict['rate'] = int(m.groupdict()['rate'])
+                police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
                 continue
 
             # police cir 445500 bc 83619

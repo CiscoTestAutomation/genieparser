@@ -10491,12 +10491,888 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
         Type 0, Length 0, Data 0, Checksum 0
     '''}
 
-    def test_show_ip_ospf_traffic_full1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowIpOspfTraffic(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '10000': {
+                                'summary_traffic_statistics': {
+                                    'ospf_packets_received_sent': {
+                                        'type': {
+                                            'rx_invalid': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_hello': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_db_des': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_ls_req': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_ls_upd': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_ls_ack': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_total': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_failed': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_hello': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_db_des': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_ls_req': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_ls_upd': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_ls_ack': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_total': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                        },
+                                    },
+                                    'ospf_header_errors': {
+                                        'length': 0,
+                                        'instance_id': 0,
+                                        'checksum': 0,
+                                        'auth_type': 0,
+                                        'version': 0,
+                                        'bad_source': 0,
+                                        'no_virtual_link': 0,
+                                        'area_mismatch': 0,
+                                        'no_sham_link': 0,
+                                        'self_originated': 0,
+                                        'duplicate_id': 0,
+                                        'hello': 0,
+                                        'mtu_mismatch': 0,
+                                        'nbr_ignored': 0,
+                                        'lls': 0,
+                                        'unknown_neighbor': 0,
+                                        'authentication': 0,
+                                        'ttl_check_fail': 0,
+                                        'adjacency_throttle': 0,
+                                        'bfd': 0,
+                                        'test_discard': 0,
+                                    },
+                                    'ospf_lsa_errors': {
+                                        'type': 0,
+                                        'length': 0,
+                                        'data': 0,
+                                        'checksum': 0,
+                                    },
+                                },
+                            },
+                            '888': {
+                                'router_id': '11.12.13.14',
+                                'ospf_queue_statistics': {
+                                    'limit': {
+                                        'inputq': 0,
+                                        'updateq': 200,
+                                        'outputq': 0,
+                                    },
+                                    'drops': {
+                                        'inputq': 0,
+                                        'updateq': 0,
+                                        'outputq': 0,
+                                    },
+                                    'max_delay_msec': {
+                                        'inputq': 3,
+                                        'updateq': 2,
+                                        'outputq': 1,
+                                    },
+                                    'max_size': {
+                                        'total': {
+                                            'inputq': 4,
+                                            'updateq': 3,
+                                            'outputq': 2,
+                                        },
+                                        'invalid': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'hello': {
+                                            'inputq': 4,
+                                            'updateq': 0,
+                                            'outputq': 1,
+                                        },
+                                        'db_des': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 1,
+                                        },
+                                        'ls_req': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'ls_upd': {
+                                            'inputq': 0,
+                                            'updateq': 3,
+                                            'outputq': 0,
+                                        },
+                                        'ls_ack': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                    },
+                                    'current_size': {
+                                        'total': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'invalid': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'hello': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'db_des': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'ls_req': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'ls_upd': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                        'ls_ack': {
+                                            'inputq': 0,
+                                            'updateq': 0,
+                                            'outputq': 0,
+                                        },
+                                    },
+                                },
+                                'interface_statistics': {
+                                    'interfaces': {
+                                        'Tunnel65541': {
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_packets_received_sent': {
+                                                'type': {
+                                                    'rx_invalid': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_hello': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_db_des': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_ls_req': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_ls_upd': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_ls_ack': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_total': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_failed': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_hello': {
+                                                        'packets': 62301,
+                                                        'bytes': 5980896,
+                                                    },
+                                                    'tx_db_des': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_ls_req': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_ls_upd': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_ls_ack': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_total': {
+                                                        'packets': 62301,
+                                                        'bytes': 5980896,
+                                                    },
+                                                },
+                                            },
+                                            'ospf_header_errors': {
+                                                'length': 0,
+                                                'instance_id': 0,
+                                                'checksum': 0,
+                                                'auth_type': 0,
+                                                'version': 0,
+                                                'bad_source': 0,
+                                                'no_virtual_link': 0,
+                                                'area_mismatch': 0,
+                                                'no_sham_link': 0,
+                                                'self_originated': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'lls': 0,
+                                                'unknown_neighbor': 0,
+                                                'authentication': 0,
+                                                'ttl_check_fail': 0,
+                                                'adjacency_throttle': 0,
+                                                'bfd': 0,
+                                                'test_discard': 0,
+                                            },
+                                            'ospf_lsa_errors': {
+                                                'type': 0,
+                                                'length': 0,
+                                                'data': 0,
+                                                'checksum': 0,
+                                            },
+                                        },
+                                        'GigabitEthernet0/1/7': {
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_packets_received_sent': {
+                                                'type': {
+                                                    'rx_invalid': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_hello': {
+                                                        'packets': 70493,
+                                                        'bytes': 3383664,
+                                                    },
+                                                    'rx_db_des': {
+                                                        'packets': 3,
+                                                        'bytes': 1676,
+                                                    },
+                                                    'rx_ls_req': {
+                                                        'packets': 1,
+                                                        'bytes': 36,
+                                                    },
+                                                    'rx_ls_upd': {
+                                                        'packets': 14963,
+                                                        'bytes': 1870388,
+                                                    },
+                                                    'rx_ls_ack': {
+                                                        'packets': 880,
+                                                        'bytes': 76140,
+                                                    },
+                                                    'rx_total': {
+                                                        'packets': 86340,
+                                                        'bytes': 5331904,
+                                                    },
+                                                    'tx_failed': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_hello': {
+                                                        'packets': 1,
+                                                        'bytes': 100,
+                                                    },
+                                                    'tx_db_des': {
+                                                        'packets': 4,
+                                                        'bytes': 416,
+                                                    },
+                                                    'tx_ls_req': {
+                                                        'packets': 1,
+                                                        'bytes': 968,
+                                                    },
+                                                    'tx_ls_upd': {
+                                                        'packets': 1,
+                                                        'bytes': 108,
+                                                    },
+                                                    'tx_ls_ack': {
+                                                        'packets': 134,
+                                                        'bytes': 9456,
+                                                    },
+                                                    'tx_total': {
+                                                        'packets': 141,
+                                                        'bytes': 11048,
+                                                    },
+                                                },
+                                            },
+                                            'ospf_header_errors': {
+                                                'length': 0,
+                                                'instance_id': 0,
+                                                'checksum': 0,
+                                                'auth_type': 0,
+                                                'version': 0,
+                                                'bad_source': 0,
+                                                'no_virtual_link': 0,
+                                                'area_mismatch': 0,
+                                                'no_sham_link': 0,
+                                                'self_originated': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'lls': 0,
+                                                'unknown_neighbor': 0,
+                                                'authentication': 0,
+                                                'ttl_check_fail': 0,
+                                                'adjacency_throttle': 0,
+                                                'bfd': 0,
+                                                'test_discard': 0,
+                                            },
+                                            'ospf_lsa_errors': {
+                                                'type': 0,
+                                                'length': 0,
+                                                'data': 0,
+                                                'checksum': 0,
+                                            },
+                                        },
+                                        'GigabitEthernet0/1/6': {
+                                            'last_clear_traffic_counters': 'never',
+                                            'ospf_packets_received_sent': {
+                                                'type': {
+                                                    'rx_invalid': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'rx_hello': {
+                                                        'packets': 70504,
+                                                        'bytes': 3384192,
+                                                    },
+                                                    'rx_db_des': {
+                                                        'packets': 3,
+                                                        'bytes': 1676,
+                                                    },
+                                                    'rx_ls_req': {
+                                                        'packets': 1,
+                                                        'bytes': 36,
+                                                    },
+                                                    'rx_ls_upd': {
+                                                        'packets': 14809,
+                                                        'bytes': 1866264,
+                                                    },
+                                                    'rx_ls_ack': {
+                                                        'packets': 877,
+                                                        'bytes': 76028,
+                                                    },
+                                                    'rx_total': {
+                                                        'packets': 86194,
+                                                        'bytes': 5328196,
+                                                    },
+                                                    'tx_failed': {
+                                                        'packets': 0,
+                                                        'bytes': 0,
+                                                    },
+                                                    'tx_hello': {
+                                                        'packets': 1,
+                                                        'bytes': 100,
+                                                    },
+                                                    'tx_db_des': {
+                                                        'packets': 4,
+                                                        'bytes': 416,
+                                                    },
+                                                    'tx_ls_req': {
+                                                        'packets': 1,
+                                                        'bytes': 968,
+                                                    },
+                                                    'tx_ls_upd': {
+                                                        'packets': 1,
+                                                        'bytes': 108,
+                                                    },
+                                                    'tx_ls_ack': {
+                                                        'packets': 117,
+                                                        'bytes': 8668,
+                                                    },
+                                                    'tx_total': {
+                                                        'packets': 124,
+                                                        'bytes': 10260,
+                                                    },
+                                                },
+                                            },
+                                            'ospf_header_errors': {
+                                                'length': 0,
+                                                'instance_id': 0,
+                                                'checksum': 0,
+                                                'auth_type': 0,
+                                                'version': 0,
+                                                'bad_source': 0,
+                                                'no_virtual_link': 0,
+                                                'area_mismatch': 0,
+                                                'no_sham_link': 0,
+                                                'self_originated': 0,
+                                                'duplicate_id': 0,
+                                                'hello': 0,
+                                                'mtu_mismatch': 0,
+                                                'nbr_ignored': 0,
+                                                'lls': 0,
+                                                'unknown_neighbor': 0,
+                                                'authentication': 0,
+                                                'ttl_check_fail': 0,
+                                                'adjacency_throttle': 0,
+                                                'bfd': 0,
+                                                'test_discard': 0,
+                                            },
+                                            'ospf_lsa_errors': {
+                                                'type': 0,
+                                                'length': 0,
+                                                'data': 0,
+                                                'checksum': 0,
+                                            },
+                                        },
+                                    },
+                                },
+                                'summary_traffic_statistics': {
+                                    'ospf_packets_received_sent': {
+                                        'type': {
+                                            'rx_invalid': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'rx_hello': {
+                                                'packets': 159187,
+                                                'bytes': 7640968,
+                                            },
+                                            'rx_db_des': {
+                                                'packets': 10240,
+                                                'bytes': 337720,
+                                            },
+                                            'rx_ls_req': {
+                                                'packets': 5,
+                                                'bytes': 216,
+                                            },
+                                            'rx_ls_upd': {
+                                                'packets': 31899,
+                                                'bytes': 4010656,
+                                            },
+                                            'rx_ls_ack': {
+                                                'packets': 2511,
+                                                'bytes': 201204,
+                                            },
+                                            'rx_total': {
+                                                'packets': 203842,
+                                                'bytes': 12190764,
+                                            },
+                                            'tx_failed': {
+                                                'packets': 0,
+                                                'bytes': 0,
+                                            },
+                                            'tx_hello': {
+                                                'packets': 208493,
+                                                'bytes': 20592264,
+                                            },
+                                            'tx_db_des': {
+                                                'packets': 10540,
+                                                'bytes': 15808320,
+                                            },
+                                            'tx_ls_req': {
+                                                'packets': 5,
+                                                'bytes': 3112,
+                                            },
+                                            'tx_ls_upd': {
+                                                'packets': 33998,
+                                                'bytes': 5309252,
+                                            },
+                                            'tx_ls_ack': {
+                                                'packets': 17571,
+                                                'bytes': 1220144,
+                                            },
+                                            'tx_total': {
+                                                'packets': 270607,
+                                                'bytes': 42933092,
+                                            },
+                                        },
+                                    },
+                                    'ospf_header_errors': {
+                                        'length': 0,
+                                        'instance_id': 0,
+                                        'checksum': 0,
+                                        'auth_type': 0,
+                                        'version': 0,
+                                        'bad_source': 0,
+                                        'no_virtual_link': 0,
+                                        'area_mismatch': 0,
+                                        'no_sham_link': 0,
+                                        'self_originated': 0,
+                                        'duplicate_id': 0,
+                                        'hello': 0,
+                                        'mtu_mismatch': 0,
+                                        'nbr_ignored': 2682,
+                                        'lls': 0,
+                                        'unknown_neighbor': 0,
+                                        'authentication': 0,
+                                        'ttl_check_fail': 0,
+                                        'adjacency_throttle': 0,
+                                        'bfd': 0,
+                                        'test_discard': 0,
+                                    },
+                                    'ospf_lsa_errors': {
+                                        'type': 0,
+                                        'length': 0,
+                                        'data': 0,
+                                        'checksum': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'ospf_statistics': {
+            'last_clear_traffic_counters': 'never',
+            'rcvd': {
+                'total': 204136,
+                'checksum_errors': 0,
+                'hello': 159184,
+                'database_desc': 10240,
+                'link_state_req': 5,
+                'link_state_updates': 31899,
+                'link_state_acks': 2511,
+            },
+            'sent': {
+                'total': 281838,
+                'hello': 219736,
+                'database_desc': 10540,
+                'link_state_req': 5,
+                'link_state_updates': 33998,
+                'link_state_acks': 17571,
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+        show ip ospf traffic
+
+        Summary traffic statistics for process ID 10000:
+
+        OSPF packets received/sent
+
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      0                    0
+        RX DB des     0                    0
+        RX LS req     0                    0
+        RX LS upd     0                    0
+        RX LS ack     0                    0
+        RX Total      0                    0
+
+        TX Failed     0                    0
+        TX Hello      0                    0
+        TX DB des     0                    0
+        TX LS req     0                    0
+        TX LS upd     0                    0
+        TX LS ack     0                    0
+        TX Total      0                    0
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+
+
+        OSPF statistics:
+        Last clearing of OSPF traffic counters never
+        Rcvd: 204136 total, 0 checksum errors
+                159184 hello, 10240 database desc, 5 link state req
+                31899 link state updates, 2511 link state acks
+        Sent: 281838 total
+                219736 hello, 10540 database desc, 5 link state req
+                33998 link state updates, 17571 link state acks
+
+
+
+                    OSPF Router with ID (11.12.13.14) (Process ID 888)
+
+        OSPF queue statistics for process ID 888:
+
+                        InputQ     UpdateQ    OutputQ
+        Limit            0          200        0
+        Drops            0          0          0
+        Max delay [msec] 3          2          1
+        Max size         4          3          2
+            Invalid        0          0          0
+            Hello          4          0          1
+            DB des         0          0          1
+            LS req         0          0          0
+            LS upd         0          3          0
+            LS ack         0          0          0
+        Current size     0          0          0
+            Invalid        0          0          0
+            Hello          0          0          0
+            DB des         0          0          0
+            LS req         0          0          0
+            LS upd         0          0          0
+            LS ack         0          0          0
+
+
+        Interface statistics:
+
+
+            Interface Tunnel65541
+
+        Last clearing of interface traffic counters never
+
+        OSPF packets received/sent
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      0                    0
+        RX DB des     0                    0
+        RX LS req     0                    0
+        RX LS upd     0                    0
+        RX LS ack     0                    0
+        RX Total      0                    0
+
+        TX Failed     0                    0
+        TX Hello      62301                5980896
+        TX DB des     0                    0
+        TX LS req     0                    0
+        TX LS upd     0                    0
+        TX LS ack     0                    0
+        TX Total      62301                5980896
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+
+
+
+            Interface GigabitEthernet0/1/7
+
+        Last clearing of interface traffic counters never
+
+        OSPF packets received/sent
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      79715                3826316
+        RX DB des     54                   6708
+        RX LS req     2                    72
+        RX LS upd     16831                2110728
+        RX LS ack     1580                 122140
+        RX Total      98182                6065964
+
+        TX Failed     0                    0
+        TX Hello      73397                7339656
+        TX DB des     59                   72276
+        TX LS req     3                    2052
+        TX LS upd     9359                 1560172
+        TX LS ack     9656                 671164
+        TX Total      92474                9645320
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 9, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+
+
+
+        Neighbor Statistics for interface GigabitEthernet0/1/7
+
+        Neighbor 111.87.5.253 traffic statistics
+
+        Last clearing of neighbor traffic counters never
+
+        OSPF packets received/sent
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      70493                3383664
+        RX DB des     3                    1676
+        RX LS req     1                    36
+        RX LS upd     14963                1870388
+        RX LS ack     880                  76140
+        RX Total      86340                5331904
+
+        TX Failed     0                    0
+        TX Hello      1                    100
+        TX DB des     4                    416
+        TX LS req     1                    968
+        TX LS upd     1                    108
+        TX LS ack     134                  9456
+        TX Total      141                  11048
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+
+
+
+            Interface GigabitEthernet0/1/6
+
+        Last clearing of interface traffic counters never
+
+        OSPF packets received/sent
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      79472                3814652
+        RX DB des     10186                331012
+        RX LS req     3                    144
+        RX LS upd     15068                1899928
+        RX LS ack     931                  79064
+        RX Total      105660               6124800
+
+        TX Failed     0                    0
+        TX Hello      72795                7271712
+        TX DB des     10481                15736044
+        TX LS req     2                    1060
+        TX LS upd     24639                3749080
+        TX LS ack     7915                 548980
+        TX Total      115832               27306876
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 2673, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+
+
+
+        Neighbor Statistics for interface GigabitEthernet0/1/6
+
+        Neighbor 111.87.5.252 traffic statistics
+
+        Last clearing of neighbor traffic counters never
+
+        OSPF packets received/sent
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      70504                3384192
+        RX DB des     3                    1676
+        RX LS req     1                    36
+        RX LS upd     14809                1866264
+        RX LS ack     877                  76028
+        RX Total      86194                5328196
+
+        TX Failed     0                    0
+        TX Hello      1                    100
+        TX DB des     4                    416
+        TX LS req     1                    968
+        TX LS upd     1                    108
+        TX LS ack     117                  8668
+        TX Total      124                  10260
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+
+
+
+        Summary traffic statistics for process ID 888:
+
+        OSPF packets received/sent
+
+        Type          Packets              Bytes
+        RX Invalid    0                    0
+        RX Hello      159187               7640968
+        RX DB des     10240                337720
+        RX LS req     5                    216
+        RX LS upd     31899                4010656
+        RX LS ack     2511                 201204
+        RX Total      203842               12190764
+
+        TX Failed     0                    0
+        TX Hello      208493               20592264
+        TX DB des     10540                15808320
+        TX LS req     5                    3112
+        TX LS upd     33998                5309252
+        TX LS ack     17571                1220144
+        TX Total      270607               42933092
+
+        OSPF header errors
+        Length 0, Instance ID 0, Checksum 0, Auth Type 0,
+        Version 0, Bad Source 0, No Virtual Link 0,
+        Area Mismatch 0, No Sham Link 0, Self Originated 0,
+        Duplicate ID 0, Hello 0, MTU Mismatch 0,
+        Nbr Ignored 2682, LLS 0, Unknown Neighbor 0,
+        Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
+        BFD 0, Test discard 0
+
+        OSPF LSA errors
+        Type 0, Length 0, Data 0, Checksum 0
+    '''}
 
     def test_show_ip_ospf_traffic_empty(self):
         self.maxDiff = None
@@ -10505,12 +11381,26 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    def test_show_ip_ospf_traffic_full1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIpOspfTraffic(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIpOspfTraffic(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowIpOspfTraffic(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ============================================
