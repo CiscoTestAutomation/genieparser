@@ -106,6 +106,10 @@
     * Added ShowIpOspfSegmentRoutingAdjacencySid for:
         * show ip ospf segment-routing adjacency-sid
         * show ip ospf {process_id} segment-routing adjacency-sid
+	* Updated ShowIpOspfNeighborDetail:
+		added show ip ospf neighbor {neighbor} detail with custom neighbor
+	* Updated ShowIpOspfMplsLdpInterface:
+		added show ip ospf mpls ldp interface {interface} with custom interface
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -257,3 +261,9 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowRunningConfigNvOverlay for more varied output
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowModule parse for Cat6k devices
