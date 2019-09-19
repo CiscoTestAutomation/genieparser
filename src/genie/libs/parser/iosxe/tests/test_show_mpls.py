@@ -2353,6 +2353,66 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                    No Label   10.0.0.16/30     0             Gi5        10.0.0.25     
     '''}
 
+    golden_parsed_output_6 = {
+        "vrf": {
+            "default": {
+                "local_label": {
+                    24: {
+                        "outgoing_label_or_vc": {
+                            "No Label": {
+                                "prefix_or_tunnel_id": {
+                                    "10.23.120.0/24": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.120": {
+                                                "next_hop": "10.12.120.2",
+                                                "bytes_label_switched": 0
+                                            },
+                                            "GigabitEthernet3.120": {
+                                                "next_hop": "10.13.120.3",
+                                                "bytes_label_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    25: {
+                        "outgoing_label_or_vc": {
+                            "No Label": {
+                                "prefix_or_tunnel_id": {
+                                    "10.23.120.0/24[V]": {
+                                        "outgoing_interface": {
+                                            "GigabitEthernet2.420": {
+                                                "next_hop": "10.12.120.2",
+                                                "bytes_label_switched": 0
+                                            },
+                                            "GigabitEthernet3.420": {
+                                                "next_hop": "10.13.120.3",
+                                                "bytes_label_switched": 0
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output_6 = {'execute.return_value':'''
+        show mpls forwarding-table
+        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+        Label      Label      or Tunnel Id     Switched      interface
+        24      No Label   10.23.120.0/24   0             Gi2.120    10.12.120.2
+                No Label   10.23.120.0/24   0             Gi3.120    10.13.120.3
+        25      No Label   10.23.120.0/24[V]   \
+                                            0             Gi2.420    10.12.120.2
+                No Label   10.23.120.0/24[V]   \
+                                            0             Gi3.420    10.13.120.3  
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTable(device=self.dev1)
@@ -2393,6 +2453,13 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         obj = ShowMplsForwardingTable(device=self.dev)
         parsed_output = obj.parse(prefix='10.0.0.16')
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_6)
+        obj = ShowMplsForwardingTable(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 
 class test_show_mpls_forwarding_table_detail(unittest.TestCase):

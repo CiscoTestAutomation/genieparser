@@ -84,6 +84,8 @@
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
+    * Updated ShowBgpL2vpnEvpn:
+        * updated schema to support more output
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -104,6 +106,10 @@
     * Added ShowIpOspfSegmentRoutingAdjacencySid for:
         * show ip ospf segment-routing adjacency-sid
         * show ip ospf {process_id} segment-routing adjacency-sid
+	* Updated ShowIpOspfNeighborDetail:
+		added show ip ospf neighbor {neighbor} detail with custom neighbor
+	* Updated ShowIpOspfMplsLdpInterface:
+		added show ip ospf mpls ldp interface {interface} with custom interface
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -145,6 +151,8 @@
 * IOSXE
         * Update ShowMplsLdpNeighborDetail:
                 * fix cli wrong command parser error
+        * Update ShowMplsForwardingTable:
+                * update regex to support more output pattern
 
 --------------------------------------------------------------------------------
                                 vlan
@@ -224,6 +232,39 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowMldGroupsDetail to support empty output
+
+--------------------------------------------------------------------------------
+                                lldp
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowLlpdEntry to:
+        * Updated regex to accommodate more formats
+
+--------------------------------------------------------------------------------
+                                platform vm
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowPlatformVm to:
+        * Updated regex to accommodate different formats from the outputs
+
+--------------------------------------------------------------------------------
+                                RPL
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowRplRoutePolicy:
+        * Updated passing command in device.parse()
+
+--------------------------------------------------------------------------------
+                                VXLAN
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowModule parse for Cat6k devices
 
 --------------------------------------------------------------------------------
                                 ND
