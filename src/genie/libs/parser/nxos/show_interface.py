@@ -2772,10 +2772,10 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
 
     cli_command = 'show running-config interface {interface}'
 
-    def cli(self, intf, output=None):
+    def cli(self, interface, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(interface=intf))
+            out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
 
@@ -2944,11 +2944,11 @@ class ShowNveInterface(ShowNveInterfaceSchema):
 
     cli_command = 'show nve interface {interface} detail'
 
-    def cli(self, intf, output=None):
+    def cli(self, interface, output=None):
         cmd = ""
         if output is None:
-            if intf:
-                cmd = self.cli_command.format(interface=intf)
+            if interface:
+                cmd = self.cli_command.format(interface=interface)
                 out = self.device.execute(cmd)
         else:
             out = output

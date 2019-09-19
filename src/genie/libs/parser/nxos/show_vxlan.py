@@ -412,12 +412,12 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
     """parser for:
         show nve interface <nve> detail"""
     cli_command = 'show nve interface {interface} detail'
-    def cli(self, intf=""):
+    def cli(self, interface=""):
         nve_list = []
 
-        if intf:
-            nve_list.append(intf)
-        if not intf:
+        if interface:
+            nve_list.append(interface)
+        if not interface:
             cmd1 = 'show interface | i nve'
             out1 = self.device.execute(cmd1)
             # Init vars

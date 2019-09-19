@@ -65,9 +65,9 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
 
     cli_command = ['show authentication sessions', 'show authentication sessions interface {interface}']
 
-    def cli(self,intf=None,output=None):
-        if intf:
-            cmd = self.cli_command[1].format(interface=intf)
+    def cli(self,interface=None,output=None):
+        if interface:
+            cmd = self.cli_command[1].format(interface=interface)
         else:
             cmd = self.cli_command[0]
 
@@ -112,9 +112,9 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
 
             if m:
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group['interface'])
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
-                intf_dict['interface'] = intf
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['interface'] = interface
                 client = group['client']
                 client_dict = intf_dict.setdefault('client', {}).setdefault(client, {})
                 client_dict.update({'client': client})
@@ -179,9 +179,9 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
     """
     cli_command = 'show authentication sessions interface {interface} details'
 
-    def cli(self, intf, output=None):
+    def cli(self, interface, output=None):
 
-        cmd = self.cli_command.format(interface=intf)
+        cmd = self.cli_command.format(interface=interface)
 
         if output is None:
             # get output from device
@@ -251,7 +251,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
 
                 key = re.sub(r'( |-)', '_',group['argument'].lower())
                 intf_dict.update({key: group['value']})

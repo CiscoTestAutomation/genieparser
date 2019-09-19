@@ -123,7 +123,7 @@ class test_show_authentication_sessions(unittest.TestCase):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_2)
         obj = ShowAuthenticationSessions(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet1/7/35')
+        parsed_output = obj.parse(interface='GigabitEthernet1/7/35')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 class test_show_authentication_sessions_interface_details(unittest.TestCase):
@@ -268,20 +268,20 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(intf='GigabitEthernet3/0/2')
+            parsed_output = obj.parse(interface='GigabitEthernet3/0/2')
 
     def test_golden_4(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_3)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet3/0/2')
+        parsed_output = obj.parse(interface='GigabitEthernet3/0/2')
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
 
     def test_golden_5(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_4)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet1/0/12')
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/12')
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
 
 if __name__ == '__main__':

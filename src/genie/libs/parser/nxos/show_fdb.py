@@ -129,13 +129,13 @@ class ShowMacAddressTableVni(ShowMacAddressTableBase, ShowMacAddressTableVniSche
                    'show mac address-table local vni {vni}']
 
 
-    def cli(self, vni, intf=None, output=None):
+    def cli(self, vni, interface=None, output=None):
 
         cmd = ""
         if output is None:
-            if vni and intf:
-                cmd = self.cli_command[0].format(vni=vni, interface=intf)
-            if vni and not intf:
+            if vni and interface:
+                cmd = self.cli_command[0].format(vni=vni, interface=interface)
+            if vni and not interface:
                 cmd = self.cli_command[1].format(vni=vni)
             out = self.device.execute(cmd)
         else:
