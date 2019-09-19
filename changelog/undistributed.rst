@@ -17,6 +17,14 @@
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
+* IOSXE
+    * Update ShowInterfaceAccounting
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+* NXOS
+    * Update ShowRunningConfigInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Update ShowNveInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
 
 --------------------------------------------------------------------------------
                                 EIGRP
@@ -106,6 +114,11 @@
     * Added ShowIpOspfSegmentRoutingAdjacencySid for:
         * show ip ospf segment-routing adjacency-sid
         * show ip ospf {process_id} segment-routing adjacency-sid
+    * Updated ShowIpOspfInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -264,4 +277,34 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowRunningConfigNvOverlay for more varied output
+    * Updated ShowNveInterfaceDetail:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowModule parse for Cat6k devices
+
+
+--------------------------------------------------------------------------------
+                                AUTHENTICATION
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessionsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessions:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowAuthenticationSessionsInterfaceDetailsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessionsInterfaceDetails:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
+--------------------------------------------------------------------------------
+                                FDB
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowMacAddressTableVni:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
 
