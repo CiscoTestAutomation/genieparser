@@ -77,6 +77,7 @@ class ShowVpc(ShowVpcSchema):
         up_vlan_bitset = peer_up_vlan_bitset = ''
 
         # vPC domain id                     : 1
+        # vPC domain id                     : Not configured
         p1 = re.compile(r'^vPC +domain +id\s*: +(?P<domain_id>[\w\s]+)$')
 
         # Peer status                       : peer adjacency formed ok 
