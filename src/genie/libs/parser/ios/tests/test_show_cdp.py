@@ -16,7 +16,7 @@ from genie.libs.parser.ios.show_cdp import ShowCdpNeighbors, \
 from genie.metaparser import SchemaEmptyParserError
 
 
-class test_show_cdp_neighbors(test_show_cdp_neighbors_iosxe):
+class Test_show_cdp_neighbors(test_show_cdp_neighbors_iosxe):
 
     def test_show_cdp_neighbors_1(self):
         self.maxDiff = None
@@ -53,7 +53,7 @@ class test_show_cdp_neighbors(test_show_cdp_neighbors_iosxe):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_5)
 
-class test_show_cdp_neighbors_detail(test_show_cdp_neighbors_detail_iosxe):
+class Test_show_cdp_neighbors_detail(test_show_cdp_neighbors_detail_iosxe):
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
