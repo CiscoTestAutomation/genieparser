@@ -136,7 +136,7 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
     """Schema for 'show authentication sessions interface {intf} details'
     """
     schema = {
-        'interface': {
+        'interfaces': {
             Any(): {
                 'mac_address': {
                     Any(): {
@@ -324,7 +324,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 if key == 'ip_address':
                     key = 'ipv4_address'
 
-                if 'interface' in ret_dict.keys():
+                if 'interfaces' in ret_dict.keys():
                     if key == 'mac_address':
                         mac_dict = intf_dict.setdefault(group['value'], {})
                     elif key == 'iif_id':
@@ -339,7 +339,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                             if key != 'interface':
                                 mac_dict.update({key: group['value']})
                 else: 
-                    intf_dict = ret_dict.setdefault('interface', {}).setdefault(group['value'], \
+                    intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(group['value'], \
                         {}).setdefault('mac_address', {})
                     
                 # else:

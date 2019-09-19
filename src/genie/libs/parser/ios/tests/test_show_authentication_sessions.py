@@ -98,7 +98,7 @@ class test_show_authentication_sessions_interface(unittest.TestCase):
 
 
     golden_parsed_output_1 = {
-        'interface': {
+        'interfaces': {
             'GigabitEthernet2/0/47': {
                 'mac_address': {
                     'Unknown': {
@@ -200,7 +200,7 @@ Runnable methods list:
     '''
     }
     golden_parsed_output_2 = {
-        'interface': {
+        'interfaces': {
             'GigabitEthernet2/0/47': {
                 'mac_address': {
                     '0005.5e7c.da05': {

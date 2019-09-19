@@ -43,11 +43,6 @@ class ShowAuthenticationSessionsInterface(ShowAuthenticationSessionsInterfaceDet
 		IOS parsers for the following show commands:
 	    	* show authentication sessions interface {interfaces}
 	'''
-	cli_command = 'show authentication sessions interface {intf}'
+	pass
 
-	def cli(self, intf, output=None):
-		if not output:
-			output = self.device.execute(self.cli_command.format(intf=intf))
-
-		return super().cli(intf=intf, output=output)
 

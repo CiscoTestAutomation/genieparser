@@ -9,7 +9,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
 from genie.libs.parser.iosxe.show_authentication_sessions import ShowAuthenticationSessions,\
                                                              ShowAuthenticationSessionsInterfaceDetails
 
-class test_show_authentication_sessions(unittest.TestCase):
+class TestShowAuthenticationSessions(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
@@ -126,13 +126,13 @@ class test_show_authentication_sessions(unittest.TestCase):
         parsed_output = obj.parse(intf='GigabitEthernet1/7/35')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
-class test_show_authentication_sessions_interface_details(unittest.TestCase):
+class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
     dev1 = Device(name='empty')
     dev_c3850 = Device(name='c3850')
     empty_output = {'execute.return_value': '      '}
 
     golden_parsed_output_3 = {
-        'interface': {
+        'interfaces': {
             'GigabitEthernet3/0/2': {
                 'mac_address': {
                     '0010.0010.0001': {
@@ -203,7 +203,7 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
     }
 
     golden_parsed_output_4 = {
-        'interface': {
+        'interfaces': {
             'GigabitEthernet1/0/12': {
                 'mac_address': {
                     '0010.0010.0001': {
@@ -313,7 +313,7 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
     }
 
     golden_parsed_output_5 = {
-        'interface': {
+        'interfaces': {
             'GigabitEthernet1/12': {
                 'mac_address': {
                     '6390.c2f7.5d21': {
@@ -362,6 +362,110 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
         }
     }
 
+    golden_output_6 = {'execute.return_value': '''\
+
+                Switch# show authentication sessions interface gigabitethernet2/0/47
+                    Interface:  GigabitEthernet2/0/47
+                MAC Address:  0001.1010.0101
+                IP Address:  10.1.2.3
+                    Status:  Authz Success
+                    Domain:  DATA
+            Oper host mode:  multi-host
+            Oper control dir:  both
+                Authorized By:  Guest Vlan
+                Vlan Policy:  20
+            Session timeout:  N/A
+                Idle timeout:  N/A
+            Common Session ID:  0A3462C8000000000002763C
+            Acct Session ID:  0x00000002
+                    Handle:  0x25000000
+        Runnable methods list:
+            Method   State
+            mab      Failed over
+            dot1x    Failed over
+        ----------------------------------------
+                    Interface:  GigabitEthernet2/0/47
+                MAC Address:  0005.5e7c.da05
+                IP Address:  10.1.3.5
+                    User-Name:  00055e7cda05
+                    Status:  Authz Success
+                    Domain:  VOICE
+            Oper host mode:  multi-domain
+            Oper control dir:  both
+                Authorized By:  Authentication Server
+            Session timeout:  N/A
+                Idle timeout:  N/A
+            Common Session ID:  0A3462C8000000010002A238
+            Acct Session ID:  0x00000003
+                    Handle:  0x91000001
+        Runnable methods list:
+            Method   State
+            mab      Authc Success
+            dot1x    Not run
+    '''
+    }
+
+    golden_parsed_output_6 = {
+        'interfaces': {
+            'GigabitEthernet2/0/47': {
+                'mac_address': {
+                    '0001.1010.0101': {
+                        'acct_session_id': '0x00000002',
+                        'authorized_by': 'Guest Vlan',
+                        'common_session_id': '0A3462C8000000000002763C',
+                        'domain': 'DATA',
+                        'handle': '0x25000000',
+                        'idle_timeout': 'N/A',
+                        'ipv4_address': '10.1.2.3',
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Failed over'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Failed over'
+                            }
+                        },
+                        'oper_control_dir': 'both',
+                        'oper_host_mode': 'multi-host',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'status': 'Authz Success',
+                        'vlan_policy': '20'
+                    },
+                    '0005.5e7c.da05': {
+                        'acct_session_id': '0x00000003',
+                        'authorized_by': 'Authentication Server',
+                        'common_session_id': '0A3462C8000000010002A238',
+                        'domain': 'VOICE',
+                        'handle': '0x91000001',
+                        'idle_timeout': 'N/A',
+                        'ipv4_address': '10.1.3.5',
+                        'method_status': {
+                            'dot1x': {
+                                'method': 'dot1x',
+                                'state': 'Not run'
+                            },
+                            'mab': {
+                                'method': 'mab',
+                                'state': 'Authc Success'
+                            }
+                        },
+                        'oper_control_dir': 'both',
+                        'oper_host_mode': 'multi-domain',
+                        'session_timeout': {
+                            'type': 'N/A'
+                        },
+                        'status': 'Authz Success',
+                        'user_name': '00055e7cda05'
+                    }
+                }
+            }
+        }
+    }
+
     def test_empty_3(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev1)
@@ -388,6 +492,13 @@ class test_show_authentication_sessions_interface_details(unittest.TestCase):
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
         parsed_output = obj.parse(intf='GigabitEthernet1/12')
         self.assertEqual(parsed_output,self.golden_parsed_output_5)
+
+    def test_golden_7(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_6)
+        obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
+        parsed_output = obj.parse(intf='GigabitEthernet2/0/47')
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 if __name__ == '__main__':
     unittest.main()
