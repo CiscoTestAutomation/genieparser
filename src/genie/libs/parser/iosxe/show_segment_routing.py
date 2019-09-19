@@ -520,7 +520,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                 "area_id": int,
                 "domain_id": int,
                 "asn": int,
-                "prefix_sid": {
+                Optional("prefix_sid"): {
                     "prefix": str,
                     "label": int,
                     "label_type": str,
@@ -549,7 +549,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                         "bandwidth_total": int,
                         "bandwidth_reservable": int,
                         "admin_groups": str,
-                        "adj_sid": {
+                        Optional("adj_sid"): {
                             Any(): str,
                         },
                     },
