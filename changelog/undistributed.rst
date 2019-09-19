@@ -195,3 +195,11 @@
 * IOSXE
     * Added ShowL2routeEvpnImetAllDetail for
         'show l2route evpn imet all detail'
+
+--------------------------------------------------------------------------------
+                                AuthenticationSessions
+--------------------------------------------------------------------------------
+* IOSXE 
+    * Updated ShowAuthenticationSessionsInterfaceDetails:
+        * Changed schema to accommodate IOS
+        * Added UT for multiple MAC addresses for 1 interface
