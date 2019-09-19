@@ -1218,8 +1218,16 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
         p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- ]+))?,? *.*$')
+
+        # Redistributing via rip
+        # Redistributing via eigrp 1
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
                          '(?P<redist_via_tag>\d+)?$')
+
+        # Last update from 192.168.151.2 on Vlan101, 2w3d ago
+        # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
+        # Last update from 10.101.146.10 2d07h ago
+        # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
         p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +(?:on +(?P<interface>[\w\.\/\-]+), )?(?P<age>[ \w\.\:]+) +ago$')
 
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
@@ -1319,8 +1327,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 group = m.groupdict()
                 entry_dict.update({k:v for k,v in group.items() if v})
                 continue
-
-
+            # Last update from 192.168.151.2 on Vlan101, 2w3d ago
+            # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
+            # Last update from 10.101.146.10 2d07h ago
+            # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
             # Last update from 192.168.151.2 on Vlan101, 2w3d ago
             # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
             # Last update from 10.101.146.10 2d07h ago
