@@ -23,10 +23,10 @@ class ShowFlowMonitorSchema(MetaParser):
         'cache_type': str,
         'cache_size': int,
         'current_entries': int,
-        'high_water_mark': int,
+        Optional('high_water_mark'): int,
         'flows_added': int,
         'flows_aged': int,
-        'ipv4_src_addr': {
+        Optional('ipv4_src_addr'): {
             Any(): {
                 'ipv4_dst_addr': {
                     Any(): {

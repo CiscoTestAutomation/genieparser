@@ -3126,18 +3126,21 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         * 'show ip ospf neighbor detail'
     '''
 
-    cli_command = 'show ip ospf neighbor detail'
+    cli_command = ['show ip ospf neighbor detail', 'show ip ospf neighbor {neighbor} detail']
     exclude = ['hello_timer', 'dead_timer', 'bdr_ip_addr',
         'bdr_router_id', 'index', 'last_retrans_max_scan_length',
         'last_retrans_max_scan_time_msec', 'total_retransmission',
         'uptime', 'last_retrans_scan_length', 'last_retrans_scan_time_msec']
 
 
-    def cli(self, output=None):
+    def cli(self, neighbor='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if neighbor:
+                out = self.device.execute(self.cli_command[1].format(neighbor=neighbor))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -5577,13 +5580,16 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         * 'show ip ospf mpls ldp interface'
     '''
 
-    cli_command = 'show ip ospf mpls ldp interface'
+    cli_command = ['show ip ospf mpls ldp interface', 'show ip ospf mpls ldp interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
