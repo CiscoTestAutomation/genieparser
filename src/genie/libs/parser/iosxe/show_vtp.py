@@ -48,20 +48,19 @@ class ShowVtpPassword(ShowVtpPasswordSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            if 'vtp' not in ret_dict:
-                ret_dict['vtp'] = {}
-
             # The VTP password is not configured.
             m = p1.match(line)
             if m:
-                ret_dict['vtp']['configured'] = False
+                sub_dict = ret_dict.setdefault('vtp', {})
+                sub_dict['configured'] = False
                 continue
 
             # VTP Password: password-string
             m = p2.match(line)
             if m:
-                ret_dict['vtp']['configured'] = True
-                ret_dict['vtp']['password'] = m.groupdict()['val']
+                sub_dict = ret_dict.setdefault('vtp', {})
+                sub_dict['configured'] = True
+                sub_dict['password'] = m.groupdict()['val']
                 continue
 
         return ret_dict

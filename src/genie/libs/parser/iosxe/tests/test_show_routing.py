@@ -871,8 +871,48 @@ class test_show_ip_route(unittest.TestCase):
                via 2001:DB8:1:1::2
           B   615:11:11:4::/64 [200/2219]
             via 10.4.1.1%default, indirectly connected
-          '''}
+    '''}
 
+    golden_parsed_output7 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv6": {
+                        "routes": {
+                            "FF00::/8": {
+                                "route": "FF00::/8",
+                                "active": True,
+                                "metric": 0,
+                                "route_preference": 0,
+                                "source_protocol_codes": "L",
+                                "source_protocol": "local",
+                                "next_hop": {
+                                    "outgoing_interface": {
+                                        "Null0": {
+                                            "outgoing_interface": "Null0"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output7 = {'execute.return_value': '''
+        CE1#show ipv6 route
+        IPv6 Routing Table - default - 1 entries
+        Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+            B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+            I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+            EX - EIGRP external, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+            OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+            ls - LISP site, ld - LISP dyn-EID, a - Application
+        L   FF00::/8 [0/0]
+            via Null0, receive
+    '''}
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -921,6 +961,14 @@ class test_show_ip_route(unittest.TestCase):
         route_map_obj = ShowIpv6RouteDistributor(device=self.device)
         parsed_output = route_map_obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output6)
+
+    def test_golden7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output7)
+        route_map_obj = ShowIpv6RouteDistributor(device=self.device)
+        parsed_output = route_map_obj.parse()
+        self.assertDictEqual(parsed_output, self.golden_parsed_output7)
+
 
 ###################################################
 # unit test for show ipv6 route updated
