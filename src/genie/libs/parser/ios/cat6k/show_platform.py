@@ -12,7 +12,7 @@ class ShowModuleSchema(MetaParser):
     schema = {
         'mod': {
             Any(): {
-                'port': int,
+                'ports': int,
                 'card_type': str,
                 'model': str,
                 'serial_number': str,
@@ -95,7 +95,7 @@ class ShowModule(ShowModuleSchema):
                     .setdefault('mod', {})\
                     .setdefault(mod, {})
 
-                module_dict['port'] = ports
+                module_dict['ports'] = ports
                 module_dict['card_type'] = card_type
                 module_dict['model'] = model
                 module_dict['serial_number'] = serial_number
@@ -119,7 +119,7 @@ class ShowModule(ShowModuleSchema):
                     .setdefault('mod', {})\
                     .setdefault(mod, {})
 
-                module_dict['port'] = ports
+                module_dict['ports'] = ports
                 module_dict['card_type'] = card_type
                 module_dict['model'] = model
                 module_dict['serial_number'] = serial_number

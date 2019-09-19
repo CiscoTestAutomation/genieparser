@@ -15,7 +15,7 @@ class test_show_module(unittest.TestCase):
     golden_parsed_output_1 = {
         "mod": {
             1: {
-                "port": 2,
+                "ports": 2,
                 "card_type": "Catalyst 6000 supervisor 2 (Active)",
                 "model": "WS-X6K-S2U-MSFC2",
                 "serial_number": "SAD0628035C",
@@ -41,7 +41,7 @@ class test_show_module(unittest.TestCase):
                 },
             },
             2: {
-                "port": 0,
+                "ports": 0,
                 "card_type": "Supervisor-Other",
                 "model": "unknown",
                 "serial_number": "unknown",
@@ -53,7 +53,7 @@ class test_show_module(unittest.TestCase):
                 "status": "Unknown",
             },
             3: {
-                "port": 16,
+                "ports": 16,
                 "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                 "model": "WS-X6816-GBIC",
                 "serial_number": "SAL061218K3",
@@ -73,7 +73,7 @@ class test_show_module(unittest.TestCase):
                 },
             },
             4: {
-                "port": 16,
+                "ports": 16,
                 "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                 "model": "WS-X6816-GBIC",
                 "serial_number": "SAL061218K8",
@@ -93,7 +93,7 @@ class test_show_module(unittest.TestCase):
                 },
             },
             5: {
-                "port": 0,
+                "ports": 0,
                 "card_type": "Switching Fabric Module-136 (Active)",
                 "model": "WS-X6500-SFM2",
                 "serial_number": "SAD061701YC",
@@ -105,7 +105,7 @@ class test_show_module(unittest.TestCase):
                 "status": "Ok",
             },
             6: {
-                "port": 1,
+                "ports": 1,
                 "card_type": "1 port 10-Gigabit Ethernet Module",
                 "model": "WS-X6502-10GE",
                 "serial_number": "SAD062003CM",
