@@ -231,14 +231,12 @@
                                 MLD
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowMldGroupsDetail to support empty output
 
-    * Updated ShowMldGroupsDetail to support empty output
-    * Updated ShowMldGroupsDetail to support empty output
-    
 --------------------------------------------------------------------------------
                                 lldp
 --------------------------------------------------------------------------------
-* IOS  
+* IOS
     * Updated ShowLlpdEntry to:
         * Updated regex to accommodate more formats
 
@@ -267,3 +265,9 @@
 --------------------------------------------------------------------------------
 * IOS
     * Added ShowModule parse for Cat6k devices
+
+--------------------------------------------------------------------------------
+                                ND
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowIpv6Routers to support different amounts of prefixes
