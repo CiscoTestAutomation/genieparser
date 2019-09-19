@@ -1209,6 +1209,9 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             out = output
 
         # initial regexp pattern
+        # Routing entry for 10.151.0.0/24, 1 known subnets
+        # Routing entry for 0.0.0.0/0, supernet
+        # Routing entry for 192.168.154.0/24
         p1 = re.compile(r'^Routing +entry +for +(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
 
         # Known via "connected", distance 0, metric 0 (connected)
@@ -1224,17 +1227,27 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+),)? '
                          '+(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, '
                          '+(?P<rib_labels>prefer-non-rib-labels), +(?P<merge_labels>merge-labels))?$')
-
+       
+        # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                          'traffic +share +count +is +(?P<share_count>\d+)$')
 
         # ipv6 specific
         p7 = re.compile(r'^Route +count +is +(?P<route_count>[\d\/]+), +'
                          'share +count +(?P<share_count>[\d\/]+)$')
+
+        # FE80::EEBD:1DFF:FE09:56C2, Vlan202
+        # FE80::EEBD:1DFF:FE09:56C2
         p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
                          '( indirectly connected)?)?$')
+        
+        # receive via Loopback4
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
+
+        # Last updated 2w4d ago       
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
+
+        # From FE80::EEBD:1DFF:FE09:56C2
         p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')
 
         # MPLS label: implicit-null
@@ -1311,7 +1324,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Last update from 192.168.151.2 on Vlan101, 2w3d ago
             # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
             # Last update from 10.101.146.10 2d07h ago
-            # Last update from 192.168.0.3 on GigabitEthernet2, 00: 00: 14 ago
+            # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
             m = p4.match(line)
             if m:
                 group = m.groupdict()

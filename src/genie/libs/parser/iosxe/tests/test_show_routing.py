@@ -20,7 +20,7 @@ from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
 # ============================================
 # unit test for 'show ip route'
 # =============================================
-class test_show_ip_route(unittest.TestCase):
+class TestShowIpRoute(unittest.TestCase):
     """
        unit test for show ip route
     """
@@ -925,7 +925,7 @@ class test_show_ip_route(unittest.TestCase):
 ###################################################
 # unit test for show ipv6 route updated
 ####################################################
-class test_show_ipv6_route_updated(unittest.TestCase):
+class TestShowIpv6RouteUpdated(unittest.TestCase):
     """
     unit test for show ipv6 route updated
     """
@@ -1163,7 +1163,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
 ###################################################
 # unit test for show ip route <WROD>
 ####################################################
-class Test_Show_Ip_Route_Word(unittest.TestCase):
+class TestShowIpRouteWord(unittest.TestCase):
     """unit test for show ip route <WORD>"""
 
     device = Device(name='aDevice')
@@ -1328,7 +1328,7 @@ class Test_Show_Ip_Route_Word(unittest.TestCase):
         'total_prefixes': 4
     }
 
-    golden_output_thaing = {'execute.return_value': '''\
+    golden_output_3 = {'execute.return_value': '''\
         Routing entry for 0.0.0.0/0, supernet
             Known via "bgp 65161", distance 20, metric 0, candidate default path
             Tag 65161, type external
@@ -1343,7 +1343,7 @@ class Test_Show_Ip_Route_Word(unittest.TestCase):
     '''
     }
 
-    golden_parsed_output_thaing = {
+    golden_parsed_output_3 = {
         'entry': {
             '0.0.0.0/0': {
                 'distance': '20',
@@ -1407,17 +1407,17 @@ class Test_Show_Ip_Route_Word(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
-    def test_golden_thaing(self):
+    def test_golden_3(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output_thaing)
+        self.device = Mock(**self.golden_output_3)
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='0.0.0.0')
-        self.assertEqual(parsed_output, self.golden_parsed_output_thaing)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
 ####################################################
-class test_show_ipv6_route_word(unittest.TestCase):
+class TestShowIpv6RouteWord(unittest.TestCase):
     """unit test for show ipv6 route <WORD>"""
 
     device = Device(name='aDevice')
@@ -1474,7 +1474,7 @@ class test_show_ipv6_route_word(unittest.TestCase):
 ###################################################
 # unit test for show ip cef <prefix>
 ####################################################
-class test_show_ip_cef(unittest.TestCase):
+class TestShowIpCef(unittest.TestCase):
     """unit test for show ip cef <ip>
                      show ip cef"""
 
@@ -1832,7 +1832,7 @@ class test_show_ip_cef(unittest.TestCase):
 ###################################################
 # unit test for show ipv6 cef <prefix>
 ####################################################
-class test_show_ipv6_cef(unittest.TestCase):
+class TestShowIpv6Cef(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1960,7 +1960,7 @@ class test_show_ipv6_cef(unittest.TestCase):
 # ==========================================
 # Unittest for 'show ip cef <prefix> detail'
 # ==========================================
-class test_show_ip_cef_detail(unittest.TestCase):
+class TestShowIpCefDetail(unittest.TestCase):
     '''Unittest for:
         * 'show ip cef <prefix> detail'
     '''
@@ -2039,7 +2039,7 @@ class test_show_ip_cef_detail(unittest.TestCase):
 ###################################################
 # unit test for show ip route summary
 ####################################################
-class test_show_ip_route_summary(unittest.TestCase):
+class TestShowIpRouteSummary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
