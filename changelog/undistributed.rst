@@ -89,8 +89,9 @@
         * updated schema to support more output
     * Added ShowBgpSessions for:
         * show bgp sessions
-    * Added ShowBgpInstanceAllSessions for:
+    * Added ShowBgpInstanceSessions for:
         * show bgp instance all sessions
+        * show bgp instance {instance} sessions
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -117,6 +118,29 @@
 	* Updated ShowIpOspfMplsLdpInterface:
 		added show ip ospf mpls ldp interface {interface} with custom interface
     * Updated ShowIpOspfTraffic to support more varied output
+
+* IOSXR
+	* Updated ShowOspfVrfAllInclusiveInterface:
+		added vrf and interface argument
+	* Updated ShowOspfVrfAllInclusiveNeighborDetail:
+		added vrf, neighbor and interface argument
+		changed total_neighbor_count key to optional
+	* Updated ShowOspfVrfAllInclusive:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveShamLinks:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveVirtualLinks:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseRouter:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseExternal:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseNetwork:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseSummary:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+		added vrf argument
 
 --------------------------------------------------------------------------------
                                 Policy Map
@@ -296,13 +320,11 @@
     * Updated ShowRunningConfigNvOverlay for more varied output
 
 --------------------------------------------------------------------------------
-                                MODULE
+                                Routing
 --------------------------------------------------------------------------------
-* IOS
-    * Added ShowModule parse for Cat6k devices
-
---------------------------------------------------------------------------------
-                                ND
---------------------------------------------------------------------------------
-* NXOS
-    * Updated ShowIpv6Routers to support different amounts of prefixes
+* IOSXE:
+    * Updated ShowIpRouteWord:
+        * Updated regex for various formats
+        * Added fields to schema
+        * Changed fields in schema to Optional
+        * Added regex for additional outputs

@@ -40,7 +40,7 @@ IOSXR parsers for the following show commands:
     * 'show bgp l2vpn evpn neighbors <neighbor>'
     * 'show bgp sessions'
     * 'show bgp instance all sessions'
-    
+    * 'show bgp instance {instance} sessions'
 """
 
 # Python
@@ -5253,15 +5253,18 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         return ret_dict
 
 # ===========================================
-# Parser for 'show bgp instance all sessions'
+# Parser for 
+#   * 'show bgp instance all sessions'
+#   * 'show bgp instance {instance} sessions'
 # ===========================================
 
-class ShowBgpInstanceAllSessions(ShowBgpSessions):
-    """Parser for show bgp instance all sessions"""
+class ShowBgpInstanceSessions(ShowBgpSessions):
+    """Parser for show bgp instance {instance} sessions"""
 
-    cli_command = 'show bgp instance all sessions'
-    def cli(self, output=None):
-        out = output if output else self.device.execute(self.cli_command)
+    cli_command = 'show bgp instance {instance} sessions'
+    def cli(self, instance='all', output=None):
+        out = output if output else self.device.execute(
+                self.cli_command.format(instance=instance))
         return super().cli(output=out)
 
 # ====================================

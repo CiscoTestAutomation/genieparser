@@ -24,7 +24,7 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
                                   ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
                                   ShowBgpSessions, \
-                                  ShowBgpInstanceAllSessions
+                                  ShowBgpInstanceSessions
 
 
 # ==================================
@@ -7673,12 +7673,12 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                 "address_family": {
                     "l2vpn evpn": {
                         "bgp_table_version": 33445,
-                        "local_router_id": "2.2.2.1"
+                        "local_router_id": "10.16.2.1"
                     },
-                    "l2vpn evpn RD 2.2.2.1:12345": {
+                    "l2vpn evpn RD 10.16.2.1:12345": {
                         "bgp_table_version": 33445,
                         "default_vrf": "L2",
-                        "local_router_id": "2.2.2.1",
+                        "local_router_id": "10.16.2.1",
                         "prefixes": {
                             "[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272": {
                                 "index": {
@@ -7747,12 +7747,12 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 }
                             }
                         },
-                        "route_distinguisher": "2.2.2.1:12345"
+                        "route_distinguisher": "10.16.2.1:12345"
                     },
-                    "l2vpn evpn RD 2.2.2.1:33333": {
+                    "l2vpn evpn RD 10.16.2.1:33333": {
                         "bgp_table_version": 33445,
                         "default_vrf": "L2",
-                        "local_router_id": "2.2.2.1",
+                        "local_router_id": "10.16.2.1",
                         "prefixes": {
                             "[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272": {
                                 "index": {
@@ -7856,7 +7856,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 }
                             }
                         },
-                        "route_distinguisher": "2.2.2.1:33333"
+                        "route_distinguisher": "10.16.2.1:33333"
                     }
                 }
             }
@@ -7868,7 +7868,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
         BGP routing table information for VRF default, address family L2VPN EVPN
 
-        BGP table version is 33445, Local Router ID is 2.2.2.1
+        BGP table version is 33445, Local Router ID is 10.16.2.1
 
         Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
 
@@ -7880,7 +7880,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
 
-        Route Distinguisher: 2.2.2.1:12345    (L2VNI 10001)
+        Route Distinguisher: 10.16.2.1:12345    (L2VNI 10001)
 
         *>l[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272
 
@@ -7920,7 +7920,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
 
 
-        Route Distinguisher: 2.2.2.1:33333    (L2VNI 20002)
+        Route Distinguisher: 10.16.2.1:33333    (L2VNI 20002)
 
         *>l[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272
 
@@ -7983,7 +7983,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         +++ Router2: executing command 'show bgp l2vpn evpn' +++
         show bgp l2vpn evpn
 
-        Fri Sep  6 10:39:01.396 JST
+        Fri Sep  6 10:39:01.396 EST
         BGP router identifier 192.168.99.25, local AS number 65001
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
@@ -8945,7 +8945,7 @@ class show_bgp_sessions(unittest.TestCase):
 """
 Unit test for 'show bgp instance all sessions'
 """
-class show_bgp_instance_all_sessions(unittest.TestCase):
+class show_bgp_instance_sessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -9049,13 +9049,13 @@ class show_bgp_instance_all_sessions(unittest.TestCase):
 
     def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
-	    obj = ShowBgpInstanceAllSessions(device=self.dev)
+	    obj = ShowBgpInstanceSessions(device=self.dev)
 	    with self.assertRaises(SchemaEmptyParserError):
 	        parsed_output = obj.parse()
 
     def test_golden(self):
         self.dev = Mock(**self.golden_output)
-        obj = ShowBgpInstanceAllSessions(device=self.dev)
+        obj = ShowBgpInstanceSessions(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
