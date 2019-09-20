@@ -114,6 +114,29 @@
 		added show ip ospf mpls ldp interface {interface} with custom interface
     * Updated ShowIpOspfTraffic to support more varied output
 
+* IOSXR
+	* Updated ShowOspfVrfAllInclusiveInterface:
+		added vrf and interface argument
+	* Updated ShowOspfVrfAllInclusiveNeighborDetail:
+		added vrf, neighbor and interface argument
+		changed total_neighbor_count key to optional
+	* Updated ShowOspfVrfAllInclusive:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveShamLinks:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveVirtualLinks:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseRouter:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseExternal:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseNetwork:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseSummary:
+		added vrf argument
+	* Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+		added vrf argument
+
 --------------------------------------------------------------------------------
                                 Policy Map
 --------------------------------------------------------------------------------
