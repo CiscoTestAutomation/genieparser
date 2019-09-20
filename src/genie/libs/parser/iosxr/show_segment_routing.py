@@ -1138,7 +1138,7 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(ShowSegment_Rout
             out = output
 
         # 10.186.1.0/24
-        p1 = re.compile(r'^(?P<prefix>\d+\.\d\.\d\.\d\/\d+)$')
+        p1 = re.compile(r'^(?P<prefix>\d+\.\d+\.\d+\.\d+\/\d+)$')
 
         # SID Index:      400
         p2 = re.compile(r'^SID Index:\s+(?P<sid_index>\d+)$')
