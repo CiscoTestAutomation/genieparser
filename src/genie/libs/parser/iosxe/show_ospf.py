@@ -52,23 +52,23 @@ class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
     '''
 
     schema = {
-        'instance':
-            {Any():
-                {'router_id': str,
-                'areas':
-                    {Any():
-                        {'router_id':
-                            {Any():
-                                {'sr_capable': str,
-                                'srlb_base': int,
-                                'srlb_range': int,
-                                },
+        'instance': {
+            Any(): {
+                'router_id': str,
+                'areas': {
+                    Any(): {
+                        'router_id': {
+                            Any(): {
+                                'sr_capable': str,
+                                Optional('srlb_base'): int,
+                                Optional('srlb_range'): int,
                             },
                         },
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ===========================================================
@@ -110,9 +110,9 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         # --------------------------------------------------------
         # *10.4.1.1          Yes          15000       1000
         # 10.16.2.2          Yes          15000       1000
-        p3 = re.compile(r'^(?:(?P<value>(\*)))?(?P<router_id>(\S+))'
-                         ' +(?P<sr_capable>(Yes|No)) +(?P<srlb_base>(\d+))'
-                         ' +(?P<srlb_range>(\d+))$')
+        # 10.169.197.252    No 
+        p3 = re.compile(r'^(?P<value>\*)?(?P<router_id>\S+) +(?P<sr_capable>Yes|No)'
+                         '( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -143,8 +143,10 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
                 smgt_dict = area_dict.setdefault('router_id', {}).\
                                       setdefault(group['router_id'], {})
                 smgt_dict['sr_capable'] = group['sr_capable']
-                smgt_dict['srlb_base'] = int(group['srlb_base'])
-                smgt_dict['srlb_range'] = int(group['srlb_range'])
+                if group['srlb_base']:
+                    smgt_dict['srlb_base'] = int(group['srlb_base'])
+                if group['srlb_range']:
+                    smgt_dict['srlb_range'] = int(group['srlb_range'])
                 continue
 
         return ret_dict
@@ -6329,7 +6331,7 @@ class ShowIpOspfTrafficSchema(MetaParser):
     '''
 
     schema = {
-        'ospf_statistics':
+        Optional('ospf_statistics'):
             {'last_clear_traffic_counters': str,
             'rcvd':
                 {'total': int,
@@ -6355,8 +6357,9 @@ class ShowIpOspfTrafficSchema(MetaParser):
                     {Any():
                         {'instance':
                             {Any():
-                                {'router_id': str,
-                                'ospf_queue_statistics':
+                                {
+                                Optional('router_id'): str,
+                                Optional('ospf_queue_statistics'):
                                     {'limit': 
                                         {'inputq': int,
                                         'outputq': int,
@@ -6447,7 +6450,7 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                             },
                                         },
                                     },
-                                'interface_statistics':
+                                Optional('interface_statistics'):
                                     {'interfaces':
                                         {Any():
                                             {'last_clear_traffic_counters': str,
@@ -6478,8 +6481,8 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                                 'unknown_neighbor': int,
                                                 'authentication': int,
                                                 'ttl_check_fail': int,
-                                                'adjacency_throttle': int,
-                                                'bfd': int,
+                                                Optional('adjacency_throttle'): int,
+                                                Optional('bfd'): int,
                                                 'test_discard': int,
                                                 },
                                             'ospf_lsa_errors':
@@ -6519,8 +6522,8 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                         'unknown_neighbor': int,
                                         'authentication': int,
                                         'ttl_check_fail': int,
-                                        'adjacency_throttle': int,
-                                        'bfd': int,
+                                        Optional('adjacency_throttle'): int,
+                                        Optional('bfd'): int,
                                         'test_discard': int,
                                         },
                                     'ospf_lsa_errors':
@@ -6562,6 +6565,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Init vars
         ret_dict = {}
         address_family = 'ipv4'
+        vrf = 'default'
         received = False ; sent = False
         interface_stats = False ; summary_stats = False
         max_size_stats = False ; current_size_stats = False
@@ -6682,6 +6686,11 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         p19 = re.compile(r'^Authentication +(?P<authentication>(\d+)), +TTL'
                           ' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
                           ' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
+
+        # Authentication 0, TTL Check Fail 0, Test discard 0
+        p19_1 = re.compile(r'^Authentication +(?P<authentication>\d+), +TTL'
+                          ' +Check +Fail +(?P<ttl_check_fail>\d+), +Test discard'
+                          ' +(?P<test_discard>\d+),?$')
 
         # BFD 0, Test discard 0
         p20 = re.compile(r'^BFD +(?P<bfd>(\d+)), +Test +discard'
@@ -6969,6 +6978,15 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 ospf_header_errors_dict['adjacency_throttle'] = int(group['adjacency_throttle'])
                 continue
 
+            # Authentication 0, TTL Check Fail 0, Test discard 0
+            m = p19_1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['authentication'] = int(group['authentication'])
+                ospf_header_errors_dict['ttl_check_fail'] = int(group['ttl_check_fail'])
+                ospf_header_errors_dict['test_discard'] = int(group['test_discard'])
+                continue
+
             # BFD 0, Test discard 0
             m = p20.match(line)
             if m:
@@ -7002,9 +7020,17 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
             # Summary traffic statistics for process ID 65109:
             m = p23.match(line)
             if m:
+                pid = m.groupdict()['pid']
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(pid, {})
                 summary_stats_dict = ospf_dict.\
                                 setdefault('summary_traffic_statistics', {})
                 interface_stats = False ; summary_stats = True
+                vrf = 'default'
                 continue
 
         return ret_dict
