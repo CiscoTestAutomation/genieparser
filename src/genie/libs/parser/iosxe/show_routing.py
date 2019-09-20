@@ -1232,6 +1232,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
+        # * 10.101.146.10, from 10.101.146.10, 2d07h ago
         p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+),)? '
                          '+(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, '
                          '+(?P<rib_labels>prefer-non-rib-labels), +(?P<merge_labels>merge-labels))?$')
