@@ -311,14 +311,15 @@
 --------------------------------------------------------------------------------
                                 VXLAN
 --------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowL2routeEvpnImetAllDetail for
-        'show l2route evpn imet all detail'
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
 
 --------------------------------------------------------------------------------
-                                AuthenticationSessions
+                                Routing
 --------------------------------------------------------------------------------
-* IOSXE 
-    * Updated ShowAuthenticationSessionsInterfaceDetails:
-        * Changed schema to accommodate IOS
-        * Added UT for multiple MAC addresses for 1 interface
+* IOSXE:
+    * Updated ShowIpRouteWord:
+        * Updated regex for various formats
+        * Added fields to schema
+        * Changed fields in schema to Optional
+        * Added regex for additional outputs

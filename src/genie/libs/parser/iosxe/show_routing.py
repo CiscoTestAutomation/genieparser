@@ -1014,9 +1014,11 @@ class ShowIpRouteWordSchema(MetaParser):
                 Optional('redist_via'): str,
                 Optional('redist_via_tag'): str,
                 Optional('sr_incoming_label'): str,
+                Optional('tag_name'): str,
+                Optional('tag_type'): str,
                 Optional('update'): {
                     'from': str,
-                    'interface': str,
+                    Optional('interface'): str,
                     'age': str
                 },
                 'paths': {
@@ -1029,8 +1031,10 @@ class ShowIpRouteWordSchema(MetaParser):
                         Optional('share_count'): str,
                         Optional('mpls_label'): str,
                         Optional('mpls_flags'): str,
-                        'prefer_non_rib_labels': bool,
-                        'merge_labels': bool,
+                        Optional('as_hops'): str,
+                        Optional('route_tag'): str,
+                        Optional('prefer_non_rib_labels'): bool,
+                        Optional('merge_labels'): bool,
                         Optional('repair_path'): {
                             'repair_path': str,
                             'via': str
@@ -1073,35 +1077,54 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             out = output
 
         # initial regexp pattern
-        p1 = re.compile(r'^Routing +entry +for +'
-                         '(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))'
-                         '(, +(?P<net>[\w\s]+))?$')
+        # Routing entry for 10.151.0.0/24, 1 known subnets
+        # Routing entry for 0.0.0.0/0, supernet
+        # Routing entry for 192.168.154.0/24
+        p1 = re.compile(r'^Routing +entry +for +(?P<entry>(?P<ip>[\w\:\.]+)\/(?P<mask>\d+))(?:, +(?P<net>[\w\s]+))?$')
 
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
-        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:type (?P<type>[\w\- ]+))?,? *.*$')
+        # Known via "bgp 65161", distance 20, metric 0, candidate default path
+        p2 = re.compile(r'^Known +via +\"(?P<known_via>[\w\s]+)\", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+),? *(?:\S+ (?P<type>[\w\- ]+))?,? *.*$')
+
+        # Redistributing via rip
+        # Redistributing via eigrp 1
         p3 = re.compile(r'^Redistributing +via +(?P<redist_via>\w+) *'
                          '(?P<redist_via_tag>\d+)?$')
-        p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +'
-                         'on +(?P<interface>[\w\.\/\-]+), +'
-                         '(?P<age>[\w\.\:]+) +ago$')
+
+        # Last update from 192.168.151.2 on Vlan101, 2w3d ago
+        # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
+        # Last update from 10.101.146.10 2d07h ago
+        # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
+        p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +(?:on +(?P<interface>[\w\.\/\-]+), )?(?P<age>[ \w\.\:]+) +ago$')
 
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
-        p5 = re.compile(r'^\*? *(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+), +'
-                         '(?P<age>[\w\.\:]+) +ago, +via +(?P<interface>\S+)(?:, +'
-                         '(?P<rib_labels>prefer-non-rib-labels))?(?:, +'
-                         '(?P<merge_labels>merge-labels))?)?$')
+        # * 10.101.146.10, from 10.101.146.10, 2d07h ago
+        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+),)? '
+                         '+(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, '
+                         '+(?P<rib_labels>prefer-non-rib-labels), +(?P<merge_labels>merge-labels))?$')
+       
+        # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
                          'traffic +share +count +is +(?P<share_count>\d+)$')
 
         # ipv6 specific
         p7 = re.compile(r'^Route +count +is +(?P<route_count>[\d\/]+), +'
                          'share +count +(?P<share_count>[\d\/]+)$')
+
+        # FE80::EEBD:1DFF:FE09:56C2, Vlan202
+        # FE80::EEBD:1DFF:FE09:56C2
         p8 = re.compile(r'^(?P<fwd_ip>[\w\:]+)(, +(?P<fwd_intf>[\w\.\/\-]+)'
                          '( indirectly connected)?)?$')
+        
+        # receive via Loopback4
         p8_1 = re.compile(r'^receive +via +(?P<fwd_intf>[\w\.\/\-]+)$')
+
+        # Last updated 2w4d ago       
         p9 = re.compile(r'^Last +updated +(?P<age>[\w\:\.]+) +ago$')
+
+        # From FE80::EEBD:1DFF:FE09:56C2
         p10 = re.compile(r'^From +(?P<from>[\w\:]+)$')
 
         # MPLS label: implicit-null
@@ -1116,6 +1139,15 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         # Repair Path: 0.0.0.0, via GigabitEthernet0
         p14 = re.compile(r'^Repair +Path: +(?P<path>[\d\.]+), +via +(?P<via>\w+)')
 
+        # Tag 65161, type external
+        p15 = re.compile(r'^Tag (?P<tag_name>\S+), +type +(?P<tag_type>\S+)$')
+
+        # AS Hops 9
+        p16 = re.compile(r'^AS +Hops (?P<num_hops>\d+)$')
+
+        # Route tag 65161
+        p17 = re.compile(r'^Route +tag (?P<route_tag>\S+)$')
+        
         # initial variables
         ret_dict = {}
         index = 0
@@ -1139,10 +1171,22 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Known via "rip", distance 120, metric 2
             # Known via "connected", distance 0, metric 0 (connected)
             # Known via "eigrp 1", distance 130, metric 10880, type internal
+            # Known via "bgp 65161", distance 20, metric 0, candidate default path
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 entry_dict.update({k:v for k,v in group.items() if v})
+                continue
+
+            # Tag 65161, type external
+            m = p15.match(line)
+            if m:
+                #import pdb;pdb.set_trace()
+                group = m.groupdict()
+                tag_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
+                tag_dict.update({'tag_name' : group['tag_name']})
+                tag_dict.update({'tag_type' : group['tag_type']})
+
                 continue
 
             # Redistributing via rip
@@ -1152,9 +1196,14 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 group = m.groupdict()
                 entry_dict.update({k:v for k,v in group.items() if v})
                 continue
-
             # Last update from 192.168.151.2 on Vlan101, 2w3d ago
             # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
+            # Last update from 10.101.146.10 2d07h ago
+            # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
+            # Last update from 192.168.151.2 on Vlan101, 2w3d ago
+            # Last update from 192.168.246.2 on Vlan103, 00:00:12 ago
+            # Last update from 10.101.146.10 2d07h ago
+            # Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -1166,6 +1215,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # * 10.69.1.2
             # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
             # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
+            # * 10.101.146.10, from 10.101.146.10, 2d07h ago
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -1183,6 +1233,22 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
                 path_dict.update({'prefer_non_rib_labels': True if group['rib_labels'] else False})
                 path_dict.update({'merge_labels': True if group['merge_labels'] else False})
+                continue
+            
+            # AS Hops 9
+            m = p16.match(line)
+            if m:
+                hops_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                hops_dict.update({'as_hops' : m.groupdict()['num_hops']})
+
+                continue
+            
+            # Route tag 65161
+            m = p17.match(line)
+            if m:
+                route_dict = entry_dict.setdefault('paths', {}).setdefault(index, {})
+                route_dict.update({'route_tag' : m.groupdict()['route_tag']})
+
                 continue
 
             # Route metric is 10880, traffic share count is 1
