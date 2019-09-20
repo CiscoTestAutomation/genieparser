@@ -466,7 +466,7 @@ class ShowPlatformVm(ShowPlatformVmSchema):
             # 0/RP0/CPU0      RP (ACTIVE)     NONE            FINAL Band      192.0.0.4
             # 0/0/CPU0        LC (ACTIVE)     NONE            FINAL Band      192.0.0.6
             # 0/RSP0/CPU0     RP(ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
-            # 0/RSP1/CPU0     RP(STANDBY)    0/RSP0/CPU0     FINAL Band      192.0.4.4
+            # 0/RSP1/CPU0     RP(STANDBY)    0/RSP0/CPU0     FINAL Band      192.168.166.4
 
             p1 = re.compile(r'^(?P<node>[\S\/]+) +(?P<type>[(RP|LC)\s*\((ACTIVE|STANDBY)\)]+)'
                              ' +(?P<partner_name>[NONE|(?:\S)]+) +(?P<sw_status>[a-zA-Z\s]+)'

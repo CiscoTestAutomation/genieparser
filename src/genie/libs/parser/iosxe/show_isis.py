@@ -491,8 +491,9 @@ class ShowRunSectionIsis(ShowRunSectionIsisSchema):
                                          setdefault(group['vrf'], {})
                 continue
 
-        for k in result_dict['instance']:
-            if 'vrf' not in result_dict['instance'][k]:
-                result_dict['instance'][k].setdefault('vrf',{}).setdefault('default' ,{})
+        if result_dict:
+            for k in result_dict['instance']:
+                if 'vrf' not in result_dict['instance'][k]:
+                    result_dict['instance'][k].setdefault('vrf',{}).setdefault('default' ,{})
 
         return result_dict
