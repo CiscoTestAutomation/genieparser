@@ -232,8 +232,10 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
 class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
     """Parser for show ospf vrf all-inclusive interface"""
 
-    cli_command = ['show ospf vrf all-inclusive interface', 'show ospf vrf all-inclusive interface {interface}',
-                   'show ospf vrf {vrf} interface {interface}', 'show ospf vrf {vrf} interface']
+    cli_command = ['show ospf vrf all-inclusive interface',
+                   'show ospf vrf all-inclusive interface {interface}',
+                   'show ospf vrf {vrf} interface {interface}',
+                   'show ospf vrf {vrf} interface']
     exclude = ['dead_timer', 'hello_timer', 'last_flood_scan_length', 'max_flood_scan_length', 'high_water_mark']
 
     def cli(self, vrf='', interface='', output=None):
@@ -2476,7 +2478,8 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
 class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     """Parser for show ospf vrf all-inclusive sham-links"""
-    cli_command = ['show ospf vrf all-inclusive sham-links', 'show ospf vrf {vrf} sham-links']
+    cli_command = ['show ospf vrf all-inclusive sham-links',
+                   'show ospf vrf {vrf} sham-links']
     def cli(self, vrf='', output=None):
         if vrf:
             cmd = self.cli_command[1].format(vrf=vrf)
@@ -2546,7 +2549,8 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
 class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     """Parser for show ospf vrf all-inclusive virtual-links"""
-    cli_command = ['show ospf vrf all-inclusive virtual-links', 'show ospf vrf {vrf} virtual-links']
+    cli_command = ['show ospf vrf all-inclusive virtual-links',
+                   'show ospf vrf {vrf} virtual-links']
 
     def cli(self, vrf='', output=None):
         if vrf:
@@ -3707,7 +3711,8 @@ class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRoute
     - db_type
     """
 
-    cli_command = ['show ospf vrf all-inclusive database router', 'show ospf vrf {vrf} database router']
+    cli_command = ['show ospf vrf all-inclusive database router',
+                   'show ospf vrf {vrf} database router']
     exclude = ['age']
 
     def cli(self, vrf='', output=None):
@@ -3796,7 +3801,8 @@ class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExt
     - db_type
     """
 
-    cli_command = ['show ospf vrf all-inclusive database external','show ospf vrf {vrf} database external']
+    cli_command = ['show ospf vrf all-inclusive database external',
+                   'show ospf vrf {vrf} database external']
     exclude = ['age', 'checksum', 'seq_num']
 
     def cli(self, vrf='', output=None):
@@ -3879,7 +3885,8 @@ class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetw
     - db_type
     """
 
-    cli_command = ['show ospf vrf all-inclusive database network', 'show ospf vrf {vrf} database network']
+    cli_command = ['show ospf vrf all-inclusive database network',
+                   'show ospf vrf {vrf} database network']
     exclude = ['age', 'checksum', 'seq_num']
 
     def cli(self, vrf='', output=None):
@@ -3965,7 +3972,8 @@ class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSumm
     - db_type
     """
 
-    cli_command = ['show ospf vrf all-inclusive database summary', 'show ospf vrf {vrf} database summary']
+    cli_command = ['show ospf vrf all-inclusive database summary',
+                   'show ospf vrf {vrf} database summary']
     exclude = ['age', 'checksum', 'seq_num']
 
     def cli(self, vrf='', output=None):
@@ -4083,7 +4091,8 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseO
 
     """
 
-    cli_command = ['show ospf vrf all-inclusive database opaque-area', 'show ospf vrf {vrf} database opaque-area']
+    cli_command = ['show ospf vrf all-inclusive database opaque-area',
+                   'show ospf vrf {vrf} database opaque-area']
     exclude = ['age', 'checksum', 'seq_num']
 
 
