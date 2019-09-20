@@ -28,26 +28,24 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
     golden_parsed_output1 = {
         'domain': {
             'dom3': {
-                'level': {
-                    5: {
-                        'service': {
-                            'ser3': {
-                                'interfaces': {
-                                    'GigabitEthernet0/0/0/0': {
-                                        'mep_id': {
-                                            1: {
-                                                'id': {
-                                                    10: {
-                                                        'st': 'V',
-                                                        'mac_address': '0001.0203.0403',
-                                                        'port': 'Up',
-                                                        'up_down_time': '00:01:35',
-                                                        'ccm_rcvd': 2,
-                                                        'seq_err': 0,
-                                                        'rdi': 0,
-                                                        'error': 2,
-                                                    },
-                                                },
+                'level': 5,
+                'service': 'ser3',
+                'mep_type': {
+                    'down': {
+                        'interface': {
+                            'GigabitEthernet0/0/0/0': {
+                                'mep_id': 1,
+                                'id': {
+                                    10: {
+                                        'mac_address': {
+                                            '0001.0203.0403': {
+                                                'st': 'V',
+                                                'port': 'Up',
+                                                'up_down_time': '00:01:35',
+                                                'ccm_rcvd': 2,
+                                                'seq_err': 0,
+                                                'rdi': 0,
+                                                'error': 2,
                                             },
                                         },
                                     },
@@ -58,36 +56,37 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
                 },
             },
             'dom4': {
-                'level': {
-                    2: {
-                        'service': {
-                            'ser4': {
-                                'interfaces': {
-                                    'GigabitEthernet0/0/0/0': {
-                                        'mep_id': {
-                                            1: {
-                                                'id': {
-                                                    20: {
-                                                        'st': '>',
-                                                        'mac_address': '0001.0203.0402',
-                                                        'port': 'Up',
-                                                        'up_down_time': '00:00:03',
-                                                        'ccm_rcvd': 4,
-                                                        'seq_err': 1,
-                                                        'rdi': 0,
-                                                        'error': 0,
-                                                    },
-                                                    21: {
-                                                        'st': '>',
-                                                        'mac_address': '0001.0203.0403',
-                                                        'port': 'Up',
-                                                        'up_down_time': '00:00:04',
-                                                        'ccm_rcvd': 3,
-                                                        'seq_err': 0,
-                                                        'rdi': 0,
-                                                        'error': 0,
-                                                    },
-                                                },
+                'level': 2,
+                'service': 'ser4',
+                'mep_type': {
+                    'down': {
+                        'interface': {
+                            'GigabitEthernet0/0/0/0': {
+                                'mep_id': 1,
+                                'id': {
+                                    20: {
+                                        'mac_address': {
+                                            '0001.0203.0402': {
+                                                'st': '>',
+                                                'port': 'Up',
+                                                'up_down_time': '00:00:03',
+                                                'ccm_rcvd': 4,
+                                                'seq_err': 1,
+                                                'rdi': 0,
+                                                'error': 0,
+                                            },
+                                        },
+                                    },
+                                    21: {
+                                        'mac_address': {
+                                            '0001.0203.0403': {
+                                                'st': '>',
+                                                'port': 'Up',
+                                                'up_down_time': '00:00:04',
+                                                'ccm_rcvd': 3,
+                                                'seq_err': 0,
+                                                'rdi': 0,
+                                                'error': 0,
                                             },
                                         },
                                     },
@@ -98,14 +97,8 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
                 },
             },
             'dom5': {
-                'level': {
-                    2: {
-                        'service': {
-                            'dom5': {
-                            },
-                        },
-                    },
-                },
+                'level': 2,
+                'service': 'dom5',
             },
         },
     }

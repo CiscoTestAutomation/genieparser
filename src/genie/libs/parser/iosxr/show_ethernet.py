@@ -22,32 +22,29 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any
 from genie.libs.parser.utils.common import Common
-from genie.libs.parser.base import *
 
 class ShowEthernetCfmMepsSchema(MetaParser):
     schema = {
         'domain': {
             Any(): {
-                'level': {
+                'level': int,
+                'service': str,
+                Optional('mep_type'): {
                     Any(): {
-                        'service': {
+                        'interface': {
                             Any(): {
-                                Optional('interfaces'): {
+                                'mep_id': int,
+                                'id': {
                                     Any(): {
-                                        Optional('mep_id'): {
+                                        'mac_address': {
                                             Any(): {
-                                                'id': {
-                                                    Any(): {
-                                                        'st': str,
-                                                        'mac_address': str,
-                                                        'port': str,
-                                                        'up_down_time': str,
-                                                        'ccm_rcvd': int,
-                                                        'seq_err': int,
-                                                        'rdi': int,
-                                                        'error': int
-                                                    }
-                                                }
+                                                'st': str,
+                                                'port': str,
+                                                'up_down_time': str,
+                                                'ccm_rcvd': int,
+                                                'seq_err': int,
+                                                'rdi': int,
+                                                'error': int
                                             }
                                         }
                                     }
@@ -98,14 +95,15 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
         ret_dict = {}
         
         # Domain dom3 (level 5), Service ser3
-        p1 = re.compile(r'Domain +(?P<domain>\S+) +\(level +(?P<level>\d+)\), +Service +(?P<service>\S+)$')
+        p1 = re.compile(r'^Domain +(?P<domain>\S+) +\(level +(?P<level>\d+)\), +Service +(?P<service>\S+)$')
         
         # Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
-        p2 = re.compile(r'Down +MEP +on +(?P<interface>\S+) +MEP-ID +(?P<mep_id>\d+)$')
+        # Up MEP on GigabitEthernet0/6/0/23.1 MEP-ID 500
+        p2 = re.compile(r'^(?P<mep_type>\w+) +MEP +on +(?P<interface>\S+) +MEP-ID +(?P<mep_id>\d+)$')
 
         # V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
         # >    20 0001.0203.0402 Up      00:00:03            4      1     0     0
-        p3 = re.compile(r'(?P<st>(>|R|L|C|X|\*|I|V|T|M|U)) +(?P<id>\d+) +(?P<mac_address>\S+) +'
+        p3 = re.compile(r'^(?P<st>(>|R|L|C|X|\*|I|V|T|M|U)) +(?P<id>\d+) +(?P<mac_address>\S+) +'
             '(?P<port>\w+) +(?P<up_down_time>\S+) +(?P<ccm_rcvd>\d+) +(?P<seq_err>\d+) +'
             '(?P<rdi>\d+) +(?P<error>\d+)$')
 
@@ -120,24 +118,29 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
                 domain = group['domain']
                 level = int(group['level'])
                 service = group['service']
-                service_dict = ret_dict.setdefault('domain', {}). \
-                    setdefault(domain, {}). \
-                    setdefault('level', {}). \
-                    setdefault(level, {}). \
-                    setdefault('service', {}). \
-                    setdefault(service, {})
+                domain_dict = ret_dict.setdefault('domain', {}). \
+                    setdefault(domain, {})
+                domain_dict.update({'level': level})
+                domain_dict.update({'service': service})
+                
                 continue
             
             # Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
+            # Up MEP on GigabitEthernet0/6/0/23.1 MEP-ID 500
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
+                mep_type = group['mep_type'].lower()
                 mep_id = int(group['mep_id'])
-                mep_id_dict = service_dict.setdefault('interfaces', {}). \
-                    setdefault(interface, {}). \
-                    setdefault('mep_id', {}). \
-                    setdefault(mep_id, {})
+
+                interface_dict = domain_dict.setdefault('mep_type', {}). \
+                    setdefault(mep_type, {}). \
+                    setdefault('interface', {}). \
+                    setdefault(interface, {})
+                
+                interface_dict.update({'mep_id': mep_id})
+
                 continue
             
             # V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
@@ -154,16 +157,19 @@ class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
                 seq_err = int(group['seq_err'])
                 rdi = int(group['rdi'])
                 error = int(group['error'])
-                id_dict = mep_id_dict.setdefault('id', {}). \
-                    setdefault(id, {})
-                id_dict.update({'st': st})
-                id_dict.update({'mac_address': mac_address})
-                id_dict.update({'port': port})
-                id_dict.update({'up_down_time': up_down_time})
-                id_dict.update({'ccm_rcvd': ccm_rcvd})
-                id_dict.update({'seq_err': seq_err})
-                id_dict.update({'rdi': rdi})
-                id_dict.update({'error': error})
+
+                mac_address_dict = interface_dict.setdefault('id', {}). \
+                    setdefault(id, {}). \
+                    setdefault('mac_address', {}). \
+                    setdefault(mac_address, {})
+
+                mac_address_dict.update({'st': st})
+                mac_address_dict.update({'port': port})
+                mac_address_dict.update({'up_down_time': up_down_time})
+                mac_address_dict.update({'ccm_rcvd': ccm_rcvd})
+                mac_address_dict.update({'seq_err': seq_err})
+                mac_address_dict.update({'rdi': rdi})
+                mac_address_dict.update({'error': error})
                 continue
         return ret_dict
 

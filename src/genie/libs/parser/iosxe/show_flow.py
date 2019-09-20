@@ -23,10 +23,10 @@ class ShowFlowMonitorSchema(MetaParser):
         'cache_type': str,
         'cache_size': int,
         'current_entries': int,
-        'high_water_mark': int,
+        Optional('high_water_mark'): int,
         'flows_added': int,
         'flows_aged': int,
-        'ipv4_src_addr': {
+        Optional('ipv4_src_addr'): {
             Any(): {
                 'ipv4_dst_addr': {
                     Any(): {
@@ -85,7 +85,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
         # Flows aged:                                   0
         p6 = re.compile(r'^Flows +aged: +(?P<flows_aged>\d+)$')
 
-        # 1.1.1.10         22.10.10.1                    0              0  0xC0         89                   100                     1
+        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
         p7 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
                         '(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
                         '(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
@@ -136,7 +136,7 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 ret_dict.update({'flows_aged': int(group['flows_aged'])})
                 continue
             
-            # 1.1.1.10         22.10.10.1                    0              0  0xC0         89                   100                     1
+            # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
             m = p7.match(line)
             if m:
                 group = m.groupdict()

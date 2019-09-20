@@ -287,15 +287,12 @@ class ShowNveVni(ShowNveVniSchema):
         # Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
         #  --------- -------- ----------------- ----- ---- ------------------ -----
         # nve1      5001     234.1.1.1         Up    CP   L2 [1001]
-
-        p1 = re.compile(r'^\s*(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+)'
-                        ' +(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>[\w\s\-\[\]]+)( +(?P<flags>[\w]+))?$')
+        # nve1      5001     192.168.0.1         Up    CP   L2 [1001]          SA MS-IR
+        p1 = re.compile(r'^(?P<nve_name>[\w\/]+) +(?P<vni>[\d]+) +(?P<mcast>[\w\.\/]+) +'
+                        r'(?P<vni_state>[\w]+) +(?P<mode>[\w]+) +(?P<type>\w+ +\[[\w\-]+\])'
+                        r'(?: +(?P<flags>[\w\-\s]+))?$')
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
-
+            line = line.strip()
 
             m = p1.match(line)
             if m:
@@ -311,7 +308,8 @@ class ShowNveVni(ShowNveVniSchema):
                 if group.get('flags'):
                     nve_dict.update({'flags': group.pop('flags')})
                 else:
-                    nve_dict.update({'flags': ""})
+                    nve_dict.update({'flags': ''})
+
                 continue
 
         return result_dict
@@ -1720,7 +1718,9 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                         Optional('vni'): int,
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
-                        Optional('mcast_group'): str
+                        Optional('mcast_group'): str,
+                        Optional('suppress_arp'): bool,
+                        Optional('vni_type'): str,
                     },
                 },
             },
@@ -1776,7 +1776,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   multisite border-gateway interface loopback3
         p8 = re.compile(r'^\s*multisite +border\-gateway +interface +(?P<multisite_bgw_if>[\w]+)$')
         #   member vni 10100 associate-vrf
-        p9 = re.compile(r'^\s*member vni +(?P<nve_vni>[\d]+)( +(?P<associated_vrf>[\w\-]+))?$')
+        #   member vni 10100-10105 associate-vrf
+        p9 = re.compile(r'^\s*member vni +(?P<nve_vni>[\d-]+)( +(?P<associated_vrf>[\w\-]+))?$')
         #   multisite ingress-replication
         p10 = re.compile(r'^\s*multisite ingress-replication$')
         #   mcast-group 231.100.1.1
@@ -1786,12 +1787,13 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   evpn multisite fabric-tracking
         #   evpn multisite dci-tracking
         p13 = re.compile(r'^\s*evpn multisite +(?P<fabric_dci_tracking>[\w\-]+)$')
+        # global suppress-arp
+        p14 = re.compile(r'^global +suppress-arp$')
+        # global mcast-group 192.168.0.1 L2
+        p15 = re.compile(r'^global +mcast-group +(?P<address>[\d\.]+) +(?P<layer>L2|L3)')
 
         for line in out.splitlines():
-            if line:
-                line = line.rstrip()
-            else:
-                continue
+            line = line.strip()
 
             m = p0.match(line)
             if m:
@@ -1812,6 +1814,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
 
             m = p3.match(line)
             if m:
+                global_suppress_arp_flag = False
+                global_mcast_group_flag = False
                 nve_name = m.groupdict().pop('nve_name')
                 nve_dict = result_dict.setdefault(nve_name, {})
                 nve_dict.update({'nve_name': nve_name})
@@ -1848,27 +1852,45 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                nve_vni = int(group.pop('nve_vni'))
-                vni_dict = nve_dict.setdefault('vni',{}).setdefault(nve_vni,{})
-                vni_dict.update({'vni':nve_vni})
 
-                if group.get('associated_vrf'):
-                    vni_dict.update({'associated_vrf':True})
-                    group.pop('associated_vrf')
+                nve_vni = group.pop('nve_vni')
+                if '-' in nve_vni:
+                    nve_vni = nve_vni.split('-')
+                    nve_vni_list = list(range(int(nve_vni[0]), int(nve_vni[1])+1))
                 else:
-                    vni_dict.update({'associated_vrf': False})
+                    nve_vni_list = [int(nve_vni)]
+
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'vni': vni})
+                    if group.get('associated_vrf'):
+                        vni_dict.update({'associated_vrf': True})
+                    else:
+                        vni_dict.update({'associated_vrf': False})
+
+                    if global_suppress_arp_flag:
+                        vni_dict.update({'suppress_arp': True})
+
+                    if global_mcast_group_flag:
+                        vni_dict.update({'mcast_group': global_mcast_group_flag[0]})
+                        vni_dict.update({'vni_type': global_mcast_group_flag[1]})
 
                 continue
 
             m = p10.match(line)
             if m:
-                vni_dict.update({'multisite_ingress_replication': True})
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'multisite_ingress_replication': True})
                 continue
 
             m = p11.match(line)
             if m:
                 mcast = m.groupdict().pop('mcast_group')
-                vni_dict.update({'mcast_group': mcast})
+
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'mcast_group': mcast})
                 continue
 
             m = p12.match(line)
@@ -1889,6 +1911,16 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                     dci_dict.update({'if_name': interface})
                     dci_dict.update({'if_state': 'up'})
                 continue
+
+            m = p14.match(line)
+            if m:
+                global_suppress_arp_flag = True
+                continue
+
+            m = p15.match(line)
+            if m:
+                global_mcast_group_flag = (m.groupdict()['address'], m.groupdict()['layer'])
+
         return result_dict
 
 # ====================================================
