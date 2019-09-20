@@ -255,7 +255,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
         # Init vars
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
-
+        instance = ''
         # Mapping dict
         bool_dict = {'up': True, 'down': False, 'unknown': False}
 
@@ -355,6 +355,20 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             # OSPF_VL0 is unknown, line protocol is up
             m = p2.match(line)
             if m:
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af] \
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] \
+                        [instance] = {}
                 interface = str(m.groupdict()['interface'])
                 enable = str(m.groupdict()['enable'])
                 line_protocol = str(m.groupdict()['line_protocol'])
@@ -395,7 +409,9 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 router_id = str(m.groupdict()['router_id'])
                 interface_type = str(m.groupdict()['interface_type']).lower()
                 interface_type = interface_type.replace("_", "-")
-
+                if not instance:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'][pid] = ret_dict['vrf'][vrf]['address_family'][af]['instance'].pop(instance)
+                    instance = pid
                 # Get interface values
                 if intf_type == 'interfaces':
                     intf_name = interface
@@ -707,7 +723,7 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'total_neighbor_count': int,
+                                {Optional('total_neighbor_count'): int,
                                 'areas': 
                                     {Any(): 
                                         {Optional('interfaces'): 
