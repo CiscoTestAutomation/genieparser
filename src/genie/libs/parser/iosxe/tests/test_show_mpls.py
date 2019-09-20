@@ -1795,7 +1795,7 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
                             'holddown_time': '1 milliseconds',
                             'enabled': 'ospf 88',
                         },
-                        'peer_ldp_ident': '106.162.197.252:0',
+                        'peer_ldp_ident': '10.169.197.252:0',
                     },
                     'TenGigabitEthernet0/2/0': {
                         'ldp': {
@@ -1814,7 +1814,7 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
                             'holddown_time': 'infinite',
                             'enabled': 'ospf 88',
                         },
-                        'peer_ldp_ident': '202.239.165.220:0',
+                        'peer_ldp_ident': '192.168.36.220:0',
                     },
                 },
             },
@@ -1834,14 +1834,14 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
             Sync status: sync achieved; peer reachable.
             Sync delay time: 0 seconds (0 seconds left)
             IGP holddown time: 1 milliseconds.
-            Peer LDP Ident: 106.162.197.252:0
+            Peer LDP Ident: 10.169.197.252:0
             IGP enabled: OSPF 88
         TenGigabitEthernet0/2/0:
             LDP configured; LDP-IGP Synchronization enabled.
             Sync status: sync achieved; peer reachable.
             Sync delay time: 0 seconds (0 seconds left)
             IGP holddown time: infinite.
-            Peer LDP Ident: 202.239.165.220:0
+            Peer LDP Ident: 192.168.36.220:0
             IGP enabled: OSPF 88
     '''}
 

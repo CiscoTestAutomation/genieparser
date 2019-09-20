@@ -1732,9 +1732,9 @@ class test_show_ip_cef(unittest.TestCase):
                 'address_family': {
                     'ipv4': {
                         'prefix': {
-                            '106.162.196.241/32': {
+                            '10.169.196.241/32': {
                                 'nexthop': {
-                                    '27.86.198.25': {
+                                    '10.19.198.25': {
                                         'outgoing_interface': {
                                             'GigabitEthernet0/1/6': {
                                                 'local_label': 17063,
@@ -1743,13 +1743,13 @@ class test_show_ip_cef(unittest.TestCase):
                                             },
                                         },
                                     },
-                                    '27.86.198.26': {
+                                    '10.19.198.26': {
                                         'outgoing_interface': {
                                             'GigabitEthernet0/1/7': {
                                                 'local_label': 17063,
                                                 'outgoing_label': ['16063'],
                                                 'outgoing_label_backup': '16063',
-                                                'repair': 'attached-nexthop 27.86.198.29 GigabitEthernet0/1/8',
+                                                'repair': 'attached-nexthop 10.19.198.29 GigabitEthernet0/1/8',
                                             },
                                         },
                                     },
@@ -1763,11 +1763,11 @@ class test_show_ip_cef(unittest.TestCase):
     }
 
     golden_output_6 = {'execute.return_value': '''
-    show ip cef 106.162.196.241
-    106.162.196.241/32
-        nexthop 27.86.198.25 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
-        nexthop 27.86.198.26 GigabitEthernet0/1/7 label [16063|16063]-(local:17063)
-            repair: attached-nexthop 27.86.198.29 GigabitEthernet0/1/8
+    show ip cef 10.169.196.241
+    10.169.196.241/32
+        nexthop 10.19.198.25 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
+        nexthop 10.19.198.26 GigabitEthernet0/1/7 label [16063|16063]-(local:17063)
+            repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/8
     '''}
 
     def test_empty(self):
@@ -1815,7 +1815,7 @@ class test_show_ip_cef(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
         obj = ShowIpCef(device=self.device)
-        parsed_output = obj.parse(prefix='106.162.196.241')
+        parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 

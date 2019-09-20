@@ -110,7 +110,7 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         # --------------------------------------------------------
         # *10.4.1.1          Yes          15000       1000
         # 10.16.2.2          Yes          15000       1000
-        # 106.162.197.252    No 
+        # 10.169.197.252    No 
         p3 = re.compile(r'^(?P<value>\*)?(?P<router_id>\S+) +(?P<sr_capable>Yes|No)'
                          '( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
 
