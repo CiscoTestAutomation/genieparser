@@ -573,7 +573,7 @@ class test_show_platform_vm(unittest.TestCase):
         Node name       Node type       Partner name    SW status       IP address
         --------------- --------------- --------------- --------------- ---------------
         0/RSP0/CPU0     RP (ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
-        0/RSP1/CPU0     RP (STANDBY)    0/RSP0/CPU0     FINAL Band      192.0.4.4
+        0/RSP1/CPU0     RP (STANDBY)    0/RSP0/CPU0     FINAL Band      192.168.166.4
     '''
     }
 
@@ -586,7 +586,7 @@ class test_show_platform_vm(unittest.TestCase):
                 'type': 'RP (ACTIVE)'
             },
             '0/RSP1/CPU0': {
-                'ip_address': '192.0.4.4',
+                'ip_address': '192.168.166.4',
                 'partner_name': '0/RSP0/CPU0',
                 'sw_status': 'FINAL Band',
                 'type': 'RP (STANDBY)'

@@ -855,7 +855,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
         'test1': {
             'name': 'test1',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -887,13 +887,13 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                     1: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                     2: {
                                         'sid': 16072,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '111.87.5.253',
-                                        'remote_address': '111.87.6.253',
+                                        'local_address': '10.189.5.253',
+                                        'remote_address': '10.189.6.253',
                                     },
                                 },
                             },
@@ -911,23 +911,23 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
-                                                'remote_address': '111.87.6.253',
+                                                'local_address': '10.189.5.253',
+                                                'remote_address': '10.189.6.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -946,7 +946,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
                                     1: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -967,7 +967,7 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         show segment-routing traffic-eng policy all
-        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Name: test1 (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 09:38:18 (since 08-28 20:56:55.275)
         Candidate-paths:
@@ -978,20 +978,20 @@ class test_show_segment_routing_traffic_eng_policy(unittest.TestCase):
             Dynamic (active)
                 Weight: 0, Metric Type: IGP
                 Metric Type: IGP, Path Accumulated Metric: 2200
-                16063 [Prefix-SID, 106.162.196.241]
-                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+                16063 [Prefix-SID, 10.169.196.241]
+                16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
             Preference 200:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Dynamic (inactive)
                 Weight: 0, Metric Type: IGP
                 Metric Type: IGP, Path Accumulated Metric: 2200
-                16063 [Prefix-SID, 106.162.196.241]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15000
             Allocation mode: explicit
@@ -1033,7 +1033,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
         'maxsid': {
             'name': 'maxsid',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -1056,67 +1056,67 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             2: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             3: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             4: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             5: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             6: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             7: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             8: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             9: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             10: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             11: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             12: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             13: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1136,22 +1136,22 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1191,7 +1191,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     'timestamp': '09-09 20:16:09.573',
                     'client': 'CLI AGENT',
                     'event_type': 'Set end point',
-                    'context': 'End-point: 106.162.196.241',
+                    'context': 'End-point: 10.169.196.241',
                 },
                 4: {
                     'timestamp': '09-09 20:16:23.728',
@@ -1264,7 +1264,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
         'test1': {
             'name': 'test1',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -1296,18 +1296,18 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                     1: {
                                         'sid': 16052,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.187.14.241',
+                                        'local_address': '10.169.14.241',
                                     },
                                     2: {
                                         'sid': 24,
                                         'sid_type': 'Adjacency-SID',
-                                        'local_address': '106.187.14.33',
-                                        'remote_address': '106.187.14.34',
+                                        'local_address': '10.169.14.33',
+                                        'remote_address': '10.169.14.34',
                                     },
                                     3: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -1325,22 +1325,22 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1359,18 +1359,18 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                     1: {
                                         'sid': 16052,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.187.14.241',
+                                        'local_address': '10.169.14.241',
                                     },
                                     2: {
                                         'sid': 24,
                                         'sid_type': 'Adjacency-SID',
-                                        'local_address': '106.187.14.33',
-                                        'remote_address': '106.187.14.34',
+                                        'local_address': '10.169.14.33',
+                                        'remote_address': '10.169.14.34',
                                     },
                                     3: {
                                         'sid': 16063,
                                         'sid_type': 'Prefix-SID',
-                                        'local_address': '106.162.196.241',
+                                        'local_address': '10.169.196.241',
                                     },
                                 },
                             },
@@ -1699,33 +1699,33 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         sr_ve-hkgasr01#show segment-routing traffic-eng policy all detail
 
-        Name: maxsid (Color: 100 End-point: 106.162.196.241)
+        Name: maxsid (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 04:54:31 (since 09-09 20:19:30.195)
         Candidate-paths:
             Preference 200:
             Explicit: segment-list maxsid (active)
                 Weight: 0, Metric Type: TE
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16063 [Prefix-SID, 106.162.196.241]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15001
             Allocation mode: explicit
@@ -1739,7 +1739,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             ---------                   ------                  ----------              -------: -----
             09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
             09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
-            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 106.162.196.241
+            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
             09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
             09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
             09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED
@@ -1752,7 +1752,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             09-09 21:20:20.811          CLI AGENT               Remove path option      Path option: 300
             09-09 21:20:20.812          FH Resolution           Policy state UP         Status: PATH RESOLVED
 
-        Name: test1 (Color: 100 End-point: 106.162.196.241)
+        Name: test1 (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 03:48:03 (since 09-09 21:25:58.933)
         Candidate-paths:
@@ -1763,23 +1763,23 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             Dynamic (active)
                 Weight: 0, Metric Type: TE
                 Metric Type: TE, Path Accumulated Metric: 2115
-                16052 [Prefix-SID, 106.187.14.241]
-                24 [Adjacency-SID, 106.187.14.33 - 106.187.14.34]
-                16063 [Prefix-SID, 106.162.196.241]
+                16052 [Prefix-SID, 10.169.14.241]
+                24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 200:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Dynamic (inactive)
                 Weight: 0, Metric Type: TE
                 Metric Type: TE, Path Accumulated Metric: 2115
-                16052 [Prefix-SID, 106.187.14.241]
-                24 [Adjacency-SID, 106.187.14.33 - 106.187.14.34]
-                16063 [Prefix-SID, 106.162.196.241]
+                16052 [Prefix-SID, 10.169.14.241]
+                24 [Adjacency-SID, 10.169.14.33 - 10.169.14.34]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15000
             Allocation mode: explicit
@@ -1848,7 +1848,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
         'maxsid': {
             'name': 'maxsid',
             'color': 100,
-            'end_point': '106.162.196.241',
+            'end_point': '10.169.196.241',
             'status': {
                 'admin': 'up',
                 'operational': {
@@ -1871,67 +1871,67 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             2: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             3: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             4: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             5: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             6: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             7: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             8: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             9: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             10: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             11: {
                                                 'sid': 16071,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.252',
+                                                'local_address': '10.189.5.252',
                                             },
                                             12: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             13: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -1951,22 +1951,22 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                                             1: {
                                                 'sid': 16072,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '111.87.5.253',
+                                                'local_address': '10.189.5.253',
                                             },
                                             2: {
                                                 'sid': 16052,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.187.14.241',
+                                                'local_address': '10.169.14.241',
                                             },
                                             3: {
                                                 'sid': 16062,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '59.128.2.251',
+                                                'local_address': '10.34.2.251',
                                             },
                                             4: {
                                                 'sid': 16063,
                                                 'sid_type': 'Prefix-SID',
-                                                'local_address': '106.162.196.241',
+                                                'local_address': '10.169.196.241',
                                             },
                                         },
                                     },
@@ -2006,7 +2006,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
                     'timestamp': '09-09 20:16:09.573',
                     'client': 'CLI AGENT',
                     'event_type': 'Set end point',
-                    'context': 'End-point: 106.162.196.241',
+                    'context': 'End-point: 10.169.196.241',
                 },
                 4: {
                     'timestamp': '09-09 20:16:23.728',
@@ -2081,33 +2081,33 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
     golden_output_name = {'execute.return_value': '''
         sr_ve-hkgasr01#show segment-routing traffic-eng policy name maxsid detail
 
-        Name: maxsid (Color: 100 End-point: 106.162.196.241)
+        Name: maxsid (Color: 100 End-point: 10.169.196.241)
         Status:
             Admin: up, Operational: up for 06:35:58 (since 09-09 20:19:30.195)
         Candidate-paths:
             Preference 200:
             Explicit: segment-list maxsid (active)
                 Weight: 0, Metric Type: TE
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16071 [Prefix-SID, 111.87.5.252]
-                16072 [Prefix-SID, 111.87.5.253]
-                16063 [Prefix-SID, 106.162.196.241]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16071 [Prefix-SID, 10.189.5.252]
+                16072 [Prefix-SID, 10.189.5.253]
+                16063 [Prefix-SID, 10.169.196.241]
             Preference 100:
             Explicit: segment-list test1 (inactive)
                 Weight: 0, Metric Type: TE
-                16072 [Prefix-SID, 111.87.5.253]
-                16052 [Prefix-SID, 106.187.14.241]
-                16062 [Prefix-SID, 59.128.2.251]
-                16063 [Prefix-SID, 106.162.196.241]
+                16072 [Prefix-SID, 10.189.5.253]
+                16052 [Prefix-SID, 10.169.14.241]
+                16062 [Prefix-SID, 10.34.2.251]
+                16063 [Prefix-SID, 10.169.196.241]
         Attributes:
             Binding SID: 15001
             Allocation mode: explicit
@@ -2121,7 +2121,7 @@ class test_show_segment_routing_traffic_eng_policy_detail(unittest.TestCase):
             ---------                   ------                  ----------              -------: -----
             09-09 20:15:58.969          CLI AGENT               Policy created          Name: maxsid
             09-09 20:16:09.573          CLI AGENT               Set colour              Colour: 100
-            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 106.162.196.241
+            09-09 20:16:09.573          CLI AGENT               Set end point           End-point: 10.169.196.241
             09-09 20:16:23.728          CLI AGENT               Set explicit path       Path option: maxsid
             09-09 20:19:30.195          FH Resolution           Policy state UP         Status: PATH RESOLVED
             09-09 20:19:30.202          FH Resolution           REOPT triggered         Status: REOPTIMIZED

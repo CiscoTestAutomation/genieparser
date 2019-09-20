@@ -36,8 +36,8 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
 
         IS-IS 1 active policy
         Prefix               SID Index    Range        Flags
-        1.1.1.100/32         100          20          
-        1.1.1.150/32         150          10          
+        10.4.1.100/32         100          20          
+        10.4.1.150/32         150          10          
 
         Number of mapping entries: 2
 
@@ -45,8 +45,8 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
 
         IS-IS 1 backup policy
         Prefix               SID Index    Range        Flags
-        1.1.1.100/32         100          20          
-        1.1.1.150/32         150          10          
+        10.4.1.100/32         100          20          
+        10.4.1.150/32         150          10          
 
         Number of mapping entries: 2
     '''}
@@ -58,11 +58,11 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
                     'active': {
                         'sid': {
                             100: {
-                                'prefix': '1.1.1.100/32',
+                                'prefix': '10.4.1.100/32',
                                 'range': 20,
                             },
                             150: {
-                                'prefix': '1.1.1.150/32',
+                                'prefix': '10.4.1.150/32',
                                 'range': 10,
                             }
                         },
@@ -71,11 +71,11 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
                     'backup': {
                         'sid': {
                             100: {
-                                'prefix': '1.1.1.100/32',
+                                'prefix': '10.4.1.100/32',
                                 'range': 20,
                             },
                             150: {
-                                'prefix': '1.1.1.150/32',
+                                'prefix': '10.4.1.150/32',
                                 'range': 10,
                             }
                         },
@@ -120,8 +120,8 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
                 SRMS active policy for Process ID 1
 
         Prefix               SID Index    Range        Flags
-        1.1.1.100/32         100          20          
-        1.1.1.150/32         150          10           
+        10.4.1.100/32         100          20          
+        10.4.1.150/32         150          10           
 
         Number of mapping entries: 2
 
@@ -130,8 +130,8 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
                 SRMS backup policy for Process ID 1
 
         Prefix               SID Index    Range        Flags
-        1.1.1.100/32         100          20          
-        1.1.1.150/32         150          10          
+        10.4.1.100/32         100          20          
+        10.4.1.150/32         150          10          
 
         Number of mapping entries: 2
     '''}
@@ -143,11 +143,11 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
                     'active': {
                         'sid': {
                             100: {
-                                'prefix': '1.1.1.100/32',
+                                'prefix': '10.4.1.100/32',
                                 'range': 20,
                             },
                             150: {
-                                'prefix': '1.1.1.150/32',
+                                'prefix': '10.4.1.150/32',
                                 'range': 10,
                             }
                         },
@@ -156,11 +156,11 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
                     'backup': {
                         'sid': {
                             100: {
-                                'prefix': '1.1.1.100/32',
+                                'prefix': '10.4.1.100/32',
                                 'range': 20,
                             },
                             150: {
-                                'prefix': '1.1.1.150/32',
+                                'prefix': '10.4.1.150/32',
                                 'range': 10,
                             }
                         },
@@ -534,11 +534,11 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
         Reported path:
             Metric type: TE, Accumulated Metric 42
             SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
-            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+            SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
         Computed path:
             Metric type: TE, Accumulated Metric 42
             SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
-            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+            SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
         Recorded path:
             None
 
@@ -560,11 +560,11 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
         Reported path:
             Metric type: TE, Accumulated Metric 42
             SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
-            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+            SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
         Computed path:
             Metric type: TE, Accumulated Metric 42
             SID[0]: Adj, Label 24000, Address: local 10.10.10.1 remote 10.10.10.2
-            SID[1]: Adj, Label 24000, Address: local 14.14.14.2 remote 14.14.14.4
+            SID[1]: Adj, Label 24000, Address: local 10.19.14.2 remote 10.19.14.4
         Recorded path:
             None
         Event history (latest first):
@@ -620,8 +620,8 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                     1: {
                                         'type' : 'Adj',
                                         'label': 24000,
-                                        'local_address': '14.14.14.2',
-                                        'remote_address': '14.14.14.4'
+                                        'local_address': '10.19.14.2',
+                                        'remote_address': '10.19.14.4'
                                     }
                                 }
                             },
@@ -638,8 +638,8 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                     1: {
                                         'type' : 'Adj',
                                         'label': 24000,
-                                        'local_address': '14.14.14.2',
-                                        'remote_address': '14.14.14.4'
+                                        'local_address': '10.19.14.2',
+                                        'remote_address': '10.19.14.4'
                                     }
                                 }
                             },
@@ -753,7 +753,7 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
     golden_output = {'execute.return_value' : '''
     show segment-routing mapping-server prefix-sid-map ipv4
     Prefix               SID Index    Range        Flags
-    20.1.1.0/24          400          300          
+    10.186.1.0/24          400          300          
     10.1.1.1/32          10           200          
     Number of mapping entries: 2
     '''}
@@ -762,7 +762,7 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
         'ipv4': {
             'number_of_mapping_entries': 2,
             'prefix' : {
-                '20.1.1.0/24': {
+                '10.186.1.0/24': {
                     'sid_index': 400,
                     'range': 300
                 },
@@ -800,10 +800,10 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
     golden_output = {'execute.return_value' : '''
         RP/0/0/CPU0:router# show segment-routing mapping-server prefix-sid-map ipv4 detail
         Prefix
-        20.1.1.0/24
+        10.186.1.0/24
             SID Index:      400
             Range:          300
-            Last Prefix:    20.2.44.0/24
+            Last Prefix:    10.229.44.0/24
             Last SID Index: 699
             Flags:          
         10.1.1.1/32
@@ -814,10 +814,10 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
     golden_parsed_output = {
         'ipv4': {
             'prefix' : {
-                '20.1.1.0/24': {
+                '10.186.1.0/24': {
                     'sid_index': 400,
                     'range': 300,
-                    'last_prefix': '20.2.44.0/24',
+                    'last_prefix': '10.229.44.0/24',
                     'last_sid_index' : 699
                 },
                 '10.1.1.1/32': {
