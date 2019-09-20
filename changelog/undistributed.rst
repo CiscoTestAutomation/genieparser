@@ -288,23 +288,14 @@
 --------------------------------------------------------------------------------
                                 VXLAN
 --------------------------------------------------------------------------------
-* NXOS
-    * Updated ShowRunningConfigNvOverlay for more varied output
+* IOSXE
+    * Added ShowL2routeEvpnImetAllDetail for
+        'show l2route evpn imet all detail'
 
 --------------------------------------------------------------------------------
-                                MODULE
+                                AuthenticationSessions
 --------------------------------------------------------------------------------
-* IOS
-    * Added ShowModule parse for Cat6k devices
-
---------------------------------------------------------------------------------
-                                ND
---------------------------------------------------------------------------------
-* NXOS
-    * Updated ShowIpv6Routers to support different amounts of prefixes
-
---------------------------------------------------------------------------------
-                                VPC
---------------------------------------------------------------------------------
-* NXOS
-    * Updated ShowVpc to support more varied output
+* IOSXE 
+    * Updated ShowAuthenticationSessionsInterfaceDetails:
+        * Changed schema to accommodate IOS
+        * Added UT for multiple MAC addresses for 1 interface
