@@ -98,6 +98,34 @@ class test_show_ipv6_neighbor_detail(unittest.TestCase):
                 },
             },
         },
+        'adjacency_hit': {
+            'GLEAN': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'GLOBAL DROP': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'GLOBAL GLEAN': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'GLOBAL PUNT': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'INVALID': {
+                'byte_count': 0,
+                'packet_count': 0
+            },
+            'NORMAL': {
+                'byte_count': 0,
+                'packet_count': 0
+            }
+        },
+        'adjacency_statistics_last_updated_before': 'never',
+	    'total_number_of_entries': 11
     }
 
     golden_output = {'execute.return_value': '''
@@ -832,6 +860,8 @@ class test_show_ipv6_routers(unittest.TestCase):
     Reachable time 0 msec, Retransmission time 0 msec
       Prefix 2020:2:3::/64  onlink_flag 1 autonomous_flag 1
       valid lifetime 2592000, preferred lifetime 604800
+      Prefix 2020:2:2::/64   onlink_flag 1 autonomous_flag 1
+      valid lifetime 2592000, preferred lifetime 604800
 
 
     Router fe80::f816:3eff:fe19:8682 on Ethernet1/3 , last update time 2.8 min
@@ -851,105 +881,123 @@ class test_show_ipv6_routers(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-     "interfaces": {
-          "Ethernet1/3": {
-               "neighbors": {
+        "interfaces": {
+            "Ethernet1/3": {
+                "neighbors": {
                     "fe80::f816:3eff:fe19:8682": {
-                         "autonomous_flag": 1,
-                         "homeagent_flag": 0,
-                         "valid_lifetime": 2592000,
-                         "is_router": True,
-                         "addr_flag": 0,
-                         "ip": "fe80::f816:3eff:fe19:8682",
-                         "lifetime": 1800,
-                         "onlink_flag": 1,
-                         "current_hop_limit": 64,
-                         "prefix": "2010:1:3::/64",
-                         "retransmission_time": 0,
-                         "preferred_lifetime": 604800,
-                         "last_update": "2.8",
-                         "mtu": 1500,
-                         "preference": "medium",
-                         "other_flag": 0,
-                         "reachable_time": 0
+                        "homeagent_flag": 0,
+                        "is_router": True,
+                        "addr_flag": 0,
+                        "ip": "fe80::f816:3eff:fe19:8682",
+                        "lifetime": 1800,
+                        "current_hop_limit": 64,
+                        "retransmission_time": 0,
+                        "last_update": "2.8",
+                        "mtu": 1500,
+                        "preference": "medium",
+                        "other_flag": 0,
+                        "reachable_time": 0,
+                        "prefix": {
+                            "2010:1:3::/64": {
+                                "preferred_lifetime": 604800,
+                                "valid_lifetime": 2592000,
+                                "autonomous_flag": 1,
+                                "onlink_flag": 1,
+                            }
+                        }
                     }
-               },
-               "interface": "Ethernet1/3"
-          },
-          "Ethernet1/1": {
-               "neighbors": {
+                },
+                "interface": "Ethernet1/3"
+            },
+            "Ethernet1/1": {
+                "neighbors": {
                     "fe80::f816:3eff:fe82:6320": {
-                         "autonomous_flag": 1,
-                         "homeagent_flag": 0,
-                         "valid_lifetime": 2592000,
-                         "is_router": True,
-                         "addr_flag": 0,
-                         "ip": "fe80::f816:3eff:fe82:6320",
-                         "lifetime": 1800,
-                         "onlink_flag": 1,
-                         "current_hop_limit": 64,
-                         "prefix": "2010:2:3::/64",
-                         "retransmission_time": 0,
-                         "preferred_lifetime": 604800,
-                         "last_update": "3.2",
-                         "mtu": 1500,
-                         "preference": "medium",
-                         "other_flag": 0,
-                         "reachable_time": 0
+                        "homeagent_flag": 0,
+                        "is_router": True,
+                        "addr_flag": 0,
+                        "ip": "fe80::f816:3eff:fe82:6320",
+                        "lifetime": 1800,
+                        "current_hop_limit": 64,
+                        "retransmission_time": 0,
+                        "last_update": "3.2",
+                        "mtu": 1500,
+                        "preference": "medium",
+                        "other_flag": 0,
+                        "reachable_time": 0,
+                        "prefix": {
+                            "2010:2:3::/64": {
+                                "preferred_lifetime": 604800,
+                                "valid_lifetime": 2592000,
+                                "autonomous_flag": 1,
+                                "onlink_flag": 1,
+                            }
+                        }
                     }
-               },
-               "interface": "Ethernet1/1"
-          },
-          "Ethernet1/4": {
-               "neighbors": {
+                },
+                "interface": "Ethernet1/1"
+            },
+            "Ethernet1/4": {
+                "neighbors": {
                     "fe80::f816:3eff:fec7:8140": {
-                         "autonomous_flag": 1,
-                         "homeagent_flag": 0,
-                         "valid_lifetime": 2592000,
-                         "is_router": True,
-                         "addr_flag": 0,
-                         "ip": "fe80::f816:3eff:fec7:8140",
-                         "lifetime": 1800,
-                         "onlink_flag": 1,
-                         "current_hop_limit": 64,
-                         "prefix": "2020:1:3::/64",
-                         "retransmission_time": 0,
-                         "preferred_lifetime": 604800,
-                         "last_update": "2.3",
-                         "mtu": 1500,
-                         "preference": "medium",
-                         "other_flag": 0,
-                         "reachable_time": 0
+                        "homeagent_flag": 0,
+                        "is_router": True,
+                        "addr_flag": 0,
+                        "ip": "fe80::f816:3eff:fec7:8140",
+                        "lifetime": 1800,
+                        "current_hop_limit": 64,
+                        "retransmission_time": 0,
+                        "last_update": "2.3",
+                        "mtu": 1500,
+                        "preference": "medium",
+                        "other_flag": 0,
+                        "reachable_time": 0,
+                        "prefix": {
+                            "2020:1:3::/64": {
+                                "preferred_lifetime": 604800,
+                                "autonomous_flag": 1,
+                                "valid_lifetime": 2592000,
+                                "onlink_flag": 1,
+                            }
+                        }
                     }
-               },
-               "interface": "Ethernet1/4"
-          },
-          "Ethernet1/2": {
-               "neighbors": {
+                },
+                "interface": "Ethernet1/4"
+            },
+            "Ethernet1/2": {
+                "neighbors": {
                     "fe80::f816:3eff:fe8b:59c9": {
-                         "autonomous_flag": 1,
-                         "homeagent_flag": 0,
-                         "valid_lifetime": 2592000,
-                         "is_router": True,
-                         "addr_flag": 0,
-                         "ip": "fe80::f816:3eff:fe8b:59c9",
-                         "lifetime": 1800,
-                         "onlink_flag": 1,
-                         "current_hop_limit": 64,
-                         "prefix": "2020:2:3::/64",
-                         "retransmission_time": 0,
-                         "preferred_lifetime": 604800,
-                         "last_update": "1.5",
-                         "mtu": 1500,
-                         "preference": "medium",
-                         "other_flag": 0,
-                         "reachable_time": 0
+                        "homeagent_flag": 0,
+                        "is_router": True,
+                        "addr_flag": 0,
+                        "ip": "fe80::f816:3eff:fe8b:59c9",
+                        "lifetime": 1800,
+                        "current_hop_limit": 64,
+                        "retransmission_time": 0,
+                        "last_update": "1.5",
+                        "mtu": 1500,
+                        "preference": "medium",
+                        "other_flag": 0,
+                        "reachable_time": 0,
+                        "prefix": {
+                            "2020:2:3::/64": {
+                                "preferred_lifetime": 604800,
+                                "onlink_flag": 1,
+                                "valid_lifetime": 2592000,
+                                "autonomous_flag": 1,
+                            },
+                            "2020:2:2::/64": {
+                                "preferred_lifetime": 604800,
+                                "onlink_flag": 1,
+                                "valid_lifetime": 2592000,
+                                "autonomous_flag": 1,
+                            }
+                        }
                     }
-               },
-               "interface": "Ethernet1/2"
-          }
-     }
-}
+                },
+                "interface": "Ethernet1/2"
+            }
+        }
+    }
 
     def test_show_ipv6_icmp_neighbor_detail_golden(self):
         self.maxDiff = None
