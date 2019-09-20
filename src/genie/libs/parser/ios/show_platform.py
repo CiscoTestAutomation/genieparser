@@ -103,101 +103,198 @@ class ShowRedundancy(ShowRedundancyIosSchema, ShowRedundancy_iosxe):
 
 
 class ShowInventory(ShowInventorySchema_iosxe):
-    """Parser for show Inventory
+    """
+    Parser for:
+        * show Inventory
     """
     cli_command = 'show inventory'
-    
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-        name = descr = slot = subslot = pid = ''
-        inventory_dict = {}
+            output = self.device.execute(self.cli_command)
 
-        # NAME: "CISCO2921/K9 chassis", DESCR: "CISCO2921/K9 chassis"
-        # NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 1234567890, Hw Revision: 1.0"
-        p1 = re.compile(r'^NAME\:\s+\"(?P<name>.*)\",\s+DESCR\:\s+\"(?P<descr>.*)\"')
+        # Init vars
+        parsed_output = {}
+        flag_is_slot = False
+        oc_key_values = ['power', 'fan', 'clock']
 
-        # IOSv
-        p1_1 = re.compile(r'\w+')
+        # NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+        # NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
+        r1 = re.compile(r'NAME\:\s*\"(?P<name>.+)\"\,\s*DESCR:\s*\"(?P<description>.+)\"')
 
-        # "Switch 1"
-        p1_2 = re.compile(r'\s*\S+[ t](?P<slot>[a-zA-Z]*\d+)[ /]*')
+        # 1
+        # 2
+        # 3
+        r1_1 = re.compile(r'(?P<slot>\d+)')
 
-        # SPA subslot 0/0
-        p1_3 = re.compile(r'SPA subslot (?P<slot>\d+)/(?P<subslot>\d+)')
+        # msfc sub-module of 1
+        # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
+        r1_2 = re.compile(r'.*module of (?P<slot>\d+).*')
 
-        # subslot 0/0
-        p1_4 = re.compile(r'\s*\S+ *\d+[ /]*(?P<subslot>\d+.*)$')
+        # Transceiver Te2/1
+        # Transceiver Te2/15
+        # Transceiver Te5/1
+        r1_3 = re.compile(r'Transceiver\s+Te(?P<slot>\d+)\/(?P<subslot>\d+)')
 
-        # PID: IOSv              , VID: 1.0, SN: 9KLUMCXRGCYY7MZLRU14R
-        p2 = re.compile(r'^PID: +(?P<pid>\S+) *, +VID: +(?P<vid>\S+) *, +SN: +(?P<sn>.*)$')
+        # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
+        r1_4 = re.compile(r'.*VS\-S.*')
 
-        for line in out.splitlines():
+        # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
+        # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
+        r1_5 = re.compile(r'.*WS\-X.*')
+
+        # NAME: "IOSv"
+        r1_6 = re.compile(r'.*IOSv.*')
+
+        # PID: WS-C6504-E        ,                     VID: V01, SN: FXS1712Q1R8
+        # PID: CLK-7600          ,                     VID:    , SN: FXS170802GL
+        r2 = re.compile(r'PID:\s*(?P<pid>.+)\s*\,\s*VID:\s*(?P<vid>.*)\,\s*SN:\s*(?P<sn>.+)')
+
+        for line in output.splitlines():
             line = line.strip()
 
-            #  NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 1234567890, Hw Revision: 1.0"
-            m = p1.match(line)
-            if m:
-                name = m.groupdict()['name']
-                descr = m.groupdict()['descr']
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
 
-                m = p1_1.match(name)
-                if m:
+                name = group['name']
+                descr = group['description']
+
+                continue
+
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+
+                pid = group['pid'].strip()
+                vid = group.get('vid', '')
+                sn = group['sn']
+
+                if 'Chassis' in descr:
+                    chassis_dict = parsed_output.setdefault('main', {})\
+                        .setdefault('chassis', {})\
+                        .setdefault(pid, {})
+
+                    chassis_dict['name'] = name
+                    chassis_dict['descr'] = descr
+                    chassis_dict['pid'] = pid                    
+                    chassis_dict['vid'] = vid
+                    chassis_dict['sn'] = sn
+
+                    continue
+                # 1
+                # 2
+                # 3
+                result = r1_1.match(name)
+                if result:
+                    flag_is_slot = True
+                    group = result.groupdict()
+                    slot = int(group['slot'])
+
+                    # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5                    
+                    if r1_4.match(descr):
+                        slot_code = 'rp'
+
+                    # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
+                    # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
+                    if r1_5.match(descr):
+                        slot_code = 'lc'
+
+                    slot_dict = parsed_output\
+                        .setdefault('slot', {})\
+                        .setdefault(slot, {})\
+                        .setdefault(slot_code, {})\
+                        .setdefault(pid, {})
+                    
+                    slot_dict['name'] = name
+                    slot_dict['descr'] = descr
+                    slot_dict['pid'] = pid
+                    slot_dict['vid'] = vid
+                    slot_dict['sn'] = sn
+
+                    continue
+
+                # msfc sub-module of 1
+                # VS-F6K-PFC4 Policy Feature Card 4 EARL sub-module of 1
+                result = r1_2.match(name)
+                if result:
+                    group = result.groupdict()
+                    slot = group['slot']
+
+                    subslot = 0
+
+                    subslot_dict = slot_dict\
+                        .setdefault('subslot', {})\
+                        .setdefault(subslot, {})\
+                        .setdefault(pid, {})
+
+                    subslot_dict['descr'] = descr
+                    subslot_dict['name'] = name
+                    subslot_dict['pid'] = pid
+                    subslot_dict['sn'] = sn
+                    subslot_dict['vid'] = vid
+
+                    continue
+
+                # Transceiver Te2/1
+                # Transceiver Te2/15
+                # Transceiver Te5/1
+                result = r1_3.match(name)
+                if result:
+                    group = result.groupdict()
+                    slot = group['slot']
+                    subslot = int(group['subslot'])
+
+                    subslot_dict = slot_dict\
+                        .setdefault('subslot', {})\
+                        .setdefault(subslot, {})\
+                        .setdefault(pid, {})
+
+                    subslot_dict['descr'] = descr
+                    subslot_dict['name'] = name
+                    subslot_dict['pid'] = pid
+                    subslot_dict['sn'] = sn
+                    subslot_dict['vid'] = vid
+
+                    continue
+
+                # NAME: "IOSv"
+                result = r1_6.match(name)
+                if result:
                     slot = '1'
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    slot_dict = parsed_output\
+                        .setdefault('slot', {})\
+                        .setdefault(slot, {})\
+                        .setdefault('rp', {})\
+                        .setdefault(pid, {})
+                    
+                    slot_dict['name'] = name
+                    slot_dict['descr'] = descr
+                    slot_dict['pid'] = pid
+                    slot_dict['vid'] = vid
+                    slot_dict['sn'] = sn
 
-                m = p1_2.match(name)
-                if m:
-                    slot = m.groupdict()['slot']
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    continue               
 
-                m = p1_3.match(name)
-                if m:
-                    slot = m.groupdict()['slot']
-                    subslot = m.groupdict()['subslot']
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                # Name could be:
+                # 2700W AC power supply for CISCO7604 2
+                # High Speed Fan Module for CISCO7604 1
+                if any(key in descr.lower() for key in oc_key_values):
+                    other_dict = parsed_output\
+                        .setdefault('slot', {})\
+                        .setdefault(name, {})\
+                        .setdefault('other', {})\
+                        .setdefault(name, {})
 
-                if 'Power Supply Module' in name:
-                    slot = name.replace('Power Supply Module ', 'P')
-                    slot_dict = inventory_dict.setdefault('slot', {}).setdefault(slot, {})
+                    other_dict['name'] = name
+                    other_dict['descr'] = descr
+                    other_dict['pid'] = pid
+                    other_dict['vid'] = vid
+                    other_dict['sn'] = sn
 
-                m = p1_4.match(name)
-                if m:
-                    subslot = m.groupdict()['subslot']
-                continue
+                    continue
 
-            # PID: IOSv              , VID: 1.0, SN: 9KLUMCXRGCYY7MZLRU14R
-            m = p2.match(line)
-            if m:
-                if 'WS-C' in pid:
-                    old_pid = pid
-                pid = m.groupdict()['pid']
-                vid = m.groupdict()['vid']
-                sn = m.groupdict()['sn']
-                if name:
-                    if pid and ('Chassis' in name):
-                        chassis_dict = inventory_dict.setdefault('main', {})\
-                            .setdefault('chassis', {}).setdefault(pid, {})
-                        chassis_dict.update({'name': name, 'descr': descr,
-                                             'pid': pid, 'vid': vid, 'sn': sn})
-                    if slot:
-                        if 'WS-C' in pid or 'IOSv' in pid:
-                            rp_dict = slot_dict.setdefault(
-                                'rp', {}).setdefault(pid, {})
-                            rp_dict.update({'name': name, 'descr': descr,
-                                            'pid': pid, 'vid': vid, 'sn': sn})
-                        else:
-                            other_dict = slot_dict.setdefault('other', {}).setdefault(pid, {})
-                            other_dict.update({'name': name, 'descr': descr,
-                                               'pid': pid, 'vid': vid, 'sn': sn})
-                name = descr = slot = subslot = ''
-                continue
-
-        return inventory_dict
-
+        return parsed_output
 
 class ShowBootvarSchema(MetaParser):
     """Schema for show bootvar"""

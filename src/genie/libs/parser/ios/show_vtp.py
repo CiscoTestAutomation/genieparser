@@ -12,6 +12,15 @@ from genie.metaparser import MetaParser
 
 # import iosxe parser
 from genie.libs.parser.iosxe.show_vtp import ShowVtpStatus as ShowVtpStatus_iosxe
+from genie.libs.parser.iosxe.show_vtp import ShowVtpPassword as ShowVtpPassword_iosxe
+
+
+# =============================================
+# Parser for 'show vtp password'
+# =============================================
+class ShowVtpPassword(ShowVtpPassword_iosxe):
+    """Parser for show vtp password"""
+    pass
 
 
 # =============================================

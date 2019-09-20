@@ -231,6 +231,122 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
     '''
     }
 
+    golden_output_2 = {'execute.return_value': '''\
+        Load for five secs: 24%/5%; one minute: 20%; five minutes: 20%
+        Time source is NTP, 07:26:59.359 EDT Tue Aug 27 2019
+
+        Dot1x Authenticator Port Statistics for GigabitEthernet2/1
+        --------------------------------------------
+        RxStart = 212   RxLogoff = 237  RxResp = 3147   RxRespID = 287
+        RxInvalid = 0   RxLenErr = 0    RxTotal = 3918
+
+        TxReq = 3391    TxReqID = 1018  TxTotal = 4821
+
+        RxVersion = 1   LastRxSrcMAC = d481.d75d.f026
+
+        Dot1x Authenticator Port Statistics for GigabitEthernet2/2
+        --------------------------------------------
+        RxStart = 124   RxLogoff = 71   RxResp = 2307   RxRespID = 220
+        RxInvalid = 0   RxLenErr = 0    RxTotal = 2742
+
+        TxReq = 2480    TxReqID = 525   TxTotal = 3148
+
+        RxVersion = 1   LastRxSrcMAC = 2899.fadd.f021
+
+        Dot1x Authenticator Port Statistics for GigabitEthernet2/3
+        --------------------------------------------
+        RxStart = 111   RxLogoff = 87   RxResp = 2290   RxRespID = 222
+        RxInvalid = 0   RxLenErr = 0    RxTotal = 2746
+
+        TxReq = 2471    TxReqID = 449   TxTotal = 3057
+
+        RxVersion = 1   LastRxSrcMAC = 103a.34e6.d73d
+
+        Dot1x Authenticator Port Statistics for GigabitEthernet2/4
+        --------------------------------------------
+        RxStart = 125   RxLogoff = 0    RxResp = 2972   RxRespID = 298
+        RxInvalid = 0   RxLenErr = 0    RxTotal = 3441
+
+        TxReq = 3214    TxReqID = 902   TxTotal = 4304
+
+        RxVersion = 1   LastRxSrcMAC = 0d01.f8ca.b859
+
+    '''
+    }
+
+    golden_parsed_output_2 = {
+        "interfaces": {
+            "GigabitEthernet2/1": {
+               "statistics": {
+                    "lastrxsrcmac": "d481.d75d.f026",
+                    "txtotal": 4821,
+                    "rxinvalid": 0,
+                    "txreqid": 1018,
+                    "rxtotal": 3918,
+                    "rxlogoff": 237,
+                    "rxrespid": 287,
+                    "rxversion": 1,
+                    "rxresp": 3147,
+                    "txreq": 3391,
+                    "rxstart": 212,
+                    "rxlenerr": 0
+                },
+                "interface": "GigabitEthernet2/1"
+            },
+            "GigabitEthernet2/2": {
+                "statistics": {
+                    "lastrxsrcmac": "2899.fadd.f021",
+                    "txtotal": 3148,
+                    "rxinvalid": 0,
+                    "txreqid": 525,
+                    "rxtotal": 2742,
+                    "rxlogoff": 71,
+                    "rxrespid": 220,
+                    "rxversion": 1,
+                    "rxresp": 2307,
+                    "txreq": 2480,
+                    "rxstart": 124,
+                    "rxlenerr": 0
+                },
+                "interface": "GigabitEthernet2/2"
+            },
+            "GigabitEthernet2/3": {
+                "statistics": {
+                    "lastrxsrcmac": "103a.34e6.d73d",
+                    "txtotal": 3057,
+                    "rxinvalid": 0,
+                    "txreqid": 449,
+                    "rxtotal": 2746,
+                    "rxlogoff": 87,
+                    "rxrespid": 222,
+                    "rxversion": 1,
+                    "rxresp": 2290,
+                    "txreq": 2471,
+                    "rxstart": 111,
+                    "rxlenerr": 0
+                },
+                "interface": "GigabitEthernet2/3"
+            },
+            "GigabitEthernet2/4": {
+                "statistics": {
+                    "lastrxsrcmac": "0d01.f8ca.b859",
+                    "txtotal": 4304,
+                    "rxinvalid": 0,
+                    "txreqid": 902,
+                    "rxtotal": 3441,
+                    "rxlogoff": 0,
+                    "rxrespid": 298,
+                    "rxversion": 1,
+                    "rxresp": 2972,
+                    "txreq": 3214,
+                    "rxstart": 125,
+                    "rxlenerr": 0
+                },
+                "interface": "GigabitEthernet2/4"
+            },
+        }
+    }
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowDot1xAllStatistics(device=self.dev1)
@@ -251,6 +367,12 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowDot1xAllStatistics(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 class test_show_dot1x_all_summary(unittest.TestCase):
     dev1 = Device(name='empty')

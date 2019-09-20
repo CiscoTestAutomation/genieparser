@@ -49,7 +49,7 @@ def get_parser_commands(device, data=parser_data):
         commands.append(command)
     return commands
 
-def format_output(parser_data, tab=0):
+def format_output(parser_data, tab=2):
     '''Format the parsed output in an aligned intended structure'''
 
     s = ['{\n']
@@ -61,7 +61,7 @@ def format_output(parser_data, tab=0):
         else:
             v = repr(v)
         s.append('%s%r: %s,\n' % ('  '*tab, k, v))
-    s.append('%s}' % ('  '*tab))
+    s.append('%s}' % ('  '*(tab-2)))
     return ''.join(s)
 
 def get_parser_exclude(command, device):
@@ -117,17 +117,22 @@ def _find_command(command, data, device):
 
         for pattern in patterns:
             word = pattern.replace('{', '').replace('}', '')
-            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) if word == 'vrf' or word == 'rd' or word == 'instance' or word=='vrf_type' else '(?P<{p}>.*)'.format(p=word)
+            new_pattern = r'(?P<{p}>\\S+)'.format(p=word) \
+                if word == 'vrf' \
+                   or word == 'rd' \
+                   or word == 'instance' \
+                   or word == 'vrf_type' \
+                   or word == 'feature' \
+                else '(?P<{p}>.*)'.format(p=word)
             reg = re.sub(pattern, new_pattern, reg)
         reg += '$'
-        # Convert | to \|
-        reg = reg.replace('|', '\|')
+        # Convert | to \|, and ^ to \^
+        reg = reg.replace('|', '\|').replace('^', '\^')
 
         match = re.match(reg, command)
         if match:
             if device.os not in data[key].keys():
                 continue
-
             # Found a match!
             lookup = Lookup.from_device(device, packages={'parser':parser})
             # Check if all the tokens exists; take the farthest one
@@ -202,7 +207,9 @@ class Common():
                    'BD': 'BridgeDomain',
                    'Se': 'Serial',
                    'Fo': 'FortyGigabitEthernet',
-                   'Hu': 'HundredGigE'
+                   'Hu': 'HundredGigE',
+                   'vl': 'vasileft',
+                   'rl': 'vasiright'
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)

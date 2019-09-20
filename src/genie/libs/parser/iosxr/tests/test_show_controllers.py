@@ -62,7 +62,7 @@ class test_show_controllers_coherentDSP(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         #show controllers coherentDSP 0/0/1/2
-        Sat Aug  3 03:10:15.685 JST
+        Sat Aug  3 03:10:15.685 EST
 
         Port                                            : CoherentDSP 0/0/1/2
         Controller State                                : Up
@@ -190,7 +190,7 @@ class test_show_controllers_optics(unittest.TestCase):
 
     golden_output1 = {'execute.return_value': '''
         #show controllers optics 0/0/0/0
-        Sat Aug  3 03:11:08.682 JST
+        Sat Aug  3 03:11:08.682 EST
 
          Controller State: Up 
          Transport Admin State: In Service 
@@ -327,7 +327,7 @@ class test_show_controllers_optics(unittest.TestCase):
 
     golden_output2 = {'execute.return_value': '''
         #show controllers optics 0/0/1/2
-        Sat Aug  3 03:11:51.141 JST
+        Sat Aug  3 03:11:51.141 EST
 
          Controller State: Up 
          Transport Admin State: In Service 
@@ -412,7 +412,7 @@ class test_show_controllers_optics(unittest.TestCase):
 
     golden_output3 = {'execute.return_value': '''
         #show controllers optics 0/0/0/20
-        Sat Aug  3 03:15:25.076 JST
+        Sat Aug  3 03:15:25.076 EST
 
          Controller State: Down 
          Transport Admin State: In Service 
@@ -508,7 +508,7 @@ class test_show_controllers_optics(unittest.TestCase):
 
     golden_output4 = {'execute.return_value': '''
         #show controllers optics 0/0/0/18
-        Sat Aug  3 03:19:06.519 JST
+        Sat Aug  3 03:19:06.519 EST
 
          Controller State: Up 
          Transport Admin State: In Service 

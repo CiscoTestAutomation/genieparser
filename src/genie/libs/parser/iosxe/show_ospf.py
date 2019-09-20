@@ -28,6 +28,7 @@ IOSXE parsers for the following show commands:
     * show ip ospf segment-routing global-block
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
+    * show ip ospf database opaque-area adv-router {address}
 '''
 
 # Python
@@ -51,23 +52,23 @@ class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
     '''
 
     schema = {
-        'instance':
-            {Any():
-                {'router_id': str,
-                'areas':
-                    {Any():
-                        {'router_id':
-                            {Any():
-                                {'sr_capable': str,
-                                'srlb_base': int,
-                                'srlb_range': int,
-                                },
+        'instance': {
+            Any(): {
+                'router_id': str,
+                'areas': {
+                    Any(): {
+                        'router_id': {
+                            Any(): {
+                                'sr_capable': str,
+                                Optional('srlb_base'): int,
+                                Optional('srlb_range'): int,
                             },
                         },
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ===========================================================
@@ -80,18 +81,24 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         * 'show ip ospf {process_id} segment-routing local-block'
     '''
 
-    cli_command = 'show ip ospf {process_id} segment-routing local-block'
+    cli_command = ['show ip ospf segment-routing local-block',
+                   'show ip ospf {process_id} segment-routing local-block']
 
-    def cli(self, process_id, output=None):
+    def cli(self, process_id=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(process_id=process_id))
+            if process_id:
+                cmd = self.cli_command[1].format(process_id=process_id)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # Init vars
         ret_dict = {}
 
-        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
                          ' +\(Process +ID +(?P<pid>(\S+))\)$')
 
@@ -101,16 +108,16 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
 
         # Router ID        SR Capable   SRLB Base   SRLB Range
         # --------------------------------------------------------
-        # *1.1.1.1          Yes          15000       1000
-        # 2.2.2.2          Yes          15000       1000
-        p3 = re.compile(r'^(?:(?P<value>(\*)))?(?P<router_id>(\S+))'
-                         ' +(?P<sr_capable>(Yes|No)) +(?P<srlb_base>(\d+))'
-                         ' +(?P<srlb_range>(\d+))$')
+        # *10.4.1.1          Yes          15000       1000
+        # 10.16.2.2          Yes          15000       1000
+        # 106.162.197.252    No 
+        p3 = re.compile(r'^(?P<value>\*)?(?P<router_id>\S+) +(?P<sr_capable>Yes|No)'
+                         '( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -128,16 +135,18 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
 
             # Router ID        SR Capable   SRLB Base   SRLB Range
             # --------------------------------------------------------
-            # *1.1.1.1          Yes          15000       1000
-            # 2.2.2.2          Yes          15000       1000
+            # *10.4.1.1          Yes          15000       1000
+            # 10.16.2.2          Yes          15000       1000
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 smgt_dict = area_dict.setdefault('router_id', {}).\
                                       setdefault(group['router_id'], {})
                 smgt_dict['sr_capable'] = group['sr_capable']
-                smgt_dict['srlb_base'] = int(group['srlb_base'])
-                smgt_dict['srlb_range'] = int(group['srlb_range'])
+                if group['srlb_base']:
+                    smgt_dict['srlb_base'] = int(group['srlb_base'])
+                if group['srlb_range']:
+                    smgt_dict['srlb_range'] = int(group['srlb_range'])
                 continue
 
         return ret_dict
@@ -3117,18 +3126,21 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         * 'show ip ospf neighbor detail'
     '''
 
-    cli_command = 'show ip ospf neighbor detail'
+    cli_command = ['show ip ospf neighbor detail', 'show ip ospf neighbor {neighbor} detail']
     exclude = ['hello_timer', 'dead_timer', 'bdr_ip_addr',
         'bdr_router_id', 'index', 'last_retrans_max_scan_length',
         'last_retrans_max_scan_time_msec', 'total_retransmission',
         'uptime', 'last_retrans_scan_length', 'last_retrans_scan_time_msec']
 
 
-    def cli(self, output=None):
+    def cli(self, neighbor='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if neighbor:
+                out = self.device.execute(self.cli_command[1].format(neighbor=neighbor))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -3766,7 +3778,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p8 = re.compile(r'^Checksum: +(?P<checksum>(\S+))$')
        
-        p9 = re.compile(r'^Length: +(?P<length>(\d+))$')
+        p9 = re.compile(r'^Length *: +(?P<length>(\d+))$')
        
         p10 = re.compile(r'^Network +Mask: +\/(?P<net_mask>(\S+))$')
        
@@ -3857,7 +3869,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
        
         p37 = re.compile(r'^EAG\[(?P<group_num>(\d+))\]: +(?P<val>(\d+))$')
 
-        # Neighbor Address : 200.0.0.2
+        # Neighbor Address : 192.168.220.2
         p38 = re.compile(r'Neighbor\s+Address\s*:\s*(?P<neighbor_address>\S+)')
 
         # TLV Type: Router Information
@@ -3901,10 +3913,10 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
         # Label  : 19
         p45 = re.compile(r'Label\s*:\s*(?P<label>\d+)')       
         
-        # (Link Data) Interface IP address: 200.0.0.1
+        # (Link Data) Interface IP address: 192.168.220.1
         p46 = re.compile(r'\(Link\s+Data\)\s+Interface\s+IP\s+address\s*:\s*(?P<link_data>\S+)')
 
-        # Prefix    : 1.1.1.1/32
+        # Prefix    : 10.4.1.1/32
         p47 = re.compile(r'Prefix\s*:\s*(?P<prefix>\S+)')
 
         # AF        : 0
@@ -4035,12 +4047,15 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p3_2.match(line)
             if m:
                 tlv_type_flag = False
+                sub_tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
             # LS age: MAXAGE(3601)
             m = p3_2_1.match(line)
             if m:
+                tlv_type_flag = False
+                sub_tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
@@ -4173,6 +4188,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                 continue
 
             # Length: 36
+            # Length : 36
             m = p9.match(line)
             if m:
                 length = int(m.groupdict()['length'])
@@ -4180,8 +4196,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     sub_tlv_types_dict['length'] = length
                 elif tlv_type_flag:
                     tlv_type_dict['length'] = length
-                
-                header_dict['length'] = length
+                else:
+                    header_dict['length'] = length
                 continue
 
             # Network Mask: /32
@@ -4268,7 +4284,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             if m:
                 if tlv_type_flag:                    
                     sub_link_type = str(m.groupdict()['type']).lower()
-                    if 'another Router' in sub_link_type:
+                    if 'another router' in sub_link_type:
                         opaque_link_type = 1
                     tlv_type_dict['link_name'] = sub_link_type
                     tlv_type_dict['link_type'] = opaque_link_type
@@ -4307,6 +4323,11 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             m = p19_2.match(line)
             if m:
                 link_id = str(m.groupdict()['link_id'])
+
+                # If 'TLV Type' found in output this flag is set to true
+                if tlv_type_flag:
+                    tlv_type_dict['link_id'] = link_id
+                    continue
 
                 # Create dict structures
                 if 'links' not in db_dict:
@@ -4622,7 +4643,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
                     ['groups'][group_num]['value'] = int(m.groupdict()['val'])
                 continue
 
-            # Neighbor Address : 200.0.0.2
+            # Neighbor Address : 192.168.220.2
             m = p38.match(line)
             if m:
                 db_dict['link_tlvs'][link_tlv_counter]['remote_if_ipv4_addrs'] = {m.groupdict()['neighbor_address']: {}}
@@ -4788,7 +4809,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
 
                 continue
 
-            # (Link Data) Interface IP address: 200.0.0.1
+            # (Link Data) Interface IP address: 192.168.220.1
             m = p46.match(line)
             if m:
                 group = m.groupdict()
@@ -4796,7 +4817,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
 
                 continue
 
-            # Prefix    : 1.1.1.1/32
+            # Prefix    : 10.4.1.1/32
             m = p47.match(line)
             if m:
                 group = m.groupdict()
@@ -4830,6 +4851,7 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # Sub-TLV Type: Local / Remote Intf ID
             m = p50.match(line)
             if m:
+                tlv_type_flag = False
                 sub_tlv_type_flag = True
                 group = m.groupdict()
                 sub_tlv_type = group['sub_tlv_type']
@@ -4890,8 +4912,6 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
 
                 continue
 
-        # print(ret_dict)
-        # import pdb; pdb.set_trace()
         return ret_dict
 
 
@@ -5560,13 +5580,16 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         * 'show ip ospf mpls ldp interface'
     '''
 
-    cli_command = 'show ip ospf mpls ldp interface'
+    cli_command = ['show ip ospf mpls ldp interface', 'show ip ospf mpls ldp interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -6308,7 +6331,7 @@ class ShowIpOspfTrafficSchema(MetaParser):
     '''
 
     schema = {
-        'ospf_statistics':
+        Optional('ospf_statistics'):
             {'last_clear_traffic_counters': str,
             'rcvd':
                 {'total': int,
@@ -6334,8 +6357,9 @@ class ShowIpOspfTrafficSchema(MetaParser):
                     {Any():
                         {'instance':
                             {Any():
-                                {'router_id': str,
-                                'ospf_queue_statistics':
+                                {
+                                Optional('router_id'): str,
+                                Optional('ospf_queue_statistics'):
                                     {'limit': 
                                         {'inputq': int,
                                         'outputq': int,
@@ -6426,7 +6450,7 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                             },
                                         },
                                     },
-                                'interface_statistics':
+                                Optional('interface_statistics'):
                                     {'interfaces':
                                         {Any():
                                             {'last_clear_traffic_counters': str,
@@ -6457,8 +6481,8 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                                 'unknown_neighbor': int,
                                                 'authentication': int,
                                                 'ttl_check_fail': int,
-                                                'adjacency_throttle': int,
-                                                'bfd': int,
+                                                Optional('adjacency_throttle'): int,
+                                                Optional('bfd'): int,
                                                 'test_discard': int,
                                                 },
                                             'ospf_lsa_errors':
@@ -6498,8 +6522,8 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                         'unknown_neighbor': int,
                                         'authentication': int,
                                         'ttl_check_fail': int,
-                                        'adjacency_throttle': int,
-                                        'bfd': int,
+                                        Optional('adjacency_throttle'): int,
+                                        Optional('bfd'): int,
                                         'test_discard': int,
                                         },
                                     'ospf_lsa_errors':
@@ -6541,6 +6565,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Init vars
         ret_dict = {}
         address_family = 'ipv4'
+        vrf = 'default'
         received = False ; sent = False
         interface_stats = False ; summary_stats = False
         max_size_stats = False ; current_size_stats = False
@@ -6661,6 +6686,11 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         p19 = re.compile(r'^Authentication +(?P<authentication>(\d+)), +TTL'
                           ' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
                           ' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
+
+        # Authentication 0, TTL Check Fail 0, Test discard 0
+        p19_1 = re.compile(r'^Authentication +(?P<authentication>\d+), +TTL'
+                          ' +Check +Fail +(?P<ttl_check_fail>\d+), +Test discard'
+                          ' +(?P<test_discard>\d+),?$')
 
         # BFD 0, Test discard 0
         p20 = re.compile(r'^BFD +(?P<bfd>(\d+)), +Test +discard'
@@ -6948,6 +6978,15 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 ospf_header_errors_dict['adjacency_throttle'] = int(group['adjacency_throttle'])
                 continue
 
+            # Authentication 0, TTL Check Fail 0, Test discard 0
+            m = p19_1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['authentication'] = int(group['authentication'])
+                ospf_header_errors_dict['ttl_check_fail'] = int(group['ttl_check_fail'])
+                ospf_header_errors_dict['test_discard'] = int(group['test_discard'])
+                continue
+
             # BFD 0, Test discard 0
             m = p20.match(line)
             if m:
@@ -6981,9 +7020,17 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
             # Summary traffic statistics for process ID 65109:
             m = p23.match(line)
             if m:
+                pid = m.groupdict()['pid']
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(pid, {})
                 summary_stats_dict = ospf_dict.\
                                 setdefault('summary_traffic_statistics', {})
                 interface_stats = False ; summary_stats = True
+                vrf = 'default'
                 continue
 
         return ret_dict
@@ -7100,7 +7147,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
         return super().cli(db_type='router', out=output)
 
 
-class ShowIpOspfSegmentRoutingSchema(MetaParser):
+class ShowIpOspfSegmentRoutingAdjacencySidSchema(MetaParser):
     ''' Schema for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
@@ -7122,14 +7169,13 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
         }
     }
         
-    
 
-class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+class ShowIpOspfSegmentRoutingAdjacencySid(ShowIpOspfSegmentRoutingAdjacencySidSchema):
     ''' Parser for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
 
-    cli_commands = [
+    cli_command = [
         'show ip ospf {process_id} segment-routing adjacency-sid',
         'show ip ospf segment-routing adjacency-sid',
     ]
@@ -7138,9 +7184,9 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
         if output is None:
             if process_id:
-                command = self.cli_commands[0].format(process_id=process_id)
+                command = self.cli_command[0].format(process_id=process_id)
             else:
-                command = self.cli_commands[1]
+                command = self.cli_command[1]
 
             out = self.device.execute(command)
         else:
@@ -7315,9 +7361,9 @@ class ShowIpOspfSegmentRoutingProtectedAdjacenciesSchema(MetaParser):
     schema = {
         'process_id': {
             Any(): {
-                'areas': {
-                    Any(): {
-                        'router_id': str,
+                'router_id': str,
+                Optional('areas'): {
+                    Any(): {                        
                         'neighbors': {
                             Any(): {
                                 'interfaces': {
@@ -7353,14 +7399,14 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
         else:
             out = output
 
-        # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+        # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
                          'Process +ID +(?P<process_id>\d+)\)')
 
         # Area with ID (8)
         p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
 
-        # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+        # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
         p3 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<interface>\S+) +(?P<address>\S+) +'
                          '(?P<adj_sid>\d+) +(?P<backup_nexthop>\S+) +(?P<backup_interface>\S+)$')
 
@@ -7370,7 +7416,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (1.1.1.1) (Process ID 9996)
+            # OSPF Router with ID (10.4.1.1) (Process ID 65109)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -7378,6 +7424,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 process_id = int(group['process_id'])
                 process_id_dict = ret_dict.setdefault('process_id', {}). \
                                     setdefault(process_id, {})
+                process_id_dict['router_id'] = router_id
                 continue
 
             # Area with ID (8)
@@ -7386,11 +7433,10 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
                 group = m.groupdict()
                 area_id = str(IPAddress(str(group['area_id'])))
                 area_dict = process_id_dict.setdefault('areas', {}). \
-                                setdefault(area_id, {})
-                area_dict.update({'router_id': router_id})
+                                setdefault(area_id, {})                
                 continue
 
-            # 20.22.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
+            # 10.234.30.22     Gi10                192.168.10.2       17           192.168.10.3       Gi14
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -7428,8 +7474,8 @@ class ShowIpOspfSegmentRoutingSidDatabaseSchema(MetaParser):
                         'sid': int,
                         Optional('codes'): str,
                         'prefix': str,
-                        'adv_rtr_id': str,
-                        'area_id': str,
+                        Optional('adv_rtr_id'): str,
+                        Optional('area_id'): str,
                         'type': str,
                         'algo': int
                     },
@@ -7458,11 +7504,12 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
                         '\(Process +ID +(?P<pid>\d+)\)$')
 
-        # 1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0
-        # 2               2.2.2.2/32          2.2.2.2          8        Intra     0
-        p2 = re.compile(r'^(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
-                        '(?P<prefix>[\d\.\/]+) +(?P<adv_rtr_id>[\d\.]+) +'
-                        '(?P<area_id>\d+) +(?P<type>\w+) +(?P<algo>\d+)$')
+        # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
+        # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
+        # 3       (M)     10.16.2.3/32                                    Unknown   0  
+        p2 = re.compile(r'(?P<sid>\d+) +(?:\((?P<codes>[LNM,]+)\) +)?'
+            '(?P<prefix>[\d\.\/]+)( +(?P<adv_rtr_id>[\d\.]+))?'
+            '( +(?P<area_id>\d+))? +(?P<type>\w+) +(?P<algo>\d+)')
 
         ret_dict = {}
         sid_entries = 0
@@ -7479,8 +7526,9 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                 process_dict.update({'router_id': group['router_id']})
                 continue
 
-            # 1       (L)     1.1.1.1/32          1.1.1.1          8        Intra     0
-            # 2               2.2.2.2/32          2.2.2.2          8        Intra     0
+            # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
+            # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
+            # 3       (M)     10.16.2.3/32                                    Unknown   0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -7496,8 +7544,11 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                     sid_dict.update({'codes': group['codes']})
 
                 sid_dict.update({'prefix': group['prefix']})
-                sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
-                sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                if 'adv_rtr_id' in group and group['adv_rtr_id']:
+                    sid_dict.update({'adv_rtr_id': group['adv_rtr_id']})
+                if 'area_id' in group and group['area_id']:
+                    sid_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                
                 sid_dict.update({'type': group['type']})
                 sid_dict.update({'algo': int(group['algo'])})
                 continue
@@ -7555,17 +7606,17 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
         else:
             out = output
 
-        # OSPF Router with ID (1.1.1.1) (Process ID 1234)
+        # OSPF Router with ID (10.4.1.1) (Process ID 1234)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
                          '\(Process +ID +(?P<pid>\d+)\)$')
 
         # OSPF Segment Routing Global Blocks in Area 3
         p2 = re.compile(r'^OSPF +Segment +Routing +Global +Blocks +in +Area (?P<area>\d+)$')
 
-        # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
-        # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
-        # *1.1.1.1         No
-        # 2.2.2.2         No
+        # *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+        # 10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+        # *10.4.1.1         No
+        # 10.16.2.2         No
         p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+)'
                          '(?: +(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
                          '(?P<srgb_range>\d+) +(?P<sid_label>\w+))?$')
@@ -7575,7 +7626,7 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (1.1.1.1) (Process ID 1234)
+            # OSPF Router with ID (10.4.1.1) (Process ID 1234)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -7592,8 +7643,8 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
                 router_dict.update({'area': int(group['area'])})
                 continue
 
-            # *1.1.1.1         Yes         SPF,StrictSPF 16000      8000         Label
-            # 2.2.2.2         Yes         SPF,StrictSPF 16000      8000         Label
+            # *10.4.1.1         Yes         SPF,StrictSPF 16000      8000         Label
+            # 10.16.2.2         Yes         SPF,StrictSPF 16000      8000         Label
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -7708,7 +7759,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         else:
             out = output
         
-        # OSPF Router with ID (2.2.2.2) (Process ID 9996)
+        # OSPF Router with ID (10.16.2.2) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
                          'Process +ID +(?P<process_id>\d+)\)$')
 
@@ -7771,7 +7822,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         # sr-app locks requested: srgb 0, srlb 0
         p18 = re.compile(r'^sr\-app +locks +requested: +srgb +(?P<srgb>\d+), +srlb +(?P<srlb>\d+)$')
 
-        # TE Router ID 2.2.2.2
+        # TE Router ID 10.16.2.2
         p19 = re.compile(r'^TE +Router +ID +(?P<te_router_id>\S+)$')
 
         # Area Topology name Forwarding Strict SPF
@@ -7788,7 +7839,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (2.2.2.2) (Process ID 9996)
+            # OSPF Router with ID (10.16.2.2) (Process ID 65109)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -7968,7 +8019,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 srp_app_locks_requested_dict.update({'srlb': srlb})
                 continue
             
-            # TE Router ID 2.2.2.2
+            # TE Router ID 10.16.2.2
             m = p19.match(line)
             if m:
                 group = m.groupdict()
@@ -8008,10 +8059,63 @@ class ShowIpOspfDatabaseOpaqueAreaSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSche
         * 'show ip ospf database opaque-area self-originate'
     '''
 
-    cli_command = 'show ip ospf database opaque-area self-originate'
+    cli_command = ['show ip ospf database opaque-area {lsa_id} self-originate', 
+                   'show ip ospf database opaque-area self-originate']
+
+    def cli(self, lsa_id=None, output=None):
+        if output is None:
+            if lsa_id:
+                output = self.device.execute(self.cli_command[0].format(lsa_id=lsa_id))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    ''' Parser for:
+        * 'show ip ospf database opaque-area adv-router {address}'
+    '''
+
+    cli_command = 'show ip ospf database opaque-area adv-router {address}'
+
+    def cli(self, address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(address=address))
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeExtLink(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type ext-link
+    """
+    cli_command = 'show ip ospf database opaque-area type ext-link'
 
     def cli(self, output=None):
         if not output:
             output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type ext-link self-originate
+    """
+    cli_command = 'show ip ospf database opaque-area type ext-link self-originate'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(db_type='opaque', out=output)
+
+class ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter(ShowIpOspfDatabaseOpaqueAreaSchema, ShowIpOspfDatabaseTypeParser):
+    """ Parser for:
+            * show ip ospf database opaque-area type ext-link adv-router {address}
+    """
+    cli_command = 'show ip ospf database opaque-area type ext-link adv-router {address}'
+
+    def cli(self, address, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command.format(address=address))
 
         return super().cli(db_type='opaque', out=output)

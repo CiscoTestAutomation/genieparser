@@ -19,7 +19,7 @@
     * show bgp all neighbor x.x.x.x routes
     * show bgp all neighbor x.x.x.x received
     * show bgp all neighbor x.x.x.x received-routes
-
+    * show bgp summary
 '''
 
 import re   
@@ -38,7 +38,8 @@ from genie.libs.parser.iosxe.show_bgp import ShowBgpAllDetail as ShowBgpAllDetai
                                              ShowBgpAllNeighborsPolicy as ShowBgpAllNeighborsPolicy_iosxe,\
                                              ShowBgpAllNeighborsReceivedRoutes as ShowBgpAllNeighborsReceivedRoutes_iosxe,\
                                              ShowIpBgpTemplatePeerPolicy as ShowIpBgpTemplatePeerPolicy_iosxe,\
-                                             ShowIpBgpTemplatePeerSession as ShowIpBgpTemplatePeerSession_iosxe
+                                             ShowIpBgpTemplatePeerSession as ShowIpBgpTemplatePeerSession_iosxe, \
+                                             ShowBgpSummary as ShowBgpSummary_iosxe
 
 class ShowBgpAllDetail(ShowBgpAllDetail_iosxe):
     """Parser for show bgp all detail"""
@@ -111,4 +112,8 @@ class ShowIpBgpAllDampeningParameters(ShowIpBgpAllDampeningParameters_iosxe):
 
 class ShowBgpAll(ShowBgpAll_iosxe):
     """Parser for show bgp all"""
+    pass
+
+class ShowBgpSummary(ShowBgpSummary_iosxe):
+    """Parser for show bgp summary"""
     pass

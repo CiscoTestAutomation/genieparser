@@ -22,6 +22,7 @@
         *  show mpls ldp statistics
         *  show mpls ldp parameters
         *  show mpls forwarding-table
+        *  show mpls forwarding-table <prefix>
         *  show mpls forwarding-table detail
         *  show mpls forwarding-table vrf <vrf>
         *  show mpls forwarding-table vrf <vrf> detail
@@ -588,13 +589,12 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
     cli_command = ['show mpls ldp neighbor', 'show mpls ldp neighbor vrf {vrf}']
 
-    def cli(self, vrf="",cmd="",output=None):
+    def cli(self, vrf="", output=None):
         if output is None:
-            if not cmd:
-                if vrf:
-                    cmd = self.cli_command[1].format(vrf=vrf)
-                else:
-                    cmd = self.cli_command[0]
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -847,8 +847,17 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
 
     cli_command = ['show mpls ldp neighbor detail', 'show mpls ldp neighbor vrf {vrf} detail']
 
-    def cli(self, vrf="", cmd ="",output=None):
-        return super().cli(cmd=self.cli_command,vrf=vrf,output=output)
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(vrf=vrf, output=out)
 
 
 class ShowMplsLdpBindingsSchema(MetaParser):
@@ -1030,11 +1039,10 @@ class ShowMplsLdpCapabilitiesSchema(MetaParser):
             Optional('iccp_type'): str,
             Optional('maj_version'): int,
             Optional('min_version'): int,
-            'dynamic_anouncement': str,
+            Optional('dynamic_anouncement'): str,
             Optional('mldp_point_to_multipoint'): str,
             Optional('mldp_multipoint_to_multipoint'): str,
-            'typed_wildcard': str,
-
+            Optional('typed_wildcard'): str,
         }
     }
 
@@ -1488,18 +1496,21 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         #     LDP configured; LDP-IGP Synchronization enabled.
         #     LDP configured; LDP-IGP Synchronization not enabled.
         #     LDP configured;  SYNC enabled.
-        p2 = re.compile(r'^LDP +configured; +(LDP\-IGP +Synchronization( +(?P<state>\w+))?'
-                        ' +(?P<synchronization_enabled>(enabled)+))?(SYNC +(?P<enabled>\w+))?.$')
+        #     LDP not configured; LDP-IGP Synchronization enabled.
+        p2 = re.compile(r'^LDP +(?P<configured>[\w\s]+); +(LDP\-IGP +Synchronization '
+                         '+(?P<state>[\w\s]+))?(SYNC +(?P<sync_enabled>[\w\s]+))?.$')
 
         #     Sync status: sync achieved; peer reachable.
         #     Sync status: sync not achieved; peer reachable.
-        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +(?P<sync_status>[\w\s]+); +peer +reachable.$')
+        #     Sync status: sync not achieved; peer not reachable.
+        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +(?P<sync_status>[\w\s]+); +peer +(?P<reachable>[\w\s]+).$')
 
         #     Sync delay time: 0 seconds (0 seconds left)
         p4 = re.compile(r'^Sync +delay +time: +(?P<delay_time>\d+) +seconds \((?P<left_time>\d+) +seconds +left\)$')
 
         #     IGP holddown time: infinite.
-        p5 = re.compile(r'^IGP +holddown +time: +(?P<holddown_time>\w+).?$')
+        #     IGP holddown time: 1 milliseconds.
+        p5 = re.compile(r'^IGP +holddown +time: +(?P<holddown_time>[\w\s]+).?$')
 
         #     Peer LDP Ident: 10.169.197.252:0
         p6 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp_ident>\S+).?$')
@@ -1521,25 +1532,29 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
             # LDP configured; LDP-IGP Synchronization enabled.
-            #   LDP configured; LDP-IGP Synchronization not enabled.
-            #   LDP configured;  SYNC enabled.
+            # LDP configured; LDP-IGP Synchronization not enabled.
+            # LDP configured;  SYNC enabled.
+            # LDP not configured; LDP-IGP Synchronization enabled.
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ldp_dict = interface_dict.setdefault('ldp', {})
-                if group['state']:
-                    ldp_dict.update({'igp_synchronization_enabled': False})
+
+                configured = group['configured']
+                state = group['state']
+                sync_enabled = group['sync_enabled']
+
+                ldp_dict.update({'configured': True if configured == 'configured' else False})
+
+                if state and state == 'enabled':
+                    ldp_dict.update({'igp_synchronization_enabled': True})
                 else:
-                    if not group['synchronization_enabled']:
-                        ldp_dict.update({'igp_synchronization_enabled': False})
-                    if group['synchronization_enabled']:
-                        ldp_dict.update({'igp_synchronization_enabled': True})
+                    ldp_dict.update({'igp_synchronization_enabled': False})
 
-                if group['enabled']:
-                    enabled_dict = interface_dict.setdefault('sync', {}).setdefault('status', {})
-                    enabled_dict.update({'enabled': True})
+                if sync_enabled:
+                    sync_status_dict = interface_dict.setdefault('sync', {}).setdefault('status', {})
+                    sync_status_dict.update({'enabled': True if sync_enabled == 'enabled' else False})
 
-                ldp_dict.update({'configured': True})
                 continue
 
             # Sync status: sync achieved; peer reachable.
@@ -1548,8 +1563,9 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 sync_dict = interface_dict.setdefault('sync', {})
                 sync_status_dict = sync_dict.setdefault('status', {})
                 sync_status = m.groupdict()['sync_status']
+                reachable = m.groupdict()['reachable']
                 sync_status_dict.update({'sync_achieved': True if sync_status == 'achieved' else False})
-                sync_status_dict.update({'peer_reachable': True})
+                sync_status_dict.update({'peer_reachable': True if reachable == 'reachable' else False})
                 continue
 
             # Sync delay time: 0 seconds (0 seconds left)
@@ -1585,12 +1601,12 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         return result_dict
 
 
-
 class ShowMplsForwardingTableSchema(MetaParser):
     """Schema for
         show mpls forwarding-table
-        show mpls forwarding-table detail
+        show mpls forwarding-table {prefix}
         show mpls forwarding-table vrf <vrf>
+        show mpls forwarding-table detail
         show mpls forwarding-table vrf <vrf> detail"""
 
     schema = {
@@ -1636,25 +1652,21 @@ class ShowMplsForwardingTableSchema(MetaParser):
 class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
     """Parser for
         show mpls forwarding-table
-        show mpls forwarding-table detail
-        show mpls forwarding-table vrf <vrf>
-        show mpls forwarding-table vrf <vrf> detail"""
+        show mpls forwarding-table {prefix}
+        show mpls forwarding-table vrf <vrf>"""
 
-    cli_command = ['show mpls forwarding-table','show mpls forwarding-table detail',
-                   'show mpls forwarding-table vrf {vrf}','show mpls forwarding-table vrf {vrf} detail']
+    cli_command = ['show mpls forwarding-table vrf {vrf}',
+                   'show mpls forwarding-table {prefix}',
+                   'show mpls forwarding-table']
 
-    def cli(self, vrf="",detail="", output=None):
+    def cli(self, vrf="", prefix="", output=None):
         if output is None:
             if vrf:
-                if detail:
-                    cmd = self.cli_command[3].format(vrf=vrf)
-                else:
-                    cmd = self.cli_command[2].format(vrf=vrf)
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif prefix:
+                cmd = self.cli_command[1].format(prefix=prefix)
             else:
-                if detail:
-                    cmd = self.cli_command[1]
-                else:
-                    cmd = self.cli_command[0]
+                cmd = self.cli_command[2]
 
             out = self.device.execute(cmd)
         else:
@@ -1670,17 +1682,18 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # Label      Label      or Tunnel Id     Switched      interface
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
-
+        #            No Label   10.23.120.0/24[V]   \
+        # None       No Label   10.0.0.16/30     0             Gi3        10.0.0.9
         #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^(?P<local_label>\d+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        p2_2 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
+        p2_2 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        p2_3 = re.compile(r'^((?P<local_label>\d+) +)?(\[(?P<t>(T)+)\] +)?'
+        p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
@@ -1709,7 +1722,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                local_label = int(group['local_label'])
+                if group['local_label']:
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
                 continue
@@ -1740,7 +1756,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             if m:
                 group = m.groupdict()
                 if group['local_label']:
-                    local_label = int(group['local_label'])
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
+                
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
@@ -1770,7 +1789,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p2_3.match(line)
             if m:
                 group = m.groupdict()
-                local_label = int(group['local_label'])
+                if group['local_label']:
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
+
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 
@@ -1848,6 +1871,28 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 continue
 
         return result_dict
+
+
+class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
+    """Parser for
+        show mpls forwarding-table detail
+        show mpls forwarding-table vrf <vrf> detail"""
+
+    cli_command = ['show mpls forwarding-table detail',
+                   'show mpls forwarding-table vrf {vrf} detail']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(vrf=vrf ,output=out)
+
 
 class ShowMplsInterfaceSchema(MetaParser):
     """Schema for

@@ -8,6 +8,7 @@ NX-OS parsers for the following show commands:
     * show virtual-service detail
     * show virtual-service detail name <name>
     * show guestshell
+    * show virtual-service utilization name <name>
 """
 
 # Python
@@ -638,3 +639,139 @@ class ShowGuestshell(ShowGuestshellSchema, ShowVirtualServiceDetail):
 
         services_dict = super().cli(output=output)
         return services_dict.get('service', {}).get('guestshell+', {})
+
+
+# =========================================================
+# Schema for "show virtual-service utilization name <name>"
+# =========================================================
+
+class ShowVirtualServiceUtilizationSchema(MetaParser):
+    """Schema for "show virtual-service utilization name <name>"."""
+
+    schema = {
+        'cpu': {
+            'requested_percent': int,
+            'actual_percent': int,
+            'state_abbrev': str,
+            'state': str,
+        },
+        'memory': {
+            'allocation_kb': int,
+            'used_kb': int,
+        },
+        'storage': {
+            Any(): {
+                'capacity_kb': int,
+                'used_kb': int,
+                'available_kb': int,
+                'used_percent': int,
+            },
+        },
+    }
+
+
+# =========================================================
+# Parser for "show virtual-service utilization name <name>"
+# =========================================================
+
+class ShowVirtualServiceUtilization(ShowVirtualServiceUtilizationSchema):
+    """Parser for "show virtual-service utilization name <name>"."""
+
+    cli_command = "show virtual-service utilization name {name}"
+
+    def cli(self, name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name)
+            output = self.device.execute(cmd)
+
+        util_dict = {}
+
+        # Virtual-Service Utilization:
+        #
+        # CPU Utilization:
+        #   Requested Application Utilization:  1 %
+        p1 = re.compile(
+            r'^Requested\s+Application\s+Utilization:\s+(?P<pct>\d+)\s*%$')
+        #   Actual Application Utilization:  0 % (30 second average)
+        p2 = re.compile(
+            r'^Actual\s+Application\s+Utilization:\s+(?P<pct>\d+)\s*%\s+'
+            r'\(30\s+second\s+average\)$')
+        #   CPU State: R : Running
+        p3 = re.compile(
+            r'^CPU\s+State:\s+(?P<abbrev>\S+)\s*:\s*(?P<state>\S+)$')
+        #
+        # Memory Utilization:
+        #   Memory Allocation: 262144 KB
+        p4 = re.compile(r'^Memory\s+Allocation:\s+(?P<kb>\d+)\s+KB$')
+        #   Memory Used:       13400 KB
+        p5 = re.compile(r'^Memory\s+Used:\s+(?P<kb>\d+)\s+KB$')
+        #
+        # Storage Utilization:
+        #   Name: _rootfs, Alias:
+        p6 = re.compile(r'^Name:\s+(?P<name>\S+), Alias:$')
+        #     Capacity(1K blocks):  243823      Used(1K blocks): 161690
+        p7 = re.compile(r'^Capacity\(1K\s+blocks\):\s+(?P<capacity>\d+)\s+'
+                        r'Used\(1K\s+blocks\):\s+(?P<used>\d+)$')
+        #     Available(1K blocks): 77537       Usage: 68 %
+        p8 = re.compile(r'^Available\(1K\s+blocks\):\s+(?P<available>\d+)\s+'
+                        r'Usage:\s+(?P<usage_pct>\d+)\s*%$')
+
+        storage_name = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #   Requested Application Utilization:  1 %
+            match = p1.match(line)
+            if match:
+                util_dict.setdefault('cpu', {})['requested_percent'] = int(match.groupdict()['pct'])
+                continue
+
+            #   Actual Application Utilization:  0 % (30 second average)
+            match = p2.match(line)
+            if match:
+                util_dict.setdefault('cpu', {})['actual_percent'] = int(match.groupdict()['pct'])
+                continue
+
+            #   CPU State: R : Running
+            match = p3.match(line)
+            if match:
+                util_dict.setdefault('cpu', {})['state_abbrev'] = match.groupdict()['abbrev']
+                util_dict['cpu']['state'] = match.groupdict()['state']
+                continue
+
+            #   Memory Allocation: 262144 KB
+            match = p4.match(line)
+            if match:
+                util_dict.setdefault('memory', {})['allocation_kb'] = int(match.groupdict()['kb'])
+                continue
+
+            #   Memory Used:       13400 KB
+            match = p5.match(line)
+            if match:
+                util_dict.setdefault('memory', {})['used_kb'] = int(match.groupdict()['kb'])
+                continue
+
+            #   Name: _rootfs, Alias:
+            match = p6.match(line)
+            if match:
+                storage_name = match.groupdict()['name']
+                util_dict.setdefault('storage', {})[storage_name] = {}
+                continue
+
+            if storage_name:
+                #     Capacity(1K blocks):  243823      Used(1K blocks): 161690
+                match = p7.match(line)
+                if match:
+                    util_dict['storage'][storage_name]['capacity_kb'] = int(match.groupdict()['capacity'])
+                    util_dict['storage'][storage_name]['used_kb'] = int(match.groupdict()['used'])
+                    continue
+
+                #     Available(1K blocks): 77537       Usage: 68 %
+                match = p8.match(line)
+                if match:
+                    util_dict['storage'][storage_name]['available_kb'] = int(match.groupdict()['available'])
+                    util_dict['storage'][storage_name]['used_percent'] = int(match.groupdict()['usage_pct'])
+                    continue
+
+        return util_dict

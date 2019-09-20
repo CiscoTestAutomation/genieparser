@@ -27,7 +27,8 @@ class ShowIssuStateDetailSchema(MetaParser):
     schema = {
         'slot':
             {Any():
-                {'issu_in_progress': bool,
+                {
+                Optional('issu_in_progress'): bool,
                 Optional('loadversion_time'): str,
                 Optional('context'): str,
                 Optional('last_operation'): str,
@@ -39,6 +40,12 @@ class ShowIssuStateDetailSchema(MetaParser):
                 Optional('operating_mode'): str,
                 Optional('terminal_state_reached'): bool,
                 Optional('runversion_executed'): bool,
+                Optional('boot_variable'): str,
+                Optional('primary_version'): str,
+                Optional('secondary_version'): str,
+                Optional('variable_store'): str,
+                Optional('issu_state'): str,
+                Optional('rp_state'): str,
                 },
             },
         }
@@ -102,6 +109,33 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
         # Notes: runversion executed, active RP is being provisioned
         p9 = re.compile(r'^Notes: +runversion +executed, +active +RP +is +being'
                          ' +provisioned$')
+
+        # Slot = 1
+        p10 = re.compile(r'Slot\s*=\s*(?P<slot>\d+)')
+
+        # RP State = Active
+        p11 = re.compile(r'RP\s+State\s*=\s*(?P<state>.+)')
+
+        # ISSU State = Init
+        p12 = re.compile(r'ISSU\s+State\s*=\s*(?P<issu_state>.+)')
+
+        # Boot Variable = bootdisk:,1;
+        p13 = re.compile(r'Boot\s+Variable\s*=\s*(?P<boot_variable>.+)')
+
+        # Operating Mode = sso
+        p14 = re.compile(r'Operating\s+Mode\s*=\s*(?P<operating_mode>.+)')
+
+        # Primary Version = N/A
+        p15 = re.compile(r'Primary\s+Version\s*=\s*(?P<primary_version>.+)')
+
+        # Secondary Version = N/A
+        p16 = re.compile(r'Secondary\s+Version\s*=\s*(?P<secondary_version>.+)')
+
+        # Current Version = bootdisk:s2t54-adventerprisek9-mz.SPA.151-1.SY.bin
+        p17 = re.compile(r'Current\s+Version\s*=\s*(?P<current_version>.+)')
+
+        # Variable Store = PrstVbl
+        p18 = re.compile(r'Variable\s+Store\s*=\s*(?P<variable_store>.+)')
 
         # Parse all lines
         for line in out.splitlines():
@@ -207,6 +241,79 @@ class ShowIssuStateDetail(ShowIssuStateDetailSchema):
                 slot_dict['runversion_executed'] = True
                 continue
 
+            # Slot = 1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                slot = 'R{}'.format(group['slot'])
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+                continue
+
+            # RP State = Active
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                state = group['state']
+                slot_dict['rp_state'] = state
+                continue
+
+            # ISSU State = Init
+            m = p12.match(line)
+            if m:                
+                group = m.groupdict()
+                issu_state = group['issu_state']
+                slot_dict['issu_state'] = issu_state
+                continue
+            # Boot Variable = bootdisk:,1;
+            m = p13.match(line)
+            if m:                
+                group = m.groupdict()
+                boot_variable = group['boot_variable']
+                slot_dict['boot_variable'] = boot_variable
+                continue
+
+            # Operating Mode = sso
+            m = p14.match(line)
+            if m:                
+                group = m.groupdict()
+                operating_mode = group['operating_mode']
+                slot_dict['operating_mode'] = operating_mode
+                continue
+
+            # Primary Version = N/A
+            m = p15.match(line)
+            if m:                
+                group = m.groupdict()
+                primary_version = group['primary_version']
+                slot_dict['primary_version'] = primary_version
+                continue
+
+            # Secondary Version = N/A
+            m = p16.match(line)
+            if m:                
+                
+                group = m.groupdict()
+                secondary_version = group['secondary_version']
+                slot_dict['secondary_version'] = secondary_version
+                continue
+
+            # Current Version = bootdisk:s2t54-adventerprisek9-mz.SPA.151-1.SY.bin
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                current_version = group['current_version']
+                slot_dict['running_image'] = current_version
+                continue
+            
+            # Variable Store = PrstVbl
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()                
+                variable_store = group['variable_store']
+                slot_dict['variable_store'] = variable_store
+                continue
+
+
         return ret_dict
 
 
@@ -219,7 +326,8 @@ class ShowIssuRollbackTimerSchema(MetaParser):
 
     schema = {
         'rollback_timer_state': str,
-        'rollback_timer_reason': str,
+        Optional('rollback_timer_reason'): str,
+        Optional('rollback_timer_time'): str,
         }
 
 # ======================================
@@ -247,6 +355,11 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
         # Rollback: inactive, timer canceled by acceptversion
         p1 = re.compile(r'^Rollback: +(?P<state>(\S+)), +(?P<reason>.*)$')
 
+        # Rollback Process State = Not in progress
+        p2 = re.compile(r'Rollback\s+Process\s+State\s*=\s*(?P<state>.+)')
+
+        # Configured Rollback Time = 00:45:00
+        p3 = re.compile(r'Configured\s+Rollback\s+Time\s*=\s*(?P<rollback_time>.+)')
 
         # Parse all lines
         for line in out.splitlines():
@@ -260,6 +373,20 @@ class ShowIssuRollbackTimer(ShowIssuRollbackTimerSchema):
                 group = m.groupdict()
                 ret_dict['rollback_timer_state'] = group['state']
                 ret_dict['rollback_timer_reason'] = group['reason']
+                continue
+
+            # Rollback Process State = Not in progress
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rollback_timer_state'] = group['state']
+                continue
+
+            # Configured Rollback Time = 00:45:00
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['rollback_timer_time'] = group['rollback_time']                
                 continue
 
         return ret_dict

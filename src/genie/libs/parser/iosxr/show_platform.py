@@ -461,15 +461,17 @@ class ShowPlatformVm(ShowPlatformVmSchema):
         show_platform_vm = {}
         
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # 0/RP0/CPU0      RP (ACTIVE)     NONE            FINAL Band      192.0.0.4
             # 0/0/CPU0        LC (ACTIVE)     NONE            FINAL Band      192.0.0.6
-            p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             ' +(?P<type>[a-zA-Z0-9\(\)\s]+)'
-                             ' +(?P<partner_name>[NONE]+)'
-                             ' +(?P<sw_status>[a-zA-Z\s]+)'
-                             ' +(?P<ip_address>[0-9\.]+)$')
+            # 0/RSP0/CPU0     RP(ACTIVE)     0/RSP1/CPU0     FINAL Band      192.0.0.4
+            # 0/RSP1/CPU0     RP(STANDBY)    0/RSP0/CPU0     FINAL Band      192.0.4.4
+
+            p1 = re.compile(r'^(?P<node>[\S\/]+) +(?P<type>[(RP|LC)\s*\((ACTIVE|STANDBY)\)]+)'
+                             ' +(?P<partner_name>[NONE|(?:\S)]+) +(?P<sw_status>[a-zA-Z\s]+)'
+                             ' +(?P<ip_address>[\S]+)$')
+
             m = p1.match(line)
             if m:
                 if 'node' not in show_platform_vm:
@@ -740,14 +742,14 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
         # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
         # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
-        p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]+)\",'
-                         ' +DESCR: +\"(?P<descr>[\S\s]+)\"$')
+        p1 = re.compile(r'^NAME: +\"(?P<module_name>[\S\s]*)\",'
+                         ' +DESCR: +\"(?P<descr>[\S\s]*)\"$')
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+),'
-                         ' +VID: +(?P<vid>[\S\s]+),'
-                         ' +SN: +(?P<sn>[\S\s]+)$')
+        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]*),'
+                         ' +VID: +(?P<vid>[\S\s]*),'
+                         ' +SN: +(?P<sn>[\S\s]*)$')
 
         for line in out.splitlines():
             line = line.strip()

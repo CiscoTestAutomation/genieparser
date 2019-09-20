@@ -432,8 +432,50 @@ class test_show_ip_vrf_detail(unittest.TestCase):
       No export route-map
       VRF label distribution protocol: LDP
       VRF label allocation mode: per-prefix
-    '''
+    '''}
+
+    golden_parsed_output3 = {
+        "Mgmt-intf": {
+            "vrf_id": 1,
+            "cli_format": "New",
+            "support_af": "multiple address-families",
+            "flags": "0x1808",
+            "interfaces": [
+                "GigabitEthernet0"
+            ],
+            "interface": {
+                "GigabitEthernet0": {
+                    "vrf": "Mgmt-intf"
+                }
+            },
+            "address_family": {
+                "none": {
+                    "table_id": "1",
+                    "flags": "0x0",
+                    "vrf_label": {
+                        "allocation_mode": "per-prefix"
+                    }
+                }
+            }
+        }
     }
+    golden_output3 = {'execute.return_value': '''
+        show ip vrf detail
+        VRF Mgmt-intf (VRF Id = 1); default RD <not set>; default VPNID <not set>
+        New CLI format, supports multiple address-families
+        Flags: 0x1808
+        Interfaces:
+            Gi0                     
+        VRF Table ID = 1
+        Flags: 0x0
+        No Export VPN route-target communities
+        No Import VPN route-target communities
+        No import route-map
+        No global export route-map
+        No export route-map
+        VRF label distribution protocol: not configured
+        VRF label allocation mode: per-prefix
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -473,6 +515,13 @@ class test_show_ip_vrf_detail(unittest.TestCase):
         obj = ShowIpVrfDetail(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpVrfDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 if __name__ == '__main__':

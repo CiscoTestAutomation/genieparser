@@ -22,13 +22,13 @@ class test_show_route_table(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-        #show route table inet.3 4.4.4.4
+        #show route table inet.3 10.64.4.4
      
         inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
          
-        4.4.4.4/32         *[LDP/9] 03:40:50, metric 110
-                            > to 200.0.0.6 via ge-0/0/1.0
+        10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
+                            > to 192.168.220.6 via ge-0/0/1.0
 
     '''}
 
@@ -40,7 +40,7 @@ class test_show_route_table(unittest.TestCase):
                 'hidden_route_count': 0,
                 'holddown_route_count': 0,
                 'routes': {
-                    '4.4.4.4/32': {
+                    '10.64.4.4/32': {
                         'active_tag': '*',
                         'age': '03:40:50',
                         'metric': '110',
@@ -48,7 +48,7 @@ class test_show_route_table(unittest.TestCase):
                             'next_hop_list': {
                                 1: {
                                     'best_route': '>',
-                                    'to': '200.0.0.6',
+                                    'to': '192.168.220.6',
                                     'via': 'ge-0/0/1.0'}}},
                         'preference': '9',
                         'protocol_name': 'LDP'}},
@@ -57,13 +57,13 @@ class test_show_route_table(unittest.TestCase):
 
 
     golden_output_2 = {'execute.return_value': '''
-        #show route table inet.3 202.239.165.220
+        #show route table inet.3 192.168.36.220
      
         inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
          
-        202.239.165.220/32 *[LDP/9] 03:41:19, metric 1111
-                            > to 200.0.0.6 via ge-0/0/1.0, Push 305550
+        192.168.36.220/32 *[LDP/9] 03:41:19, metric 1111
+                            > to 192.168.220.6 via ge-0/0/1.0, Push 305550
 
     '''}
 
@@ -75,7 +75,7 @@ class test_show_route_table(unittest.TestCase):
                 'hidden_route_count': 0,
                 'holddown_route_count': 0,
                 'routes': {
-                    '202.239.165.220/32': {
+                    '192.168.36.220/32': {
                         'active_tag': '*',
                         'age': '03:41:19',
                         'metric': '1111',
@@ -84,7 +84,7 @@ class test_show_route_table(unittest.TestCase):
                                 1: {
                                     'best_route': '>',
                                     'mpls_label': 'Push 305550',
-                                    'to': '200.0.0.6',
+                                    'to': '192.168.220.6',
                                     'via': 'ge-0/0/1.0'}}},
                         'preference': '9',
                         'protocol_name': 'LDP'}},
@@ -97,12 +97,12 @@ class test_show_route_table(unittest.TestCase):
         inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
 
-        4.4.4.4/32         *[LDP/9] 02:30:55, metric 110
-                            > to 200.0.0.6 via ge-0/0/1.0
-        106.162.197.254/32 *[LDP/9] 02:14:05, metric 1001
-                            > to 7.0.0.1 via ge-0/0/2.0
-        202.239.165.220/32 *[LDP/9] 02:03:22, metric 1111
-                            > to 200.0.0.6 via ge-0/0/1.0, Push 307742
+        10.64.4.4/32         *[LDP/9] 02:30:55, metric 110
+                            > to 192.168.220.6 via ge-0/0/1.0
+        10.169.197.254/32 *[LDP/9] 02:14:05, metric 1001
+                            > to 10.49.0.1 via ge-0/0/2.0
+        192.168.36.220/32 *[LDP/9] 02:03:22, metric 1111
+                            > to 192.168.220.6 via ge-0/0/1.0, Push 307742
     '''}
 
     parsed_output_3 = {        
@@ -113,7 +113,7 @@ class test_show_route_table(unittest.TestCase):
                 'hidden_route_count': 0,
                 'holddown_route_count': 0,
                 'routes': {
-                    '106.162.197.254/32': {
+                    '10.169.197.254/32': {
                         'active_tag': '*',
                         'age': '02:14:05',
                         'metric': '1001',
@@ -121,11 +121,11 @@ class test_show_route_table(unittest.TestCase):
                             'next_hop_list': {
                                 1: {
                                     'best_route': '>',
-                                    'to': '7.0.0.1',
+                                    'to': '10.49.0.1',
                                     'via': 'ge-0/0/2.0'}}},
                         'preference': '9',
                         'protocol_name': 'LDP'},
-                    '202.239.165.220/32': {
+                    '192.168.36.220/32': {
                         'active_tag': '*',
                         'age': '02:03:22',
                         'metric': '1111',
@@ -134,11 +134,11 @@ class test_show_route_table(unittest.TestCase):
                                 1: {
                                     'best_route': '>',
                                     'mpls_label': 'Push 307742',
-                                    'to': '200.0.0.6',
+                                    'to': '192.168.220.6',
                                     'via': 'ge-0/0/1.0'}}},
                         'preference': '9',
                         'protocol_name': 'LDP'},
-                    '4.4.4.4/32': {
+                    '10.64.4.4/32': {
                         'active_tag': '*',
                         'age': '02:30:55',
                         'metric': '110',
@@ -146,7 +146,7 @@ class test_show_route_table(unittest.TestCase):
                             'next_hop_list': {
                                 1: {
                                     'best_route': '>',
-                                    'to': '200.0.0.6',
+                                    'to': '192.168.220.6',
                                     'via': 'ge-0/0/1.0'}}},
                         'preference': '9',
                         'protocol_name': 'LDP'}},
@@ -200,14 +200,14 @@ class test_show_route_table(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowRouteTable(device=self.device)
-        parsed_output = obj.parse(table='inet.3', prefix='4.4.4.4')
+        parsed_output = obj.parse(table='inet.3', prefix='10.64.4.4')
         self.assertEqual(parsed_output, self.parsed_output_1)
 
     def test_show_route_table_2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowRouteTable(device=self.device)
-        parsed_output = obj.parse(table='inet.3', prefix='202.239.165.220')
+        parsed_output = obj.parse(table='inet.3', prefix='192.168.36.220')
         self.assertEqual(parsed_output, self.parsed_output_2)
 
     def test_show_route_table_3(self):

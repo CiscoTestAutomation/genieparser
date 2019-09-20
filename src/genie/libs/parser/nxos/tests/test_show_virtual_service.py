@@ -15,6 +15,7 @@ from genie.libs.parser.nxos.show_virtual_service import (
     ShowVirtualServiceCore,
     ShowVirtualServiceDetail,
     ShowGuestshell,
+    ShowVirtualServiceUtilization,
 )
 
 
@@ -192,9 +193,9 @@ class test_show_virtual_service_core(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-        obj = ShowVirtualServiceCore(device=self.device, name='guestshell+')
+        obj = ShowVirtualServiceCore(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(name="guestshell+")
 
     def test_show_virtual_service_core(self):
         self.maxDiff = None
@@ -203,8 +204,8 @@ class test_show_virtual_service_core(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-        obj = ShowVirtualServiceCore(device=self.device, name='guestshell+')
-        parsed_output = obj.parse()
+        obj = ShowVirtualServiceCore(device=self.device)
+        parsed_output = obj.parse(name="guestshell+")
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
@@ -590,6 +591,79 @@ class test_show_guestshell(unittest.TestCase):
         self.device = Mock(**self.golden_output_1)
         obj = ShowGuestshell(device=self.device)
         parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+# ============================================================
+# Unit test for "show virtual-service utilization name <name>"
+# ============================================================
+class test_show_virtual_service_utilization(unittest.TestCase):
+    """Unit test for "show virtual-service utilization name <name>"."""
+
+    empty_output = {'execute.return_value': """
+    """}
+
+    golden_output_1 = {'execute.return_value': """
+	Virtual-Service Utilization:
+
+	CPU Utilization:
+	  Requested Application Utilization:  1 %
+	  Actual Application Utilization:  0 % (30 second average)
+	  CPU State: R : Running
+
+	Memory Utilization:
+	  Memory Allocation: 262144 KB
+	  Memory Used:       13400 KB
+
+	Storage Utilization:
+	  Name: _rootfs, Alias:
+	    Capacity(1K blocks):  243823      Used(1K blocks): 161690
+	    Available(1K blocks): 77537       Usage: 68 %
+
+	  Name: /cisco/core, Alias:
+	    Capacity(1K blocks):  2097152     Used(1K blocks): 62216
+	    Available(1K blocks): 2034936     Usage: 3  %
+    """}
+
+    golden_parsed_output_1 = {
+        'cpu': {
+            'requested_percent': 1,
+            'actual_percent': 0,
+            'state_abbrev': "R",
+            'state': "Running",
+        },
+        'memory': {
+            'allocation_kb': 262144,
+            'used_kb': 13400,
+        },
+        'storage': {
+            "_rootfs": {
+                'capacity_kb': 243823,
+                'used_kb': 161690,
+                'available_kb': 77537,
+                'used_percent': 68,
+            },
+            "/cisco/core": {
+                'capacity_kb': 2097152,
+                'used_kb': 62216,
+                'available_kb': 2034936,
+                'used_percent': 3,
+            },
+        },
+    }
+
+    def test_show_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowVirtualServiceUtilization(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(name="guestshell+")
+
+    def test_show_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowVirtualServiceUtilization(device=self.device)
+        parsed_output = obj.parse(name="guestshell+")
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 

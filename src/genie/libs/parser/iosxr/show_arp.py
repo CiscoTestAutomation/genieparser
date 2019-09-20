@@ -135,7 +135,7 @@ class ShowArpTrafficDetailSchema(MetaParser):
                  'alias': int,
                  'static': int,
                  'dhcp': int,
-                 'dhcp': int,
+                 Optional('drop_adj'): int,
                  'ip_packet_drop_count': int,
                  'total_arp_idb': int,
                 }
@@ -205,9 +205,11 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
             ' +Standby: +(?P<standby>\w+)$')
 
         # Alias: 0,   Static: 0,    DHCP: 0
+        # Alias: 0,   Static: 0,    DHCP: 0,    DropAdj: 0
         p12 = re.compile(r'^Alias: +(?P<alias>\w+),'
             ' +Static: +(?P<static>\w+),'
-            ' +DHCP: +(?P<dhcp>\w+)$')
+            ' +DHCP: +(?P<dhcp>\w+)'
+            '(, +DropAdj: +(?P<drop_adj>\d+))?$')
 
         # IP Packet drop count for node 0/0/CPU0: 0
         p13 = re.compile(r'^IP +Packet +drop +count +for +node'
@@ -303,7 +305,7 @@ class ShowArpTrafficDetail(ShowArpTrafficDetailSchema):
             if m:
                 groups = m.groupdict()
                 final_dict.update({k: \
-                    int(v) for k, v in groups.items()})
+                    int(v) for k, v in groups.items() if v is not None})
                 continue
 
             m = p13.match(line)

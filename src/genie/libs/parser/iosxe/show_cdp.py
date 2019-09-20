@@ -52,14 +52,15 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             out = output
 
         # Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
-        #                   S - Switch, H - Host, I - IGMP, r - Repeater
+        #                   S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
+        #                   D - Remote, C - CVTA, M - Two-port Mac Relay
 
         # Specifically for situations when Platform and Port Id are concatenated        
         # RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
         # C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
         p1 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
                          '(?P<platform>\S+)'
                          '(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
 
@@ -67,17 +68,21 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+)'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+)'
                          '(?: +(?P<platform>[\w\-]+) )? +'
                          '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W-W Gi 0
         p3 = re.compile(r'^(?P<device_id>\S+) +'
                          '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIr\s]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
                          '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
-        
+        # p4 and p5 for two-line output, where device id is on a separate line
+        p4 = re.compile(r'^(?P<device_id>\S+)$')
+        p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
+                        r'(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9/\s]+)$')
 
         device_id_index = 0
         parsed_dict = {}
@@ -112,6 +117,39 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
 
                 device_dict['port_id'] = Common.convert_intf_name\
                     (intf=group['port_id'].strip())
+                continue
+
+            result = p4.match(line)
+            if result:
+                group = result.groupdict()
+                if 'Eth' not in group['device_id']:
+                    device_id_index += 1
+                    device_dict = parsed_dict.setdefault('cdp', {}) \
+                        .setdefault('index', {}).setdefault(device_id_index, {})
+                    device_dict['device_id'] = group['device_id'].strip()
+                else:
+                    device_dict['port_id'] = Common \
+                        .convert_intf_name(intf=group['device_id'].strip())
+                continue
+
+            result = p5.match(line)
+            if result:
+                group = result.groupdict()
+                device_dict = parsed_dict.setdefault('cdp', {}) \
+                    .setdefault('index', {}).setdefault(device_id_index, {})
+                device_dict['local_interface'] = Common \
+                    .convert_intf_name(intf=group['local_interface'].strip())
+                device_dict['hold_time'] = int(group['hold_time'])
+                device_dict['capability'] = group['capability'].strip()
+                if group['platform']:
+                    device_dict['platform'] = group['platform'].strip()
+                elif not group['platform']:
+                    device_dict['platform'] = ''
+
+                device_dict['port_id'] = Common \
+                    .convert_intf_name(intf=group['port_id'].strip())
+                continue
+
         if device_id_index:
             parsed_dict.setdefault('cdp', {}).\
                 setdefault('index', devices_dict_info)
@@ -169,15 +207,19 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
         # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
+        # Platform: cisco WS_C6506_E,  Capabilities: Router Switch-6506 IGMP
+        # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_)]+)'
-                                   '\,\s*Capabilities:\s+'
-                                   '(?P<capabilities>[\w+\s\-]+)$')
+                                   '\,\s*Capabilities:\s+(?P<capabilities>[\w\s\-]+)$')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
+        # Interface: Ethernet0/1,  Port ID (outgoing port): Ethernet0/1
+        # Interface: GigabitEthernet0/0,  Port ID (outgoing port): GigabitEthernet0/0
+        # Interface: GigabitEthernet0/0/2,  Port ID (outgoing port): GigabitEthernet0/0/3
         interface_port_re = re.compile(r'Interface:\s*'
                                       '(?P<interface>[\w\s\-\/\/]+)\s*\,'
                                       '*\s*Port\s*ID\s*[\(\w\)\s]+:\s*'
-                                      '(?P<port_id>\w+)')
+                                      '(?P<port_id>\S+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'

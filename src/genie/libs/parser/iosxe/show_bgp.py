@@ -2267,7 +2267,7 @@ class ShowBgpAllSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
 
         # Call super
         return super().cli(output=show_output, address_family=address_family, 
-                          vrf=vrf, cmd=cmd)
+                          vrf=vrf)
 
 # =====================================================
 # Parser for:
@@ -2305,7 +2305,7 @@ class ShowIpBgpSummary(ShowBgpSummarySuperParser, ShowBgpSummarySchema):
                                                  vrf=vrf)
             elif address_family:
                 cmd = self.cli_command[2].format(address_family=address_family)
-            else:
+            else:   
                 cmd = self.cli_command[3]
             # Execute command
             show_output = self.device.execute(cmd)
