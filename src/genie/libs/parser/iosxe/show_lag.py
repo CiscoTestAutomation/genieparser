@@ -893,7 +893,7 @@ class ShowEtherChannelLoadBalancingSchema(MetaParser):
     schema = {
         'global_lb_method': str,
         Optional('lb_algo_type'): str,
-        'port_channel': {
+        Optional('port_channel'): {
             Any(): {
                 'lb_method': str,
             },

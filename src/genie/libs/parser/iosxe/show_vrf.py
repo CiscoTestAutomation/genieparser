@@ -207,6 +207,9 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         p4 = re.compile(r'^Address +family +(?P<af>[\w\s]+) +'
                         r'\(Table +ID +\= +(?P<table_id>\w+)( *[\w\(\)]+)?\):$')
 
+        # VRF Table ID = 2
+        p5 = re.compile(r'^VRF +Table +ID += +(?P<table_id>\d+)$')
+
         # No Export VPN route-target communities
         # Export VPN route-target communities
         p6 = re.compile(r'^Export VPN route-target communities$')
@@ -279,7 +282,6 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 continue
 
             # New CLI format, supports multiple address-families
-
             m = p1_1.match(line)
             if m:
                 groups = m.groupdict()
@@ -326,6 +328,20 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 intf_conf = False
                 af = groups['af'].lower()
+                af_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})
+                af_dict.update({'table_id': groups['table_id']})
+                af_flag = True
+                continue
+
+            # VRF Table ID = 2
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                intf_conf = False
+                try:
+                    af
+                except Exception:
+                    af = 'none'
                 af_dict = vrf_dict.setdefault('address_family', {}).setdefault(af, {})
                 af_dict.update({'table_id': groups['table_id']})
                 af_flag = True
