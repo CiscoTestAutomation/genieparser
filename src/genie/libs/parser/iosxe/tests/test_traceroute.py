@@ -275,6 +275,77 @@ class test_traceroute(unittest.TestCase):
         10.1.1.6 120 msec
         10.1.2.6 132 msec
     '''
+
+    golden_parsed_output5 = {
+        'traceroute': {
+            '192.168.1.1': {
+                'address': '192.168.1.1',
+                'hops': {
+                    '1': {
+                        'paths': {
+                            1: {
+                                'address': '27.86.198.29',
+                                'probe_msec': ['2', '2', '2'],
+                                'label_info': {
+                                    'MPLS': {
+                                        'label': '16052/16062/16063/39',
+                                        'exp': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '2': {
+                        'paths': {
+                            1: {
+                                'address': '106.187.14.129',
+                                'probe_msec': ['3', '1', '1'],
+                                'label_info': {
+                                    'MPLS': {
+                                        'label': '16062/16063/39',
+                                        'exp': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '3': {
+                        'paths': {
+                            1: {
+                                'address': '106.187.14.34',
+                                'probe_msec': ['3', '1', '2'],
+                                'label_info': {
+                                    'MPLS': {
+                                        'label': '16063/39',
+                                        'exp': 0,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '4': {
+                        'paths': {
+                            1: {
+                                'address': '192.168.1.1',
+                                'probe_msec': ['2', '*', '2'],
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output5 = '''
+    traceroute vrf MG501 192.168.1.1 numeric    
+    Type escape sequence to abort.
+    Tracing the route to 192.168.1.1
+    VRF info: (vrf in name/id, vrf out name/id)
+      1 27.86.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+      2 106.187.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
+      3 106.187.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
+      4 192.168.1.1 2 msec *  2 msec
+    '''
+
     def test_traceroute_empty(self):
         obj = Traceroute(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
@@ -303,6 +374,12 @@ class test_traceroute(unittest.TestCase):
         obj = Traceroute(device=self.device)
         parsed_output = obj.parse(output=self.golden_output4)
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_traceroute_golden5(self):
+        self.maxDiff = None
+        obj = Traceroute(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output5)
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 if __name__ == '__main__':
     unittest.main()
