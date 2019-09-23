@@ -4,6 +4,7 @@
 
     * show ipv6 neighbors
     * show ipv6 neighbors vrf <vrf>
+    * show ipv6 neighbors <interface>
     * show ipv6 neighbors detail
     * show ipv6 neighbors vrf <vrf> detail
     * show ipv6 interface (from show_interface.py)
@@ -54,6 +55,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
     """
        Parser for 'show ipv6 neighbors'
                   'show ipv6 neighbors vrf <vrf>'
+                  'show ipv6 neighbors <interface>'
     """
 
     cli_command = ['show ipv6 neighbors vrf {vrf}',

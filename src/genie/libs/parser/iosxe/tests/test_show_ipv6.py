@@ -15,6 +15,7 @@ from genie.libs.parser.iosxe.show_ipv6 import ShowIpv6Neighbors,\
 # Unittest For:
 #          'show ipv6 neighbors'
 #          'show ipv6 neighbors vrf {vrf}'
+#          'show ipv6 neighbors {interface}'
 #          'show ipv6 neighbors detail'
 #          'show ipv6 neighbors vrf {vrf} detail'
 #############################################################################
