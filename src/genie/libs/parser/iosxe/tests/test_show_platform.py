@@ -3137,6 +3137,7 @@ class test_show_switch_detail(unittest.TestCase):
     }
 
     golden_output_c3850 = {'execute.return_value': '''\
+        show switch detail
         Switch/Stack Mac Address : 689c.e2d9.df00 - Local Mac Address
         Mac persistency wait time: Indefinite
                                                      H/W   Current
@@ -3157,6 +3158,46 @@ class test_show_switch_detail(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output1 = {
+        "switch": {
+            "mac_address": "00d6.fe70.3c80",
+            "mac_persistency_wait_time": "indefinite",
+            "stack": {
+                "1": {
+                    "role": "active",
+                    "state": "ready",
+                    "mac_address": "00d6.fe70.3c80",
+                    "priority": "1",
+                    "hw_ver": "V02",
+                    "ports": {
+                        "1": {
+                            "stack_port_status": "down",
+                            "neighbors_num": "None"
+                        },
+                        "2": {
+                            "stack_port_status": "down",
+                            "neighbors_num": "None"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    golden_output1 = {'execute.return_value': '''\
+        show switch detail
+        Switch/Stack Mac Address : 00d6.fe70.3c80 - Local Mac Address
+        Mac persistency wait time: Indefinite
+                                                    H/W   Current
+        Switch#   Role    Mac Address     Priority Version  State
+        ------------------------------------------------------------
+        *1       Active   00d6.fe70.3c80     1      V02     Ready
+
+                Stack Port Status             Neighbors
+        Switch#  Port 1     Port 2           Port 1   Port 2
+        --------------------------------------------------------
+        1       DOWN       DOWN             None     None
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         platform_obj = ShowSwitchDetail(device=self.dev1)
@@ -3169,6 +3210,13 @@ class test_show_switch_detail(unittest.TestCase):
         platform_obj = ShowSwitchDetail(device=self.dev_c3850)
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_c3850)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output1)
+        platform_obj = ShowSwitchDetail(device=self.dev_c3850)
+        parsed_output = platform_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 class test_show_switch(unittest.TestCase):
     dev1 = Device(name='empty')
