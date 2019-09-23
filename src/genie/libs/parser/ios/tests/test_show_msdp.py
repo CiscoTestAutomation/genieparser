@@ -25,12 +25,12 @@ class test_show_msdp_peer(unittest.TestCase):
         "vrf": {
             "default": {
                 "peer": {
-                    "2.2.2.2": {
+                    "10.16.2.2": {
                         "peer_as": 65000,
                         "session_state": "Up",
                         "resets": "0",
                         "connect_source": "Loopback0",
-                        "connect_source_address": "1.1.1.1",
+                        "connect_source_address": "10.4.1.1",
                         "elapsed_time": "00:13:18",
                         "statistics": {
                             "sent": {
@@ -66,12 +66,12 @@ class test_show_msdp_peer(unittest.TestCase):
                         "sa_learned_from": 0,
                         "signature_protection": False,
                     },
-                    "3.3.3.3": {
+                    "10.36.3.3": {
                         "peer_as": 65000,
                         "session_state": "Up",
                         "resets": "0",
                         "connect_source": "Loopback0",
-                        "connect_source_address": "1.1.1.1",
+                        "connect_source_address": "10.4.1.1",
                         "elapsed_time": "00:16:57",
                         "statistics": {
                             "sent": {
@@ -114,9 +114,9 @@ class test_show_msdp_peer(unittest.TestCase):
 
     device_output_1 = {"execute.return_value": """
     show ip msdp peer
-    MSDP Peer 2.2.2.2 (?), AS 65000
+    MSDP Peer 10.16.2.2 (?), AS 65000
       Connection status:
-        State: Up, Resets: 0, Connection source: Loopback0 (1.1.1.1)
+        State: Up, Resets: 0, Connection source: Loopback0 (10.4.1.1)
         Uptime(Downtime): 00:13:18, Messages sent/received: 15/28
         Output messages discarded: 0
         Connection and counters cleared 00:22:05 ago
@@ -138,9 +138,9 @@ class test_show_msdp_peer(unittest.TestCase):
         SA Requests in: 0
         SA Responses out: 0
         Data Packets in/out: 0/0
-    MSDP Peer 3.3.3.3 (?), AS 65000
+    MSDP Peer 10.36.3.3 (?), AS 65000
       Connection status:
-        State: Up, Resets: 0, Connection source: Loopback0 (1.1.1.1)
+        State: Up, Resets: 0, Connection source: Loopback0 (10.4.1.1)
         Uptime(Downtime): 00:16:57, Messages sent/received: 20/19
         Output messages discarded: 0
         Connection and counters cleared 00:22:14 ago
@@ -169,12 +169,12 @@ class test_show_msdp_peer(unittest.TestCase):
         "vrf": {
             "VRF1": {
                 "peer": {
-                    "2.2.2.2": {
+                    "10.16.2.2": {
                         "peer_as": 65000,
                         "session_state": "Up",
                         "resets": "0",
                         "connect_source": "Loopback300",
-                        "connect_source_address": "1.1.1.1",
+                        "connect_source_address": "10.4.1.1",
                         "elapsed_time": "00:19:00",
                         "statistics": {
                             "sent": {
@@ -210,12 +210,12 @@ class test_show_msdp_peer(unittest.TestCase):
                         "sa_learned_from": 0,
                         "signature_protection": False,
                     },
-                    "3.3.3.3": {
+                    "10.36.3.3": {
                         "peer_as": 65000,
                         "session_state": "Down",
                         "resets": "31",
                         "connect_source": "Loopback300",
-                        "connect_source_address": "1.1.1.1",
+                        "connect_source_address": "10.4.1.1",
                         "elapsed_time": "00:00:23",
                         "statistics": {
                             "sent": {
@@ -258,9 +258,9 @@ class test_show_msdp_peer(unittest.TestCase):
 
     device_output_2 = {"execute.return_value": """
     Router# show ip msdp vrf VRF1 peer
-    MSDP Peer 2.2.2.2 (?), AS 65000
+    MSDP Peer 10.16.2.2 (?), AS 65000
       Connection status:
-        State: Up, Resets: 0, Connection source: Loopback300 (1.1.1.1)
+        State: Up, Resets: 0, Connection source: Loopback300 (10.4.1.1)
         Uptime(Downtime): 00:19:00, Messages sent/received: 22/40
         Output messages discarded: 0
         Connection and counters cleared 00:27:47 ago
@@ -282,9 +282,9 @@ class test_show_msdp_peer(unittest.TestCase):
         SA Requests in: 0
         SA Responses out: 0
         Data Packets in/out: 0/0
-    MSDP Peer 3.3.3.3 (?), AS 65000
+    MSDP Peer 10.36.3.3 (?), AS 65000
       Connection status:
-        State: Down, Resets: 31, Connection source: Loopback300 (1.1.1.1)
+        State: Down, Resets: 31, Connection source: Loopback300 (10.4.1.1)
         Uptime(Downtime): 00:00:23, Messages sent/received: 0/0
         Output messages discarded: 0
         Connection and counters cleared 00:27:56 ago
