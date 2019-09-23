@@ -87,26 +87,26 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
     golden_parsed_output2 = {
         "instance": {
             "88": {
-                "router_id": "111.112.113.144",
+                "router_id": "10.4.113.144",
                 "areas": {
                     "0.0.0.8": {
                         "router_id": {
-                            "2.2.2.2": {
+                            "10.16.2.2": {
                                 "sr_capable": "No"
                             },
-                            "3.3.3.3": {
+                            "10.36.3.3": {
                                 "sr_capable": "No"
                             },
-                            "4.4.4.4": {
+                            "10.64.4.4": {
                                 "sr_capable": "No"
                             },
-                            "111.112.113.142": {
+                            "10.4.113.142": {
                                 "sr_capable": "No"
                             },
-                            "111.112.113.144": {
+                            "10.4.113.144": {
                                 "sr_capable": "No"
                             },
-                            "111.112.113.99": {
+                            "10.4.113.99": {
                                 "sr_capable": "No"
                             }
                         }
@@ -118,18 +118,18 @@ class test_show_ip_ospf_segment_routing_local_block(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         show ip ospf segment-routing local-block
       
-                OSPF Router with ID (111.112.113.144) (Process ID 88)
+                OSPF Router with ID (10.4.113.144) (Process ID 88)
 
                 OSPF Segment Routing Local Blocks in Area 8
 
         Router ID        SR Capable   SRLB Base   SRLB Range
         --------------------------------------------------------
-        2.2.2.2          No
-        3.3.3.3          No
-        4.4.4.4          No
-        111.112.113.142  No
-       *111.112.113.144  No
-        111.112.113.99   No
+        10.16.2.2          No
+        10.36.3.3          No
+        10.64.4.4          No
+        10.4.113.142  No
+       *10.4.113.144  No
+        10.4.113.99   No
     '''}
 
     def test_show_ip_ospf_segment_routing_local_block_empty(self):
@@ -9974,7 +9974,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                     'ipv4': {
                         'instance': {
                             '888': {
-                                'router_id': '202.239.165.220',
+                                'router_id': '192.168.36.220',
                                 'ospf_queue_statistics': {
                                     'limit': {
                                         'inputq': 0,
@@ -10349,7 +10349,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         show ip ospf traffic
         Load for five secs: 6%/1%; one minute: 20%; five minutes: 14%
-        Time source is NTP, 01:06:03.667 JST Thu Jan 2 2020
+        Time source is NTP, 01:06:03.667 EST Thu Jan 2 2020
 
 
         OSPF statistics:
@@ -10361,7 +10361,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
             932534 hello, 1251 database desc, 170 link state req
             74590 link state updates, 63700 link state acks
 
-                    OSPF Router with ID (202.239.165.220) (Process ID 888)
+                    OSPF Router with ID (192.168.36.220) (Process ID 888)
 
         OSPF queue statistics for process ID 888:
 
@@ -10591,7 +10591,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
                                 },
                             },
                             '888': {
-                                'router_id': '11.12.13.14',
+                                'router_id': '10.19.13.14',
                                 'ospf_queue_statistics': {
                                     'limit': {
                                         'inputq': 0,
@@ -11129,7 +11129,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
 
 
 
-                    OSPF Router with ID (11.12.13.14) (Process ID 888)
+                    OSPF Router with ID (10.19.13.14) (Process ID 888)
 
         OSPF queue statistics for process ID 888:
 
@@ -11230,7 +11230,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
 
         Neighbor Statistics for interface GigabitEthernet0/1/7
 
-        Neighbor 111.87.5.253 traffic statistics
+        Neighbor 10.189.5.253 traffic statistics
 
         Last clearing of neighbor traffic counters never
 
@@ -11304,7 +11304,7 @@ class test_show_ip_ospf_traffic(unittest.TestCase):
 
         Neighbor Statistics for interface GigabitEthernet0/1/6
 
-        Neighbor 111.87.5.252 traffic statistics
+        Neighbor 10.189.5.252 traffic statistics
 
         Last clearing of neighbor traffic counters never
 

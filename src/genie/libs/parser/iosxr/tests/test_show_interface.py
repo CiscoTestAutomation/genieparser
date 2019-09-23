@@ -1688,7 +1688,7 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         +++ XR1: executing command 'show ipv6 vrf all interface' +++d.parse()
         show ipv6 vrf all interface
 
-        Fri Sep  6 09:50:49.892 JST
+        Fri Sep  6 09:50:49.892 EST
         BVI100 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
         IPv6 is disabled, link-local address unassigned
         No global unicast address is configured
