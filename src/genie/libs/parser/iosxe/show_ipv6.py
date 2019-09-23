@@ -57,13 +57,16 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
     """
 
     cli_command = ['show ipv6 neighbors vrf {vrf}',
-                   'show ipv6 neighbors']
+                   'show ipv6 neighbors',
+                   'show ipv6 neighbors {neighbor}',]
     exclude = ['age' , 'neighbor_state']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', neighbor='', output=None):
         if output is None:
             if vrf:
-               cmd = self.cli_command[0].format(vrf=vrf)
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif neighbor:
+                cmd = self.cli_command[2].format(neighbor=neighbor)
             else:
                 cmd = self.cli_command[1]
             out = self.device.execute(cmd)
