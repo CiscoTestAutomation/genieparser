@@ -819,15 +819,20 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         show ip ospf mpls ldp interface
         show ip ospf mpls ldp interface vrf <vrf>"""
 
-    cli_command = ['show ip ospf mpls ldp interface vrf {vrf}', 'show ip ospf mpls ldp interface']
+    cli_command = ['show ip ospf mpls ldp interface vrf {vrf}',
+                   'show ip ospf mpls ldp interface',
+                   'show ip ospf mpls ldp interface {interface}']
     exclude = [
         'state']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='', output=None):
         if vrf:
             cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = self.cli_command[1]
+            if interface:
+                cmd = self.cli_command[2].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
 
         if output is None:
             out = self.device.execute(cmd)
@@ -1794,7 +1799,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         show ip ospf interface
         show ip ospf interface vrf <vrf>"""
 
-    cli_command = ['show ip ospf interface vrf {vrf}', 'show ip ospf interface']
+    cli_command = ['show ip ospf interface vrf {vrf}',
+                   'show ip ospf interface',
+                   'show ip ospf interface {interface}']
     exclude = [
         'hello_timer',
         'bdr_ip_addr',
@@ -1804,11 +1811,14 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         'state',
         'index']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='', output=None):
         if vrf:
             cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = self.cli_command[1]
+            if interface:
+                cmd = self.cli_command[2].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
 
         if output is None:
             out = self.device.execute(cmd)
@@ -2326,7 +2336,10 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         show ip ospf neighbors detail
         show ip ospf neighbors detail vrf <vrf>"""
 
-    cli_command = ['show ip ospf neighbors detail vrf {vrf}', 'show ip ospf neighbors detail']
+    cli_command = ['show ip ospf neighbors detail vrf {vrf}',
+                   'show ip ospf neighbors {neighbor} detail vrf {vrf}',
+                   'show ip ospf neighbors {neighbor} detail',
+                   'show ip ospf neighbors detail']
     exclude = [
         'dead_timer',
         'last_non_hello_packet_received',
@@ -2335,11 +2348,17 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         'dr_ip_addr',
         'nbr_event_count']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', neighbor='', output=None):
         if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
+            if neighbor:
+                cmd = self.cli_command[1].format(vrf=vrf, neighbor=neighbor)
+            else:
+                cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            cmd = self.cli_command[1]
+            if neighbor:
+                cmd = self.cli_command[2].format(neighbor=neighbor)
+            else:
+                cmd = self.cli_command[3]
 
         if output is None:
             out = self.device.execute(cmd)
