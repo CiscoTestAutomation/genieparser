@@ -23,7 +23,7 @@ class ShowVpcSchema(MetaParser):
     """Schema for "show vpc"""
 
     schema = {
-        'vpc_domain_id': int,
+        'vpc_domain_id': str,
         'vpc_peer_status': str,
         'vpc_peer_keepalive_status': str,
         'vpc_configuration_consistency_status': str,
@@ -77,7 +77,8 @@ class ShowVpc(ShowVpcSchema):
         up_vlan_bitset = peer_up_vlan_bitset = ''
 
         # vPC domain id                     : 1
-        p1 = re.compile(r'^vPC +domain +id\s*: +(?P<domain_id>\d+)$')
+        # vPC domain id                     : Not configured
+        p1 = re.compile(r'^vPC +domain +id\s*: +(?P<domain_id>[\w\s]+)$')
 
         # Peer status                       : peer adjacency formed ok 
         p2 = re.compile(r'^Peer +status\s*: +(?P<peer_status>[\S\s]+)$')
@@ -164,7 +165,7 @@ class ShowVpc(ShowVpcSchema):
             match = p1.match(line)
             if match:
                 group = match.groupdict()
-                ret_dict.update({'vpc_domain_id': int(group['domain_id'])})
+                ret_dict.update({'vpc_domain_id': group['domain_id']})
                 continue
 
             # Peer status                       : peer adjacency formed ok 

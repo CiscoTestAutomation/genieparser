@@ -440,7 +440,34 @@ class testShowSpanningTreeSummary(unittest.TestCase):
             'stp_actives': 280
         }
     }
-    
+
+    golden_output_2 = {'execute.return_value': '''
+    show spann sum
+    Switch is in rapid-pvst mode 
+
+    Port Type Default                        is disable
+    Edge Port [PortFast] BPDU Guard Default  is disabled
+    Edge Port [PortFast] BPDU Filter Default is disabled
+    Bridge Assurance                         is enabled
+    Loopguard Default                        is disabled
+    Pathcost method used                     is short
+    STP-Lite                                 is enabled
+    '''}
+
+    golden_parsed_output_2 = {
+        'bpdu_filter': False,
+        'bpdu_guard': False,
+        'bridge_assurance': True,
+        'loop_guard': False,
+        'mode': {
+            'rapid-pvst': {
+            }
+        },
+        'path_cost_method': 'short',
+        'port_type_default': False,
+        'stp_lite': True,
+    }
+
     def test_empty(self):
         self.dev2 = Mock(**self.empty_output)
         obj = ShowSpanningTreeSummary(device=self.dev2)
@@ -467,6 +494,13 @@ class testShowSpanningTreeSummary(unittest.TestCase):
         obj = ShowSpanningTreeSummary(device=self.dev_c3850)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.dev_c3850 = Mock(**self.golden_output_2)
+        obj = ShowSpanningTreeSummary(device=self.dev_c3850)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestShowSpanningTreeDetail(unittest.TestCase):
     dev_c3850 = Device(name = 'c3850')

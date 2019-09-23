@@ -1407,6 +1407,7 @@ class ShowPolicyMapSchema(MetaParser):
                             Any(): {
                                 'kbps': int}},
                         Optional('police'): {
+                            Optional('rate_pps'): int,
                             Optional('cir_bps'): int,
                             Optional('cir_bc_bytes'): int,
                             Optional('cir_be_bytes'): int,
@@ -1519,12 +1520,15 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                      'kbps': 'kbps',
                      'kb/s': 'kbps',
                      'msec': 'msec'}
+
         # Policy Map police-in
-        p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\w\-]+))$')
+        # Policy Map policy_4-6-3~6
+        p1 = re.compile(r'^Policy +Map +(?P<policy_map>([\S]+))$')
         
         # Class class-default
         # Class class c1
-        p2 = re.compile(r'^Class +(?P<class_map>([\w\-\s]+))$')
+        # Class class_4-6-3
+        p2 = re.compile(r'^Class +(?P<class_map>([\S\s]+))$')
 
         # police 8000 9216 0
         p2_0 = re.compile(r'^police +(?P<cir_bps>(\d+)) +(?P<cir_bc_bytes>(\d+)) +(?P<cir_be_bytes>(\d+))$')
@@ -1535,6 +1539,9 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 
         # police cir 1000000 bc 31250 pir 2000000 be 31250
         p2_2 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+)) +pir +(?P<pir>(\d+)) +be +(?P<pir_be_bytes>(\d+))$')
+
+        # police rate 2000 pps
+        p2_3 = re.compile(r'^police +rate +(?P<rate_pps>\d+) +pps$')
 
         # police cir 445500 bc 83619
         p3 = re.compile(r'^police +cir +(?P<cir_bps>(\d+)) +bc +(?P<cir_bc_bytes>(\d+))$')
@@ -1698,7 +1705,6 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_dict['bc_ms'] = int(m.groupdict()['bc_ms'])
                 police_dict['pir_percent'] = int(m.groupdict()['pir_percent'])
                 police_dict['be_ms'] = int(m.groupdict()['be_ms'])
-
                 continue
 
             # police cir 1000000 bc 31250 pir 2000000 be 31250
@@ -1715,6 +1721,16 @@ class ShowPolicyMap(ShowPolicyMapSchema):
                 police_dict['pir_be_bytes'] = int(m.groupdict()['pir_be_bytes'])
                 continue
 
+            # police rate 1800 pps
+            m = p2_3.match(line)
+            if m:
+                police_line = 1
+                conform_list = []
+                exceed_list = []
+                vioate_list = []
+                police_dict = class_map_dict.setdefault('police', {})
+                police_dict['rate_pps'] = int(m.groupdict()['rate_pps'])
+                continue
 
             # police cir 445500 bc 83619
             m = p3.match(line)
