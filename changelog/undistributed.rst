@@ -17,6 +17,14 @@
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
+* IOSXE
+    * Update ShowInterfaceAccounting
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+* NXOS
+    * Update ShowRunningConfigInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Update ShowNveInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
 
 --------------------------------------------------------------------------------
                                 EIGRP
@@ -41,7 +49,6 @@
     * Update ShowMplsForwardingTable
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
-    * Update ShowMplsLdpCapabilities to support more varied output
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -97,7 +104,6 @@
 * IOSXE
     * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
         * show ip ospf segment-routing local-block
-        * support more varied output
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLink for:
         * show ip ospf database opaque-area type ext-link
     * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate for:
@@ -108,40 +114,11 @@
     * Added ShowIpOspfSegmentRoutingAdjacencySid for:
         * show ip ospf segment-routing adjacency-sid
         * show ip ospf {process_id} segment-routing adjacency-sid
-	* Updated ShowIpOspfNeighborDetail:
-		added show ip ospf neighbor {neighbor} detail with custom neighbor
-	* Updated ShowIpOspfMplsLdpInterface:
-		added show ip ospf mpls ldp interface {interface} with custom interface
-    * Updated ShowIpOspfTraffic to support more varied output
-
+    * Updated ShowIpOspfInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
 * IOSXR
-	* Updated ShowOspfVrfAllInclusiveInterface:
-		added vrf and interface argument
-	* Updated ShowOspfVrfAllInclusiveNeighborDetail:
-		added vrf, neighbor and interface argument
-		changed total_neighbor_count key to optional
-	* Updated ShowOspfVrfAllInclusive:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveShamLinks:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveVirtualLinks:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveDatabaseRouter:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveDatabaseExternal:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveDatabaseNetwork:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveDatabaseSummary:
-		added vrf argument
-	* Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
-		added vrf argument
-
---------------------------------------------------------------------------------
-                                Policy Map
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowPolicyMap to support more varied output
+    * Updated ShowOspfVrfAllInclusiveInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -163,9 +140,6 @@
 * NXOS
 	* Updated ShowRunningConfigVrf:
 		changed logic to support calling from device.parse
-* IOSXE
-	* Updated ShowVrfDetailSuperParser:
-		to support more varied output
 
 --------------------------------------------------------------------------------
 								common.py
@@ -210,7 +184,6 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
-    * Update ShowIpRoute regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
@@ -233,7 +206,11 @@
     * Updated ShowSpanningTreeDetail to:
         * updated regex to accommodate more formats
         * add support for rstp
-        * changed some fields in schema to Optional
+        * chnaged some fields in schema to Optional
+
+--------------------------------------------------------------------------------
+                                Spanning-Tree
+--------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowSpanningTreeSummary:
         * Changed some schema keywords to Optional
@@ -244,8 +221,7 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowArpTrafficDetail to parse drop_adj key from output
-* IOSXE
-    * Updated ShowIpTraffic schema for more varied outputs
+
 
 --------------------------------------------------------------------------------
                                 VTP
@@ -264,6 +240,8 @@
                                 MLD
 --------------------------------------------------------------------------------
 * IOSXR
+
+    * Updated ShowMldGroupsDetail to support empty output
     * Updated ShowMldGroupsDetail to support empty output
 
 --------------------------------------------------------------------------------
@@ -274,32 +252,21 @@
         * Updated regex to accommodate more formats
 
 --------------------------------------------------------------------------------
+                                CDP
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+* IOSXR
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+
+--------------------------------------------------------------------------------
                                 platform vm
 --------------------------------------------------------------------------------
 * IOSXR
     * Updated ShowPlatformVm to:
         * Updated regex to accommodate different formats from the outputs
-
---------------------------------------------------------------------------------
-                                platform
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowEnvironmentAll for more varied outputs
-    * Updated ShowSwitchDetail for more varied outputs
-    * Updated ShowPlatformHardware for more varied outputs
-    * Updated ShowPlatformSoftwareStatusControl for more varied outputs
-
---------------------------------------------------------------------------------
-                                LAG
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowEtherChannelLoadBalancing schema for more varied outputs
-
---------------------------------------------------------------------------------
-                                MCAST
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowIpMulticast schema for more varied outputs
 
 --------------------------------------------------------------------------------
                                 RPL
@@ -313,13 +280,34 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowRunningConfigNvOverlay for more varied output
+    * Updated ShowNveInterfaceDetail:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
 
 --------------------------------------------------------------------------------
-                                Routing
+                                MODULE
 --------------------------------------------------------------------------------
-* IOSXE:
-    * Updated ShowIpRouteWord:
-        * Updated regex for various formats
-        * Added fields to schema
-        * Changed fields in schema to Optional
-        * Added regex for additional outputs
+* IOS
+    * Added ShowModule parse for Cat6k devices
+
+
+--------------------------------------------------------------------------------
+                                AUTHENTICATION
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessionsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessions:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowAuthenticationSessionsInterfaceDetailsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessionsInterfaceDetails:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
+--------------------------------------------------------------------------------
+                                FDB
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowMacAddressTableVni:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
