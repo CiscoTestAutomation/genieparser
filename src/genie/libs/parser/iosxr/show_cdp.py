@@ -56,39 +56,34 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         #                   S - Switch, H - Host, I - IGMP, r - Repeater
         #
 
-        # Specifically for situations when Platform and Port Id are
-        # concatenated
-        p1 = re.compile(
-            r'^(?P<device_id>\S+) +'
-            r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-            r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-            r'(?P<platform>\S+)'
-            '(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
-
-
+        # Specifically for situations when Platform and Port Id are concatenated
+        p1 = re.compile(r'^(?P<device_id>\S+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
+                         '(?P<platform>\S+)'
+                         '(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
 
 
 
         # No platform
         p2 = re.compile(r'^(?P<device_id>\S+) +'
-                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+)'
-                        r'(?: +(?P<platform>[\w\-]+) )? +'
-                        '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+)'
+                         '(?: +(?P<platform>[\w\-]+) )? +'
+                         '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+
 
         # device6 Gig 0 157 R S I C887VA-W-W Gi 0
-        p3 = re.compile(
-            r'^(?P<device_id>\S+) +'
-            r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-            r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-            '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+        p3 = re.compile(r'^(?P<device_id>\S+) +'
+                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
+                         '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # p4 and p5 for two-line output, where device id is on a separate line
         p4 = re.compile(r'^(?P<device_id>\S+)$')
-        p5 = re.compile(
-            r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
-            r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-            r'(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9/\s]+)$')
+        p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
+                        r'(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9/\s]+)$')
 
         device_id_index = 0
         parsed_dict = {}
@@ -112,8 +107,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 group = result.groupdict()
 
                 device_dict['device_id'] = group['device_id'].strip()
-                device_dict['local_interface'] = Common.convert_intf_name(
-                    intf=group['local_interface'].strip())
+                device_dict['local_interface'] = Common.convert_intf_name \
+                    (intf=group['local_interface'].strip())
                 device_dict['hold_time'] = int(group['hold_time'])
                 device_dict['capability'] = group['capability'].strip()
                 if group['platform']:
@@ -121,8 +116,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 elif not group['platform']:
                     device_dict['platform'] = ''
 
-                device_dict['port_id'] = Common.convert_intf_name(
-                    intf=group['port_id'].strip())
+                device_dict['port_id'] = Common.convert_intf_name \
+                    (intf=group['port_id'].strip())
                 continue
 
             result = p4.match(line)
@@ -130,13 +125,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 group = result.groupdict()
                 if 'Eth' not in group['device_id']:
                     device_id_index += 1
-                    device_dict = parsed_dict.setdefault(
-                        'cdp',
-                        {}) .setdefault(
-                        'index',
-                        {}).setdefault(
-                        device_id_index,
-                        {})
+                    device_dict = parsed_dict.setdefault('cdp', {}) \
+                        .setdefault('index', {}).setdefault(device_id_index, {})
                     device_dict['device_id'] = group['device_id'].strip()
                 else:
                     device_dict['port_id'] = Common \
@@ -166,10 +156,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 setdefault('index', devices_dict_info)
 
         return parsed_dict
-
-
-
-
 
 
 
