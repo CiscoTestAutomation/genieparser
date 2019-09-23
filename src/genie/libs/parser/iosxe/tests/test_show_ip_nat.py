@@ -26,6 +26,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
 		udp  10.5.5.1:1025          192.0.2.1:4000        ---                   ---
 		udp  10.5.5.1:1024          192.0.2.3:4000        ---                   ---
         udp  10.5.5.1:1026          192.0.2.2:4000        ---                   ---
+        Total number of translations: 3
     '''
     }
 
@@ -53,7 +54,8 @@ class TestShowIpNatTranslations(unittest.TestCase):
                     'outside_local': '---',
                     'protocol': 'udp'
                 }
-            }
+            },
+            'number_of_translations': 3
         }
     }
 
@@ -62,6 +64,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
         Pro Inside global      Inside local       Outside local      Outside global
         --- 171.69.233.209     192.168.1.95       ---                ---
         --- 171.69.233.210     192.168.1.89       ---                --
+        Total number of translations: 2
     '''
     }
 
@@ -82,7 +85,8 @@ class TestShowIpNatTranslations(unittest.TestCase):
                     'outside_local': '---',
                     'protocol': '---'
                 }
-            }
+            },
+            'number_of_translations': 2
         }
     }
     golden_output_2 = {'execute.return_value': '''\
@@ -91,6 +95,7 @@ class TestShowIpNatTranslations(unittest.TestCase):
         udp 171.69.233.209:1220  192.168.1.95:1220  171.69.2.132:53    171.69.2.132:53
         tcp 171.69.233.209:11012 192.168.1.89:11012 171.69.1.220:23    171.69.1.220:23
         tcp 171.69.233.209:1067  192.168.1.95:1067  171.69.1.161:23    171.69.1.161:23
+        Total number of translations: 3
     '''
     }
 
@@ -111,13 +116,100 @@ class TestShowIpNatTranslations(unittest.TestCase):
                     'outside_local': '171.69.1.220:23',
                     'protocol': 'tcp'
                 },
-                3: {'inside_global': '171.69.233.209:1067',
+                3: {
+                    'inside_global': '171.69.233.209:1067',
                     'inside_local': '192.168.1.95:1067',
                     'outside_global': '171.69.1.161:23',
                     'outside_local': '171.69.1.161:23',
                     'protocol': 'tcp'
                 }
-            }
+            },
+            'number_of_translations': 3
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''\
+        Device# show ip nat translations verbose
+
+        Pro  Inside global         Inside local          Outside local         Outside global
+        udp  10.5.5.1:1025          192.0.2.1:4000        ---                   ---
+        create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
+        Map-Id(In): 1
+        Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+        entry-id: 0x0, use_count:1
+
+        udp  10.5.5.1:1024          192.0.2.3:4000        ---                   ---
+        create: 02/15/12 11:38:00, use: 02/15/12 11:39:02, timeout: 00:00:00
+        Map-Id(In): 1
+        Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+        entry-id: 0x0, use_count:1
+
+        udp  10.5.5.1:1026          192.0.2.2:4000        ---                   ---
+        create: 02/15/12 11:38:00, use: 02/15/12 11:39:02, timeout: 00:00:00
+        Map-Id(In): 1
+        Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+        entry-id: 0x0, use_count:1
+
+        Total number of translations: 3
+    '''    
+    }
+
+    golden_parsed_output_3 = {
+        'nat_translations': {
+            'index': {
+                1: {
+                    'details': {
+                        'create': '02/15/12 11:38:01',
+                        'entry_id': '0x0',
+                        'input_idb': 'TenGigabitEthernet1/1/0',
+                        'mac_address': '0000.0000.0000',
+                        'map_id_in': 1,
+                        'timeout': '00:00:00',
+                        'use': '02/15/12 11:39:02',
+                        'use_count': 1
+                    },
+                    'inside_global': '10.5.5.1:1025',
+                    'inside_local': '192.0.2.1:4000',
+                    'outside_global': '---',
+                    'outside_local': '---',
+                    'protocol': 'udp'
+                },
+                2: {
+                    'details': {
+                        'create': '02/15/12 11:38:00',
+                        'entry_id': '0x0',
+                        'input_idb': 'TenGigabitEthernet1/1/0',
+                        'mac_address': '0000.0000.0000',
+                        'map_id_in': 1,
+                        'timeout': '00:00:00',
+                        'use': '02/15/12 11:39:02',
+                        'use_count': 1
+                    },
+                    'inside_global': '10.5.5.1:1024',
+                    'inside_local': '192.0.2.3:4000',
+                    'outside_global': '---',
+                    'outside_local': '---',
+                    'protocol': 'udp'
+                },
+                3: {
+                    'details': {
+                        'create': '02/15/12 11:38:00',
+                        'entry_id': '0x0',
+                        'input_idb': 'TenGigabitEthernet1/1/0',
+                        'mac_address': '0000.0000.0000',
+                        'map_id_in': 1,
+                        'timeout': '00:00:00',
+                        'use': '02/15/12 11:39:02',
+                        'use_count': 1
+                    },
+                    'inside_global': '10.5.5.1:1026',
+                    'inside_local': '192.0.2.2:4000',
+                    'outside_global': '---',
+                    'outside_local': '---',
+                    'protocol': 'udp'
+                }
+            },
+            'number_of_translations': 3
         }
     }
 
@@ -136,8 +228,6 @@ class TestShowIpNatTranslations(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowIpNatTranslations(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_1(self):
@@ -145,8 +235,6 @@ class TestShowIpNatTranslations(unittest.TestCase):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIpNatTranslations(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_2(self):
@@ -154,9 +242,14 @@ class TestShowIpNatTranslations(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         obj = ShowIpNatTranslations(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpNatTranslations(device=self.device)
+        parsed_output = obj.parse(option='verbose')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()

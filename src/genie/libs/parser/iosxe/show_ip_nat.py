@@ -48,9 +48,9 @@ class ShowIpNatTranslationsSchema(MetaParser):
                         'entry_id': str,
                         'use_count': int
                     }
-                }
+                },
             },
-            Optional('number_of_translations'): int
+            'number_of_translations': int
         }
     }
 
@@ -85,6 +85,21 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
         # tcp 171.69.233.209:1067  192.168.1.95:1067  171.69.1.161:23    171.69.1.161:23
         p1 = re.compile(r'^(?P<protocol>-+|udp|tcp) +(?P<inside_global>\S+) '
                          '+(?P<inside_local>\S+) +(?P<outside_local>\S+) +(?P<outside_global>\S+)$')
+        
+        # create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
+        p2 = re.compile(r'^create: +(?P<create>[\S ]+), +use: +(?P<use>[\S ]+), +timeout: +(?P<timeout>\S+)$')
+
+        # Map-Id(In): 1
+        p3 = re.compile(r'^Map-Id\(In\): +(?P<map_id_in>\d+)$')
+
+        # Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+        p4 = re.compile(r'^Mac-Address: +(?P<mac_address>\S+) +Input-IDB: +(?P<input_idb>\S+)$')
+
+        #entry-id: 0x0, use_count:1
+        p5 = re.compile(r'^entry-id: +(?P<entry_id>\S+), +use_count:+(?P<use_count>\d+)$')
+
+        # Total number of translations: 3
+        p6 = re.compile(r'^Total +number +of +translations: +(?P<number_of_translations>\d+)$')
 
         # initialize variables
         ret_dict = {}
@@ -116,6 +131,52 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                 continue
             
+            # create: 02/15/12 11:38:01, use: 02/15/12 11:39:02, timeout: 00:00:00
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                details_dict = protocol_dict.setdefault('details', {})
+                details_dict.update({'create': group['create']})
+                details_dict.update({'use': group['use']})
+                details_dict.update({'timeout': group['timeout']})
+
+                continue
+            
+            # Map-Id(In): 1
+            m = p3.match(line)
+            if m:
+                details_dict.update({'map_id_in': int(m.groupdict()['map_id_in'])})
+
+                continue
+
+            # Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                details_dict.update({'mac_address': group['mac_address']})
+                details_dict.update({'input_idb': group['input_idb']})
+
+                continue
+            
+            # entry-id: 0x0, use_count:1
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+
+                details_dict.update({'entry_id': group['entry_id']})
+                details_dict.update({'use_count': int(group['use_count'])})
+
+                continue
+            
+            # Total number of translations: 3
+            m = p6.match(line)
+            if m:
+                #import pdb;pdb.set_trace()
+                total_dict = ret_dict.setdefault('nat_translations', {})
+                total_dict.update({'number_of_translations': int(m.groupdict()['number_of_translations'])})
+
+                continue
+
         return ret_dict
 
 
