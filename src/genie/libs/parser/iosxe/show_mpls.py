@@ -1039,11 +1039,10 @@ class ShowMplsLdpCapabilitiesSchema(MetaParser):
             Optional('iccp_type'): str,
             Optional('maj_version'): int,
             Optional('min_version'): int,
-            'dynamic_anouncement': str,
+            Optional('dynamic_anouncement'): str,
             Optional('mldp_point_to_multipoint'): str,
             Optional('mldp_multipoint_to_multipoint'): str,
-            'typed_wildcard': str,
-
+            Optional('typed_wildcard'): str,
         }
     }
 
@@ -1497,18 +1496,21 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
         #     LDP configured; LDP-IGP Synchronization enabled.
         #     LDP configured; LDP-IGP Synchronization not enabled.
         #     LDP configured;  SYNC enabled.
-        p2 = re.compile(r'^LDP +configured; +(LDP\-IGP +Synchronization( +(?P<state>\w+))?'
-                        ' +(?P<synchronization_enabled>(enabled)+))?(SYNC +(?P<enabled>\w+))?.$')
+        #     LDP not configured; LDP-IGP Synchronization enabled.
+        p2 = re.compile(r'^LDP +(?P<configured>[\w\s]+); +(LDP\-IGP +Synchronization '
+                         '+(?P<state>[\w\s]+))?(SYNC +(?P<sync_enabled>[\w\s]+))?.$')
 
         #     Sync status: sync achieved; peer reachable.
         #     Sync status: sync not achieved; peer reachable.
-        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +(?P<sync_status>[\w\s]+); +peer +reachable.$')
+        #     Sync status: sync not achieved; peer not reachable.
+        p3 = re.compile(r'^(Sync|SYNC) +status: +sync +(?P<sync_status>[\w\s]+); +peer +(?P<reachable>[\w\s]+).$')
 
         #     Sync delay time: 0 seconds (0 seconds left)
         p4 = re.compile(r'^Sync +delay +time: +(?P<delay_time>\d+) +seconds \((?P<left_time>\d+) +seconds +left\)$')
 
         #     IGP holddown time: infinite.
-        p5 = re.compile(r'^IGP +holddown +time: +(?P<holddown_time>\w+).?$')
+        #     IGP holddown time: 1 milliseconds.
+        p5 = re.compile(r'^IGP +holddown +time: +(?P<holddown_time>[\w\s]+).?$')
 
         #     Peer LDP Ident: 10.169.197.252:0
         p6 = re.compile(r'^Peer +LDP +Ident: +(?P<peer_ldp_ident>\S+).?$')
@@ -1530,25 +1532,29 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
             # LDP configured; LDP-IGP Synchronization enabled.
-            #   LDP configured; LDP-IGP Synchronization not enabled.
-            #   LDP configured;  SYNC enabled.
+            # LDP configured; LDP-IGP Synchronization not enabled.
+            # LDP configured;  SYNC enabled.
+            # LDP not configured; LDP-IGP Synchronization enabled.
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 ldp_dict = interface_dict.setdefault('ldp', {})
-                if group['state']:
-                    ldp_dict.update({'igp_synchronization_enabled': False})
+
+                configured = group['configured']
+                state = group['state']
+                sync_enabled = group['sync_enabled']
+
+                ldp_dict.update({'configured': True if configured == 'configured' else False})
+
+                if state and state == 'enabled':
+                    ldp_dict.update({'igp_synchronization_enabled': True})
                 else:
-                    if not group['synchronization_enabled']:
-                        ldp_dict.update({'igp_synchronization_enabled': False})
-                    if group['synchronization_enabled']:
-                        ldp_dict.update({'igp_synchronization_enabled': True})
+                    ldp_dict.update({'igp_synchronization_enabled': False})
 
-                if group['enabled']:
-                    enabled_dict = interface_dict.setdefault('sync', {}).setdefault('status', {})
-                    enabled_dict.update({'enabled': True})
+                if sync_enabled:
+                    sync_status_dict = interface_dict.setdefault('sync', {}).setdefault('status', {})
+                    sync_status_dict.update({'enabled': True if sync_enabled == 'enabled' else False})
 
-                ldp_dict.update({'configured': True})
                 continue
 
             # Sync status: sync achieved; peer reachable.
@@ -1557,8 +1563,9 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 sync_dict = interface_dict.setdefault('sync', {})
                 sync_status_dict = sync_dict.setdefault('status', {})
                 sync_status = m.groupdict()['sync_status']
+                reachable = m.groupdict()['reachable']
                 sync_status_dict.update({'sync_achieved': True if sync_status == 'achieved' else False})
-                sync_status_dict.update({'peer_reachable': True})
+                sync_status_dict.update({'peer_reachable': True if reachable == 'reachable' else False})
                 continue
 
             # Sync delay time: 0 seconds (0 seconds left)
@@ -1592,7 +1599,6 @@ class ShowMplsLdpIgpSync(ShowMplsLdpIgpSyncSchema):
                 continue
 
         return result_dict
-
 
 
 class ShowMplsForwardingTableSchema(MetaParser):
@@ -1676,9 +1682,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         # Label      Label      or Tunnel Id     Switched      interface
         # 9301       No Label   172.16.100.1/32[V]   \
         #                                        0             Po1.51     192.168.10.253
+        #            No Label   10.23.120.0/24[V]   \
         # None       No Label   10.0.0.16/30     0             Gi3        10.0.0.9
         #       [T]  16130      10.25.40.40/32   0             Tu1        point2point
-        p1 = re.compile(r'^(?P<local_label>\w+) +(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
+        p1 = re.compile(r'^((?P<local_label>\d+|[Nn]one) +)?(?P<outgoing_label>[\w\s]+) +(?P<prefix_or_tunnel_id>[\S]+) +\\$')
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
@@ -1715,9 +1722,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                local_label = group['local_label']
-                if local_label.isdigit():
-                    local_label = int(local_label)
+                if group['local_label']:
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
                 continue
@@ -1781,9 +1789,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             m = p2_3.match(line)
             if m:
                 group = m.groupdict()
-                local_label = group['local_label']
-                if local_label.isdigit():
-                    local_label = int(local_label)
+                if group['local_label']:
+                    local_label = group['local_label']
+                    if local_label.isdigit():
+                        local_label = int(local_label)
+
                 outgoing_label = group['outgoing_label']
                 prefix_or_tunnel_id = group['prefix_or_tunnel_id'].strip()
 

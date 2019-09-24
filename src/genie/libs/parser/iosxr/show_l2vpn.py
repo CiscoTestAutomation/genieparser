@@ -287,7 +287,7 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                                     'state': str,
                                     'static_mac_address': int,
                                     'mst_i': int,
-                                    'unprotected': bool
+                                    'mst_i_state': str
                                 }
                             }
                         },
@@ -296,9 +296,12 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             Any(): {
                                 'neighbor': {
                                     Any(): {
-                                        'pw_id': int,
-                                        'state': str,
-                                        'static_mac_address': int
+                                        'pw_id': {
+                                            Any(): {
+                                                'state': str,
+                                                'static_mac_address': int
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -343,7 +346,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
         p5 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +Static +MAC +addresses: +'
-            '(?P<static_mac_address>\d+), +MSTi: +(?P<mst_i>\d+) +\((?P<unprotected>\w+)\)$')
+            '(?P<static_mac_address>\d+), +MSTi: +(?P<mst_i>\d+) +\((?P<mst_i_state>\w+)\)$')
         
         # VFI 1
         p6 = re.compile(r'^VFI +(?P<vfi>\d+)$')
@@ -422,14 +425,14 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 state = group['state']
                 static_mac_address = int(group['static_mac_address'])
                 mst_i = int(group['mst_i'])
-                unprotected = group['unprotected']
+                mst_i_state = group['mst_i_state']
 
                 interface_dict = ac_dict.setdefault('interfaces', {}). \
                     setdefault(interface, {})
                 interface_dict.update({'state': state})
                 interface_dict.update({'static_mac_address': static_mac_address})
                 interface_dict.update({'mst_i': mst_i})
-                interface_dict.update({'unprotected': True if unprotected == 'unprotected' else False})
+                interface_dict.update({'mst_i_state': mst_i_state})
                 continue
 
             # VFI 1
@@ -451,9 +454,10 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 static_mac_address = int(group['static_mac_address'])
 
                 neighbor_dict = vfi_dict.setdefault('neighbor', {}). \
-                    setdefault(neighbor, {})
+                    setdefault(neighbor, {}). \
+                    setdefault('pw_id', {}). \
+                    setdefault(pw_id, {})
 
-                neighbor_dict.update({'pw_id': pw_id})
                 neighbor_dict.update({'state': state})
                 neighbor_dict.update({'static_mac_address': static_mac_address})
                 continue

@@ -520,7 +520,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                 "area_id": int,
                 "domain_id": int,
                 "asn": int,
-                "prefix_sid": {
+                Optional("prefix_sid"): {
                     "prefix": str,
                     "label": int,
                     "label_type": str,
@@ -549,7 +549,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                         "bandwidth_total": int,
                         "bandwidth_reservable": int,
                         "admin_groups": str,
-                        "adj_sid": {
+                        Optional("adj_sid"): {
                             Any(): str,
                         },
                     },
@@ -854,7 +854,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         else:
             out = output
 
-        # Name: test1 (Color: 100 End-point: 106.162.196.241)
+        # Name: test1 (Color: 100 End-point: 10.169.196.241)
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
                          '+End-point: +(?P<end_point>\S+)\)$')
 
@@ -879,8 +879,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+), Path +Accumulated '
                          '+Metric: +(?P<path_accumulated_metric>[\d]+)$')
 
-        #         16063 [Prefix-SID, 106.162.196.241]
-        #         16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+        #         16063 [Prefix-SID, 10.169.196.241]
+        #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
         p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
                          '( +- +(?P<remote_address>[\S]+))?\]$')
 
@@ -920,7 +920,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
             if not line:
                 continue
 
-            # Name: test1 (Color: 100 End-point: 106.162.196.241)
+            # Name: test1 (Color: 100 End-point: 10.169.196.241)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -986,7 +986,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 path_dict.update({'path_accumulated_metric': metric})
                 continue
 
-            #   16063 [Prefix-SID, 106.162.196.241]
+            #   16063 [Prefix-SID, 10.169.196.241]
             m = p7.match(line)
             if m:
                 hop_index += 1

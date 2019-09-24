@@ -12,12 +12,12 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # iosxr show_mrib
 from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnBridgeDomain)
 
-# ====================================
-#  Unit test for 'show isis neighbors'
-# ====================================
+# ===========================================
+#  Unit test for 'show l2vpn bridge-domain'
+# ===========================================
 
 class test_show_l2vpn_bridge_domain(unittest.TestCase):
-    '''Unit test for "show isis neighbors"'''
+    '''Unit test for "show l2vpn bridge-domain"'''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -44,7 +44,7 @@ class test_show_l2vpn_bridge_domain(unittest.TestCase):
                                     'state': 'up',
                                     'static_mac_address': 2,
                                     'mst_i': 0,
-                                    'unprotected': True,
+                                    'mst_i_state': 'unprotected',
                                 },
                             },
                         },
@@ -53,9 +53,12 @@ class test_show_l2vpn_bridge_domain(unittest.TestCase):
                             1: {
                                 'neighbor': {
                                     '10.1.1.1': {
-                                        'pw_id': 1,
-                                        'state': 'up',
-                                        'static_mac_address': 0,
+                                        'pw_id': {
+                                            1: {
+                                                'state': 'up',
+                                                'static_mac_address': 0,
+                                            },
+                                        },
                                     },
                                 },
                             },

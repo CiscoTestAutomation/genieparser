@@ -21,7 +21,8 @@ class ShowEnvironmentAllSchema(MetaParser):
                 'fan': {
                     Any(): {
                         'state': str,
-                    }
+                        Optional('direction'): str,
+                    },
                 },
                 'power_supply': {
                     Any(): {
@@ -35,19 +36,25 @@ class ShowEnvironmentAllSchema(MetaParser):
                     }
                 },
                 'system_temperature_state': str,
-                'inlet_temperature':{
+                Optional('inlet_temperature'):{
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
                     'red_threshold': str
                 },
-                'hotspot_temperature':{
+                Optional('hotspot_temperature'):{
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
                     'red_threshold': str
-                }
-            }
+                },
+                Optional('asic_temperature'):{
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+            },
         },
     }
 
@@ -69,6 +76,10 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
+
+        # Switch 1 FAN 1 direction is Front to Back
+        p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
+                           '+direction +is +(?P<direction>[\w\s]+)$')
 
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
 
@@ -100,6 +111,17 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
                 continue
+            
+            # Switch 1 FAN 1 direction is Front to Back
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                fan_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})\
+                                   .setdefault('fan', {}).setdefault(fan, {})
+                fan_dict.update({'direction': group['direction'].lower()})
+                continue
                 
             # FAN PS-1 is OK
             m = p2.match(line)
@@ -121,6 +143,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
             # Inlet Temperature Value: 34 Degree Celsius
             # Hotspot Temperature Value: 45 Degree Celsius
+            # ASIC Temperature Value: 36 Degree Celsius
             m = p4.match(line)
             if m:
                 group = m.groupdict()
