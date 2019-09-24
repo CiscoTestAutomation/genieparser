@@ -11,3 +11,10 @@
 * IOSXE
     * Update ShowIpv6Neighbors
         * Add command 'show ipv6 neighbors {interface}'
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* NXOS
+    * Update ShowIpv6MldInterfaceSchema
+        * Added support for 'show ipv6 mld interface vrf all'
