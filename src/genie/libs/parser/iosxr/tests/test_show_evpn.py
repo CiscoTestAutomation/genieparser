@@ -81,9 +81,10 @@ class test_show_evpn_evi_detail(unittest.TestCase):
             145: {
                 'bridge_domain': 'tb1-core1',
                 'type': 'PBB',
-                'unicast_label': 16000,
-                'multicast_label': 16001,
+                'unicast_label': '16000',
+                'multicast_label': '16001',
                 'rd_config': 'none',
+                'rd_auto': '(auto)_1.100.100.100:145',
                 'rt_auto': '100:145',
                 'route_target_in_use': {
                     '100:145': {
@@ -95,9 +96,10 @@ class test_show_evpn_evi_detail(unittest.TestCase):
             165: {
                 'bridge_domain': 'tb1-core2',
                 'type': 'PBB',
-                'unicast_label': 16002,
-                'multicast_label': 16003,
+                'unicast_label': '16002',
+                'multicast_label': '16003',
                 'rd_config': 'none',
+                'rd_auto': '(auto)_1.100.100.100:165',
                 'rt_auto': '100:165',
                 'route_target_in_use': {
                     '100:165': {
@@ -109,9 +111,10 @@ class test_show_evpn_evi_detail(unittest.TestCase):
             185: {
                 'bridge_domain': 'tb1-core3',
                 'type': 'PBB',
-                'unicast_label': 16004,
-                'multicast_label': 16005,
+                'unicast_label': '16004',
+                'multicast_label': '16005',
                 'rd_config': 'none',
+                'rd_auto': '(auto)_1.100.100.100:185',
                 'rt_auto': '100:185',
                 'route_target_in_use': {
                     '100:185': {
@@ -123,21 +126,11 @@ class test_show_evpn_evi_detail(unittest.TestCase):
             65535: {
                 'bridge_domain': 'ES:GLOBAL',
                 'type': 'BD',
-                'unicast_label': 0,
-                'multicast_label': 0,
+                'unicast_label': '0',
+                'multicast_label': '0',
                 'rd_config': 'none',
+                'rd_auto': '(auto)_1.100.100.100:0',
                 'rt_auto': 'none',
-                'route_target_in_use': {
-                    '0100.9e00.0210': {
-                        'import': True,
-                    },
-                    '0100.be01.ce00': {
-                        'import': True,
-                    },
-                    '0100.be02.0101': {
-                        'import': True,
-                    },
-                },
             },
         },
     }
@@ -192,6 +185,43 @@ class test_show_evpn_evi_detail(unittest.TestCase):
         0100.be02.0101                 Import
 
         '''}
+    
+    golden_parsed_output2 = {
+        'evi': {
+            1: {
+                'bridge_domain': 'core1',
+                'type': 'PBB',
+                'unicast_label': '24001',
+                'multicast_label': '24002',
+                'flow_label': 'n',
+                'table-policy_name': 'forward_class_1',
+                'forward-class': '1',
+                'rd_config': 'none',
+                'rd_auto': 'none',
+                'rt_auto': 'none',
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        show evpn evi detail 
+        Mon Aug 24 14:14:19.873 EDT
+
+        EVI        Bridge Domain                Type   
+        ---------- ---------------------------- -------
+        1          core1                        PBB    
+        Unicast Label  : 24001
+        Multicast Label: 24002
+        Flow Label: N
+        Table-policy Name: forward_class_1
+        Forward-class: 1
+        RD Config: none
+        RD Auto  : none
+        RT Auto  : none
+        Route Targets in Use           Type   
+        ------------------------------ -------
+
+        '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -205,6 +235,13 @@ class test_show_evpn_evi_detail(unittest.TestCase):
         obj = ShowEvpnEviDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowEvpnEviDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()

@@ -45,16 +45,12 @@ class ShowEvpnEviSchema(MetaParser):
             Any(): {
                 'bridge_domain': str,
                 'type': str,
-                Optional('unicast_label'): int,
-                Optional('multicast_label'): int,
-                Optional('rd_config'): str,
-                Optional('rd_auto'): str,
-                Optional('rt_auto'): str,
                 Optional('route_target_in_use'): {
                     Any(): {
                         Any(): bool
                     }
-                }
+                },
+                Optional(Any()): str,
             }
         }
     }
@@ -76,24 +72,17 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
         # 2001  XC-POD2-EVPN    EVPN
         p1 = re.compile(r'^(?P<evi>\d+) +(?P<bridge_domain>\S+) +(?P<type>[\S ]+)$')
 
-        # Unicast Label  : 16000
-        p2 = re.compile(r'^Unicast +Label *: +(?P<unicast_label>\d+)$')
-
-        # Multicast Label: 16001
-        p3 = re.compile(r'^Multicast +Label *: +(?P<multicast_label>\d+)$')
-
-        # RD Config: none
-        p4 = re.compile(r'^RD +Config *: +(?P<rd_config>\S+)$')
-
-        # RD Auto  : (auto) 1.100.100.100:145
-        p5 = re.compile(r'^RD +Auto *: +(?P<rd_auto>\S+)$')
-
-        # RT Auto  : 100:145
-        p6 = re.compile(r'^RT +Auto *: +(?P<rt_auto>\S+)$')
-
         # 100:145                        Import 
         # 100:145                        Export 
-        p7 = re.compile(r'^(?P<route_target_in_use>[\w\.:]+) +(?P<type>\S+)$')
+        p2 = re.compile(r'^(?P<route_target_in_use>[\d+:\d+]+) +(?P<type>\S+)$')
+
+        # ------------------------------ -------
+        p3 = re.compile(r'(-+ *)+$')
+
+        # Unicast Label  : 24001
+        # Multicast Label: 16001
+        # RD Auto  : (auto) 1.100.100.100:145
+        p4 = re.compile(r'^(?P<key>[\S ]+) *: +(?P<value>[\S ]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -112,45 +101,10 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
                 evi_dict.update({'bridge_domain': bridge_domain})
                 evi_dict.update({'type': evi_type})
                 continue
-        
-            # Unicast Label  : 16000
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                evi_dict.update({k:int(v) for k, v in group.items() if v is not None})
-                continue
-
-            # Multicast Label: 16001
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                evi_dict.update({k:int(v) for k, v in group.items() if v is not None})
-                continue
-            
-            # RD Config: none
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                evi_dict.update({k:v for k, v in group.items() if v is not None})
-                continue
-            
-            # RD Auto  : (auto) 1.100.100.100:145
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                evi_dict.update({k:v for k, v in group.items() if v is not None})
-                continue
-
-            # RT Auto  : 100:145
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                evi_dict.update({k:v for k, v in group.items() if v is not None})
-                continue
             
             # 100:145                        Import 
             # 100:145                        Export 
-            m = p7.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 route_target_in_use = group['route_target_in_use']
@@ -159,7 +113,23 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
                     setdefault(route_target_in_use, {})
                 type_dict.update({route_type.lower(): True})
                 continue
+            
+            # ------------------------------ -------
+            m = p3.match(line)
+            if m:
+                continue
 
+            # Unicast Label  : 24001
+            # Multicast Label: 16001
+            # RD Auto  : (auto) 1.100.100.100:145
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(' ', '_')
+                value = group['value'].strip().lower().replace(' ', '_')
+                evi_dict.update({key: value})
+                continue
+            
         return ret_dict
 
 class ShowEvpnEviDetail(ShowEvpnEvi):
