@@ -71,8 +71,8 @@ class ShowIsisSegmentRoutingPrefixSidMap(ShowIsisSegmentRoutingPrefixSidMapSchem
         p1 = re.compile(r'^IS-IS (?P<isis_id>\d+) (?P<status>\w+) policy$')
 
         # Prefix               SID Index    Range        Flags
-        # 1.1.1.100/32         100          20          
-        # 1.1.1.150/32         150          10          
+        # 10.4.1.100/32         100          20          
+        # 10.4.1.150/32         150          10          
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
             '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         
@@ -155,8 +155,8 @@ class ShowOspfSegmentRoutingPrefixSidMap(ShowOspfSegmentRoutingPrefixSidMapSchem
                                                     'ID (?P<process_id>\d+)$')
 
         # Prefix               SID Index    Range        Flags
-        # 1.1.1.100/32         100          20          
-        # 1.1.1.150/32         150          10          
+        # 10.4.1.100/32         100          20          
+        # 10.4.1.150/32         150          10          
         p2 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
             '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         
@@ -1075,7 +1075,7 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMap
 
         ret_dict = {}
 
-        # 20.1.1.0/24          400          300          
+        # 10.186.1.0/24          400          300          
         p1 = re.compile(r'(?P<prefix>[\w\.\/]+)\s+(?P<sid_index>\d+)'
                                 '\s+(?P<range>\d+)(\s+(?P<flags>)[\w\s]+$)?')
         # Number of mapping entries: 2
@@ -1137,8 +1137,8 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(ShowSegment_Rout
         else:
             out = output
 
-        # 20.1.1.0/24
-        p1 = re.compile(r'^(?P<prefix>\d+\.\d\.\d\.\d\/\d+)$')
+        # 10.186.1.0/24
+        p1 = re.compile(r'^(?P<prefix>\d+\.\d+\.\d+\.\d+\/\d+)$')
 
         # SID Index:      400
         p2 = re.compile(r'^SID Index:\s+(?P<sid_index>\d+)$')
@@ -1146,7 +1146,7 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(ShowSegment_Rout
         # Range:          300
         p3 = re.compile(r'^Range:\s+(?P<range>\d+)$')
 
-        # Last Prefix:    20.2.44.0/24
+        # Last Prefix:    10.229.44.0/24
         p4 = re.compile(r'^Last Prefix:\s+(?P<last_prefix>[\d\.\/]+)$')
 
         # Last SID Index: 699
