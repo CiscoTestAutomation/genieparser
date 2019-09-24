@@ -79,7 +79,7 @@ class ShowEvpnEviMacSchema(MetaParser):
     schema = {
         'vpn_id': {
             Any(): {
-                'encap': str,
+                Optional('encap'): str,
                 'mac_address': str,
                 'ip_address': str,
                 'next_hop': str,
@@ -90,6 +90,7 @@ class ShowEvpnEviMacSchema(MetaParser):
                 Optional('local_static'): str,
                 Optional('remote_static'): str,
                 Optional('local_ethernet_segment'): str,
+                Optional('ethernet_segment'): str,
                 Optional('remote_ethernet_segment'): str,
                 Optional('local_sequence_number'): int,
                 Optional('remote_sequence_number'): int,
@@ -99,20 +100,37 @@ class ShowEvpnEviMacSchema(MetaParser):
                 Optional('source'): str,
                 Optional('flush_requested'): int,
                 Optional('flush_received'): int,
+                Optional('flush_count'): int,
+                Optional('flush_seq_id'): int,
+                Optional('static'): str,
                 Optional('soo_nexthop'): str,
                 Optional('bp_xcid'): str,
+                Optional('bp_ifh'): str,
                 Optional('mac_state'): str,
                 Optional('mac_producers'): str,
                 Optional('local_router_mac'): str,
                 Optional('l3_label'): int,
-                Optional('object'): str,
-                Optional('base_info'): {
-                    'version': str,
-                    'flags': str,
-                    'type': int,
-                    'reserved': int
-                },
-                Optional('num_events'): int
+                Optional('object'): {
+                    Any(): {
+                        Optional('base_info'): {
+                            'version': str,
+                            'flags': str,
+                            'type': int,
+                            'reserved': int
+                        },
+                        Optional('num_events'): int,
+                        Optional('event_history'): {
+                            Any(): {
+                                'time': str,
+                                'event': str,
+                                'flag_1': str,
+                                'flag_2': str,
+                                'code_1': str,
+                                'code_2': str,
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -124,6 +142,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
 
     def cli(self, vpn_id=None, output=None):
         ret_dict = {}
+        event_history_index = {}
 
         if output is None:
             cmd = self.cli_command[1].format(vpn_id=vpn_id) if vpn_id else self.cli_command[0]
@@ -135,6 +154,12 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p1 = re.compile(r'^(?P<vpn_id>\d+) +(?P<encap>\S+) +(?P<mac_address>[\w\.]+) +'
                 '(?P<ip_address>[\w:\.]+) +(?P<next_hop>[\S ]+) +(?P<label>\d+)$')
         
+        # 001b.0100.0001 N/A                                     24014    7  
+        p1_1 = re.compile(r'^(?P<mac_address>\S+) +(?P<next_hop>\S+) +(?P<label>\d+) +(?P<vpn_id>\d+)$')
+
+        # IP Address   : 7.7.7.8
+        p1_2 = re.compile(r'^IP +Address +: +(?P<ip_address>\S+)$')
+
         # Ethernet Tag                            : 0
         p2 = re.compile(r'^Ethernet +Tag +: +(?P<ethernet_tag>\d+)$')
 
@@ -149,9 +174,12 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
 
         # Remote Static                           : No
         p6 = re.compile(r'^Remote +Static +: +(?P<remote_static>\S+)$')
-
+        
         # Local Ethernet Segment                  : 0000.0000.0000.0000.0000
         p7 = re.compile(r'^Local +Ethernet +Segment +: +(?P<local_ethernet_segment>\S+)$')
+
+        # Ether.Segment: 0000.0000.0000.0000.0000
+        p7_1 = re.compile(r'^Ether\S+Segment *: +(?P<ethernet_segment>\S+)$')
 
         # Remote Ethernet Segment                 : 0000.0000.0000.0000.0000        
         p8 = re.compile(r'^Remote +Ethernet +Segment +: +(?P<remote_ethernet_segment>\S+)$')
@@ -199,7 +227,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         p22 = re.compile(r'^L3 +Label +: +(?P<l3_label>\d+)$')
 
         # Object: EVPN MAC
-        p23 = re.compile(r'^Object: +(?P<object>[\S ]+)$')
+        p23 = re.compile(r'^Object: +(?P<object_name>[\S ]+)$')
 
         # Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
         p24 = re.compile(r'^Base info: +version=(?P<version>\S+), +flags=(?P<flags>\S+)'
@@ -207,6 +235,23 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         
         # EVPN MAC event history  [Num events: 0]
         p25 = re.compile(r'^EVPN +MAC +event +history +\[Num +events: +(?P<num_events>\d+)\]$')
+
+        # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
+        # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+        p26 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>\d+)'
+                ', +(?P<flag_2>\d+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
+
+        # Flush Count  : 0
+        p27 = re.compile(r'^Flush +Count *: +(?P<flush_count>\d+)$')
+
+        # BP IFH: 0
+        p28 = re.compile(r'^BP +IFH: +(?P<bp_ifh>\d+)$')
+
+        # Flush Seq ID : 0
+        p29 = re.compile(r'^Flush +Seq +ID +: +(?P<flush_seq_id>\d+)$')
+
+        # Static: No
+        p30 = re.compile(r'^Static: +(?P<static>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -231,6 +276,30 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id_dict.update({'label': label}) 
                 continue
             
+            # 001b.0100.0001 N/A                                     24014    7
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id = int(group['vpn_id'])
+                mac_address = group['mac_address']
+                next_hop = group['next_hop'].strip()
+                label = int(group['label'])
+
+                vpn_id_dict = ret_dict.setdefault('vpn_id', {}). \
+                    setdefault(vpn_id, {})
+                vpn_id_dict.update({'mac_address': mac_address})
+                vpn_id_dict.update({'next_hop': next_hop}) 
+                vpn_id_dict.update({'label': label}) 
+                continue
+            
+            # IP Address   : 7.7.7.8
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                ip_address = group['ip_address']
+                vpn_id_dict.update({'ip_address': ip_address})
+                continue
+
             # Ethernet Tag                            : 0
             m = p2.match(line)
             if m:
@@ -268,6 +337,13 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             
             # Local Ethernet Segment                  : 0000.0000.0000.0000.0000
             m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Ether.Segment: 0000.0000.0000.0000.0000
+            m = p7_1.match(line)
             if m:
                 group = m.groupdict()
                 vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
@@ -382,7 +458,9 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                object_name = group['object_name']
+                object_dict = vpn_id_dict.setdefault('object', {}). \
+                    setdefault(object_name, {})
                 continue
 
             # Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
@@ -393,7 +471,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 flags = group['flags']
                 base_info_type = int(group['type'])
                 reserved = int(group['reserved'])
-                base_info_dict = vpn_id_dict.setdefault('base_info', {})
+                base_info_dict = object_dict.setdefault('base_info', {})
                 base_info_dict.update({'version': version})
                 base_info_dict.update({'flags': flags})
                 base_info_dict.update({'type': base_info_type})
@@ -404,9 +482,45 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                vpn_id_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                object_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 continue
-
+            
+            # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
+            # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                index = event_history_index.get('event_history', 0) + 1
+                event_history_dict = object_dict.setdefault('event_history', {}). \
+                    setdefault(index, {})
+                event_history_dict.update({k:v.strip() for k, v in group.items() if v is not None})
+                event_history_index.update({'event_history': index})
+                continue
+            
+            # Flush Count  : 0
+            m = p27.match(line)
+            if m:
+                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # # BP IFH: 0
+            m = p28.match(line)
+            if m:
+                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Flush Seq ID : 0
+            m = p29.match(line)
+            if m:
+                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Static: No
+            m = p30.match(line)
+            if m:
+                vpn_id_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
         return ret_dict
 
 class ShowEvpnEviMacPrivate(ShowEvpnEviMac):
