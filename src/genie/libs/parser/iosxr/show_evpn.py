@@ -79,54 +79,57 @@ class ShowEvpnEviMacSchema(MetaParser):
     schema = {
         'vpn_id': {
             Any(): {
-                Optional('encap'): str,
-                'mac_address': str,
-                'ip_address': str,
-                'next_hop': str,
-                'label': int,
-                Optional('ethernet_tag'): int,
-                Optional('multipaths_resolved'): str,
-                Optional('multipaths_internal_label'): int,
-                Optional('local_static'): str,
-                Optional('remote_static'): str,
-                Optional('local_ethernet_segment'): str,
-                Optional('ethernet_segment'): str,
-                Optional('remote_ethernet_segment'): str,
-                Optional('local_sequence_number'): int,
-                Optional('remote_sequence_number'): int,
-                Optional('local_encapsulation'): str,
-                Optional('remote_encapsulation'): str,
-                Optional('esi_port_key'): int,
-                Optional('source'): str,
-                Optional('flush_requested'): int,
-                Optional('flush_received'): int,
-                Optional('flush_count'): int,
-                Optional('flush_seq_id'): int,
-                Optional('static'): str,
-                Optional('soo_nexthop'): str,
-                Optional('bp_xcid'): str,
-                Optional('bp_ifh'): str,
-                Optional('mac_state'): str,
-                Optional('mac_producers'): str,
-                Optional('local_router_mac'): str,
-                Optional('l3_label'): int,
-                Optional('object'): {
+                'mac_address': {
                     Any(): {
-                        Optional('base_info'): {
-                            'version': str,
-                            'flags': str,
-                            'type': int,
-                            'reserved': int
-                        },
-                        Optional('num_events'): int,
-                        Optional('event_history'): {
+                        Optional('encap'): str,
+                        'ip_address': str,
+                        'next_hop': str,
+                        'label': int,
+                        Optional('ethernet_tag'): int,
+                        Optional('multipaths_resolved'): str,
+                        Optional('multipaths_internal_label'): int,
+                        Optional('local_static'): str,
+                        Optional('remote_static'): str,
+                        Optional('local_ethernet_segment'): str,
+                        Optional('ethernet_segment'): str,
+                        Optional('remote_ethernet_segment'): str,
+                        Optional('local_sequence_number'): int,
+                        Optional('remote_sequence_number'): int,
+                        Optional('local_encapsulation'): str,
+                        Optional('remote_encapsulation'): str,
+                        Optional('esi_port_key'): int,
+                        Optional('source'): str,
+                        Optional('flush_requested'): int,
+                        Optional('flush_received'): int,
+                        Optional('flush_count'): int,
+                        Optional('flush_seq_id'): int,
+                        Optional('static'): str,
+                        Optional('soo_nexthop'): str,
+                        Optional('bp_xcid'): str,
+                        Optional('bp_ifh'): str,
+                        Optional('mac_state'): str,
+                        Optional('mac_producers'): str,
+                        Optional('local_router_mac'): str,
+                        Optional('l3_label'): int,
+                        Optional('object'): {
                             Any(): {
-                                'time': str,
-                                'event': str,
-                                'flag_1': str,
-                                'flag_2': str,
-                                'code_1': str,
-                                'code_2': str,
+                                Optional('base_info'): {
+                                    'version': str,
+                                    'flags': str,
+                                    'type': int,
+                                    'reserved': int
+                                },
+                                Optional('num_events'): int,
+                                Optional('event_history'): {
+                                    Any(): {
+                                        'time': str,
+                                        'event': str,
+                                        'flag_1': str,
+                                        'flag_2': str,
+                                        'code_1': str,
+                                        'code_2': str,
+                                    }
+                                }
                             }
                         }
                     }
@@ -268,9 +271,10 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 label = int(group['label'])
 
                 vpn_id_dict = ret_dict.setdefault('vpn_id', {}). \
-                    setdefault(vpn_id, {})
+                    setdefault(vpn_id, {}). \
+                    setdefault('mac_address', {}). \
+                    setdefault(mac_address, {})
                 vpn_id_dict.update({'encap': encap}) 
-                vpn_id_dict.update({'mac_address': mac_address})
                 vpn_id_dict.update({'ip_address': ip_address})
                 vpn_id_dict.update({'next_hop': next_hop}) 
                 vpn_id_dict.update({'label': label}) 
@@ -286,8 +290,9 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 label = int(group['label'])
 
                 vpn_id_dict = ret_dict.setdefault('vpn_id', {}). \
-                    setdefault(vpn_id, {})
-                vpn_id_dict.update({'mac_address': mac_address})
+                    setdefault(vpn_id, {}). \
+                    setdefault('mac_address', {}). \
+                    setdefault(mac_address, {})
                 vpn_id_dict.update({'next_hop': next_hop}) 
                 vpn_id_dict.update({'label': label}) 
                 continue
