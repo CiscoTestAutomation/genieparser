@@ -81,6 +81,9 @@ class Traceroute(TracerouteSchema):
         # init index for paths
         index = 1
         # Type escape sequence to abort.
+        # traceroute 22.22.22.22
+        # traceroute vrf MG501 192.168.1.1 numeric 
+        p1 = re.compile(r'^traceroute +')
 
         # Tracing the route to 172.16.166.253
         p1_1 = re.compile(r'^Tracing +the +route +to +(?P<traceroute>(\S+))$')
@@ -123,11 +126,9 @@ class Traceroute(TracerouteSchema):
         # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
         # 7 172.31.166.10 92 msec 51 msec 148 msec
         # 8 10.169.197.101 1 msec 1 msec *
-        p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))'
-                         '(?: +\[(?P<label_name>(MPLS)): +Label (?P<label>(\d+))'
-                         ' +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
-        # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
-        p4_1 = re.compile(r'^(?P<hop>\d+) +(?P<address>[\S]+) +\[(?P<label_name>\S+): +Labels +(?P<label>[\S]+) +Exp +(?P<exp>\d+)\] +(?P<probe_msec>[\S ]+)')
+        # 1 27.86.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+        p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))(?: +\[(?P<label_name>(MPLS))'
+                ': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
         # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
         p5 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<name>[\S]+)'
                          ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
@@ -136,6 +137,12 @@ class Traceroute(TracerouteSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            
+            # traceroute 22.22.22.22
+            # traceroute vrf MG501 192.168.1.1 numeric
+            m = p1.match(line)
+            if m:
+                continue
 
             # Tracing the route to 172.16.166.253
             m = p1_1.match(line)
@@ -243,28 +250,6 @@ class Traceroute(TracerouteSchema):
                 continue
 
             # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
-            m = p4_1.match(line)
-            if m:
-                group = m.groupdict()
-                if group.get('hop'):
-                    index = 1
-                    path_dict = tr_dict.setdefault('hops', {}).\
-                                        setdefault(group['hop'], {}).setdefault('paths',{})
-                index_dict = path_dict.setdefault(index, {})
-                index_dict['address'] = group['address']
-                index_dict['probe_msec'] = group['probe_msec'].strip().\
-                                            replace(" msec", "").\
-                                            replace(" ms", "").\
-                                            split()
-                if group['label_name']:
-                    label_dict = index_dict.setdefault('label_info', {}).\
-                                           setdefault(group['label_name'], {})
-                    label_dict['label'] = group['label']
-                    label_dict['exp'] = int(group['exp'])
-                index += 1
-                continue
-
-            # 1 172.31.255.125 [MPLS: Label 624 Exp 0] 70 msec 200 msec 19 msec
             # 2 10.0.9.1 [MPLS: Label 300678 Exp 0] 177 msec 150 msec 9 msec
             # 3 192.168.14.61 [MPLS: Label 302537 Exp 0] 134 msec 1 msec 55 msec
             # 4 192.168.15.1 [MPLS: Label 24133 Exp 0] 6 msec 7 msec 64 msec
@@ -287,7 +272,7 @@ class Traceroute(TracerouteSchema):
                                             split()
                 if group['label_name']:
                     label_dict = index_dict.setdefault('label_info', {}).\
-                                           setdefault(group['label_name'], {})
+                                        setdefault(group['label_name'], {})
                     label_dict['label'] = group['label']
                     label_dict['exp'] = int(group['exp'])
                 index += 1
