@@ -20,248 +20,186 @@ from genie.metaparser.util.schemaengine import Schema, \
 from genie.libs.parser.base import *
 from genie.libs.parser.utils.common import Common
 
-# class ShowL2VpnXconnectSummary(MetaParser):
-#     """Parser for show l2vpn xconnect summary"""
-#     # parser class - implements detail parsing mechanisms for cli output.
+class ShowL2VpnXconnectSummary(MetaParser):
+    """Parser for show l2vpn xconnect summary"""
+    # parser class - implements detail parsing mechanisms for cli output.
 
 
-#     #*************************
-#     # schema - class variable
-#     #
-#     # Purpose is to make sure the parser always return the output
-#     # (nested dict) that has the same data structure across all supported
-#     # parsing mechanisms (cli(), yang(), xml()).
-#     """
-#     schema = {'TODO:': {
-#                         'module': {
-#                                  Any(): {
-#                                          'bios_compile_time': str,
-#                                          'bios_version': str,
-#                                          'image_compile_time': str,
-#                                          'image_version': str,
-#                                          'status': str},}},
-#               'hardware': {
-#                         'bootflash': str,
-#                         'chassis': str,
-#                         'cpu': str,
-#                         'device_name': str,
-#                         'memory': str,
-#                         'model': str,
-#                         'processor_board_id': str,
-#                         'slots': str,
-#                         Any(): str,},
-#               'kernel_uptime': {
-#                         'days': str,
-#                         'hours': str,
-#                         'minutes': str,
-#                         'seconds': str},
-#               'reason': str,
-#               'software': {
-#                         'bios': str,
-#                         'bios_compile_time': str,
-#                         'kickstart': str,
-#                         'kickstart_compile_time': str,
-#                         'kickstart_image_file': str,
-#                         'system': str,
-#                         'system_compile_time': str,
-#                         'system_image_file': str},
-#               'system_version': str,
-#               Any(): str,}
-#     """
-#     cli_command = 'show l2vpn xconnect summary'
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+    """
+    schema = {'TODO:': {
+                        'module': {
+                                 Any(): {
+                                         'bios_compile_time': str,
+                                         'bios_version': str,
+                                         'image_compile_time': str,
+                                         'image_version': str,
+                                         'status': str},}},
+              'hardware': {
+                        'bootflash': str,
+                        'chassis': str,
+                        'cpu': str,
+                        'device_name': str,
+                        'memory': str,
+                        'model': str,
+                        'processor_board_id': str,
+                        'slots': str,
+                        Any(): str,},
+              'kernel_uptime': {
+                        'days': str,
+                        'hours': str,
+                        'minutes': str,
+                        'seconds': str},
+              'reason': str,
+              'software': {
+                        'bios': str,
+                        'bios_compile_time': str,
+                        'kickstart': str,
+                        'kickstart_compile_time': str,
+                        'kickstart_image_file': str,
+                        'system': str,
+                        'system_compile_time': str,
+                        'system_image_file': str},
+              'system_version': str,
+              Any(): str,}
+    """
+    cli_command = 'show l2vpn xconnect summary'
 
-#     def cli(self):
-#         '''parsing mechanism: cli
-#         '''
+    def cli(self):
+        '''parsing mechanism: cli
+        '''
 
-#         tcl_package_require_caas_parsers()
-#         kl = tcl_invoke_caas_abstract_parser(
-#             device=self.device, exec=self.cli_command)
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=self.cli_command)
 
-#         return kl
-
-
-# class ShowL2VpnXconnectBrief(MetaParser):
-#     """Parser for show l2vpn xconnect brief"""
-#     # parser class - implements detail parsing mechanisms for cli output.
+        return kl
 
 
-#     #*************************
-#     # schema - class variable
-#     #
-#     # Purpose is to make sure the parser always return the output
-#     # (nested dict) that has the same data structure across all supported
-#     # parsing mechanisms (cli(), yang(), xml()).
-#     """
-#     schema = {'TODO:': {
-#                         'module': {
-#                                  Any(): {
-#                                          'bios_compile_time': str,
-#                                          'bios_version': str,
-#                                          'image_compile_time': str,
-#                                          'image_version': str,
-#                                          'status': str},}},
-#               'hardware': {
-#                         'bootflash': str,
-#                         'chassis': str,
-#                         'cpu': str,
-#                         'device_name': str,
-#                         'memory': str,
-#                         'model': str,
-#                         'processor_board_id': str,
-#                         'slots': str,
-#                         Any(): str,},
-#               'kernel_uptime': {
-#                         'days': str,
-#                         'hours': str,
-#                         'minutes': str,
-#                         'seconds': str},
-#               'reason': str,
-#               'software': {
-#                         'bios': str,
-#                         'bios_compile_time': str,
-#                         'kickstart': str,
-#                         'kickstart_compile_time': str,
-#                         'kickstart_image_file': str,
-#                         'system': str,
-#                         'system_compile_time': str,
-#                         'system_image_file': str},
-#               'system_version': str,
-#               Any(): str,}
-#     """
-#     cli_command = 'show l2vpn xconnect brief'
-#     def cli(self):
-#         '''parsing mechanism: cli
-#         '''
-
-#         tcl_package_require_caas_parsers()
-#         kl = tcl_invoke_caas_abstract_parser(
-#             device=self.device, exec=self.cli_command)
-
-#         return kl
+class ShowL2VpnXconnectBrief(MetaParser):
+    """Parser for show l2vpn xconnect brief"""
+    # parser class - implements detail parsing mechanisms for cli output.
 
 
-# class ShowL2VpnXconnectDetail(MetaParser):
-#     """Parser for show l2vpn xconnect detail"""
-#     # parser class - implements detail parsing mechanisms for cli output.
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+    """
+    schema = {'TODO:': {
+                        'module': {
+                                 Any(): {
+                                         'bios_compile_time': str,
+                                         'bios_version': str,
+                                         'image_compile_time': str,
+                                         'image_version': str,
+                                         'status': str},}},
+              'hardware': {
+                        'bootflash': str,
+                        'chassis': str,
+                        'cpu': str,
+                        'device_name': str,
+                        'memory': str,
+                        'model': str,
+                        'processor_board_id': str,
+                        'slots': str,
+                        Any(): str,},
+              'kernel_uptime': {
+                        'days': str,
+                        'hours': str,
+                        'minutes': str,
+                        'seconds': str},
+              'reason': str,
+              'software': {
+                        'bios': str,
+                        'bios_compile_time': str,
+                        'kickstart': str,
+                        'kickstart_compile_time': str,
+                        'kickstart_image_file': str,
+                        'system': str,
+                        'system_compile_time': str,
+                        'system_image_file': str},
+              'system_version': str,
+              Any(): str,}
+    """
+    cli_command = 'show l2vpn xconnect brief'
+    def cli(self):
+        '''parsing mechanism: cli
+        '''
 
-#     #*************************
-#     # schema - class variable
-#     #
-#     # Purpose is to make sure the parser always return the output
-#     # (nested dict) that has the same data structure across all supported
-#     # parsing mechanisms (cli(), yang(), xml()).
-#     """
-#     schema = {'cmp': {
-#                         'module': {
-#                                  Any(): {
-#                                          'bios_compile_time': str,
-#                                          'bios_version': str,
-#                                          'image_compile_time': str,
-#                                          'image_version': str,
-#                                          'status': str},}},
-#               'hardware': {
-#                         'bootflash': str,
-#                         'chassis': str,
-#                         'cpu': str,
-#                         'device_name': str,
-#                         'memory': str,
-#                         'model': str,
-#                         'processor_board_id': str,
-#                         'slots': str,
-#                         Any(): str,},
-#               'kernel_uptime': {
-#                         'days': str,
-#                         'hours': str,
-#                         'minutes': str,
-#                         'seconds': str},
-#               'reason': str,
-#               'software': {
-#                         'bios': str,
-#                         'bios_compile_time': str,
-#                         'kickstart': str,
-#                         'kickstart_compile_time': str,
-#                         'kickstart_image_file': str,
-#                         'system': str,
-#                         'system_compile_time': str,
-#                         'system_image_file': str},
-#               'system_version': str,
-#               Any(): str,}
-#     """
-#     cli_command = 'show l2vpn xconnect detail'
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=self.cli_command)
 
-#     def cli(self):
-#         '''parsing mechanism: cli
-#         '''
+        return kl
 
+class ShowL2VpnXconnectMp2mpDetail(MetaParser):
+    """Parser for show l2vpn xconnect mp2mp detail"""
+    # parser class - implements detail parsing mechanisms for cli output.
 
-#         tcl_package_require_caas_parsers()
-#         kl = tcl_invoke_caas_abstract_parser(
-#             device=self.device, exec=self.cli_command)
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+    """
+    schema = {'cmp': {
+                        'module': {
+                                 Any(): {
+                                         'bios_compile_time': str,
+                                         'bios_version': str,
+                                         'image_compile_time': str,
+                                         'image_version': str,
+                                         'status': str},}},
+              'hardware': {
+                        'bootflash': str,
+                        'chassis': str,
+                        'cpu': str,
+                        'device_name': str,
+                        'memory': str,
+                        'model': str,
+                        'processor_board_id': str,
+                        'slots': str,
+                        Any(): str,},
+              'kernel_uptime': {
+                        'days': str,
+                        'hours': str,
+                        'minutes': str,
+                        'seconds': str},
+              'reason': str,
+              'software': {
+                        'bios': str,
+                        'bios_compile_time': str,
+                        'kickstart': str,
+                        'kickstart_compile_time': str,
+                        'kickstart_image_file': str,
+                        'system': str,
+                        'system_compile_time': str,
+                        'system_image_file': str},
+              'system_version': str,
+              Any(): str,}
+    """
+    cli_command = 'show l2vpn xconnect mp2mp detail'
 
-#         return kl
+    def cli(self):
+        '''parsing mechanism: cli
+        '''
 
+        tcl_package_require_caas_parsers()
+        kl = tcl_invoke_caas_abstract_parser(
+            device=self.device, exec=self.cli_command)
 
-# class ShowL2VpnXconnectMp2mpDetail(MetaParser):
-#     """Parser for show l2vpn xconnect mp2mp detail"""
-#     # parser class - implements detail parsing mechanisms for cli output.
+        return kl
 
-#     #*************************
-#     # schema - class variable
-#     #
-#     # Purpose is to make sure the parser always return the output
-#     # (nested dict) that has the same data structure across all supported
-#     # parsing mechanisms (cli(), yang(), xml()).
-#     """
-#     schema = {'cmp': {
-#                         'module': {
-#                                  Any(): {
-#                                          'bios_compile_time': str,
-#                                          'bios_version': str,
-#                                          'image_compile_time': str,
-#                                          'image_version': str,
-#                                          'status': str},}},
-#               'hardware': {
-#                         'bootflash': str,
-#                         'chassis': str,
-#                         'cpu': str,
-#                         'device_name': str,
-#                         'memory': str,
-#                         'model': str,
-#                         'processor_board_id': str,
-#                         'slots': str,
-#                         Any(): str,},
-#               'kernel_uptime': {
-#                         'days': str,
-#                         'hours': str,
-#                         'minutes': str,
-#                         'seconds': str},
-#               'reason': str,
-#               'software': {
-#                         'bios': str,
-#                         'bios_compile_time': str,
-#                         'kickstart': str,
-#                         'kickstart_compile_time': str,
-#                         'kickstart_image_file': str,
-#                         'system': str,
-#                         'system_compile_time': str,
-#                         'system_image_file': str},
-#               'system_version': str,
-#               Any(): str,}
-#     """
-#     cli_command = 'show l2vpn xconnect mp2mp detail'
-
-#     def cli(self):
-#         '''parsing mechanism: cli
-#         '''
-
-#         tcl_package_require_caas_parsers()
-#         kl = tcl_invoke_caas_abstract_parser(
-#             device=self.device, exec=self.cli_command)
-
-#         return kl
-
-# # vim: ft=python ts=8 sw=4 et
+# vim: ft=python ts=8 sw=4 et
 
 class ShowL2vpnXconnectDetailSchema(MetaParser):
     schema = {
