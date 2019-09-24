@@ -11,3 +11,6 @@
 * IOSXE
     * Update ShowIpv6Neighbors
         * Add command 'show ipv6 neighbors {interface}'
+        * Add command 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Update ShowIpv6Interface
+        * Add 'suppress' key to schema
