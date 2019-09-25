@@ -817,6 +817,7 @@ class ShowIpOspfMplsLdpInterfaceSchema(MetaParser):
 class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
     """Parser for:
         show ip ospf mpls ldp interface
+        show ip ospf mpls ldp interface <interface>
         show ip ospf mpls ldp interface vrf <vrf>"""
 
     cli_command = ['show ip ospf mpls ldp interface vrf {vrf}',
@@ -1797,6 +1798,7 @@ class ShowIpOspfInterfaceSchema(MetaParser):
 class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
     """Parser for:
         show ip ospf interface
+        show ip ospf interface <interface>
         show ip ospf interface vrf <vrf>"""
 
     cli_command = ['show ip ospf interface vrf {vrf}',
@@ -2334,7 +2336,9 @@ class ShowIpOspfNeighborDetailSchema(MetaParser):
 class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
     """Parser for:
         show ip ospf neighbors detail
-        show ip ospf neighbors detail vrf <vrf>"""
+        show ip ospf neighbors <neighbor> detail
+        show ip ospf neighbors detail vrf <vrf>
+        show ip ospf neighbors <neighbor> detail vrf <vrf>"""
 
     cli_command = ['show ip ospf neighbors detail vrf {vrf}',
                    'show ip ospf neighbors {neighbor} detail vrf {vrf}',
