@@ -382,7 +382,10 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Label        30005                          unknown
         # Group ID     0x5000300                      0x0
         # VCCV CV type 0x2                            0x0
-        p15 = re.compile(r'^(?P<mpls>[\S ]+)\s+(?P<local>\S+)\s+(?P<remote>\S+)$')
+        # Avoid show commands: show l2vpn xconnect detail
+        # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
+        p15 = re.compile(r'^(?!(show +l2vpn))(?P<mpls>[\S ]+)\s+'
+                '(?P<local>\S+)\s+(?P<remote>\S+)$')
 
         # Create time: 20/11/2007 21:45:06 (00:53:31 ago)
         p16 = re.compile(r'^Create +time: +(?P<create_time>[\S ]+)$')
@@ -402,11 +405,20 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Backup for neighbor 10.1.1.1 PW ID 1 ( active )
         p21 = re.compile(r'^Backup( +PW)? +for +neighbor +\S+ +PW +ID +\d+( +\( +\w+ +\))?$')
 
+        # Avoid Device name : Device#
+        # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
+        p22 = re.compile(r'^(\w+ +\w+ \d+ +\S+ +\w+)|(\S+\#)$')
 
         for line in out.splitlines():
             original_line = line
             line = line.strip()
             
+            # Avoid show commands : show l2vpn xconnect detail
+            # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
+            m = p22.match(line)
+            if m:
+                continue
+
             # Group siva_xc, XC siva_p2p, state is down; Interworking none
             m = p1.match(line)
             if m:

@@ -345,6 +345,8 @@ class test_show_l2vpn_xconnect_detail(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
+    show l2vpn xconnect detail
+    Wed Sep 25 20:09:36.362 UTC
     Group siva_xc, XC siva_p2p, state is down; Interworking none
       Monitor-Session: pw-span-test, state is configured
     AC: GigabitEthernet0/4/0/1, state is up
