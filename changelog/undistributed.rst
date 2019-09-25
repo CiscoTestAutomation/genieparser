@@ -119,6 +119,13 @@
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+* NXOS
+	* Updated ShowIpOspfMplsLdpInterface
+		* add custom interface argument
+	* Updated ShowIpOspfInterface
+		* add custom interface argument
+	* Updated ShowIpOspfNeighborDetail
+		* added custom neighbor argument
 
 --------------------------------------------------------------------------------
                                 dot1x
