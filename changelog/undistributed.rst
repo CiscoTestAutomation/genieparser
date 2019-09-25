@@ -32,3 +32,10 @@
 * IOSXR  
     * Added ShowEthernetCfmMeps for:
         * show ethernet cfm peer meps
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpRouteWord:
+        * Updated regex to accommodate different formats
