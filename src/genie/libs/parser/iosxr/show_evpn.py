@@ -74,7 +74,11 @@ class ShowEvpnEviDetail(MetaParser):
 
 
 class ShowEvpnEviMacSchema(MetaParser):
-    """Parser class for 'show evpn evi mac' CLI."""
+    ''' Schema for:
+        * 'show evpn evi mac'
+        * 'show evpn evi mac private'
+        * 'show evpn evi vpn-id {vpn_id} mac'
+    '''
 
     schema = {
         'vpn_id': {
@@ -138,8 +142,19 @@ class ShowEvpnEviMacSchema(MetaParser):
         }
     }
 
+# =====================================================
+# Parser for:
+#   * 'show evpn evi mac'
+#   * 'show evpn evi vpn-id {vpn_id} mac'
+# =====================================================
+
 class ShowEvpnEviMac(ShowEvpnEviMacSchema):
     
+    ''' Parser for:
+        * 'show evpn evi mac'
+        * 'show evpn evi vpn-id {vpn_id} mac'
+    '''
+
     cli_command = ['show evpn evi mac', 
                     'show evpn evi vpn-id {vpn_id} mac']
 
@@ -540,7 +555,7 @@ class ShowEvpnEviMacPrivate(ShowEvpnEviMac):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        return super().cli(output=output)
+        return super().cli(output=out)
 
 class ShowEvpnEthernetSegment(MetaParser):
     """Parser class for 'show evpn ethernet-segment' CLI."""
