@@ -230,10 +230,10 @@ class test_show_l2vpn_xconnect_detail(unittest.TestCase):
                                         'interface': {
                                             'local': 'GigabitEthernet0/4/0/1',
                                             'remote': 'unknown',
-                                            'monitor_interface': {
-                                                'local': 'pw-span-test',
-                                                'remote': 'GigabitEthernet0/3/0/1',
-                                            },
+                                        },
+                                        'monitor_interface': {
+                                            'local': 'pw-span-test',
+                                            'remote': 'GigabitEthernet0/3/0/1',
                                         },
                                         'mtu': {
                                             'local': '1500',

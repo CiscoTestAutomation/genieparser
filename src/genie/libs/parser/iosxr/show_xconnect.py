@@ -252,10 +252,6 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'remote': str,
                                             Optional('local_type'): list,
                                             Optional('remote_type'): list,
-                                            Optional('monitor_interface'): {
-                                                'local': str,
-                                                'remote': str
-                                            }
                                         }
                                     },
                                     'create_time': str,
@@ -291,10 +287,6 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'remote': str,
                                             Optional('local_type'): list,
                                             Optional('remote_type'): list,
-                                            Optional('monitor_interface'): {
-                                                'local': str,
-                                                'remote': str
-                                            }
                                         }
                                     },
                                     'create_time': str,
@@ -660,13 +652,14 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 remote = group['remote']
                 if mpls == 'interface':
                     if interface_found:
-                        interface_dict = mpls_dict.setdefault('monitor_interface', {})
+                        interface_dict = current_dict.setdefault('mpls', {}). \
+                            setdefault('monitor_interface', {})
                         interface_dict.update({'local': local})
                         interface_dict.update({'remote': remote})
                     else:
                         interface_found = True
                         mpls_dict = current_dict.setdefault('mpls', {}). \
-                        setdefault(mpls, {})
+                            setdefault(mpls, {})
                         mpls_dict.update({'local': local})
                         mpls_dict.update({'remote': remote})
                 else:
