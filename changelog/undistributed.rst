@@ -8,7 +8,6 @@
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
-<<<<<<< HEAD
 * NXOS
     * Update ShowInterfaceBrief
         * Add command 'show interface {interface} brief'
@@ -212,11 +211,15 @@
 --------------------------------------------------------------------------------
                                 Spanning-Tree
 --------------------------------------------------------------------------------
-=======
->>>>>>> dev
 * IOSXE
     * Update ShowIpv6Neighbors
         * Add command 'show ipv6 neighbors {interface}'
+        * Add command 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Update ShowIpv6Interface
+        * Add 'suppress' key to schema
+* NXOS
+    * Update ShowIpv6MldInterfaceSchema
+        * Added support for 'show ipv6 mld interface vrf all'
 
 --------------------------------------------------------------------------------
                                 CDP
@@ -226,23 +229,20 @@
         * show cdp neighbors
 
 --------------------------------------------------------------------------------
+
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
-<<<<<<< HEAD
     * Updated ShowRunningConfigNvOverlay for more varied output
     * Updated ShowNveInterfaceDetail:
         * Change {intf} and argument 'intf' into {interface} and 'interface'
-
-=======
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
->>>>>>> dev
 
 --------------------------------------------------------------------------------
+
                                 Ethernet
 --------------------------------------------------------------------------------
-<<<<<<< HEAD
 * IOS
     * Added ShowModule parse for Cat6k devices
 
@@ -266,9 +266,13 @@
 * NXOS
     * Updated ShowMacAddressTableVni:
         * Change {intf} and argument 'intf' into {interface} and 'interface'
-
-=======
 * IOSXR  
     * Added ShowEthernetCfmMeps for:
         * show ethernet cfm peer meps
->>>>>>> dev
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+	* Updated ShowIpCef to parse outputs without routes
+

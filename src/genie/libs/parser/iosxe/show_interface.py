@@ -2270,6 +2270,7 @@ class ShowIpv6InterfaceSchema(MetaParser):
                             Optional('unreachables'): str,
                         },
                         Optional('nd'): {
+                            Optional('suppress'): bool,
                             Optional('dad_enabled'): bool,
                             Optional('dad_attempts'): int,
                             Optional('reachable_time'): int,
@@ -2344,9 +2345,9 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # IPv6 is enabled, link-local address is FE80::257:D2FF:FE28:
             # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [TEN]
             # IPv6 is tentative, link-local address is FE80::257:D2FF:FE28:1A64 [UNA/TEN]
-            p2 =  re.compile(r'^IPv6 +is +(?P<status>\w+), +'
-                              'link-local +address +is +(?P<link_local>[\w\:]+)'
-                              '( *\[(?P<type>[\w\/]+)\])?$')
+            p2 = re.compile(r'^IPv6 +is +(?P<status>\w+), +'
+                             'link-local +address +is +(?P<link_local>[\w\:]+)'
+                             '( *\[(?P<type>[\w\/]+)\])?$')
             m = p2.match(line)
             if m:
                 status = m.groupdict()['status']
@@ -2372,14 +2373,14 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # No Virtual link-local address(es):
             # Virtual link-local address(es):
             # FE80::5:73FF:FEA0:16 [UNA/OOD]
-            p21 =  re.compile(r'^Virtual +link\-local +address\(es\)\:$')
+            p21 = re.compile(r'^Virtual +link\-local +address\(es\)\:$')
             m = p21.match(line)
             if m:
                 ipv6 = True
                 continue
 
-            p21_1 =  re.compile(r'^(?P<ipv6>[\w\:]+)'
-                             '( *\[(?P<type>[\w\/]+)\])?$')
+            p21_1 = re.compile(r'^(?P<ipv6>[\w\:]+)'
+                                '( *\[(?P<type>[\w\/]+)\])?$')
             m = p21_1.match(line)
             if m and ipv6:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2404,7 +2405,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # Stateless address autoconfig enabled
-            p3 =  re.compile(r'^Stateless +address +autoconfig +enabled$')
+            p3 = re.compile(r'^Stateless +address +autoconfig +enabled$')
             m = p3.match(line)
             if m:
                 ret_dict[intf]['autoconf'] = True
@@ -2413,15 +2414,15 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # Global unicast address(es):
             #   2001:10::14:1, subnet is 2001:10::14:0/112 
             #   2001:DB8:3:3::3, subnet is 2001:DB8:3:3::/64 [ANY/TEN]
-            p4 =  re.compile(r'^Global +unicast +address\(es\):$')
+            p4 = re.compile(r'^Global +unicast +address\(es\):$')
             m = p4.match(line)
             if m:
                 ipv6 = True
                 continue
 
-            p4_1 =  re.compile(r'^(?P<ipv6>[\w\:]+), +subnet +is +(?P<dum1>(?P<dum2>[\w\:]+)'
-                             '\/(?P<prefix_length>[0-9]+))'
-                             '( *\[(?P<type>[\w\/]+)\])?$')
+            p4_1 = re.compile(r'^(?P<ipv6>[\w\:]+), +subnet +is +(?P<dum1>(?P<dum2>[\w\:]+)'
+                               '\/(?P<prefix_length>[0-9]+))'
+                               '( *\[(?P<type>[\w\/]+)\])?$')
             m = p4_1.match(line)
             if m and ipv6:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2462,8 +2463,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             #     valid lifetime 2591911 preferred lifetime 604711
-            p4_2 =  re.compile(r'^valid +lifetime +(?P<valid>\d+) +'
-                                'preferred +lifetime +(?P<preferred>\d+)$')
+            p4_2 = re.compile(r'^valid +lifetime +(?P<valid>\d+) +'
+                               'preferred +lifetime +(?P<preferred>\d+)$')
             m = p4_2.match(line)
             if m and ipv6:
                 try:
@@ -2483,13 +2484,13 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             #   FF02::1
             #   FF02::1:FF14:1
             #   FF02::1:FF28:1A71
-            p5 =  re.compile(r'^Joined +group +address\(es\):$')
+            p5 = re.compile(r'^Joined +group +address\(es\):$')
             m = p5.match(line)
             if m:
                 ipv6 = False
                 continue
 
-            p5_1 =  re.compile(r'^(?P<address>[\w\:]+)$')
+            p5_1 = re.compile(r'^(?P<address>[\w\:]+)$')
             m = p5_1.match(line)
             if m and not ipv6:
                 joined_group.append(m.groupdict()['address'])
@@ -2497,22 +2498,22 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # MTU is 1500 bytes
-            p6 =  re.compile(r'^MTU +is +(?P<mtu>\d+) +bytes$')
+            p6 = re.compile(r'^MTU +is +(?P<mtu>\d+) +bytes$')
             m = p6.match(line)
             if m:
                 ret_dict[intf]['mtu'] = int(m.groupdict()['mtu'])                    
                 continue
 
             # VPN Routing/Forwarding "VRF1"
-            p6 =  re.compile(r'^VPN +Routing\/Forwarding +\"(?P<vrf>[\w\-]+)\"$')
+            p6 = re.compile(r'^VPN +Routing\/Forwarding +\"(?P<vrf>[\w\-]+)\"$')
             m = p6.match(line)
             if m:
                 ret_dict[intf]['vrf'] = m.groupdict()['vrf']
                 continue
 
             # ICMP error messages limited to one every 100 milliseconds
-            p7 =  re.compile(r'^ICMP +error +messages +limited +to +one +'
-                              'every +(?P<limited>\d+) +milliseconds$')
+            p7 = re.compile(r'^ICMP +error +messages +limited +to +one +'
+                             'every +(?P<limited>\d+) +milliseconds$')
             m = p7.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2524,7 +2525,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # ICMP redirects are enabled
-            p8 =  re.compile(r'^ICMP +redirects +are +(?P<status>\w+)$')
+            p8 = re.compile(r'^ICMP +redirects +are +(?P<status>\w+)$')
             m = p8.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2538,7 +2539,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # ICMP unreachables are sent
-            p9 =  re.compile(r'^ICMP +unreachables +are +(?P<status>[\w\s]+)$')
+            p9 = re.compile(r'^ICMP +unreachables +are +(?P<status>[\w\s]+)$')
             m = p9.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2550,127 +2551,110 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # ND DAD is enabled, number of DAD attempts: 1
-            p10 =  re.compile(r'^ND +DAD +is +(?P<status>\w+), +'
-                               'number +of +DAD +attempts: +(?P<attempts>\d+)$')
+            p10 = re.compile(r'^ND +DAD +is +(?P<status>\w+), +'
+                              'number +of +DAD +attempts: +(?P<attempts>\d+)$')
             m = p10.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                
                 if 'enabled' in m.groupdict()['status']:
-                    ret_dict[intf]['ipv6']['nd']['dad_enabled'] = True
+                    nd_dict['dad_enabled'] = True
                 else:
-                    ret_dict[intf]['ipv6']['nd']['dad_enabled'] = False
+                    nd_dict['dad_enabled'] = False
 
-                ret_dict[intf]['ipv6']['nd']['dad_attempts'] = int(m.groupdict()['attempts'])
+                nd_dict['dad_attempts'] = int(m.groupdict()['attempts'])
                 continue
 
             # ND reachable time is 30000 milliseconds (using 30000)
-            p11 =  re.compile(r'^ND +reachable +time +is (?P<time>\d+) +milliseconds'
-                               ' +\(using +(?P<use>\d+)\)$')
+            p11 = re.compile(r'^ND +reachable +time +is (?P<time>\d+) +milliseconds'
+                              ' +\(using +(?P<use>\d+)\)$')
             m = p11.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['reachable_time'] = int(m.groupdict()['time'])
-                ret_dict[intf]['ipv6']['nd']['using_time'] = int(m.groupdict()['use'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['reachable_time'] = int(m.groupdict()['time'])
+                nd_dict['using_time'] = int(m.groupdict()['use'])
                 continue
 
             # ND NS retransmit interval is 1000 milliseconds
-            p12 =  re.compile(r'^ND +NS +retransmit +interval +is'
-                               ' +(?P<interval>\d+) +milliseconds$')
+            p12 = re.compile(r'^ND +NS +retransmit +interval +is'
+                              ' +(?P<interval>\d+) +milliseconds$')
             m = p12.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['ns_retransmit_interval'] = \
-                    int(m.groupdict()['interval'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['ns_retransmit_interval'] = int(m.groupdict()['interval'])
                 continue
 
             # ND advertised reachable time is 0 (unspecified)
-            p13 =  re.compile(r'^ND +advertised +reachable +time +is +(?P<time>\d+)'
-                               ' +\((?P<dummy>\S+)\)$')
+            p13 = re.compile(r'^ND +advertised +reachable +time +is +(?P<time>\d+)'
+                              ' +\((?P<dummy>\S+)\)$')
             m = p13.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['advertised_reachable_time'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['advertised_reachable_time'] = int(m.groupdict()['time'])
                 if m.groupdict()['dummy'] == 'unspecified':
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_reachable_time_unspecified'] = True
+                    nd_dict['advertised_reachable_time_unspecified'] = True
                 else:
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_reachable_time_unspecified'] = False
+                    nd_dict['advertised_reachable_time_unspecified'] = False
                 continue
 
             # ND advertised retransmit interval is 0 (unspecified)
-            p14 =  re.compile(r'^ND +advertised +retransmit +interval +is +(?P<time>\d+)'
-                               ' +\((?P<dummy>\S+)\)$')
+            p14 = re.compile(r'^ND +advertised +retransmit +interval +is +(?P<time>\d+)'
+                              ' +\((?P<dummy>\S+)\)$')
             m = p14.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['advertised_retransmit_interval'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['advertised_retransmit_interval'] = int(m.groupdict()['time'])
                 if m.groupdict()['dummy'] == 'unspecified':
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_retransmit_interval_unspecified'] = True
+                    nd_dict['advertised_retransmit_interval_unspecified'] = True
                 else:
-                    ret_dict[intf]['ipv6']['nd']\
-                        ['advertised_retransmit_interval_unspecified'] = False
+                    nd_dict['advertised_retransmit_interval_unspecified'] = False
                 continue
 
             # ND router advertisements are sent every 200 seconds
-            p15 =  re.compile(r'^ND +router +advertisements +are +sent +'
-                               'every +(?P<time>\d+) +seconds$')
+            p15 = re.compile(r'^ND +router +advertisements +are +sent +'
+                              'every +(?P<time>\d+) +seconds$')
             m = p15.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['router_advertisements_interval'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['router_advertisements_interval'] = int(m.groupdict()['time'])
                 continue
 
             # ND router advertisements live for 1800 seconds
-            p16 =  re.compile(r'^ND +router +advertisements +live +for +'
-                               '(?P<time>\d+) +seconds$')
+            p16 = re.compile(r'^ND +router +advertisements +live +for +'
+                              '(?P<time>\d+) +seconds$')
             m = p16.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['router_advertisements_live'] = \
-                    int(m.groupdict()['time'])
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['router_advertisements_live'] = int(m.groupdict()['time'])
                 continue
 
             # ND advertised default router preference is Medium
-            p17 =  re.compile(r'^ND +advertised +default +router +preference +'
-                               'is +(?P<prefer>\w+)$')
+            p17 = re.compile(r'^ND +advertised +default +router +preference +'
+                              'is +(?P<prefer>\w+)$')
             m = p17.match(line)
             if m:
-                if 'ipv6' not in ret_dict[intf]:
-                    ret_dict[intf]['ipv6'] = {}
-                if 'nd' not in ret_dict[intf]['ipv6']:
-                    ret_dict[intf]['ipv6']['nd'] = {}
-                ret_dict[intf]['ipv6']['nd']['advertised_default_router_preference'] = \
-                    m.groupdict()['prefer']
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.setdefault('suppress', False)
+                nd_dict['advertised_default_router_preference'] = m.groupdict()['prefer']
+                continue
+
+            # ND RAs are suppressed (periodic)
+            p17_1 = re.compile(r'^ND +RAs +are +suppressed.*$')
+            m = p17_1.match(line)
+            if m:
+                nd_dict = ret_dict.setdefault(intf, {}).setdefault('ipv6', {}).setdefault('nd', {})
+                nd_dict.update({'suppress': True})
                 continue
 
             # Hosts use stateless autoconfig for addresses.
-            p18 =  re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +for +addresses.$')
+            p18 = re.compile(r'^Hosts +use +(?P<addr_conf_method>[\w\s]+) +for +addresses.$')
             m = p18.match(line)
             if m:
                 ret_dict[intf]['addresses_config_method'] = \
@@ -2678,8 +2662,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # Interface is unnumbered. Using address of Loopback0
-            p19 =  re.compile(r'^Interface +is +unnumbered. +Using +address +of'
-                               ' +(?P<unnumbered_intf>[\w\/\.]+)$')
+            p19 = re.compile(r'^Interface +is +unnumbered. +Using +address +of'
+                              ' +(?P<unnumbered_intf>[\w\/\.]+)$')
             m = p19.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
@@ -2691,7 +2675,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
                 continue
 
             # No global unicast address is configured
-            p20 =  re.compile(r'^No +global +unicast +address +is +configured$')
+            p20 = re.compile(r'^No +global +unicast +address +is +configured$')
             m = p20.match(line)
             if m:
                 if 'ipv6' not in ret_dict[intf]:
