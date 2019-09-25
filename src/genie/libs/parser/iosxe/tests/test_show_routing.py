@@ -1871,6 +1871,30 @@ class TestShowIpCef(unittest.TestCase):
             repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/8
     '''}
 
+    golden_parsed_output_7 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '0.0.0.0/0': {
+                                'epoch': 3,
+                                'flags': ['default route handler', 'default route'],
+                                'nexthop': {'no route': {}},
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+        show ip cef 10.169.196.241 detail
+        0.0.0.0/0, epoch 3, flags [default route handler, default route]
+        no route
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpCef(device=self.device)
@@ -1918,6 +1942,13 @@ class TestShowIpCef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
 
 ###################################################

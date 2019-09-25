@@ -3516,26 +3516,26 @@ class test_show_run_interface(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowRunningConfigInterface(device=self.device)
-        parsed_output = intf_obj.parse(intf='nve1')
+        parsed_output = intf_obj.parse(interface='nve1')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         intf_obj = ShowRunningConfigInterface(device=self.device)
-        parsed_output = intf_obj.parse(intf='nve1')
+        parsed_output = intf_obj.parse(interface='nve1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
       
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         intf_obj = ShowRunningConfigInterface(device=self.device)
-        parsed_output = intf_obj.parse(intf='Ethernet1/1')
+        parsed_output = intf_obj.parse(interface='Ethernet1/1')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         intf_obj = ShowRunningConfigInterface(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = intf_obj.parse(intf='nve1')
+            parsed_output = intf_obj.parse(interface='nve1')
 
 class test_show_nve_interface(unittest.TestCase):
 
@@ -3587,14 +3587,14 @@ class test_show_nve_interface(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowNveInterface(device=self.device)
-        parsed_output = obj.parse(intf='nve1')
+        parsed_output = obj.parse(interface='nve1')
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowNveInterface(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(intf='nve1')
+            parsed_output = obj.parse(interface='nve1')
 
 class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
 
