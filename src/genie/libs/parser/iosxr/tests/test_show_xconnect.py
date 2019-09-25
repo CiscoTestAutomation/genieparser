@@ -29,30 +29,28 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/0/0/5.1000': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '10.4.1.206': {
-                                        'pw_id': '1000',
+                                    '10.4.1.206       1000': {
                                         'status': 'DN',
-                                        },
                                     },
                                 },
                             },
                         },
+                    },
                     '2000': {
                         'status': 'DN',
                         'segment1': {
                             'GigabitEthernet0/0/0/5.2000': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '10.4.1.206': {
-                                        'pw_id': '2000',
+                                    '10.4.1.206       2000': {
                                         'status': 'DN',
-                                        },
                                     },
                                 },
                             },
                         },
                     },
                 },
+            },
             'Test_XCONN_Group2': {
                 'name': {
                     '3000': {
@@ -61,10 +59,8 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/0/0/5.3000': {
                                 'status': 'UR',
                                 'segment2': {
-                                    '10.4.1.206': {
-                                        'pw_id': '3000',
+                                    '10.4.1.206       3000': {
                                         'status': 'DN',
-                                        },
                                     },
                                 },
                             },
@@ -72,7 +68,8 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                     },
                 },
             },
-        }
+        },
+    }
 
     golden_output = {'execute.return_value': '''
     XRv01_NUC# show l2vpn xconnect
@@ -102,9 +99,8 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/2/0/1.2': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '26.26.26.26': {
+                                    '26.26.26.26     100': {
                                         'status': 'UP',
-                                        'pw_id': '100',
                                     },
                                 },
                             },
@@ -116,9 +112,8 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             'GigabitEthernet0/2/0/1.3': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '26.26.26.26': {
+                                    '26.26.26.26     200': {
                                         'status': 'UP',
-                                        'pw_id': '200',
                                     },
                                 },
                             },
@@ -170,10 +165,10 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
 
 
 # ==================================================
-#  Unit test for 'show l2vpn xconnect'
+#  Unit test for 'show l2vpn xconnect detail'
 # ==================================================
 
-class test_show_l2vpn_xconnect(unittest.TestCase):
+class test_show_l2vpn_xconnect_detail(unittest.TestCase):
     """Unit test for 'show l2vpn xconnect detail' """
 
     device = Device(name='aDevice')
@@ -210,118 +205,136 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
                             },
                         },
                         'pw': {
-                            'neighbor': '10.1.1.1',
-                            'id': 1,
-                            'state': 'down ( local ready )',
-                            'class_set': False,
-                            'xc_id': '0x5000001',
-                            'encapsulation': 'MPLS',
-                            'protocol': 'LDP',
-                            'type': 'Ethernet',
-                            'control_word': 'enabled',
-                            'interworking': 'none',
-                            'backup_disable_delay': 0,
-                            'sequencing_set': False,
-                            'mpls': {
-                                'Label': {
-                                    'local': '30005',
-                                    'remote': 'unknown',
-                                },
-                                'Group ID': {
-                                    'local': '0x5000300',
-                                    'remote': '0x0',
-                                },
-                                'Interface': {
-                                    'local': 'GigabitEthernet0/4/0/1',
-                                    'remote': 'unknown',
-                                },
-                                'MTU': {
-                                    'local': '1500',
-                                    'remote': 'unknown',
-                                },
-                                'Control word': {
-                                    'local': 'enabled',
-                                    'remote': 'unknown',
-                                },
-                                'PW type': {
-                                    'local': 'Ethernet',
-                                    'remote': 'unknown',
-                                },
-                                'VCCV CV type': {
-                                    'local': '0x2',
-                                    'remote': '0x0',
-                                },
-                                'VCCV CC type': {
-                                    'local': '0x3',
-                                    'remote': '0x0',
-                                },
-                            },
-                            'create_time': '20/11/2007 21:45:06 (00:53:31 ago)',
-                            'last_time_status_changed': '20/11/2007 22:38:14 (00:00:23 ago)',
-                            'statistics': {
-                                'packet_totals': {
-                                    'receive': 0,
-                                },
-                                'byte_totals': {
-                                    'receive': 0,
+                            'neighbor': {
+                                '10.1.1.1': {
+                                    'id': 1,
+                                    'state': 'down ( local ready )',
+                                    'pw_class': 'not set',
+                                    'xc_id': '0x5000001',
+                                    'encapsulation': 'MPLS',
+                                    'protocol': 'LDP',
+                                    'type': 'Ethernet',
+                                    'control_word': 'enabled',
+                                    'interworking': 'none',
+                                    'backup_disable_delay': 0,
+                                    'sequencing': 'not set',
+                                    'mpls': {
+                                        'label': {
+                                            'local': '30005',
+                                            'remote': 'unknown',
+                                        },
+                                        'group_id': {
+                                            'local': '0x5000300',
+                                            'remote': '0x0',
+                                        },
+                                        'interface': {
+                                            'local': 'GigabitEthernet0/4/0/1',
+                                            'remote': 'unknown',
+                                            'monitor_interface': {
+                                                'local': 'pw-span-test',
+                                                'remote': 'GigabitEthernet0/3/0/1',
+                                            },
+                                        },
+                                        'mtu': {
+                                            'local': '1500',
+                                            'remote': 'unknown',
+                                        },
+                                        'control_word': {
+                                            'local': 'enabled',
+                                            'remote': 'unknown',
+                                        },
+                                        'pw_type': {
+                                            'local': 'Ethernet',
+                                            'remote': 'unknown',
+                                        },
+                                        'vccv_cv_type': {
+                                            'local': '0x2',
+                                            'remote': '0x0',
+                                            'local_type': ['LSP ping verification'],
+                                            'remote_type': ['none'],
+                                        },
+                                        'vccv_cc_type': {
+                                            'local': '0x3',
+                                            'remote': '0x0',
+                                            'local_type': ['control word', 'router alert label'],
+                                            'remote_type': ['none'],
+                                        },
+                                    },
+                                    'create_time': '20/11/2007 21:45:06 (00:53:31 ago)',
+                                    'last_time_status_changed': '20/11/2007 22:38:14 (00:00:23 ago)',
+                                    'statistics': {
+                                        'packet_totals': {
+                                            'receive': 0,
+                                        },
+                                        'byte_totals': {
+                                            'receive': 0,
+                                        },
+                                    },
                                 },
                             },
                         },
                         'backup_pw': {
-                            'neighbor': '10.2.2.2',
-                            'id': 2,
-                            'state': 'up ( established )',
-                            'class_set': False,
-                            'xc_id': '0x0',
-                            'encapsulation': 'MPLS',
-                            'protocol': 'LDP',
-                            'type': 'Ethernet',
-                            'control_word': 'enabled',
-                            'interworking': 'none',
-                            'backup_disable_delay': 0,
-                            'sequencing_set': False,
-                            'mpls': {
-                                'Label': {
-                                    'local': '30006',
-                                    'remote': '16003',
-                                },
-                                'Group ID': {
-                                    'local': 'unassigned',
-                                    'remote': '0x5000400',
-                                },
-                                'Interface': {
-                                    'local': 'unknown',
-                                    'remote': 'GigabitEthernet0/4/0/2',
-                                },
-                                'MTU': {
-                                    'local': '1500',
-                                    'remote': '1500',
-                                },
-                                'Control word': {
-                                    'local': 'enabled',
-                                    'remote': 'enabled',
-                                },
-                                'PW type': {
-                                    'local': 'Ethernet',
-                                    'remote': 'Ethernet',
-                                },
-                                'VCCV CV type': {
-                                    'local': '0x2',
-                                    'remote': '0x2',
-                                },
-                                'VCCV CC type': {
-                                    'local': '0x3',
-                                    'remote': '0x3',
-                                },
-                            },
-                            'create_time': '20/11/2007 21:45:44 (00:52:54 ago)',
-                            'last_time_status_changed': '20/11/2007 21:45:48 (00:52:49 ago)',
-                            'statistics': {
-                                'packet_totals': {
-                                    'receive': 0,
-                                },
-                                'byte_totals': {
-                                    'receive': 0,
+                            'neighbor': {
+                                '10.2.2.2': {
+                                    'id': 2,
+                                    'state': 'up ( established )',
+                                    'pw_class': 'not set',
+                                    'xc_id': '0x0',
+                                    'encapsulation': 'MPLS',
+                                    'protocol': 'LDP',
+                                    'type': 'Ethernet',
+                                    'control_word': 'enabled',
+                                    'interworking': 'none',
+                                    'backup_disable_delay': 0,
+                                    'sequencing': 'not set',
+                                    'mpls': {
+                                        'label': {
+                                            'local': '30006',
+                                            'remote': '16003',
+                                        },
+                                        'group_id': {
+                                            'local': 'unassigned',
+                                            'remote': '0x5000400',
+                                        },
+                                        'interface': {
+                                            'local': 'unknown',
+                                            'remote': 'GigabitEthernet0/4/0/2',
+                                        },
+                                        'mtu': {
+                                            'local': '1500',
+                                            'remote': '1500',
+                                        },
+                                        'control_word': {
+                                            'local': 'enabled',
+                                            'remote': 'enabled',
+                                        },
+                                        'pw_type': {
+                                            'local': 'Ethernet',
+                                            'remote': 'Ethernet',
+                                        },
+                                        'vccv_cv_type': {
+                                            'local': '0x2',
+                                            'remote': '0x2',
+                                            'local_type': ['LSP ping verification'],
+                                            'remote_type': ['LSP ping verification'],
+                                        },
+                                        'vccv_cc_type': {
+                                            'local': '0x3',
+                                            'remote': '0x3',
+                                            'local_type': ['control word', 'router alert label'],
+                                            'remote_type': ['control word', 'router alert label'],
+                                        },
+                                    },
+                                    'create_time': '20/11/2007 21:45:44 (00:52:54 ago)',
+                                    'last_time_status_changed': '20/11/2007 21:45:48 (00:52:49 ago)',
+                                    'statistics': {
+                                        'packet_totals': {
+                                            'receive': 0,
+                                        },
+                                        'byte_totals': {
+                                            'receive': 0,
+                                        },
+                                    },
                                 },
                             },
                         },
@@ -351,7 +364,7 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
         Label        30005                          unknown                       
         Group ID     0x5000300                      0x0                           
         Interface    GigabitEthernet0/4/0/1         unknown   
-           Interface     pw-span-test                      GigabitEthernet0/3/0/1
+            Interface        pw-span-test                GigabitEthernet0/3/0/1
         MTU          1500                           unknown                       
         Control word enabled                        unknown                       
         PW type      Ethernet                       unknown                       
