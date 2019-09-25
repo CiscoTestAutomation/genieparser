@@ -1428,6 +1428,18 @@ class TestShowIpRouteWord(unittest.TestCase):
         'total_prefixes': 1
     }
 
+    golden_output_4 = {'execute.return_value': '''\
+        lab-asr-1002# show ip route vrf Mgmt-intf 0.0.0.0
+        
+        Routing Table: Mgmt-intf
+        Routing entry for 0.0.0.0/0, supernet
+        Known via "static", distance 1, metric 0, candidate default path
+        Routing Descriptor Blocks:
+        * 10.255.207.129
+            Route metric is 0, traffic share count is 1
+    '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1461,6 +1473,15 @@ class TestShowIpRouteWord(unittest.TestCase):
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='0.0.0.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0')
+        import pprint
+        pprint.pprint(parsed_output)
+        #self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
