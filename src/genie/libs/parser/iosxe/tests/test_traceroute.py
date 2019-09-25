@@ -259,6 +259,7 @@ class test_traceroute(unittest.TestCase):
                             3: {'address': '10.1.2.6',
                                 'probe_msec': ['132']}}}
                 },
+                'vrf': 'CE1test',
             },
         },
     }
@@ -332,6 +333,7 @@ class test_traceroute(unittest.TestCase):
                         },
                     },
                 },
+                'vrf': 'MG501',
             },
         },
     }

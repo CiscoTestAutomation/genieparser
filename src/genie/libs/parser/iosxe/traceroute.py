@@ -55,6 +55,7 @@ class TracerouteSchema(MetaParser):
                   Optional('timeout_seconds'): int,
                   Optional('name_of_address'): str,
                   'address': str,
+                  Optional('vrf'): str,
                   Optional('mask'): str,
                   },
              },
@@ -75,7 +76,7 @@ class Traceroute(TracerouteSchema):
 
         # Init vars
         ret_dict = {}
-
+        vrf, tr_dict = None, None
         # Set output
         out = output
         # init index for paths
@@ -83,7 +84,7 @@ class Traceroute(TracerouteSchema):
         # Type escape sequence to abort.
         # traceroute 22.22.22.22
         # traceroute vrf MG501 192.168.1.1 numeric 
-        p1 = re.compile(r'^traceroute +')
+        p1 = re.compile(r'^traceroute( +vrf +(?P<vrf>\S+))? +[\S ]+$')
 
         # Tracing the route to 172.16.166.253
         p1_1 = re.compile(r'^Tracing +the +route +to +(?P<traceroute>(\S+))$')
@@ -142,6 +143,9 @@ class Traceroute(TracerouteSchema):
             # traceroute vrf MG501 192.168.1.1 numeric
             m = p1.match(line)
             if m:
+                group = m.groupdict()
+                if 'vrf' in group:
+                    vrf = group['vrf']
                 continue
 
             # Tracing the route to 172.16.166.253
@@ -308,4 +312,9 @@ class Traceroute(TracerouteSchema):
                 index_dict['address'] = group['address']
                 index += 1
                 continue
+        
+        # Update vrf if found from the command
+        if tr_dict and vrf:
+            tr_dict.update({'vrf': vrf})
+        
         return ret_dict
