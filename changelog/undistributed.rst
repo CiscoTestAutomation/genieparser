@@ -32,3 +32,13 @@
 * IOSXR  
     * Added ShowEthernetCfmMeps for:
         * show ethernet cfm peer meps
+
+--------------------------------------------------------------------------------
+                                EVPN
+--------------------------------------------------------------------------------
+* IOSXR  
+    * Added ShowEvpnEviMac for:
+        * show evpn evi mac
+        * show evpn evi vpn-id {vpn_id} mac 
+    * Added ShowEvpnEviMacPrivate for:
+        * show evpn evi mac private
