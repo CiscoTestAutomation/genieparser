@@ -70,7 +70,7 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
         # 1000  VPWS:1000       VPWS (vlan-unaware)
         # 2000  XC-POD1-EVPN    EVPN
         # 2001  XC-POD2-EVPN    EVPN
-        p1 = re.compile(r'^(?P<evi>\d+) +(?P<bridge_domain>\S+) +(?P<type>[\S ]+)$')
+        p1 = re.compile(r'^(?P<evi>\d+) +(?P<bridge_domain>\S+) +(?P<type>.+)$')
 
         # 100:145                        Import 
         # 100:145                        Export 
@@ -126,7 +126,7 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
             if m:
                 group = m.groupdict()
                 key = group['key'].strip().lower().replace(' ', '_')
-                value = group['value'].strip().lower().replace(' ', '_')
+                value = group['value'].strip()
                 evi_dict.update({key: value})
                 continue
             

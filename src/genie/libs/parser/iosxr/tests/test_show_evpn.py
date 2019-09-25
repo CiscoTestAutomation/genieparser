@@ -84,7 +84,7 @@ class test_show_evpn_evi_detail(unittest.TestCase):
                 'unicast_label': '16000',
                 'multicast_label': '16001',
                 'rd_config': 'none',
-                'rd_auto': '(auto)_1.100.100.100:145',
+                'rd_auto': '(auto) 1.100.100.100:145',
                 'rt_auto': '100:145',
                 'route_target_in_use': {
                     '100:145': {
@@ -99,7 +99,7 @@ class test_show_evpn_evi_detail(unittest.TestCase):
                 'unicast_label': '16002',
                 'multicast_label': '16003',
                 'rd_config': 'none',
-                'rd_auto': '(auto)_1.100.100.100:165',
+                'rd_auto': '(auto) 1.100.100.100:165',
                 'rt_auto': '100:165',
                 'route_target_in_use': {
                     '100:165': {
@@ -114,7 +114,7 @@ class test_show_evpn_evi_detail(unittest.TestCase):
                 'unicast_label': '16004',
                 'multicast_label': '16005',
                 'rd_config': 'none',
-                'rd_auto': '(auto)_1.100.100.100:185',
+                'rd_auto': '(auto) 1.100.100.100:185',
                 'rt_auto': '100:185',
                 'route_target_in_use': {
                     '100:185': {
@@ -129,7 +129,7 @@ class test_show_evpn_evi_detail(unittest.TestCase):
                 'unicast_label': '0',
                 'multicast_label': '0',
                 'rd_config': 'none',
-                'rd_auto': '(auto)_1.100.100.100:0',
+                'rd_auto': '(auto) 1.100.100.100:0',
                 'rt_auto': 'none',
             },
         },
@@ -193,7 +193,7 @@ class test_show_evpn_evi_detail(unittest.TestCase):
                 'type': 'PBB',
                 'unicast_label': '24001',
                 'multicast_label': '24002',
-                'flow_label': 'n',
+                'flow_label': 'N',
                 'table-policy_name': 'forward_class_1',
                 'forward-class': '1',
                 'rd_config': 'none',
