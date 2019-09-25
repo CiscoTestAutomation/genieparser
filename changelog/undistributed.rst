@@ -25,3 +25,10 @@
 * NXOS
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
+
+--------------------------------------------------------------------------------
+                                Ethernet
+--------------------------------------------------------------------------------
+* IOSXR  
+    * Added ShowEthernetCfmMeps for:
+        * show ethernet cfm peer meps
