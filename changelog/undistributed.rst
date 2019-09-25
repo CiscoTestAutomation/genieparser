@@ -5,4 +5,274 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* NXOS
+    * Update ShowInterfaceBrief
+        * Add command 'show interface {interface} brief'
+    * Update ShowRunningConfigInterface
+        * Update regex to support more interface names
+        * Updated schema to support more outputs
+* IOSXR
+    * Update ShowIpv6VrfAllInterface
+        * Update regex to avoid empty lines and command itself
+* IOSXE
+    * Update ShowInterfaceAccounting
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+* NXOS
+    * Update ShowRunningConfigInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Update ShowNveInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
+--------------------------------------------------------------------------------
+                                EIGRP
+--------------------------------------------------------------------------------
+* IOS
+        * Added ShowIpEigrpNeighbors for commands
+                * 'show ip eigrp vrf {vrf} neighbors'
+                * 'show ip eigrp neighbors'
+        * Added ShowIpv6EigrpNeighbors for commands:
+                * 'show ipv6 eigrp vrf {vrf} neighbors'
+                * 'show ipv6 eigrp neighbors'
+        * Added ShowIpEigrpNeighborsDetail for commands:
+                * 'show ip eigrp neighbors detail'
+                * 'show ip eigrp vrf {vrf} neighbors detail'
+        * Added ShowIpv6EigrpNeighborsDetail for commands:
+                * 'show ipv6 eigrp neighbors detail'
+
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowMplsForwardingTable
+        * Add command 'show mpls forwarding-table {prefix}'
+        * update regex to support local label 'None'
+
+--------------------------------------------------------------------------------
+                                Segment Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowSegmentRoutingMplsConnectedPrefixSidMapLocal for:
+        'show segment-routing mpls connected-prefix-sid-map local ipv4'
+        'show segment-routing mpls connected-prefix-sid-map local ipv6'
+    * Added ShowSegmentRoutingTrafficEngTopology for:
+        'show segment-routing traffic-eng topology ipv4'
+    * Added ShowSegmentRoutingTrafficEngPolicy for:
+        'show segment-routing traffic-eng policy all'
+        'show segment-routing traffic-eng policy name {name}'
+    * Added ShowSegmentRoutingTrafficEngPolicyDetail for:
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
+    * Added ShowSegmentRoutingMplsMappingServer for:
+        'show segment-routing mpls mapping-server ipv4'
+        'show segment-routing mpls mapping-server ipv6'
+    * Added ShowSegmentRoutingMplsLbAssignedSids for:
+        'show segment-routing mpls lb assigned-sids'
+
+--------------------------------------------------------------------------------
+                                ISSU
+--------------------------------------------------------------------------------
+* IOS
+	Added ShowIssuStateDetail for:
+		* show issu state detail
+	Added ShowIssuRollbackTimer for:
+	 	* show issu rollback-timer
+--------------------------------------------------------------------------------
+                              Virtual-Service
+--------------------------------------------------------------------------------
+* NXOS
+    * Added ShowVirtualServiceUtilization for "show virtual-service utilization name {name}"
+
+--------------------------------------------------------------------------------
+                                BGP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowBgpL2vpnEvpn for:
+        added a schema and unittest, and updated based on the schema
+    * Updated ShowBgpInstanceAllAll for address family regex issue
+    * Updated ShowBgpL2vpnEvpn:
+        * updated schema to support more output
+* IOS
+    * Added ShowBgpSummary for:
+        * show bgp summary
+        * show bgp all summary
+--------------------------------------------------------------------------------
+                                OSPF
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpOspfSegmentRoutingLocalBlock to add:
+        * show ip ospf segment-routing local-block
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLink for:
+        * show ip ospf database opaque-area type ext-link
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate for:
+        * show ip ospf database opaque-area type ext-link self-originate
+    * Added ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter for:
+        * show ip ospf database opaque-area type ext-link adv-router {address}
+    * Updated ShowIpOspfDatabaseTypeParser to parse more varied output
+    * Added ShowIpOspfSegmentRoutingAdjacencySid for:
+        * show ip ospf segment-routing adjacency-sid
+        * show ip ospf {process_id} segment-routing adjacency-sid
+    * Updated ShowIpOspfInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
+
+--------------------------------------------------------------------------------
+                                dot1x
+--------------------------------------------------------------------------------
+* IOSXE
+    * removed tab, replace with space
+    	'show dot1x all statistics'
+
+--------------------------------------------------------------------------------
+                                PIM
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigPim:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								VRF
+--------------------------------------------------------------------------------
+* NXOS
+	* Updated ShowRunningConfigVrf:
+		changed logic to support calling from device.parse
+
+--------------------------------------------------------------------------------
+								common.py
+--------------------------------------------------------------------------------
+* updated _find_command to escape "^"
+* disallow spaces in key "feature"
+
+--------------------------------------------------------------------------------
+                                MPLS
+--------------------------------------------------------------------------------
+* IOS
+        * Added ShowIpMsdpSaCache for commands:
+                * show ip msdp sa-cache
+                * show ip msdb vrf {vrf} sa-cache
+        * Added ShowIpMsdpPeer for commands:
+                * show ip msdp peer
+                * show ip msdp vrf {vrf} peer
+* IOSXE
+        * Update ShowMplsLdpNeighborDetail:
+                * fix cli wrong command parser error
+        * Update ShowMplsForwardingTable:
+                * update regex to support more output pattern
+
+--------------------------------------------------------------------------------
+                                vlan
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed regex in ShowVlan
+--------------------------------------------------------------------------------
+                                FLOW
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowFlowMonitor for:
+        * show flow monitor {name} cache format table
+    * Added ShowFlowExporterStatistics for:
+        * show flow exporter statistics
+        * show flow exporter {exporter} statistics
+
+--------------------------------------------------------------------------------
+                                ROUTING
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpCef
+        * update regex to support outgoing_label_backup and outgoing_label_info
+* IOSXR
+    * Updated ShowRouteIpv4:
+        * Matching more routes
+        * Optimized parser moving regex compilation out of for loop
+
+--------------------------------------------------------------------------------
+                                INVENTORY
+--------------------------------------------------------------------------------
+* IOS
+    * Updated ShowInventory:
+        * Matching more slots
+
+--------------------------------------------------------------------------------
+                                Spanning-tree
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowSpanningTreeSummary to:
+        * regex to accommodate different formats
+        * changed some fields in schema to Optional
+    * Updated ShowSpanningTreeDetail to:
+        * updated regex to accommodate more formats
+        * add support for rstp
+        * chnaged some fields in schema to Optional
+
+--------------------------------------------------------------------------------
+                                Spanning-Tree
+--------------------------------------------------------------------------------
+* IOSXE
+    * Update ShowIpv6Neighbors
+        * Add command 'show ipv6 neighbors {interface}'
+        * Add command 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Update ShowIpv6Interface
+        * Add 'suppress' key to schema
+* NXOS
+    * Update ShowIpv6MldInterfaceSchema
+        * Added support for 'show ipv6 mld interface vrf all'
+
+--------------------------------------------------------------------------------
+                                CDP
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+
+--------------------------------------------------------------------------------
+
+                                Interface
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
+    * Updated ShowNveInterfaceDetail:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Update ShowIpv6MldInterfaceSchema
+        * Added support for 'show ipv6 mld interface vrf all'
+
+--------------------------------------------------------------------------------
+
+                                Ethernet
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowModule parse for Cat6k devices
+
+
+--------------------------------------------------------------------------------
+                                AUTHENTICATION
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessionsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessions:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowAuthenticationSessionsInterfaceDetailsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessionsInterfaceDetails:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
+--------------------------------------------------------------------------------
+                                FDB
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowMacAddressTableVni:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+* IOSXR  
+    * Added ShowEthernetCfmMeps for:
+        * show ethernet cfm peer meps
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+	* Updated ShowIpCef to parse outputs without routes
 

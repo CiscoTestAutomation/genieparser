@@ -4,6 +4,7 @@
 
     * show ipv6 neighbors
     * show ipv6 neighbors vrf <vrf>
+    * show ipv6 neighbors <interface>
     * show ipv6 neighbors detail
     * show ipv6 neighbors vrf <vrf> detail
     * show ipv6 interface (from show_interface.py)
@@ -54,18 +55,25 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
     """
        Parser for 'show ipv6 neighbors'
                   'show ipv6 neighbors vrf <vrf>'
+                  'show ipv6 neighbors <interface>'
     """
 
-    cli_command = ['show ipv6 neighbors vrf {vrf}',
-                   'show ipv6 neighbors']
+    cli_command = ['show ipv6 neighbors vrf {vrf} {interface}',
+                   'show ipv6 neighbors {interface}',
+                   'show ipv6 neighbors vrf {vrf}',
+                   'show ipv6 neighbors',]
     exclude = ['age' , 'neighbor_state']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', interface='', output=None):
         if output is None:
-            if vrf:
-               cmd = self.cli_command[0].format(vrf=vrf)
+            if vrf and interface:
+                cmd = self.cli_command[0].format(vrf=vrf, interface=interface)
+            elif interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif vrf:
+                cmd = self.cli_command[2].format(vrf=vrf)
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[3]
             out = self.device.execute(cmd)
         else:
             out = output
