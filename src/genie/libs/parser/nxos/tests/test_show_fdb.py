@@ -123,7 +123,7 @@ Legend:
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowMacAddressTableVni(device=self.device)
-        parsed_output = obj.parse(vni='2001001', intf='nve1')
+        parsed_output = obj.parse(vni='2001001', interface='nve1')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_1(self):
@@ -137,7 +137,7 @@ Legend:
         self.device = Mock(**self.empty_output)
         obj = ShowMacAddressTableVni(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(vni='2001001', intf='nve1')
+            parsed_output = obj.parse(vni='2001001', interface='nve1')
 
 
 class test_show_mac_address_table_aging_time(unittest.TestCase):

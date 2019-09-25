@@ -2,8 +2,8 @@
 
 IOSXE parsers for the following show commands:
     * show authentication sessions
-    * show authentication sessions interface {intf}
-    * show authentication sessions interface {intf} details
+    * show authentication sessions interface {interface}
+    * show authentication sessions interface {interface} details
 
 '''
 # Python
@@ -34,7 +34,7 @@ Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E2981
 #==============================================
 class ShowAuthenticationSessionsSchema(MetaParser):
     """Schema for show authentication sessions
-                  show authentication sessions interface {intf}
+                  show authentication sessions interface {interface}
     """
 
     schema = {
@@ -60,14 +60,14 @@ class ShowAuthenticationSessionsSchema(MetaParser):
 
 class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
     """Parser for 'show authentication sessions'
-                  'show authentication sessions interface {intf}''
+                  'show authentication sessions interface {interface}''
     """
 
-    cli_command = ['show authentication sessions', 'show authentication sessions interface {intf}']
+    cli_command = ['show authentication sessions', 'show authentication sessions interface {interface}']
 
-    def cli(self,intf=None,output=None):
-        if intf:
-            cmd = self.cli_command[1].format(intf=intf)
+    def cli(self,interface=None,output=None):
+        if interface:
+            cmd = self.cli_command[1].format(interface=interface)
         else:
             cmd = self.cli_command[0]
 
@@ -112,9 +112,9 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
 
             if m:
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group['interface'])
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
-                intf_dict['interface'] = intf
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['interface'] = interface
                 client = group['client']
                 client_dict = intf_dict.setdefault('client', {}).setdefault(client, {})
                 client_dict.update({'client': client})
@@ -130,10 +130,10 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         return ret_dict
 
 #==================================================================================
-# Parser for 'show authentication sessions interface {intf} details'
+# Parser for 'show authentication sessions interface {interface} details'
 #==================================================================================
 class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
-    """Schema for 'show authentication sessions interface {intf} details'
+    """Schema for 'show authentication sessions interface {interface} details'
     """
     schema = {
         'interfaces': {
@@ -189,13 +189,19 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
     }
 
 class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
-    """Parser for 'show authentication sessions interface {intf} details'
+    """Parser for 'show authentication sessions interface {interface} details'
     """
-    cli_command = 'show authentication sessions interface {intf} details'
+    cli_command = 'show authentication sessions interface {interface} details'
 
-    def cli(self, intf, output=None):
+    def cli(self, interface, output=None):
 
+<<<<<<< HEAD
+        cmd = self.cli_command.format(interface=interface)
+
+        if output is None:
+=======
         if not output:
+>>>>>>> dev
             # get output from device
             out = self.device.execute(self.cli_command.format(intf=intf))
         else:
@@ -317,6 +323,10 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+<<<<<<< HEAD
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+=======
+>>>>>>> dev
 
                 key = re.sub(r'( |-)', '_', group['argument'].lower())
 
