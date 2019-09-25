@@ -1440,6 +1440,30 @@ class TestShowIpRouteWord(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output_4 = {
+        'entry': {
+            '0.0.0.0/0': {
+                'distance': '1',
+                'ip': '0.0.0.0',
+                'known_via': 'static',
+                'mask': '0',
+                'metric': '0',
+                'net': 'supernet',
+                'paths': {
+                    1: {
+                        'merge_labels': False,
+                        'metric': '0',
+                        'nexthop': '10.255.207.129',
+                        'prefer_non_rib_labels': False,
+                        'share_count': '1'
+                    }
+                },
+                'type': 'default path'
+            }
+        },
+        'total_prefixes': 1
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1479,9 +1503,7 @@ class TestShowIpRouteWord(unittest.TestCase):
         self.device = Mock(**self.golden_output_4)
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='0.0.0.0')
-        import pprint
-        pprint.pprint(parsed_output)
-        #self.assertEqual(parsed_output, self.golden_parsed_output_3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
