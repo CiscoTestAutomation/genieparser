@@ -1717,6 +1717,7 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
 
     Router#
     '''}
+
     golden_parsed_output = {
         "vrf": {
             "default": {
@@ -1755,6 +1756,95 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'interface': {
+                    'GigabitEthernet0/0/0': {
+                        'ldp': {
+                            'configured': False,
+                            'igp_synchronization_enabled': True,
+                        },
+                        'sync': {
+                            'status': {
+                                'sync_achieved': False,
+                                'peer_reachable': False,
+                            },
+                            'delay_time': 0,
+                            'left_time': 0,
+                        },
+                        'igp': {
+                            'holddown_time': 'infinite',
+                            'enabled': 'ospf 88',
+                        },
+                    },
+                    'TenGigabitEthernet0/1/0': {
+                        'ldp': {
+                            'configured': True,
+                            'igp_synchronization_enabled': True,
+                        },
+                        'sync': {
+                            'status': {
+                                'sync_achieved': True,
+                                'peer_reachable': True,
+                            },
+                            'delay_time': 0,
+                            'left_time': 0,
+                        },
+                        'igp': {
+                            'holddown_time': '1 milliseconds',
+                            'enabled': 'ospf 88',
+                        },
+                        'peer_ldp_ident': '10.169.197.252:0',
+                    },
+                    'TenGigabitEthernet0/2/0': {
+                        'ldp': {
+                            'configured': True,
+                            'igp_synchronization_enabled': True,
+                        },
+                        'sync': {
+                            'status': {
+                                'sync_achieved': True,
+                                'peer_reachable': True,
+                            },
+                            'delay_time': 0,
+                            'left_time': 0,
+                        },
+                        'igp': {
+                            'holddown_time': 'infinite',
+                            'enabled': 'ospf 88',
+                        },
+                        'peer_ldp_ident': '192.168.36.220:0',
+                    },
+                },
+            },
+        },
+    }
+    golden_output1 = {'execute.return_value': '''\
+        show mpls ldp igp sync
+
+        GigabitEthernet0/0/0:
+            LDP not configured; LDP-IGP Synchronization enabled.
+            Sync status: sync not achieved; peer not reachable.
+            Sync delay time: 0 seconds (0 seconds left)
+            IGP holddown time: infinite.
+            IGP enabled: OSPF 88
+        TenGigabitEthernet0/1/0:
+            LDP configured; LDP-IGP Synchronization enabled.
+            Sync status: sync achieved; peer reachable.
+            Sync delay time: 0 seconds (0 seconds left)
+            IGP holddown time: 1 milliseconds.
+            Peer LDP Ident: 10.169.197.252:0
+            IGP enabled: OSPF 88
+        TenGigabitEthernet0/2/0:
+            LDP configured; LDP-IGP Synchronization enabled.
+            Sync status: sync achieved; peer reachable.
+            Sync delay time: 0 seconds (0 seconds left)
+            IGP holddown time: infinite.
+            Peer LDP Ident: 192.168.36.220:0
+            IGP enabled: OSPF 88
+    '''}
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowMplsLdpIgpSync(device=self.dev)
@@ -1774,6 +1864,13 @@ class test_show_mpls_ldp_igp_sync(unittest.TestCase):
         obj = ShowMplsLdpIgpSync(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output1)
+        obj = ShowMplsLdpIgpSync(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 class test_show_mpls_forwarding_table(unittest.TestCase):

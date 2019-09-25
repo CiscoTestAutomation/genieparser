@@ -21,7 +21,6 @@ from netaddr import IPAddress, IPNetwork
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
-from genie.libs.parser.utils.common import Common
 
 
 # ==================================================
@@ -233,19 +232,32 @@ class ShowOspfVrfAllInclusiveInterfaceSchema(MetaParser):
 class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
     """Parser for show ospf vrf all-inclusive interface"""
 
-    cli_command = 'show ospf vrf all-inclusive interface'
+    cli_command = ['show ospf vrf all-inclusive interface',
+                   'show ospf vrf all-inclusive interface {interface}',
+                   'show ospf vrf {vrf} interface {interface}',
+                   'show ospf vrf {vrf} interface']
     exclude = ['dead_timer', 'hello_timer', 'last_flood_scan_length', 'max_flood_scan_length', 'high_water_mark']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                if vrf:
+                    out = self.device.execute(
+                        self.cli_command[2].format(interface=interface, vrf=vrf))
+                else:
+                    out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                if vrf:
+                    out = self.device.execute(self.cli_command[3].format(vrf=vrf))
+                else:
+                    out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
         # Init vars
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
-
+        instance = ''
         # Mapping dict
         bool_dict = {'up': True, 'down': False, 'unknown': False}
 
@@ -345,6 +357,20 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
             # OSPF_VL0 is unknown, line protocol is up
             m = p2.match(line)
             if m:
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][vrf] = {}
+                if 'address_family' not in ret_dict['vrf'][vrf]:
+                    ret_dict['vrf'][vrf]['address_family'] = {}
+                if af not in ret_dict['vrf'][vrf]['address_family']:
+                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'instance' not in ret_dict['vrf'][vrf]['address_family'][af]:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['vrf'][vrf]['address_family'][af] \
+                        ['instance']:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'] \
+                        [instance] = {}
                 interface = str(m.groupdict()['interface'])
                 enable = str(m.groupdict()['enable'])
                 line_protocol = str(m.groupdict()['line_protocol'])
@@ -385,7 +411,9 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                 router_id = str(m.groupdict()['router_id'])
                 interface_type = str(m.groupdict()['interface_type']).lower()
                 interface_type = interface_type.replace("_", "-")
-
+                if not instance:
+                    ret_dict['vrf'][vrf]['address_family'][af]['instance'][pid] = ret_dict['vrf'][vrf]['address_family'][af]['instance'].pop(instance)
+                    instance = pid
                 # Get interface values
                 if intf_type == 'interfaces':
                     intf_name = interface
@@ -697,7 +725,7 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
                     {Any(): 
                         {'instance': 
                             {Any(): 
-                                {'total_neighbor_count': int,
+                                {Optional('total_neighbor_count'): int,
                                 'areas': 
                                     {Any(): 
                                         {Optional('interfaces'): 
@@ -785,12 +813,43 @@ class ShowOspfVrfAllInclusiveNeighborDetailSchema(MetaParser):
 class ShowOspfVrfAllInclusiveNeighborDetail(ShowOspfVrfAllInclusiveNeighborDetailSchema):
     """Parser for show ospf vrf all-inclusive neighbor detail"""
 
-    cli_command = 'show ospf vrf all-inclusive neighbor detail'
+    cli_command = ['show ospf vrf all-inclusive neighbor detail',
+                   'show ospf vrf all-inclusive neighbor detail {interface}',
+                   'show ospf vrf all-inclusive neighbor {neighbor} detail',
+                   'show ospf vrf all-inclusive neighbor {neighbor} detail {interface}',
+                   'show ospf vrf {vrf} neighbor detail',
+                   'show ospf vrf {vrf} neighbor detail {interface}',
+                   'show ospf vrf {vrf} neighbor {neighbor} detail',
+                   'show ospf vrf {vrf} neighbor {neighbor} detail {interface}']
+
     exclude = ['dead_timer', 'neighbor_uptime', 'hello_timer', 'total_dbd_retrans']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', neighbor='', interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                if neighbor:
+                    if interface:
+                        cmd = self.cli_command[7].format(vrf=vrf, interface=interface, neighbor=neighbor)
+                    else:
+                        cmd = self.cli_command[6].format(vrf=vrf, neighbor=neighbor)
+                else:
+                    if interface:
+                        cmd = self.cli_command[5].format(vrf=vrf, interface=interface)
+                    else:
+                        cmd = self.cli_command[4].format(vrf=vrf)
+            else:
+                if neighbor:
+                    if interface:
+                        cmd = self.cli_command[3].format(interface=interface, neighbor=neighbor)
+                    else:
+                        cmd = self.cli_command[2].format(neighbor=neighbor)
+                else:
+                    if interface:
+                        cmd = self.cli_command[1].format(interface=interface)
+                    else:
+                        cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -1242,13 +1301,16 @@ class ShowOspfVrfAllInclusiveSchema(MetaParser):
 class ShowOspfVrfAllInclusive(ShowOspfVrfAllInclusiveSchema):
     """Parser for show ospf vrf all-inclusive"""
 
-    cli_command = 'show ospf vrf all-inclusive'
+    cli_command = ['show ospf vrf all-inclusive','show ospf vrf {vrf}']
     exclude = ['area_scope_lsa_cksum_sum', 'topology_version', 'spf_runs_count', 'external_lsa_checksum']
 
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                out = self.device.execute(self.cli_command[1].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -2416,10 +2478,14 @@ class ShowOspfVrfAllInclusiveShamLinksSchema(MetaParser):
 class ShowOspfVrfAllInclusiveShamLinks(ShowOspfVrfAllInclusiveShamLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     """Parser for show ospf vrf all-inclusive sham-links"""
-    cli_command = 'show ospf vrf all-inclusive sham-links'
-    def cli(self,output=None):
-        
-        return super().cli(cmd=self.cli_command, link_type='sham_links',output=output)
+    cli_command = ['show ospf vrf all-inclusive sham-links',
+                   'show ospf vrf {vrf} sham-links']
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, link_type='sham_links',output=output)
 
 
 # ======================================================
@@ -2483,11 +2549,15 @@ class ShowOspfVrfAllInclusiveVirtualLinksSchema(MetaParser):
 class ShowOspfVrfAllInclusiveVirtualLinks(ShowOspfVrfAllInclusiveVirtualLinksSchema, ShowOspfVrfAllInclusiveLinksParser):
 
     """Parser for show ospf vrf all-inclusive virtual-links"""
-    cli_command = 'show ospf vrf all-inclusive virtual-links'
+    cli_command = ['show ospf vrf all-inclusive virtual-links',
+                   'show ospf vrf {vrf} virtual-links']
 
-    def cli(self, output=None):
-
-        return super().cli(cmd=self.cli_command, link_type='virtual_links',output=output)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, link_type='virtual_links',output=output)
 
 
 # ============================================
@@ -3641,11 +3711,16 @@ class ShowOspfVrfAllInclusiveDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseRoute
     - db_type
     """
 
-    cli_command = 'show ospf vrf all-inclusive database router'
+    cli_command = ['show ospf vrf all-inclusive database router',
+                   'show ospf vrf {vrf} database router']
     exclude = ['age']
 
-    def cli(self,output=None):
-        return super().cli(cmd=self.cli_command, db_type='router',output=output)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, db_type='router',output=output)
 
 
 # ==========================================================
@@ -3726,12 +3801,16 @@ class ShowOspfVrfAllInclusiveDatabaseExternal(ShowOspfVrfAllInclusiveDatabaseExt
     - db_type
     """
 
-    cli_command = 'show ospf vrf all-inclusive database external'
+    cli_command = ['show ospf vrf all-inclusive database external',
+                   'show ospf vrf {vrf} database external']
     exclude = ['age', 'checksum', 'seq_num']
 
-    def cli(self, output=None):
-
-        return super().cli(cmd=self.cli_command, db_type='external',output=output)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, db_type='external',output=output)
 
 
 # =========================================================
@@ -3806,12 +3885,16 @@ class ShowOspfVrfAllInclusiveDatabaseNetwork(ShowOspfVrfAllInclusiveDatabaseNetw
     - db_type
     """
 
-    cli_command = 'show ospf vrf all-inclusive database network'
+    cli_command = ['show ospf vrf all-inclusive database network',
+                   'show ospf vrf {vrf} database network']
     exclude = ['age', 'checksum', 'seq_num']
 
-    def cli(self, output=None):
-
-        return super().cli(cmd=self.cli_command, db_type='network',output=output)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, db_type='network',output=output)
 
 
 # =========================================================
@@ -3889,11 +3972,16 @@ class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSumm
     - db_type
     """
 
-    cli_command = 'show ospf vrf all-inclusive database summary'
+    cli_command = ['show ospf vrf all-inclusive database summary',
+                   'show ospf vrf {vrf} database summary']
     exclude = ['age', 'checksum', 'seq_num']
 
-    def cli(self, output=None):
-        return super().cli(cmd=self.cli_command, db_type='summary',output=output)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, db_type='summary',output=output)
 
 
 # =============================================================
@@ -4003,10 +4091,14 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(ShowOspfVrfAllInclusiveDatabaseO
 
     """
 
-    cli_command = 'show ospf vrf all-inclusive database opaque-area'
+    cli_command = ['show ospf vrf all-inclusive database opaque-area',
+                   'show ospf vrf {vrf} database opaque-area']
     exclude = ['age', 'checksum', 'seq_num']
 
 
-    def cli(self, output=None):
-
-        return super().cli(cmd=self.cli_command, db_type='opaque',output=output)
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[1].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[0]
+        return super().cli(cmd=cmd, db_type='opaque',output=output)

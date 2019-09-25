@@ -31,9 +31,9 @@ class test_show_monitor(unittest.TestCase):
         'flows_added': 1,
         'flows_aged': 0,
         'ipv4_src_addr': {
-            '1.1.1.10': {
+            '10.4.1.10': {
                 'ipv4_dst_addr': {
-                    '22.10.10.1': {
+                    '10.4.10.1': {
                         'index': {
                             1: {
                                 'trns_src_port': 0,
@@ -55,9 +55,9 @@ class test_show_monitor(unittest.TestCase):
                     },
                 },
             },
-            '1.1.1.11': {
+            '10.4.1.11': {
                 'ipv4_dst_addr': {
-                    '22.10.10.2': {
+                    '10.4.10.2': {
                         'index': {
                             1: {
                                 'trns_src_port': 0,
@@ -86,12 +86,34 @@ class test_show_monitor(unittest.TestCase):
     
     IPV4 SRC ADDR    IPV4 DST ADDR    TRNS SRC PORT  TRNS DST PORT  IP TOS  IP PROT            bytes long             pkts long
     ===============  ===============  =============  =============  ======  =======  ====================  ====================
-    1.1.1.10         22.10.10.1                    0              0  0xC0         89                   100                     1
-    1.1.1.10         22.10.10.1                    1              1  0xC0         89                   100                     1
-    1.1.1.11         22.10.10.2                    0              0  0xC0         89                   100                     1
+    10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
+    10.4.1.10         10.4.10.1                    1              1  0xC0         89                   100                     1
+    10.4.1.11         10.4.10.2                    0              0  0xC0         89                   100                     1
     
     Device#
     '''}
+
+    golden_parsed_output2 = {
+        'cache_type': 'Normal (Platform cache)',
+        'cache_size': 16,
+        'current_entries': 1,
+        'flows_added': 1,
+        'flows_aged': 0,
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        Device#show flow monitor FLOW-MONITOR-1 cache format table
+        Cache type:                               Normal (Platform cache)
+        Cache size:                                   16
+        Current entries:                               1
+
+        Flows added:                                   1
+        Flows aged:                                    0
+
+        There are no cache entries to display.
+
+        Device#
+        '''}
 
     def test_empty(self):
         self.maxDiff = None
@@ -107,6 +129,12 @@ class test_show_monitor(unittest.TestCase):
         parsed_output = obj.parse(name='FLOW-MONITOR-1')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowFlowMonitor(device=self.device)
+        parsed_output = obj.parse(name='FLOW-MONITOR-1')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 class test_show_flow_exporter_statistics(unittest.TestCase):
     """ Unit tests for:
