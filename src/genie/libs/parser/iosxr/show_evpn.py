@@ -543,6 +543,11 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             
         return ret_dict
 
+# =====================================================
+# Parser for:
+#   * 'show evpn evi mac private'
+# =====================================================
+
 class ShowEvpnEviMacPrivate(ShowEvpnEviMac):
     """Parser class for 'show evpn evi mac private' CLI."""
 
