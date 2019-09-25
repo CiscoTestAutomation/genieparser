@@ -1862,7 +1862,7 @@ class ShowSwitchDetailSchema(MetaParser):
                     'ports': {
                         Any(): {
                             'stack_port_status': str,
-                            'neighbors_num': int
+                            'neighbors_num': Or(int, str)
                         },
                     }
                 },
@@ -1892,22 +1892,33 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
             return ret_dict
 
         # initial regexp pattern
+
+        # Switch/Stack Mac Address : 0057.d21b.cc00 - Local Mac Address
         p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
                          '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
         
+        # Mac persistency wait time: Indefinite
         p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +'
                          '(?P<mac_persistency_wait_time>[\w\.\:]+)$')
 
+        #                                              H/W   Current
+        # Switch#   Role    Mac Address     Priority Version  State 
+        # -----------------------------------------------------------
+        # *1       Active   689c.e2d9.df00     3      V04     Ready 
         p3 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
                          '(?P<mac_address>[\w\.]+) +'
                          '(?P<priority>\d+) +'
                          '(?P<hw_ver>\w+) +'
                          '(?P<state>[\w\s]+)$')
 
+        #          Stack Port Status             Neighbors     
+        # Switch#  Port 1     Port 2           Port 1   Port 2 
+        #   1         OK         OK               3        2 
+        #   1       DOWN       DOWN             None     None
         p4 = re.compile(r'^(?P<switch>\d+) +(?P<status1>\w+) +'
                          '(?P<status2>\w+) +'
-                         '(?P<nbr_num_1>\d+) +'
-                         '(?P<nbr_num_2>\d+)$')
+                         '(?P<nbr_num_1>\w+) +'
+                         '(?P<nbr_num_2>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1937,11 +1948,11 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
                 ret_dict.setdefault('stack', {}).setdefault(stack, {}).update(match_dict)
                 continue
 
-
             #          Stack Port Status             Neighbors     
             # Switch#  Port 1     Port 2           Port 1   Port 2 
             # --------------------------------------------------------
             #   1         OK         OK               3        2 
+            #   1       DOWN       DOWN             None     None
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -1950,7 +1961,8 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
                 for port in self.STACK_PORT_RANGE:
                     port_dict = stack_ports.setdefault(port, {})
                     port_dict['stack_port_status'] = group['status{}'.format(port)].lower()
-                    port_dict['neighbors_num'] = int(group['nbr_num_{}'.format(port)])
+                    nbr_num = group['nbr_num_{}'.format(port)]
+                    port_dict['neighbors_num'] = int(nbr_num) if nbr_num.isdigit() else nbr_num
                 continue
 
         return {'switch': ret_dict} if ret_dict else {}
@@ -1989,7 +2001,8 @@ class ShowEnvironmentAllSchema(MetaParser):
                 'fan': {
                     Any(): {
                         'state': str,
-                    }
+                        Optional('direction'): str,
+                    },
                 },
                 'power_supply': {
                     Any(): {
@@ -2003,19 +2016,25 @@ class ShowEnvironmentAllSchema(MetaParser):
                     }
                 },
                 'system_temperature_state': str,
-                'inlet_temperature':{
+                Optional('inlet_temperature'):{
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
                     'red_threshold': str
                 },
-                'hotspot_temperature':{
+                Optional('hotspot_temperature'):{
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
                     'red_threshold': str
-                }
-            }
+                },
+                Optional('asic_temperature'):{
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+            },
         },
     }
 
@@ -2037,6 +2056,10 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
+
+        # Switch 1 FAN 1 direction is Front to Back
+        p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
+                           '+direction +is +(?P<direction>[\w\s]+)$')
 
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
 
@@ -2068,6 +2091,17 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
                 continue
+            
+            # Switch 1 FAN 1 direction is Front to Back
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                fan_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})\
+                                   .setdefault('fan', {}).setdefault(fan, {})
+                fan_dict.update({'direction': group['direction'].lower()})
+                continue
                 
             # FAN PS-1 is OK
             m = p2.match(line)
@@ -2089,6 +2123,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
             # Inlet Temperature Value: 34 Degree Celsius
             # Hotspot Temperature Value: 45 Degree Celsius
+            # ASIC Temperature Value: 36 Degree Celsius
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -2307,9 +2342,9 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
                          '(?P<min1>[\d\.]+) +(?P<min5>[\d\.]+) +(?P<min15>[\d\.]+)$')
         
         p2 = re.compile(r'^(?P<slot>\S+) +(?P<status>\w+) +'
-                         '(?P<total>\d+) +(?P<used>\d+) +\((?P<used_percentage>\d+)\%\) +'
-                         '(?P<free>\d+) +\((?P<free_percentage>\d+)\%\) +'
-                         '(?P<committed>\d+) +\((?P<committed_percentage>\d+)\%\)$')
+                         '(?P<total>\d+) +(?P<used>\d+) +\((?P<used_percentage>[\d\s]+)\%\) +'
+                         '(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +'
+                         '(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$')
 
         p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
                          '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
@@ -2863,8 +2898,8 @@ class ShowPlatformHardwareSchema(MetaParser):
                         'total_enqs_packets': int,
                         Optional('queue_depth_bytes'): int,
                         Optional('queue_depth_pkts'): int,
-                        'lic_throughput_oversub_drops_bytes': int,
-                        'lic_throughput_oversub_drops_packets': int,
+                        Optional('lic_throughput_oversub_drops_bytes'): int,
+                        Optional('lic_throughput_oversub_drops_packets'): int,
                     }
                 },
             }
@@ -2959,11 +2994,11 @@ class ShowPlatformHardware(ShowPlatformHardwareSchema):
         p13_1 = re.compile(r'^Statistics:$')  
 
         #       tail drops  (bytes): 0                   ,          (packets): 0   
-        p13_2 = re.compile(r'^tail +drops  +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
+        p13_2 = re.compile(r'^tail +drops +\(bytes\): +(?P<tail_drops_bytes>\d+) +,'
                          ' +\(packets\): +(?P<tail_drops_packets>\d+)$')  
 
         #       total enqs  (bytes): 0                   ,          (packets): 0   
-        p14 = re.compile(r'^total +enqs  +\(bytes\): +(?P<total_enqs_bytes>\d+) +,'
+        p14 = re.compile(r'^total +enqs +\(bytes\): +(?P<total_enqs_bytes>\d+) +,'
                          ' +\(packets\): +(?P<total_enqs_packets>\d+)$')  
 
         #       queue_depth (bytes): 0    

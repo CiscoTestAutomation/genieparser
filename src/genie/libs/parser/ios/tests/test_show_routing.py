@@ -10,10 +10,10 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.ios.show_routing import ShowIpRouteDistributor, ShowIpv6RouteDistributor, ShowIpv6RouteUpdated, ShowIpRouteSummary
 
 from genie.libs.parser.iosxe.tests.test_show_routing import \
-                        test_show_ip_route as test_show_ip_route_iosxe,\
-                        test_show_ipv6_route_updated as test_show_ipv6_route_updated_iosxe,\
-                        test_show_ipv6_route_word as test_show_ipv6_route_word_iosxe,\
-                        test_show_ip_route_summary as test_show_ip_route_summary_iosxe
+                        TestShowIpRoute as test_show_ip_route_iosxe,\
+                        TestShowIpv6RouteUpdated as test_show_ipv6_route_updated_iosxe,\
+                        TestShowIpv6RouteWord as test_show_ipv6_route_word_iosxe,\
+                        TestShowIpRouteSummary as test_show_ip_route_summary_iosxe
 
 # ============================================
 # unit test for 'show ip route'

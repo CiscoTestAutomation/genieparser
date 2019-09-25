@@ -421,18 +421,18 @@ class ShowIpMulticastSchema(MetaParser):
         show ip multicast
         show ip multicast vrf <vrf>
     """
-    schema = {'vrf': 
-                {Any():
-                    {
-                    'enable': bool,
-                    'multipath': bool,
-                    'route_limit': str,
-                    'fallback_group_mode': str,
-                    'multicast_bound_with_filter_autorp': int,
-                    'mo_frr': bool,
-                    },
-                },
-            }
+    schema = {
+        'vrf': {
+            Any(): {
+                'enable': bool,
+                'multipath': bool,
+                'route_limit': str,
+                'fallback_group_mode': str,
+                'multicast_bound_with_filter_autorp': int,
+                Optional('mo_frr'): bool,
+            },
+        },
+    }
 
 class ShowIpMulticast(ShowIpMulticastSchema):
     """Parser for:
