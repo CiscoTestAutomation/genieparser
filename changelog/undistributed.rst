@@ -31,3 +31,9 @@
 * IOSXR  
     * Added ShowEthernetCfmMeps for:
         * show ethernet cfm peer meps
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+	* Updated ShowIpCef to parse outputs without routes
