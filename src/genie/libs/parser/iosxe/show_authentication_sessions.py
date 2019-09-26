@@ -2,8 +2,8 @@
 
 IOSXE parsers for the following show commands:
     * show authentication sessions
-    * show authentication sessions interface {intf}
-    * show authentication sessions interface {intf} details
+    * show authentication sessions interface {interface}
+    * show authentication sessions interface {interface} details
 
 '''
 # Python
@@ -12,15 +12,16 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional, \
-                                         Or, \
-                                         And, \
-                                         Default, \
-                                         Use
+    Any, \
+    Optional, \
+    Or, \
+    And, \
+    Default, \
+    Use
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
 '''
 Device# show authentication sessions 
 
@@ -29,12 +30,14 @@ Gi1/48     0015.63b0.f676  dot1x    DATA     Authz Success  0A3462B1000000102983
 Gi1/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
 Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
 '''
-#==============================================
+
+
+# ==============================================
 # Parser for 'show authentication sessions'
-#==============================================
+# ==============================================
 class ShowAuthenticationSessionsSchema(MetaParser):
     """Schema for show authentication sessions
-                  show authentication sessions interface {intf}
+                  show authentication sessions interface {interface}
     """
 
     schema = {
@@ -58,16 +61,17 @@ class ShowAuthenticationSessionsSchema(MetaParser):
         }
     }
 
+
 class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
     """Parser for 'show authentication sessions'
-                  'show authentication sessions interface {intf}''
+                  'show authentication sessions interface {interface}''
     """
 
-    cli_command = ['show authentication sessions', 'show authentication sessions interface {intf}']
+    cli_command = ['show authentication sessions', 'show authentication sessions interface {interface}']
 
-    def cli(self,intf=None,output=None):
-        if intf:
-            cmd = self.cli_command[1].format(intf=intf)
+    def cli(self, interface=None, output=None):
+        if interface:
+            cmd = self.cli_command[1].format(interface=interface)
         else:
             cmd = self.cli_command[0]
 
@@ -93,11 +97,11 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         # Gi1/5      000f.23c4.a401  mab      DATA     Authz Success  0A3462B10000000D24F80B58
         # Gi1/5      0014.bf5d.d26d  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
         p4 = re.compile(r'^(?P<interface>\S+) +'
-                         '(?P<client>\w+\.\w+\.\w+) +'
-                         '(?P<method>\w+) +'
-                         '(?P<domain>\w+) +'
-                         '(?P<status>\w+(?: +\w+)?) +'
-                         '(?P<session>\w+)$')
+                        '(?P<client>\w+\.\w+\.\w+) +'
+                        '(?P<method>\w+) +'
+                        '(?P<domain>\w+) +'
+                        '(?P<status>\w+(?: +\w+)?) +'
+                        '(?P<session>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -112,9 +116,9 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
 
             if m:
                 group = m.groupdict()
-                intf = Common.convert_intf_name(group['interface'])
-                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
-                intf_dict['interface'] = intf
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict['interface'] = interface
                 client = group['client']
                 client_dict = intf_dict.setdefault('client', {}).setdefault(client, {})
                 client_dict.update({'client': client})
@@ -123,17 +127,18 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
                 client_dict['domain'] = group['domain']
                 client_dict['status'] = group['status']
                 session = group['session']
-                client_dict.setdefault('session', {}).setdefault(session, {})\
+                client_dict.setdefault('session', {}).setdefault(session, {}) \
                     .setdefault('session_id', session)
                 continue
 
         return ret_dict
 
-#==================================================================================
-# Parser for 'show authentication sessions interface {intf} details'
-#==================================================================================
+
+# ==================================================================================
+# Parser for 'show authentication sessions interface {interface} details'
+# ==================================================================================
 class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
-    """Schema for 'show authentication sessions interface {intf} details'
+    """Schema for 'show authentication sessions interface {interface} details'
     """
     schema = {
         'interfaces': {
@@ -188,16 +193,17 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
         }
     }
 
-class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
-    """Parser for 'show authentication sessions interface {intf} details'
-    """
-    cli_command = 'show authentication sessions interface {intf} details'
 
-    def cli(self, intf, output=None):
+class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInterfaceDetailsSchema):
+    """Parser for 'show authentication sessions interface {interface} details'
+    """
+    cli_command = 'show authentication sessions interface {interface} details'
+
+    def cli(self, interface, output=None):
 
         if not output:
             # get output from device
-            out = self.device.execute(self.cli_command.format(intf=intf))
+            out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
 
@@ -218,7 +224,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Current Policy:  dot1x_dvlan_reauth_hm
         # Authorized By:  Guest Vlan
         # Status:  Authz Success
-        
+
         p1 = re.compile(r'^(?P<argument>[\w\s\-]+): +(?P<value>[\w\s\-\.\./]+)$')
 
         # Local Policies:
@@ -245,7 +251,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
         # Session timeout:  43200s(local), Remaining: 31799s
         # Session timeout:  N/A
-        p9 = re.compile(r'^Session +timeout: +(?P<value>\S+)(?:\s*\((?P<name>\w+)\), +Remaining: +(?P<remaining>[\S]+))?')
+        p9 = re.compile(
+            r'^Session +timeout: +(?P<value>\S+)(?:\s*\((?P<name>\w+)\), +Remaining: +(?P<remaining>[\S]+))?')
 
         #   Security Policy:  Should Secure
         #   Security Status:  Link Unsecure
@@ -292,7 +299,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                     session_dict.update({'type': group['name']})
                     session_dict.update({'timeout': group['value']})
                     session_dict.update({'remaining': group['remaining']})
-                
+
                 continue
 
             # match these lines:
@@ -313,7 +320,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #        Current Policy:  dot1x_dvlan_reauth_hm
             #         Authorized By:  Guest Vlan
             #                Status:  Authz Success
-                
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -338,10 +345,10 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                         else:
                             if key != 'interface':
                                 mac_dict.update({key: group['value']})
-                else: 
+                else:
                     intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(group['value'], \
-                        {}).setdefault('mac_address', {})
-                    
+                                                                                 {}).setdefault('mac_address', {})
+
                 # else:
                 #     if key != 'interface':
                 #         hold_dict.update({group['value']: key})
@@ -361,7 +368,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                vlan_dict = mac_dict.setdefault('local_policies', {}).setdefault('vlan_group',{})
+                vlan_dict = mac_dict.setdefault('local_policies', {}).setdefault('vlan_group', {})
 
                 vlan_dict.update({'vlan': int(group['vlan_value'])})
 
