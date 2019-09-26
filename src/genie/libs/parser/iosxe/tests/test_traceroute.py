@@ -19,7 +19,7 @@ from genie.libs.parser.iosxe.traceroute import Traceroute
 # Unit test for:
 #   * 'traceroute'
 # ================
-class test_traceroute(unittest.TestCase):
+class TestTraceroute(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = ''
@@ -265,16 +265,16 @@ class test_traceroute(unittest.TestCase):
     }
 
     golden_output4 = '''
-    traceroute vrf CE1test 172.16.51.1
-    Type escape sequence to abort.
-    Tracing the route to 172.16.51.1
-    VRF info: (vrf in name/id, vrf out name/id)
-      1  *
-        172.16.51.1 41 msec *
-        *
-      2 10.1.2.6 148 msec
-        10.1.1.6 120 msec
-        10.1.2.6 132 msec
+        traceroute vrf CE1test 172.16.51.1
+        Type escape sequence to abort.
+        Tracing the route to 172.16.51.1
+        VRF info: (vrf in name/id, vrf out name/id)
+        1  *
+            172.16.51.1 41 msec *
+            *
+        2 10.1.2.6 148 msec
+            10.1.1.6 120 msec
+            10.1.2.6 132 msec
     '''
 
     golden_parsed_output5 = {
@@ -338,14 +338,14 @@ class test_traceroute(unittest.TestCase):
         },
     }
     golden_output5 = '''
-    traceroute vrf MG501 192.168.1.1 numeric    
-    Type escape sequence to abort.
-    Tracing the route to 192.168.1.1
-    VRF info: (vrf in name/id, vrf out name/id)
-      1 27.86.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
-      2 106.187.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
-      3 106.187.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
-      4 192.168.1.1 2 msec *  2 msec
+        traceroute vrf MG501 192.168.1.1 numeric    
+        Type escape sequence to abort.
+        Tracing the route to 192.168.1.1
+        VRF info: (vrf in name/id, vrf out name/id)
+        1 27.86.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+        2 106.187.14.129 [MPLS: Labels 16062/16063/39 Exp 0] 3 msec 1 msec 1 msec
+        3 106.187.14.34 [MPLS: Labels 16063/39 Exp 0] 3 msec 1 msec 2 msec
+        4 192.168.1.1 2 msec *  2 msec
     '''
 
     golden_parsed_output6 = {
@@ -381,12 +381,12 @@ class test_traceroute(unittest.TestCase):
     }
 
     golden_output6 = '''
-    traceroute 22.22.22.22
-    Type escape sequence to abort.
-    Tracing the route to 22.22.22.22
-    VRF info: (vrf in name/id, vrf out name/id)
-    1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
-    2 10.0.0.18 351 msec *  8 msec
+        traceroute 22.22.22.22
+        Type escape sequence to abort.
+        Tracing the route to 22.22.22.22
+        VRF info: (vrf in name/id, vrf out name/id)
+        1 10.0.0.5 [MPLS: Label 16022 Exp 0] 307 msec 10 msec 2 msec
+        2 10.0.0.18 351 msec *  8 msec
     '''
 
     def test_traceroute_empty(self):

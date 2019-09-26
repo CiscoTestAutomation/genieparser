@@ -5588,7 +5588,8 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 index_dict.update({'next_hop': next_hop})
                 index_dict.update({'origin_codes': origin_codes})
                 index_dict.update({'status_codes': status_codes})
-                index_dict.update({'path_type': path_type})
+                if m.groupdict()['path_type']:
+                    index_dict.update({'path_type': path_type})
 
                 try:
                     # Set values of status_codes and path_type from prefix line

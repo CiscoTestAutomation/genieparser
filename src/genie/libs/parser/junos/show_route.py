@@ -58,7 +58,7 @@ Parser for:
 '''
 class ShowRouteTable(ShowRouteTableSchema):
 
-    cli_commands = [
+    cli_command = [
         'show route table {table}',
         'show route table {table} {prefix}',
     ]
@@ -67,16 +67,16 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         if output is None:
             if table and prefix:
-                command = self.cli_commands[1].format(table=table, prefix=prefix)
+                command = self.cli_command[1].format(table=table, prefix=prefix)
             else:
-                command = self.cli_commands[0].format(table=table)
+                command = self.cli_command[0].format(table=table)
             out = self.device.execute(command)
         else:
             out = output
 
 
         # inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
-        r1 = re.compile(r'(?P<table_name>\S+)\s+(?P<destination_count>\d+)\s+'
+        r1 = re.compile(r'(?P<table_name>\S+):\s+(?P<destination_count>\d+)\s+'
                          'destinations\,\s+(?P<total_route_count>\d+)\s+routes\s+'
                          '\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
                          '\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
