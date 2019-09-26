@@ -5,7 +5,6 @@ show l2route parser class
 """
 
 import re
-from netaddr import EUI
 from ipaddress import ip_address
 
 from genie.metaparser import MetaParser
@@ -90,7 +89,7 @@ class ShowL2routeEvpnMac(MetaParser):
             if m:
                 entry = {
                     'topo_id': eval(m.group('topo_id')),
-                    'mac': EUI(m.group('mac')),
+                    'mac': m.group('mac'),
                     'producer': m.group('producer'),
                     'next_hop': m.group('next_hop'),
                 }
@@ -135,7 +134,7 @@ class ShowL2routeEvpnMacIp(MetaParser):
             if m:
                 entry = {
                     'topo_id': eval(m.group('topo_id')),
-                    'mac': EUI(m.group('mac')),
+                    'mac': m.group('mac'),
                     'ip': ip_address(m.group('ip')),
                     'producer': m.group('producer'),
                     'next_hop': m.group('next_hop'),

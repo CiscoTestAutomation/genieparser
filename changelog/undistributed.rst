@@ -5,6 +5,13 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+* Removed type `EUI` from the following show commands under IOSXR:
+    * ShowL2routeEvpnMac
+    * ShowL2routeEvpnMacIp
+    * ShowL2vpnMacLearning
+    * ShowEvpnEviMac
+    * ShowControllersFiaDiagshellL2show
+
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
