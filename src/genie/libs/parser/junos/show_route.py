@@ -58,7 +58,7 @@ Parser for:
 '''
 class ShowRouteTable(ShowRouteTableSchema):
 
-    cli_commands = [
+    cli_command = [
         'show route table {table}',
         'show route table {table} {prefix}',
     ]
@@ -67,9 +67,9 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         if output is None:
             if table and prefix:
-                command = self.cli_commands[1].format(table=table, prefix=prefix)
+                command = self.cli_command[1].format(table=table, prefix=prefix)
             else:
-                command = self.cli_commands[0].format(table=table)
+                command = self.cli_command[0].format(table=table)
             out = self.device.execute(command)
         else:
             out = output

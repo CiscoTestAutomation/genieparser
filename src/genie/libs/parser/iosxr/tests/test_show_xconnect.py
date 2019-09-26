@@ -12,8 +12,7 @@ from genie.libs.parser.iosxr.show_xconnect import (ShowL2vpnXconnect,
 # ==================================================
 #  Unit test for 'show l2vpn xconnect'
 # ==================================================
-
-class test_show_l2vpn_xconnect(unittest.TestCase):
+class TestShowL2vpnXconnect(unittest.TestCase):
     """Unit test for 'show l2vpn xconnect' """
 
     device = Device(name='aDevice')
@@ -167,8 +166,7 @@ class test_show_l2vpn_xconnect(unittest.TestCase):
 # ==================================================
 #  Unit test for 'show l2vpn xconnect detail'
 # ==================================================
-
-class test_show_l2vpn_xconnect_detail(unittest.TestCase):
+class TestShowL2vpnXconnectDetail(unittest.TestCase):
     """Unit test for 'show l2vpn xconnect detail' """
 
     device = Device(name='aDevice')
