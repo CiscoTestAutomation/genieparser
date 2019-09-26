@@ -5,6 +5,13 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+* Removed type `EUI` from the following show commands under IOSXR:
+    * ShowL2routeEvpnMac
+    * ShowL2routeEvpnMacIp
+    * ShowL2vpnMacLearning
+    * ShowEvpnEviMac
+    * ShowControllersFiaDiagshellL2show
+
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -75,10 +82,10 @@
                                 ISSU
 --------------------------------------------------------------------------------
 * IOS
-	Added ShowIssuStateDetail for:
-		* show issu state detail
-	Added ShowIssuRollbackTimer for:
-	 	* show issu rollback-timer
+    Added ShowIssuStateDetail for:
+        * show issu state detail
+    Added ShowIssuRollbackTimer for:
+        * show issu rollback-timer
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -95,6 +102,8 @@
     * Updated ShowBgpL2vpnEvpn:
         * updated schema to support more output
         * Fixed parser logic when there is no path type available
+    * Updated ShowBgpL2vpnEvpnAdvertised:
+        * Fixed dict key values of type `set`
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -121,36 +130,36 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
 * NXOS
-	* Updated ShowIpOspfMplsLdpInterface
-		* add custom interface argument
-	* Updated ShowIpOspfInterface
-		* add custom interface argument
-	* Updated ShowIpOspfNeighborDetail
-		* added custom neighbor argument
+    * Updated ShowIpOspfMplsLdpInterface
+        * add custom interface argument
+    * Updated ShowIpOspfInterface
+        * add custom interface argument
+    * Updated ShowIpOspfNeighborDetail
+        * added custom neighbor argument
 
 --------------------------------------------------------------------------------
                                 dot1x
 --------------------------------------------------------------------------------
 * IOSXE
     * removed tab, replace with space
-    	'show dot1x all statistics'
+        'show dot1x all statistics'
 
 --------------------------------------------------------------------------------
                                 PIM
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigPim:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigPim:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								VRF
+                                VRF
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigVrf:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigVrf:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								common.py
+                                common.py
 --------------------------------------------------------------------------------
 * updated _find_command to escape "^"
 * disallow spaces in key "feature"
@@ -293,5 +302,47 @@
                                 Routing
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowIpRouteWord:
-        * Updated regex to accommodate different formats
+    * Updated ShowIpCef to parse outputs without routes
+
+--------------------------------------------------------------------------------
+                                X-Connect
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowL2vpnXconnectDetail for:
+        * show l2vpn xconnect detail
+    * Added ShowL2vpnXconnect for:
+        * show l2vpn xconnect
+
+--------------------------------------------------------------------------------
+                                EVPN
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowEvpnEvi for:
+        * show evpn evi
+    * Added ShowEvpnEviDetail for:
+        * show evpn evi detail
+
+--------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* JUNOS
+    * Updated ShowRouteTable for better matching of table name
+
+--------------------------------------------------------------------------------
+                                TRACEROUTE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated Traceroute to support more output
+
+--------------------------------------------------------------------------------
+                                L2VPN
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowL2vpnBridgeDomain for:  
+        * show l2vpn bridge-domain
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Changed schema for ShowModule for Cat6k platform to reflect ops

@@ -4,7 +4,6 @@ show evpn parser class
 
 """
 
-from netaddr import EUI
 from ipaddress import ip_address
 import re
 
@@ -198,7 +197,7 @@ class ShowEvpnEviMac(MetaParser):
             if m:
                 entry = {
                     'evi': int(m.group('evi')),
-                    'mac': EUI(m.group('mac')),
+                    'mac': m.group('mac'),
                     'ip': ip_address(m.group('ip')),
                     'next_hop': m.group('next_hop'),
                     'label': m.group('label_str') \
@@ -224,7 +223,7 @@ class ShowEvpnEviMac(MetaParser):
                          r'$', line)
             if m:
                 entry = {
-                    'mac': EUI(m.group('mac')),
+                    'mac': m.group('mac'),
                     'ip': m.group('ip') and ip_address(m.group('ip')),
                     'next_hop': m.group('next_hop'),
                     'label': m.group('label_str') or int(m.group('label_int')),

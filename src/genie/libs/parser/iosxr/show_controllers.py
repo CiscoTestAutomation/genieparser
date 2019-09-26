@@ -7,7 +7,6 @@
 
 import re
 import logging
-from netaddr import EUI
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or
@@ -64,7 +63,7 @@ class ShowControllersFiaDiagshellL2show(MetaParser):
                          r' +encap_id=(?P<encap_id>\d+|0x[[A-Fa-f0-9]+)$', line)
             if m:
                 entry = {
-                    'mac': EUI(m.group('mac')),
+                    'mac': m.group('mac'),
                     'vlan': int(m.group('vlan')),
                     'gport': eval(m.group('gport')),
                     'static': bool(m.group('b_static')),
