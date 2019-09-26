@@ -490,14 +490,14 @@ class TestShowAuthenticationSessionsInterfaceDetails(unittest.TestCase):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_5)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet1/12')
+        parsed_output = obj.parse(interface='GigabitEthernet1/12')
         self.assertEqual(parsed_output,self.golden_parsed_output_5)
 
     def test_golden_7(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_6)
         obj = ShowAuthenticationSessionsInterfaceDetails(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet2/0/47')
+        parsed_output = obj.parse(interface='GigabitEthernet2/0/47')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 if __name__ == '__main__':
