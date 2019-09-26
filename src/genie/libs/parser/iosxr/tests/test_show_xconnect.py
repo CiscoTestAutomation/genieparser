@@ -162,7 +162,6 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-
 # ==================================================
 #  Unit test for 'show l2vpn xconnect detail'
 # ==================================================
