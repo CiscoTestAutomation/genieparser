@@ -268,6 +268,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         index_device = 0
         sw_version = []
 
+        out = re.sub(r'\r', '', out)
         for line in out.splitlines():
             line = line.strip()
 
