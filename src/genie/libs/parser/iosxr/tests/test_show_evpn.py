@@ -242,6 +242,5 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         obj = ShowEvpnEviDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-
 if __name__ == '__main__':
     unittest.main()
