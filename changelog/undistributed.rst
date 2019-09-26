@@ -236,6 +236,17 @@
         * show cdp neighbors
 
 --------------------------------------------------------------------------------
+                                Nd
+--------------------------------------------------------------------------------
+* NXOS
+    * Update ShowIpv6NdInterface:
+        * Add command 'show ipv6 nd interface {interface}'
+        * Add command 'show ipv6 nd interface {interface} vrf {vrf}'
+    * Update ShowIpv6IcmpNeighborDetail:
+        * Add command 'show ipv6 icmp neighbor {interface} detail'
+        * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
+
+--------------------------------------------------------------------------------
 
                                 Interface
 --------------------------------------------------------------------------------
