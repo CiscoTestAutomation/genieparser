@@ -75,10 +75,10 @@
                                 ISSU
 --------------------------------------------------------------------------------
 * IOS
-	Added ShowIssuStateDetail for:
-		* show issu state detail
-	Added ShowIssuRollbackTimer for:
-	 	* show issu rollback-timer
+    Added ShowIssuStateDetail for:
+        * show issu state detail
+    Added ShowIssuRollbackTimer for:
+        * show issu rollback-timer
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -123,36 +123,36 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
 * NXOS
-	* Updated ShowIpOspfMplsLdpInterface
-		* add custom interface argument
-	* Updated ShowIpOspfInterface
-		* add custom interface argument
-	* Updated ShowIpOspfNeighborDetail
-		* added custom neighbor argument
+    * Updated ShowIpOspfMplsLdpInterface
+        * add custom interface argument
+    * Updated ShowIpOspfInterface
+        * add custom interface argument
+    * Updated ShowIpOspfNeighborDetail
+        * added custom neighbor argument
 
 --------------------------------------------------------------------------------
                                 dot1x
 --------------------------------------------------------------------------------
 * IOSXE
     * removed tab, replace with space
-    	'show dot1x all statistics'
+        'show dot1x all statistics'
 
 --------------------------------------------------------------------------------
                                 PIM
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigPim:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigPim:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								VRF
+                                VRF
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigVrf:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigVrf:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								common.py
+                                common.py
 --------------------------------------------------------------------------------
 * updated _find_command to escape "^"
 * disallow spaces in key "feature"
@@ -295,7 +295,7 @@
                                 Routing
 --------------------------------------------------------------------------------
 * IOSXE
-	* Updated ShowIpCef to parse outputs without routes
+    * Updated ShowIpCef to parse outputs without routes
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -333,3 +333,9 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:  
         * show l2vpn bridge-domain
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Changed schema for ShowModule for Cat6k platform to reflect ops
