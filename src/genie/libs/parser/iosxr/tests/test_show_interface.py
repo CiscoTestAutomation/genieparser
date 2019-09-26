@@ -2779,6 +2779,137 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                 'enabled': False,
             },
         }
+    
+    golden_parsed_output3 = {
+        'Bundle-Ether12': {
+            'ipv6_enabled': True,
+            'int_status': 'up',
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000',
+            'enabled': False,
+        },
+        'Loopback0': {
+            'ipv6_enabled': True,
+            'int_status': 'up',
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000',
+            'enabled': True,
+            'ipv6': {
+                '2001:2:2:2::2/128': {
+                    'ipv6': '2001:2:2:2::2',
+                    'ipv6_prefix_length': '128',
+                    'ipv6_subnet': '2001:2:2:2::2',
+                },
+                'ipv6_link_local': 'fe80::8152:bfff:fed0:fbb5',
+                'ipv6_groups': ['ff02::1:ff00:2', 'ff02::1:ffd0:fbb5', 'ff02::2', 'ff02::1', 'ff02::16', 'ff02::d'],
+                'ipv6_mtu': '1500',
+                'ipv6_mtu_available': '1500',
+                'icmp_redirects': 'disabled',
+                'nd_dad': 'disabled',
+                'dad_attempts': '0',
+                'nd_reachable_time': '0',
+                'nd_cache_limit': '0',
+                'nd_adv_retrans_int': '0',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000',
+                'complete_protocol_adj': '0',
+                'complete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'incomplete_glean_adj': '0',
+                'dropped_protocol_req': '0',
+                'dropped_glean_req': '0',
+            },
+        },
+        'MgmtEth0/RP0/CPU0/0': {
+            'ipv6_enabled': True,
+            'int_status': 'up',
+            'oper_status': 'up',
+            'vrf': 'management',
+            'vrf_id': '0x60000002',
+            'enabled': False,
+        },
+        'GigabitEthernet0/0/0/0': {
+            'ipv6_enabled': True,
+            'int_status': 'up',
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000',
+            'enabled': False,
+        },
+        'GigabitEthernet0/0/0/0.90': {
+            'ipv6_enabled': True,
+            'int_status': 'up',
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000',
+            'enabled': True,
+            'ipv6': {
+                '2001:10:12:90::2/64': {
+                    'ipv6': '2001:10:12:90::2',
+                    'ipv6_prefix_length': '64',
+                    'ipv6_subnet': '2001:10:12:90::',
+                },
+                'ipv6_link_local': 'fe80::f816:3eff:fe0f:b2ec',
+                'ipv6_groups': ['ff02::1:ff00:2', 'ff02::1:ff0f:b2ec', 'ff02::2', 'ff02::1', 'ff02::a'],
+                'ipv6_mtu': '1518',
+                'ipv6_mtu_available': '1500',
+                'icmp_redirects': 'disabled',
+                'icmp_unreachables': 'enabled',
+                'nd_dad': 'enabled',
+                'dad_attempts': '1',
+                'nd_reachable_time': '0',
+                'nd_cache_limit': '1000000000',
+                'nd_adv_retrans_int': '0',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000',
+                'complete_protocol_adj': '0',
+                'complete_glean_adj': '1',
+                'incomplete_protocol_adj': '0',
+                'incomplete_glean_adj': '0',
+                'dropped_protocol_req': '0',
+                'dropped_glean_req': '0',
+                'nd_suppress': True,
+            },
+        },
+        'GigabitEthernet0/0/0/0.110': {
+            'ipv6_enabled': True,
+            'int_status': 'up',
+            'oper_status': 'up',
+            'vrf': 'default',
+            'vrf_id': '0x60000000',
+            'enabled': True,
+            'ipv6': {
+                '2001:10:12:110::2/64': {
+                    'ipv6': '2001:10:12:110::2',
+                    'ipv6_prefix_length': '64',
+                    'ipv6_subnet': '2001:10:12:110::',
+                },
+                'ipv6_link_local': 'fe80::f816:3eff:fe0f:b2ec',
+                'ipv6_groups': ['ff02::1:ff00:2', 'ff02::1:ff0f:b2ec', 'ff02::2', 'ff02::1', 'ff02::16', 'ff02::5', 'ff02::6', 'ff02::d'],
+                'ipv6_mtu': '1518',
+                'ipv6_mtu_available': '1500',
+                'icmp_redirects': 'disabled',
+                'icmp_unreachables': 'enabled',
+                'nd_dad': 'enabled',
+                'dad_attempts': '1',
+                'nd_reachable_time': '0',
+                'nd_cache_limit': '1000000000',
+                'nd_adv_retrans_int': '0',
+                'nd_adv_duration': '160-240',
+                'nd_router_adv': '1800',
+                'stateless_autoconfig': True,
+                'table_id': '0xe0800000',
+                'complete_protocol_adj': '1',
+                'complete_glean_adj': '0',
+                'incomplete_protocol_adj': '0',
+                'incomplete_glean_adj': '0',
+                'dropped_protocol_req': '0',
+                'dropped_glean_req': '0',
+            },
+        },
+    }
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device1)
@@ -2808,6 +2939,138 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse(vrf='VRF1', interface='GigabitEthernet0/0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output_custom)
+
+    def test_golden3(self):
+
+        def mapper(key):
+            return self.outputs[key]
+        
+        raw1 = '''\
+            interface Bundle-Ether12
+            !
+            interface Loopback0
+                ipv4 address 2.2.2.2 255.255.255.255
+                ipv6 address 2001:2:2:2::2/128
+            !
+            interface MgmtEth0/RP0/CPU0/0
+                vrf management
+                ipv4 address 172.16.1.52 255.255.255.0
+            !
+            interface GigabitEthernet0/0/0/0
+                cdp
+            !
+            interface GigabitEthernet0/0/0/0.90
+                ipv4 address 10.12.90.2 255.255.255.0
+                ipv6 nd ra-lifetime 2000
+                ipv6 nd suppress-ra
+                ipv6 address 2001:10:12:90::2/64
+                encapsulation dot1q 90
+            !
+            interface GigabitEthernet0/0/0/0.110
+                ipv4 address 10.12.110.2 255.255.255.0
+                ipv6 address 2001:10:12:110::2/64
+                encapsulation dot1q 110
+            !
+        '''
+
+        golden_output3 = '''\
+            RP/0/RP0/CPU0:R2_xr#show ipv6 vrf all interface
+            Thu Sep 26 19:19:56.411 UTC
+            Bundle-Ether12 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is disabled, link-local address unassigned
+                No global unicast address is configured
+            Loopback0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::8152:bfff:fed0:fbb5
+                Global unicast address(es):
+                2001:2:2:2::2, subnet is 2001:2:2:2::2/128
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ffd0:fbb5 ff02::2
+                    ff02::1 ff02::16 ff02::d
+                MTU is 1500 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are always on
+                ND DAD is disabled, number of DAD attempts 0
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 0
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 0
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            MgmtEth0/RP0/CPU0/0 is Up, ipv6 protocol is Up, Vrfid is management (0x60000002)
+                IPv6 is disabled, link-local address unassigned
+                No global unicast address is configured
+            GigabitEthernet0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is disabled, link-local address unassigned
+                No global unicast address is configured
+            GigabitEthernet0/0/0/0.90 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe0f:b2ec
+                Global unicast address(es):
+                2001:10:12:90::2, subnet is 2001:10:12:90::/64
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff0f:b2ec ff02::2
+                    ff02::1 ff02::a
+                MTU is 1518 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+            GigabitEthernet0/0/0/0.110 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe0f:b2ec
+                Global unicast address(es):
+                2001:10:12:110::2, subnet is 2001:10:12:110::/64
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff0f:b2ec ff02::2
+                    ff02::1 ff02::16 ff02::5 ff02::6 ff02::d
+                MTU is 1518 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 0
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
+        '''
+
+        self.outputs = {}
+        self.maxDiff = None 
+        self.outputs['show ipv6 vrf all interface'] = golden_output3
+        self.outputs['show running-config interface'] = raw1
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+
+        obj = ShowIpv6VrfAllInterface(device=self.device)
+        parsed_output = obj.parse()
+        # from genie.libs.parser.utils.common import format_output
+        # print(format_output(parsed_output))
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 #############################################################################
 # unitest For show ethernet tags

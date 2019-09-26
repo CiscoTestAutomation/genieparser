@@ -35,10 +35,11 @@ class ShowIpv6NeighborsDetailSchema(MetaParser):
                         'age': str,
                         'neighbor_state': str,
                         'location': str,
-                        'static': str,
-                        'dynamic': str,
-                        'sync': str,
-                        'serg_flags': str
+                        Optional('static'): str,
+                        Optional('dynamic'): str,
+                        Optional('sync'): str,
+                        Optional('origin'): str,
+                        Optional('serg_flags'): str
                     },
                 },
             },
@@ -60,11 +61,11 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
 
         # 2010:1:2::1  82   fa16.3e19.abba REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
         p1 = re.compile(r'^(?P<ip>\S+)\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+(?P<interface>\S+)\s+'
-                         '(?P<location>\S+)\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+)$')
+                         '(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
 
         #[Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
         p2 = re.compile(r'^\[(?P<ip>([\w\s]+))\]\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
-                         '(?P<interface>\S+)\s+(?P<location>\S+)\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+)$')
+                         '(?P<interface>\S+)\s+(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -94,10 +95,22 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 neighbor_dict['link_layer_address'] = link_layer_address
                 neighbor_dict['neighbor_state'] = neighbor_state
                 neighbor_dict['location'] = location
-                neighbor_dict['static'] = static
-                neighbor_dict['dynamic'] = dynamic
-                neighbor_dict['sync'] = sync
-                neighbor_dict['serg_flags'] = serg_flags
+                if static:
+                    neighbor_dict['static'] = static
+                    neighbor_dict['dynamic'] = dynamic
+                    neighbor_dict['sync'] = sync
+                    neighbor_dict['serg_flags'] = serg_flags
+
+                    if static == 'Y':
+                        origin = 'static'
+                    elif dynamic == 'Y':
+                        origin = 'dynamic'
+                    elif sync == 'Y':
+                        origin = 'sync'
+                    else:
+                        origin = 'other'
+                    neighbor_dict['origin'] = origin
+
                 continue
 
             # [Mcast adjacency]  - 0000.0000.0000 REACH Gi0/0/0/0   0/0/CPU0  -      -       -            ff
@@ -122,14 +135,56 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
 
                 neighbor_dict['age'] = age
                 neighbor_dict['ip'] = ip
-
                 neighbor_dict['link_layer_address'] = link_layer_address
                 neighbor_dict['neighbor_state'] = neighbor_state
                 neighbor_dict['location'] = location
-                neighbor_dict['static'] = static
-                neighbor_dict['dynamic'] = dynamic
-                neighbor_dict['sync'] = sync
-                neighbor_dict['serg_flags'] = serg_flags
+                if static:
+                    neighbor_dict['static'] = static
+                    neighbor_dict['dynamic'] = dynamic
+                    neighbor_dict['sync'] = sync
+                    neighbor_dict['serg_flags'] = serg_flags
+
+                    if static == 'Y':
+                        origin = 'static'
+                    elif dynamic == 'Y':
+                        origin = 'dynamic'
+                    elif sync == 'Y':
+                        origin = 'sync'
+                    else:
+                        origin = 'other'
+                    neighbor_dict['origin'] = origin
+
                 continue
 
         return ret_dict
+
+
+class ShowIpv6Neighbors(ShowIpv6NeighborsDetail):
+    """Parser for show ipv6 neighbors """
+
+    cli_command = ['show ipv6 neighbors vrf {vrf} {interface}',
+                   'show ipv6 neighbors {interface}',
+                   'show ipv6 neighbors vrf {vrf}',
+                   'show ipv6 neighbors',]
+
+    def cli(self, vrf='', interface='', output=None):
+        if output is None:
+            if vrf and interface:
+                if vrf == 'all':
+                    cmd = self.cli_command[1].format(interface=interface)
+                else:
+                    cmd = self.cli_command[0].format(vrf=vrf, interface=interface)
+            elif interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            elif vrf:
+                cmd = self.cli_command[2].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[3]
+            
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+        
