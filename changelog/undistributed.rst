@@ -96,8 +96,9 @@
         * updated schema to support more output
     * Added ShowBgpSessions for:
         * show bgp sessions
-    * Added ShowBgpInstanceSessions for:
+    * Added ShowBgpInstanceAllSessions for:
         * show bgp instance all sessions
+    * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
 * IOS
     * Added ShowBgpSummary for:
