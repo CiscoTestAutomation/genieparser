@@ -34,7 +34,7 @@ class test_show_route_table(unittest.TestCase):
 
     parsed_output_1 = {
         'table_name': {
-            'inet.3:': {
+            'inet.3': {
                 'active_route_count': 3,
                 'destination_count': 3,
                 'hidden_route_count': 0,
@@ -69,7 +69,7 @@ class test_show_route_table(unittest.TestCase):
 
     parsed_output_2 = {
         'table_name': {
-            'inet.3:': {
+            'inet.3': {
                 'active_route_count': 3,
                 'destination_count': 3,
                 'hidden_route_count': 0,
@@ -107,7 +107,7 @@ class test_show_route_table(unittest.TestCase):
 
     parsed_output_3 = {        
         'table_name': {
-            'inet.3:': {
+            'inet.3': {
                 'active_route_count': 3,
                 'destination_count': 3,
                 'hidden_route_count': 0,
@@ -165,7 +165,7 @@ class test_show_route_table(unittest.TestCase):
 
     parsed_output_4 = {
         'table_name': {
-            'inet.3:': {
+            'inet.3': {
                 'active_route_count': 5,
                 'destination_count': 5,
                 'hidden_route_count': 0,

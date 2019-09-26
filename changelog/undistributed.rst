@@ -94,6 +94,7 @@
     * Updated ShowBgpInstanceAllAll for address family regex issue
     * Updated ShowBgpL2vpnEvpn:
         * updated schema to support more output
+        * Fixed parser logic when there is no path type available
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -236,6 +237,17 @@
         * show cdp neighbors
 
 --------------------------------------------------------------------------------
+                                Nd
+--------------------------------------------------------------------------------
+* NXOS
+    * Update ShowIpv6NdInterface:
+        * Add command 'show ipv6 nd interface {interface}'
+        * Add command 'show ipv6 nd interface {interface} vrf {vrf}'
+    * Update ShowIpv6IcmpNeighborDetail:
+        * Add command 'show ipv6 icmp neighbor {interface} detail'
+        * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
+
+--------------------------------------------------------------------------------
 
                                 Interface
 --------------------------------------------------------------------------------
@@ -302,3 +314,9 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
+
+--------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* JUNOS
+    * Updated ShowRouteTable for better matching of table name

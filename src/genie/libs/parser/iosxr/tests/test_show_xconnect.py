@@ -436,7 +436,9 @@ class TestShowL2vpnXconnectSummary(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'number_of_groups': 0,
+        'number_of_groups': {
+            'total': 0,
+        },
         'number_of_xconnects': {
             'total': 0,
             'up': 0,
@@ -448,7 +450,9 @@ class TestShowL2vpnXconnectSummary(unittest.TestCase):
             'pw_pw': 0,
             'monitor_session_pw': 0,
         },
-        'number_of_admin_down_segments': 0,
+        'number_of_admin_down_segments': {
+            'total': 0,
+        },
         'number_of_mp2mp_xconnects': {
             'total': 0,
             'up': 0,
@@ -481,34 +485,34 @@ class TestShowL2vpnXconnectSummary(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-    Device#show l2vpn xconnect summary
-    Thu Sep 26 11:00:09.210 EDT
-    Number of groups: 0
-    Number of xconnects: 0
-    Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
-    AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
-    Number of Admin Down segments: 0
-    Number of MP2MP xconnects: 0
-    Up 0 Down 0
-    Advertised: 0 Non-Advertised: 0
-    Number of CE Connections: 0
-    Advertised: 0 Non-Advertised: 0
-    Backup PW:
-    Configured   : 0
-    UP           : 0
-    Down         : 0
-    Admin Down   : 0
-    Unresolved   : 0
-    Standby      : 0
-    Standby Ready: 0
-    Backup Interface:
-    Configured   : 0
-    UP           : 0
-    Down         : 0
-    Admin Down   : 0
-    Unresolved   : 0
-    Standby      : 0
-    Device#
+        Device#show l2vpn xconnect summary
+        Thu Sep 26 11:00:09.210 EDT
+        Number of groups: 0
+        Number of xconnects: 0
+        Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
+        AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
+        Number of Admin Down segments: 0
+        Number of MP2MP xconnects: 0
+        Up 0 Down 0
+        Advertised: 0 Non-Advertised: 0
+        Number of CE Connections: 0
+        Advertised: 0 Non-Advertised: 0
+        Backup PW:
+        Configured   : 0
+        UP           : 0
+        Down         : 0
+        Admin Down   : 0
+        Unresolved   : 0
+        Standby      : 0
+        Standby Ready: 0
+        Backup Interface:
+        Configured   : 0
+        UP           : 0
+        Down         : 0
+        Admin Down   : 0
+        Unresolved   : 0
+        Standby      : 0
+        Device#
         '''}
 
     def test_empty(self):

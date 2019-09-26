@@ -25,7 +25,9 @@ from genie.libs.parser.utils.common import Common
 """Schema for 'show l2vpn xconnect summary'"""
 class ShowL2vpnXconnectSummarySchema(MetaParser):
     schema = {
-        'number_of_groups': int,
+        'number_of_groups': {
+            'total': int,
+        },
         'number_of_xconnects': {
             'total': int,
             'up': int,
@@ -37,7 +39,9 @@ class ShowL2vpnXconnectSummarySchema(MetaParser):
             'pw_pw': int,
             'monitor_session_pw': int,
         },
-        'number_of_admin_down_segments': int,
+        'number_of_admin_down_segments': {
+            'total': int
+        },
         'number_of_mp2mp_xconnects': {
             'total': int,
             'up': int,
@@ -91,13 +95,16 @@ class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
         p2 = re.compile(r'^Number +of +xconnects: +(?P<number_of_xconnects>\d+)$')
 
         # Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
-        p3 = re.compile(r'^Up: (?P<up>\d+) +Down: +(?P<down>\d+) +Unresolved: +(?P<unresolved>\d+) +Partially-programmed: +(?P<partially_programmed>\d+)$')
+        p3 = re.compile(r'^Up: (?P<up>\d+) +Down: +(?P<down>\d+) +Unresolved: +'
+            '(?P<unresolved>\d+) +Partially-programmed: +(?P<partially_programmed>\d+)$')
 
         # AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
-        p4 = re.compile(r'^AC-PW: +(?P<ac_pw>\d+) +AC-AC: +(?P<ac_ac>\d+) +PW-PW: +(?P<pw_pw>\d+) +Monitor-Session-PW: +(?P<monitor_session_pw>\d+)$')
+        p4 = re.compile(r'^AC-PW: +(?P<ac_pw>\d+) +AC-AC: +(?P<ac_ac>\d+) +PW-PW: +'
+            '(?P<pw_pw>\d+) +Monitor-Session-PW: +(?P<monitor_session_pw>\d+)$')
 
         # Number of Admin Down segments: 0
-        p5 = re.compile(r'^Number +of +Admin +Down +segments: +(?P<number_of_admin_down_segments>\d+)$')
+        p5 = re.compile(r'^Number +of +Admin +Down +segments: +'
+            '(?P<number_of_admin_down_segments>\d+)$')
 
         # Number of MP2MP xconnects: 0
         p6 = re.compile(r'^Number +of +MP2MP +xconnects: +(?P<number_of_mp2mp_xconnects>\d+)$')
@@ -106,7 +113,8 @@ class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
         p7 = re.compile(r'^Up +(?P<up>\d+) +Down +(?P<down>\d+)$')
 
         # Advertised: 0 Non-Advertised: 0
-        p8 = re.compile(r'^Advertised: +(?P<advertised>\d+) +Non-Advertised: +(?P<non_advertised>\d+)$')
+        p8 = re.compile(r'^Advertised: +(?P<advertised>\d+) +Non-Advertised: +'
+            '(?P<non_advertised>\d+)$')
 
         # Number of CE Connections: 0
         p9 = re.compile(r'^Number +of +CE +Connections: +(?P<number_of_ce_connections>\d+)$')
@@ -133,7 +141,9 @@ class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                number_of_groups = int(group['number_of_groups'])
+                number_of_groups_dict = ret_dict.setdefault('number_of_groups', {})
+                number_of_groups_dict.update({'total': number_of_groups})
                 continue
             
             # # Number of xconnects: 0
@@ -163,7 +173,11 @@ class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                number_of_admin_down_segments = int(group['number_of_admin_down_segments'])
+                number_of_admin_down_segments_dict = ret_dict.\
+                    setdefault('number_of_admin_down_segments', {})
+                number_of_admin_down_segments_dict.\
+                    update({'total': number_of_admin_down_segments})
                 continue
             
             # Number of MP2MP xconnects: 0
