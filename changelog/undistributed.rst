@@ -283,3 +283,11 @@
 * IOSXE
 	* Updated ShowIpCef to parse outputs without routes
 
+--------------------------------------------------------------------------------
+                                X-Connect
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowL2vpnXconnectDetail for:
+        * show l2vpn xconnect detail
+    * Added ShowL2vpnXconnect for:
+        * show l2vpn xconnect
