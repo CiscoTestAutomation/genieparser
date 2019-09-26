@@ -291,3 +291,12 @@
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
         * show l2vpn xconnect
+
+--------------------------------------------------------------------------------
+                                EVPN
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowEvpnEvi for:
+        * show evpn evi
+    * Added ShowEvpnEviDetail for:
+        * show evpn evi detail
