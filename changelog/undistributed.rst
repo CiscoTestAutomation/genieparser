@@ -94,6 +94,7 @@
     * Updated ShowBgpInstanceAllAll for address family regex issue
     * Updated ShowBgpL2vpnEvpn:
         * updated schema to support more output
+        * Fixed parser logic when there is no path type available
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
