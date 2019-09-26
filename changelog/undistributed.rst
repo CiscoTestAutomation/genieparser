@@ -312,3 +312,8 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Changed schema for ShowModule for Cat6k platform
