@@ -5293,7 +5293,7 @@ class ShowBgpL2vpnEvpnSchema(MetaParser):
                             {Any(): 
                                 {'index': 
                                     {Any(): 
-                                        {Optional('next_hop'): str,
+                                        {'next_hop': str,
                                          Optional('status_codes'): str,
                                          Optional('path_type'): str,
                                          Optional('metric'): int,
