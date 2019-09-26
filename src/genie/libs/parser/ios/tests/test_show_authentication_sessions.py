@@ -268,20 +268,20 @@ Runnable methods list:
         self.dev1 = Mock(**self.empty_output)
         obj = ShowAuthenticationSessionsInterface(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(intf='GigabitEthernet3/0/2')
+            parsed_output = obj.parse(interface='GigabitEthernet3/0/2')
 
     def test_authentication_sessions_interface_1_output(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_1)
         obj = ShowAuthenticationSessionsInterface(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet2/0/47')
+        parsed_output = obj.parse(interface='GigabitEthernet2/0/47')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
     def test_authentication_sessions_interface_multi_ouput(self):
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_2)
         obj = ShowAuthenticationSessionsInterface(device=self.dev_c3850)
-        parsed_output = obj.parse(intf='GigabitEthernet2/0/47')
+        parsed_output = obj.parse(interface='GigabitEthernet2/0/47')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 if __name__ == '__main__':

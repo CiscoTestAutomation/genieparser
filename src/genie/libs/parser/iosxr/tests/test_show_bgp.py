@@ -24,7 +24,7 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
                                   ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
                                   ShowBgpSessions, \
-                                  ShowBgpInstanceSessions
+                                  ShowBgpInstanceAllSessions
 
 
 # ==================================
@@ -8831,7 +8831,7 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
 """
 Unit test for 'show bgp sessions'
 """
-class show_bgp_sessions(unittest.TestCase):
+class TestShowBgpSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -8945,7 +8945,7 @@ class show_bgp_sessions(unittest.TestCase):
 """
 Unit test for 'show bgp instance all sessions'
 """
-class show_bgp_instance_sessions(unittest.TestCase):
+class TestShowBgpInstanceAllSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -9049,13 +9049,13 @@ class show_bgp_instance_sessions(unittest.TestCase):
 
     def test_empty(self):
 	    self.dev = Mock(**self.empty_output)
-	    obj = ShowBgpInstanceSessions(device=self.dev)
+	    obj = ShowBgpInstanceAllSessions(device=self.dev)
 	    with self.assertRaises(SchemaEmptyParserError):
 	        parsed_output = obj.parse()
 
     def test_golden(self):
         self.dev = Mock(**self.golden_output)
-        obj = ShowBgpInstanceSessions(device=self.dev)
+        obj = ShowBgpInstanceAllSessions(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 

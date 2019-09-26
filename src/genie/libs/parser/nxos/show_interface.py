@@ -10,7 +10,7 @@ NXOS parsers for the following show commands:
     * show ip interface brief | vlan
     * show interface brief
     * show interface {interface} brief
-    * show running-config interface {intf}
+    * show running-config interface {interface}
 '''
 
 # python
@@ -2770,12 +2770,12 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
 class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
     """Parser for show running-config interface <WORD>"""
 
-    cli_command = 'show running-config interface {intf}'
+    cli_command = 'show running-config interface {interface}'
 
-    def cli(self, intf, output=None):
+    def cli(self, interface, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(intf=intf))
+            out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
 
@@ -2942,13 +2942,13 @@ class ShowNveInterfaceSchema(MetaParser):
 class ShowNveInterface(ShowNveInterfaceSchema):
     """Parser for show nve interface"""
 
-    cli_command = 'show nve interface {intf} detail'
+    cli_command = 'show nve interface {interface} detail'
 
-    def cli(self, intf, output=None):
+    def cli(self, interface, output=None):
         cmd = ""
         if output is None:
-            if intf:
-                cmd = self.cli_command.format(intf=intf)
+            if interface:
+                cmd = self.cli_command.format(interface=interface)
                 out = self.device.execute(cmd)
         else:
             out = output

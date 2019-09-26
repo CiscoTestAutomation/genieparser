@@ -5254,7 +5254,6 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
 
 # ===========================================
 # Parser for 
-#   * 'show bgp instance all sessions'
 #   * 'show bgp instance {instance} sessions'
 # ===========================================
 
@@ -5262,9 +5261,23 @@ class ShowBgpInstanceSessions(ShowBgpSessions):
     """Parser for show bgp instance {instance} sessions"""
 
     cli_command = 'show bgp instance {instance} sessions'
-    def cli(self, instance='all', output=None):
+    def cli(self, instance, output=None):
         out = output if output else self.device.execute(
                 self.cli_command.format(instance=instance))
+        return super().cli(output=out)
+
+# ===========================================
+# Parser for 
+#   * 'show bgp instance all sessions'
+# ===========================================
+
+class ShowBgpInstanceAllSessions(ShowBgpSessions):
+    """Parser for show bgp instance all sessions"""
+
+    cli_command = 'show bgp instance all sessions'
+    def cli(self, output=None):
+        out = output if output else self.device.execute(
+                self.cli_command)
         return super().cli(output=out)
 
 # ====================================

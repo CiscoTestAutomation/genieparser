@@ -38,6 +38,7 @@ class ShowIpv6MldInterfaceSchema(MetaParser):
 
     schema = {'vrfs': {
                 Any(): {
+                    Optional('count'): int,
                     Optional('interface'): {
                         Any(): {
                             'enable': bool,
@@ -137,6 +138,16 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
+                count = None
+                continue
+
+            # MLD Interfaces for VRF "VRF1", count: 4
+            p1_1 = re.compile(r'^MLD +Interfaces +for +VRF +\"(?P<vrf>\S+)\", '
+                               'count: +(?P<count>\d+)$')
+            m = p1_1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                count = int(m.groupdict()['count'])
                 continue
 
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up
@@ -152,6 +163,8 @@ class ShowIpv6MldInterface(ShowIpv6MldInterfaceSchema):
                     ret_dict['vrfs'] = {}
                 if vrf not in ret_dict['vrfs']:
                     ret_dict['vrfs'][vrf] = {}
+                    if count:
+                        ret_dict['vrfs'][vrf]['count'] = count
 
                 if 'interface' not in ret_dict['vrfs'][vrf]:
                     ret_dict['vrfs'][vrf]['interface'] = {}
