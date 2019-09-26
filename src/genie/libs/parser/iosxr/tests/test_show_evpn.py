@@ -18,7 +18,7 @@ from genie.libs.parser.iosxr.show_evpn import (ShowEvpnEvi,
 #  Unit test for 'show evpn evi'
 # ===================================================
 
-class test_show_evpn_evi(unittest.TestCase):
+class TestShowEvpnEvi(unittest.TestCase):
 
     '''Unit test for 'show evpn evi'''
     
@@ -69,7 +69,7 @@ class test_show_evpn_evi(unittest.TestCase):
 #  Unit test for 'show evpn evi detail'
 # ===================================================
 
-class test_show_evpn_evi_detail(unittest.TestCase):
+class TestShowEvpnEviDetail(unittest.TestCase):
 
     '''Unit test for 'show evpn evi detail'''
     

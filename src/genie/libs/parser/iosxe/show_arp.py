@@ -354,7 +354,7 @@ class ShowIpTrafficSchema(MetaParser):
             'eigrp_ipv4_received_total': int,
             'eigrp_ipv4_sent_total': int,
         },
-        'bgp_statistics': {
+        Optional('bgp_statistics'): {
             'bgp_received_total': int,
             'bgp_received_opens': int,
             'bgp_received_notifications': int,
