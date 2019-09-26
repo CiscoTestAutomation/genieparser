@@ -55,6 +55,7 @@ class TracerouteSchema(MetaParser):
                   Optional('timeout_seconds'): int,
                   Optional('name_of_address'): str,
                   'address': str,
+                  Optional('vrf'): str,
                   Optional('mask'): str,
                   },
              },
@@ -75,12 +76,15 @@ class Traceroute(TracerouteSchema):
 
         # Init vars
         ret_dict = {}
-
+        vrf, tr_dict = None, None
         # Set output
         out = output
         # init index for paths
         index = 1
         # Type escape sequence to abort.
+        # traceroute 22.22.22.22
+        # traceroute vrf MG501 192.168.1.1 numeric 
+        p1 = re.compile(r'^traceroute( +vrf +(?P<vrf>\S+))? +[\S ]+$')
 
         # Tracing the route to 172.16.166.253
         p1_1 = re.compile(r'^Tracing +the +route +to +(?P<traceroute>(\S+))$')
@@ -123,10 +127,9 @@ class Traceroute(TracerouteSchema):
         # 6 10.90.135.110 [MPLS: Label 24140 Exp 0] 21 msec 4 msec 104 msec
         # 7 172.31.166.10 92 msec 51 msec 148 msec
         # 8 10.169.197.101 1 msec 1 msec *
-        p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))'
-                         '(?: +\[(?P<label_name>(MPLS)): +Label (?P<label>(\d+))'
-                         ' +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
-
+        # 1 27.86.198.29 [MPLS: Labels 16052/16062/16063/39 Exp 0] 2 msec 2 msec 2 msec
+        p4 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<address>([a-zA-Z0-9\.\:]+))(?: +\[(?P<label_name>(MPLS))'
+                ': +Labels? (?P<label>(\S+)) +Exp +(?P<exp>(\d+))\])? +(?P<probe_msec>(\d+.*))$')
         # 1 p5DC5A26A.dip0.t-ipconnect.de (10.169.197.93) 0 msec *  1 msec *  0 msec
         p5 = re.compile(r'^((?P<hop>(\d+)) +)?(?P<name>[\S]+)'
                          ' +\(+(?P<address>([\d\.]+))\) +(?P<probe_msec>(.*))$')
@@ -135,6 +138,15 @@ class Traceroute(TracerouteSchema):
 
         for line in out.splitlines():
             line = line.strip()
+            
+            # traceroute 22.22.22.22
+            # traceroute vrf MG501 192.168.1.1 numeric
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'vrf' in group:
+                    vrf = group['vrf']
+                continue
 
             # Tracing the route to 172.16.166.253
             m = p1_1.match(line)
@@ -264,7 +276,7 @@ class Traceroute(TracerouteSchema):
                                             split()
                 if group['label_name']:
                     label_dict = index_dict.setdefault('label_info', {}).\
-                                           setdefault(group['label_name'], {})
+                                        setdefault(group['label_name'], {})
                     label_dict['label'] = group['label']
                     label_dict['exp'] = int(group['exp'])
                 index += 1
@@ -300,4 +312,9 @@ class Traceroute(TracerouteSchema):
                 index_dict['address'] = group['address']
                 index += 1
                 continue
+        
+        # Update vrf if found from the command
+        if tr_dict and vrf:
+            tr_dict.update({'vrf': vrf})
+        
         return ret_dict

@@ -16,7 +16,7 @@ from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnBridgeDomain)
 #  Unit test for 'show l2vpn bridge-domain'
 # ===========================================
 
-class test_show_l2vpn_bridge_domain(unittest.TestCase):
+class TestShowL2vpnBridgeDomain(unittest.TestCase):
     '''Unit test for "show l2vpn bridge-domain"'''
 
     device = Device(name='aDevice')
