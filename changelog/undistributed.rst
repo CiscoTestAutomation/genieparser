@@ -95,6 +95,8 @@
     * Updated ShowBgpL2vpnEvpn:
         * updated schema to support more output
         * Fixed parser logic when there is no path type available
+    * Updated ShowBgpL2vpnEvpnAdvertised:
+        * Fixed dict key values of type `set`
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -318,3 +320,9 @@
 --------------------------------------------------------------------------------
 * JUNOS
     * Updated ShowRouteTable for better matching of table name
+
+--------------------------------------------------------------------------------
+                                TRACEROUTE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated Traceroute to support more output

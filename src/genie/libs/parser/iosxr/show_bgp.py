@@ -6124,7 +6124,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
             #    ORG AS EXTCOMM
             m = re.match(r'^(?: +' + re_attr_string + r')+$', line)
             if m:
-                attr_info['attributes'] = set(line.split())
+                attr_info['attributes'] = list(dict.fromkeys(line.split()))
                 continue
 
             #    origin: IGP
