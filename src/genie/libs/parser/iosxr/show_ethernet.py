@@ -21,25 +21,44 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any
+from genie.libs.parser.utils.common import Common
 
-from genie.libs.parser.base import *
+class ShowEthernetCfmMepsSchema(MetaParser):
+    schema = {
+        'domain': {
+            Any(): {
+                'level': int,
+                'service': str,
+                Optional('mep_type'): {
+                    Any(): {
+                        'interface': {
+                            Any(): {
+                                'mep_id': int,
+                                'id': {
+                                    Any(): {
+                                        'mac_address': {
+                                            Any(): {
+                                                'st': str,
+                                                'port': str,
+                                                'up_down_time': str,
+                                                'ccm_rcvd': int,
+                                                'seq_err': int,
+                                                'rdi': int,
+                                                'error': int
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-def regexp(expression):
-    def match(value):
-        if re.match(expression,value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                              %(value, expression))
-    return match
-
-
-class ShowEthernetCfmMeps(MetaParser):
+class ShowEthernetCfmMeps(ShowEthernetCfmMepsSchema):
     """Parser for show ethernet cfm peer meps"""
-    # TODO schema
-
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
 
     cli_command = 'show ethernet cfm peer meps'
 
@@ -48,10 +67,6 @@ class ShowEthernetCfmMeps(MetaParser):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-
-        result = {
-            'entries' : []
-        }
 
         # Sample Output
 
@@ -77,82 +92,86 @@ class ShowEthernetCfmMeps(MetaParser):
         # -- ----- -------------- ------- ----------- --------- ------ ----- -----
         #  >    40 a80c.0d4f.18d2 Up      13:20:10        48010      0     0     0
 
-        title_found = False
-        header_processed = False
-        field_indice = []
+        ret_dict = {}
+        
+        # Domain dom3 (level 5), Service ser3
+        p1 = re.compile(r'^Domain +(?P<domain>\S+) +\(level +(?P<level>\d+)\), +Service +(?P<service>\S+)$')
+        
+        # Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
+        # Up MEP on GigabitEthernet0/6/0/23.1 MEP-ID 500
+        p2 = re.compile(r'^(?P<mep_type>\w+) +MEP +on +(?P<interface>\S+) +MEP-ID +(?P<mep_id>\d+)$')
 
-        def _retrieve_fields(line,field_indice):
-            res = []
-            for idx,(start,end) in enumerate(field_indice):
-                if idx == len(field_indice) - 1:
-                    res.append(line[start:].strip())
-                else:
-                    res.append(line[start:end].strip())
-            return res
+        # V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
+        # >    20 0001.0203.0402 Up      00:00:03            4      1     0     0
+        p3 = re.compile(r'^(?P<st>(>|R|L|C|X|\*|I|V|T|M|U)) +(?P<id>\d+) +(?P<mac_address>\S+) +'
+            '(?P<port>\w+) +(?P<up_down_time>\S+) +(?P<ccm_rcvd>\d+) +(?P<seq_err>\d+) +'
+            '(?P<rdi>\d+) +(?P<error>\d+)$')
 
-        lines = out.splitlines()
-        for idx,line in enumerate(lines):
 
-            m = re.match(r'Domain (\w+).+level (\w+).+Service (\w+)',line)
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Domain dom3 (level 5), Service ser3
+            m = p1.match(line)
             if m:
-                domain = m.group(1)
-                level = m.group(2)
-                service = m.group(3)
-
-            m = re.match(r'.+ on (\S+) MEP-ID (\w+)',line)
-            if m:
-                interface = m.group(1)
-                local_id = m.group(2)
+                group = m.groupdict()
+                domain = group['domain']
+                level = int(group['level'])
+                service = group['service']
+                domain_dict = ret_dict.setdefault('domain', {}). \
+                    setdefault(domain, {})
+                domain_dict.update({'level': level})
+                domain_dict.update({'service': service})
                 
-            if idx == len(lines) - 1:
-                break
+                continue
+            
+            # Down MEP on GigabitEthernet0/0/0/0 MEP-ID 1
+            # Up MEP on GigabitEthernet0/6/0/23.1 MEP-ID 500
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                mep_type = group['mep_type'].lower()
+                mep_id = int(group['mep_id'])
 
-            line = line.rstrip()
-            if not header_processed:
-                # 1. check proper title header exist
-                if re.match(r"^St\s+ID\s+MAC Address\s+Port\s+Up/Downtime\s+CcmRcvd\s+SeqErr\s+RDI\s+Error",line):
-                    title_found = True
-                    continue
-                # 2. get dash header line
-                if title_found and re.match(r"^(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)",line):
-                    match = re.match(r"^(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)",line)
-                    start = 0
-                    for field in match.groups():
-                        if '-' in field:
-                            end = start + len(field)
-                            field_indice.append((start,end))
-                            start = end
-                        else:
-                            start += len(field)
-                            end += len(field)
-                    header_processed = True
-                    continue
+                interface_dict = domain_dict.setdefault('mep_type', {}). \
+                    setdefault(mep_type, {}). \
+                    setdefault('interface', {}). \
+                    setdefault(interface, {})
+                
+                interface_dict.update({'mep_id': mep_id})
 
-            elif re.match('^\s*$',line):
-                title_found = False
-                header_processed = False
-                field_indice = []
+                continue
+            
+            # V     10 0001.0203.0403 Up      00:01:35            2      0     0     2
+            # >    20 0001.0203.0402 Up      00:00:03            4      1     0     0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                st = group['st']
+                id = int(group['id'])
+                mac_address = group['mac_address']
+                port = group['port']
+                up_down_time = group['up_down_time']
+                ccm_rcvd = int(group['ccm_rcvd'])
+                seq_err = int(group['seq_err'])
+                rdi = int(group['rdi'])
+                error = int(group['error'])
 
-            else:
-                status,remote_id,mac,port,time,ccm_rcvd,seq_error,rdi,error = _retrieve_fields(line,field_indice)
-                result['entries'].append({
-                    'domain' : domain,
-                    'level' : level,
-                    'service' : service,
-                    'status' : status,
-                    'remote_id' : remote_id,
-                    'local_id' : local_id,
-                    'interface' : interface,
-                    'mac_address' : mac,
-                    'time' : time,
-                    'ccm_rcvd' : ccm_rcvd,
-                    'seq_error' : seq_error,
-                    'rdi' : rdi,
-                    'error' : error,
-                })
+                mac_address_dict = interface_dict.setdefault('id', {}). \
+                    setdefault(id, {}). \
+                    setdefault('mac_address', {}). \
+                    setdefault(mac_address, {})
 
-        return result
-
+                mac_address_dict.update({'st': st})
+                mac_address_dict.update({'port': port})
+                mac_address_dict.update({'up_down_time': up_down_time})
+                mac_address_dict.update({'ccm_rcvd': ccm_rcvd})
+                mac_address_dict.update({'seq_err': seq_err})
+                mac_address_dict.update({'rdi': rdi})
+                mac_address_dict.update({'error': error})
+                continue
+        return ret_dict
 
 #Incomplete parser - to be completed 
 class ShowEthernetTrunkDetailSchema(MetaParser):
