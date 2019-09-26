@@ -9,7 +9,7 @@ from ipaddress import ip_address
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 from genie.libs.parser.base import *
 
@@ -39,35 +39,112 @@ re_label_str = r'(?:' + r'|'.join([
 ]) + r')'
 
 
-class ShowEvpnEvi(MetaParser):
-    """Parser class for 'show evpn evi' CLI."""
+class ShowEvpnEviSchema(MetaParser):
+    schema = {
+        'evi': {
+            Any(): {
+                'bridge_domain': str,
+                'type': str,
+                Optional('route_target_in_use'): {
+                    Any(): {
+                        Any(): bool
+                    }
+                },
+                Optional(Any()): str,
+            }
+        }
+    }
 
-    # TODO schema
+class ShowEvpnEvi(ShowEvpnEviSchema):
+    """Parser class for 'show evpn evi'"""
+
     cli_command = 'show evpn evi'
+    def cli(self, output=None):
 
-    def cli(self):
-        """parsing mechanism: cli"""
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+        # 1000  VPWS:1000       VPWS (vlan-unaware)
+        # 2000  XC-POD1-EVPN    EVPN
+        # 2001  XC-POD2-EVPN    EVPN
+        p1 = re.compile(r'^(?P<evi>\d+) +(?P<bridge_domain>\S+) +(?P<type>.+)$')
 
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
+        # 100:145                        Import 
+        # 100:145                        Export 
+        p2 = re.compile(r'^(?P<route_target_in_use>[\d+:\d+]+) +(?P<type>\S+)$')
 
-        return kl
+        # ------------------------------ -------
+        p3 = re.compile(r'(-+ *)+$')
 
+        # Unicast Label  : 24001
+        # Multicast Label: 16001
+        # RD Auto  : (auto) 1.100.100.100:145
+        p4 = re.compile(r'^(?P<key>[\S ]+) *: +(?P<value>[\S ]+)$')
 
-class ShowEvpnEviDetail(MetaParser):
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 1000  VPWS:1000       VPWS (vlan-unaware)
+            # 2000  XC-POD1-EVPN    EVPN
+            # 2001  XC-POD2-EVPN    EVPN
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi = int(group['evi'])
+                bridge_domain = group['bridge_domain']
+                evi_type = group['type']
+                evi_dict = ret_dict.setdefault('evi', {}). \
+                    setdefault(evi, {})
+                evi_dict.update({'bridge_domain': bridge_domain})
+                evi_dict.update({'type': evi_type})
+                continue
+            
+            # 100:145                        Import 
+            # 100:145                        Export 
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                route_target_in_use = group['route_target_in_use']
+                route_type = group['type']
+                type_dict = evi_dict.setdefault('route_target_in_use', {}). \
+                    setdefault(route_target_in_use, {})
+                type_dict.update({route_type.lower(): True})
+                continue
+            
+            # ------------------------------ -------
+            m = p3.match(line)
+            if m:
+                continue
+
+            # Unicast Label  : 24001
+            # Multicast Label: 16001
+            # RD Auto  : (auto) 1.100.100.100:145
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(' ', '_')
+                value = group['value'].strip()
+                evi_dict.update({key: value})
+                continue
+            
+        return ret_dict
+
+class ShowEvpnEviDetail(ShowEvpnEvi):
     """Parser class for 'show evpn evi detail' CLI."""
 
-    # TODO schema
     cli_command = 'show evpn evi detail'
-    def cli(self):
+    def cli(self, output=None):
         """parsing mechanism: cli
         """
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
-
-        return kl
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=output)
 
 
 class ShowEvpnEviMac(MetaParser):
