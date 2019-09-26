@@ -312,3 +312,9 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
+
+--------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* JUNOS
+    * Updated ShowRouteTable for better matching of table name
