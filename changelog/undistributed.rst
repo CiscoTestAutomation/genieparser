@@ -94,7 +94,6 @@
     * Updated ShowBgpInstanceAllAll for address family regex issue
     * Updated ShowBgpL2vpnEvpn:
         * updated schema to support more output
-        * Fixed parser logic when there is no path type available
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -120,13 +119,6 @@
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
-* NXOS
-	* Updated ShowIpOspfMplsLdpInterface
-		* add custom interface argument
-	* Updated ShowIpOspfInterface
-		* add custom interface argument
-	* Updated ShowIpOspfNeighborDetail
-		* added custom neighbor argument
 
 --------------------------------------------------------------------------------
                                 dot1x
@@ -235,17 +227,12 @@
 * IOS
     * Added ShowCdpNeighbors for command:
         * show cdp neighbors
+        * show cdp neighbors detail
 
---------------------------------------------------------------------------------
-                                Nd
---------------------------------------------------------------------------------
-* NXOS
-    * Update ShowIpv6NdInterface:
-        * Add command 'show ipv6 nd interface {interface}'
-        * Add command 'show ipv6 nd interface {interface} vrf {vrf}'
-    * Update ShowIpv6IcmpNeighborDetail:
-        * Add command 'show ipv6 icmp neighbor {interface} detail'
-        * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
+* IOSXR
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+        * show cdp neighbors detail
 
 --------------------------------------------------------------------------------
 
@@ -295,26 +282,3 @@
 * IOSXE
 	* Updated ShowIpCef to parse outputs without routes
 
---------------------------------------------------------------------------------
-                                X-Connect
---------------------------------------------------------------------------------
-* IOSXR
-    * Added ShowL2vpnXconnectDetail for:
-        * show l2vpn xconnect detail
-    * Added ShowL2vpnXconnect for:
-        * show l2vpn xconnect
-
---------------------------------------------------------------------------------
-                                EVPN
---------------------------------------------------------------------------------
-* IOSXR
-    * Added ShowEvpnEvi for:
-        * show evpn evi
-    * Added ShowEvpnEviDetail for:
-        * show evpn evi detail
-
---------------------------------------------------------------------------------
-                                Route
---------------------------------------------------------------------------------
-* JUNOS
-    * Updated ShowRouteTable for better matching of table name
