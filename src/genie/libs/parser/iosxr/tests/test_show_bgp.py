@@ -8948,6 +8948,7 @@ Unit test for 'show bgp instance all sessions'
 class TestShowBgpInstanceAllSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+
     golden_parsed_output = {
         'instance': {
             'default': {
