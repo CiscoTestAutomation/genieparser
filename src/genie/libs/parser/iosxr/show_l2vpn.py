@@ -5,7 +5,6 @@ show l2vpn parser class
 """
 # Python
 import re
-from netaddr import EUI
 from ipaddress import ip_address
 
 # Genie
@@ -55,7 +54,7 @@ class ShowL2vpnMacLearning(MetaParser):
                     'topo_id': eval(m.group('topo_id')),
                     'producer': m.group('producer'),
                     'next_hop': m.group('next_hop'),
-                    'mac': EUI(m.group('mac')),
+                    'mac': m.group('mac'),
                     'ip_address': m.group('ip_address') \
                     and ip_address(m.group('ip_address')),
                 }
