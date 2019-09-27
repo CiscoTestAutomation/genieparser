@@ -74,7 +74,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 2010:1:2::1  82   fa16.3e19.abba REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
+            # 2010:1:2::1  82   fa16.3e19.abba REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff 
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']
