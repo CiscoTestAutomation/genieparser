@@ -76,7 +76,7 @@ class ShowRouteTable(ShowRouteTableSchema):
 
 
         # inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
-        r1 = re.compile(r'(?P<table_name>\S+)\s+(?P<destination_count>\d+)\s+'
+        r1 = re.compile(r'(?P<table_name>\S+):\s+(?P<destination_count>\d+)\s+'
                          'destinations\,\s+(?P<total_route_count>\d+)\s+routes\s+'
                          '\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
                          '\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')

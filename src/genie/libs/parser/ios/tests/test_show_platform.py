@@ -761,6 +761,150 @@ class test_show_inventory(unittest.TestCase):
         PID: PWR-2700-AC/4     ,                     VID: V03, SN: APS17070093
     '''}
 
+    golden_parsed_output_3 = {
+        "main": {
+            "chassis": {
+                "WS-C6503-E": {
+                    "name": "WS-C6503-E",
+                    "descr": "Cisco Systems Catalyst 6500 3-slot Chassis System",
+                    "pid": "WS-C6503-E",
+                    "vid": "V03",
+                    "sn": "FXS1821Q2H9",
+                }
+            }
+        },
+        "slot": {
+            "CLK-7600 1": {
+                "other": {
+                    "CLK-7600 1": {
+                        "name": "CLK-7600 1",
+                        "descr": "OSR-7600 Clock FRU 1",
+                        "pid": "CLK-7600",
+                        "vid": "",
+                        "sn": "FXS181101V4",
+                    }
+                }
+            },
+            "CLK-7600 2": {
+                "other": {
+                    "CLK-7600 2": {
+                        "name": "CLK-7600 2",
+                        "descr": "OSR-7600 Clock FRU 2",
+                        "pid": "CLK-7600",
+                        "vid": "",
+                        "sn": "FXS181101V4",
+                    }
+                }
+            },
+            1: {
+                "rp": {
+                    "WS-SUP720-3BXL": {
+                        "name": "1",
+                        "descr": "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6",
+                        "pid": "WS-SUP720-3BXL",
+                        "vid": "V05",
+                        "sn": "SAL11434P2C",
+                        "subslot": {
+                            0: {
+                                "WS-SUP720": {
+                                    "descr": "WS-SUP720 MSFC3 Daughterboard Rev. 3.1",
+                                    "name": "msfc sub-module of 1",
+                                    "pid": "WS-SUP720",
+                                    "sn": "SAL11434N9G",
+                                    "vid": "",
+                                },
+                                "WS-F6K-PFC3BXL": {
+                                    "descr": "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.8",
+                                    "name": "switching engine sub-module of 1",
+                                    "pid": "WS-F6K-PFC3BXL",
+                                    "sn": "SAL11434LYG",
+                                    "vid": "V01",
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+            2: {
+                "lc": {
+                    "WS-X6748-GE-TX": {
+                        "name": "2",
+                        "descr": "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.6",
+                        "pid": "WS-X6748-GE-TX",
+                        "vid": "V02",
+                        "sn": "SAL1128UPQ9",
+                        "subslot": {
+                            0: {
+                                "WS-F6700-DFC3CXL": {
+                                    "descr": "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1",
+                                    "name": "switching engine sub-module of 2",
+                                    "pid": "WS-F6700-DFC3CXL",
+                                    "sn": "SAL1214LAG5",
+                                    "vid": "V01",
+                                }
+                            }
+                        },
+                    }
+                }
+            },
+            "WS-C6503-E-FAN 1": {
+                "other": {
+                    "WS-C6503-E-FAN 1": {
+                        "name": "WS-C6503-E-FAN 1",
+                        "descr": "Enhanced 3-slot Fan Tray 1",
+                        "pid": "WS-C6503-E-FAN",
+                        "vid": "V02",
+                        "sn": "DCH183500KW",
+                    }
+                }
+            },
+            "PS 1 PWR-1400-AC": {
+                "other": {
+                    "PS 1 PWR-1400-AC": {
+                        "name": "PS 1 PWR-1400-AC",
+                        "descr": "AC power supply, 1400 watt 1",
+                        "pid": "PWR-1400-AC",
+                        "vid": "V01",
+                        "sn": "ABC0830J127",
+                    }
+                }
+            },
+        },
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        # show inventory
+        NAME: "WS-C6503-E", DESCR: "Cisco Systems Catalyst 6500 3-slot Chassis System"
+        PID: WS-C6503-E        , VID: V03, SN: FXS1821Q2H9
+
+        NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+        PID: CLK-7600          , VID:    , SN: FXS181101V4
+
+        NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+        PID: CLK-7600          , VID:    , SN: FXS181101V4
+
+        NAME: "1", DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6"
+        PID: WS-SUP720-3BXL    , VID: V05, SN: SAL11434P2C
+
+        NAME: "msfc sub-module of 1", DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 3.1"
+        PID: WS-SUP720         , VID:    , SN: SAL11434N9G
+
+        NAME: "switching engine sub-module of 1", DESCR: "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.8"
+        PID: WS-F6K-PFC3BXL    , VID: V01, SN: SAL11434LYG
+
+        NAME: "2", DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.6"
+        PID: WS-X6748-GE-TX    , VID: V02, SN: SAL1128UPQ9
+
+        NAME: "switching engine sub-module of 2", DESCR: "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1"
+        PID: WS-F6700-DFC3CXL  , VID: V01, SN: SAL1214LAG5
+
+        NAME: "WS-C6503-E-FAN 1", DESCR: "Enhanced 3-slot Fan Tray 1"
+        PID: WS-C6503-E-FAN    , VID: V02, SN: DCH183500KW
+
+        NAME: "PS 1 PWR-1400-AC", DESCR: "AC power supply, 1400 watt 1"
+        PID: PWR-1400-AC       , VID: V01, SN: ABC0830J127
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -780,6 +924,13 @@ class test_show_inventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_output_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 class test_show_bootvar(unittest.TestCase):

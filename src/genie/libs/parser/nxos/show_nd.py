@@ -7,9 +7,15 @@ NXOS parser for the following show commands:
     * show ipv6 nd interface
     * show ipv6 nd interface vrf all
     * show ipv6 nd interface vrf <vrf>
+    * show ipv6 nd interface <interface>
+    * show ipv6 nd interface <interface> vrf all
+    * show ipv6 nd interface <interface> vrf <vrf>
     * show ipv6 icmp neighbor detail
     * show ipv6 icmp neighbor detail vrf all
     * show ipv6 icmp neighbor detail vrf <vrf>
+    * show ipv6 icmp neighbor <interface> detail
+    * show ipv6 icmp neighbor <interface> detail vrf all
+    * show ipv6 icmp neighbor <interface> detail vrf <vrf>
     * show ipv6 routers
     * show ipv6 routers vrf all
     * show ipv6 routers vrf <vrf>
@@ -117,14 +123,14 @@ class ShowIpv6NeighborDetail(ShowIpv6NeighborDetailSchema):
         # Interface :          Ethernet1/1
         # Physical Interface : Ethernet1/1
         # Packet Count :       0
-        # Byte C#ount :         0
+        # Byte Count :         0
         # Best :               Yes
         # Throttled :          No
-        p4 = re.compile(r'^\s*(?P<neighbor_key>(?!Total number of entries)[A-Za-z\s]+) +: +(?P<neighbor_value>[\w\/\.\:]+)$')
+        p4 = re.compile(r'^(?P<neighbor_key>(?!Total number of entries)[A-Za-z\s]+) +: +(?P<neighbor_value>[\w\/\.\:]+)$')
 
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()
             else:
                 continue
 
@@ -204,7 +210,10 @@ class ShowIpv6NdInterfaceSchema(MetaParser):
     """Schema for:
         show ipv6 nd interface
         show ipv6 nd interface vrf all
-        show ipv6 nd interface vrf <vrf>"""
+        show ipv6 nd interface vrf <vrf>
+        show ipv6 nd interface <interface>
+        show ipv6 nd interface <interface> vrf all
+        show ipv6 nd interface <interface> vrf <vrf>"""
 
     schema = {
         'vrf':{
@@ -267,20 +276,30 @@ class ShowIpv6NdInterface(ShowIpv6NdInterfaceSchema):
     """Parser for :
         show ipv6 nd interface
         show ipv6 nd interface vrf all
-        show ipv6 nd interface vrf <vrf>"""
+        show ipv6 nd interface vrf <vrf>
+        show ipv6 nd interface <interface>
+        show ipv6 nd interface <interface> vrf all
+        show ipv6 nd interface <interface> vrf <vrf>"""
 
-    cli_command = ['show ipv6 nd interface vrf {vrf}','show ipv6 nd interface']
+    cli_command = ['show ipv6 nd interface {interface} vrf {vrf}',
+                   'show ipv6 nd interface {interface}',
+                   'show ipv6 nd interface vrf {vrf}',
+                   'show ipv6 nd interface',]
     exclude = [
         'last_neighbor_advertisement',
         'last_neighbor_solicitation',
         'last_router_advertisement',
         'next_router_advertisement']
 
-    def cli(self, vrf="",output=None):
-        if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
+    def cli(self, vrf="", interface="", output=None):
+        if vrf and interface:
+            cmd = self.cli_command[0].format(vrf=vrf, interface=interface)
+        elif interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        elif vrf:
+            cmd = self.cli_command[2].format(vrf=vrf)
         else:
-            cmd = self.cli_command[1]
+            cmd = self.cli_command[3]
 
         # excute command to get output
         if output is None:
@@ -542,7 +561,10 @@ class ShowIpv6IcmpNeighborDetailSchema(MetaParser):
     """Schema for:
         show ipv6 icmp neighbor detail
         show ipv6 icmp neighbor detail vrf all
-        show ipv6 icmp neighbor detail vrf <vrf>"""
+        show ipv6 icmp neighbor detail vrf <vrf>
+        show ipv6 icmp neighbor <interface> detail
+        show ipv6 icmp neighbor <interface> detail vrf all
+        show ipv6 icmp neighbor <interface> detail vrf <vrf>"""
 
     schema = {
         'interfaces': {
@@ -569,17 +591,26 @@ class ShowIpv6IcmpNeighborDetail(ShowIpv6IcmpNeighborDetailSchema):
     """Parser for :
         show ipv6 icmp neighbor detail
         show ipv6 icmp neighbor detail vrf all
-        show ipv6 icmp neighbor detail vrf <vrf>"""
+        show ipv6 icmp neighbor detail vrf <vrf>
+        show ipv6 icmp neighbor <interface> detail
+        show ipv6 icmp neighbor <interface> detail vrf all
+        show ipv6 icmp neighbor <interface> detail vrf <vrf>"""
 
-    cli_command = ['show ipv6 icmp neighbor detail vrf {vrf}','show ipv6 icmp neighbor detail']
-    exclude = [
-        'age']
+    cli_command = ['show ipv6 icmp neighbor {interface} detail vrf {vrf}',
+                   'show ipv6 icmp neighbor {interface} detail',
+                   'show ipv6 icmp neighbor detail vrf {vrf}',
+                   'show ipv6 icmp neighbor detail',]
+    exclude = ['age']
 
-    def cli(self, vrf="", output=None):
-        if vrf:
-            cmd = self.cli_command[0].format(vrf=vrf)
+    def cli(self, vrf="", interface="", output=None):
+        if vrf and interface:
+            cmd = self.cli_command[0].format(vrf=vrf, interface=interface)
+        elif interface:
+            cmd = self.cli_command[1].format(interface=interface)
+        elif vrf:
+            cmd = self.cli_command[2].format(vrf=vrf)
         else:
-            cmd = self.cli_command[1]
+            cmd = self.cli_command[3]
 
         # excute command to get output
         if output is None:
@@ -705,31 +736,31 @@ class ShowIpv6Routers(ShowIpv6RoutersSchema):
 
         # Router fe80::f816:3eff:fe82:6320 on Ethernet1/1 , last update time 3.2 min
         # Router fe80::e6c7:22ff:fe15:4cc1 on port-channel1.100 , last update time 1.3 min
-        p1 = re.compile(r'^\s*((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
+        p1 = re.compile(r'^((?P<router>\w+) )?(?P<neighbor>[a-f0-9\:]+) +on'
                         ' +(?P<interface>[\S]+) +,'
                         ' +last +update +time +(?P<last_update>[\d\.]+) +min$')
 
         # Current_hop_limit 64, Lifetime 1800, AddrFlag 0, OtherFlag 0, MTU 1500
-        p2 = re.compile(r'^\s*Current_hop_limit +(?P<current_hop_limit>\d+), +Lifetime +(?P<lifetime>\d+),'
+        p2 = re.compile(r'^Current_hop_limit +(?P<current_hop_limit>\d+), +Lifetime +(?P<lifetime>\d+),'
                         ' +AddrFlag +(?P<addr_flag>\d+), +OtherFlag +(?P<other_flag>\d+),'
                         ' +MTU +(?P<mtu>\d+)$')
 
         #  HomeAgentFlag 0, Preference Medium
-        p3 = re.compile(r'^\s*HomeAgentFlag +(?P<homeagentflag>\d+), +Preference +(?P<preference>\w+)$')
+        p3 = re.compile(r'^HomeAgentFlag +(?P<homeagentflag>\d+), +Preference +(?P<preference>\w+)$')
 
         # Reachable time 0 msec, Retransmission time 0 msec
-        p4 = re.compile(r'^\s*Reachable time +(?P<reachable_time>\d+) +msec, +Retransmission time +(?P<retransmission_time>\d+) +msec$')
+        p4 = re.compile(r'^Reachable time +(?P<reachable_time>\d+) +msec, +Retransmission time +(?P<retransmission_time>\d+) +msec$')
 
         # Prefix 2010:2:3::/64  onlink_flag 1 autonomous_flag 1
         # Prefix 2010:2:3::/64onlink_flag 1 autonomous_flag 1
-        p5 = re.compile(r'^\s*Prefix +(?P<prefix>[\w\:\/]+) *onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
+        p5 = re.compile(r'^Prefix +(?P<prefix>[\w\:\/]+) *onlink_flag +(?P<onlink_flag>\d+) +autonomous_flag +(?P<autonomous_flag>\d+)$')
 
         #   valid lifetime 2592000, preferred lifetime 604800
-        p6 = re.compile(r'^\s*valid lifetime +(?P<valid_lifetime>\d+), +preferred lifetime +(?P<preferred_lifetime>\d+)$')
+        p6 = re.compile(r'^valid lifetime +(?P<valid_lifetime>\d+), +preferred lifetime +(?P<preferred_lifetime>\d+)$')
 
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.replace('\t', '    ').strip()
             else:
                 continue
 
