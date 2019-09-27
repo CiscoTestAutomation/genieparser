@@ -352,3 +352,15 @@
 --------------------------------------------------------------------------------
 * IOS
     * Changed schema for ShowModule for Cat6k platform to reflect ops
+
+--------------------------------------------------------------------------------
+                                LLDP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowLldpEntry to support different port descriptions
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowRunningConfigNtp to support different vrfs output
