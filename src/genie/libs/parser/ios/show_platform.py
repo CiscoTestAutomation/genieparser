@@ -137,7 +137,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
         r1_3 = re.compile(r'Transceiver\s+Te(?P<slot>\d+)\/(?P<subslot>\d+)')
 
         # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
-        r1_4 = re.compile(r'.*VS\-S.*')
+        # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
+        r1_4 = re.compile(r'.*ports\s+Supervisor\s+Engine.*')
 
         # WS-X6824-SFP CEF720 24 port 1000mb SFP Rev. 1.0
         # WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 3.4
@@ -191,7 +192,8 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     group = result.groupdict()
                     slot = int(group['slot'])
 
-                    # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5                    
+                    # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
+                    # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
                     if r1_4.match(descr):
                         slot_code = 'rp'
 
