@@ -244,6 +244,12 @@
 * IOS
     * Added ShowCdpNeighbors for command:
         * show cdp neighbors
+        * show cdp neighbors detail
+
+* IOSXR
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+        * show cdp neighbors detail
 
 --------------------------------------------------------------------------------
                                 Nd
