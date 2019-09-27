@@ -1646,7 +1646,6 @@ class ShowIpv6VrfAllInterfaceSchema(MetaParser):
                 Optional('nd_adv_retrans_int'): str,
                 Optional('nd_adv_duration'): str,
                 Optional('nd_router_adv'): str,
-                Optional('nd_suppress'): bool,
                 Optional('stateless_autoconfig'): bool,
                 Optional('out_access_list'): str,
                 Optional('in_access_list'): str,
@@ -1683,16 +1682,6 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
             out = self.device.execute(cmd)
         else:
             out = output
-
-        # Get nd suppress by executing 'show running-config interface'
-        if interface:
-            show_run_cmd = 'show running-config interface {}'.format(interface)
-        else:
-            show_run_cmd = 'show running-config interface'
-        show_run = self.device.execute(show_run_cmd)
-        cfg = Config(show_run)
-        cfg.tree()
-        config_dict = cfg.config
 
         ipv6_vrf_all_interface_dict = {}
 
@@ -2185,12 +2174,6 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ipv6_vrf_all_interface_dict[interface]['ipv6']\
                 ['dropped_glean_req'] = dropped_glean_req
                 continue
-
-        if config_dict:
-            for intf, intf_dict in ipv6_vrf_all_interface_dict.items():
-                key = 'interface {}'.format(intf)
-                if key in config_dict and 'ipv6 nd suppress-ra' in config_dict[key]:
-                    intf_dict.setdefault('ipv6', {}).update({'nd_suppress': True})
 
         return ipv6_vrf_all_interface_dict
 

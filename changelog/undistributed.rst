@@ -271,9 +271,6 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
-* IOSXR
-    * Updated ShowIpv6VrfAllInterface:
-        * Added 'nd_suppress' key to schema
 
 --------------------------------------------------------------------------------
                                 IPv6
