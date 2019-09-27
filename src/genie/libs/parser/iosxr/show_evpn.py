@@ -336,11 +336,17 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                         Optional('service_carving_results'): {
                             Optional('forwarders'): int,
                             Optional('permanent'): int,
-                            Optional('bridge_ports'): int,
-                            'elected': int,
-                            'not_elected': int,
-                            Optional('i_sid_ne'): str,
-                            Optional('i_sid_e'): str,
+                            Optional('bridge_ports'): {
+                                'num_of_total': int,
+                            },
+                            'elected': {
+                                'num_of_total': int,
+                                Optional('i_sid_e'): list,
+                            },
+                            'not_elected': {
+                                'num_of_total': int,
+                                Optional('i_sid_ne'): list,
+                            },
                         },
                         Optional('mac_flushing_mode'): str,
                         Optional('peering_timer'): str,
@@ -350,6 +356,7 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                         Optional('remote_shg_label'): int,
                         Optional('flush_again_timer'): str,
                         Optional('shg_label'): {
+                            'num_of_label': int,
                             Any(): {
                                 'next_hop': str
                             }
@@ -374,6 +381,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             out = output
         
         ret_dict = {}
+        num_of_label = {}
 
         # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
         p1 = re.compile(r'^(?P<segment_id>\S+) +(?P<interface>\S+) +(?P<next_hop>[\d\.]+)$')
@@ -473,7 +481,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         p29 = re.compile(r'^Local +SHG +label *: +(?P<local_shg_label>\d+)$')
 
         # Remote SHG labels : 1
-        p30 = re.compile(r'^Remote +SHG +label *: +(?P<remote_shg_label>\d+)$')
+        p30 = re.compile(r'^Remote +SHG +labels? *: +(?P<remote_shg_label>\d+)$')
 
         # 64005 : nexthop 3.3.3.37
         p31 = re.compile(r'^(?P<shg_label>\d+) *: +nexthop +(?P<next_hop>\S+)$')
@@ -576,40 +584,46 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                service_carving_results = interface_dict.setdefault('service_carving_results', {})
-                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                bridge_ports = int(group['bridge_ports'])
+                bridge_ports_dict = interface_dict.setdefault('service_carving_results', {}). \
+                    setdefault('bridge_ports', {})
+                bridge_ports_dict.update({'num_of_total': bridge_ports})
                 continue
             
             # Elected        : 0
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                service_carving_results = interface_dict.setdefault('service_carving_results', {})
-                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                elected = int(group['elected'])
+                elected_dict = interface_dict.setdefault('service_carving_results', {}). \
+                    setdefault('elected', {})
+                elected_dict.update({'num_of_total': elected})
                 continue
             
             # Not Elected    : 3
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                service_carving_results = interface_dict.setdefault('service_carving_results', {})
-                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                not_elected = int(group['not_elected'])
+                not_elected_dict = interface_dict.setdefault('service_carving_results', {}). \
+                    setdefault('not_elected', {})
+                not_elected_dict.update({'num_of_total': not_elected})
                 continue
 
             # I-Sid E  :  1450101, 1650205, 1850309
             m = p16.match(line)
             if m:
                 group = m.groupdict()
-                service_carving_results = interface_dict.setdefault('service_carving_results', {})
-                service_carving_results.update({k:v for k, v in group.items() if v is not None})
+                i_sid_e = group['i_sid_e']
+                elected_dict.update({'i_sid_e': i_sid_e.replace(' ', '').split(',')})
                 continue
 
             # I-Sid NE  :  1450101, 1650205, 1850309
             m = p16_1.match(line)
             if m:
                 group = m.groupdict()
-                service_carving_results = interface_dict.setdefault('service_carving_results', {})
-                service_carving_results.update({k:v for k, v in group.items() if v is not None})
+                i_sid_ne = group['i_sid_ne']
+                not_elected_dict.update({'i_sid_ne': i_sid_ne.replace(' ', '').split(',')})
                 continue
 
             # MAC Flushing mode : STP-TCN
@@ -721,6 +735,9 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 next_hop_dict = interface_dict.setdefault('shg_label', {}). \
                     setdefault(shg_label, {})
                 next_hop_dict.update({'next_hop': next_hop})
+                label_index = num_of_label.get('num_of_label', 0) + 1
+                interface_dict.setdefault('shg_label', {}). \
+                    update({'num_of_label': label_index})
                 continue
 
             # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
@@ -759,7 +776,7 @@ class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegment):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        return super().cli(output=output)
+        return super().cli(output=out)
 
 class ShowEvpnEthernetSegmentPrivate(ShowEvpnEthernetSegment):
     """Parser class for 'show evpn ethernet-segment private' CLI."""
@@ -773,7 +790,7 @@ class ShowEvpnEthernetSegmentPrivate(ShowEvpnEthernetSegment):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        return super().cli(output=output)
+        return super().cli(output=out)
 
 class ShowEvpnEthernetSegmentEsiDetail(ShowEvpnEthernetSegment):
     """Parser class for 'show evpn ethernet-segment esi {esi} detail' CLI."""
@@ -788,7 +805,7 @@ class ShowEvpnEthernetSegmentEsiDetail(ShowEvpnEthernetSegment):
                     esi=esi))
         else:
             out = output
-        return super().cli(output=output)
+        return super().cli(output=out)
 
 class ShowEvpnInternalLabelDetail(MetaParser):
 
