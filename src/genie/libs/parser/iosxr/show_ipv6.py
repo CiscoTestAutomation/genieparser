@@ -81,15 +81,14 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 age = m.groupdict()['age']
                 link_layer_address = m.groupdict()['link_layer_address']
                 neighbor_state = m.groupdict()['neighbor_state']
-                interfaces = Common.convert_intf_name(m.groupdict()['interface'])
-                interface = m.groupdict()['interface']
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
                 location = m.groupdict()['location']
                 static = m.groupdict()['static']
                 dynamic = m.groupdict()['dynamic']
                 sync = m.groupdict()['sync']
                 serg_flags = m.groupdict()['serg_flags']
 
-                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 interface_dict['interface'] = interface
 
                 neighbor_dict = interface_dict.setdefault('neighbors', {}).setdefault(ip, {})
@@ -124,15 +123,14 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
                 age = m.groupdict()['age']
                 link_layer_address = m.groupdict()['link_layer_address']
                 neighbor_state = m.groupdict()['neighbor_state']
-                interfaces = Common.convert_intf_name(m.groupdict()['interface'])
-                interface = m.groupdict()['interface']
+                interface = Common.convert_intf_name(m.groupdict()['interface'])
                 location = m.groupdict()['location']
                 static = m.groupdict()['static']
                 dynamic = m.groupdict()['dynamic']
                 sync = m.groupdict()['sync']
                 serg_flags = m.groupdict()['serg_flags']
 
-                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interfaces, {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(interface, {})
                 interface_dict['interface'] = interface
 
                 neighbor_dict = interface_dict.setdefault('neighbors', {}).setdefault(ip, {})

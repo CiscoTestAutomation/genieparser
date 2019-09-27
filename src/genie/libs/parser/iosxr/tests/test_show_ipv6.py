@@ -23,7 +23,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
     golden_parsed_output = {
         'interfaces': {
             'GigabitEthernet0/0/0/0': {
-                'interface': 'Gi0/0/0/0',
+                'interface': 'GigabitEthernet0/0/0/0',
                 'neighbors': {
                     '2010:1:2::1': {
                         'age': '82',
@@ -76,7 +76,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/3': {
-                'interface': 'Gi0/0/0/3',
+                'interface': 'GigabitEthernet0/0/0/3',
                 'neighbors': {
                     '2020:2:3::3': {
                         'age': '114',
@@ -117,7 +117,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/2': {
-                'interface': 'Gi0/0/0/2',
+                'interface': 'GigabitEthernet0/0/0/2',
                 'neighbors': {
                     '2010:2:3::3': {
                         'age': '1',
@@ -158,7 +158,7 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/1': {
-                'interface': 'Gi0/0/0/1',
+                'interface': 'GigabitEthernet0/0/0/1',
                 'neighbors': {
                     '2020:1:2::1': {
                         'age': '4',
@@ -260,7 +260,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
     golden_parsed_output = {
         'interfaces': {
             'GigabitEthernet0/0/0/0.90': {
-                'interface': 'Gi0/0/0/0.90',
+                'interface': 'GigabitEthernet0/0/0/0.90',
                 'neighbors': {
                     'fe80::f816:3eff:fe26:1224': {
                         'age': '119',
@@ -279,7 +279,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/1.90': {
-                'interface': 'Gi0/0/0/1.90',
+                'interface': 'GigabitEthernet0/0/0/1.90',
                 'neighbors': {
                     'fe80::5c00:40ff:fe02:7': {
                         'age': '128',
@@ -298,7 +298,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/0.110': {
-                'interface': 'Gi0/0/0/0.110',
+                'interface': 'GigabitEthernet0/0/0/0.110',
                 'neighbors': {
                     'fe80::f816:3eff:fe26:1224': {
                         'age': '94',
@@ -317,7 +317,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/0.115': {
-                'interface': 'Gi0/0/0/0.115',
+                'interface': 'GigabitEthernet0/0/0/0.115',
                 'neighbors': {
                     'fe80::f816:3eff:fe26:1224': {
                         'age': '27',
@@ -336,7 +336,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/0.120': {
-                'interface': 'Gi0/0/0/0.120',
+                'interface': 'GigabitEthernet0/0/0/0.120',
                 'neighbors': {
                     'Mcast adjacency': {
                         'age': '-',
@@ -367,7 +367,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
     golden_parsed_output1 = {
         'interfaces': {
             'GigabitEthernet0/0/0/0.390': {
-                'interface': 'Gi0/0/0/0.390',
+                'interface': 'GigabitEthernet0/0/0/0.390',
                 'neighbors': {
                     'fe80::f816:3eff:fe26:1224': {
                         'age': '47',
@@ -398,7 +398,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
     golden_parsed_output2 = {
         'interfaces': {
             'GigabitEthernet0/0/0/0.390': {
-                'interface': 'Gi0/0/0/0.390',
+                'interface': 'GigabitEthernet0/0/0/0.390',
                 'neighbors': {
                     'fe80::f816:3eff:fe26:1224': {
                         'age': '90',
@@ -417,7 +417,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/0.410': {
-                'interface': 'Gi0/0/0/0.410',
+                'interface': 'GigabitEthernet0/0/0/0.410',
                 'neighbors': {
                     'Mcast adjacency': {
                         'age': '-',
@@ -429,7 +429,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/0.415': {
-                'interface': 'Gi0/0/0/0.415',
+                'interface': 'GigabitEthernet0/0/0/0.415',
                 'neighbors': {
                     'Mcast adjacency': {
                         'age': '-',
@@ -441,7 +441,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
                 },
             },
             'GigabitEthernet0/0/0/0.420': {
-                'interface': 'Gi0/0/0/0.420',
+                'interface': 'GigabitEthernet0/0/0/0.420',
                 'neighbors': {
                     'Mcast adjacency': {
                         'age': '-',
@@ -468,7 +468,7 @@ class TestShowIpv6Neighbors(unittest.TestCase):
     golden_parsed_output3 = {
         'interfaces': {
             'GigabitEthernet0/0/0/0.390': {
-                'interface': 'Gi0/0/0/0.390',
+                'interface': 'GigabitEthernet0/0/0/0.390',
                 'neighbors': {
                     'fe80::f816:3eff:fe26:1224': {
                         'age': '129',
