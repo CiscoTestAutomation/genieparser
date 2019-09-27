@@ -104,6 +104,12 @@
         * Fixed parser logic when there is no path type available
     * Updated ShowBgpL2vpnEvpnAdvertised:
         * Fixed dict key values of type `set`
+    * Added ShowBgpSessions for:
+        * show bgp sessions
+    * Added ShowBgpInstanceAllSessions for:
+        * show bgp instance all sessions
+    * Added ShowBgpInstanceSessions for:
+        * show bgp instance {instance} sessions
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
