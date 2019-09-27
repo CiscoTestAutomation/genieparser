@@ -305,4 +305,5 @@
                                 Route
 --------------------------------------------------------------------------------
 * JUNOS
-    * Updated ShowRouteTable for better matching of table name
+    * Updated ShowRouteTable for:
+        better matching of table name and parsing of more varied output
