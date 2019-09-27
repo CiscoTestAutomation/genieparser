@@ -831,6 +831,9 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
 class ShowL2vpnXconnectMp2mpDetail(ShowL2vpnXconnectDetail):
     """Parser class for 'show l2vpn xconnect mp2mp detail' CLI."""
+
+    cli_command = 'show l2vpn xconnect mp2mp detail'
+    
     def cli(self, output=None):
         """parsing mechanism: cli
         """
