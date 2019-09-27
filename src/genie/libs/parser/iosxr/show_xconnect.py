@@ -140,76 +140,47 @@ class ShowL2VpnXconnectBrief(MetaParser):
 
         return kl
 
-class ShowL2VpnXconnectMp2mpDetail(MetaParser):
-    """Parser for show l2vpn xconnect mp2mp detail"""
-    # parser class - implements detail parsing mechanisms for cli output.
-
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    """
-    schema = {'cmp': {
-                        'module': {
-                                 Any(): {
-                                         'bios_compile_time': str,
-                                         'bios_version': str,
-                                         'image_compile_time': str,
-                                         'image_version': str,
-                                         'status': str},}},
-              'hardware': {
-                        'bootflash': str,
-                        'chassis': str,
-                        'cpu': str,
-                        'device_name': str,
-                        'memory': str,
-                        'model': str,
-                        'processor_board_id': str,
-                        'slots': str,
-                        Any(): str,},
-              'kernel_uptime': {
-                        'days': str,
-                        'hours': str,
-                        'minutes': str,
-                        'seconds': str},
-              'reason': str,
-              'software': {
-                        'bios': str,
-                        'bios_compile_time': str,
-                        'kickstart': str,
-                        'kickstart_compile_time': str,
-                        'kickstart_image_file': str,
-                        'system': str,
-                        'system_compile_time': str,
-                        'system_image_file': str},
-              'system_version': str,
-              Any(): str,}
-    """
-    cli_command = 'show l2vpn xconnect detail'
-
-    def cli(self):
-        '''parsing mechanism: cli
-        '''
-
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
-
-        return kl
-
-# vim: ft=python ts=8 sw=4 et
+# ===========================================================
+# Schema for:
+#     *'show l2vpn xconnect detail'
+#     *'show l2vpn xconnect mp2mp detail'
+# ===========================================================
 
 class ShowL2vpnXconnectDetailSchema(MetaParser):
     schema = {
         'group': {
             Any(): {
+                Optional('mp2mp'): {
+                    Any(): {
+                        'state': str,
+                        'vpn_id': int,
+                        'vpn_mtu': int,
+                        'l2_encapsulation': str,
+                        'auto_discovery': {
+                            Any(): {
+                                'state': str,
+                                'service': str,
+                                'route_distinguisher': str,
+                            },
+                        },
+                        'import_route_targets': list,
+                        'export_route_targets': list,
+                        'signaling_protocol': {
+                            Any(): {
+                                'ce_range': int,
+                            }
+                        }
+                    }
+                },
                 'xc': {
                     Any(): {
                         'state': str,
                         'interworking': str,
-                        'monitor_session': {
+                        Optional('local_ce_id'): int,
+                        Optional('remote_ce_id'): int,
+                        Optional('discovery_state'): str,
+                        Optional('vlan_ranges'): list,
+                        Optional('monitor_session'): {
                             Any(): {
                                 'state': str
                             }
@@ -218,11 +189,12 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                             Any(): {
                                 'state': str,
                                 'type': str,
+                                Optional('num_ranges'): int,
                                 'mtu': int,
                                 'xc_id': str,
                                 'interworking': str,
-                                'msti': int,
-                                'statistics': {
+                                Optional('msti'): int,
+                                Optional('statistics'): {
                                     'packet_totals': {
                                         'send': int
                                     },
@@ -240,12 +212,13 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                     'pw_class': str,
                                     'xc_id': str,
                                     'encapsulation': str,
+                                    Optional('auto_discovered'): str,
                                     'protocol': str,
-                                    'type': str,
-                                    'control_word': str,
-                                    'interworking': str,
-                                    'backup_disable_delay': int,
-                                    'sequencing': str,
+                                    Optional('type'): str,
+                                    Optional('control_word'): str,
+                                    Optional('interworking'): str,
+                                    Optional('backup_disable_delay'): int,
+                                    Optional('sequencing'): str,
                                     'mpls': {
                                         Any(): {
                                             'local': str,
@@ -254,9 +227,9 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('remote_type'): list,
                                         }
                                     },
-                                    'create_time': str,
-                                    'last_time_status_changed': str,
-                                    'statistics': {
+                                    Optional('create_time'): str,
+                                    Optional('last_time_status_changed'): str,
+                                    Optional('statistics'): {
                                         'packet_totals': {
                                             'receive': int
                                         },
@@ -267,7 +240,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                 }
                             }
                         },
-                        'backup_pw': {
+                        Optional('backup_pw'): {
                             'neighbor': {
                                 Any(): {
                                     'id': int,
@@ -275,12 +248,13 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                     'pw_class': str,
                                     'xc_id': str,
                                     'encapsulation': str,
+                                    Optional('auto_discovered'): str,
                                     'protocol': str,
-                                    'type': str,
-                                    'control_word': str,
-                                    'interworking': str,
-                                    'backup_disable_delay': int,
-                                    'sequencing': str,
+                                    Optional('type'): str,
+                                    Optional('control_word'): str,
+                                    Optional('interworking'): str,
+                                    Optional('backup_disable_delay'): int,
+                                    Optional('sequencing'): str,
                                     'mpls': {
                                         Any(): {
                                             'local': str,
@@ -289,16 +263,16 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('remote_type'): list,
                                         }
                                     },
-                                    'create_time': str,
-                                    'last_time_status_changed': str,
-                                    'statistics': {
+                                    Optional('create_time'): str,
+                                    Optional('last_time_status_changed'): str,
+                                    Optional('statistics'): {
                                         'packet_totals': {
                                             'receive': int
                                         },
                                         'byte_totals': {
                                             'receive': int
                                         }
-                                    },
+                                    }
                                 }
                             }
                         },
@@ -307,6 +281,11 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
             },
         },
     }
+
+# ===========================================================
+# Parser for:
+#     *'show l2vpn xconnect detail'
+# ===========================================================
 
 class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
     """Parser for show l2vpn xconnect detail"""
@@ -333,8 +312,9 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p4 = re.compile(r'^Type +(?P<type>\S+)$')
 
         # MTU 1500; XC ID 0x5000001; interworking none; MSTi 0
-        p5 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); '
-            '+interworking +(?P<interworking>\S+); +MSTi +(?P<msti>\d+)$')
+        # MTU 1500; XC ID 0x2000013; interworking none
+        p5 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); +'
+            'interworking +(?P<interworking>\S+)(; +MSTi +(?P<msti>\d+))?$')
 
         # packet totals: send 98
         p6 = re.compile(r'^packet +totals: +send +(?P<send>\d+)$')
@@ -356,7 +336,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p9 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+), +XC +ID +(?P<xc_id>\S+)$')
 
         # Encapsulation MPLS, protocol LDP
-        p10 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+), +protocol +(?P<protocol>\S+)$')
+        p10 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+)(, +Auto-discovered +\((?P<auto_discovered>\S+)\))?, +protocol +(?P<protocol>\S+)$')
 
         # PW type Ethernet, control word enabled, interworking none
         p11 = re.compile(r'^PW +type +(?P<type>\S+), +control +word +(?P<control_word>\S+)'
@@ -401,6 +381,48 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
         p22 = re.compile(r'^(\w+ +\w+ \d+ +\S+ +\w+)|(\S+\#)$')
 
+        # Local CE ID: 1, Remote CE ID: 2, Discovery State: Advertised
+        p23 = re.compile(r'^Local +CE +ID: +(?P<local_ce_id>\d+), +Remote +CE +ID: +(?P<remote_ce_id>\d+), Discovery +State: +(?P<state>\S+)$')
+
+        # Type VLAN; Num Ranges: 1
+        p24 = re.compile(r'^Type +(?P<type>\S+); +Num +Ranges: +(?P<num_ranges>\d+)$')
+
+        # VLAN ranges: [1, 1]
+        p25 = re.compile(r'^VLAN +ranges: +\[(?P<vlan_ranges>[\S ]+)\]$')
+
+        # Group gr1, MP2MP mp1, state: up
+        p26 = re.compile(r'^Group +(?P<group_name>\S+), +MP2MP +(?P<mp2mp>\S+), +state: +(?P<state>\S+)$')
+
+        # VPN ID: 100
+        p27 = re.compile(r'^VPN +ID: +(?P<vpn_id>\d+)$')
+
+        # VPN MTU: 1500
+        p28 = re.compile(r'^VPN +MTU: +(?P<vpn_mtu>\d+)$')
+
+        # L2 Encapsulation: VLAN
+        p29 = re.compile(r'^L2 +Encapsulation: +(?P<l2_encapsulation>\S+)$')
+
+        # Auto Discovery: BGP, state is Advertised (Service Connected)
+        p30 = re.compile(r'^Auto +Discovery: +(?P<auto_discovery>\S+), +state +is +(?P<state>\S+) +\(Service +(?P<service>\S+)\)$')
+
+        # Route Distinguisher: (auto) 3.3.3.3:32770
+        p31 = re.compile(r'^Route +Distinguisher: +(?P<route_distinguisher>[\S ]+)$')
+
+        # Import Route Targets:
+        p32 = re.compile(r'^Import +Route +Targets:$')
+
+        # Export Route Targets:
+        p33 = re.compile(r'^Export +Route +Targets:$')
+
+        # 2.2.2.2:100
+        p34 = re.compile(r'^(?P<route_target>[\d\.:]+)$')
+
+        # Signaling protocol:BGP
+        p35 = re.compile(r'^Signaling +protocol: *(?P<signaling_protocol>\S+)$')
+
+        # CE Range:10
+        p36 = re.compile(r'^CE +Range: *(?P<ce_range>\d+)$')
+
         for line in out.splitlines():
             original_line = line
             line = line.strip()
@@ -427,6 +449,22 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
                 xc_dict.update({'state': state})
                 xc_dict.update({'interworking': interworking})
+                continue
+
+            # Group gr1, MP2MP mp1, state: up
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                group_name = group['group_name']
+                mp2mp = group['mp2mp']
+                state = group['state']
+
+                mp2mp_dict = ret_dict.setdefault('group', {}). \
+                    setdefault(group_name, {}). \
+                    setdefault('mp2mp', {}). \
+                    setdefault(mp2mp, {})
+
+                mp2mp_dict.update({'state': state})
                 continue
             
             # Monitor-Session: pw-span-test, state is configured
@@ -466,11 +504,12 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 mtu = int(group['mtu'])
                 xc_id = group['xc_id']
                 interworking = group['interworking']
-                msti = int(group['msti'])
                 current_dict.update({'mtu': mtu})
                 current_dict.update({'xc_id': xc_id})
                 current_dict.update({'interworking': interworking})
-                current_dict.update({'msti': msti})
+                if group['msti']:
+                    msti = int(group['msti'])
+                    current_dict.update({'msti': msti})
                 continue
             
             # packet totals: send 98
@@ -640,6 +679,120 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             m = p21.match(line)
             if m:
                 continue
+            
+            # Local CE ID: 1, Remote CE ID: 2, Discovery State: Advertised
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                local_ce_id = int(group['local_ce_id'])
+                remote_ce_id = int(group['remote_ce_id'])
+                discovery_state = group['state']
+                xc_dict.update({'local_ce_id': local_ce_id})
+                xc_dict.update({'remote_ce_id': remote_ce_id})
+                xc_dict.update({'discovery_state': discovery_state})
+                continue
+            
+            # Type VLAN; Num Ranges: 1
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                type_name = group['type']
+                num_ranges =  int(group['num_ranges'])
+                current_dict.update({'type': type_name})
+                current_dict.update({'num_ranges': num_ranges})
+                continue
+
+            # VLAN ranges: [1, 1]
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_ranges = group['vlan_ranges'].replace(' ', '').split(',')
+                xc_dict.update({'vlan_ranges': vlan_ranges})
+                continue
+            
+            # VPN ID: 100
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_id = int(group['vpn_id'])
+                mp2mp_dict.update({'vpn_id': vpn_id})
+                continue
+
+            # VPN MTU: 1500
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                vpn_mtu = int(group['vpn_mtu'])
+                mp2mp_dict.update({'vpn_mtu': vpn_mtu})
+                continue
+
+            # L2 Encapsulation: VLAN
+            # p29 = re.compile(r'^L2 +Encapsulation: +(?P<l2_encapsulation>\S+)$')
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                l2_encapsulation = group['l2_encapsulation']
+                mp2mp_dict.update({'l2_encapsulation': l2_encapsulation})
+                continue
+
+            # Auto Discovery: BGP, state is Advertised (Service Connected)
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                auto_discovery = group['auto_discovery']
+                state = group['state']
+                service = group['service']
+                auto_discovery_dict = mp2mp_dict.setdefault('auto_discovery', {}). \
+                    setdefault(auto_discovery, {})
+                auto_discovery_dict.update({'state': state})
+                auto_discovery_dict.update({'service': service})
+                continue
+
+            # Route Distinguisher: (auto) 3.3.3.3:32770
+            # p31 = re.compile(r'^Route +Distinguisher: +(?P<route_distinguisher>[\S ]+)$')
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                route_distinguisher = group['route_distinguisher']
+                auto_discovery_dict.update({'route_distinguisher': route_distinguisher})
+                continue
+
+            # Import Route Targets:
+            m = p32.match(line)
+            if m:
+                route_target_list = mp2mp_dict.setdefault('import_route_targets', [])
+                continue
+
+            # Export Route Targets:
+            m = p33.match(line)
+            if m:
+                route_target_list = mp2mp_dict.setdefault('export_route_targets', [])
+                continue
+
+            # 2.2.2.2:100
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                route_target = group['route_target']
+                route_target_list.append(route_target)
+                continue
+
+            # Signaling protocol:BGP
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                signaling_protocol = group['signaling_protocol']
+                signaling_protocol_dict = mp2mp_dict.setdefault('signaling_protocol', {}). \
+                    setdefault(signaling_protocol, {})
+                continue
+
+            # CE Range:10
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                ce_range = int(group['ce_range'])
+                signaling_protocol_dict.update({'ce_range': ce_range})
+                continue
 
             # Label        30005                          unknown
             # Group ID     0x5000300                      0x0
@@ -670,6 +823,22 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
         return ret_dict
+
+# ===========================================================
+# Parser for:
+#     *'show l2vpn xconnect mp2mp detail'
+# ===========================================================
+
+class ShowL2vpnXconnectMp2mpDetail(ShowL2vpnXconnectDetail):
+    """Parser class for 'show l2vpn xconnect mp2mp detail' CLI."""
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=out)
 
 class ShowL2vpnXconnectSchema(MetaParser):
     """Schema for show l2vpn xconnect"""

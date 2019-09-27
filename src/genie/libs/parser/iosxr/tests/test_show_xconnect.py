@@ -6,7 +6,8 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.iosxr.show_xconnect import (ShowL2vpnXconnect,
-                                                   ShowL2vpnXconnectDetail)
+                                                   ShowL2vpnXconnectDetail,
+                                                   ShowL2vpnXconnectMp2mpDetail)
 
 
 # ==================================================
@@ -421,6 +422,171 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+# ==================================================
+#  Unit test for 'show l2vpn xconnect mp2mp detail'
+# ==================================================
+class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
+    """Unit test for 'show l2vpn xconnect mp2mp detail' """
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'group': {
+            'gr1': {
+                'mp2mp': {
+                    'mp1': {
+                        'state': 'up',
+                        'vpn_id': 100,
+                        'vpn_mtu': 1500,
+                        'l2_encapsulation': 'VLAN',
+                        'auto_discovery': {
+                            'BGP': {
+                                'state': 'Advertised',
+                                'service': 'Connected',
+                                'route_distinguisher': '(auto) 3.3.3.3:32770',
+                            },
+                        },
+                        'import_route_targets': ['2.2.2.2:100'],
+                        'export_route_targets': ['2.2.2.2:100'],
+                        'signaling_protocol': {
+                            'BGP': {
+                                'ce_range': 10,
+                            },
+                        },
+                    },
+                },
+                'xc': {
+                    'mp1.1:2': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'local_ce_id': 1,
+                        'remote_ce_id': 2,
+                        'discovery_state': 'Advertised',
+                        'ac': {
+                            'GigabitEthernet0/1/0/1.1': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'mtu': 1500,
+                                'xc_id': '0x2000013',
+                                'interworking': 'none',
+                            },
+                        },
+                        'vlan_ranges': ['1', '1'],
+                        'pw': {
+                            'neighbor': {
+                                '1.1.1.1': {
+                                    'id': 65538,
+                                    'state': 'up ( established )',
+                                    'pw_class': 'not set',
+                                    'xc_id': '0x2000013',
+                                    'encapsulation': 'MPLS',
+                                    'protocol': 'BGP',
+                                    'mpls': {
+                                        'label': {
+                                            'local': '16031',
+                                            'remote': '16045',
+                                        },
+                                        'mtu': {
+                                            'local': '1500',
+                                            'remote': '1500',
+                                        },
+                                        'control_word': {
+                                            'local': 'enabled',
+                                            'remote': 'enabled',
+                                        },
+                                        'pw_type______ethernet_vlan': {
+                                            'local': 'Ethernet',
+                                            'remote': 'VLAN',
+                                        },
+                                        'ce-id': {
+                                            'local': '1',
+                                            'remote': '2',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
+    golden_output = {'execute.return_value': '''
+        show l2vpn xconnect mp2mp detail
+
+        Group gr1, MP2MP mp1, state: up
+
+        VPN ID: 100
+
+        VPN MTU: 1500
+
+        L2 Encapsulation: VLAN
+
+        Auto Discovery: BGP, state is Advertised (Service Connected)
+
+            Route Distinguisher: (auto) 3.3.3.3:32770
+
+        Import Route Targets:
+
+            2.2.2.2:100
+
+        Export Route Targets:
+
+            2.2.2.2:100
+
+        Signaling protocol:BGP
+
+            CE Range:10
+
+        Group gr1, XC mp1.1:2, state is up; Interworking none
+
+        Local CE ID: 1, Remote CE ID: 2, Discovery State: Advertised
+
+        AC: GigabitEthernet0/1/0/1.1, state is up
+
+        Type VLAN; Num Ranges: 1
+
+        VLAN ranges: [1, 1]
+
+        MTU 1500; XC ID 0x2000013; interworking none
+
+        PW: neighbor 1.1.1.1, PW ID 65538, state is up ( established )
+
+        PW class not set, XC ID 0x2000013
+
+        Encapsulation MPLS, Auto-discovered (BGP), protocol BGP
+
+            MPLS         Local                         Remote                       
+
+            ------------ ------------------------------ -----------------------------
+
+            Label        16031                          16045                        
+
+            MTU          1500                           1500                        
+
+        Control word     enabled                        enabled                      
+
+            PW type      Ethernet VLAN                  Ethernet VLAN                
+
+            CE-ID        1                              2                            
+    '''}
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2vpnXconnectMp2mpDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowL2vpnXconnectMp2mpDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
