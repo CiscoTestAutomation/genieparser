@@ -3068,9 +3068,8 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
 
         obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = obj.parse()
-        # from genie.libs.parser.utils.common import format_output
-        # print(format_output(parsed_output))
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
 
 #############################################################################
 # unitest For show ethernet tags

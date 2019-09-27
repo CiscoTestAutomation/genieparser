@@ -247,7 +247,6 @@
         * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
 
 --------------------------------------------------------------------------------
-
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
@@ -256,6 +255,21 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
+* IOSXR
+    * Updated ShowIpv6VrfAllInterface:
+        * Added 'nd_suppress' key to schema
+
+--------------------------------------------------------------------------------
+                                IPv6
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowIpv6Neighbors for commands:
+        * 'show ipv6 neighbors'
+        * 'show ipv6 neighbors vrf {vrf}'
+        * 'show ipv6 neighbors {interface}'
+        * 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Updated ShowIpv6NeighborsDetail:
+        * Added 'origin' key to schema
 
 --------------------------------------------------------------------------------
 

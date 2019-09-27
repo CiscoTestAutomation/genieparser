@@ -1685,7 +1685,11 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
             out = output
 
         # Get nd suppress by executing 'show running-config interface'
-        show_run = self.device.execute('show running-config interface')
+        if interface:
+            show_run_cmd = 'show running-config interface {}'.format(interface)
+        else:
+            show_run_cmd = 'show running-config interface'
+        show_run = self.device.execute(show_run_cmd)
         cfg = Config(show_run)
         cfg.tree()
         config_dict = cfg.config
