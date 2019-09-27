@@ -2779,7 +2779,6 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
                 'enabled': False,
             },
         }
-
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device1)
@@ -2809,7 +2808,6 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
         ipv6_vrf_all_interface_obj = ShowIpv6VrfAllInterface(device=self.device)
         parsed_output = ipv6_vrf_all_interface_obj.parse(vrf='VRF1', interface='GigabitEthernet0/0/0/1')
         self.assertEqual(parsed_output, self.golden_parsed_output_custom)
-
 
 #############################################################################
 # unitest For show ethernet tags

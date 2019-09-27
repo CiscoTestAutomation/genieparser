@@ -20,7 +20,6 @@
 import re
 import logging
 
-from genie.utils.config import Config
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
