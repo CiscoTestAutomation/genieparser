@@ -612,7 +612,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             if m:
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
-	                mpls_pairs.update({m.start(): m.end()})
+                    mpls_pairs.update({m.start(): m.end()})
                 continue
             
             #     (LSP ping verification)               
