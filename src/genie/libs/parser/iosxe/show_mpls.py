@@ -1690,7 +1690,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        # 22    [M]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        # 22    [M]  Pop Label  192.168.0.1/32  0        Gi2    192.168.0.2
         # 22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
         p2_2 = re.compile(r'^(?:(?P<local_label>\w+) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
                            '(?P<outgoing_label>(?:(?:A|a)ggregate|Untagged|(?:No|Pop) '
