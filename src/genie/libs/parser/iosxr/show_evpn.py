@@ -12,7 +12,7 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
-
+from genie.libs.parser.base import *
 from genie.libs.parser.utils.common import Common
 
 re_8bit_u = r'(?:' + r'|'.join([
@@ -379,44 +379,6 @@ class ShowEvpnEviMac(MetaParser):
                             continue
 
         return result
-
-
-class ShowEvpnEthernetSegment(MetaParser):
-    """Parser class for 'show evpn ethernet-segment' CLI."""
-
-    # TODO schema
-
-    def __init__(self, detail=False, private=False, carving=False, esi=None, **kwargs):
-        self.esi = esi
-        self.detail = detail
-        self.private = private
-        self.carving = carving
-        super().__init__(**kwargs)
-
-    cli_command = ['show evpn ethernet-segment esi {esi}','show evpn ethernet-segment']
-    def cli(self):
-        """parsing mechanism: cli
-        """
-
-        if self.esi:
-            cmd = self.cli_command[0].format(esi=self.esi)
-        else:
-            cmd = self.cli_command[1]
-
-        if self.carving:
-            cmd += ' carving'
-
-        if self.private:
-            cmd += ' private'
-        elif self.detail:
-            cmd += ' detail'
-
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
-
-        return kl
-
 
 class ShowEvpnInternalLabelDetail(MetaParser):
 
