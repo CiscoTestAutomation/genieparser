@@ -223,7 +223,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     group = result.groupdict()
                     slot = group['slot']
 
-                    subslot = 0
+                    subslot = "0"
 
                     subslot_dict = slot_dict\
                         .setdefault('subslot', {})\
@@ -245,7 +245,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 if result:
                     group = result.groupdict()
                     slot = group['slot']
-                    subslot = int(group['subslot'])
+                    subslot = group['subslot']
 
                     subslot_dict = slot_dict\
                         .setdefault('subslot', {})\

@@ -599,7 +599,7 @@ class test_show_inventory(unittest.TestCase):
                         "vid": "V05",
                         "sn": "SAL17152N0F",
                         "subslot": {
-                            0: {
+                            "0": {
                                 "VS-F6K-MSFC5": {
                                     "descr": "VS-F6K-MSFC5 CPU Daughterboard Rev. 2.0",
                                     "name": "msfc sub-module of 1",
@@ -615,7 +615,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V03",
                                 },
                             },
-                            4: {
+                            "4": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te1/4",
                                     "name": "Transceiver Te1/4",
@@ -624,7 +624,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V06 ",
                                 }
                             },
-                            5: {
+                            "5": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te1/5",
                                     "name": "Transceiver Te1/5",
@@ -646,7 +646,7 @@ class test_show_inventory(unittest.TestCase):
                         "vid": "V02",
                         "sn": "SAL17152QB3",
                         "subslot": {
-                            0: {
+                            "0": {
                                 "WS-F6K-DFC4-E": {
                                     "descr": "WS-F6K-DFC4-E Distributed Forwarding Card 4 Rev. 1.2",
                                     "name": "WS-F6K-DFC4-E Distributed Forwarding Card 4 EARL sub-module of 2",
@@ -655,7 +655,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V02",
                                 }
                             },
-                            1: {
+                            "1": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/1",
                                     "name": "Transceiver Te2/1",
@@ -664,7 +664,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V06 ",
                                 }
                             },
-                            2: {
+                            "2": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/2",
                                     "name": "Transceiver Te2/2",
@@ -673,7 +673,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V06 ",
                                 }
                             },
-                            3: {
+                            "3": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/3",
                                     "name": "Transceiver Te2/3",
@@ -682,7 +682,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V06 ",
                                 }
                             },
-                            4: {
+                            "4": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/4",
                                     "name": "Transceiver Te2/4",
@@ -691,7 +691,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V06 ",
                                 }
                             },
-                            5: {
+                            "5": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/5",
                                     "name": "Transceiver Te2/5",
@@ -700,7 +700,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V05 ",
                                 }
                             },
-                            6: {
+                            "6": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/6",
                                     "name": "Transceiver Te2/6",
@@ -709,7 +709,7 @@ class test_show_inventory(unittest.TestCase):
                                     "vid": "V06 ",
                                 }
                             },
-                            16: {
+                            "16": {
                                 "X2-10GB-SR": {
                                     "descr": "X2 Transceiver 10Gbase-SR Te2/16",
                                     "name": "Transceiver Te2/16",
@@ -731,7 +731,7 @@ class test_show_inventory(unittest.TestCase):
                         "vid": "V01",
                         "sn": "SAL17152EG9",
                         "subslot": {
-                            0: {
+                            "0": {
                                 "WS-F6K-DFC4-A": {
                                     "descr": "WS-F6K-DFC4-A Distributed Forwarding Card 4 Rev. 1.0",
                                     "name": "WS-F6K-DFC4-A Distributed Forwarding Card 4 EARL sub-module of 3",
@@ -753,7 +753,7 @@ class test_show_inventory(unittest.TestCase):
                         "vid": "V04",
                         "sn": "SAL14017TWF",
                         "subslot": {
-                            0: {
+                            "0": {
                                 "WS-F6700-CFC": {
                                     "descr": "WS-F6700-CFC Centralized Forwarding Card Rev. 4.1",
                                     "name": "WS-F6700-CFC Centralized Forwarding Card EARL sub-module of 4",
@@ -888,7 +888,7 @@ class test_show_inventory(unittest.TestCase):
                         "vid": "V05",
                         "sn": "SAL11434P2C",
                         "subslot": {
-                            0: {
+                            "0": {
                                 "WS-SUP720": {
                                     "descr": "WS-SUP720 MSFC3 Daughterboard Rev. 3.1",
                                     "name": "msfc sub-module of 1",
@@ -917,7 +917,7 @@ class test_show_inventory(unittest.TestCase):
                         "vid": "V02",
                         "sn": "SAL1128UPQ9",
                         "subslot": {
-                            0: {
+                            "0": {
                                 "WS-F6700-DFC3CXL": {
                                     "descr": "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1",
                                     "name": "switching engine sub-module of 2",
