@@ -104,6 +104,12 @@
         * Fixed parser logic when there is no path type available
     * Updated ShowBgpL2vpnEvpnAdvertised:
         * Fixed dict key values of type `set`
+    * Added ShowBgpSessions for:
+        * show bgp sessions
+    * Added ShowBgpInstanceAllSessions for:
+        * show bgp instance all sessions
+    * Added ShowBgpInstanceSessions for:
+        * show bgp instance {instance} sessions
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -352,3 +358,15 @@
 --------------------------------------------------------------------------------
 * IOS
     * Changed schema for ShowModule for Cat6k platform to reflect ops
+
+--------------------------------------------------------------------------------
+                                LLDP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowLldpEntry to support different port descriptions
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowRunningConfigNtp to support different vrfs output
