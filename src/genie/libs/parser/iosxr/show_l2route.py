@@ -1,6 +1,7 @@
 """show_l2route.py
 
-show l2route parser class
+show l2route topology
+show l2route evpn mac all
 
 """
 
@@ -16,12 +17,10 @@ class ShowL2routeTopologySchema(MetaParser):
     """
     schema = {
         Any(): {
-            'topo_id': {
-                Any(): {
-                    'topo_name': {
-                        Any(): {
-                            Optional('topo_type'): str
-                        }
+            Any(): {
+                'topo_name': {
+                    Any(): {
+                        Optional('topo_type'): str
                     }
                 }
             }
@@ -46,16 +45,15 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
         # 4294967294     GLOBAL           N/A
         # 4294967295     ALL              N/A
 
-        p = re.compile(
-            r'^\s*(?P<topo_id>\d+)\s* +'
-            r'(?P<topo_name>\S+)\s* +'
-            r'(?:N/A|(?P<topo_type>\S+))')
+        p = re.compile(r'^\s*(?P<topo_id>\d+)\s* +'
+                       r'(?P<topo_name>\S+)\s* +'
+                       r'(?P<topo_type>\S+)')
 
         parsed_dict = {}
         counts = 0
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             result = p.match(line)
 
@@ -63,7 +61,6 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
                 counts += 1
                 group_dict = result.groupdict()
 
-                str_topology = 'topology %d' % counts
                 str_id = group_dict['topo_id']
                 str_name = group_dict['topo_name']
                 str_type = group_dict['topo_type']
@@ -73,22 +70,18 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
 
                 id_dict = {}
                 name_dict = {}
-                type_dict = {}
+                type_dict = {'topo_type': str_type}
 
-                id_dict['topo_id'] = {}
-                name_dict['topo_name'] = {}
-                type_dict['topo_type'] = {}
+                name_dict.setdefault('topo_name', {}).setdefault(
+                    str_name, type_dict)
+                id_dict.setdefault(('topo_id %d' % counts), {}).setdefault(
+                    str_id, name_dict)
 
-                type_dict['topo_type'] = str_type
-                name_dict['topo_name'].setdefault(str_name, type_dict)
-                id_dict['topo_id'].setdefault(str_id, name_dict)
+                parsed_dict.update(id_dict)
 
-                parsed_dict.update({str_topology: id_dict})
-
-                continue
+            continue
 
         return parsed_dict
-
 
 
 class ShowL2routeEvpnMacAllSchema(MetaParser):
@@ -97,18 +90,17 @@ class ShowL2routeEvpnMacAllSchema(MetaParser):
     """
     schema = {
         Any(): {
-            'topo_id': {
-                Any(): {
-                    'mac_addr': {
-                        Any(): {
-                            'edt_producer': str,
-                            'next_hop': str
-                        }
+            Any(): {
+                'mac_addr': {
+                    Any(): {
+                        'edt_producer': str,
+                        'next_hop': str
                     }
                 }
             }
         }
     }
+
 
 class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
     """Parser class for show l2route evpn mac all"""
@@ -122,7 +114,7 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
             out = output
 
         # Topo ID  Mac Address    Producer    Next Hop(s)
-        # -------- -------------- ----------- ----------------------------------------
+        # -------- -------------- ----------- ---------------------------------
         # 0        0012.0100.0001 L2VPN       172.16.2.89/100001/ME
         # 0        0012.0100.0002 L2VPN       172.16.2.89/100001/ME
         # 0        0012.0100.0003 L2VPN       172.16.2.89/100001/ME
@@ -130,17 +122,16 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
         # 0        0012.0100.0005 L2VPN       172.16.2.89/100001/ME
         # 0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME
 
-        p = re.compile(
-            r'^\s*(?P<topo_id>\d+)\s* +'
-            r'(?P<mac_addr>\S+)\s* +'
-            r'(?P<edt_producer>\S+)\s* +'
-            r'(?P<next_hop>\S+)')
+        p = re.compile(r'^\s*(?P<topo_id>\d+)\s* +'
+                       r'(?P<mac_addr>\S+)\s* +'
+                       r'(?P<edt_producer>\S+)\s* +'
+                       r'(?P<next_hop>\S+)')
 
         parsed_dict = {}
         counts = 0
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             result = p.match(line)
 
@@ -157,15 +148,16 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
                 mac_addr_dict = {}
                 id_dict = {}
 
-                mac_addr_dict['mac_addr'] = {}
-                id_dict['topo_id'] = {}
-
                 producer_hop_dict.update({'edt_producer': str_producer})
                 producer_hop_dict.update({'next_hop': str_next_hop})
-                mac_addr_dict['mac_addr'].setdefault(str_mac, producer_hop_dict)
-                id_dict['topo_id'].setdefault(str_id, mac_addr_dict)
+                mac_addr_dict.setdefault('mac_addr', {}).setdefault(
+                    str_mac, producer_hop_dict)
+                id_dict.setdefault(
+                    ('topo_id %d' %
+                     counts), {}).setdefault(
+                    str_id, mac_addr_dict)
 
-                parsed_dict.update({counts: id_dict})
+                parsed_dict.update(id_dict)
 
                 continue
         return parsed_dict
