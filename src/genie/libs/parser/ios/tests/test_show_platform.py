@@ -56,7 +56,7 @@ from genie.libs.parser.iosxe.tests.test_show_platform import test_show_platform 
 
 
 
-class test_show_version(unittest.TestCase):
+class TestShowVersion(unittest.TestCase):
 
     dev1 = Device(name='empty')
     dev_iosv = Device(name='iosv')
@@ -237,6 +237,82 @@ class test_show_version(unittest.TestCase):
 
     '''}
 
+    golden_parsed_output_ios_cat6k = {
+        "version": {
+            "os": "IOS",
+            "version_short": "12.2",
+            "platform": "s72033_rp",
+            "version": "12.2(18)SXF7",
+            "image_id": "s72033_rp-ADVENTERPRISEK9_WAN-M",
+            "image_type": "production image",
+            "rom": "System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)",
+            "bootldr": "s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)",
+            "hostname": "cat6k_tb1",
+            "uptime": "10 weeks, 5 days, 5 hours, 16 minutes",
+            "system_image": "disk0:s72033-adventerprisek9_wan-mz.122-18.SXF7",
+            "chassis": "WS-C6503-E",
+            "main_mem": "983008",
+            "processor_type": "R7000",
+            "rtr_type": "WS-C6503-E",
+            "chassis_sn": "FXS1821Q2H9",
+            "last_reload_reason": "s/w reset",
+            "number_of_intfs": {"Gigabit Ethernet/IEEE 802.3": "50"},
+            "mem_size": {"non-volatile configuration": "1917", "packet buffer": "8192"},
+            "curr_config_register": "0x2102",
+        }
+    }
+
+
+    golden_output_ios_cat6k = {'execute.return_value': '''
+        show version
+        Cisco Internetwork Operating System Software
+        IOS (tm) s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2006 by cisco Systems, Inc.
+        Compiled Thu 23-Nov-06 06:26 by kellythw
+        Image text-base: 0x40101040, data-base: 0x42D98000
+
+        ROM: System Bootstrap, Version 12.2(17r)S4, RELEASE SOFTWARE (fc1)
+        BOOTLDR: s72033_rp Software (s72033_rp-ADVENTERPRISEK9_WAN-M), Version 12.2(18)SXF7, RELEASE SOFTWARE (fc1)
+
+        cat6k_tb1 uptime is 10 weeks, 5 days, 5 hours, 16 minutes
+        Time since cat6k_tb1 switched to active is 10 weeks, 5 days, 5 hours, 15 minutes
+        System returned to ROM by  power cycle at 21:57:23 UTC Sat Aug 28 2010 (SP by power on)
+        System image file is "disk0:s72033-adventerprisek9_wan-mz.122-18.SXF7"
+
+
+        This product contains cryptographic features and is subject to United
+        States and local country laws governing import, export, transfer and
+        use. Delivery of Cisco cryptographic products does not imply
+        third-party authority to import, export, distribute or use encryption.
+        Importers, exporters, distributors and users are responsible for
+        compliance with U.S. and local country laws. By using this product you
+        agree to comply with applicable laws and regulations. If you are unable
+        to comply with U.S. and local laws, return this product immediately.
+
+        A summary of U.S. laws governing Cisco cryptographic products may be found at:
+        http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+        If you require further assistance please contact us by sending email to
+        export@cisco.com.
+
+        cisco WS-C6503-E (R7000) processor (revision 1.4) with 983008K/65536K bytes of memory.
+        Processor board ID FXS1821Q2H9
+        SR71000 CPU at 600Mhz, Implementation 0x504, Rev 1.2, 512KB L2 Cache
+        Last reset from s/w reset
+        SuperLAT software (copyright 1990 by Meridian Technology Corp).
+        X.25 software, Version 3.0.0.
+        Bridging software.
+        TN3270 Emulation software.
+        1 Virtual Ethernet/IEEE 802.3 interface
+        50 Gigabit Ethernet/IEEE 802.3 interfaces
+        1917K bytes of non-volatile configuration memory.
+        8192K bytes of packet buffer memory.
+
+        65536K bytes of Flash internal SIMM (Sector size 512K).
+        Configuration register is 0x2102
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         version_obj = ShowVersion(device=self.dev1)
@@ -262,6 +338,13 @@ class test_show_version(unittest.TestCase):
         version_obj = ShowVersion(device=self.dev_iosv)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_ios)
+
+    def test_golden_ios_cat6k(self):
+        self.maxDiff = None
+        self.dev_iosv = Mock(**self.golden_output_ios_cat6k)
+        version_obj = ShowVersion(device=self.dev_iosv)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_ios_cat6k)
 
 
 class test_dir(unittest.TestCase):
@@ -761,6 +844,150 @@ class test_show_inventory(unittest.TestCase):
         PID: PWR-2700-AC/4     ,                     VID: V03, SN: APS17070093
     '''}
 
+    golden_parsed_output_3 = {
+        "main": {
+            "chassis": {
+                "WS-C6503-E": {
+                    "name": "WS-C6503-E",
+                    "descr": "Cisco Systems Catalyst 6500 3-slot Chassis System",
+                    "pid": "WS-C6503-E",
+                    "vid": "V03",
+                    "sn": "FXS1821Q2H9",
+                }
+            }
+        },
+        "slot": {
+            "CLK-7600 1": {
+                "other": {
+                    "CLK-7600 1": {
+                        "name": "CLK-7600 1",
+                        "descr": "OSR-7600 Clock FRU 1",
+                        "pid": "CLK-7600",
+                        "vid": "",
+                        "sn": "FXS181101V4",
+                    }
+                }
+            },
+            "CLK-7600 2": {
+                "other": {
+                    "CLK-7600 2": {
+                        "name": "CLK-7600 2",
+                        "descr": "OSR-7600 Clock FRU 2",
+                        "pid": "CLK-7600",
+                        "vid": "",
+                        "sn": "FXS181101V4",
+                    }
+                }
+            },
+            1: {
+                "rp": {
+                    "WS-SUP720-3BXL": {
+                        "name": "1",
+                        "descr": "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6",
+                        "pid": "WS-SUP720-3BXL",
+                        "vid": "V05",
+                        "sn": "SAL11434P2C",
+                        "subslot": {
+                            0: {
+                                "WS-SUP720": {
+                                    "descr": "WS-SUP720 MSFC3 Daughterboard Rev. 3.1",
+                                    "name": "msfc sub-module of 1",
+                                    "pid": "WS-SUP720",
+                                    "sn": "SAL11434N9G",
+                                    "vid": "",
+                                },
+                                "WS-F6K-PFC3BXL": {
+                                    "descr": "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.8",
+                                    "name": "switching engine sub-module of 1",
+                                    "pid": "WS-F6K-PFC3BXL",
+                                    "sn": "SAL11434LYG",
+                                    "vid": "V01",
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+            2: {
+                "lc": {
+                    "WS-X6748-GE-TX": {
+                        "name": "2",
+                        "descr": "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.6",
+                        "pid": "WS-X6748-GE-TX",
+                        "vid": "V02",
+                        "sn": "SAL1128UPQ9",
+                        "subslot": {
+                            0: {
+                                "WS-F6700-DFC3CXL": {
+                                    "descr": "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1",
+                                    "name": "switching engine sub-module of 2",
+                                    "pid": "WS-F6700-DFC3CXL",
+                                    "sn": "SAL1214LAG5",
+                                    "vid": "V01",
+                                }
+                            }
+                        },
+                    }
+                }
+            },
+            "WS-C6503-E-FAN 1": {
+                "other": {
+                    "WS-C6503-E-FAN 1": {
+                        "name": "WS-C6503-E-FAN 1",
+                        "descr": "Enhanced 3-slot Fan Tray 1",
+                        "pid": "WS-C6503-E-FAN",
+                        "vid": "V02",
+                        "sn": "DCH183500KW",
+                    }
+                }
+            },
+            "PS 1 PWR-1400-AC": {
+                "other": {
+                    "PS 1 PWR-1400-AC": {
+                        "name": "PS 1 PWR-1400-AC",
+                        "descr": "AC power supply, 1400 watt 1",
+                        "pid": "PWR-1400-AC",
+                        "vid": "V01",
+                        "sn": "ABC0830J127",
+                    }
+                }
+            },
+        },
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        # show inventory
+        NAME: "WS-C6503-E", DESCR: "Cisco Systems Catalyst 6500 3-slot Chassis System"
+        PID: WS-C6503-E        , VID: V03, SN: FXS1821Q2H9
+
+        NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
+        PID: CLK-7600          , VID:    , SN: FXS181101V4
+
+        NAME: "CLK-7600 2", DESCR: "OSR-7600 Clock FRU 2"
+        PID: CLK-7600          , VID:    , SN: FXS181101V4
+
+        NAME: "1", DESCR: "WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6"
+        PID: WS-SUP720-3BXL    , VID: V05, SN: SAL11434P2C
+
+        NAME: "msfc sub-module of 1", DESCR: "WS-SUP720 MSFC3 Daughterboard Rev. 3.1"
+        PID: WS-SUP720         , VID:    , SN: SAL11434N9G
+
+        NAME: "switching engine sub-module of 1", DESCR: "WS-F6K-PFC3BXL Policy Feature Card 3 Rev. 1.8"
+        PID: WS-F6K-PFC3BXL    , VID: V01, SN: SAL11434LYG
+
+        NAME: "2", DESCR: "WS-X6748-GE-TX CEF720 48 port 10/100/1000mb Ethernet Rev. 2.6"
+        PID: WS-X6748-GE-TX    , VID: V02, SN: SAL1128UPQ9
+
+        NAME: "switching engine sub-module of 2", DESCR: "WS-F6700-DFC3CXL Distributed Forwarding Card 3 Rev. 1.1"
+        PID: WS-F6700-DFC3CXL  , VID: V01, SN: SAL1214LAG5
+
+        NAME: "WS-C6503-E-FAN 1", DESCR: "Enhanced 3-slot Fan Tray 1"
+        PID: WS-C6503-E-FAN    , VID: V02, SN: DCH183500KW
+
+        NAME: "PS 1 PWR-1400-AC", DESCR: "AC power supply, 1400 watt 1"
+        PID: PWR-1400-AC       , VID: V01, SN: ABC0830J127
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         inventory_obj = ShowInventory(device=self.dev1)
@@ -780,6 +1007,13 @@ class test_show_inventory(unittest.TestCase):
         obj = ShowInventory(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_output_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowInventory(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 class test_show_bootvar(unittest.TestCase):
