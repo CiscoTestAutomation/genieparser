@@ -5,6 +5,13 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+* Removed type `EUI` from the following show commands under IOSXR:
+    * ShowL2routeEvpnMac
+    * ShowL2routeEvpnMacIp
+    * ShowL2vpnMacLearning
+    * ShowEvpnEviMac
+    * ShowControllersFiaDiagshellL2show
+
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -75,10 +82,10 @@
                                 ISSU
 --------------------------------------------------------------------------------
 * IOS
-	Added ShowIssuStateDetail for:
-		* show issu state detail
-	Added ShowIssuRollbackTimer for:
-	 	* show issu rollback-timer
+    Added ShowIssuStateDetail for:
+        * show issu state detail
+    Added ShowIssuRollbackTimer for:
+        * show issu rollback-timer
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -97,6 +104,12 @@
         * Fixed parser logic when there is no path type available
     * Updated ShowBgpL2vpnEvpnAdvertised:
         * Fixed dict key values of type `set`
+    * Added ShowBgpSessions for:
+        * show bgp sessions
+    * Added ShowBgpInstanceAllSessions for:
+        * show bgp instance all sessions
+    * Added ShowBgpInstanceSessions for:
+        * show bgp instance {instance} sessions
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -123,36 +136,36 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
 * NXOS
-	* Updated ShowIpOspfMplsLdpInterface
-		* add custom interface argument
-	* Updated ShowIpOspfInterface
-		* add custom interface argument
-	* Updated ShowIpOspfNeighborDetail
-		* added custom neighbor argument
+    * Updated ShowIpOspfMplsLdpInterface
+        * add custom interface argument
+    * Updated ShowIpOspfInterface
+        * add custom interface argument
+    * Updated ShowIpOspfNeighborDetail
+        * added custom neighbor argument
 
 --------------------------------------------------------------------------------
                                 dot1x
 --------------------------------------------------------------------------------
 * IOSXE
     * removed tab, replace with space
-    	'show dot1x all statistics'
+        'show dot1x all statistics'
 
 --------------------------------------------------------------------------------
                                 PIM
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigPim:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigPim:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								VRF
+                                VRF
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigVrf:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigVrf:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								common.py
+                                common.py
 --------------------------------------------------------------------------------
 * updated _find_command to escape "^"
 * disallow spaces in key "feature"
@@ -237,6 +250,12 @@
 * IOS
     * Added ShowCdpNeighbors for command:
         * show cdp neighbors
+        * show cdp neighbors detail
+
+* IOSXR
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+        * show cdp neighbors detail
 
 --------------------------------------------------------------------------------
                                 Nd
@@ -290,12 +309,19 @@
 * IOSXR  
     * Added ShowEthernetCfmMeps for:
         * show ethernet cfm peer meps
+--------------------------------------------------------------------------------
+                                VERSION
+--------------------------------------------------------------------------------
+* IOS
+    * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXE
+    * Optimization of ShowVersion moving regex compilation out of loop
 
 --------------------------------------------------------------------------------
                                 Routing
 --------------------------------------------------------------------------------
 * IOSXE
-	* Updated ShowIpCef to parse outputs without routes
+    * Updated ShowIpCef to parse outputs without routes
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -335,3 +361,21 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:  
         * show l2vpn bridge-domain
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Changed schema for ShowModule for Cat6k platform to reflect ops
+
+--------------------------------------------------------------------------------
+                                LLDP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowLldpEntry to support different port descriptions
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowRunningConfigNtp to support different vrfs output

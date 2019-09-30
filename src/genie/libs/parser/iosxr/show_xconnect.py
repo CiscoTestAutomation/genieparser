@@ -651,28 +651,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             if m:
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
-	                mpls_pairs.update({m.start(): m.end()})
-                continue
-            
-            #     (LSP ping verification)               
-            #                                    (none)
-            #     (control word)                 (control word)
-            #     (control word) 
-            m = p20.match(line)
-            if m:
-                mpls_items = list(mpls_pairs.items()) 
-                local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
-                                replace('(','').replace(')', '').strip()) 
-                remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
-                                replace('(','').replace(')', '').strip())
-                local_type = mpls_dict.get('local_type', [])
-                remote_type = mpls_dict.get('remote_type', [])
-                if local_value:
-                    local_type.append(local_value)
-                if remote_value:
-                    remote_type.append(remote_value)
-                mpls_dict.update({'local_type': local_type})
-                mpls_dict.update({'remote_type': remote_type})
+                    mpls_pairs.update({m.start(): m.end()})
                 continue
 
             # Backup for neighbor 10.1.1.1 PW ID 1 ( active )
@@ -800,48 +779,46 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                mpls = group['mpls'].strip().lower().replace(' ','_')
-                local = group['local'].strip()
-                remote = group['remote']
-                if mpls == 'interface':
-                    if interface_found:
-                        interface_dict = current_dict.setdefault('mpls', {}). \
-                            setdefault('monitor_interface', {})
-                        interface_dict.update({'local': local})
-                        interface_dict.update({'remote': remote})
+                # mpls = group['mpls'].strip().lower().replace(' ','_')
+                # local = group['local'].strip()
+                # remote = group['remote']
+                mpls_items = list(mpls_pairs.items()) 
+                mpls_value = (original_line[mpls_items[0][0]:mpls_items[0][1]].
+                                replace('(','').replace(')', '').strip())
+                local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
+                                replace('(','').replace(')', '').strip()) 
+                remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
+                                replace('(','').replace(')', '').strip())
+                if mpls_value:
+                    if mpls_value == 'interface':
+                        if interface_found:
+                            interface_dict = current_dict.setdefault('mpls', {}). \
+                                setdefault('monitor_interface', {})
+                            interface_dict.update({'local': local})
+                            interface_dict.update({'remote': remote})
+                        else:
+                            interface_found = True
+                            mpls_dict = current_dict.setdefault('mpls', {}). \
+                                setdefault(mpls_value, {})
+                            mpls_dict.update({'local': local})
+                            mpls_dict.update({'remote': remote})
                     else:
-                        interface_found = True
                         mpls_dict = current_dict.setdefault('mpls', {}). \
-                            setdefault(mpls, {})
+                            setdefault(mpls_value, {})
                         mpls_dict.update({'local': local})
                         mpls_dict.update({'remote': remote})
                 else:
-                    mpls_dict = current_dict.setdefault('mpls', {}). \
-                        setdefault(mpls, {})
-                    mpls_dict.update({'local': local})
-                    mpls_dict.update({'remote': remote})
+                    local_type = mpls_dict.get('local_type', [])
+                    remote_type = mpls_dict.get('remote_type', [])
+                    if local_value:
+                        local_type.append(local_value)
+                    if remote_value:
+                        remote_type.append(remote_value)
+                    mpls_dict.update({'local_type': local_type})
+                    mpls_dict.update({'remote_type': remote_type})
                 continue
 
         return ret_dict
-
-# ===========================================================
-# Parser for:
-#     *'show l2vpn xconnect mp2mp detail'
-# ===========================================================
-
-class ShowL2vpnXconnectMp2mpDetail(ShowL2vpnXconnectDetail):
-    """Parser class for 'show l2vpn xconnect mp2mp detail' CLI."""
-
-    cli_command = 'show l2vpn xconnect mp2mp detail'
-    
-    def cli(self, output=None):
-        """parsing mechanism: cli
-        """
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-        return super().cli(output=out)
 
 class ShowL2vpnXconnectSchema(MetaParser):
     """Schema for show l2vpn xconnect"""
@@ -941,3 +918,22 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment2_dict['status'] = str(group['status_seg2'])
 
         return ret_dict
+
+# ===========================================================
+# Parser for:
+#     *'show l2vpn xconnect mp2mp detail'
+# ===========================================================
+
+class ShowL2vpnXconnectMp2mpDetail(ShowL2vpnXconnectDetail):
+    """Parser class for 'show l2vpn xconnect mp2mp detail' CLI."""
+
+    cli_command = 'show l2vpn xconnect mp2mp detail'
+    
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=out)
