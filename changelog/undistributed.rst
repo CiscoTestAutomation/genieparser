@@ -309,6 +309,13 @@
 * IOSXR  
     * Added ShowEthernetCfmMeps for:
         * show ethernet cfm peer meps
+--------------------------------------------------------------------------------
+                                VERSION
+--------------------------------------------------------------------------------
+* IOS
+    * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXE
+    * Optimization of ShowVersion moving regex compilation out of loop
 
 --------------------------------------------------------------------------------
                                 Routing
