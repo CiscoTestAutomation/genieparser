@@ -5,7 +5,7 @@ show xsconnect parser class
   supported commands:
    *  show l2vpn xconnect
    *  show l2vpn xconnect detail
-   
+   *  show l2vpn xconnect mp2mp detail
 """
 import re
 
@@ -802,7 +802,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             if m:
                 try:
                     group = m.groupdict()
-                    mpls_items = list(mpls_pairs.items()) 
+                    mpls_items = list(mpls_pairs.items())
                     mpls_value = (original_line[:mpls_items[0][1]+1].
                                     replace('(','').
                                     replace(')', '').
