@@ -153,38 +153,38 @@ class ShowVersion(ShowVersionSchema):
         p6 = re.compile(r'^\s*ROM\: +(?P<rom>.+)$')
         
         # ROM: Bootstrap program is IOSv
-        p7 = re.compile(r'^Bootstrap +program +is +(?P<os>.+)$')            
+        p7 = re.compile(r'^Bootstrap +program +is +(?P<os>.+)$')
 
         # bootldr
-        p8 = re.compile(r'^\s*BOOTLDR\: +(?P<bootldr>.+)$')        
+        p8 = re.compile(r'^\s*BOOTLDR\: +(?P<bootldr>.+)$')
 
         # hostname & uptime
-        p9 = re.compile(r'^\s*(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')        
+        p9 = re.compile(r'^\s*(?P<hostname>.+) +uptime +is +(?P<uptime>.+)$')
 
         # uptime_this_cp
-        p10 = re.compile(r'^\s*[Uu]ptime +for +this +control +processor +is +(?P<uptime_this_cp>.+)$')       
+        p10 = re.compile(r'^\s*[Uu]ptime +for +this +control +processor +is +(?P<uptime_this_cp>.+)$')
 
         # system_restarted_at
-        p11 = re.compile(r'^\s*[Ss]ystem +restarted +at +(?P<system_restarted_at>.+)$')        
+        p11 = re.compile(r'^\s*[Ss]ystem +restarted +at +(?P<system_restarted_at>.+)$')
 
         # system_image
-        p12 = re.compile(r'^\s*[Ss]ystem +image +file +is +\"(?P<system_image>.+)\"')        
+        p12 = re.compile(r'^\s*[Ss]ystem +image +file +is +\"(?P<system_image>.+)\"')
 
         # last_reload_reason
-        p13 = re.compile(r'^\s*[Ll]ast +reload +reason\: +(?P<last_reload_reason>.+)$')        
+        p13 = re.compile(r'^\s*[Ll]ast +reload +reason\: +(?P<last_reload_reason>.+)$')
 
         # last_reload_reason
         # Last reset from power-on
-        p14 = re.compile(r'^\s*[Ll]ast +reset +from +(?P<last_reload_reason>.+)$')       
+        p14 = re.compile(r'^\s*[Ll]ast +reset +from +(?P<last_reload_reason>.+)$')
 
         # license_type
-        p15 = re.compile(r'^\s*[Ll]icense +[Tt]ype\: +(?P<license_type>.+)$')        
+        p15 = re.compile(r'^\s*[Ll]icense +[Tt]ype\: +(?P<license_type>.+)$')
 
         # license_level
-        p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')        
+        p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')
 
         # next_reload_license_level
-        p17 = re.compile(r'^\s*[Nn]ext +reload +license +Level\: +(?P<next_reload_license_level>.+)$')        
+        p17 = re.compile(r'^\s*[Nn]ext +reload +license +Level\: +(?P<next_reload_license_level>.+)$')
 
         # chassis, processor_type, main_mem and rtr_type
         # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
@@ -202,40 +202,40 @@ class ShowVersion(ShowVersionSchema):
         p20 = re.compile(r'^\s*(?P<number_of_ports>\d+) +(?P<interface>.+) +interfaces')
         
         # mem_size
-        p21 = re.compile(r'^\s*(?P<mem_size>\d+)K +bytes +of +(?P<memories>.+) +[Mm]emory\.')        
+        p21 = re.compile(r'^\s*(?P<mem_size>\d+)K +bytes +of +(?P<memories>.+) +[Mm]emory\.')
 
         # disks, disk_size and type_of_disk
-        p22 = re.compile(r'^\s*(?P<disk_size>\d+)K bytes of (?P<type_of_disk>.*) at (?P<disks>.+)$')        
+        p22 = re.compile(r'^\s*(?P<disk_size>\d+)K bytes of (?P<type_of_disk>.*) at (?P<disks>.+)$')
 
         # os
-        p23 = re.compile(r'^\s*[Cc]isco +(?P<os>[a-zA-Z\-]+) +[Ss]oftware,')        
+        p23 = re.compile(r'^\s*[Cc]isco +(?P<os>[a-zA-Z\-]+) +[Ss]oftware,')
 
         # curr_config_register
-        p24 = re.compile(r'^\s*[Cc]onfiguration +register +is +(?P<curr_config_register>[a-zA-Z0-9]+)')        
+        p24 = re.compile(r'^\s*[Cc]onfiguration +register +is +(?P<curr_config_register>[a-zA-Z0-9]+)')
 
         # next_config_register
         p25 = re.compile(r'^\s*[Cc]onfiguration +register +is +[a-zA-Z0-9]+ +\(will be (?P<next_config_register>[a-zA-Z0-9]+) at next reload\)')
         
         # switch_number
-        p26 = re.compile(r'^\s*[Ss]witch +0(?P<switch_number>\d+)$')        
+        p26 = re.compile(r'^\s*[Ss]witch +0(?P<switch_number>\d+)$')
 
         # uptime
-        p27 = re.compile(r'^\s*[Ss]witch +uptime +\: +(?P<uptime>.+)$')         
+        p27 = re.compile(r'^\s*[Ss]witch +uptime +\: +(?P<uptime>.+)$')
 
         # mac_address
-        p28 = re.compile(r'^\s*[Bb]ase +[Ee]thernet +MAC +[Aa]ddress +\: +(?P<mac_address>.+)$')        
+        p28 = re.compile(r'^\s*[Bb]ase +[Ee]thernet +MAC +[Aa]ddress +\: +(?P<mac_address>.+)$')
 
         # mb_assembly_num
         p29 = re.compile(r'^\s*[Mm]otherboard +[Aa]ssembly +[Nn]umber +\: +(?P<mb_assembly_num>.+)$')
         
         # mb_sn
-        p30 = re.compile(r'^\s*[Mm]otherboard +[Ss]erial +[Nn]umber +\: +(?P<mb_sn>.+)$')        
+        p30 = re.compile(r'^\s*[Mm]otherboard +[Ss]erial +[Nn]umber +\: +(?P<mb_sn>.+)$')
 
         # model_rev_num
-        p31 = re.compile(r'^\s*[Mm]odel +[Rr]evision +[Nn]umber +\: +(?P<model_rev_num>.+)$')        
+        p31 = re.compile(r'^\s*[Mm]odel +[Rr]evision +[Nn]umber +\: +(?P<model_rev_num>.+)$')
 
         # mb_rev_num
-        p32 = re.compile(r'^\s*[Mm]otherboard +[Rr]evision +[Nn]umber +\: +(?P<mb_rev_num>.+)$')        
+        p32 = re.compile(r'^\s*[Mm]otherboard +[Rr]evision +[Nn]umber +\: +(?P<mb_rev_num>.+)$')
 
         # model_num
         p33 = re.compile(r'^\s*[Mm]odel +[Nn]umber +\: +(?P<model_num>.+)$')
@@ -294,13 +294,13 @@ class ShowVersion(ShowVersionSchema):
                         version_dict['version']['os'] = m.groupdict()['os']
                     continue
 
-            # Copyright (c) 1986-2016 by Cisco Systems, Inc.            
+            # Copyright (c) 1986-2016 by Cisco Systems, Inc.
             m = p4.match(line)
             if m:
                 version_dict.setdefault('version', {}).setdefault('image_type', 'developer image')
                 continue
 
-            # Technical Support: http://www.cisco.com/techsupport            
+            # Technical Support: http://www.cisco.com/techsupport
             m = p5.match(line)
             if m:
                 version_dict.setdefault('version', {}).setdefault('image_type', 'production image')
@@ -310,23 +310,23 @@ class ShowVersion(ShowVersionSchema):
             m = p6.match(line)
             if m:
                 rom = m.groupdict()['rom']
-                version_dict['version']['rom'] = rom                    
+                version_dict['version']['rom'] = rom
 
-                # ROM: Bootstrap program is IOSv                
+                # ROM: Bootstrap program is IOSv
                 m = p7.match(rom)
                 if m:
                     version_dict['version']['os'] = \
                         m.groupdict()['os']
                 continue
 
-            # bootldr            
+            # bootldr
             m = p8.match(line)
             if m:
                 version_dict['version']['bootldr'] = \
                     m.groupdict()['bootldr']
                 continue
 
-            # hostname & uptime            
+            # hostname & uptime
             m = p9.match(line)
             if m:
                 version_dict['version']['hostname'] = \
@@ -335,7 +335,7 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['uptime']
                 continue
 
-            # uptime_this_cp            
+            # uptime_this_cp
             m = p10.match(line)
             if m:
                 version_dict['version']['uptime_this_cp'] = \
@@ -357,7 +357,7 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['system_image']
                 continue
 
-            # last_reload_reason            
+            # last_reload_reason
             m = p13.match(line)
             if m:
                 version_dict['version']['last_reload_reason'] = \
@@ -379,7 +379,7 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['license_type']
                 continue
 
-            # license_level           
+            # license_level
             m = p16.match(line)
             if m:
                 version_dict['version']['license_level'] = \
@@ -399,7 +399,7 @@ class ShowVersion(ShowVersionSchema):
             # cisco C1111-4P (1RU) processor with 1453955K/6147K bytes of memory. 
             # Cisco IOSv (revision 1.0) with  with 435457K/87040K bytes of memory.
             # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
-            # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.            
+            # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
             m = p18.match(line)
             if m:
                 version_dict['version']['chassis'] \
@@ -428,7 +428,7 @@ class ShowVersion(ShowVersionSchema):
                     = m.groupdict()['chassis_sn']
                 continue
 
-            # number_of_intfs            
+            # number_of_intfs
             m = p20.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -438,7 +438,7 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['number_of_ports']
                 continue
 
-            # mem_size            
+            # mem_size
             m = p21.match(line)
             if m:
                 memories = m.groupdict()['memories']
@@ -448,7 +448,7 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['mem_size']
                 continue
 
-            # disks, disk_size and type_of_disk            
+            # disks, disk_size and type_of_disk
             m = p22.match(line)
             if m:
                 disks = m.groupdict()['disks']
@@ -462,19 +462,19 @@ class ShowVersion(ShowVersionSchema):
                     m.groupdict()['type_of_disk']
                 continue
 
-            # os            
+            # os
             m = p23.match(line)
             if m:
                 version_dict['version']['os'] = m.groupdict()['os']
                 continue
 
-            # curr_config_register            
+            # curr_config_register
             m = p24.match(line)
             if m:
                 version_dict['version']['curr_config_register'] \
                     = m.groupdict()['curr_config_register']
 
-            # next_config_register            
+            # next_config_register
             m = p25.match(line)
             if m:
                 version_dict['version']['next_config_register'] \
@@ -492,7 +492,7 @@ class ShowVersion(ShowVersionSchema):
                         version_dict['version']['switch_num'][switch_number] = {}
                 continue
 
-            # uptime            
+            # uptime
             m = p27.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
@@ -500,7 +500,7 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['switch_num'][switch_number]['uptime'] = m.groupdict()['uptime']
                 continue
 
-            # mac_address            
+            # mac_address
             m = p28.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
@@ -509,7 +509,7 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['switch_num'][switch_number]['mac_address'] = m.groupdict()['mac_address']
                 continue
 
-            # mb_assembly_num            
+            # mb_assembly_num
             m = p29.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
@@ -536,7 +536,7 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['switch_num'][switch_number]['model_rev_num'] = m.groupdict()['model_rev_num']
                 continue
 
-            # mb_rev_num            
+            # mb_rev_num
             m = p32.match(line)
             if m:
                 if 'switch_num' not in version_dict['version']:
