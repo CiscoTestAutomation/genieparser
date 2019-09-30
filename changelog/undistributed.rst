@@ -56,6 +56,7 @@
     * Update ShowMplsForwardingTable
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
+        * update schema to support 'Merged' key
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -207,6 +208,8 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
+    * ShowIpRouteWord
+        * update regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
