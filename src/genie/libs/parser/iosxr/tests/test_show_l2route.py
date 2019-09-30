@@ -10,7 +10,8 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mrib
-from genie.libs.parser.iosxr.show_l2route import (ShowL2routeTopology, ShowL2routeEvpnMacAll)
+from genie.libs.parser.iosxr.show_l2route import (
+    ShowL2routeTopology, ShowL2routeEvpnMacAll)
 
 
 # ===========================================
@@ -69,28 +70,87 @@ class TestShowL2RouteTopology(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_output)
 
+
 # ===========================================
 #  Unit test for 'show l2route evpn mac all'
 # ===========================================
+
+
 class TestShowL2RouteEvpnMacAll(unittest.TestCase):
     """Unit test for 'show l2route evpn mac all'"""
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    # expected_output =
+    expected_output = {
+        1: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0001': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        2: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0002': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        3: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0003': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        4: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0004': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        5: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0005': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        6: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0006': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        7: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0007': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}},
+        8: {
+            'topo_id': {
+                '0': {
+                    'mac_addr': {
+                        '0012.0100.0008': {
+                            'edt_producer': 'L2VPN',
+                            'next_hop': '172.16.2.89/100001/ME'}}}}}}
 
     device_output = {'execute.return_value': '''
-        Topo ID  Mac Address    Producer    Next Hop(s)                             
+        Topo ID  Mac Address    Producer    Next Hop(s)
         -------- -------------- ----------- ----------------------------------------
-        0        0012.0100.0001 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0002 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0003 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0004 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0005 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0007 L2VPN       172.16.2.89/100001/ME                   
-        0        0012.0100.0008 L2VPN       172.16.2.89/100001/ME                   
+        0        0012.0100.0001 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0002 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0003 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0004 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0005 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0007 L2VPN       172.16.2.89/100001/ME
+        0        0012.0100.0008 L2VPN       172.16.2.89/100001/ME
     '''}
 
     def test_empty(self):
@@ -105,12 +165,8 @@ class TestShowL2RouteEvpnMacAll(unittest.TestCase):
         obj = ShowL2routeEvpnMacAll(device=self.device)
         parsed_output = obj.parse()
 
-        import pprint
-        pprint.pprint(parsed_output)
-        import pdb
-        pdb.set_trace()
-
         self.assertEqual(parsed_output, self.expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
