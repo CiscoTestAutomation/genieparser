@@ -761,6 +761,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     "prefix_length": "112"
                },
                "nd": {
+                    "suppress": False,
                     "dad_enabled": True,
                     "advertised_default_router_preference": "Medium",
                     "advertised_retransmit_interval": 0,
@@ -800,6 +801,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                },
                "enabled": True,
                "nd": {
+                    "suppress": True,
                     "advertised_default_router_preference": "Medium",
                     "advertised_retransmit_interval": 0,
                     "advertised_retransmit_interval_unspecified": True,

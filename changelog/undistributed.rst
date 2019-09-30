@@ -5,6 +5,13 @@
 | ------------------------|:-------------:|
 | ``genie.libs.parser``   |               |
 
+* Removed type `EUI` from the following show commands under IOSXR:
+    * ShowL2routeEvpnMac
+    * ShowL2routeEvpnMacIp
+    * ShowL2vpnMacLearning
+    * ShowEvpnEviMac
+    * ShowControllersFiaDiagshellL2show
+
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -17,6 +24,14 @@
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
+* IOSXE
+    * Update ShowInterfaceAccounting
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+* NXOS
+    * Update ShowRunningConfigInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Update ShowNveInterface:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
 
 --------------------------------------------------------------------------------
                                 EIGRP
@@ -67,10 +82,10 @@
                                 ISSU
 --------------------------------------------------------------------------------
 * IOS
-	Added ShowIssuStateDetail for:
-		* show issu state detail
-	Added ShowIssuRollbackTimer for:
-	 	* show issu rollback-timer
+    Added ShowIssuStateDetail for:
+        * show issu state detail
+    Added ShowIssuRollbackTimer for:
+        * show issu rollback-timer
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -84,6 +99,17 @@
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
+    * Updated ShowBgpL2vpnEvpn:
+        * updated schema to support more output
+        * Fixed parser logic when there is no path type available
+    * Updated ShowBgpL2vpnEvpnAdvertised:
+        * Fixed dict key values of type `set`
+    * Added ShowBgpSessions for:
+        * show bgp sessions
+    * Added ShowBgpInstanceAllSessions for:
+        * show bgp instance all sessions
+    * Added ShowBgpInstanceSessions for:
+        * show bgp instance {instance} sessions
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -104,30 +130,42 @@
     * Added ShowIpOspfSegmentRoutingAdjacencySid for:
         * show ip ospf segment-routing adjacency-sid
         * show ip ospf {process_id} segment-routing adjacency-sid
+    * Updated ShowIpOspfInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
+* IOSXR
+    * Updated ShowOspfVrfAllInclusiveInterface:
+        * change {intf} and argument 'intf' into {interface} and 'interface'
+* NXOS
+    * Updated ShowIpOspfMplsLdpInterface
+        * add custom interface argument
+    * Updated ShowIpOspfInterface
+        * add custom interface argument
+    * Updated ShowIpOspfNeighborDetail
+        * added custom neighbor argument
 
 --------------------------------------------------------------------------------
                                 dot1x
 --------------------------------------------------------------------------------
 * IOSXE
     * removed tab, replace with space
-    	'show dot1x all statistics'
+        'show dot1x all statistics'
 
 --------------------------------------------------------------------------------
                                 PIM
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigPim:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigPim:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								VRF
+                                VRF
 --------------------------------------------------------------------------------
 * NXOS
-	* Updated ShowRunningConfigVrf:
-		changed logic to support calling from device.parse
+    * Updated ShowRunningConfigVrf:
+        changed logic to support calling from device.parse
 
 --------------------------------------------------------------------------------
-								common.py
+                                common.py
 --------------------------------------------------------------------------------
 * updated _find_command to escape "^"
 * disallow spaces in key "feature"
@@ -197,44 +235,148 @@
                                 Spanning-Tree
 --------------------------------------------------------------------------------
 * IOSXE
-    * Updated ShowSpanningTreeSummary:
-        * Changed some schema keywords to Optional
-        * Refined regex for various formats
+    * Update ShowIpv6Neighbors
+        * Add command 'show ipv6 neighbors {interface}'
+        * Add command 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Update ShowIpv6Interface
+        * Add 'suppress' key to schema
+* NXOS
+    * Update ShowIpv6MldInterfaceSchema
+        * Added support for 'show ipv6 mld interface vrf all'
 
 --------------------------------------------------------------------------------
-                                ARP
+                                CDP
 --------------------------------------------------------------------------------
+* IOS
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+        * show cdp neighbors detail
+
 * IOSXR
-    * Updated ShowArpTrafficDetail to parse drop_adj key from output
-
-
---------------------------------------------------------------------------------
-                                VTP
---------------------------------------------------------------------------------
-* IOSXE:
-    * Updated ShowVtpStatusSchema to:
-        * Changed schema keywords to Optional
+    * Added ShowCdpNeighbors for command:
+        * show cdp neighbors
+        * show cdp neighbors detail
 
 --------------------------------------------------------------------------------
-                                IPV6
+                                Nd
 --------------------------------------------------------------------------------
 * NXOS
-    * Updated ShowIpv6NdInterfaceVrfAll to parse more varied output
+    * Update ShowIpv6NdInterface:
+        * Add command 'show ipv6 nd interface {interface}'
+        * Add command 'show ipv6 nd interface {interface} vrf {vrf}'
+    * Update ShowIpv6IcmpNeighborDetail:
+        * Add command 'show ipv6 icmp neighbor {interface} detail'
+        * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
 
 --------------------------------------------------------------------------------
-                                MLD
+
+                                Interface
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowRunningConfigNvOverlay for more varied output
+    * Updated ShowNveInterfaceDetail:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Update ShowIpv6MldInterfaceSchema
+        * Added support for 'show ipv6 mld interface vrf all'
+
+--------------------------------------------------------------------------------
+
+                                Ethernet
+--------------------------------------------------------------------------------
+* IOS
+    * Added ShowModule parse for Cat6k devices
+
+
+--------------------------------------------------------------------------------
+                                AUTHENTICATION
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowAuthenticationSessionsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessions:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowAuthenticationSessionsInterfaceDetailsSchema:
+        * Change {intf} in doc string into {interface}
+    * Updated ShowAuthenticationSessionsInterfaceDetails:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+
+--------------------------------------------------------------------------------
+                                FDB
+--------------------------------------------------------------------------------
+* NXOS
+    * Updated ShowMacAddressTableVni:
+        * Change {intf} and argument 'intf' into {interface} and 'interface'
+* IOSXR  
+    * Added ShowEthernetCfmMeps for:
+        * show ethernet cfm peer meps
+--------------------------------------------------------------------------------
+                                VERSION
+--------------------------------------------------------------------------------
+* IOS
+    * Optimization of ShowVersion moving regex compilation out of loop
+* IOSXE
+    * Optimization of ShowVersion moving regex compilation out of loop
+
+--------------------------------------------------------------------------------
+                                Routing
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowIpCef to parse outputs without routes
+
+--------------------------------------------------------------------------------
+                                X-Connect
 --------------------------------------------------------------------------------
 * IOSXR
+    * Added ShowL2vpnXconnectDetail for:
+        * show l2vpn xconnect detail
+    * Added ShowL2vpnXconnect for:
+        * show l2vpn xconnect
 
-    * Updated ShowMldGroupsDetail to support empty output
-    * Updated ShowMldGroupsDetail to support empty output
-    
 --------------------------------------------------------------------------------
-                                lldp
+                                EVPN
 --------------------------------------------------------------------------------
-* IOS  
-    * Updated ShowLlpdEntry to:
-        * Updated regex to accommodate more formats
+* IOSXR
+    * Added ShowEvpnEvi for:
+        * show evpn evi
+    * Added ShowEvpnEviDetail for:
+        * show evpn evi detail
+
+--------------------------------------------------------------------------------
+                                Route
+--------------------------------------------------------------------------------
+* JUNOS
+    * Updated ShowRouteTable for better matching of table name
+
+--------------------------------------------------------------------------------
+                                TRACEROUTE
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated Traceroute to support more output
+
+--------------------------------------------------------------------------------
+                                L2VPN
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowL2vpnBridgeDomain for:  
+        * show l2vpn bridge-domain
+
+--------------------------------------------------------------------------------
+                                MODULE
+--------------------------------------------------------------------------------
+* IOS
+    * Changed schema for ShowModule for Cat6k platform to reflect ops
+
+--------------------------------------------------------------------------------
+                                LLDP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowLldpEntry to support different port descriptions
+
+--------------------------------------------------------------------------------
+                                NTP
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowRunningConfigNtp to support different vrfs output
 
 --------------------------------------------------------------------------------
                                 EVPN

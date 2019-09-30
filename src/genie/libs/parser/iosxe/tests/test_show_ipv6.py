@@ -15,6 +15,7 @@ from genie.libs.parser.iosxe.show_ipv6 import ShowIpv6Neighbors,\
 # Unittest For:
 #          'show ipv6 neighbors'
 #          'show ipv6 neighbors vrf {vrf}'
+#          'show ipv6 neighbors {interface}'
 #          'show ipv6 neighbors detail'
 #          'show ipv6 neighbors vrf {vrf} detail'
 #############################################################################
@@ -112,6 +113,48 @@ class test_show_ipv6_neighborrs(unittest.TestCase):
         FE80::5C01:C0FF:FE02:7                      1 5e01.c002.0007  STALE Gi5
     '''}
 
+    golden_parsed_output3 = {
+        "interface": {
+            "GigabitEthernet3.90": {
+                "interface": "GigabitEthernet3.90",
+                "neighbors": {
+                    "FE80::5C00:40FF:FE02:7": {
+                        "age": "22",
+                        "ip": "FE80::5C00:40FF:FE02:7",
+                        "link_layer_address": "5e00.4002.0007",
+                        "neighbor_state": "STALE"
+                    }
+                }
+            }
+        }
+    }
+    golden_output3 = {'execute.return_value': '''
+        show ipv6 neighbors Gi3.90
+        IPv6 Address                              Age Link-layer Addr State Interface
+        FE80::5C00:40FF:FE02:7                     22 5e00.4002.0007  STALE Gi3.90
+    '''}
+
+    golden_parsed_output4 = {
+        "interface": {
+            "GigabitEthernet3.420": {
+                "interface": "GigabitEthernet3.420",
+                "neighbors": {
+                    "FE80::5C00:40FF:FE02:7": {
+                        "age": "7",
+                        "ip": "FE80::5C00:40FF:FE02:7",
+                        "link_layer_address": "5e00.4002.0007",
+                        "neighbor_state": "STALE"
+                    }
+                }
+            }
+        }
+    }
+    golden_output4 = {'execute.return_value': '''
+        R1_xe#show ipv6 neighbors vrf VRF1 Gi3.420
+        IPv6 Address                              Age Link-layer Addr State Interface
+        FE80::5C00:40FF:FE02:7                      7 5e00.4002.0007  STALE Gi3.420
+    '''}
+
     def test_show_ipv6_neighbors_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6Neighbors(device=self.device)
@@ -129,6 +172,18 @@ class test_show_ipv6_neighborrs(unittest.TestCase):
         obj = ShowIpv6Neighbors(device=self.device)
         parsed_output = obj.parse(vrf='vrf1')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_ipv6_neighbors_vrf_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpv6Neighbors(device=self.device)
+        parsed_output = obj.parse(interface='Gi3.90')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
+    def test_show_ipv6_neighbors_vrf_golden4(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowIpv6Neighbors(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1', interface='Gi3.420')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 class test_show_ipv6_neighbors_detail(unittest.TestCase):

@@ -333,6 +333,19 @@ class test_show_nve_vni(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
+    show nve vni
+
+
+    Codes: CP - Control Plane        DP - Data Plane          
+    
+           UC - Unconfigured         SA - Suppress ARP        
+    
+           SU - Suppress Unknown Unicast 
+    
+           Xconn - Crossconnect      
+    
+           MS-IR - Multisite Ingress Replication
+           
     Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
     --------- -------- ----------------- ----- ---- ------------------ -----
     nve1      5001     234.1.1.1         Up    CP   L2 [1001]
@@ -349,12 +362,152 @@ class test_show_nve_vni(unittest.TestCase):
     nve1      10005    n/a               Up    CP   L3 [vni_10005]
         '''}
 
+    golden_parsed_output_2 = {
+        'nve1': {
+            'vni': {
+                5001: {
+                    'vni': 5001,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1001]",
+                    'flags': 'SA MS-IR',
+                },
+                5002: {
+                    'vni': 5002,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1002]",
+                    'flags': 'SA MS-IR',
+                },
+                5003: {
+                    'vni': 5003,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1003]",
+                    'flags': 'SA MS-IR',
+                },
+                5004: {
+                    'vni': 5004,
+                    'mcast': "234.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1004]",
+                    'flags': 'SA MS-IR',
+                },
+                6004: {
+                    'vni': 6004,
+                    'mcast': "231.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1014]",
+                    'flags': 'SA MS-IR',
+                },
+                6005: {
+                    'vni': 6005,
+                    'mcast': "231.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1015]",
+                    'flags': 'SA MS-IR',
+                },
+                7001: {
+                    'vni': 7001,
+                    'mcast': "235.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1103]",
+                    'flags': 'SA MS-IR',
+                },
+                7002: {
+                    'vni': 7002,
+                    'mcast': "235.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1104]",
+                    'flags': 'SA MS-IR',
+                },
+                7003: {
+                    'vni': 7003,
+                    'mcast': "235.1.1.1",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L2 [1105]",
+                    'flags': 'SA MS-IR',
+                },
+                10001: {
+                    'vni': 10001,
+                    'mcast': "n/a",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L3 [vni_10001]",
+                    'flags': '',
+                },
+                10002: {
+                    'vni': 10002,
+                    'mcast': "n/a",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L3 [vni_10002]",
+                    'flags': '',
+                },
+                10005: {
+                    'vni': 10005,
+                    'mcast': "n/a",
+                    'vni_state': "up",
+                    'mode': "CP",
+                    'type': "L3 [vni_10005]",
+                    'flags': '',
+                },
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show nve vni
+
+
+        Codes: CP - Control Plane        DP - Data Plane          
+
+               UC - Unconfigured         SA - Suppress ARP        
+
+               SU - Suppress Unknown Unicast 
+
+               Xconn - Crossconnect      
+
+               MS-IR - Multisite Ingress Replication
+
+        Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+        --------- -------- ----------------- ----- ---- ------------------ -----
+        nve1      5001     234.1.1.1         Up    CP   L2 [1001]          SA MS-IR 
+        nve1      5002     234.1.1.1         Up    CP   L2 [1002]          SA MS-IR 
+        nve1      5003     234.1.1.1         Up    CP   L2 [1003]          SA MS-IR 
+        nve1      5004     234.1.1.1         Up    CP   L2 [1004]          SA MS-IR 
+        nve1      6004     231.1.1.1         Up    CP   L2 [1014]          SA MS-IR 
+        nve1      6005     231.1.1.1         Up    CP   L2 [1015]          SA MS-IR 
+        nve1      7001     235.1.1.1         Up    CP   L2 [1103]          SA MS-IR 
+        nve1      7002     235.1.1.1         Up    CP   L2 [1104]          SA MS-IR 
+        nve1      7003     235.1.1.1         Up    CP   L2 [1105]          SA MS-IR 
+        nve1      10001    n/a               Up    CP   L3 [vni_10001]
+        nve1      10002    n/a               Up    CP   L3 [vni_10002]
+        nve1      10005    n/a               Up    CP   L3 [vni_10005]
+            '''}
+
     def test_show_nve_vni_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowNveVni(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_nve_vni_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowNveVni(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_nve_vni_empty(self):
         self.device = Mock(**self.empty_output)
@@ -483,7 +636,7 @@ class test_show_nve_interface_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowNveInterfaceDetail(device=self.device)
-        parsed_output = obj.parse(intf="nve1")
+        parsed_output = obj.parse(interface="nve1")
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_show_nve_vni_empty(self):
@@ -1448,12 +1601,32 @@ class test_show_running_config_nv_overlay(unittest.TestCase):
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.100.1.1"
                 },
-                10200: {
-                    'vni': 10200,
+                100000: {
+                    'vni': 100000,
                     'associated_vrf': True,
                 },
-                10201: {
-                    'vni': 10201,
+                100001: {
+                    'vni': 100001,
+                    'associated_vrf': True,
+                },
+                100002: {
+                    'vni': 100002,
+                    'associated_vrf': True,
+                },
+                100004: {
+                    'vni': 100004,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.200.1.1"
+                },
+                100005: {
+                    'vni': 100005,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'mcast_group': "231.200.1.1"
+                },
+                100006: {
+                    'vni': 100006,
                     'associated_vrf': False,
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.200.1.1"
@@ -1513,8 +1686,8 @@ interface nve1
   member vni 10102
     multisite ingress-replication
     mcast-group 231.100.1.1
-  member vni 10200 associate-vrf
-  member vni 10201
+  member vni 100000-100002 associate-vrf
+  member vni 100004-100006
     multisite ingress-replication
     mcast-group 231.200.1.1
   member vni 10202
@@ -1533,12 +1706,174 @@ interface Ethernet1/6
 
     '''}
 
+    golden_parsed_output_2 = {
+        'enabled_nv_overlay': True,
+        'evpn_multisite_border_gateway': 111111,
+        'multisite_convergence_time': 185,
+        'nve1': {
+            'nve_name': 'nve1',
+            'if_state': "up",
+            'host_reachability_protocol': "bgp",
+            'adv_vmac': True,
+            'source_if': "loopback1",
+            'multisite_bgw_if': "loopback3",
+            'vni': {
+                10100: {
+                    'vni': 10100,
+                    'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                10101: {
+                    'vni': 10101,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                10102: {
+                    'vni': 10102,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                100000: {
+                    'vni': 100000,
+                    'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                100001: {
+                    'vni': 100001,
+                    'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                100002: {
+                    'vni': 100002,
+                    'associated_vrf': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                100004: {
+                    'vni': 100004,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                100005: {
+                    'vni': 100005,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                100006: {
+                    'vni': 100006,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+                10202: {
+                    'vni': 10202,
+                    'associated_vrf': False,
+                    'multisite_ingress_replication': True,
+                    'suppress_arp': True,
+                    'mcast_group': "192.168.0.1",
+                    'vni_type': 'L2',
+                },
+            },
+        },
+        'multisite': {
+            'fabric_links': {
+                'Ethernet1/1': {
+                    'if_name': 'Ethernet1/1',
+                    'if_state': 'up',
+                },
+                'Ethernet1/2': {
+                    'if_name': 'Ethernet1/2',
+                    'if_state': 'up',
+                }
+            },
+            'dci_links': {
+                'Ethernet1/6': {
+                    'if_name': 'Ethernet1/6',
+                    'if_state': 'up',
+                }
+            },
+        },
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+    R6# show running-config nv overlay
+     
+    !Command: show running-config nv overlay
+    !No configuration change since last restart
+    !Time: Wed May 30 14:42:18 2018
+     
+    version 9.2(1) Bios:version 
+    feature nv overlay
+     
+    evpn multisite border-gateway 111111
+      delay-restore time 185
+     
+     
+    interface nve1
+      no shutdown
+      host-reachability protocol bgp
+      advertise virtual-rmac
+      source-interface loopback1
+      global suppress-arp 
+      global mcast-group 192.168.0.1 L2
+      multisite border-gateway interface loopback3
+      member vni 10100 associate-vrf
+      member vni 10101
+        multisite ingress-replication
+      member vni 10102
+        multisite ingress-replication
+      member vni 100000-100002 associate-vrf
+      member vni 100004-100006
+        multisite ingress-replication
+      member vni 10202
+        multisite ingress-replication
+     
+    interface Ethernet1/1
+      evpn multisite fabric-tracking
+     
+    interface Ethernet1/2
+      evpn multisite fabric-tracking
+     
+    interface Ethernet1/6
+      evpn multisite dci-tracking
+
+
+        '''}
+
     def test_show_running_config_nv_overlay(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowRunningConfigNvOverlay(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_show_running_config_nv_overlay_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRunningConfigNvOverlay(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_running_config_nv_overlay_empty(self):
         self.device = Mock(**self.empty_output)

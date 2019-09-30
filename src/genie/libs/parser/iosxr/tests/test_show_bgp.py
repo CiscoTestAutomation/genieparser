@@ -22,7 +22,9 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
-                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors
+                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
+                                  ShowBgpSessions, \
+                                  ShowBgpInstanceAllSessions
 
 
 # ==================================
@@ -7666,207 +7668,207 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-    "vrf": {
-        "default": {
-            "address_family": {
-                "l2vpn evpn": {
-                    "bgp_table_version": 33445,
-                    "local_router_id": "2.2.2.1"
-                },
-                "l2vpn evpn RD 2.2.2.1:12345": {
-                    "bgp_table_version": 33445,
-                    "default_vrf": "L2",
-                    "local_router_id": "2.2.2.1",
-                    "prefixes": {
-                        "[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1000::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1000::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2000:1:ab:10::1:2]/368": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1000::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2000:1:ab:10::1:3]/368": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1000::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2000:1:ab:10::4:2]/368": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1000::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        },
-                        "[3]:[0]:[128]:[2000:1000::abcd:5678:1]/184": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1000::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        }
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "l2vpn evpn": {
+                        "bgp_table_version": 33445,
+                        "local_router_id": "10.16.2.1"
                     },
-                    "route_distinguisher": "2.2.2.1:12345"
-                },
-                "l2vpn evpn RD 2.2.2.1:33333": {
-                    "bgp_table_version": 33445,
-                    "default_vrf": "L2",
-                    "local_router_id": "2.2.2.1",
-                    "prefixes": {
-                        "[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*>",
-                                    "weight": 0
-                                },
-                                2: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*",
-                                    "weight": 0
+                    "l2vpn evpn RD 10.16.2.1:12345": {
+                        "bgp_table_version": 33445,
+                        "default_vrf": "L2",
+                        "local_router_id": "10.16.2.1",
+                        "prefixes": {
+                            "[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0010.0010.0001]:[32]:[10.1.1.4]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0011.0100.0001]:[128]:[2000:1:ab:10::1:2]/368": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0011.0100.0002]:[128]:[2000:1:ab:10::1:3]/368": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0014.0100.0001]:[128]:[2000:1:ab:10::4:2]/368": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
+                                }
+                            },
+                            "[3]:[0]:[128]:[2000:1000::abcd:5678:1]/184": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1000::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
                                 }
                             }
                         },
-                        "[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*>",
-                                    "weight": 0
-                                },
-                                2: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*",
-                                    "weight": 0
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*>",
-                                    "weight": 0
-                                },
-                                2: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*",
-                                    "weight": 0
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*>",
-                                    "weight": 0
-                                },
-                                2: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*",
-                                    "weight": 0
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*>",
-                                    "weight": 0
-                                },
-                                2: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:3",
-                                    "path_type": "i",
-                                    "status_codes": "*",
-                                    "weight": 0
-                                }
-                            }
-                        },
-                        "[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272": {
-                            "index": {
-                                1: {
-                                    "localprf": 100,
-                                    "next_hop": "2000:1015::abcd:5678:1",
-                                    "path_type": "l",
-                                    "status_codes": "*>",
-                                    "weight": 33445
-                                }
-                            }
-                        }
+                        "route_distinguisher": "10.16.2.1:12345"
                     },
-                    "route_distinguisher": "2.2.2.1:33333"
+                    "l2vpn evpn RD 10.16.2.1:33333": {
+                        "bgp_table_version": 33445,
+                        "default_vrf": "L2",
+                        "local_router_id": "10.16.2.1",
+                        "prefixes": {
+                            "[2]:[0]:[0]:[48]:[0020.0100.0007]:[32]:[10.2.2.2]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*>",
+                                        "weight": 0
+                                    },
+                                    2: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*",
+                                        "weight": 0
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0020.0100.0008]:[32]:[10.2.2.3]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*>",
+                                        "weight": 0
+                                    },
+                                    2: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*",
+                                        "weight": 0
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0020.0100.0009]:[32]:[10.2.2.4]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*>",
+                                        "weight": 0
+                                    },
+                                    2: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*",
+                                        "weight": 0
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0020.0100.000a]:[32]:[10.2.2.5]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*>",
+                                        "weight": 0
+                                    },
+                                    2: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*",
+                                        "weight": 0
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[0020.0100.000b]:[32]:[10.2.2.6]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*>",
+                                        "weight": 0
+                                    },
+                                    2: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:3",
+                                        "path_type": "i",
+                                        "status_codes": "*",
+                                        "weight": 0
+                                    }
+                                }
+                            },
+                            "[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272": {
+                                "index": {
+                                    1: {
+                                        "localprf": 100,
+                                        "next_hop": "2000:1015::abcd:5678:1",
+                                        "path_type": "l",
+                                        "status_codes": "*>",
+                                        "weight": 33445
+                                    }
+                                }
+                            }
+                        },
+                        "route_distinguisher": "10.16.2.1:33333"
+                    }
                 }
             }
         }
     }
-}
 
     golden_output = {'execute.return_value': '''
         show bgp l2vpn evpn
 
         BGP routing table information for VRF default, address family L2VPN EVPN
 
-        BGP table version is 33445, Local Router ID is 2.2.2.1
+        BGP table version is 33445, Local Router ID is 10.16.2.1
 
         Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
 
@@ -7878,7 +7880,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
            Network            Next Hop            Metric     LocPrf     Weight Path
 
-        Route Distinguisher: 2.2.2.1:12345    (L2VNI 10001)
+        Route Distinguisher: 10.16.2.1:12345    (L2VNI 10001)
 
         *>l[2]:[0]:[0]:[48]:[0001.0010.0001]:[32]:[10.1.1.2]/272
 
@@ -7918,7 +7920,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
 
 
 
-        Route Distinguisher: 2.2.2.1:33333    (L2VNI 20002)
+        Route Distinguisher: 10.16.2.1:33333    (L2VNI 20002)
 
         *>l[2]:[0]:[0]:[48]:[1000.0100.0007]:[32]:[10.2.1.2]/272
 
@@ -7977,6 +7979,69 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                                                 100          0 i
     '''}
 
+    golden_output2 = {'execute.return_value': '''
+        +++ Router2: executing command 'show bgp l2vpn evpn' +++
+        show bgp l2vpn evpn
+
+        Fri Sep  6 10:39:01.396 EST
+        BGP router identifier 192.168.99.25, local AS number 65001
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 2
+        BGP NSR Initial initsync version 2 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 192.168.99.25:100 (default for vrf Mansion-100)
+        *> [3][0][32][192.168.99.25]/80
+                            0.0.0.0                                0 i
+
+        Processed 1 prefixes, 1 paths
+        RP/0/RP0/CPU0:Router2#
+
+    '''}
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'l2vpn evpn': {
+                        'router_identifier': '192.168.99.25',
+                        'local_as': 65001,
+                        'generic_scan_interval': '60',
+                        'non_stop_routing': 'enabled',
+                        'table_state': 'active',
+                        'table_id': '0x0',
+                        'rd_version': 0,
+                        'bgp_table_version': 2,
+                        'nsr_initial_initsync_version': '2',
+                        'nsr_initial_init_ver_status': 'reached',
+                        'nsr_issu_sync_group_versions': '0/0',
+                        'scan_interval': 60,
+                        'prefixes': {
+                            '[3][0][32][192.168.99.25]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                        'processed_prefix': 1,
+                        'processed_paths': 1,
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpL2vpnEvpn(device=self.device)
@@ -7989,6 +8054,13 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 # =============================================
@@ -8756,6 +8828,237 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
         parsed_output = obj.parse(neighbor='192.168.99.11')
         self.assertEqual(parsed_output,self.golden_parsed_output_neighbor)
 
+"""
+Unit test for 'show bgp sessions'
+"""
+class TestShowBgpSessions(unittest.TestCase):
+    dev = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'neighbors': {
+                            '1.1.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '3.3.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                    'VRF1': {
+                        'neighbors': {
+                            '1.1.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '3.3.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+        
+    golden_output = {'execute.return_value': '''\
+        show bgp sessions
+        Fri Sep 13 19:10:54.578 UTC
+
+        Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+        1.1.1.1         default                 0 65000     0     0  Established  None
+        3.3.3.3         default                 0 65000     0     0  Established  None
+        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:3:3:3::3   default                 0 65000     0     0  Established  None
+        1.1.1.1         VRF1                    0 65000     0     0  Established  None
+        3.3.3.3         VRF1                    0 65000     0     0  Established  None
+        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
+        '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpSessions(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+"""
+Unit test for 'show bgp instance all sessions'
+"""
+class TestShowBgpInstanceAllSessions(unittest.TestCase):
+    dev = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'neighbors': {
+                            '1.1.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '3.3.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                    'VRF1': {
+                        'neighbors': {
+                            '1.1.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '3.3.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+        
+    golden_output = {'execute.return_value': '''\
+        show bgp instance all sessions
+        Sat Sep 14 09:39:17.056 UTC
+
+        BGP instance 0: 'default'
+        =========================
+
+        Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+        1.1.1.1         default                 0 65000     0     0  Established  None
+        3.3.3.3         default                 0 65000     0     0  Established  None
+        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:3:3:3::3   default                 0 65000     0     0  Established  None
+        1.1.1.1         VRF1                    0 65000     0     0  Established  None
+        3.3.3.3         VRF1                    0 65000     0     0  Established  None
+        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
+        '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpInstanceAllSessions(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpInstanceAllSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
