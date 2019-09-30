@@ -1623,6 +1623,7 @@ class ShowMplsForwardingTableSchema(MetaParser):
                                                 'bytes_label_switched': int,
                                                 Optional('next_hop'): str,
                                                 Optional('tsp_tunnel'): bool,
+                                                Optional('merged'): bool,
                                                 Optional('mac'): int,
                                                 Optional('macstr'): str,
                                                 Optional('lstack'): str,
@@ -1689,9 +1690,14 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        p2_2 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+)'
-            ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+        # 22    [M]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        # 22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        p2_2 = re.compile(r'^(?:(?P<local_label>\w+) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
+                           '(?P<outgoing_label>(?:(?:A|a)ggregate|Untagged|(?:No|Pop) '
+                           'Label|(?:No|Pop) (?:T|t)ag|\d\/\w*|\d|\d\/)+)(?:\['
+                           '(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+) +'
+                           '(?P<bytes_label_switched>\d+)(?: +(?P<interface>\S+))?(?: +'
+                           '(?P<next_hop>[\w\.]+))?$')
 
         p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
@@ -1780,7 +1786,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
                 if group['t']:
-                    feature_dict.update({'tsp_tunnel': True})
+                    if 'T' in group['t']:
+                        feature_dict.update({'tsp_tunnel': True})
+                    if 'M' in group['t']:
+                        feature_dict.update({'merged': True})
                 if group['t1']:
                     feature_dict.update({'tsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
