@@ -2,6 +2,7 @@
 
 show l2route topology
 show l2route evpn mac all
+show l2route evpn mac-ip all
 
 """
 
@@ -71,7 +72,7 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
                     str_type = 'N/A'
 
                 single_dict[group_dict['topo_id']
-                ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
+                            ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
 
                 parsed_dict.setdefault('topo_id', {}).update(single_dict)
 
@@ -82,7 +83,7 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
 
 class ShowL2routeEvpnMacAllSchema(MetaParser):
     """Schema for:
-        * 'show l2route evpn all'
+        * 'show l2route evpn mac all'
     """
     schema = {
         'topo_id': {
@@ -135,9 +136,9 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
 
                 mac_address_dict_in = AutoTree()
                 mac_address_dict_in[group_dict['mac_address']
-                ]['producer'] = group_dict['producer']
+                                    ]['producer'] = group_dict['producer']
                 mac_address_dict_in[group_dict['mac_address']
-                ]['next_hop'] = group_dict['next_hop']
+                                    ]['next_hop'] = group_dict['next_hop']
 
                 parsed_dict.setdefault(
                     'topo_id',
@@ -185,7 +186,7 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
             out = output
 
         # Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
-        # -------- -------------- --------------- ----------- ----------------------------------------
+        # -------- -------------- --------------- ----------- -----------------
         # 0        0001.0003.0004 100.69.0.250    LOCAL       N/A
         # 0        0001.0003.0004 2001:db8::250   LOCAL       N/A
         # 0        0aaa.0bbb.0000 100.69.0.3      LOCAL       N/A
@@ -216,9 +217,9 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
                     next_hop = 'N/A'
 
                 ip_address_dict_in[group_dict['ip_address']
-                ]['producer'] = group_dict['producer']
+                                   ]['producer'] = group_dict['producer']
                 ip_address_dict_in[group_dict['ip_address']
-                ]['next_hop'] = next_hop
+                                   ]['next_hop'] = next_hop
 
                 print(ip_address_dict_in)
 
@@ -230,7 +231,7 @@ class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
                     'mac_address',
                     {}).setdefault(
                     group_dict['mac_address'],
-                    {}).setdefault('ip_address',{}).update(ip_address_dict_in)
+                    {}).setdefault('ip_address', {}).update(ip_address_dict_in)
                 continue
 
         return parsed_dict
