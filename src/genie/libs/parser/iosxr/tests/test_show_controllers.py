@@ -9,7 +9,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 # iosxr show_controllers
 from genie.libs.parser.iosxr.show_controllers import ShowControllersCoherentDSP,\
                                                      ShowControllersOptics,\
-                                                     ShowControllersFiaDiagshellL2show
+                                                     ShowControllersFiaDiagshellL2showLocation
 
 
 # =====================================================
@@ -651,13 +651,13 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowControllersFiaDiagshellL2show(device=self.device)
+        obj = ShowControllersFiaDiagshellL2showLocation(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden1(self):
         self.device = Mock(**self.golden_output1)
-        obj = ShowControllersFiaDiagshellL2show(device=self.device)
+        obj = ShowControllersFiaDiagshellL2showLocation(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 

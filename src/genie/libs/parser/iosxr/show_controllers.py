@@ -19,7 +19,7 @@ from genie.metaparser.util.schemaengine import Any, Optional, Or
 # ==========================================================================================
 # Schema for 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
 # ==========================================================================================
-class ShowControllersFiaDiagshellL2showSchema(MetaParser):
+class ShowControllersFiaDiagshellL2showLocationSchema(MetaParser):
 
     schema = {
         'nodes':
@@ -42,7 +42,7 @@ class ShowControllersFiaDiagshellL2showSchema(MetaParser):
 # ==========================================================================================
 # Parser for 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
 # ==========================================================================================
-class ShowControllersFiaDiagshellL2show(ShowControllersFiaDiagshellL2showSchema):
+class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2showLocationSchema):
     '''Parser for:
         * show controllers fia diagshell {diagshell_unit} "l2 show" location {location}
     '''
