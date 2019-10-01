@@ -13,6 +13,13 @@
     * ShowControllersFiaDiagshellL2show
 
 --------------------------------------------------------------------------------
+                                CLNS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Changed "type" type from string to integer on the following commands
+        * 'show clns neighbors detail'
+        * 'show clns is-neighbors detail'
+--------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
