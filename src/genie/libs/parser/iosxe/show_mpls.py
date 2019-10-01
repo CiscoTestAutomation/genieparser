@@ -1704,11 +1704,11 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
-        p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label'
-                        ' +Stack(?P<label_stack>[\S]+)(, via +(?P<via>\w+))?$')
+        p3 = re.compile(r'^MAC\/Encaps=(?P<mac>\d+)\/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), '
+                         '+Label +Stack{(?P<label_stack>.*)}(, via +(?P<via>\S+))?$')
         #         00002440156384B261CB1480810000330800
         #         AABBCC032800AABBCC0325018847 00010000
-        p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\d+))?$')
+        p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\w+))?$')
         #         VPN route: L3VPN-0051
         p5 = re.compile(r'^VPN +route: +(?P<vpn_route>\S+)$')
         #         No output feature configured

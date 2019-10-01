@@ -2580,7 +2580,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 18,
                                                 "encaps": 18,
                                                 "mru": 1530,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "macstr": "00002440156384B261CB1480810000330800",
                                                 "vpn_route": "L3VPN-0051",
                                                 "output_feature_configured": False,
@@ -2616,7 +2616,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 18,
                                                 "encaps": 18,
                                                 "mru": 1530,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "via": "Ls0",
                                                 "macstr": "AABBCC032800AABBCC0325018847",
                                                 "lstack": "00010000",
@@ -2640,7 +2640,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 0,
                                                 "encaps": 0,
                                                 "mru": 0,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "vpn_route": "L3VPN-0051",
                                                 "output_feature_configured": False,
                                                 "broadcast": True
@@ -2699,7 +2699,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 14,
                                                 "encaps": 18,
                                                 "mru": 1500,
-                                                "label_stack": "{16}",
+                                                "label_stack": "16",
                                                 "macstr": "AABBCC032800AABBCC0325018847",
                                                 "lstack": "00010000",
                                                 "output_feature_configured": False,
@@ -2723,7 +2723,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 0,
                                                 "encaps": 0,
                                                 "mru": 0,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "via": "Ls0"
                                             }
                                         }
