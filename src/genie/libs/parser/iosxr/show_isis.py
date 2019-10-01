@@ -257,4 +257,59 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
         return isis_neighbors_dict
 
 
+# ======================================================
+#  Schema for 'show isis segment-routing label table'
+# ======================================================
+class ShowIsisSegmentRoutingLabelTableSchema(MetaParser):
+    """Schema for show isis segment-routing label table"""
+
+    schema = {
+        'isis': {
+            'label': {
+                Any(): {
+                    'interface': str,
+                },
+            }
+        }
+    }
+
+
+class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
+    """Parser for show isis segment-routing label table"""
+    
+    cli_command = ['show isis segment-routing label table']
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        isis_dict = {}
+
+        # Label         Prefix/Interface
+        # ----------    ----------------
+        # 16001         Loopback0
+        # 16002         10.2.2.2/32
+        p1 = re.compile(r'^(?P<label>\d+)\s+(?P<interface>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Label         Prefix/Interface
+            # ----------    ----------------
+            # 16001         Loopback0
+            # 16002         10.2.2.2/32
+            m = p1.match(line)
+            if m:
+                label = int(m.groupdict()['label'])
+                interface = m.groupdict()['interface']
+                isis_dict.setdefault('isis', {}).setdefault(
+                    'label', {}).setdefault(label, {}).\
+                    update({'interface': interface})
+                continue
+
+        return isis_dict
+
+
 
