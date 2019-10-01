@@ -693,7 +693,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
         # System Id       Interface     State  Type Priority  Circuit Id         Format
         # R7              Gi4           Up     L2   64        R2.01              Phase V
         p2 = re.compile(r'^(?P<system_id>[\w\.]+)\s+(?P<interface>\S+)\s+'
-                        '(?P<state>\w+)\s+(?P<type>\w+)\s+(?P<priority>\d+)'
+                        '(?P<state>\w+)\s+L(?P<type>\d+)\s+(?P<priority>\d+)'
                         '(\/\d+)*\s+(?P<circuit_id>[\w\.]+)\s+(?P<format>[\S\s]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
@@ -729,7 +729,7 @@ class ShowClnsIsNeighborsDetail(ShowClnsIsNeighborsDetailSchema):
                 type_dict = clns_dict.setdefault('system_id', {}). \
                                       setdefault(group['system_id'], {}). \
                                       setdefault('type', {}). \
-                                      setdefault(group['type'], {})
+                                      setdefault(int(group['type']), {})
 
                 type_dict.update({'state': group['state'].lower()})
                 type_dict.update({'circuit_id': group['circuit_id']})
