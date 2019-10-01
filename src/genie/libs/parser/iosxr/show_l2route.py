@@ -71,7 +71,7 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
                     str_type = 'N/A'
 
                 single_dict[group_dict['topo_id']
-                ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
+                            ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
 
                 parsed_dict.setdefault('topo_id', {}).update(single_dict)
 
@@ -87,9 +87,9 @@ class ShowL2routeEvpnMacAllSchema(MetaParser):
     schema = {
         'topo_id': {
             Any(): {
-                'mac_addr': {
+                'mac_address': {
                     Any(): {
-                        'edt_producer': str,
+                        'producer': str,
                         'next_hop': str
                     }
                 }
@@ -119,8 +119,8 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
         # 0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME
 
         p = re.compile(r'^(?P<topo_id>\d+) +'
-                       r'(?P<mac_addr>\S+) +'
-                       r'(?P<edt_producer>\S+) +'
+                       r'(?P<mac_address>\S+) +'
+                       r'(?P<producer>\S+) +'
                        r'(?P<next_hop>\S+)')
 
         parsed_dict = {}
@@ -133,13 +133,19 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
             if result:
                 group_dict = result.groupdict()
 
-                mac_addr_dict_in = AutoTree()
-                mac_addr_dict_in[group_dict['mac_addr']]['edt_producer'] = group_dict['edt_producer']
-                mac_addr_dict_in[group_dict['mac_addr']]['next_hop'] = group_dict['next_hop']
+                mac_address_dict_in = AutoTree()
+                mac_address_dict_in[group_dict['mac_address']
+                                 ]['producer'] = group_dict['producer']
+                mac_address_dict_in[group_dict['mac_address']
+                                 ]['next_hop'] = group_dict['next_hop']
 
-                parsed_dict.setdefault('topo_id', {}).setdefault(group_dict['topo_id'], {}).setdefault('mac_addr',
-                                                                                                       {}).update(
-                    mac_addr_dict_in)
+                parsed_dict.setdefault(
+                    'topo_id',
+                    {}).setdefault(
+                    group_dict['topo_id'],
+                    {}).setdefault(
+                    'mac_address',
+                    {}).update(mac_address_dict_in)
 
                 continue
         return parsed_dict
