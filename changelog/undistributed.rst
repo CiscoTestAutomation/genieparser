@@ -341,8 +341,6 @@
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
         * show l2vpn xconnect
-    * Added ShowL2vpnXconnectSummary for:
-        * show l2vpn xconnect summary
 
 --------------------------------------------------------------------------------
                                 EVPN
