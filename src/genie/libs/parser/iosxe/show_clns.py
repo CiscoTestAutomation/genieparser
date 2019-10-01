@@ -551,7 +551,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         # System Id       Interface     SNPA                State  Holdtime  Type Protocol
         # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
         p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) +(?P<snpa>[\w\.]+)'
-                        ' +(?P<state>\w+) +(?P<holdtime>\d+) +(?P<type>\w+) +(?P<protocol>[\w\-]+)$')
+                        ' +(?P<state>\w+) +(?P<holdtime>\d+) +L(?P<type>\d+) +(?P<protocol>[\w\-]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  10.229.7.7*
@@ -585,7 +585,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
                 type_dict = clns_dict.setdefault('system_id', {}).\
                                       setdefault(group['system_id'],{}).\
                                       setdefault('type', {}).\
-                                      setdefault(group['type'], {})
+                                      setdefault(int(group['type']), {})
 
                 type_dict.update({'holdtime': int(group['holdtime'])})
                 type_dict.update({'state': group['state'].lower()})
