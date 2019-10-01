@@ -22,7 +22,7 @@ class ShowL2routeTopologySchema(MetaParser):
         * 'show l2route topology'
     """
     schema = {
-        Any(): {
+        'topo_id': {
             Any(): {
                 'topo_name': {
                     Any(): {
@@ -56,7 +56,6 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
                        r'(?P<topo_type>\S+)')
 
         parsed_dict = {}
-        counts = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -64,19 +63,17 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
             result = p.match(line)
 
             if result:
-                counts += 1
                 group_dict = result.groupdict()
                 single_dict = AutoTree()
 
                 str_type = group_dict['topo_type']
-
                 if str_type is None:
                     str_type = 'N/A'
 
-                single_dict['topo_id %d' % counts][group_dict['topo_id']
-                                                   ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
+                single_dict[group_dict['topo_id']
+                ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
 
-                parsed_dict.update(single_dict)
+                parsed_dict.setdefault('topo_id', {}).update(single_dict)
 
             continue
 
@@ -88,7 +85,7 @@ class ShowL2routeEvpnMacAllSchema(MetaParser):
         * 'show l2route evpn all'
     """
     schema = {
-        Any(): {
+        'topo_id': {
             Any(): {
                 'mac_addr': {
                     Any(): {
@@ -127,7 +124,6 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
                        r'(?P<next_hop>\S+)')
 
         parsed_dict = {}
-        counts = 0
 
         for line in out.splitlines():
             line = line.strip()
@@ -135,17 +131,15 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
             result = p.match(line)
 
             if result:
-                counts += 1
                 group_dict = result.groupdict()
-                single_dict = AutoTree()
 
-                single_dict['topo_id %d' % counts][group_dict['topo_id']
-                                                   ]['mac_addr'][group_dict['mac_addr']]['edt_producer'] = group_dict['edt_producer']
+                mac_addr_dict_in = AutoTree()
+                mac_addr_dict_in[group_dict['mac_addr']]['edt_producer'] = group_dict['edt_producer']
+                mac_addr_dict_in[group_dict['mac_addr']]['next_hop'] = group_dict['next_hop']
 
-                single_dict['topo_id %d' % counts][group_dict['topo_id']
-                                                   ]['mac_addr'][group_dict['mac_addr']]['next_hop'] = group_dict['next_hop']
-
-                parsed_dict.update(single_dict)
+                parsed_dict.setdefault('topo_id', {}).setdefault(group_dict['topo_id'], {}).setdefault('mac_addr',
+                                                                                                       {}).update(
+                    mac_addr_dict_in)
 
                 continue
         return parsed_dict

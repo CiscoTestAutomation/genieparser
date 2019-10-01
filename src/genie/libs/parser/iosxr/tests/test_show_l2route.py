@@ -22,10 +22,9 @@ class TestShowL2RouteTopology(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    expected_output = {'topo_id 1': {'0': {'topo_name': {'EVPN-Multicast-BTV': {'topo_type': 'L2VRF'}}}},
-                                    'topo_id 2': {'4294967294': {'topo_name': {'GLOBAL': {'topo_type': 'N/A'}}}},
-                                    'topo_id 3': {'4294967295': {'topo_name': {'ALL': {'topo_type': 'N/A'}}}}}
-
+    expected_output = {'topo_id': {'0': {'topo_name': {'EVPN-Multicast-BTV': {'topo_type': 'L2VRF'}}},
+                                   '4294967294': {'topo_name': {'GLOBAL': {'topo_type': 'N/A'}}},
+                                   '4294967295': {'topo_name': {'ALL': {'topo_type': 'N/A'}}}}}
     device_output = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2route topology
 
@@ -46,6 +45,7 @@ class TestShowL2RouteTopology(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output)
         obj = ShowL2routeTopology(device=self.device)
+
         parsed_output = obj.parse()
 
         self.assertEqual(parsed_output, self.expected_output)
@@ -62,63 +62,22 @@ class TestShowL2RouteEvpnMacAll(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    expected_output = {
-
-        'topo_id 1': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0001': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 2': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0002': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 3': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0003': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 4': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0004': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 5': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0005': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 6': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0006': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 7': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0007': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}},
-
-        'topo_id 8': {
-            '0': {
-                'mac_addr': {
-                    '0012.0100.0008': {
-                        'edt_producer': 'L2VPN',
-                        'next_hop': '172.16.2.89/100001/ME'}}}}}
+    expected_output = {'topo_id': {'0': {'mac_addr': {'0012.0100.0001': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0002': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0003': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0004': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0005': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0006': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0007': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'},
+                                '0012.0100.0008': {'edt_producer': 'L2VPN',
+                                                   'next_hop': '172.16.2.89/100001/ME'}}}}}
 
     device_output = {'execute.return_value': '''
         Topo ID  Mac Address    Producer    Next Hop(s)
