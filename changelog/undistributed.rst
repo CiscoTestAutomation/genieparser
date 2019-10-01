@@ -57,6 +57,9 @@
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
         * update schema to support 'Merged' key
+* IOSXR
+    * Added ShowMplsLabelTableDetail for:
+        'show mpls label table detail'
 
 --------------------------------------------------------------------------------
                                 Segment Routing
