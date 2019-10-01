@@ -2,9 +2,9 @@
 
 IOSXR parsers for the following show commands:
 
-    * show controllers fia diagshell {diagshell_unit} "l2 show" location {location}
-    * show controllers coherentDSP {port}
-    * show controllers optics {port}
+    * 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
+    * 'show controllers coherentDSP {port}'
+    * 'show controllers optics {port}'
 '''
 
 # Python
@@ -20,6 +20,9 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # Schema for 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
 # ==========================================================================================
 class ShowControllersFiaDiagshellL2showLocationSchema(MetaParser):
+    '''Schema for:
+        * show controllers fia diagshell {diagshell_unit} "l2 show" location {location}
+    '''
 
     schema = {
         'nodes':

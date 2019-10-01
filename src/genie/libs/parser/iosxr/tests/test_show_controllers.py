@@ -7,9 +7,10 @@ from unittest.mock import Mock
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxr show_controllers
-from genie.libs.parser.iosxr.show_controllers import ShowControllersCoherentDSP,\
-                                                     ShowControllersOptics,\
-                                                     ShowControllersFiaDiagshellL2showLocation
+from genie.libs.parser.iosxr.show_controllers import (ShowControllersCoherentDSP,
+                                                     ShowControllersOptics,
+                                                     ShowControllersFiaDiagshellL2showLocation,
+                                                     )
 
 
 # =====================================================
