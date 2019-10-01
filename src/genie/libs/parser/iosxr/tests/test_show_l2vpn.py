@@ -115,117 +115,171 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
-        'mac_address': {
-            '0001.0000.0002': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0003': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0004': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0005': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0006': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0007': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0008': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0009': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.000a': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.000b': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.000c': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.000d': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.000e': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.000f': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0010': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0011': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0012': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'},
-            '0001.0000.0013': {
-                'lc_learned': 'N/A',
-                'learned_from': 'Te0/0/1/0/3.3',
-                'mapped_to': 'N/A',
-                'resync_age': '0d 0h 0m 14s',
-                'type': 'dynamic'}
-            }
-        }
+        'mac_table': {
+            'Te0/0/1/0/3.3': {
+                'mac_address': {
+                    '0001.0000.0002': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0003': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0004': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0005': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0006': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0007': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0008': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0009': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                     '0001.0000.000a': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.000b': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.000c': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.000d': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.000e': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.000f': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0010': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0011': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0012': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'},
+                    '0001.0000.0013': {
+                        'lc_learned': 'N/A',
+                                        'learned_from': 'Te0/0/1/0/3.3',
+                                        'mapped_to': 'N/A',
+                                        'resync_age': '0d '
+                                                      '0h '
+                                                      '0m '
+                                                      '14s',
+                                        'type': 'dynamic'}}}}}
 
     golden_output = {'execute.return_value': '''
         RP/0/RP0/CPU0:ios#show l2vpn forwarding bridge-domain mac-address location 0/$
@@ -256,81 +310,99 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
     '''}
 
     golden_parsed_output_1 = {
-        'mac_address': {
-            '0021.0001.0001': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '0021.0001.0002': {
-                'lc_learned': 'N/A',
-                'learned_from': '(10.25.40.40, 10007)',
-                'mapped_to': 'N/A',
-                'resync_age': '14 Mar 12:46:04',
-                'type': 'dynamic'},
-            '0021.0001.0003': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '0021.0001.0004': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '0021.0001.0005': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '0021.0002.0005': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BE1.2',
-                'mapped_to': 'N/A',
-                'resync_age': '14 Mar 12:46:04',
-                'type': 'dynamic'},
-            '1234.0001.0001': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '1234.0001.0002': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '1234.0001.0003': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '1234.0001.0004': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BD id:0',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'EVPN'},
-            '1234.0001.0005': {
-                'lc_learned': 'N/A',
-                'learned_from': '(10.25.40.40, 10007)',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'static'},
-            '1234.0002.0004': {
-                'lc_learned': 'N/A',
-                'learned_from': 'BE1.2',
-                'mapped_to': 'N/A',
-                'resync_age': 'N/A',
-                'type': 'static'}
+        'mac_table': {
+            '(10.25.40.40, 10007)': {
+                'mac_address': {
+                    '0021.0001.0002': {
+                        'lc_learned': 'N/A',
+                        'learned_from': '(10.25.40.40, '
+                                       '10007)',
+                        'mapped_to': 'N/A',
+                        'resync_age': '14 '
+                                     'Mar '
+                                     '12:46:04',
+                        'type': 'dynamic'},
+                    '1234.0001.0005': {'lc_learned': 'N/A',
+                        'learned_from': '(10.25.40.40, '
+                                       '10007)',
+                        'mapped_to': 'N/A',
+                        'resync_age': 'N/A',
+                        'type': 'static'}
+                }
+            },
+            'BD id:0': {
+                'mac_address': {
+                    '0021.0001.0001': {
+                        'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '0021.0001.0003': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '0021.0001.0004': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '0021.0001.0005': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '1234.0001.0001': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '1234.0001.0002': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '1234.0001.0003': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'},
+                    '1234.0001.0004': {'lc_learned': 'N/A',
+                                      'learned_from': 'BD '
+                                                      'id:0',
+                                      'mapped_to': 'N/A',
+                                      'resync_age': 'N/A',
+                                      'type': 'EVPN'}
+                }
+            },
+            'BE1.2': {
+                'mac_address': {
+                    '0021.0002.0005': {
+                        'lc_learned': 'N/A',
+                        'learned_from': 'BE1.2',
+                        'mapped_to': 'N/A',
+                        'resync_age': '14 '
+                                      'Mar '
+                                      '12:46:04',
+                        'type': 'dynamic'},
+                    '1234.0002.0004': {
+                        'lc_learned': 'N/A',
+                        'learned_from': 'BE1.2',
+                        'mapped_to': 'N/A',
+                        'resync_age': 'N/A',
+                        'type': 'static'}
+                }
             }
         }
+    }
 
     golden_output_1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2vpn forwarding bridge-domain mac-address location 0

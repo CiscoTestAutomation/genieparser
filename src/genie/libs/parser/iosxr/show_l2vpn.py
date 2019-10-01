@@ -74,13 +74,17 @@ class ShowL2vpnForwardingBridgeDomainMacAddressSchema(MetaParser):
     """
 
     schema = {
-        'mac_address': {
+        'mac_table': {
             Any(): {
-                'type': str,
-                'learned_from': str,
-                'lc_learned': str,
-                'resync_age': str,
-                'mapped_to': str,
+                'mac_address': {
+                    Any(): {
+                        'type': str,
+                        'learned_from': str,
+                        'lc_learned': str,
+                        'resync_age': str,
+                        'mapped_to': str,
+                    },
+                }
             },
         }
     }
@@ -134,18 +138,21 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(ShowL2vpnForwardingBridgeDomainM
             if '------' in line or not line:
                 continue
 
+            # Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to
             m = p1.match(line)
             if m:
                 start_parsing = True
                 continue
 
+            # 1.01.1 EVPN    BD id: 0                    N/A        N/A                    N/A
             m = p2.match(line)
             if m and start_parsing:
                 group = m.groupdict()
 
                 mac_address = group['mac_address']
                 learned_from = 'BD id:' + group['bridge_domain']
-                final_dict = ret_dict.setdefault('mac_address', {}).setdefault(
+                final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                    learned_from, {}).setdefault('mac_address', {}).setdefault(
                     mac_address, {})
 
                 keys_list = ['type', 'lc_learned', 'resync_age', 'mapped_to']
@@ -154,12 +161,16 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(ShowL2vpnForwardingBridgeDomainM
                 final_dict.update({'learned_from': learned_from})
                 continue
 
+            # 3.3.5          dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
+            # 0001.0000.0002 dynamic Te0/0/1/0/3.3               N/A        0d 0h 0m 14s           N/A
             m = p3.match(line)
             if m and start_parsing:
                 group = m.groupdict()
 
                 mac_address = group['mac_address']
-                final_dict = ret_dict.setdefault('mac_address', {}).setdefault(
+                learned_from = group['learned_from']
+                final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                    learned_from, {}).setdefault('mac_address', {}).setdefault(
                     mac_address, {})
 
                 keys_list = ['type', 'learned_from', 'lc_learned', 'resync_age', 'mapped_to']
@@ -167,12 +178,15 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(ShowL2vpnForwardingBridgeDomainM
                     final_dict.update({key: group[key].strip()})
                 continue
 
+            # 2.2.2          dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
             m = p4.match(line)
             if m and start_parsing:
                 group = m.groupdict()
 
                 mac_address = group['mac_address']
-                final_dict = ret_dict.setdefault('mac_address', {}).setdefault(
+                learned_from = group['learned_from'].strip()
+                final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                    learned_from, {}).setdefault('mac_address', {}).setdefault(
                     mac_address, {})
 
                 keys_list = ['type', 'learned_from', 'lc_learned', 'resync_age', 'mapped_to']
