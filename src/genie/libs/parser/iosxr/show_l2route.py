@@ -11,6 +11,12 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
 
+class AutoTree(dict):
+    def __missing__(self, key):
+        value = self[key] = type(self)()
+        return value
+
+
 class ShowL2routeTopologySchema(MetaParser):
     """Schema for:
         * 'show l2route topology'
@@ -45,8 +51,8 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
         # 4294967294     GLOBAL           N/A
         # 4294967295     ALL              N/A
 
-        p = re.compile(r'^\s*(?P<topo_id>\d+)\s* +'
-                       r'(?P<topo_name>\S+)\s* +'
+        p = re.compile(r'^(?P<topo_id>\d+) +'
+                       r'(?P<topo_name>\S+) +'
                        r'(?P<topo_type>\S+)')
 
         parsed_dict = {}
@@ -60,24 +66,17 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
             if result:
                 counts += 1
                 group_dict = result.groupdict()
+                single_dict = AutoTree()
 
-                str_id = group_dict['topo_id']
-                str_name = group_dict['topo_name']
                 str_type = group_dict['topo_type']
 
                 if str_type is None:
                     str_type = 'N/A'
 
-                id_dict = {}
-                name_dict = {}
-                type_dict = {'topo_type': str_type}
+                single_dict['topo_id %d' % counts][group_dict['topo_id']
+                                                   ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
 
-                name_dict.setdefault('topo_name', {}).setdefault(
-                    str_name, type_dict)
-                id_dict.setdefault(('topo_id %d' % counts), {}).setdefault(
-                    str_id, name_dict)
-
-                parsed_dict.update(id_dict)
+                parsed_dict.update(single_dict)
 
             continue
 
@@ -122,9 +121,9 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
         # 0        0012.0100.0005 L2VPN       172.16.2.89/100001/ME
         # 0        0012.0100.0006 L2VPN       172.16.2.89/100001/ME
 
-        p = re.compile(r'^\s*(?P<topo_id>\d+)\s* +'
-                       r'(?P<mac_addr>\S+)\s* +'
-                       r'(?P<edt_producer>\S+)\s* +'
+        p = re.compile(r'^(?P<topo_id>\d+) +'
+                       r'(?P<mac_addr>\S+) +'
+                       r'(?P<edt_producer>\S+) +'
                        r'(?P<next_hop>\S+)')
 
         parsed_dict = {}
@@ -138,26 +137,15 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
             if result:
                 counts += 1
                 group_dict = result.groupdict()
+                single_dict = AutoTree()
 
-                str_id = group_dict['topo_id']
-                str_mac = group_dict['mac_addr']
-                str_producer = group_dict['edt_producer']
-                str_next_hop = group_dict['next_hop']
+                single_dict['topo_id %d' % counts][group_dict['topo_id']
+                                                   ]['mac_addr'][group_dict['mac_addr']]['edt_producer'] = group_dict['edt_producer']
 
-                producer_hop_dict = {}
-                mac_addr_dict = {}
-                id_dict = {}
+                single_dict['topo_id %d' % counts][group_dict['topo_id']
+                                                   ]['mac_addr'][group_dict['mac_addr']]['next_hop'] = group_dict['next_hop']
 
-                producer_hop_dict.update({'edt_producer': str_producer})
-                producer_hop_dict.update({'next_hop': str_next_hop})
-                mac_addr_dict.setdefault('mac_addr', {}).setdefault(
-                    str_mac, producer_hop_dict)
-                id_dict.setdefault(
-                    ('topo_id %d' %
-                     counts), {}).setdefault(
-                    str_id, mac_addr_dict)
-
-                parsed_dict.update(id_dict)
+                parsed_dict.update(single_dict)
 
                 continue
         return parsed_dict
