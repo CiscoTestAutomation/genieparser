@@ -33,6 +33,7 @@ class ShowRouteTableSchema(MetaParser):
                             'active_tag': str,
                             'protocol_name': str,
                             'preference': str,
+                            Optional('preference2'): str,
                             'age': str,
                             'metric': str,
                             'next_hop': {
@@ -82,9 +83,11 @@ class ShowRouteTable(ShowRouteTableSchema):
                          '\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
 
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
+        # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         r2 = re.compile(r'(?P<rt_destination>\S+)\s+(?P<active_tag>\*|\-\*)'
-                         '\[(?P<protocol_name>\S+)\/(?P<preference>\d+)\]\s+'
-                         '(?P<age>\S+)\,\s+metric\s+(?P<metric>\d+)')
+                         '\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)(?:\/'
+                         '(?P<preference2>\d+))?\]\s+(?P<age>[\S ]+)\,\s+'
+                         'metric\s+(?P<metric>\d+)$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
@@ -118,17 +121,12 @@ class ShowRouteTable(ShowRouteTableSchema):
             if result:
                 group = result.groupdict()
 
-                rt_destination = group['rt_destination']
+                rt_destination = group.pop('rt_destination', None)
 
                 route_dict = table_dict.setdefault('routes', {})\
                                        .setdefault(rt_destination, {})
-                
-                route_dict['active_tag'] = group['active_tag']
-                route_dict['protocol_name'] = group['protocol_name']
-                route_dict['preference'] = group['preference']
-                route_dict['age'] = group['age']
-                route_dict['metric'] = group['metric']
 
+                route_dict.update({k: v for k, v in group.items() if v})
                 continue
 
             # > to 192.168.220.6 via ge-0/0/1.0

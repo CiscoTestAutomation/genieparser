@@ -56,6 +56,7 @@
     * Update ShowMplsForwardingTable
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
+        * update schema to support 'Merged' key
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -207,6 +208,8 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
+    * ShowIpRouteWord
+        * update regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
@@ -345,7 +348,8 @@
                                 Route
 --------------------------------------------------------------------------------
 * JUNOS
-    * Updated ShowRouteTable for better matching of table name
+    * Updated ShowRouteTable for:
+        * better matching of table name and parsing of more varied output
 
 --------------------------------------------------------------------------------
                                 TRACEROUTE
@@ -357,7 +361,7 @@
                                 L2VPN
 --------------------------------------------------------------------------------
 * IOSXR
-    * Added ShowL2vpnBridgeDomain for:  
+    * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
     * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
         * show l2vpn forwarding bridge-domain mac-address location {location}
