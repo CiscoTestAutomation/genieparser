@@ -331,14 +331,16 @@ class test_show_isis_segment_routing_label_table(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'isis': {
-            'label': {
-                16001: {
-                    'interface': 'Loopback0'},
-                16002: {
-                    'interface': '10.2.2.2/32'},
-                16003: {
-                    'interface': '10.3.3.3/32'}
+        'instance': {
+            'SR': {
+                'label': {
+                    16001: {
+                        'prefix_interface': 'Loopback0'},
+                    16002: {
+                        'prefix_interface': '10.2.2.2/32'},
+                    16003: {
+                        'prefix_interface': '10.3.3.3/32'}
+                }
             }
         }
     }
