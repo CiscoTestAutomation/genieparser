@@ -71,7 +71,7 @@ class ShowL2routeTopology(ShowL2routeTopologySchema):
                     str_type = 'N/A'
 
                 single_dict[group_dict['topo_id']
-                            ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
+                ]['topo_name'][group_dict['topo_name']]['topo_type'] = str_type
 
                 parsed_dict.setdefault('topo_id', {}).update(single_dict)
 
@@ -135,9 +135,9 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
 
                 mac_address_dict_in = AutoTree()
                 mac_address_dict_in[group_dict['mac_address']
-                                 ]['producer'] = group_dict['producer']
+                ]['producer'] = group_dict['producer']
                 mac_address_dict_in[group_dict['mac_address']
-                                 ]['next_hop'] = group_dict['next_hop']
+                ]['next_hop'] = group_dict['next_hop']
 
                 parsed_dict.setdefault(
                     'topo_id',
@@ -148,4 +148,89 @@ class ShowL2routeEvpnMacAll(ShowL2routeEvpnMacAllSchema):
                     {}).update(mac_address_dict_in)
 
                 continue
+        return parsed_dict
+
+
+class ShowL2routeEvpnMacIpAllSchema(MetaParser):
+    """Schema for:
+        * 'show l2route evpn mac-ip all'
+    """
+    schema = {
+        'topo_id': {
+            Any(): {
+                'mac_address': {
+                    Any(): {
+                        'ip_address': {
+                            Any(): {
+                                'producer': str,
+                                'next_hop': str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowL2routeEvpnMacIpAll(ShowL2routeEvpnMacIpAllSchema):
+    """Parser class for show l2route evpn mac-ip all"""
+
+    cli_command = 'show l2route evpn mac-ip all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
+        # -------- -------------- --------------- ----------- ----------------------------------------
+        # 0        0001.0003.0004 100.69.0.250    LOCAL       N/A
+        # 0        0001.0003.0004 2001:db8::250   LOCAL       N/A
+        # 0        0aaa.0bbb.0000 100.69.0.3      LOCAL       N/A
+        # 0        0aaa.0bbb.0001 100.69.0.4      LOCAL       N/A
+        # 0        fc00.0001.0006 192.168.166.3   L2VPN  Bundle-Ether1.0
+        # 0        fc00.0001.0008 192.168.49.3    L2VPN  68101/I/ME
+
+        p = re.compile(r'^(?P<topo_id>\d+) +'
+                       r'(?P<mac_address>\S+) +'
+                       r'(?P<ip_address>\S+) +'
+                       r'(?P<producer>\S+) +'
+                       r'(?P<next_hop>\S+)')
+
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            result = p.match(line)
+
+            if result:
+
+                group_dict = result.groupdict()
+                ip_address_dict_in = AutoTree()
+
+                next_hop = group_dict['next_hop']
+                if next_hop is None:
+                    next_hop = 'N/A'
+
+                ip_address_dict_in[group_dict['ip_address']
+                ]['producer'] = group_dict['producer']
+                ip_address_dict_in[group_dict['ip_address']
+                ]['next_hop'] = next_hop
+
+                print(ip_address_dict_in)
+
+                parsed_dict.setdefault(
+                    'topo_id',
+                    {}).setdefault(
+                    group_dict['topo_id'],
+                    {}).setdefault(
+                    'mac_address',
+                    {}).setdefault(
+                    group_dict['mac_address'],
+                    {}).setdefault('ip_address',{}).update(ip_address_dict_in)
+                continue
+
         return parsed_dict
