@@ -426,9 +426,9 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnForwardingBridgeDomainMacAddress(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(location=0)
 
-    def test_empty(self):
+    def test_missing_attribute(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnForwardingBridgeDomainMacAddress(device=self.device)
         with self.assertRaises(TypeError):
