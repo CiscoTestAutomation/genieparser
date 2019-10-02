@@ -66,6 +66,9 @@
         * update schema to support 'Merged' key
     * Update ShowMplsForwardingTableDetail
         * Add command 'show mpls forwarding-table labels {label} detail'
+* IOSXR
+    * Added ShowMplsLabelTableDetail for:
+        'show mpls label table detail'
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -345,6 +348,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpCef to parse outputs without routes
+* IOSXR
+    * Updated ShowL2routeTopology for:
+        * show l2route topology
+    * Updated ShowL2routeEvpnMacAll for:
+        * show l2route evpn mac all
+    * Updated ShowL2routeEvpnMacIpAll for:
+        * show l2route evpn mac-ip all
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -356,6 +366,8 @@
         * show l2vpn xconnect
     * Added ShowL2vpnXconnectSummary for:
         * show l2vpn xconnect summary
+    * Added ShowL2vpnXconnectMp2mpDetail for:
+        * show l2vpn xconnect mp2mp detail
 
 --------------------------------------------------------------------------------
                                 EVPN
@@ -385,6 +397,11 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
+    * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
+        * show l2vpn forwarding bridge-domain mac-address location {location}
+        * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
+    * Added ShowL2vpnForwardingProtectionMainInterface for:  
+        * show l2vpn forwarding protection main-interface location {location}
 
 --------------------------------------------------------------------------------
                                 MODULE
