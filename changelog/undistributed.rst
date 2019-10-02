@@ -343,6 +343,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpCef to parse outputs without routes
+* IOSXR
+    * Updated ShowL2routeTopology for:
+        * show l2route topology
+    * Updated ShowL2routeEvpnMacAll for:
+        * show l2route evpn mac all
+    * Updated ShowL2routeEvpnMacIpAll for:
+        * show l2route evpn mac-ip all
 
 --------------------------------------------------------------------------------
                                 X-Connect
