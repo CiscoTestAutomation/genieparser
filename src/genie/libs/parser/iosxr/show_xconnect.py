@@ -4,6 +4,7 @@ show xsconnect parser class
 
   supported commands:
    *  show l2vpn xconnect
+   *  show l2vpn xconnect detail
    
 """
 import re
@@ -209,7 +210,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                     Any(): {
                         'state': str,
                         'interworking': str,
-                        'monitor_session': {
+                        Optional('monitor_session'): {
                             Any(): {
                                 'state': str
                             }
@@ -218,16 +219,25 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                             Any(): {
                                 'state': str,
                                 'type': str,
+                                Optional('num_ranges'): int,
+                                Optional('vlan_range'): str,
+                                Optional('rewrite_tags'): str,
                                 'mtu': int,
                                 'xc_id': str,
                                 'interworking': str,
-                                'msti': int,
+                                Optional('msti'): int,
                                 'statistics': {
                                     'packet_totals': {
-                                        'send': int
+                                        Optional('send'): int,
+                                        Optional('receive'): int
                                     },
                                     'byte_totals': {
-                                        'send': int
+                                        Optional('send'): int,
+                                        Optional('receive'): int
+                                    },
+                                    Optional('drops'): {
+                                        Optional('illegal_vlan'): int,
+                                        Optional('illegal_length'): int
                                     }
                                 }
                             }
@@ -235,17 +245,20 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                         'pw': {
                             'neighbor': {
                                 Any(): {
-                                    'id': int,
+                                    'id': str,
                                     'state': str,
-                                    'pw_class': str,
+                                    Optional('pw_class'): str,
                                     'xc_id': str,
+                                    Optional('ac_id'): int,
                                     'encapsulation': str,
-                                    'protocol': str,
+                                    Optional('protocol'): str,
                                     'type': str,
                                     'control_word': str,
-                                    'interworking': str,
-                                    'backup_disable_delay': int,
+                                    Optional('interworking'): str,
+                                    Optional('backup_disable_delay'): int,
                                     'sequencing': str,
+                                    Optional('source_address'): str,
+                                    Optional('lsp'): str,
                                     'mpls': {
                                         Any(): {
                                             'local': str,
@@ -258,29 +271,34 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                     'last_time_status_changed': str,
                                     'statistics': {
                                         'packet_totals': {
-                                            'receive': int
+                                            Optional('send'): int,
+                                            Optional('receive'): int
                                         },
                                         'byte_totals': {
-                                            'receive': int
+                                            Optional('send'): int,
+                                            Optional('receive'): int
                                         }
                                     }
                                 }
                             }
                         },
-                        'backup_pw': {
+                        Optional('backup_pw'): {
                             'neighbor': {
                                 Any(): {
-                                    'id': int,
+                                    'id': str,
                                     'state': str,
-                                    'pw_class': str,
+                                    Optional('pw_class'): str,
                                     'xc_id': str,
+                                    Optional('ac_id'): int,
                                     'encapsulation': str,
-                                    'protocol': str,
+                                    Optional('protocol'): str,
                                     'type': str,
                                     'control_word': str,
-                                    'interworking': str,
-                                    'backup_disable_delay': int,
+                                    Optional('interworking'): str,
+                                    Optional('backup_disable_delay'): int,
                                     'sequencing': str,
+                                    Optional('source_address'): str,
+                                    Optional('lsp'): str,
                                     'mpls': {
                                         Any(): {
                                             'local': str,
@@ -293,10 +311,12 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                     'last_time_status_changed': str,
                                     'statistics': {
                                         'packet_totals': {
-                                            'receive': int
+                                            Optional('send'): int,
+                                            Optional('receive'): int
                                         },
                                         'byte_totals': {
-                                            'receive': int
+                                            Optional('send'): int,
+                                            Optional('receive'): int
                                         }
                                     },
                                 }
@@ -330,11 +350,18 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p3 = re.compile(r'^AC: +(?P<ac>\S+), +state +is +(?P<state>\S+)$')
 
         # Type Ethernet
-        p4 = re.compile(r'^Type +(?P<type>\S+)$')
+        # Type VLAN; Num Ranges: 1
+        p4 = re.compile(r'^Type +(?P<type>\S+)(; +Num +Ranges: +(?P<num_ranges>\d+))?$')
+
+        # Rewrite Tags: []
+        p4_1 = re.compile(r'^Rewrite +Tags: +(?P<rewrite_tags>[\S\s]+)$')
+
+        # VLAN ranges: [200, 200]
+        p4_2 = re.compile(r'^VLAN +ranges: +(?P<vlan_range>[\S\s]+)$')
 
         # MTU 1500; XC ID 0x5000001; interworking none; MSTi 0
         p5 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); '
-            '+interworking +(?P<interworking>\S+); +MSTi +(?P<msti>\d+)$')
+            '+interworking +(?P<interworking>\S+)(; +MSTi +(?P<msti>\d+))?$')
 
         # packet totals: send 98
         p6 = re.compile(r'^packet +totals: +send +(?P<send>\d+)$')
@@ -342,25 +369,51 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # packet totals: receive 98
         p6_1 = re.compile(r'^packet +totals: +receive +(?P<receive>\d+)$')
 
+        # packets: received 3, sent 0
+        p6_2 = re.compile(r'^packets: +received +(?P<pkts_received>\d+),'
+            ' +sent +(?P<pkts_sent>\d+)$')
+
         # byte totals: send 20798
         p7 = re.compile(r'^byte +totals: +send +(?P<send>\d+)$')
 
         # byte totals: send 20798
         p7_1 = re.compile(r'^byte +totals: +receive +(?P<receive>\d+)$')
 
+        # bytes: received 180, sent 0
+        p7_2 = re.compile(r'^bytes: +received +(?P<bytes_received>\d+),'
+            ' +sent +(?P<bytes_sent>\d+)$')
+
+        # drops: illegal VLAN 0, illegal length 0
+        p7_3 = re.compile(r'^drops: +illegal +VLAN +(?P<illegal_vlan>\d+),'
+            ' +illegal +length +(?P<illegal_length>\d+)$')
+
         # PW: neighbor 10.1.1.1, PW ID 1, state is down ( local ready )
         p8 = re.compile(r'^PW: +neighbor +(?P<neighbor>\S+), +PW +ID +'
             '(?P<id>\d+), state +is +(?P<state>[\S ]+)$')
-        
+
+        # EVPN: neighbor 67.70.219.82, PW ID: evi 10100, ac-id 30100, state is up ( established )
+        p8_1 = re.compile(r'^EVPN: +neighbor +(?P<neighbor>\S+), +PW +ID(:)? +'
+            '(?P<id>[\w\d\s]+),( +ac-id +(?P<ac_id>\d+),)? state +is +(?P<state>[\S ]+)$')
+
         # PW class not set, XC ID 0x5000001
         p9 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+), +XC +ID +(?P<xc_id>\S+)$')
 
+        # XC ID 0xc0000001
+        p9_1 = re.compile(r'^XC +ID +(?P<xc_id>\S+)$')
+
         # Encapsulation MPLS, protocol LDP
-        p10 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+), +protocol +(?P<protocol>\S+)$')
+        # Encapsulation MPLS
+        p10 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+)(, +protocol +(?P<protocol>\S+))?$')
+
+        # Source address 67.70.219.88
+        p10_1 = re.compile(r'^Source address +(?P<source_address>\S+)$')
 
         # PW type Ethernet, control word enabled, interworking none
         p11 = re.compile(r'^PW +type +(?P<type>\S+), +control +word +(?P<control_word>\S+)'
             ', +interworking +(?P<interworking>\S+)$')
+
+        # Encap type Ethernet, control word enabled
+        p11_1 = re.compile(r'^Encap +type +(?P<type>\S+), +control +word +(?P<control_word>\S+)$')
 
         # PW backup disable delay 0 sec
         p12 = re.compile(r'^PW +backup +disable +delay +(?P<backup_disable_delay>\d+) +sec$')
@@ -368,8 +421,14 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Sequencing not set
         p13 = re.compile(r'^Sequencing +(?P<sequencing>[\S ]+)$')
 
+        # LSP : Up
+        p13_1 = re.compile(r'^LSP +: +(?P<lsp>\S+)$')
+
         # MPLS         Local                          Remote
         p14 = re.compile(r'^MPLS +Local +Remote$')
+
+        # EVPN         Local                          Remote
+        p14_1 = re.compile(r'^EVPN +Local +Remote$')
 
         # Label        30005                          unknown
         # Group ID     0x5000300                      0x0
@@ -459,6 +518,22 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'type': ac_type})
                 continue
 
+            # Rewrite Tags: []
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                rewrite_tags = group['rewrite_tags']
+                current_dict.update({'rewrite_tags': rewrite_tags})
+                continue
+
+            # VLAN ranges: [200, 200]
+            m = p4_2.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_range = group['vlan_range']
+                current_dict.update({'vlan_range': vlan_range})
+                continue
+
             # MTU 1500; XC ID 0x5000001; interworking none; MSTi 0
             m = p5.match(line)
             if m:
@@ -466,11 +541,12 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 mtu = int(group['mtu'])
                 xc_id = group['xc_id']
                 interworking = group['interworking']
-                msti = int(group['msti'])
+                if group['msti']:
+                    msti = int(group['msti'])
+                    current_dict.update({'msti': msti})
                 current_dict.update({'mtu': mtu})
                 current_dict.update({'xc_id': xc_id})
                 current_dict.update({'interworking': interworking})
-                current_dict.update({'msti': msti})
                 continue
             
             # packet totals: send 98
@@ -493,6 +569,18 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     update({'receive': receive})
                 continue
 
+            # packets: received 3, sent 0
+            m = p6_2.match(line)
+            if m:
+                group = m.groupdict()
+                send = int(group['pkts_sent'])
+                receive = int(group['pkts_received'])
+                current_dict.setdefault('statistics', {}). \
+                    setdefault('packet_totals', {}). \
+                    update({'receive': receive})
+                current_dict['statistics']['packet_totals'].update({'send': send})
+                continue
+
             # byte totals: send 98
             m = p7.match(line)
             if m:
@@ -513,12 +601,36 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     update({'receive': receive})
                 continue
 
+            # bytes: received 180, sent 0
+            m = p7_2.match(line)
+            if m:
+                group = m.groupdict()
+                send = int(group['bytes_sent'])
+                receive = int(group['bytes_received'])
+                current_dict.setdefault('statistics', {}). \
+                    setdefault('byte_totals', {}). \
+                    update({'receive': receive})
+                current_dict['statistics']['byte_totals'].update({'send': send})
+                continue
+
+            # drops: illegal VLAN 0, illegal length 0
+            m = p7_3.match(line)
+            if m:
+                group = m.groupdict()
+                illegal_vlan = int(group['illegal_vlan'])
+                illegal_length = int(group['illegal_length'])
+                current_dict.setdefault('statistics', {}). \
+                    setdefault('drops', {}). \
+                    update({'illegal_vlan': illegal_vlan})
+                current_dict['statistics']['drops'].update({'illegal_length': illegal_length})
+                continue
+
             # PW: neighbor 10.1.1.1, PW ID 1, state is down ( local ready )
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 neighbor = group['neighbor']
-                pw_id = int(group['id'])
+                pw_id = group['id']
                 state = group['state']
                 if not pw_backup:
                     current_dict = xc_dict.setdefault('pw', {})
@@ -529,7 +641,26 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'id': pw_id})
                 current_dict.update({'state': state})
                 continue
-            
+
+            # EVPN: neighbor 1.1.1.1, PW ID: evi 1010, ac-id 1234, state is up ( established )
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                pw_id = group['id']
+                ac_id = int(group['ac_id'])
+                state = group['state']
+                if not pw_backup:
+                    current_dict = xc_dict.setdefault('pw', {})
+                
+                current_dict = current_dict.setdefault('neighbor', {}). \
+                        setdefault(neighbor, {})
+                
+                current_dict.update({'id': pw_id})
+                current_dict.update({'state': state})
+                current_dict.update({'ac_id': ac_id})
+                continue
+
             # PW class not set, XC ID 0x5000001
             m = p9.match(line)
             if m:
@@ -540,16 +671,34 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'xc_id': xc_id})
                 continue
 
+            # XC ID 0xc0000001
+            m = p9_1.match(line)
+            if m:
+                group = m.groupdict()
+                xc_id = group['xc_id']
+                current_dict.update({'xc_id': xc_id})
+                continue
+
             # Encapsulation MPLS, protocol LDP
+            # Encapsulation MPLS
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 encapsulation = group['encapsulation']
-                protocol = group['protocol']
+                if group['protocol']:
+                    protocol = group['protocol']
+                    current_dict.update({'protocol': protocol})
                 current_dict.update({'encapsulation': encapsulation})
-                current_dict.update({'protocol': protocol})
                 continue
-            
+
+            # Source address 67.70.219.88
+            m = p10_1.match(line)
+            if m:
+                group = m.groupdict()
+                source_address = group['source_address']
+                current_dict.update({'source_address': source_address})
+                continue
+
             # PW type Ethernet, control word enabled, interworking none
             m = p11.match(line)
             if m:
@@ -560,6 +709,16 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'type': pw_type})
                 current_dict.update({'control_word': control_word})
                 current_dict.update({'interworking': interworking})
+                continue
+
+            # Encap type Ethernet, control word enabled
+            m = p11_1.match(line)
+            if m:
+                group = m.groupdict()
+                pw_type = group['type']
+                control_word = group['control_word']
+                current_dict.update({'type': pw_type})
+                current_dict.update({'control_word': control_word})
                 continue
 
             # PW backup disable delay 0 sec
@@ -578,11 +737,24 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'sequencing': sequencing})
                 continue
 
+            # LSP : Up
+            m = p13_1.match(line)
+            if m:
+                group = m.groupdict()
+                lsp = group['lsp']
+                current_dict.update({'lsp': lsp})
+                continue
+
             # MPLS         Local                          Remote
             m = p14.match(line)
             if m:
                 continue
-            
+
+            # EVPN         Local                          Remote
+            m = p14_1.match(line)
+            if m:
+                continue
+
             # Create time: 20/11/2007 21:45:06 (00:53:31 ago)
             m = p16.match(line)
             if m:
@@ -612,7 +784,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             if m:
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
-	                mpls_pairs.update({m.start(): m.end()})
+                    mpls_pairs.update({m.start(): m.end()})
                 continue
             
             #     (LSP ping verification)               
@@ -710,10 +882,14 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
         # initial return dictionary
         ret_dict = {}
         flag_group = True
+        m3_1 = None
 
         # L2TPV3_V4_XC_GRP
         #           L2TPV3_P2P_1
-        p1 = re.compile(r'^(?P<group>[\w]+)$')
+        p1 = re.compile(r'^(?P<group>[\w\-]+)$')
+
+        # SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
+        p1_1 = re.compile(r'^SB = Standby, SR = Standby Ready, \(PP\) = Partially Programmed$')
 
         #               1000     DN   Gi0/0/0/5.1000    UP   10.4.1.206       1000   DN
         p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
@@ -730,11 +906,23 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         '+(?P<segment_2>[\S ]+) '
                         '+(?P<status_seg2>(UP|DN|AD|UR|SB|SR|\(PP\)))$')
 
+        #                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100  
+        p3_1 = re.compile(r'^(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                        '+(?P<segment_1>.*?) ' 
+                        '+(?P<status_seg1>(UP|DN|AD|UR|SB|SR|\(PP\))) '
+                        '+(?P<segment_2>[\S ]+)$')
+
+        #                                                             UP  
+        p4 = re.compile(r'^(?P<status_segment2>[A-Z]+)$')
+
         for line in out.splitlines():
             line = line.strip()
-            
+
+            if '--------' in line:
+                continue
+
             m = p1.match(line)
-            if m:
+            if m and not m3_1:
                 if flag_group:
                     group = m.groupdict()
                     group_dict = ret_dict.setdefault('groups', {}) \
@@ -747,6 +935,10 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         .setdefault(str(group['group']), {})
                     flag_group = True
                     continue
+
+            m = p1_1.match(line)
+            if m:
+                continue
 
             m2 = p2.match(line)
             if m2:
@@ -765,7 +957,23 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                     .setdefault(Common.convert_intf_name(group['segment_1']), {})
                 segment1_dict['status'] = str(group['status_seg1'])
                 segment2_dict = segment1_dict.setdefault('segment2', {}) \
-                    .setdefault(str(group['segment_2'].strip()), {}) 
+                    .setdefault(str(group['segment_2'].strip()), {})
                 segment2_dict['status'] = str(group['status_seg2'])
+                continue
+
+            m3_1 = p3_1.match(line)
+            if m3_1:
+                group = m3_1.groupdict()
+                name_dict['status'] = str(group['status_group'])
+                segment1_dict = name_dict.setdefault('segment1',{}) \
+                    .setdefault(Common.convert_intf_name(group['segment_1']), {})
+                segment1_dict['status'] = str(group['status_seg1'])
+                segment2_dict = segment1_dict.setdefault('segment2', {}) \
+                    .setdefault(str(group['segment_2'].strip()), {})
+
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                segment2_dict['status'] = str(group['status_segment2'])
 
         return ret_dict

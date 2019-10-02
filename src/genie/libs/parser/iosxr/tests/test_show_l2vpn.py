@@ -26,7 +26,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         'bridge_group': {
             'g1': {
                 'bridge_domain': {
-                    'bd1': {
+                    'EVPN-Multicast-BTV': {
                         'id': 0,
                         'state': 'up',
                         'shg_id': 0,
@@ -76,7 +76,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2vpn bridge-domain
 
-        Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
+        Bridge group: g1, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
           Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
           Filter MAC addresses: 0
           ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)

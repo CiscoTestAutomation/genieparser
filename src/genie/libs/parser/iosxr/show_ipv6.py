@@ -64,10 +64,12 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
         ret_dict = {}
 
         # 2010:1:2::1  82   fa16.3e19.abba REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
+        # fe80::f816:3eff:fe26:1224  119  fa16.3e26.1224 REACH Gi0/0/0/0.90         0/0/CPU0
         p1 = re.compile(r'^(?P<ip>\S+)\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+(?P<interface>\S+)\s+'
                          '(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
 
-        #[Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
+        # [Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
+        # [Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0.90         0/0/CPU0
         p2 = re.compile(r'^\[(?P<ip>([\w\s]+))\]\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
                          '(?P<interface>\S+)\s+(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
 
