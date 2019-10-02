@@ -8,7 +8,7 @@ from ats.topology import Device
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_mrib
+# iosxr show_l2route
 from genie.libs.parser.iosxr.show_l2route import (
     ShowL2routeTopology, ShowL2routeEvpnMacAll, ShowL2routeEvpnMacIpAll)
 
