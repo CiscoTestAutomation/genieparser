@@ -1702,12 +1702,16 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
         p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
+        #         MAC/Encaps=14/26, MRU=1492, Label Stack{16052 16062 16063}, via Gi0/1/7
         p3 = re.compile(r'^MAC\/Encaps=(?P<mac>\d+)\/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), '
                          '+Label +Stack{(?P<label_stack>.*)}(, via +(?P<via>\S+))?$')
+
         #         00002440156384B261CB1480810000330800
         #         AABBCC032800AABBCC0325018847 00010000
+        #         0050568DA282BC16652F3A178847 03EB400003EBE00003EBF000
         p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\w+))?$')
         #         VPN route: L3VPN-0051
         p5 = re.compile(r'^VPN +route: +(?P<vpn_route>\S+)$')
@@ -1888,12 +1892,15 @@ class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
         show mpls forwarding-table vrf <vrf> detail"""
 
     cli_command = ['show mpls forwarding-table detail',
-                   'show mpls forwarding-table vrf {vrf} detail']
+                   'show mpls forwarding-table vrf {vrf} detail',
+                   'show mpls forwarding-table labels {label} detail']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', label='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[1].format(vrf=vrf)
+            elif label:
+                cmd = self.cli_command[2].format(label=label)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
