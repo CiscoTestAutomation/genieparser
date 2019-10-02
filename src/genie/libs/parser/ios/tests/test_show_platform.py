@@ -590,7 +590,7 @@ class test_show_inventory(unittest.TestCase):
                     }
                 }
             },
-            1: {
+            "1": {
                 "rp": {
                     "VS-SUP2T-10G": {
                         "name": "1",
@@ -637,7 +637,7 @@ class test_show_inventory(unittest.TestCase):
                     }
                 }
             },
-            2: {
+            "2": {
                 "lc": {
                     "WS-X6816-10GE": {
                         "name": "2",
@@ -722,7 +722,7 @@ class test_show_inventory(unittest.TestCase):
                     }
                 }
             },
-            3: {
+            "3": {
                 "lc": {
                     "WS-X6824-SFP": {
                         "name": "3",
@@ -744,7 +744,7 @@ class test_show_inventory(unittest.TestCase):
                     }
                 }
             },
-            4: {
+            "4": {
                 "lc": {
                     "WS-X6748-GE-TX": {
                         "name": "4",
@@ -879,7 +879,7 @@ class test_show_inventory(unittest.TestCase):
                     }
                 }
             },
-            1: {
+            "1": {
                 "rp": {
                     "WS-SUP720-3BXL": {
                         "name": "1",
@@ -908,7 +908,7 @@ class test_show_inventory(unittest.TestCase):
                     }
                 }
             },
-            2: {
+            "2": {
                 "lc": {
                     "WS-X6748-GE-TX": {
                         "name": "2",
