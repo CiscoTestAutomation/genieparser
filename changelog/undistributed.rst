@@ -418,3 +418,10 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunningConfigNtp to support different vrfs output
+
+--------------------------------------------------------------------------------
+                                ISIS
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowIsisSegmentRoutingLabelTable for:
+        * show isis segment-routing label table
