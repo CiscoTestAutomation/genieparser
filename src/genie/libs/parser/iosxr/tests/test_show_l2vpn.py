@@ -4,102 +4,78 @@ from unittest.mock import Mock
 
 # ATS
 from ats.topology import Device
-from ats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_mrib
-from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnBridgeDomain)
+# iosxr show_l2vpn_mac_learning
+from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnMacLearning)
+
 
 # ===========================================
-#  Unit test for 'show l2vpn bridge-domain'
+# Unit test for 'show l2vpn mac-learning <mac_type> all location <location>'
 # ===========================================
-
-class TestShowL2vpnBridgeDomain(unittest.TestCase):
-    '''Unit test for "show l2vpn bridge-domain"'''
+class TestShowL2vpnMacLearning(unittest.TestCase):
+    """Unit test for 'show l2vpn mac-learning <mac_type> all location <location>'"""
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output1 = {
-        'bridge_group': {
-            'g1': {
-                'bridge_domain': {
-                    'bd1': {
-                        'id': 0,
-                        'state': 'up',
-                        'shg_id': 0,
-                        'mst_i': 0,
-                        'aging': 300,
-                        'mac_limit': 4000,
-                        'action': 'none',
-                        'notification': 'syslog',
-                        'filter_mac_address': 0,
-                        'ac': {
-                            'ac': 1,
-                            'ac_up': 1,
-                            'interfaces': {
-                                'GigabitEthernet0/1/0/0': {
-                                    'state': 'up',
-                                    'static_mac_address': 2,
-                                    'mst_i': 0,
-                                    'mst_i_state': 'unprotected',
-                                },
-                            },
-                        },
-                        'vfi': {
-                            'vfi': 1,
-                            1: {
-                                'neighbor': {
-                                    '10.1.1.1': {
-                                        'pw_id': {
-                                            1: {
-                                                'state': 'up',
-                                                'static_mac_address': 0,
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        'pw': {
-                            'pw': 1,
-                            'pw_up': 1,
-                        },
-                    },
-                },
-            },
-        },
-    }
+    expected_output = {
+        'topo_id': {
+            '1': {
+                'producer': {
+                    '0/0/CPU0': {
+                        'next_hop': {
+                            'BE1.7': {
+                                'mac_address': {
+                                    '7777.7777.0002': {}}}}}}},
+            '6': {
+                'producer': {
+                    '0/0/CPU0': {
+                        'next_hop': {
+                            'BV1': {
+                                'mac_address': {
+                                    '0000.f65a.357c': {
+                                        'ip_address': 'fe80::200:f6ff:fe5a:357c'},
+                                '1000.0001.0001': {
+                                        'ip_address': '10.1.1.11'}}}}}}},
+            '7': {
+                'producer': {
+                    '0/0/CPU0': {
+                        'next_hop': {
+                            'BV2': {
+                                'mac_address': {
+                                    '0000.f65a.3570': {
+                                        'ip_address': '10.1.2.91'},
+                                    '0000.f65a.357d': {
+                                        'ip_address': '10.1.2.93'}}}}}}}}}
 
-    golden_output1 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:router# show l2vpn bridge-domain
+    device_output = {'execute.return_value': '''
+        Topo ID  Producer  Next Hop(s)  Mac Address     IP Address
 
-        Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
-          Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
-          Filter MAC addresses: 0
-          ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
-          List of ACs:
-            Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
-          List of Access PWs:
-          List of VFIs:
-            VFI 1
-              Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
+        6        0/0/CPU0   BV1        1000.0001.0001      10.1.1.11
+        7        0/0/CPU0   BV2        0000.f65a.3570      10.1.2.91
+        7        0/0/CPU0   BV2        0000.f65a.357d      10.1.2.93
+        1        0/0/CPU0   BE1.7      7777.7777.0002
+        6        0/0/CPU0   BV1        0000.f65a.357c      fe80::200:f6ff:fe5a:357c
     '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowL2vpnBridgeDomain(device=self.device)
+        obj = ShowL2vpnMacLearning(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_golden1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowL2vpnBridgeDomain(device=self.device)
+        self.device = Mock(**self.device_output)
+        obj = ShowL2vpnMacLearning(device=self.device)
+
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+        self.assertEqual(parsed_output, self.expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
