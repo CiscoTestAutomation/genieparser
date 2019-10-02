@@ -13,6 +13,13 @@
     * ShowControllersFiaDiagshellL2show
 
 --------------------------------------------------------------------------------
+                                CLNS
+--------------------------------------------------------------------------------
+* IOSXE
+    * Changed "type" type from string to integer on the following commands
+        * 'show clns neighbors detail'
+        * 'show clns is-neighbors detail'
+--------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
@@ -56,6 +63,7 @@
     * Update ShowMplsForwardingTable
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
+        * update schema to support 'Merged' key
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -207,6 +215,8 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
+    * ShowIpRouteWord
+        * update regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
@@ -269,7 +279,6 @@
         * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
 
 --------------------------------------------------------------------------------
-
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
@@ -278,6 +287,18 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
+
+--------------------------------------------------------------------------------
+                                IPv6
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowIpv6Neighbors for commands:
+        * 'show ipv6 neighbors'
+        * 'show ipv6 neighbors vrf {vrf}'
+        * 'show ipv6 neighbors {interface}'
+        * 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Updated ShowIpv6NeighborsDetail:
+        * Added 'origin' key to schema
 
 --------------------------------------------------------------------------------
 
@@ -331,7 +352,9 @@
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
         * show l2vpn xconnect
-    * Added ShowL2vpnXconnectDetail for:
+    * Added ShowL2vpnXconnectSummary for:
+        * show l2vpn xconnect summary
+    * Added ShowL2vpnXconnectMp2mpDetail for:
         * show l2vpn xconnect mp2mp detail
 
 --------------------------------------------------------------------------------
@@ -347,7 +370,8 @@
                                 Route
 --------------------------------------------------------------------------------
 * JUNOS
-    * Updated ShowRouteTable for better matching of table name
+    * Updated ShowRouteTable for:
+        * better matching of table name and parsing of more varied output
 
 --------------------------------------------------------------------------------
                                 TRACEROUTE
@@ -359,7 +383,7 @@
                                 L2VPN
 --------------------------------------------------------------------------------
 * IOSXR
-    * Added ShowL2vpnBridgeDomain for:  
+    * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
 
 --------------------------------------------------------------------------------
