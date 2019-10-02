@@ -97,7 +97,7 @@ class test_show_route_table(unittest.TestCase):
         inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         + = Active Route, - = Last Active, * = Both
 
-        10.64.4.4/32         *[LDP/9] 02:30:55, metric 110
+        10.64.4.4/32         *[LDP/9/4] 02:30:55, metric 110
                             > to 192.168.220.6 via ge-0/0/1.0
         10.169.197.254/32 *[LDP/9] 02:14:05, metric 1001
                             > to 10.49.0.1 via ge-0/0/2.0
@@ -149,6 +149,7 @@ class test_show_route_table(unittest.TestCase):
                                     'to': '192.168.220.6',
                                     'via': 'ge-0/0/1.0'}}},
                         'preference': '9',
+                        'preference2': '4',
                         'protocol_name': 'LDP'}},
                         'total_route_count': 3}}}
 

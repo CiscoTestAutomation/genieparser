@@ -116,6 +116,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # VRF: VRF501
         p1 = re.compile(r'^\s*VRF: +(?P<vrf>[\w]+)$')
 
+        # i L2 67.70.219.32/32 [115/100030] via 1.1.1.1, 1d06h, HundredGigE0/0/1/1 (!)
         # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
         # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
         # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
@@ -130,7 +131,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                          '( +is +directly +connected)?( +\[(?P<route_preference>[\d\/]+)\]?'
                          '( +via )?(?P<next_hop>[\w\/\:\.]+)?)?\s*'
                          '(:?\(nexthop +in +vrf +default\))?,'
-                         '( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                         '( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?( +(?P<code3>[\w\*\(\>\)\!]+))?$')
 
         #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
         p3 = re.compile(r'^\s*\[(?P<route_preference>[\d\/]+)\]'
@@ -150,6 +151,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 vrf = m.groupdict()['vrf']
                 continue
 
+            # i L2 67.70.219.32/32 [115/100030] via 1.1.1.1, 1d06h, HundredGigE0/0/1/1 (!)
             # S    10.4.1.1/32 is directly connected, 01:51:13, GigabitEthernet0/0/0/0
             # S    10.36.3.3/32 [1/0] via 10.2.3.3, 01:51:13, GigabitEthernet0/0/0/1
             # B    10.19.31.31/32 [200/0] via 10.229.11.11, 00:55:14
@@ -176,6 +178,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 if group['code2']:
                     source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code2'])
+
+                if group['code3']:
+                    source_protocol_codes = '{} {}'.format(source_protocol_codes, m.groupdict()['code3'])
 
                 if group['network']:
                     route = m.groupdict()['network']
