@@ -385,6 +385,12 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
+    * Added ShowL2vpnBridgeDomainSummary for:
+        * show l2vpn bridge-domain summary
+    * Added ShowL2vpnBridgeDomainBrief for:
+        * show l2vpn bridge-domain brief
+    * Added ShowL2vpnBridgeDomainDetail for:
+        * show l2vpn bridge-domain detail
 
 --------------------------------------------------------------------------------
                                 MODULE
