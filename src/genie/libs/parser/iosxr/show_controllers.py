@@ -110,8 +110,14 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         return parsed_dict
 
 
+# ================================================
+# Schema for 'show controllers coherentDSP {port}'
+# ================================================
 class ShowControllersCoherentDSPSchema(MetaParser):
-    """Schema for show controllers coherentDSP {port}"""
+    '''Schema for:
+        * show controllers coherentDSP {port}
+    '''
+
     schema = {
         Any(): {
             'port': str,
@@ -150,8 +156,13 @@ class ShowControllersCoherentDSPSchema(MetaParser):
     }
 
 
+# ================================================
+# Parser for 'show controllers coherentDSP {port}'
+# ================================================
 class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
-    """Parser for show controllers coherentDSP {port}"""
+    '''Parser for:
+        * show controllers coherentDSP {port}
+    '''
 
     cli_command = 'show controllers coherentDSP {port}'
     exclude = []
@@ -366,8 +377,14 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
         return result_dict
 
 
+# ===========================================
+# Schema for 'show controllers optics {port}'
+# ===========================================
 class ShowControllersOpticsSchema(MetaParser):
-    """Schema for show controllers optics {port}"""
+    '''Schema for:
+        * show controllers optics {port}
+    '''
+
     schema = {
         Any(): {
             'name': str,
@@ -444,8 +461,13 @@ class ShowControllersOpticsSchema(MetaParser):
     }
 
 
+# ===========================================
+# Parser for 'show controllers optics {port}'
+# ===========================================
 class ShowControllersOptics(ShowControllersOpticsSchema):
-    """Parser for show controllers optics {port}"""
+    '''Parser for:
+        * show controllers optics {port}
+    '''
 
     cli_command = 'show controllers optics {port}'
     exclude = ['laser_bias_current', 'actual_tx_power', 'rx_power', 'chromatic_dispersion']

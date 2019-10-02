@@ -414,19 +414,29 @@ class ShowEvpnEthernetSegment(MetaParser):
 
         return kl
 
+# ============================================
+# Schema for 'show evpn internal-label detail'
+# ============================================
+class ShowEvpnInternalLabelDetailSchemaMetaParser):
+    '''Schema for:
+        * show evpn internal-label detail
+    '''
 
+    schema = {}
+
+
+# ============================================
+# Parser for 'show evpn internal-label detail'
+# ============================================
 class ShowEvpnInternalLabelDetail(MetaParser):
-
-    # TODO schema
-
-    def __init__(self,**kwargs):
-        super().__init__(**kwargs)
+    '''Parser for:
+        * show evpn internal-label detail
+    '''
 
     cli_command = 'show evpn internal-label detail'
 
-    def cli(self,output=None):
-        """parsing mechanism: cli
-        """
+    def cli(self, output=None):
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
