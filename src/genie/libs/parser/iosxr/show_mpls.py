@@ -264,6 +264,8 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
                 label_list = ['vers', 'start_label', 'size']
                 for key in label_list:
                     latest_dict.update({key:int(m.groupdict()[key])})
+                if m.groupdict()['app_notify']:
+                    latest_dict.update({'app_notify':int(m.groupdict()['app_notify'])})
                 continue
 
             # (SR Adj Segment IPv4, vers:0, index=0, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)

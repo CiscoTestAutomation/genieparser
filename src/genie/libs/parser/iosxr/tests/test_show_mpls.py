@@ -209,14 +209,16 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
                         'state': 'InUse'},
                     1: {
                         'owner': 'LSD(A)',
-                             'rewrite': 'Yes',
-                             'state': 'InUse'},
-                         2: {'owner': 'LSD(A)',
-                             'rewrite': 'Yes',
-                             'state': 'InUse'},
-                         13: {'owner': 'LSD(A)',
-                              'rewrite': 'Yes',
-                              'state': 'InUse'},
+                        'rewrite': 'Yes',
+                        'state': 'InUse'},
+                    2: {
+                        'owner': 'LSD(A)',
+                        'rewrite': 'Yes',
+                        'state': 'InUse'},
+                    13: {
+                        'owner': 'LSD(A)',
+                        'rewrite': 'Yes',
+                        'state': 'InUse'},
                     16000: {
                         'label_type': {
                             'Lbl-blk SRGB': {
@@ -326,7 +328,8 @@ class test_show_mpls_ldp_neighbor_brief(unittest.TestCase):
                             'Lbl-blk SRLB': {
                                 'size': 1000,
                                 'start_label': 15000,
-                                'vers': 0}
+                                'vers': 0,
+                                'app_notify': 0}
                         },
                         'owner': 'LSD(A)',
                         'rewrite': 'No',

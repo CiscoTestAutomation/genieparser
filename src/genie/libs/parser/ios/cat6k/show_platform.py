@@ -129,7 +129,7 @@ class ShowModule(ShowModuleSchema):
             if result:
                 group = result.groupdict()
 
-                mod = int(group['mod'])
+                mod = group['mod']
                 ports = int(group['ports'])
                 card_type = group['card_type'].strip()
                 model = group['model']
@@ -152,7 +152,7 @@ class ShowModule(ShowModuleSchema):
             result = r2.match(line)
             if result:
                 group = result.groupdict()
-                mod = int(group['mod'])
+                mod = group['mod']
                 ports = int(group['ports'])
                 card_type = group['card_type'].strip()
                 model = group['model']
@@ -174,7 +174,7 @@ class ShowModule(ShowModuleSchema):
             result = r3.match(line)
             if result:
                 group = result.groupdict()
-                mod = int(group['mod'])
+                mod = group['mod']
                 ports = int(group['ports'])
                 card_type = group['card_type'].strip()
                 model = group['model']
@@ -199,7 +199,7 @@ class ShowModule(ShowModuleSchema):
             if result:
                 group = result.groupdict()
 
-                mod = int(group['mod'])
+                mod = group['mod']
                 mac_from = group['mac_from']
                 mac_to = group['mac_to']
                 hw = group['hw']
@@ -230,7 +230,7 @@ class ShowModule(ShowModuleSchema):
             result = r5.match(line)
             if result:
                 group = result.groupdict()
-                mod = int(group['mod'])
+                mod = group['mod']
                 sub_mod = group['sub_mod']
                 model = group['model']
                 serial = group['serial']
