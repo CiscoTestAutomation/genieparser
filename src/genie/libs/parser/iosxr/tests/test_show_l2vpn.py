@@ -452,5 +452,6 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         parsed_output = obj.parse(location=0, bridge_domain=0)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+
 if __name__ == '__main__':
     unittest.main()

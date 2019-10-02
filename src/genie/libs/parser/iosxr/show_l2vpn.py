@@ -196,94 +196,84 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(ShowL2vpnForwardingBridgeDomainM
 
         return ret_dict
 
+# ================================================================================
+# Parser for 'show l2vpn forwarding protection main-interface location {location}'
+# ================================================================================
 
-class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
-    """Parser for show l2vpn forwarding protection main-interface location <location>"""
-    # TODO schema
+class ShowL2vpnForwardingProtectionMainInterfaceSchema(MetaParser):
+    """Schema for:
+        show l2vpn forwarding protection main-interface location {location}
+    """
 
-    def __init__(self,location=None,**kwargs):
-        assert location is not None
-        self.location = location
-        super().__init__(**kwargs)
+    schema = {
+        'main_interface_id': {
+            Any(): {
+                'instance': {
+                    Any(): {
+                        'state': str,
+                    },
+                }
+            },
+        }
+    }
 
-    cli_command = 'show l2vpn forwarding protection main-interface location {location}'
 
-    def cli(self,output=None):
+class ShowL2vpnForwardingProtectionMainInterface(ShowL2vpnForwardingProtectionMainInterfaceSchema):
+    """Parser for:
+        show l2vpn forwarding protection main-interface location {location}
+    """
+
+    cli_command = ['show l2vpn forwarding protection main-interface location {location}']
+
+    def cli(self, location, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(location=self.location))
+            cmd = self.cli_command[0].format(location=location)
+            out = self.device.execute(cmd)
         else:
             out = output
 
-        result = {
-            'entries' : []
-        }
+        # Main Interface ID                Instance      State
+        p1 = re.compile(r'^Main +Interface +ID +Instance +State$')
 
-        ## Sample Output
-
-        # Main Interface ID                Instance   State
-        # -------------------------------- ---------- ------------
         # VFI:ves-vfi-1                    0          FORWARDING
-        # VFI:ves-vfi-1                    1          BLOCKED
-        # VFI:ves-vfi-2                    0          FORWARDING
-        # VFI:ves-vfi-2                    1          FORWARDING
-        # VFI:ves-vfi-3                    0          FORWARDING
-        # VFI:ves-vfi-3                    1          BLOCKED
-        # VFI:ves-vfi-4                    0          FORWARDING
-        # VFI:ves-vfi-4                    1          FORWARDING
         # PW:10.25.40.40,10001             0          FORWARDING
-        # PW:10.25.40.40,10001             1          BLOCKED
-        # PW:10.25.40.40,10007             0          FORWARDING
-        # PW:10.25.40.40,10007             1          FORWARDING
-        # PW:10.25.40.40,10011             0          FORWARDING
-        # PW:10.25.40.40,10011             1          FORWARDING
-        # PW:10.25.40.40,10017             0          FORWARDING
+        p2 = re.compile(r'^(?P<main_interface_id>\S+) +(?P<instance>\d+) +(?P<state>\S+)$')
 
-        title_found = False
-        header_processed = False
-        field_indice = []
 
-        def _retrieve_fields(line,field_indice):
-            res = []
-            for idx,(start,end) in enumerate(field_indice):
-                if idx == len(field_indice) - 1:
-                    res.append(line[start:].strip())
-                else:
-                    res.append(line[start:end].strip())
-            return res
+        # Init dict
+        ret_dict = {}
 
-        lines = out.splitlines()
-        for idx,line in enumerate(lines):
-            if idx == len(lines) - 1:
-                break
-            line = line.rstrip()
-            if not header_processed:
-                # 1. check proper title header exist
-                if re.match(r"^Main Interface ID\s+Instance\s+State",line):
-                    title_found = True
-                    continue
-                # 2. get dash header line
-                if title_found and re.match(r"^(-+)( +)(-+)( +)(-+)",line):
-                    match = re.match(r"^(-+)( +)(-+)( +)(-+)",line)
-                    start = 0
-                    for field in match.groups():
-                        if '-' in field:
-                            end = start + len(field)
-                            field_indice.append((start,end))
-                            start = end
-                        else:
-                            start += len(field)
-                            end += len(field)
-                    header_processed = True
-                    continue
-            else:
-                interface,instance_id,state = _retrieve_fields(line,field_indice)
-                result['entries'].append({
-                    'interface' : interface,
-                    'instance_id' : instance_id,
-                    'state' : state,
-                })
+        # Init vars
+        start_parsing = False
 
-        return result
+        for line in out.splitlines():
+            line = line.strip()
+
+            if '------' in line or not line:
+                continue
+
+            # Main Interface ID                Instance      State
+            m = p1.match(line)
+            if m:
+                start_parsing = True
+                continue
+
+            # VFI:ves-vfi-1                    0          FORWARDING
+            # PW:10.25.40.40,10001             0          FORWARDING
+            m = p2.match(line)
+            if m and start_parsing:
+                group = m.groupdict()
+
+                main_interface_id = group['main_interface_id']
+                instance = group['instance']
+                state = group['state']
+                ret_dict.setdefault('main_interface_id', {}).setdefault(
+                    main_interface_id, {}).setdefault('instance', {}).setdefault(
+                    instance, {}).setdefault('state', state)
+                continue
+
+        return ret_dict
+
 
 # vim: ft=python ts=8 sw=4 et
 
