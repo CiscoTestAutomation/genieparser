@@ -392,8 +392,9 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
-    * Added ShowL2vpnForwardingProtectionMainInterface for:  
-        * show l2vpn forwarding protection main-interface location {location}
+    * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
+        * show l2vpn forwarding bridge-domain mac-address location {location}
+        * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
 
 --------------------------------------------------------------------------------
                                 MODULE
