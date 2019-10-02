@@ -190,7 +190,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 if result:
                     flag_is_slot = True
                     group = result.groupdict()
-                    slot = int(group['slot'])
+                    slot = group['slot']
 
                     # VS-SUP2T-10G 5 ports Supervisor Engine 2T 10GE w/ CTS Rev. 1.5
                     # WS-SUP720-3BXL 2 ports Supervisor Engine 720 Rev. 5.6
@@ -223,7 +223,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     group = result.groupdict()
                     slot = group['slot']
 
-                    subslot = 0
+                    subslot = "0"
 
                     subslot_dict = slot_dict\
                         .setdefault('subslot', {})\
@@ -245,7 +245,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
                 if result:
                     group = result.groupdict()
                     slot = group['slot']
-                    subslot = int(group['subslot'])
+                    subslot = group['subslot']
 
                     subslot_dict = slot_dict\
                         .setdefault('subslot', {})\
