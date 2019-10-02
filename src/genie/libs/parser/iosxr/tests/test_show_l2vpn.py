@@ -10,7 +10,9 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mrib
-from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnBridgeDomain, ShowL2vpnForwardingBridgeDomainMacAddress)
+from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnBridgeDomain,
+                                                ShowL2vpnForwardingBridgeDomainMacAddress,
+                                                ShowL2vpnForwardingProtectionMainInterface)
 
 # ===========================================
 #  Unit test for 'show l2vpn bridge-domain'
@@ -451,6 +453,145 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         obj = ShowL2vpnForwardingBridgeDomainMacAddress(device=self.device)
         parsed_output = obj.parse(location=0, bridge_domain=0)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+# ====================================================================================
+#  Unit test for 'show l2vpn forwarding protection main-interface location {location}'
+# ====================================================================================
+class TestShowL2vpnForwardingProtectionMainInterface(unittest.TestCase):
+    '''Unit test for 
+        show l2vpn forwarding protection main-interface location {location}
+    '''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'main_interface_id': {
+            'GigabitEthernet0/0/0/0': {
+                'instance': {
+                    '1': {
+                        'state': 'forward'},
+                    '2': {
+                        'state': 'forward'}
+                }
+            },
+            'GigabitEthernet0/0/0/1': {
+                'instance': {
+                    '1': {
+                        'state': 'forward'}
+                }
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        RP/0/RP0/CPU0:router# show l2vpn forwarding protection main-interface location 0/1/0
+        Main Interface ID                Instance    State    
+        -------------------------------- -------------- -------- 
+        GigabitEthernet0/0/0/0           1               forward       
+        GigabitEthernet0/0/0/0           2               forward                
+        GigabitEthernet0/0/0/1           1               forward  
+    '''}
+
+    golden_parsed_output_1 = {
+        'main_interface_id': {
+            'PW:10.25.40.40,10001': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'BLOCKED'}
+                }
+            },
+            'PW:10.25.40.40,10007': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'FORWARDING'}
+                }
+            },
+            'PW:10.25.40.40,10011': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'FORWARDING'}
+                }
+            },
+            'PW:10.25.40.40,10017': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'}
+                }
+            },
+            'VFI:ves-vfi-1': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'BLOCKED'}
+                }
+            },
+            'VFI:ves-vfi-2': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'FORWARDING'}
+                }
+            },
+            'VFI:ves-vfi-3': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'BLOCKED'}
+                }
+            },
+            'VFI:ves-vfi-4': {
+                'instance': {
+                    '0': {
+                        'state': 'FORWARDING'},
+                    '1': {
+                        'state': 'FORWARDING'}
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:router# show l2vpn forwarding protection main-interface location 0/2/1
+        Main Interface ID                Instance   State
+        -------------------------------- ---------- ------------
+        VFI:ves-vfi-1                    0          FORWARDING
+        VFI:ves-vfi-1                    1          BLOCKED
+        VFI:ves-vfi-2                    0          FORWARDING
+        VFI:ves-vfi-2                    1          FORWARDING
+        VFI:ves-vfi-3                    0          FORWARDING
+        VFI:ves-vfi-3                    1          BLOCKED
+        VFI:ves-vfi-4                    0          FORWARDING
+        VFI:ves-vfi-4                    1          FORWARDING
+        PW:10.25.40.40,10001             0          FORWARDING
+        PW:10.25.40.40,10001             1          BLOCKED
+        PW:10.25.40.40,10007             0          FORWARDING
+        PW:10.25.40.40,10007             1          FORWARDING
+        PW:10.25.40.40,10011             0          FORWARDING
+        PW:10.25.40.40,10011             1          FORWARDING
+        PW:10.25.40.40,10017             0          FORWARDING
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2vpnForwardingProtectionMainInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(location='0/1/0')
+
+    def test_missing_argument(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2vpnForwardingProtectionMainInterface(device=self.device)
+        with self.assertRaises(TypeError):
+            parsed_output = obj.parse()
 
 
 if __name__ == '__main__':
