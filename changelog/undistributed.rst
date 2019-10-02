@@ -64,6 +64,9 @@
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
         * update schema to support 'Merged' key
+* IOSXR
+    * Added ShowMplsLabelTableDetail for:
+        'show mpls label table detail'
 
 --------------------------------------------------------------------------------
                                 Segment Routing
@@ -279,7 +282,6 @@
         * Add command 'show ipv6 icmp neighbor {interface} detail vrf {vrf}'
 
 --------------------------------------------------------------------------------
-
                                 Interface
 --------------------------------------------------------------------------------
 * NXOS
@@ -288,6 +290,18 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
+
+--------------------------------------------------------------------------------
+                                IPv6
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowIpv6Neighbors for commands:
+        * 'show ipv6 neighbors'
+        * 'show ipv6 neighbors vrf {vrf}'
+        * 'show ipv6 neighbors {interface}'
+        * 'show ipv6 neighbors vrf {vrf} {interface}'
+    * Updated ShowIpv6NeighborsDetail:
+        * Added 'origin' key to schema
 
 --------------------------------------------------------------------------------
 
@@ -332,6 +346,13 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Updated ShowIpCef to parse outputs without routes
+* IOSXR
+    * Updated ShowL2routeTopology for:
+        * show l2route topology
+    * Updated ShowL2routeEvpnMacAll for:
+        * show l2route evpn mac all
+    * Updated ShowL2routeEvpnMacIpAll for:
+        * show l2route evpn mac-ip all
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -341,6 +362,10 @@
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
         * show l2vpn xconnect
+    * Added ShowL2vpnXconnectSummary for:
+        * show l2vpn xconnect summary
+    * Added ShowL2vpnXconnectMp2mpDetail for:
+        * show l2vpn xconnect mp2mp detail
 
 --------------------------------------------------------------------------------
                                 EVPN
@@ -370,6 +395,9 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
+    * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
+        * show l2vpn forwarding bridge-domain mac-address location {location}
+        * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
 
@@ -396,3 +424,5 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunRouterIsis to support different outputs
+    * Added ShowIsisSegmentRoutingLabelTable for:
+        * show isis segment-routing label table

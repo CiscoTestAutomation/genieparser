@@ -63,107 +63,138 @@ class ShowL2vpnMacLearning(MetaParser):
 
         return result
 
+# ================================================================================
+# Parser for 'show l2vpn forwarding bridge-domain mac-address location {location}'
+# ================================================================================
 
-class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
+class ShowL2vpnForwardingBridgeDomainMacAddressSchema(MetaParser):
+    """Schema for:
+        show l2vpn forwarding bridge-domain mac-address location {location}
+        show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
+    """
+
+    schema = {
+        'mac_table': {
+            Any(): {
+                'mac_address': {
+                    Any(): {
+                        'type': str,
+                        'learned_from': str,
+                        'lc_learned': str,
+                        'resync_age': str,
+                        'mapped_to': str,
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowL2vpnForwardingBridgeDomainMacAddress(ShowL2vpnForwardingBridgeDomainMacAddressSchema):
     """Parser for:
         show l2vpn forwarding bridge-domain mac-address location <location>
         show l2vpn forwarding bridge-domain <bridge_domain> mac-address location <location>
     """
-    # TODO schema
 
-    def __init__(self,location=None,bridge_domain=None,**kwargs) :
-        assert location is not None
-        self.location = location
-        self.bridge_domain = bridge_domain
-        super().__init__(**kwargs)
-
-    cli_command = ['show l2vpn forwarding bridge-domain mac-address location {location}', \
+    cli_command = ['show l2vpn forwarding bridge-domain mac-address location {location}',
                    'show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}']
 
-    def cli(self,output=None):
+    def cli(self, location, bridge_domain=None, output=None):
         if output is None:
-            if self.bridge_domain is None:
-                cmd = self.cli_command[0].format(location=self.location)
+            if bridge_domain:
+                cmd = self.cli_command[1].format(location=location, bridge_domain=bridge_domain)
             else:
-                cmd = self.cli_command[1].format(bridge_domain=self.bridge_domain,location=self.location)
+                cmd = self.cli_command[0].format(location=location)
 
             out = self.device.execute(cmd)
         else:
             out = output
 
-        result = {
-            'entries' : []
-        }
+        # Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to
+        p1 = re.compile(r'^Mac +Address +Type +Learned +from\/Filtered +on +LC +learned +Resync Age\/Last +Change +Mapped +to$')
 
-        ## Sample Output
+        # 1.01.1 EVPN    BD id: 0                    N/A        N/A                    N/A
+        p2 = re.compile(r'^(?P<mac_address>\S+) +(?P<type>\S+) +BD +id: +(?P<bridge_domain>\d+)'
+            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
 
-        #  To Resynchronize MAC table from the Network Processors, use the command...
-        #     l2vpn resynchronize forwarding mac-address-table location <r/s/i>
-        #
-        # Mac Address    Type    Learned from/Filtered on    LC learned Resync Age/Last Change Mapped to
-        # -------------- ------- --------------------------- ---------- ---------------------- --------------
-        # 0021.0001.0001 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 0021.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 0021.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 0021.0001.0005 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 1234.0001.0001 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 1234.0001.0002 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 1234.0001.0003 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 1234.0001.0004 EVPN    BD id: 0                    N/A        N/A                    N/A
-        # 0021.0001.0002 dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
-        # 1234.0001.0005 static  (10.25.40.40, 10007)        N/A        N/A                    N/A
-        # 0021.0002.0005 dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
-        # 1234.0002.0004 static  BE1.2                       N/A        N/A                    N/A
+        # 3.3.5          dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
+        # 0001.0000.0002 dynamic Te0/0/1/0/3.3               N/A        0d 0h 0m 14s           N/A
+        p3 = re.compile(r'^(?P<mac_address>\S+) +(?P<type>\S+) +(?P<learned_from>[\w\/\.\d]+)'
+            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
 
-        title_found = False
-        header_processed = False
-        field_indice = []
+        # 2.2.2          dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
+        p4 = re.compile(r'^(?P<mac_address>\S+) +(?P<type>\w+) +(?P<learned_from>[\d\(\)\.\,\s]+)'
+            ' +(?P<lc_learned>\S+) +(?P<resync_age>[\S\s]+) +(?P<mapped_to>\S+)$')
 
-        def _retrieve_fields(line,field_indice):
-            res = []
-            for idx,(start,end) in enumerate(field_indice):
-                if idx == len(field_indice) - 1:
-                    res.append(line[start:].strip())
-                else:
-                    res.append(line[start:end].strip())
-            return res
+        # Init dict
+        ret_dict = {}
 
-        lines = out.splitlines()
-        for idx,line in enumerate(lines):
-            if idx == len(lines) - 1:
-                break
-            line = line.rstrip()
-            if not header_processed:
-                # 1. check proper title header exist
-                if re.match(r"^Mac Address\s+Type\s+Learned from/Filtered on\s+LC learned\s+Resync Age/Last Change\s+Mapped to",line):
-                    title_found = True
-                    continue
-                # 2. get dash header line
-                if title_found and re.match(r"^(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)",line):
-                    match = re.match(r"^(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)( +)(-+)",line)
-                    start = 0
-                    for field in match.groups():
-                        if '-' in field:
-                            end = start + len(field)
-                            field_indice.append((start,end))
-                            start = end
-                        else:
-                            start += len(field)
-                            end += len(field)
-                    header_processed = True
-                    continue
-            else:
-                mac,mac_type,learned_from,lc_learned,resync_age,mapped_to = _retrieve_fields(line,field_indice)
-                result['entries'].append({
-                    'mac' : mac,
-                    'mac_type' : mac_type,
-                    'learned_from' : learned_from,
-                    'lc_learned' : lc_learned,
-                    'resync_age' : resync_age,
-                    'mapped_to' : mapped_to,
-                })
+        # Init vars
+        start_parsing = False
 
-        return result
+        for line in out.splitlines():
+            line = line.strip()
+
+            if '------' in line or not line:
+                continue
+
+            # Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to
+            m = p1.match(line)
+            if m:
+                start_parsing = True
+                continue
+
+            # 1.01.1 EVPN    BD id: 0                    N/A        N/A                    N/A
+            m = p2.match(line)
+            if m and start_parsing:
+                group = m.groupdict()
+
+                mac_address = group['mac_address']
+                learned_from = 'BD id:' + group['bridge_domain']
+                final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                    learned_from, {}).setdefault('mac_address', {}).setdefault(
+                    mac_address, {})
+
+                keys_list = ['type', 'lc_learned', 'resync_age', 'mapped_to']
+                for key in keys_list:
+                    final_dict.update({key: group[key].strip()})
+                final_dict.update({'learned_from': learned_from})
+                continue
+
+            # 3.3.5          dynamic BE1.2                       N/A        14 Mar 12:46:04        N/A
+            # 0001.0000.0002 dynamic Te0/0/1/0/3.3               N/A        0d 0h 0m 14s           N/A
+            m = p3.match(line)
+            if m and start_parsing:
+                group = m.groupdict()
+
+                mac_address = group['mac_address']
+                learned_from = group['learned_from']
+                final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                    learned_from, {}).setdefault('mac_address', {}).setdefault(
+                    mac_address, {})
+
+                keys_list = ['type', 'learned_from', 'lc_learned', 'resync_age', 'mapped_to']
+                for key in keys_list:
+                    final_dict.update({key: group[key].strip()})
+                continue
+
+            # 2.2.2          dynamic (10.25.40.40, 10007)        N/A        14 Mar 12:46:04        N/A
+            m = p4.match(line)
+            if m and start_parsing:
+                group = m.groupdict()
+
+                mac_address = group['mac_address']
+                learned_from = group['learned_from'].strip()
+                final_dict = ret_dict.setdefault('mac_table', {}).setdefault(
+                    learned_from, {}).setdefault('mac_address', {}).setdefault(
+                    mac_address, {})
+
+                keys_list = ['type', 'learned_from', 'lc_learned', 'resync_age', 'mapped_to']
+                for key in keys_list:
+                    final_dict.update({key: group[key].strip()})
+                continue
+
+        return ret_dict
 
 # ================================================================================
 # Parser for 'show l2vpn forwarding protection main-interface location {location}'
