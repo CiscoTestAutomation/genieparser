@@ -14,7 +14,7 @@ class test_show_module(unittest.TestCase):
 
     golden_parsed_output_1 = {
         "slot": {
-            1: {
+            "1": {
                 "rp": {
                     "card_type": "Catalyst 6000 supervisor 2 (Active)",
                     "fw_ver": "6.1(3)",
@@ -42,7 +42,7 @@ class test_show_module(unittest.TestCase):
                     "sw_ver": "7.5(0.6)HUB9",
                 }
             },
-            2: {
+            "2": {
                 "rp": {
                     "card_type": "Supervisor-Other",
                     "fw_ver": "Unknown",
@@ -56,7 +56,7 @@ class test_show_module(unittest.TestCase):
                     "sw_ver": "Unknown",
                 }
             },
-            3: {
+            "3": {
                 "lc": {
                     "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                     "fw_ver": "12.1(5r)E1",
@@ -78,7 +78,7 @@ class test_show_module(unittest.TestCase):
                     "sw_ver": "12.1(13)E3",
                 }
             },
-            4: {
+            "4": {
                 "lc": {
                     "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
                     "fw_ver": "12.1(5r)E1",
@@ -100,7 +100,7 @@ class test_show_module(unittest.TestCase):
                     "sw_ver": "12.1(13)E3",
                 }
             },
-            5: {
+            "5": {
                 "other": {
                     "card_type": "Switching Fabric Module-136 (Active)",
                     "fw_ver": "6.1(3)",
@@ -114,7 +114,7 @@ class test_show_module(unittest.TestCase):
                     "sw_ver": "7.5(0.6)HUB9",
                 }
             },
-            6: {
+            "6": {
                 "lc": {
                     "card_type": "1 port 10-Gigabit Ethernet Module",
                     "fw_ver": "6.3(1)",
