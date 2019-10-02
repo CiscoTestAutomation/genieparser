@@ -6,7 +6,8 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 from genie.libs.parser.iosxr.show_xconnect import (ShowL2vpnXconnect,
-                                                   ShowL2vpnXconnectDetail)
+                                                   ShowL2vpnXconnectDetail,
+                                                   ShowL2vpnXconnectSummary)
 
 
 # ==================================================
@@ -723,6 +724,108 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         obj = ShowL2vpnXconnectDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+# ==================================================
+#  Unit test for 'show l2vpn xconnect summary'
+# ==================================================
+class TestShowL2vpnXconnectSummary(unittest.TestCase):
+    """Unit test for 'show l2vpn xconnect summary' """
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'number_of_groups': {
+            'total': 0,
+        },
+        'number_of_xconnects': {
+            'total': 0,
+            'up': 0,
+            'down': 0,
+            'unresolved': 0,
+            'partially_programmed': 0,
+            'ac_pw': 0,
+            'ac_ac': 0,
+            'pw_pw': 0,
+            'monitor_session_pw': 0,
+        },
+        'number_of_admin_down_segments': {
+            'total': 0,
+        },
+        'number_of_mp2mp_xconnects': {
+            'total': 0,
+            'up': 0,
+            'down': 0,
+            'advertised': 0,
+            'non_advertised': 0,
+        },
+        'number_of_ce_connections': {
+            'total': 0,
+            'advertised': 0,
+            'non_advertised': 0,
+        },
+        'backup_pw': {
+            'configured': 0,
+            'up': 0,
+            'down': 0,
+            'admin_down': 0,
+            'unresolved': 0,
+            'standby': 0,
+            'standby_ready': 0,
+        },
+        'backup_interface': {
+            'configured': 0,
+            'up': 0,
+            'down': 0,
+            'admin_down': 0,
+            'unresolved': 0,
+            'standby': 0,
+        },
+    }
+
+    golden_output = {'execute.return_value': '''
+        Device#show l2vpn xconnect summary
+        Thu Sep 26 11:00:09.210 EDT
+        Number of groups: 0
+        Number of xconnects: 0
+        Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
+        AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
+        Number of Admin Down segments: 0
+        Number of MP2MP xconnects: 0
+        Up 0 Down 0
+        Advertised: 0 Non-Advertised: 0
+        Number of CE Connections: 0
+        Advertised: 0 Non-Advertised: 0
+        Backup PW:
+        Configured   : 0
+        UP           : 0
+        Down         : 0
+        Admin Down   : 0
+        Unresolved   : 0
+        Standby      : 0
+        Standby Ready: 0
+        Backup Interface:
+        Configured   : 0
+        UP           : 0
+        Down         : 0
+        Admin Down   : 0
+        Unresolved   : 0
+        Standby      : 0
+        Device#
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2vpnXconnectSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowL2vpnXconnectSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

@@ -977,3 +977,222 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                 segment2_dict['status'] = str(group['status_segment2'])
 
         return ret_dict
+
+"""Schema for 'show l2vpn xconnect summary'"""
+class ShowL2vpnXconnectSummarySchema(MetaParser):
+    schema = {
+        'number_of_groups': {
+            'total': int,
+        },
+        'number_of_xconnects': {
+            'total': int,
+            'up': int,
+            'down': int,
+            'unresolved': int,
+            'partially_programmed': int,
+            'ac_pw': int,
+            'ac_ac': int,
+            'pw_pw': int,
+            'monitor_session_pw': int,
+        },
+        'number_of_admin_down_segments': {
+            'total': int
+        },
+        'number_of_mp2mp_xconnects': {
+            'total': int,
+            'up': int,
+            'down': int,
+            'advertised': int,
+            'non_advertised': int,
+        },
+        'number_of_ce_connections': {
+            'total': int,
+            'advertised': int,
+            'non_advertised': int
+        },
+        'backup_pw': {
+            'configured': int,
+            'up': int,
+            'down': int,
+            'admin_down': int,
+            'unresolved': int,
+            'standby': int,
+            'standby_ready': int,
+        },
+        'backup_interface': {
+            'configured': int,
+            'up': int,
+            'down': int,
+            'admin_down': int,
+            'unresolved': int,
+            'standby': int,
+        }
+    }
+
+class ShowL2vpnXconnectSummary(ShowL2vpnXconnectSummarySchema):
+    """Parser for show l2vpn xconnect summary"""
+    
+    cli_command = 'show l2vpn xconnect summary'
+    def cli(self, output=None):
+        '''parsing mechanism: cli
+        '''
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+
+        # Number of groups: 0
+        p1 = re.compile(r'^Number +of +groups: +(?P<number_of_groups>\d+)$')
+        
+        # Number of xconnects: 0
+        p2 = re.compile(r'^Number +of +xconnects: +(?P<number_of_xconnects>\d+)$')
+
+        # Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
+        p3 = re.compile(r'^Up: (?P<up>\d+) +Down: +(?P<down>\d+) +Unresolved: +'
+            '(?P<unresolved>\d+) +Partially-programmed: +(?P<partially_programmed>\d+)$')
+
+        # AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
+        p4 = re.compile(r'^AC-PW: +(?P<ac_pw>\d+) +AC-AC: +(?P<ac_ac>\d+) +PW-PW: +'
+            '(?P<pw_pw>\d+) +Monitor-Session-PW: +(?P<monitor_session_pw>\d+)$')
+
+        # Number of Admin Down segments: 0
+        p5 = re.compile(r'^Number +of +Admin +Down +segments: +'
+            '(?P<number_of_admin_down_segments>\d+)$')
+
+        # Number of MP2MP xconnects: 0
+        p6 = re.compile(r'^Number +of +MP2MP +xconnects: +(?P<number_of_mp2mp_xconnects>\d+)$')
+        
+        # Up 0 Down 0
+        p7 = re.compile(r'^Up +(?P<up>\d+) +Down +(?P<down>\d+)$')
+
+        # Advertised: 0 Non-Advertised: 0
+        p8 = re.compile(r'^Advertised: +(?P<advertised>\d+) +Non-Advertised: +'
+            '(?P<non_advertised>\d+)$')
+
+        # Number of CE Connections: 0
+        p9 = re.compile(r'^Number +of +CE +Connections: +(?P<number_of_ce_connections>\d+)$')
+
+        # Backup PW:
+        p10 = re.compile(r'^Backup +PW:$')
+
+        # Backup Interface: 
+        p11 = re.compile(r'^Backup +Interface:$')
+        
+        # Configured   : 0
+        # UP           : 0
+        # Down         : 0
+        # Admin Down   : 0
+        # Unresolved   : 0
+        # Standby      : 0
+        # Standby Ready: 0
+        p12 = re.compile(r'^(?P<key>[\S ]+): +(?P<value>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Number of groups: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_groups = int(group['number_of_groups'])
+                number_of_groups_dict = ret_dict.setdefault('number_of_groups', {})
+                number_of_groups_dict.update({'total': number_of_groups})
+                continue
+            
+            # # Number of xconnects: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_xconnects = int(group['number_of_xconnects'])
+                number_of_xconnects_dict = ret_dict.setdefault('number_of_xconnects', {})
+                number_of_xconnects_dict.update({'total': number_of_xconnects})
+                continue
+            
+            # Up: 0  Down: 0  Unresolved: 0 Partially-programmed: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_xconnects_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # AC-PW: 0  AC-AC: 0  PW-PW: 0 Monitor-Session-PW: 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_xconnects_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # Number of Admin Down segments: 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_admin_down_segments = int(group['number_of_admin_down_segments'])
+                number_of_admin_down_segments_dict = ret_dict.\
+                    setdefault('number_of_admin_down_segments', {})
+                number_of_admin_down_segments_dict.\
+                    update({'total': number_of_admin_down_segments})
+                continue
+            
+            # Number of MP2MP xconnects: 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_mp2mp_xconnects = int(group['number_of_mp2mp_xconnects'])
+                xconnects_dict = ret_dict.setdefault('number_of_mp2mp_xconnects', {})
+                xconnects_dict.update({'total': number_of_mp2mp_xconnects})
+                continue
+            
+            # Up 0 Down 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                xconnects_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # Advertised: 0 Non-Advertised: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                xconnects_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # Number of CE Connections: 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                number_of_ce_connections = int(group['number_of_ce_connections'])
+                xconnects_dict = ret_dict.setdefault('number_of_ce_connections', {})
+                xconnects_dict.update({'total': number_of_ce_connections})
+                continue
+            
+            # Backup PW:
+            m = p10.match(line)
+            if m:
+                current_dict = ret_dict.setdefault('backup_pw', {})
+                continue
+            
+            # Backup Interface:
+            m = p11.match(line)
+            if m:
+                current_dict = ret_dict.setdefault('backup_interface', {})
+                continue
+
+            # Configured   : 0
+            # UP           : 0
+            # Down         : 0
+            # Admin Down   : 0
+            # Unresolved   : 0
+            # Standby      : 0
+            # Standby Ready: 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].strip().lower().replace(' ', '_')
+                value = int(group['value'])
+                current_dict.update({key: value})
+                continue
+        
+        return ret_dict
