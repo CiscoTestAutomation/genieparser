@@ -390,3 +390,9 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunningConfigNtp to support different vrfs output
+
+--------------------------------------------------------------------------------
+                                ISIS
+--------------------------------------------------------------------------------
+* IOSXR
+    * Fixed parser ShowRunRouterIsis to support different outputs
