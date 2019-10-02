@@ -33,14 +33,14 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all vrf all ipv4 unicast'
     * 'show bgp instance all vrf all ipv6 unicast'
     * 'show bgp instances'
-
-    * 'show bgp sessions'
     * 'show bgp vrf-db vrf all'
     * 'show bgp l2vpn evpn'
     * 'show bgp l2vpn evpn advertised'
     * 'show bgp l2vpn evpn neighbors'
     * 'show bgp l2vpn evpn neighbors <neighbor>'
-    
+    * 'show bgp sessions'
+    * 'show bgp instance all sessions'
+    * 'show bgp instance {instance} sessions'
 """
 
 # Python
@@ -5158,24 +5158,127 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
 ################################################################################
 
+"""Schema for 'show bgp sessions'"""
+class ShowBgpSessionsSchema(MetaParser):
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'neighbors': {
+                            Any(): {
+                                'spk': int,
+                                'as_number': int,
+                                'in_q': int,
+                                'out_q': int,
+                                'nbr_state': str,
+                                'nsr_state': str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 # ==============================
 # Parser for 'show bgp sessions'
 # ==============================
 
-class ShowBgpSessions(MetaParser):
+class ShowBgpSessions(ShowBgpSessionsSchema):
     """Parser for show bgp sessions"""
 
     # TODO schema
     cli_command = 'show bgp sessions'
-    def cli(self):
-        """parsing mechanism: cli
-        """
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
+    def cli(self, output=None):
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+        instance = 'default'
 
-        return kl
+        # 3.3.3.3         default                 0 65000     0     0  Established  None
+        # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
 
+        p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
+            '(?P<as_number>\d+) +(?P<in_q>\d+) +(?P<out_q>\d+) +'
+            '(?P<nbr_state>\w+) +(?P<nsr_state>\w+)$')
+        
+        # BGP instance 0: 'default'
+        p2 = re.compile(r'^BGP +instance +\d+: +\'(?P<instance>\S+)\'$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 3.3.3.3         default                 0 65000     0     0  Established  None
+            # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+                neighbor = group['neighbor']
+                spk = int(group['spk'])
+                as_number = int(group['as_number'])
+                in_q = int(group['in_q'])
+                out_q = int(group['out_q'])
+                nbr_state = group['nbr_state']
+                nsr_state = group['nsr_state']
+
+                neighbor_dict = ret_dict.setdefault('instance', {}). \
+                                    setdefault(instance, {}). \
+                                    setdefault('vrf', {}). \
+                                    setdefault(vrf, {}). \
+                                    setdefault('neighbors', {}). \
+                                    setdefault(neighbor, {})
+
+                neighbor_dict.update({'spk': spk})
+                neighbor_dict.update({'as_number': as_number})
+                neighbor_dict.update({'in_q': in_q})
+                neighbor_dict.update({'out_q': out_q})
+                neighbor_dict.update({'nbr_state': nbr_state})
+                neighbor_dict.update({'nsr_state': nsr_state})
+                continue
+            
+            # BGP instance 0: 'default'
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group['instance']
+                continue
+
+        return ret_dict
+
+# ===========================================
+# Parser for 
+#   * 'show bgp instance {instance} sessions'
+# ===========================================
+
+class ShowBgpInstanceSessions(ShowBgpSessions):
+    """Parser for show bgp instance {instance} sessions"""
+
+    cli_command = 'show bgp instance {instance} sessions'
+    def cli(self, instance, output=None):
+        out = output if output else self.device.execute(
+                self.cli_command.format(instance=instance))
+        return super().cli(output=out)
+
+# ===========================================
+# Parser for 
+#   * 'show bgp instance all sessions'
+# ===========================================
+
+class ShowBgpInstanceAllSessions(ShowBgpSessions):
+    """Parser for show bgp instance all sessions"""
+
+    cli_command = 'show bgp instance all sessions'
+    def cli(self, output=None):
+        out = output if output else self.device.execute(
+                self.cli_command)
+        return super().cli(output=out)
 
 # ====================================
 # Parser for 'show bgp vrf-db vrf all'
@@ -5588,7 +5691,8 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 index_dict.update({'next_hop': next_hop})
                 index_dict.update({'origin_codes': origin_codes})
                 index_dict.update({'status_codes': status_codes})
-                index_dict.update({'path_type': path_type})
+                if m.groupdict()['path_type']:
+                    index_dict.update({'path_type': path_type})
 
                 try:
                     # Set values of status_codes and path_type from prefix line
@@ -6123,7 +6227,7 @@ class ShowBgpL2vpnEvpnAdvertised(MetaParser):
             #    ORG AS EXTCOMM
             m = re.match(r'^(?: +' + re_attr_string + r')+$', line)
             if m:
-                attr_info['attributes'] = set(line.split())
+                attr_info['attributes'] = list(dict.fromkeys(line.split()))
                 continue
 
             #    origin: IGP

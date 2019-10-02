@@ -1099,11 +1099,13 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +(?:on +(?P<interface>[\w\.\/\-]+), )?(?P<age>[ \w\.\:]+) +ago$')
 
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
+        # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, merge-labels
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
         # * 10.101.146.10, from 10.101.146.10, 2d07h ago
-        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+),)? '
-                         '+(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, '
-                         '+(?P<rib_labels>prefer-non-rib-labels), +(?P<merge_labels>merge-labels))?$')
+        # * 10.255.207.129
+        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+)?, +'
+                         '(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
+                         '(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
        
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'
@@ -1423,6 +1425,7 @@ class ShowIpCefSchema(MetaParser):
                                 Optional('epoch'): int,
                                 Optional('per_destination_sharing'): bool,
                                 Optional('sr_local_label_info'): str,
+                                Optional('flags'): list,
                             },
                         },
                     },
@@ -1509,6 +1512,9 @@ class ShowIpCef(ShowIpCefSchema):
 
         # repair: attached-nexthop 10.0.0.9 GigabitEthernet3
         p6 = re.compile(r'^repair: +(?P<repair>(.*))$')
+
+        # 0.0.0.0/0, epoch 3, flags [default route handler, default route]
+        p7 = re.compile(r'(?P<prefix>\S+)\,\s*epoch\s*(?P<epoch>\d+)\,\s*flags\s*\[(?P<flags>[\w\s\,]+)\]')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1623,6 +1629,31 @@ class ShowIpCef(ShowIpCefSchema):
             m = p6.match(line)
             if m:
                 nexthop_dict.update({'repair': m.groupdict()['repair']})
+                continue
+
+            # 0.0.0.0/0, epoch 3, flags [default route handler, default route]
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                prefix = group['prefix']
+                epoch = int(group['epoch'])
+                flags = group['flags']               
+
+                if ':' in prefix:
+                    address_family = 'ipv6'
+                else:
+                    address_family = 'ipv4'
+
+                prefix_dict = result_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {}). \
+                    setdefault('prefix', {}). \
+                    setdefault(prefix, {})
+
+                prefix_dict['epoch'] = epoch
+                prefix_dict['flags'] = list(map(str.strip, flags.split(',')))
+
                 continue
 
         return result_dict

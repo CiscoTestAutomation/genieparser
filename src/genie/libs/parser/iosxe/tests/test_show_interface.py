@@ -15695,6 +15695,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                  },
                  "enabled": True,
                  "nd": {
+                      "suppress": False,
                       "dad_attempts": 1,
                       "ns_retransmit_interval": 1000,
                       "dad_enabled": True,
@@ -15734,6 +15735,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                  },
                  "enabled": True,
                  "nd": {
+                      "suppress": False,
                       "dad_attempts": 1,
                       "ns_retransmit_interval": 1000,
                       "dad_enabled": True,
@@ -15768,18 +15770,13 @@ class test_show_ipv6_interface(unittest.TestCase):
                  "unnumbered": {
                       "interface_ref": "Loopback0",
                  },
-                 "nd": {
-                      "dad_attempts": 1,
-                      "reachable_time": 30000,
-                      "using_time": 30000,
-                      "dad_enabled": True
-                 },
                  "icmp": {
                       "unreachables": "sent",
                       "redirects": True,
                       "error_messages_limited": 100
                  },
                  "nd": {
+                      "suppress": False,
                       "dad_attempts": 1,
                       "dad_enabled": True,
                       "reachable_time": 30000,
@@ -15881,6 +15878,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     'redirects': True,
                     'unreachables': 'sent'},
                 'nd': {
+                    'suppress': True,
                     'dad_enabled': True,
                     'dad_attempts': 1,
                     'reachable_time': 30000,
@@ -15917,6 +15915,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     'redirects': True,
                     'unreachables': 'sent'},
                 'nd': {
+                    'suppress': False,
                     'dad_enabled': True,
                     'dad_attempts': 1,
                     'reachable_time': 30000,
@@ -15955,6 +15954,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     'redirects': True,
                     'unreachables': 'sent'},
                 'nd': {
+                    'suppress': False,
                     'dad_enabled': True,
                     'dad_attempts': 1,
                     'reachable_time': 30000,
@@ -15992,6 +15992,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     'redirects': True,
                     'unreachables': 'sent'},
                 'nd': {
+                    'suppress': False,
                     'dad_enabled': True,
                     'dad_attempts': 1,
                     'reachable_time': 30000,
@@ -16030,6 +16031,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     'redirects': True,
                     'unreachables': 'sent'},
                 'nd': {
+                    'suppress': True,
                     'reachable_time': 30000,
                     'using_time': 30000,
                     'advertised_reachable_time': 0,
@@ -16063,6 +16065,7 @@ class test_show_ipv6_interface(unittest.TestCase):
                     'redirects': True,
                     'unreachables': 'sent'},
                 'nd': {
+                    'suppress': True,
                     'reachable_time': 30000,
                     'using_time': 30000,
                     'advertised_reachable_time': 0,

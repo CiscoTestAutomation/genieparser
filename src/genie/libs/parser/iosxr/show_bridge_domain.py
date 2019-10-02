@@ -162,68 +162,6 @@ class ShowL2VpnBridgeDomainBrief(MetaParser):
 
         return kl
 
-
-class ShowL2VpnBridgeDomain(MetaParser):
-    """Parser for show l2vpn bridge-domain"""
-    # parser class - implements detail parsing mechanisms for cli, xml, and yang output.
-
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    """
-    schema = {'TODO:': {
-                        'module': {
-                                 Any(): {
-                                         'bios_compile_time': str,
-                                         'bios_version': str,
-                                         'image_compile_time': str,
-                                         'image_version': str,
-                                         'status': str},}},
-              'hardware': {
-                        'bootflash': str,
-                        'chassis': str,
-                        'cpu': str,
-                        'device_name': str,
-                        'memory': str,
-                        'model': str,
-                        'processor_board_id': str,
-                        'slots': str,
-                        Any(): str,},
-              'kernel_uptime': {
-                        'days': str,
-                        'hours': str,
-                        'minutes': str,
-                        'seconds': str},
-              'reason': str,
-              'software': {
-                        'bios': str,
-                        'bios_compile_time': str,
-                        'kickstart': str,
-                        'kickstart_compile_time': str,
-                        'kickstart_image_file': str,
-                        'system': str,
-                        'system_compile_time': str,
-                        'system_image_file': str},
-              'system_version': str,
-              Any(): str,}
-    """
-
-    def cli(self):
-        '''parsing mechanism: cli
-        '''
-
-        cmd = 'show l2vpn bridge-domain'
-
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=cmd)
-
-        return kl
-
-
 class ShowL2VpnBridgeDomainDetail(MetaParser):
     """Parser for show l2vpn bridge-domain detail"""
     # parser class - implements detail parsing mechanisms for cli, xml, and yang output.

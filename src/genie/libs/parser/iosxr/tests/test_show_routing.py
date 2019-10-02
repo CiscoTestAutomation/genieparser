@@ -205,6 +205,116 @@ class test_show_route_ipv4(unittest.TestCase):
         },
     }
 
+    golden_output_2 = {'execute.return_value': '''
+        show route ipv4
+
+        Fri Sep 27 17:00:03.303 EDT
+
+        Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+               D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+               N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+               E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+               i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+               ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+               U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+               A - access/subscriber, a - Application route
+               M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+        Gateway of last resort is not set
+
+        i L2 1.1.1.32/32 [115/100030] via 2.2.2.3, 1d06h, HundredGigE0/0/1/1 (!)
+                             [115/100020] via 2.2.2.1, 1d06h, Bundle-Ether1
+        i L2 1.1.1.33/32 [115/100030] via 2.2.2.3, 1d06h, HundredGigE0/0/1/1 (!)
+                             [115/100020] via 2.2.2.1, 1d06h, Bundle-Ether1
+        i L2 1.1.1.34/32 [115/100030] via 2.2.2.3, 1d06h, HundredGigE0/0/1/1 (!)
+                             [115/100020] via 2.2.2.1, 1d06h, Bundle-Ether1
+    '''
+}
+    golden_parsed_output_2 = {
+    "vrf": {
+        "default": {
+            "address_family": {
+                "ipv4": {
+                    "routes": {
+                        "1.1.1.32/32": {
+                            "route": "1.1.1.32/32",
+                            "active": True,
+                            "metric": 100020,
+                            "route_preference": 115,
+                            "source_protocol_codes": "i L2 (!)",
+                            "source_protocol": "isis",
+                            "next_hop": {
+                                "next_hop_list": {
+                                    1: {
+                                        "index": 1,
+                                        "next_hop": "2.2.2.3",
+                                        "updated": "1d06h",
+                                        "outgoing_interface": "HundredGigE0/0/1/1"
+                                    },
+                                    2: {
+                                        "index": 2,
+                                        "next_hop": "2.2.2.1",
+                                        "updated": "1d06h",
+                                        "outgoing_interface": "Bundle-Ether1"
+                                    }
+                                }
+                            }
+                        },
+                        "1.1.1.33/32": {
+                            "route": "1.1.1.33/32",
+                            "active": True,
+                            "metric": 100020,
+                            "route_preference": 115,
+                            "source_protocol_codes": "i L2 (!)",
+                            "source_protocol": "isis",
+                            "next_hop": {
+                                "next_hop_list": {
+                                    1: {
+                                        "index": 1,
+                                        "next_hop": "2.2.2.3",
+                                        "updated": "1d06h",
+                                        "outgoing_interface": "HundredGigE0/0/1/1"
+                                    },
+                                    2: {
+                                        "index": 2,
+                                        "next_hop": "2.2.2.1",
+                                        "updated": "1d06h",
+                                        "outgoing_interface": "Bundle-Ether1"
+                                    }
+                                }
+                            }
+                        },
+                        "1.1.1.34/32": {
+                            "route": "1.1.1.34/32",
+                            "active": True,
+                            "metric": 100020,
+                            "route_preference": 115,
+                            "source_protocol_codes": "i L2 (!)",
+                            "source_protocol": "isis",
+                            "next_hop": {
+                                "next_hop_list": {
+                                    1: {
+                                        "index": 1,
+                                        "next_hop": "2.2.2.3",
+                                        "updated": "1d06h",
+                                        "outgoing_interface": "HundredGigE0/0/1/1"
+                                    },
+                                    2: {
+                                        "index": 2,
+                                        "next_hop": "2.2.2.1",
+                                        "updated": "1d06h",
+                                        "outgoing_interface": "Bundle-Ether1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
     golden_output_2_with_vrf = {'execute.return_value':'''
     RP/0/RP0/CPU0:PE1#show route vrf all ipv4
 
@@ -574,6 +684,12 @@ class test_show_route_ipv4(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_show_route_ipv4_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteIpv4(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
     def test_show_route_ipv4_2_with_vrf(self):
         self.maxDiff = None
