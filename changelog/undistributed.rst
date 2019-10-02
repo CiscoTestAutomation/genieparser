@@ -343,6 +343,8 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:  
         * show l2vpn bridge-domain
+    * Added ShowL2vpnMacLearning for:
+        * show l2vpn mac-learning <mac_type> all location <location>
 
 --------------------------------------------------------------------------------
                                 MODULE
