@@ -221,7 +221,7 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
                 'system_id':{
                     'R7':{
                         'type':{
-                            'L2': {
+                            2: {
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
                                 'snpa': '5e00.c006.0007',
@@ -283,7 +283,7 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
                 'system_id': {
                     'R7':{
                         'type':{
-                            'L2':{
+                            2:{
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
                                 'priority': 64,
