@@ -354,6 +354,8 @@
         * show l2vpn xconnect
     * Added ShowL2vpnXconnectSummary for:
         * show l2vpn xconnect summary
+    * Added ShowL2vpnXconnectMp2mpDetail for:
+        * show l2vpn xconnect mp2mp detail
 
 --------------------------------------------------------------------------------
                                 EVPN
