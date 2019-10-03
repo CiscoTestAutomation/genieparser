@@ -299,14 +299,14 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                         'state': str,
                         'shg_id': int,
                         'mst_i': int,
-                        'aging': int,
+                        'mac_aging': int,
                         'mac_limit': int,
-                        'action': str,
-                        'notification': str,
+                        'mac_action': str,
+                        'mac_notification': str,
                         'filter_mac_address': int,
                         'ac': {
-                            'ac': int,
-                            'ac_up': int,
+                            'total': int,
+                            'up': int,
                             'interfaces': {
                                 Any(): {
                                     'state': str,
@@ -332,8 +332,8 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             }
                         },
                         'pw': {
-                            'pw': int,
-                            'pw_up': int
+                            'total': int,
+                            'up': int
                         },
                     },
                 }
@@ -357,14 +357,14 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                         'state': str,
                         Optional('shg_id'): int,
                         Optional('mst_i'): int,
-                        Optional('aging'): int,
+                        Optional('mac_aging_time'): int,
                         Optional('mac_limit'): int,
-                        Optional('action'): str,
-                        Optional('notification'): str,
+                        Optional('mac_limit_action'): str,
+                        Optional('mac_limit_notification'): str,
                         Optional('filter_mac_address'): int,
                         'ac': {
-                            'ac': int,
-                            'ac_up': int,
+                            'num_ac': int,
+                            'num_ac_up': int,
                             Optional('interfaces'): {
                                 Any(): {
                                     'state': str,
@@ -375,7 +375,7 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             }
                         },
                         Optional('vfi'): {
-                            'vfi': int,
+                            'num_vfi': int,
                             Any(): {
                                 'neighbor': {
                                     Any(): {
@@ -390,8 +390,8 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             }
                         },
                         'pw': {
-                            'pw': int,
-                            'pw_up': int,
+                            'num_pw': int,
+                            'num_pw_up': int,
                         },
                     },
                 }
@@ -418,8 +418,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
             'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
 
         # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
-        p2 = re.compile(r'^Aging: +(?P<aging>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), '
-            '+Action: +(?P<action>\w+), +Notification: +(?P<notification>\w+)$')
+        p2 = re.compile(r'^Aging: +(?P<mac_aging_time>\d+) s, +MAC +limit: +(?P<mac_limit>\d+), '
+            '+Action: +(?P<mac_limit_action>\w+), +Notification: +(?P<mac_limit_notification>\w+)$')
 
         # Filter MAC addresses: 0
         p3 = re.compile(r'^Filter +MAC +addresses: +(?P<filter_mac_address>\d+)$')
@@ -494,15 +494,15 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 pw_up = int(group['pw_up'])
                 
                 ac_dict = bridge_domain_dict.setdefault('ac', {})
-                ac_dict.update({'ac': ac})
-                ac_dict.update({'ac_up': ac_up})
+                ac_dict.update({'num_ac': ac})
+                ac_dict.update({'num_ac_up': ac_up})
 
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {})
-                vfi_dict.update({'vfi': vfi})
+                vfi_dict.update({'num_vfi': vfi})
 
                 pw_dict = bridge_domain_dict.setdefault('pw', {})
-                pw_dict.update({'pw': pw})
-                pw_dict.update({'pw_up': pw_up})
+                pw_dict.update({'num_pw': pw})
+                pw_dict.update({'num_pw_up': pw_up})
                 continue
             
             # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
@@ -551,8 +551,6 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 continue
 
             # g1/bd1                           0     up         1/1            1/1 
-            # p8 = re.compile(r'^(?P<bridge_group>\S+)\/(?P<bridge_domain_name>\S+) +(?P<id>\d+) +'
-            #     '(?P<state>\w+) +(?P<ac>\d+)\/(?P<ac_up>\d+) +(?P<pw>\d+)\/(?P<pw_up>\d+)$')
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -574,12 +572,12 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 bridge_domain_dict.update({'state': state})
 
                 ac_dict = bridge_domain_dict.setdefault('ac', {})
-                ac_dict.update({'ac': ac})
-                ac_dict.update({'ac_up': ac_up})
+                ac_dict.update({'num_ac': ac})
+                ac_dict.update({'num_ac_up': ac_up})
 
                 pw_dict = bridge_domain_dict.setdefault('pw', {})
-                pw_dict.update({'pw': pw})
-                pw_dict.update({'pw_up': pw_up})
+                pw_dict.update({'num_pw': pw})
+                pw_dict.update({'num_pw_up': pw_up})
 
                 continue
         return ret_dict
@@ -713,31 +711,32 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         'id': int,
                         'state': str,
                         'shg_id': int,
+                        Optional('mode'): str,
                         Optional('mst_i'): int,
                         Optional('mac_learning'): str,
                         Optional('mac_withdraw'): str,
                         Optional('flooding'): {
-                            'broadcast': str,
-                            'multicast': str,
+                            'broadcast_multicast': str,
                             'unknown_unicast': str
                         },
                         Optional('mac_aging_time'): int,
-                        Optional('type'): str,
+                        Optional('mac_aging_type'): str,
                         Optional('mac_limit'): int,
-                        Optional('action'): str,
-                        Optional('notification'): str,
+                        Optional('mac_limit_action'): str,
+                        Optional('mac_limit_notification'): str,
                         Optional('mac_limit_reached'): str,
                         Optional('security'): str,
                         Optional('dhcp_v4_snooping'): str,
                         'mtu': int,
                         Optional('filter_mac_address'): int,
                         'ac': {
-                            'ac': int,
-                            'ac_up': int,
+                            'num_ac': int,
+                            'num_ac_up': int,
                             Optional('interfaces'): {
                                 Any(): {
                                     'state': str,
                                     'type': str,
+                                    Optional('mac_aging_type'): str,
                                     Optional('mtu'): int,
                                     'xc_id': str,
                                     'interworking': str,
@@ -745,14 +744,13 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Optional('mst_i_state'): str,
                                     Optional('mac_learning'): str,
                                     Optional('flooding'): {
-                                        'broadcast': str,
-                                        'multicast': str,
+                                        'broadcast_multicast': str,
                                         'unknown_unicast': str
                                     },
                                     Optional('mac_aging_time'): int,
                                     Optional('mac_limit'): int,
-                                    Optional('action'): str,
-                                    Optional('notification'): str,
+                                    Optional('mac_limit_action'): str,
+                                    Optional('mac_limit_notification'): str,
                                     Optional('mac_limit_reached'): str,
                                     Optional('security'): str,
                                     Optional('dhcp_v4_snooping'): str,
@@ -771,7 +769,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                             }
                         },
                         Optional('vfi'): {
-                            'vfi': int,
+                            'num_vfi': int,
                             Any(): {
                                 'neighbor': {
                                     Any(): {
@@ -785,8 +783,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                 'pw_type': str,
                                                 'control_word': str,
                                                 'interworking': str,
-                                                Optional('pw_backup'): str,
-                                                Optional('delay'): int,
+                                                Optional('pw_backup_disable_delay'): int,
                                                 'sequencing': str,
                                                 'mpls': {
                                                     Any(): {
@@ -802,7 +799,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                     'send': int,
                                                     'receive': int,
                                                 },
-                                                Optional('static_mac_addresses'): list,
+                                                Optional('static_mac_address'): list,
                                                 Optional('statistics'): {
                                                     'packet_totals': {
                                                         'receive': int,
@@ -813,20 +810,21 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                         'send': int,
                                                     },
                                                 },
-                                                Optional('vfi_statistics'): {
-                                                    'drops': str,
-                                                    'vlan': int,
-                                                    'illegal_length': int 
-                                                }
                                             }
                                         }
                                     }
-                                }
+                                },
+                                Optional('vfi_statistics'): {
+                                    'drop': {
+                                        'illegal_vlan': int,
+                                        'illegal_length': int 
+                                    },
+                                },
                             }
                         },
                         'pw': {
-                            'pw': int,
-                            'pw_up': int,
+                            'num_pw': int,
+                            'num_pw_up': int,
                         },
                     },
                 }
@@ -853,6 +851,9 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
             'ShgId: +(?P<shg_id>\d+)(, +MSTi: +(?P<mst_i>\d+))?$')
         
+        # VPWS Mode
+        p1_1 = re.compile(r'^(?P<mode>\S+) +Mode$')
+        
         # MAC learning: enabled
         p2 = re.compile(r'^MAC +learning: +(?P<mac_learning>\S+)$')
 
@@ -869,7 +870,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p6 = re.compile(r'^Unknown +unicast: +(?P<enabled>\S+)$')
 
         # MAC aging time: 300 s, Type: inactivity
-        p7 = re.compile(r'^MAC +aging +time: +(?P<mac_aging_time>\d+) +s, +Type: +(?P<type>\S+)$')
+        p7 = re.compile(r'^MAC +aging +time: +(?P<mac_aging_time>\d+) +s, +Type: +(?P<mac_aging_type>\S+)$')
 
         # MAC limit: 4000, Action: none, Notification: syslog
         p8 = re.compile(r'^MAC +limit: +(?P<mac_limit>\d+), +Action: +(?P<action>\S+), +Notification: +(?P<notification>\S+)$')
@@ -945,7 +946,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p29 = re.compile(r'PW +type +(?P<pw_type>\S+), +control +word +(?P<control_word>\S+), +interworking +(?P<interworking>\S+)$')
 
         # PW backup disable delay 0 sec
-        p30 = re.compile(r'PW +backup +(?P<pw_backup>\S+) +delay +(?P<delay>\d+) +sec$')
+        p30 = re.compile(r'PW +backup +disable +delay +(?P<delay>\d+) +sec$')
 
         # Sequencing not set
         p31 = re.compile(r'Sequencing +(?P<sequencing>[\S ]+)$')
@@ -1010,6 +1011,18 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                     mst_i = int(group['mst_i'])
                     bridge_domain_dict.update({'mst_i': mst_i})
                 continue
+            
+            # VPWS Mode
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                mode = group['mode']
+                if dict_type == 'bridge_domain':
+                    bridge_domain_dict.update({'mode': mode})
+                else:
+                    interface_dict.update({'mode': mode})
+                continue
+
             # MAC learning: enabled
             m = p2.match(line)
             if m:
@@ -1047,8 +1060,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 group = m.groupdict()
                 enabled = group['enabled']
-                flooding_dict.update({'broadcast': enabled})
-                flooding_dict.update({'multicast': enabled})
+                flooding_dict.update({'broadcast_multicast': enabled})
                 continue
 
             # Unknown unicast: enabled
@@ -1064,13 +1076,13 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 group = m.groupdict()
                 mac_aging_time = int(group['mac_aging_time'])
-                mac_aging_type = group['type']
+                mac_aging_type = group['mac_aging_type']
                 if dict_type == 'bridge_domain':
                     bridge_domain_dict.update({'mac_aging_time': mac_aging_time})
-                    bridge_domain_dict.update({'type': mac_aging_type})
+                    bridge_domain_dict.update({'mac_aging_type': mac_aging_type})
                 else:
                     interface_dict.update({'mac_aging_time': mac_aging_time})
-                    interface_dict.update({'type': mac_aging_type})
+                    interface_dict.update({'mac_aging_type': mac_aging_type})
                 continue
 
             # MAC limit: 4000, Action: none, Notification: syslog
@@ -1083,12 +1095,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 
                 if dict_type == 'bridge_domain':
                     bridge_domain_dict.update({'mac_limit': mac_limit})
-                    bridge_domain_dict.update({'action': action})
-                    bridge_domain_dict.update({'notification': notification})
+                    bridge_domain_dict.update({'mac_limit_action': action})
+                    bridge_domain_dict.update({'mac_limit_notification': notification})
                 else:
                     interface_dict.update({'mac_limit': mac_limit})
-                    interface_dict.update({'action': action})
-                    interface_dict.update({'notification': notification})
+                    interface_dict.update({'mac_limit_action': action})
+                    interface_dict.update({'mac_limit_notification': notification})
                 continue
 
             # MAC limit reached: yes
@@ -1154,15 +1166,15 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 pw_up = int(group['pw_up'])
                 
                 ac_dict = bridge_domain_dict.setdefault('ac', {})
-                ac_dict.update({'ac': ac})
-                ac_dict.update({'ac_up': ac_up})
+                ac_dict.update({'num_ac': ac})
+                ac_dict.update({'num_ac_up': ac_up})
 
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {})
-                vfi_dict.update({'vfi': vfi})
+                vfi_dict.update({'num_vfi': vfi})
 
                 pw_dict = bridge_domain_dict.setdefault('pw', {})
-                pw_dict.update({'pw': pw})
-                pw_dict.update({'pw_up': pw_up})
+                pw_dict.update({'num_pw': pw})
+                pw_dict.update({'num_pw_up': pw_up})
                 continue
 
             # List of ACs:
@@ -1346,10 +1358,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p30.match(line)
             if m:
                 group = m.groupdict()
-                pw_backup = group['pw_backup']
-                delay = int(group['delay'])
-                pw_id_dict.update({'pw_backup': pw_backup})
-                pw_id_dict.update({'delay': delay})
+                pw_id_dict.update({'pw_backup_disable_delay': int(group['delay'])})
                 continue
 
             # Sequencing not set
@@ -1422,14 +1431,14 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # drops: illegal VLAN 0, illegal length 0
             m = p41.match(line)
             if m:
-                vfi_statistics_dict = pw_id_dict.setdefault('vfi_statistics', {})
+                vfi_statistics_dict = vfi_obj_dict.setdefault('vfi_statistics', {})
                 group = m.groupdict()
                 drops = group['drops']
                 vlan = int(group['vlan'])
                 illegal_length = int(group['illegal_length'])
-                vfi_statistics_dict.update({'drops': drops})
-                vfi_statistics_dict.update({'vlan': vlan})
-                vfi_statistics_dict.update({'illegal_length': illegal_length})
+                drop_dict = vfi_statistics_dict.setdefault('drop', {})
+                drop_dict.update({'illegal_vlan': vlan})
+                drop_dict.update({'illegal_length': illegal_length})
                 continue
             
 

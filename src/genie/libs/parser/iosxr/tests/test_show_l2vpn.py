@@ -36,14 +36,14 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                         'state': 'up',
                         'shg_id': 0,
                         'mst_i': 0,
-                        'aging': 300,
+                        'mac_aging_time': 300,
                         'mac_limit': 4000,
-                        'action': 'none',
-                        'notification': 'syslog',
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
                         'filter_mac_address': 0,
                         'ac': {
-                            'ac': 1,
-                            'ac_up': 1,
+                            'num_ac': 1,
+                            'num_ac_up': 1,
                             'interfaces': {
                                 'GigabitEthernet0/1/0/0': {
                                     'state': 'up',
@@ -54,7 +54,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                             },
                         },
                         'vfi': {
-                            'vfi': 1,
+                            'num_vfi': 1,
                             1: {
                                 'neighbor': {
                                     '10.1.1.1': {
@@ -69,8 +69,8 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
                             },
                         },
                         'pw': {
-                            'pw': 1,
-                            'pw_up': 1,
+                            'num_pw': 1,
+                            'num_pw_up': 1,
                         },
                     },
                 },
@@ -664,12 +664,12 @@ class TestShowL2vpnBridgeDomainBrief(unittest.TestCase):
                         'id': 0,
                         'state': 'up',
                         'ac': {
-                            'ac': 1,
-                            'ac_up': 1,
+                            'num_ac': 1,
+                            'num_ac_up': 1,
                         },
                         'pw': {
-                            'pw': 1,
-                            'pw_up': 1,
+                            'num_pw': 1,
+                            'num_pw_up': 1,
                         },
                     },
                 },
@@ -720,26 +720,25 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'mac_learning': 'enabled',
                         'mac_withdraw': 'disabled',
                         'flooding': {
-                            'broadcast': 'enabled',
-                            'multicast': 'enabled',
+                            'broadcast_multicast': 'enabled',
                             'unknown_unicast': 'enabled',
                         },
                         'mac_aging_time': 300,
-                        'type': 'inactivity',
+                        'mac_aging_type': 'inactivity',
                         'mac_limit': 4000,
-                        'action': 'none',
-                        'notification': 'syslog',
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
                         'mac_limit_reached': 'yes',
                         'security': 'disabled',
                         'dhcp_v4_snooping': 'disabled',
                         'mtu': 1500,
                         'ac': {
-                            'ac': 1,
-                            'ac_up': 1,
+                            'num_ac': 1,
+                            'num_ac_up': 1,
                             'interfaces': {
                                 'GigabitEthernet0/1/0/0': {
                                     'state': 'up',
-                                    'type': 'inactivity',
+                                    'type': 'Ethernet',
                                     'mtu': 1500,
                                     'xc_id': '0x2000001',
                                     'interworking': 'none',
@@ -747,14 +746,14 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'mst_i_state': 'unprotected',
                                     'mac_learning': 'enabled',
                                     'flooding': {
-                                        'broadcast': 'enabled',
-                                        'multicast': 'enabled',
+                                        'broadcast_multicast': 'enabled',
                                         'unknown_unicast': 'enabled',
                                     },
                                     'mac_aging_time': 300,
+                                    'mac_aging_type': 'inactivity',
                                     'mac_limit': 4000,
-                                    'action': 'none',
-                                    'notification': 'syslog',
+                                    'mac_limit_action': 'none',
+                                    'mac_limit_notification': 'syslog',
                                     'mac_limit_reached': 'yes',
                                     'security': 'disabled',
                                     'dhcp_v4_snooping': 'disabled',
@@ -773,7 +772,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                             },
                         },
                         'vfi': {
-                            'vfi': 1,
+                            'num_vfi': 1,
                             '1': {
                                 'neighbor': {
                                     '1.1.1.1': {
@@ -787,8 +786,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                                 'pw_type': 'Ethernet',
                                                 'control_word': 'disabled',
                                                 'interworking': 'none',
-                                                'pw_backup': 'disable',
-                                                'delay': 0,
+                                                'pw_backup_disable_delay': 0,
                                                 'sequencing': 'not set',
                                                 'mpls': {
                                                     'label': {
@@ -844,20 +842,21 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                                         'send': 321277968,
                                                     },
                                                 },
-                                                'vfi_statistics': {
-                                                    'drops': 'illegal',
-                                                    'vlan': 0,
-                                                    'illegal_length': 0,
-                                                },
                                             },
                                         },
+                                    },
+                                },
+                                'vfi_statistics': {
+                                    'drop': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
                                     },
                                 },
                             },
                         },
                         'pw': {
-                            'pw': 1,
-                            'pw_up': 1,
+                            'num_pw': 1,
+                            'num_pw_up': 1,
                         },
                     },
                 },
@@ -940,10 +939,11 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'state': 'up',
                         'id': 0,
                         'shg_id': 0,
+                        'mode': 'VPWS',
                         'mtu': 1500,
                         'ac': {
-                            'ac': 1,
-                            'ac_up': 0,
+                            'num_ac': 1,
+                            'num_ac_up': 0,
                             'interfaces': {
                                 'GigabitEthernet0/5/1/4': {
                                     'state': 'admin down',
@@ -965,7 +965,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                             },
                         },
                         'vfi': {
-                            'vfi': 1,
+                            'num_vfi': 1,
                             'foo_vfi': {
                                 'neighbor': {
                                     '1.1.1.1': {
@@ -1069,20 +1069,21 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                                 },
                                                 'create_time': '25/06/2007 05:29:42 (2w0d ago)',
                                                 'last_time_status_changed': '27/06/2007 06:50:35 (1w5d ago)',
-                                                'vfi_statistics': {
-                                                    'drops': 'illegal',
-                                                    'vlan': 0,
-                                                    'illegal_length': 0,
-                                                },
                                             },
                                         },
+                                    },
+                                },
+                                'vfi_statistics': {
+                                    'drop': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0,
                                     },
                                 },
                             },
                         },
                         'pw': {
-                            'pw': 2,
-                            'pw_up': 2,
+                            'num_pw': 2,
+                            'num_pw_up': 2,
                         },
                     },
                 },
