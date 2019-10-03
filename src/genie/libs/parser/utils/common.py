@@ -8,14 +8,9 @@ import sys
 import warnings
 import logging
 import importlib
-
-
 from genie.libs import parser
 from genie.abstract import Lookup
-try:
-    from genie_internal import parsers as internal_parser
-except:
-    pass
+
 log = logging.getLogger(__name__)
 
 
@@ -79,7 +74,7 @@ def get_parser(command, device):
     kwargs = {}
     if command in parser_data:
         # Then just return it
-        lookup = Lookup.from_device(device, packages={'parser':parser})
+        lookup = Lookup.from_device(device, packages={'parser': parser})
         # Check if all the tokens exists; take the farthest one
         data = parser_data[command]
         for token in lookup._tokens:
@@ -149,13 +144,10 @@ def _find_command(command, data, device):
 
 
 def _find_parser_cls(device, data):
-    lookup = Lookup.from_device(device, packages={'parser':parser})
+    lookup = Lookup.from_device(device, packages={'parser':importlib.import_module(data['package'])})
 
-    try:
-        return getattr(getattr(lookup.parser, data['module_name']), data['class'])
-    except:
-        lookup_internal = Lookup.from_device(device, packages={'parser': internal_parser})
-        return getattr(getattr(lookup_internal.parser, data['module_name']), data['class'])
+    return getattr(getattr(lookup.parser, data['module_name']), data['class'])
+
 
 class Common():
     '''Common functions to be used in parsers.'''
