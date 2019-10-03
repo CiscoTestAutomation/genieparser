@@ -4,7 +4,7 @@ show_isis.py
 IOSXR parsers for the following show commands:
     * show isis adjacency
     * show isis neighbors
-
+    * show isis
 """
 
 # Python
