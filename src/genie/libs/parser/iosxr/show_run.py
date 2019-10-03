@@ -202,8 +202,8 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
         is_address_family = False
         isis_name = None
         for line in out.splitlines():
-            line = line.rstrip()
-            
+            line = line.strip()
+
             p0 = re.compile(r'^\s*!+\s*$')
             m = p0.match(line)
             if m:
@@ -212,17 +212,24 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
             # Parsers for ISIS Address Family
             if is_address_family:
                 # fast-reroute per-prefix tiebreaker srlg-disjoint index 255
+                # fast-reroute per-prefix tiebreaker node-protecting index 100
                 a1 = re.compile(r'^\s*fast-reroute\sper-prefix\stiebreaker\s+(?P<key>\S+)\s+(?P<value>.+)$')
                 m = a1.match(line)
                 if m:
                     if is_interface:
-                        if not 'fast_reroute' in router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]:
-                            router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]['fast_reroute'] = {'per_prefix':{'tiebreaker': {}}}
-                        router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]['fast_reroute']['per_prefix']['tiebreaker'][m.groupdict()['key'].replace('-', '_')] = m.groupdict()['value']
+                        if not 'fast_reroute' in router_isis_dict['isis'][isis_name]['interfaces']\
+                            [interface]['address_family'][address_family] or isinstance(router_isis_dict['isis']\
+                                [isis_name]['interfaces'][interface]['address_family'][address_family]['fast_reroute'], str):
+                            router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family']\
+                                [address_family]['fast_reroute'] = {'per_prefix':{'tiebreaker': {}}}
+                        router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]['fast_reroute']\
+                            ['per_prefix']['tiebreaker'][m.groupdict()['key'].replace('-', '_')] = m.groupdict()['value']
                     if not is_interface:
-                        if not 'fast_reroute' in router_isis_dict['isis'][isis_name]['address_family'][address_family]:
+                        if not 'fast_reroute' in router_isis_dict['isis'][isis_name]['address_family'][address_family] or \
+                            isinstance(router_isis_dict['isis'][isis_name]['address_family'][address_family]['fast_reroute'],str):
                             router_isis_dict['isis'][isis_name]['address_family'][address_family]['fast_reroute'] = {'per_prefix':{'tiebreaker': {}}}
-                        router_isis_dict['isis'][isis_name]['address_family'][address_family]['fast_reroute']['per_prefix']['tiebreaker'][m.groupdict()['key'].replace('-', '_')] = m.groupdict()['value']
+                        router_isis_dict['isis'][isis_name]['address_family'][address_family]['fast_reroute']['per_prefix']\
+                            ['tiebreaker'][m.groupdict()['key'].replace('-', '_')] = m.groupdict()['value']
                     continue
                 
                 # mpls traffic-eng level-2-only
@@ -231,12 +238,15 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 if m:
                     if is_interface:
                         if not 'mpls' in router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]:
-                            router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]['mpls'] = {'traffic_eng': []}
-                        router_isis_dict['isis'][isis_name][interface]['address_family'][address_family]['mpls']['traffic_eng'].append(m.groupdict()['mpls_traffic_eng'])
+                            router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family]['mpls'] = \
+                                {'traffic_eng': []}
+                        router_isis_dict['isis'][isis_name][interface]['address_family'][address_family]['mpls']['traffic_eng'].append(
+                            m.groupdict()['mpls_traffic_eng'])
                     if not is_interface:
                         if not 'mpls' in router_isis_dict['isis'][isis_name]['address_family'][address_family]:
                             router_isis_dict['isis'][isis_name]['address_family'][address_family]['mpls'] = {'traffic_eng': []}
-                        router_isis_dict['isis'][isis_name]['address_family'][address_family]['mpls']['traffic_eng'].append(m.groupdict()['mpls_traffic_eng'])
+                        router_isis_dict['isis'][isis_name]['address_family'][address_family]['mpls']['traffic_eng'].append(
+                            m.groupdict()['mpls_traffic_eng'])
                     continue
                 
                 # segment-routing mpls sr-prefer
@@ -245,7 +255,8 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 if m:
                     if not 'segment_routing' in router_isis_dict['isis'][isis_name]['address_family'][address_family]:
                         router_isis_dict['isis'][isis_name]['address_family'][address_family]['segment_routing'] = {}
-                    router_isis_dict['isis'][isis_name]['address_family'][address_family]['segment_routing'][m.groupdict()['segment_key'].replace('-', '_')] = m.groupdict()['segment_value']
+                    router_isis_dict['isis'][isis_name]['address_family'][address_family]['segment_routing'][m.groupdict()\
+                        ['segment_key'].replace('-', '_')] = m.groupdict()['segment_value']
                     continue
                 
                 # spf prefix-priority critical tag 1000
@@ -254,7 +265,8 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 if m:
                     if not 'spf_prefix_priority' in router_isis_dict['isis'][isis_name]['address_family'][address_family]:
                         router_isis_dict['isis'][isis_name]['address_family'][address_family]['spf_prefix_priority'] = {}
-                    router_isis_dict['isis'][isis_name]['address_family'][address_family]['spf_prefix_priority'][m.groupdict()['tag_key'].replace(' ', '_')] = m.groupdict()['tag_value']
+                    router_isis_dict['isis'][isis_name]['address_family'][address_family]['spf_prefix_priority'][m.groupdict()\
+                        ['tag_key'].replace(' ', '_')] = m.groupdict()['tag_value']
                     continue
                 
                 # spf-interval maximum-wait 8000 initial-wait 300 secondary-wait 500
@@ -274,9 +286,14 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 m = a9.match(line)
                 if m:
                     if is_interface:
-                        router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family][m.groupdict()['generic_key'].replace('-', '_')] = m.groupdict()['generic_value']
+                        router_isis_dict['isis'][isis_name]['interfaces'][interface]['address_family'][address_family][m.groupdict()\
+                            ['generic_key'].replace('-', '_')] = \
+                            m.groupdict()['generic_value'].replace('-', '_') if isinstance(m.groupdict()['generic_value'], str) \
+                            else m.groupdict()['generic_value']
                     if not is_interface:
-                        router_isis_dict['isis'][isis_name]['address_family'][address_family][m.groupdict()['generic_key'].replace('-', '_')] = m.groupdict()['generic_value']
+                        router_isis_dict['isis'][isis_name]['address_family'][address_family][m.groupdict()['generic_key'].replace('-', '_')] = \
+                            m.groupdict()['generic_value'].replace('-', '_') if isinstance(m.groupdict()['generic_value'], str) \
+                            else m.groupdict()['generic_value']
                     continue
                 
                 # End Parsers for ISIS Address Family
@@ -299,7 +316,8 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
             p2 = re.compile(r'^\s*segment-routing\s+(?P<segment_routing_key>\S+)\s+(?P<segment_routing_value>.+)$')
             m = p2.match(line)
             if m:
-                router_isis_dict['isis'][isis_name]['segment_routing'][m.groupdict()['segment_routing_key'].replace('-', '_')] = m.groupdict()['segment_routing_value']
+                router_isis_dict['isis'][isis_name]['segment_routing'][m.groupdict()['segment_routing_key'].replace('-', '_')] = \
+                    m.groupdict()['segment_routing_value']
                 continue
             
             # lsp-gen-interval maximum-wait 8000 initial-wait 1 secondary-wait 250
@@ -342,7 +360,8 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                 if m:
                     if not 'bfd' in router_isis_dict['isis'][isis_name]['interfaces'][interface]:
                         router_isis_dict['isis'][isis_name]['interfaces'][interface]['bfd'] = {}
-                    router_isis_dict['isis'][isis_name]['interfaces'][interface]['bfd'][m.groupdict()['bfd_key'].replace('-', '_')] = m.groupdict()['bfd_value']
+                    router_isis_dict['isis'][isis_name]['interfaces'][interface]['bfd'][m.groupdict()['bfd_key'].replace('-', '_')] = \
+                        m.groupdict()['bfd_value']
                     continue
                 # passive
                 i1 = re.compile(r'^\s*(?P<other>[^\s!]+)\s*$')
@@ -364,7 +383,8 @@ class ShowRunRouterIsis(ShowRunRouterIsisSchema):
                         router_isis_dict['isis'][isis_name][m.groupdict()['generic_key'].replace('-', '_')] = m.groupdict()['generic_value']
                         continue
                     if is_interface:
-                        router_isis_dict['isis'][isis_name]['interfaces'].setdefault(interface, {}).setdefault(m.groupdict()['generic_key'].replace('-', '_'), m.groupdict()['generic_value'])
+                        router_isis_dict['isis'][isis_name]['interfaces'].setdefault(interface, {}).setdefault(m.groupdict()['generic_key'].\
+                                replace('-', '_'), m.groupdict()['generic_value'])
                         continue
         
         return router_isis_dict
