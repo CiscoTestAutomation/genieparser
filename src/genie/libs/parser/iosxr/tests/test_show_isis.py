@@ -376,7 +376,7 @@ class TestShowIsis(unittest.TestCase):
         * show isis -> ShowIsis
     '''
 
-    device = Device(name='aDevice')
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
@@ -413,7 +413,7 @@ class TestShowIsis(unittest.TestCase):
                                                 },
                                                 "protocols_redistributed": False,
                                                 "distance": 115,
-                                                "passive_interface_only": "No",
+                                                "passive_interface_only": False,
                                             },
                                             "IPv6 Unicast": {
                                                 "level": {
@@ -428,7 +428,7 @@ class TestShowIsis(unittest.TestCase):
                                                 },
                                                 "protocols_redistributed": False,
                                                 "distance": 115,
-                                                "passive_interface_only": "No",
+                                                "passive_interface_only": False,
                                             },
                                         },
                                         "srlb": "not allocated",
@@ -517,7 +517,6 @@ class TestShowIsis(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsis(device=self.device)
         parsed_output = obj.parse()
