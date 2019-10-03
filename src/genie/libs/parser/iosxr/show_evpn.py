@@ -12,30 +12,6 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 from genie.libs.parser.base import *
 
-re_8bit_u = r'(?:' + r'|'.join([
-    r'[0-9]',
-    r'[1-9][0-9]',
-    r'1[0-9][0-9]',
-    r'2[0-4][0-9]',
-    r'25[0-5]',
-]) + r')'
-re_8bit_x = r'(?:[A-Fa-f0-9]{1,2})'
-re_8bit_02x = r'(?:[A-Fa-f0-9]{2})'
-re_16bit_x = r'(?:[A-Fa-f0-9]{1,4})'
-re_16bit_04x = r'(?:[A-Fa-f0-9]{4})'
-re_mac = r'(?:' + r'|'.join([
-    r'\.'.join([re_16bit_x] * 3),
-    r':'.join([re_8bit_x] * 6),
-    r'-'.join([re_8bit_x] * 6),
-    r'\.'.join([re_8bit_x] * 6),
-]) + r')'
-re_ipv4 = r'(?:' + r'\.'.join([re_8bit_u] * 4) + r')'
-re_ipv6 = r'(?:[A-Fa-f0-9:]*:[A-Fa-f0-9:]*(?::' + re_ipv4 + ')?)'
-re_ip = r'(?:' + r'|'.join([re_ipv4, re_ipv6]) + ')'
-re_label_str = r'(?:' + r'|'.join([
-    r'[0-9]+',
-    r'[A-Za-z0-9-]+',  # See mpls_label_strings @ mpls/base/include/mpls_label_defs_extra.h
-]) + r')'
 
 
 class ShowEvpnEviSchema(MetaParser):
@@ -414,15 +390,60 @@ class ShowEvpnEthernetSegment(MetaParser):
 
         return kl
 
+
 # ============================================
 # Schema for 'show evpn internal-label detail'
 # ============================================
-class ShowEvpnInternalLabelDetailSchemaMetaParser):
+class ShowEvpnInternalLabelDetailSchema(MetaParser):
     '''Schema for:
         * show evpn internal-label detail
     '''
 
-    schema = {}
+    schema = {
+        'evi':
+            {Any():
+                {'esi': str,
+                'eth_tag': str,
+                'internal_label': str,
+                'mp_resolved': bool,
+                Optional('mp_single_active'): str,
+                Optional('pathlists'):
+                    {Optional('mac'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                     Optional('es_ead'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                     Optional('evi_ead'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                     Optional('summary'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 
 # ============================================
@@ -441,157 +462,87 @@ class ShowEvpnInternalLabelDetail(MetaParser):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        res = {
-            'entries': [],
-        }
+
+        # Init
+        parsed_dict = {}
+        type_dict = {
+            'MAC': 'mac',
+            'EAD/ES': 'es_ead',
+            'EAD/EVI': 'evi_ead',
+            'Summary': 'summary',
+            }
+
+        # 5     0012.1200.0000.0000.0002                0        24114
+        # 100   0100.0000.acce.5500.0100                0        24005
+        p1 = re.compile(r'^(?P<evi>(\d+)) +(?P<esi>([a-z0-9\.]+))'
+                         ' +(?P<eth_tag>(\d+)) +(?P<internal_label>(\d+))$')
+
+        # Multi-paths resolved: TRUE
+        # Multi-paths resolved: TRUE (Remote single-active)
+        p2 = re.compile(r'^Multi-paths +resolved: +(?P<mp_resolved>(\S+))'
+                         ' +\((?P<mp_single_active>(.*))\)$')
+
+        # MAC     10.70.20.20                              24212
+        # EAD/ES  10.10.10.10                              0
+        # EAD/EVI 10.10.10.10                              24012
+        # Summary 10.70.20.20                              24212
+        p3 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary)) +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
+
+        #         10.70.20.20                              0
+        #         10.10.10.10 (B)                          24012
+        p4 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<flag>(\S+))\))? +(?P<label>(\d+))$')
+
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # 5     0012.1200.0000.0000.0002                0        24114
-            m = re.match(r'^\s*(?P<evi>\d+)\s+'
-                          '(?P<esi>[\w.]+)\s+'
-                          '(?P<eth_tag>\d+)\s+'
-                          '(?P<internal_label>\w+)$',line)
-
+            m = p1.match(line)
             if m:
-                # create new record
-                record = { 'evi' : m.group('evi'),
-                           'esi' : m.group('esi'),
-                           'eth_tag' : m.group('eth_tag'),
-                           'internal_label' : m.group('internal_label'),
-                           'pathlists' : {
-                                'mac' : [],
-                                'es_ead' : [],
-                                'evi_ead' : [],
-                                'summary' : []
-                            }
-                         }
-
-                res['entries'].append(record)
+                group = m.groupdict()
+                evi_dict = parsed_dict.setdefault('evi', {}).\
+                                       setdefault(int(group['evi']), {})
+                for key, value in group.items():
+                    if "." not in value:
+                        value = int(value)
+                    evi_dict[key] = value
+                continue
 
             # Multi-paths resolved: TRUE
-            m = re.match(r'^\s+Multi-paths resolved: '
-                          '(?P<mp_resolved>\w+)$',line)
-
-            if m:
-                res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
-
-
             # Multi-paths resolved: TRUE (Remote single-active)
-            m = re.match(r'^\s+Multi-paths resolved: '
-                          '(?P<mp_resolved>\w+) '
-                          '\((?P<mp_single_active>.+)\)$',line)
-
+            m = p2.match(line)
             if m:
-                res['entries'][-1]['mp_resolved'] = m.group('mp_resolved')
-                res['entries'][-1]['mp_single_active'] = m.group('mp_single_active')
+                evi_dict['mp_resolved'] = True
+                if m.groupdict()['mp_single_active']:
+                    evi_dict['mp_single_active'] = m.groupdict()['mp_single_active']
+                continue
 
             # MAC     10.70.20.20                              24212
-            m = re.match(r'^\s+MAC\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = True
-                es_ead_flag = False
-                evi_ead_flag = False
-                summary_flag = False
-
-                res['entries'][-1]['pathlists']['mac'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
             # EAD/ES  10.10.10.10                              0
-            m = re.match(r'^\s+EAD/ES\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = False
-                es_ead_flag = True
-                evi_ead_flag = False
-                summary_flag = False
-
-                res['entries'][-1]['pathlists']['es_ead'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
             # EAD/EVI 10.10.10.10                              24012
-            m = re.match(r'^\s+EAD/EVI\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
-            if m:
-                mac_flag = False
-                es_ead_flag = False
-                evi_ead_flag = True
-                summary_flag = False
-
-                res['entries'][-1]['pathlists']['evi_ead'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
-
             # Summary 10.70.20.20                              24212
-            m = re.match(r'^\s+Summary\s+'
-                          '(?P<nexthop>[\d.]+)\s+'
-                          '(?P<label>\d+)$',line)
-
+            m = p3.match(line)
             if m:
-                mac_flag = False
-                es_ead_flag = False
-                evi_ead_flag = False
-                summary_flag = True
-
-                res['entries'][-1]['pathlists']['summary'].append(
-                    {'nexthop' : m.group('nexthop'),
-                     'label' : m.group('label')}
-                )
+                group = m.groupdict()
+                pathlists_dict = evi_dict.setdefault('pathlists', {}).\
+                                        setdefault(type_dict[group['type']], {})
+                type_nh_dict = pathlists_dict.setdefault(group['nexthop'], {})
+                type_nh_dict['label'] = int(group['label'])
+                continue
 
             #         10.70.20.20                              0
-            m = re.match(r'^\s+'
-                         '(?P<nexthop>[\d.]+)\s+'
-                         '(?P<label>\d+)$',line)
-
-            if m:
-               if mac_flag:
-                   res['entries'][-1]['pathlists']['mac'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-               elif es_ead_flag:
-                   res['entries'][-1]['pathlists']['es_ead'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-               elif evi_ead_flag:
-                   res['entries'][-1]['pathlists']['evi_ead'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-               elif summary_flag:
-                   res['entries'][-1]['pathlists']['summary'].append(
-                       {'nexthop' : m.group('nexthop'),
-                        'label' : m.group('label')}
-                   )
-
             #         10.10.10.10 (B)                          24012
-            m = re.match(r'^\s+'
-                         '(?P<nexthop>[\d.]+)\s+'
-                         '\((?P<flag>\w+)\)\s+'
-                         '(?P<label>\d+)$',line)
-
+            m = p4.match(line)
             if m:
-               res['entries'][-1]['pathlists']['summary'].append(
-                   {'nexthop' : m.group('nexthop'),
-                    'label' : m.group('label'),
-                    'flag' : m.group('flag')}
-               )
+                group = m.groupdict()
+                type_nh_dict = pathlists_dict.setdefault(group['nexthop'], {})
+                type_nh_dict['label'] = int(group['label'])
+                if group['flag']:
+                    type_nh_dict['flag'] = group['flag']
+                continue
 
-        return res
+        return parsed_dict
+
 
 # vim: ft=python ts=8 sw=4 et
 

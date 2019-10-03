@@ -10,11 +10,117 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
+from genie.libs.parser.iosxr.show_evpn import ShowEvpnInternalLabelDetail
+
 # iosxr show_evpn
 from genie.libs.parser.iosxr.show_evpn import (ShowEvpnEvi,
                                                ShowEvpnEviDetail,
                                                ShowEvpnEviMac,
                                                ShowEvpnEviMacPrivate)
+
+# ================================================
+#  Unit test for 'show evpn internal-label detail'
+# ================================================
+class TestShowEvpnInternalLabelDetail(unittest.TestCase):
+    '''Unit test for 'show evpn internal-label detail'''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'evi': 
+            {5: 
+                {'esi': '0012.1200.0000.0000.0002',
+                'eth_tag': 0,
+                'evi': 5,
+                'internal_label': 24114,
+                'mp_resolved': True,
+               'mp_single_active': 'Remote single-active',
+               'pathlists':
+                {'es_ead':
+                    {'10.10.10.10':
+                        {'label': 0}
+                        },
+                'evi_ead':
+                    {'10.10.10.10':
+                        {'label': 24012},
+                        },
+                'mac':
+                    {'10.70.20.20':
+                        {'label': 24212},
+                    '10.70.21.21':
+                        {'label': 0}},
+                'summary':
+                    {'10.10.10.10':
+                        {'flag': 'B',
+                        'label': 24012},
+                    '10.70.20.20':
+                        {'label': 24212}}}},
+            100:
+                {'esi': '0100.0000.acce.5500.0100',
+                'eth_tag': 0,
+                'evi': 100,
+                'internal_label': 24005}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:PE1#show evpn internal-label
+        Wed Jul 13 13:55:17.592 EDT
+
+        EVI   Ethernet Segment Id                     EtherTag Label   
+        ----- --------------------------------------- -------- --------
+        100   0100.0000.acce.5500.0100                0        24005
+        5     0012.1200.0000.0000.0002                0        24114
+
+              Multi-paths resolved: TRUE (Remote single-active)
+              MAC     10.70.20.20                              24212
+                      10.70.21.21                              0
+              EAD/ES  10.10.10.10                              0
+              EAD/EVI 10.10.10.10                              24012
+              Summary 10.70.20.20                              24212
+                      10.10.10.10 (B)                          24012
+        '''}
+
+    golden_parsed_output2 = {
+        'evi': 
+            {145: 
+                {'esi': 'ff00.0002.be23.ce01.0000',
+                'eth_tag': 0,
+                'evi': 145,
+                'internal_label': 24005,
+                'pathlists':
+                    {'summary':
+                        {'192.168.0.3':
+                            {'label': 524288}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/0/CPU0:PE1#show evpn internal-label 
+        Thu May  5 10:16:51.447 EDT
+
+        EVI   Ethernet Segment Id                     EtherTag Label   
+        ----- --------------------------------------- -------- --------
+        145   ff00.0002.be23.ce01.0000                0        24005
+              Summary 192.168.0.3                              524288
+
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
 
 # ===================================================
 #  Unit test for 'show evpn evi'
