@@ -374,6 +374,7 @@
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
+        * show evpn evi detail
 * IOSXR:
     * Added ShowEvpnEthernetSegment for:
         * show evpn ethernet-segment
