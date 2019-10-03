@@ -9,16 +9,16 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_mrib
-from genie.libs.parser.iosxr.show_isis import ShowIsisAdjacency, \
-                                              ShowIsisNeighbors
-
+# iosxr show_isis
+from genie.libs.parser.iosxr.show_isis import (ShowIsis,
+                                               ShowIsisAdjacency,
+                                               ShowIsisNeighbors)
 
 # ==================================================
 #  Unit test for 'show isis adjacency'
 # ==================================================
 
-class test_show_isis_adjacency(unittest.TestCase):
+class TestShowIsisAdjacency(unittest.TestCase):
     '''Unit test for 'show isis adjacency'''
 
     device = Device(name='aDevice')
@@ -213,7 +213,7 @@ class test_show_isis_adjacency(unittest.TestCase):
 #  Unit test for 'show isis neighbors'
 # ====================================
 
-class test_show_isis_neighbors(unittest.TestCase):
+class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
     device = Device(name='aDevice')
@@ -318,6 +318,157 @@ class test_show_isis_neighbors(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+class TestShowIsis(unittest.TestCase):
+    ''' Unitest for commands:
+        * show isis -> ShowIsis
+    '''
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "isis": {
+            "test": {
+                "vrf": {
+                    "default": {
+                        "system_id": {
+                            "3333.3333.3333": {
+                                "instance": {
+                                    "0": {
+                                        "is_levels": "level-1-2",
+                                        "manual_area_address": "49.0002",
+                                        "routing_area_address": "49.0002",
+                                        "non_stop_forwarding": "Disabled",
+                                        "most_recent_startup_mode": "Cold Restart",
+                                        "te_connection_status": "Down",
+                                        "topology": {
+                                            "IPv4 Unicast": {
+                                                "level": {
+                                                    1: {
+                                                        "generate_style": "Wide",
+                                                        "accept_style": "Wide",
+                                                        "metric": 10,
+                                                        "ispf_status": "Disabled",
+                                                    },
+                                                    2: {
+                                                        "generate_style": "Wide",
+                                                        "accept_style": "Wide",
+                                                        "metric": 10,
+                                                        "ispf_status": "Disabled",
+                                                    },
+                                                },
+                                                "protocols_redistributed": False,
+                                                "distance": 115,
+                                                "passive_interface_only": "No",
+                                            },
+                                            "IPv6 Unicast": {
+                                                "level": {
+                                                    1: {
+                                                        "metric": 10,
+                                                        "ispf_status": "Disabled",
+                                                    },
+                                                    2: {
+                                                        "metric": 10,
+                                                        "ispf_status": "Disabled",
+                                                    },
+                                                },
+                                                "protocols_redistributed": False,
+                                                "distance": 115,
+                                                "passive_interface_only": "No",
+                                            },
+                                        },
+                                        "srlb": "not allocated",
+                                        "srgb": "not allocated",
+                                        "interfaces": {
+                                            "Loopback0": {
+                                                "running_state": "running actively",
+                                                "configuration_state": "active in configuration",
+                                            },
+                                            "GigabitEthernet0/0/0/0": {
+                                                "running_state": "running actively",
+                                                "configuration_state": "active in configuration",
+                                            },
+                                            "GigabitEthernet0/0/0/1": {
+                                                "running_state": "running actively",
+                                                "configuration_state": "active in configuration",
+                                            },
+                                            "GigabitEthernet0/0/0/2": {
+                                                "running_state": "running actively",
+                                                "configuration_state": "active in configuration",
+                                            },
+                                            "GigabitEthernet0/0/0/3": {
+                                                "running_state": "running actively",
+                                                "configuration_state": "active in configuration",
+                                            },
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        IS-IS Router: test
+          System Id: 3333.3333.3333
+          Instance Id: 0
+          IS Levels: level-1-2
+          Manual area address(es):
+            49.0002
+          Routing for area address(es):
+            49.0002
+          Non-stop forwarding: Disabled
+          Most recent startup mode: Cold Restart
+          TE connection status: Down
+          Topologies supported by IS-IS:
+            IPv4 Unicast
+              Level-1
+                Metric style (generate/accept): Wide/Wide
+                Metric: 10
+                ISPF status: Disabled
+              Level-2
+                Metric style (generate/accept): Wide/Wide
+                Metric: 10
+                ISPF status: Disabled
+              No protocols redistributed
+              Distance: 115
+              Advertise Passive Interface Prefixes Only: No
+            IPv6 Unicast
+              Level-1
+                Metric: 10
+                ISPF status: Disabled
+              Level-2
+                Metric: 10
+                ISPF status: Disabled
+              No protocols redistributed
+              Distance: 115
+              Advertise Passive Interface Prefixes Only: No
+          SRLB not allocated
+          SRGB not allocated
+          Interfaces supported by IS-IS:
+            Loopback0 is running actively (active in configuration)
+            GigabitEthernet0/0/0/0 is running actively (active in configuration)
+            GigabitEthernet0/0/0/1 is running actively (active in configuration)
+            GigabitEthernet0/0/0/2 is running actively (active in configuration)
+            GigabitEthernet0/0/0/3 is running actively (active in configuration)
+    '''}
+
+    def test_show_isis_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsis(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIsis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
