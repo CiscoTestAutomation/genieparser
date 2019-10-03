@@ -375,6 +375,8 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
+    * Added ShowEvpnInternalLabel for:
+        * show evpn internal-label
 
 --------------------------------------------------------------------------------
                                 Route
