@@ -1842,7 +1842,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict.update({'mru': int(group['mru'])})
                 feature_dict.update({'label_stack': group['label_stack']})
                 if group['via']:
-                    feature_dict.update({'via': group['via']})
+                    feature_dict.update({'via': Common.convert_intf_name(group['via'])})
 
                 continue
 

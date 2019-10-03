@@ -2769,7 +2769,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 'encaps': 26,
                                                 'mru': 1492,
                                                 'label_stack': '16052 16062 16063',
-                                                'via': 'Gi0/1/7',
+                                                'via': 'GigabitEthernet0/1/7',
                                                 'macstr': '0050568DA282BC16652F3A178847',
                                                 'lstack': '03EB400003EBE00003EBF000',
                                                 'output_feature_configured': False,
