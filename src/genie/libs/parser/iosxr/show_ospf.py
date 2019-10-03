@@ -444,7 +444,7 @@ class ShowOspfVrfAllInclusiveInterface(ShowOspfVrfAllInclusiveInterfaceSchema):
                     sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
-                    cmd = 'show ospf vrf all-inclusive sham-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ospf vrf all-inclusive sham-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():

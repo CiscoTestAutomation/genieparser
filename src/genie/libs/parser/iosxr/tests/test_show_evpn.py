@@ -659,6 +659,6 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
         obj = ShowEvpnInternalLabel(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-
+       
 if __name__ == '__main__':
     unittest.main()

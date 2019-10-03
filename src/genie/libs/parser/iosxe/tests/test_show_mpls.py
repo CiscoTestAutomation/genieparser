@@ -2043,11 +2043,11 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                         "outgoing_label_or_vc": {
                             "Pop Label": {
                                 "prefix_or_tunnel_id": {
-                                    "1/1[TE-Bind]": {
+                                    "192.168.0.1/32": {
                                         "outgoing_interface": {
-                                            "Tunnel1": {
-                                                "next_hop": "point2point",
-                                                "tsp_tunnel": True,
+                                            "GigabitEthernet2": {
+                                                "next_hop": "192.168.0.2",
+                                                "merged": True,
                                                 "bytes_label_switched": 0
                                             }
                                         }
@@ -2236,7 +2236,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         19         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
         20         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
         21         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
-        22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        22    [M]  Pop Label  192.168.0.1/32  0        Gi2    192.168.0.2
         16110      Pop Label  10.70.20.20/32   0             Et0/0      10.4.1.2
         16120      16120      10.30.30.30/32   0             Et0/0      10.4.1.2
         16130      16130      10.25.40.40/32   0             Et0/0      10.4.1.2

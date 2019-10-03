@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock 
+from unittest.mock import Mock
 from ats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -8,133 +8,145 @@ from genie.libs.parser.ios.cat6k.show_platform import ShowModule
 
 
 class test_show_module(unittest.TestCase):
-    device = Device(name='aDevice')
+    device = Device(name="aDevice")
 
-    empty_output = {'execute.return_value': ''}
+    empty_output = {"execute.return_value": ""}
 
     golden_parsed_output_1 = {
-        "mod": {
-            1: {
-                "ports": 2,
-                "card_type": "Catalyst 6000 supervisor 2 (Active)",
-                "model": "WS-X6K-S2U-MSFC2",
-                "serial_number": "SAD0628035C",
-                "mac_address_from": "0001.6416.0342",
-                "mac_address_to": "0001.6416.0343",
-                "hw_ver": "3.9",
-                "fw_ver": "6.1(3)",
-                "sw_ver": "7.5(0.6)HUB9",
-                "status": "Ok",
-                "sub_mod": {
-                    "WS-F6K-PFC2": {
-                        "hw_ver": "3.2",
-                        "status": "Ok",
-                        "serial_number": "SAD062802AV",
-                        "model": "WS-F6K-PFC2",
+        "slot": {
+            "1": {
+                "rp": {
+                    "card_type": "Catalyst 6000 supervisor 2 (Active)",
+                    "fw_ver": "6.1(3)",
+                    "hw_ver": "3.9",
+                    "mac_address_from": "0001.6416.0342",
+                    "mac_address_to": "0001.6416.0343",
+                    "model": "WS-X6K-S2U-MSFC2",
+                    "ports": 2,
+                    "serial_number": "SAD0628035C",
+                    "status": "Ok",
+                    "subslot": {
+                        "WS-F6K-MSFC2": {
+                            "hw_ver": "2.5",
+                            "model": "WS-F6K-MSFC2",
+                            "serial_number": "SAD062803TX",
+                            "status": "Ok",
+                        },
+                        "WS-F6K-PFC2": {
+                            "hw_ver": "3.2",
+                            "model": "WS-F6K-PFC2",
+                            "serial_number": "SAD062802AV",
+                            "status": "Ok",
+                        },
                     },
-                    "WS-F6K-MSFC2": {
-                        "hw_ver": "2.5",
-                        "status": "Ok",
-                        "serial_number": "SAD062803TX",
-                        "model": "WS-F6K-MSFC2",
+                    "sw_ver": "7.5(0.6)HUB9",
+                }
+            },
+            "2": {
+                "rp": {
+                    "card_type": "Supervisor-Other",
+                    "fw_ver": "Unknown",
+                    "hw_ver": "0.0",
+                    "mac_address_from": "0000.0000.0000",
+                    "mac_address_to": "0000.0000.0000",
+                    "model": "unknown",
+                    "ports": 0,
+                    "serial_number": "unknown",
+                    "status": "Unknown",
+                    "sw_ver": "Unknown",
+                }
+            },
+            "3": {
+                "lc": {
+                    "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
+                    "fw_ver": "12.1(5r)E1",
+                    "hw_ver": "1.3",
+                    "mac_address_from": "0005.7485.9518",
+                    "mac_address_to": "0005.7485.9527",
+                    "model": "WS-X6816-GBIC",
+                    "ports": 16,
+                    "serial_number": "SAL061218K3",
+                    "status": "Ok",
+                    "subslot": {
+                        "WS-F6K-DFC": {
+                            "hw_ver": "2.1",
+                            "model": "WS-F6K-DFC",
+                            "serial_number": "SAL06121A19",
+                            "status": "Ok",
+                        }
                     },
-                },
+                    "sw_ver": "12.1(13)E3",
+                }
             },
-            2: {
-                "ports": 0,
-                "card_type": "Supervisor-Other",
-                "model": "unknown",
-                "serial_number": "unknown",
-                "mac_address_from": "0000.0000.0000",
-                "mac_address_to": "0000.0000.0000",
-                "hw_ver": "0.0",
-                "fw_ver": "Unknown",
-                "sw_ver": "Unknown",
-                "status": "Unknown",
-            },
-            3: {
-                "ports": 16,
-                "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
-                "model": "WS-X6816-GBIC",
-                "serial_number": "SAL061218K3",
-                "mac_address_from": "0005.7485.9518",
-                "mac_address_to": "0005.7485.9527",
-                "hw_ver": "1.3",
-                "fw_ver": "12.1(5r)E1",
-                "sw_ver": "12.1(13)E3",
-                "status": "Ok",
-                "sub_mod": {
-                    "WS-F6K-DFC": {
-                        "hw_ver": "2.1",
-                        "status": "Ok",
-                        "serial_number": "SAL06121A19",
-                        "model": "WS-F6K-DFC",
-                    }
-                },
-            },
-            4: {
-                "ports": 16,
-                "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
-                "model": "WS-X6816-GBIC",
-                "serial_number": "SAL061218K8",
-                "mac_address_from": "0005.7485.9548",
-                "mac_address_to": "0005.7485.9557",
-                "hw_ver": "1.3",
-                "fw_ver": "12.1(5r)E1",
-                "sw_ver": "12.1(13)E3",
-                "status": "Ok",
-                "sub_mod": {
-                    "WS-F6K-DFC": {
-                        "hw_ver": "2.1",
-                        "status": "Ok",
-                        "serial_number": "SAL06121A46",
-                        "model": "WS-F6K-DFC",
-                    }
-                },
-            },
-            5: {
-                "ports": 0,
-                "card_type": "Switching Fabric Module-136 (Active)",
-                "model": "WS-X6500-SFM2",
-                "serial_number": "SAD061701YC",
-                "mac_address_from": "0001.0002.0003",
-                "mac_address_to": "0001.0002.0003",
-                "hw_ver": "1.2",
-                "fw_ver": "6.1(3)",
-                "sw_ver": "7.5(0.6)HUB9",
-                "status": "Ok",
-            },
-            6: {
-                "ports": 1,
-                "card_type": "1 port 10-Gigabit Ethernet Module",
-                "model": "WS-X6502-10GE",
-                "serial_number": "SAD062003CM",
-                "mac_address_from": "0002.7ec2.95f2",
-                "mac_address_to": "0002.7ec2.95f2",
-                "hw_ver": "1.0",
-                "fw_ver": "6.3(1)",
-                "sw_ver": "7.5(0.6)HUB9",
-                "status": "Ok",
-                "sub_mod": {
-                    "WS-F6K-DFC": {
-                        "hw_ver": "2.3",
-                        "status": "Ok",
-                        "serial_number": "SAL06261R0A",
-                        "model": "WS-F6K-DFC",
+            "4": {
+                "lc": {
+                    "card_type": "Pure SFM-mode 16 port 1000mb GBIC",
+                    "fw_ver": "12.1(5r)E1",
+                    "hw_ver": "1.3",
+                    "mac_address_from": "0005.7485.9548",
+                    "mac_address_to": "0005.7485.9557",
+                    "model": "WS-X6816-GBIC",
+                    "ports": 16,
+                    "serial_number": "SAL061218K8",
+                    "status": "Ok",
+                    "subslot": {
+                        "WS-F6K-DFC": {
+                            "hw_ver": "2.1",
+                            "model": "WS-F6K-DFC",
+                            "serial_number": "SAL06121A46",
+                            "status": "Ok",
+                        }
                     },
-                    "WS-G6488": {
-                        "hw_ver": "1.1",
-                        "status": "Ok",
-                        "serial_number": "SAD062201BN",
-                        "model": "WS-G6488",
+                    "sw_ver": "12.1(13)E3",
+                }
+            },
+            "5": {
+                "other": {
+                    "card_type": "Switching Fabric Module-136 (Active)",
+                    "fw_ver": "6.1(3)",
+                    "hw_ver": "1.2",
+                    "mac_address_from": "0001.0002.0003",
+                    "mac_address_to": "0001.0002.0003",
+                    "model": "WS-X6500-SFM2",
+                    "ports": 0,
+                    "serial_number": "SAD061701YC",
+                    "status": "Ok",
+                    "sw_ver": "7.5(0.6)HUB9",
+                }
+            },
+            "6": {
+                "lc": {
+                    "card_type": "1 port 10-Gigabit Ethernet Module",
+                    "fw_ver": "6.3(1)",
+                    "hw_ver": "1.0",
+                    "mac_address_from": "0002.7ec2.95f2",
+                    "mac_address_to": "0002.7ec2.95f2",
+                    "model": "WS-X6502-10GE",
+                    "ports": 1,
+                    "serial_number": "SAD062003CM",
+                    "status": "Ok",
+                    "subslot": {
+                        "WS-F6K-DFC": {
+                            "hw_ver": "2.3",
+                            "model": "WS-F6K-DFC",
+                            "serial_number": "SAL06261R0A",
+                            "status": "Ok",
+                        },
+                        "WS-G6488": {
+                            "hw_ver": "1.1",
+                            "model": "WS-G6488",
+                            "serial_number": "SAD062201BN",
+                            "status": "Ok",
+                        },
                     },
-                },
+                    "sw_ver": "7.5(0.6)HUB9",
+                }
             },
         }
     }
 
-
-    golden_output_1 = {'execute.return_value': '''
+    golden_output_1 = {
+        "execute.return_value": """
         Mod Ports Card Type                              Model              Serial No.
         --- ----- -------------------------------------- ------------------ -----------
           1    2  Catalyst 6000 supervisor 2 (Active)    WS-X6K-S2U-MSFC2   SAD0628035C
@@ -161,7 +173,8 @@ class test_show_module(unittest.TestCase):
           4 Distributed Forwarding Card WS-F6K-DFC      SAL06121A46      2.1    Ok     
           6 Distributed Forwarding Card WS-F6K-DFC      SAL06261R0A      2.3    Ok     
           6 10GBASE-LR Serial 1310nm lo WS-G6488        SAD062201BN      1.1    Ok
-    '''}
+    """
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -176,6 +189,5 @@ class test_show_module(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
