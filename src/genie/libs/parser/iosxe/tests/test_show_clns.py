@@ -221,7 +221,7 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
                 'system_id':{
                     'R7':{
                         'type':{
-                            'L2': {
+                            2: {
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
                                 'snpa': '5e00.c006.0007',
@@ -256,6 +256,22 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
       Interface name: GigabitEthernet4
     '''}
 
+    golden_parsed_output_2 = {
+        'tag': {
+            'test': {}, 
+            'test1': {}}}
+
+    # When there is not nothing under "Tag" in device output
+    golden_output_2 = {'execute.return_value': '''
+        show clns neighbors detail
+
+        Tag test:
+        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+
+        Tag test1:
+        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+    '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowClnsNeighborsDetail(device=self.device1)
@@ -268,6 +284,13 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
         obj = ShowClnsNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_clns_neighbor_detail_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowClnsNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()        
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # =========================================================
@@ -283,7 +306,7 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
                 'system_id': {
                     'R7':{
                         'type':{
-                            'L2':{
+                            2:{
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
                                 'priority': 64,
@@ -318,6 +341,22 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
       Interface name: GigabitEthernet4
 
     '''}
+    
+    golden_parsed_output_2 = {
+        'tag': {
+            'test': {}, 
+            'test1': {}}} 
+
+    # When there is not nothing under "Tag" in device output
+    golden_output_2 = {'execute.return_value': '''
+        show clns is-neighbors detail
+
+        Tag test:
+        System Id       Interface     State  Type Priority  Circuit Id         Format
+
+        Tag test1:
+        System Id       Interface     State  Type Priority  Circuit Id         Format
+    '''}
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -331,6 +370,13 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
         obj = ShowClnsIsNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_clns_is_neighbor_detail_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowClnsIsNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()        
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 # =========================================================

@@ -45,7 +45,8 @@ class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
 
     def cli(self, mac_type='', location='', output=None):
         if output is None:
-            cmd = self.cli_command[0].format(mac_type=mac_type, location=location)
+            cmd = self.cli_command[0].format(
+                mac_type=mac_type, location=location)
             out = self.device.execute(cmd)
         else:
             out = output
