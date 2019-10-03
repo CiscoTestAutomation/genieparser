@@ -640,7 +640,7 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
             },
             '0012.1200.0001.0000.0002': {
                 'interface': {
-                    'Bundle-Ethernet1': {
+                    'Bundle-Ether1': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
@@ -760,7 +760,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             },
             'be01.0300.be01.ce00.0001': {
                 'interface': {
-                    'Bundle-Ethernet1': {
+                    'Bundle-Ether1': {
                         'next_hops': ['1.100.100.100', '2.100.100.100'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
@@ -898,7 +898,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
         'segment_id': {
             '0047.4700.0000.0000.2200': {
                 'interface': {
-                    'Bundle-Ethernet200': {
+                    'Bundle-Ether200': {
                         'next_hops': ['4.4.4.47', '4.4.4.48'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
