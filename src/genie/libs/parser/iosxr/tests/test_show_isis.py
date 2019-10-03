@@ -10,9 +10,10 @@ from ats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mrib
-from genie.libs.parser.iosxr.show_isis import ShowIsisAdjacency, \
-                                              ShowIsisNeighbors, \
-                                              ShowIsisSegmentRoutingLabelTable
+from genie.libs.parser.iosxr.show_isis import (ShowIsisAdjacency, 
+                                               ShowIsisNeighbors, 
+                                               ShowIsisHostname,
+                                               ShowIsisSegmentRoutingLabelTable)
 
 
 # ==================================================
@@ -370,6 +371,149 @@ class test_show_isis_segment_routing_label_table(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+class TestIsisHostname(unittest.TestCase):
+    ''' Unit tests for commands:
+        * show isis hostname -> ShowIsisHostname
+    ''' 
+
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "isis": {
+            "TEST1": {
+                "vrf": {
+                    "default": {
+                        "system_id": {
+                            "0670.7021.9090": {
+                                "dynamic_hostname": "spine2-tatooine",
+                                "level": 2,
+                            },
+                            "0670.7021.9096": {
+                                "dynamic_hostname": "tcore3-rohan",
+                                "level": 2,
+                            },
+                            "1720.1800.0208": {
+                                "dynamic_hostname": "tor-1.qa-site1",
+                                "level": 2,
+                            },
+                            "1720.1800.0209": {
+                                "dynamic_hostname": "tor-2.qa-site1",
+                                "level": 2,
+                            },
+                            "1720.1800.0210": {
+                                "dynamic_hostname": "tor-3.qa-site1",
+                                "level": 2,
+                            },
+                            "1720.1800.0212": {
+                                "dynamic_hostname": "leaf-1.qa-site1",
+                                "level": 2,
+                            },
+                            "1720.1800.0223": {
+                                "dynamic_hostname": "lef-arista.qa-site1",
+                                "level": 2,
+                            },
+                            "1720.1800.0224": {
+                                "dynamic_hostname": "tor-1.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0225": {
+                                "dynamic_hostname": "tor-2.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0226": {
+                                "dynamic_hostname": "tor-3.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0227": {
+                                "dynamic_hostname": "tor-4.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0232": {
+                                "dynamic_hostname": "tor-32.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0233": {
+                                "dynamic_hostname": "tor-31.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0234": {
+                                "dynamic_hostname": "tor-21.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0235": {
+                                "dynamic_hostname": "tor-22.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0236": {
+                                "dynamic_hostname": "tor-7.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0237": {
+                                "dynamic_hostname": "tor-8.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0238": {
+                                "dynamic_hostname": "tor-9.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1800.0239": {
+                                "dynamic_hostname": "tor-10.tenlab-cloud",
+                                "level": 2,
+                            },
+                            "1720.1904.0062": {
+                                "dynamic_hostname": "leaf-1.kamino",
+                                "level": 2,
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        show isis hostname
+
+        Thu Oct  3 10:53:16.534 EDT
+
+        IS-IS TEST1 hostnames
+        Level  System ID      Dynamic Hostname
+         2     1720.1800.0224 tor-1.tenlab-cloud
+         2     1720.1800.0226 tor-3.tenlab-cloud
+         2     1720.1800.0225 tor-2.tenlab-cloud
+         2     1720.1800.0227 tor-4.tenlab-cloud
+         2     1720.1800.0238 tor-9.tenlab-cloud
+         2     1720.1800.0234 tor-21.tenlab-cloud
+         2     1720.1800.0236 tor-7.tenlab-cloud
+         2     1720.1800.0223 lef-arista.qa-site1
+         2     1720.1800.0232 tor-32.tenlab-cloud
+         2     1720.1800.0208 tor-1.qa-site1
+         2     1720.1800.0239 tor-10.tenlab-cloud
+         2     1720.1800.0235 tor-22.tenlab-cloud
+         2     1720.1800.0237 tor-8.tenlab-cloud
+         2     1720.1904.0062 leaf-1.kamino
+         2     1720.1800.0233 tor-31.tenlab-cloud
+         2     1720.1800.0210 tor-3.qa-site1
+         2     1720.1800.0212 leaf-1.qa-site1
+         2     0670.7021.9096 tcore3-rohan
+         2     1720.1800.0209 tor-2.qa-site1
+         2     0670.7021.9090 spine2-tatooine
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisHostname(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
