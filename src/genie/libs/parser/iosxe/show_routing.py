@@ -1099,11 +1099,13 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
         p4 = re.compile(r'^Last +update +from +(?P<from>[\w\.]+) +(?:on +(?P<interface>[\w\.\/\-]+), )?(?P<age>[ \w\.\:]+) +ago$')
 
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, prefer-non-rib-labels, merge-labels
+        # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0, merge-labels
         # 0.0.0.0, from 0.0.0.0, 00:00:00 ago, via GigabitEthernet0/0/0
         # * 10.101.146.10, from 10.101.146.10, 2d07h ago
-        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+),)? '
-                         '+(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, '
-                         '+(?P<rib_labels>prefer-non-rib-labels), +(?P<merge_labels>merge-labels))?$')
+        # * 10.255.207.129
+        p5 = re.compile(r'^(?:\* +)?(?P<nexthop>[\w\.]+)(?:, +from +(?P<from>[\w\.]+)?, +'
+                         '(?P<age>[\w\.\:]+) +ago(?:, +via +(?P<interface>\S+))?(?:, +'
+                         '(?P<rib_labels>prefer-non-rib-labels))?(:?, +(?P<merge_labels>merge-labels))?)?$')
        
         # Route metric is 10880, traffic share count is 1
         p6 = re.compile(r'^Route +metric +is +(?P<metric>\d+), +'

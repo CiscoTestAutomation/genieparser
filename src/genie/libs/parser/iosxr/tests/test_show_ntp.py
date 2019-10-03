@@ -587,30 +587,29 @@ class test_show_run_ntp(unittest.TestCase):
     golden_parsed_output = {
         'vrf': {
             'default': {
-                'source': 'Loopback0',
                 'address': {
-                    '10.4.1.1': {
-                        'type': 'server'},
-                    '10.16.2.2': {
-                        'type': 'peer'},
-                    '10.36.3.3': {
-                        'type': 'peer'},
-                    '10.64.4.4': {
-                        'type': 'peer'},
-                    }
+                    '1.1.1.1': {
+                        'type': 'server'}
+                }
+            },
+            'management': {
+                'address': {
+                    '1.1.1.1': {
+                        'type': 'server'}
                 }
             }
         }
+    }
+
 
     golden_output = {'execute.return_value': '''\
-        RP/0/RP0/CPU0:iosxrv9000-1#sh run ntp
-        Thu Dec 20 23:56:57.618 EST
+        +++ dev: executing command 'show running-config ntp' +++
+        show running-config ntp
+
+        Thu Sep 26 18:20:16.484 EDT
         ntp
-         server 10.4.1.1
-         peer 10.16.2.2
-         peer 10.36.3.3
-         peer 10.64.4.4
-         source Loopback0
+         server 1.1.1.1
+         server vrf management 1.1.1.1
         !
     '''
     }

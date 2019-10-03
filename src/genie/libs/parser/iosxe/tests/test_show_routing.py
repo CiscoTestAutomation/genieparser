@@ -1268,7 +1268,7 @@ class TestShowIpRouteWord(unittest.TestCase):
           Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
          SR Incoming Label: 52610
           Routing Descriptor Blocks:
-          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, prefer-non-rib-labels, merge-labels
+          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, merge-labels
               Route metric is 5, traffic share count is 1
               MPLS label: 52610
               MPLS Flags: NSF
@@ -1311,7 +1311,7 @@ class TestShowIpRouteWord(unittest.TestCase):
                         'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet4',
-                        'prefer_non_rib_labels': True,
+                        'prefer_non_rib_labels': False,
                         'merge_labels': True,
                         'metric': '5',
                         'share_count': '1',
@@ -1428,6 +1428,42 @@ class TestShowIpRouteWord(unittest.TestCase):
         'total_prefixes': 1
     }
 
+    golden_output_4 = {'execute.return_value': '''\
+        lab-asr-1002# show ip route vrf Mgmt-intf 0.0.0.0
+        
+        Routing Table: Mgmt-intf
+        Routing entry for 0.0.0.0/0, supernet
+        Known via "static", distance 1, metric 0, candidate default path
+        Routing Descriptor Blocks:
+        * 10.255.207.129
+            Route metric is 0, traffic share count is 1
+    '''
+    }
+
+    golden_parsed_output_4 = {
+        'entry': {
+            '0.0.0.0/0': {
+                'distance': '1',
+                'ip': '0.0.0.0',
+                'known_via': 'static',
+                'mask': '0',
+                'metric': '0',
+                'net': 'supernet',
+                'paths': {
+                    1: {
+                        'merge_labels': False,
+                        'metric': '0',
+                        'nexthop': '10.255.207.129',
+                        'prefer_non_rib_labels': False,
+                        'share_count': '1'
+                    }
+                },
+                'type': 'default path'
+            }
+        },
+        'total_prefixes': 1
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1461,6 +1497,13 @@ class TestShowIpRouteWord(unittest.TestCase):
         obj = ShowIpRouteWord(device=self.device)
         parsed_output = obj.parse(route='0.0.0.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 ###################################################
 # unit test for show ipv6 route <WROD>

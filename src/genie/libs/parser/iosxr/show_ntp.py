@@ -493,7 +493,7 @@ class ShowRunningConfigNtpSchema(MetaParser):
     schema = {
         'vrf': {
             Any(): {
-                'source': str,
+                Optional('source'): str,
                 'address': {
                     Any(): {
                         'type': str,
