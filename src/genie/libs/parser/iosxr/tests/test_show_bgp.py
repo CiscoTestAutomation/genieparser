@@ -9976,6 +9976,154 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
             },
         },
     }
+    
+    golden_output4 = {'execute.return_value': '''
+        +++ spine1-tatooine: executing command 'show bgp l2vpn evpn' +++
+        show bgp l2vpn evpn
+
+        Fri Sep 27 17:01:51.580 EDT
+        BGP router identifier 67.70.219.88, local AS number 64577
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 7
+        BGP NSR Initial initsync version 3 (Reached)
+        BGP NSR/ISSU Sync-Group versions 7/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 67.70.219.82:10100
+        *>i[1][0000.0000.0000.0000.0000][30100]/120
+                            67.70.219.82                  100      0 i
+        Route Distinguisher: 67.70.219.82:10200
+        *>i[1][0000.0000.0000.0000.0000][30200]/120
+                            67.70.219.82                  100      0 i
+        Route Distinguisher: 67.70.219.88:10100 (default for vrf VPWS:10100)
+        *> [1][0000.0000.0000.0000.0000][20100]/120
+                            0.0.0.0                                0 i
+        *>i[1][0000.0000.0000.0000.0000][30100]/120
+                            67.70.219.82                  100      0 i
+        Route Distinguisher: 67.70.219.88:10200 (default for vrf VPWS:10200)
+        *> [1][0000.0000.0000.0000.0000][20200]/120
+                            0.0.0.0                                0 i
+        *>i[1][0000.0000.0000.0000.0000][30200]/120
+                            67.70.219.82                  100      0 i
+
+        Processed 6 prefixes, 6 paths
+        RP/0/RP0/CPU0:spine1-tatooine#
+    '''}
+
+    golden_parsed_output4 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'l2vpn evpn': {
+                        'router_identifier': '67.70.219.88',
+                        'local_as': 64577,
+                        'generic_scan_interval': '60',
+                        'non_stop_routing': 'enabled',
+                        'table_state': 'active',
+                        'table_id': '0x0',
+                        'rd_version': 0,
+                        'bgp_table_version': 7,
+                        'nsr_initial_initsync_version': '3',
+                        'nsr_initial_init_ver_status': 'reached',
+                        'nsr_issu_sync_group_versions': '7/0',
+                        'scan_interval': 60,
+                    },
+                    'l2vpn evpn RD 67.70.219.82:10100': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '67.70.219.82:10100',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][30100]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '67.70.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 67.70.219.82:10200': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '67.70.219.82:10200',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][30200]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '67.70.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 67.70.219.88:10100': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '67.70.219.88:10100',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][20100]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[1][0000.0000.0000.0000.0000][30100]/120': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '67.70.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 67.70.219.88:10200': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '67.70.219.88:10200',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][20200]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[1][0000.0000.0000.0000.0000][30200]/120': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '67.70.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                        'processed_prefix': 6,
+                        'processed_paths': 6,
+                    },
+                },
+            },
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpL2vpnEvpn(device=self.device)
@@ -10002,7 +10150,13 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output3)
-
+    
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
 
 # =============================================
 # Unit test for 'show bgp l2vpn evpn neighbors'

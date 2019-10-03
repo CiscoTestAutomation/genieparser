@@ -5495,7 +5495,9 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         p3_3_2 = re.compile(r'^\s*(?P<numbers>[0-9\s\(\)\{\}]+)? +'
                             '(?P<origin_codes>(i|e|\?|\|))$')
         p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
-        p4 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>(\S+))(?: +\(((VRF +(?P<default_vrf>\S+))|((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
+        p4 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>(\S+))'
+            '(?: +\(((VRF +(?P<default_vrf>\S+))|((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)'
+            '|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
         
         p5 = re.compile(r'^\s*BGP *router *identifier *(?P<router_identifier>[0-9\.]+)'
                          ', *local *AS *number *(?P<local_as>[0-9]+)$')
@@ -5511,9 +5513,12 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                           ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
         p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
         p13 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
-        p14 = re.compile(r'(--More-- +)?(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
-        p15 = re.compile(r'(--More-- +)?(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?(?: *(?P<origin_codes>(i|e|\?)))$')
-        p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +(?P<processed_paths>[0-9]+) +paths$')
+        p14 = re.compile(r'(--More-- +)?(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
+            '(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
+        p15 = re.compile(r'(--More-- +)?(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
+            '(?: *(?P<origin_codes>(i|e|\?)))$')
+        p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +'
+            '(?P<processed_paths>[0-9]+) +paths$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -6099,32 +6104,6 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict['processed_prefix'] = processed_prefix
                 af_dict['processed_paths'] = processed_paths
                 continue
-        # order the af prefixes index
-        # return dict when parsed dictionary is empty
-        if 'vrf' not in parsed_dict:
-            return parsed_dict
-
-        # for vrf_name in parsed_dict['vrf']:
-        #     if 'address_family' not in parsed_dict['vrf'][vrf_name]:
-        #         continue
-        #     for af in parsed_dict['vrf'][vrf_name]['address_family']:
-        #         af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
-        #           .setdefault('address_family', {}).setdefault(af, {})
-        #         if 'prefixes' in af_dict:
-        #             for prefixes in af_dict['prefixes']:
-        #                 if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:
-        #                     ind = 1
-        #                     nexthop_dict = {}
-        #                     try:
-        #                         sorted_list = sorted(af_dict['prefixes'][prefixes]['index'].items(),
-        #                                         key = lambda x:x[1]['next_hop'])
-        #                         for i, j in enumerate(sorted_list):
-        #                             nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][j[0]]
-        #                             ind += 1
-        #                         del(af_dict['prefixes'][prefixes]['index'])
-        #                         af_dict['prefixes'][prefixes]['index'] = nexthop_dict
-        #                     except Exception:
-        #                         pass
 
         return parsed_dict
 
