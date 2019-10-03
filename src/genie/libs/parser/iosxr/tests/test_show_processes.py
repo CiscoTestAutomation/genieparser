@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # Parser
-from genie.libs.parser.iosxr.show_processes import ShowProcessesIsis
+from genie.libs.parser.iosxr.show_processes import ShowProcesses
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
@@ -13,7 +13,7 @@ from ats.topology import Device
 
 class TestShowProcesses(unittest.TestCase):
     ''' Unit tests for commands:
-        * 'show processes isis' : Parser ShowProcessesIsis
+        * 'show processes isis' : Parser ShowProcesses
     '''
 
     device = Device(name='aDevice')
@@ -28,209 +28,207 @@ class TestShowProcesses(unittest.TestCase):
                 "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis",
                 "instance": "1",
                 "last_started": "Wed Jan 30 20:43:04 2019",
-                "max_core": "0",
+                "max_core": 0,
                 "package_state": "Normal",
                 "pid": 22464,
                 "placement": "Placeable",
                 "process_cpu_time": {
-                    "kernel": "0.640", 
-                    "total": "3.330", 
-                    "user": "2.690"},
+                    "kernel": 0.640, 
+                    "total": 3.330, 
+                    "user": 2.690},
                 "process_group": "v4-routing",
                 "process_name": "isis",
-                "process_state": "Run",
-                "processes": {
-                    "tid": {
-                        22464: {
-                            "name": "Management",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22471: {
-                            "name": "lwm_debug_threa",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22472: {
-                            "name": "isis",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22473: {
-                            "name": "lwm_service_thr",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22474: {
-                            "name": "qsm_service_thr",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22475: {
-                            "name": "aaa_tty_th",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22476: {
-                            "name": "aaa_util_th",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22477: {
-                            "name": "aaa_client_th",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22478: {
-                            "name": "aaa_login_th",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22479: {
-                            "name": "isis",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22480: {
-                            "name": "isis",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22481: {
-                            "name": "chkpt_evm",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22482: {
-                            "name": "isis",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22485: {
-                            "name": "isis",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22486: {
-                            "name": "isis",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22487: {
-                            "name": "lspv_lib ISIS",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22488: {
-                            "name": "async",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22489: {
-                            "name": "Hello",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22490: {
-                            "name": "Update",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22491: {
-                            "name": "SR-MPLS",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22492: {
-                            "name": "NSR",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22493: {
-                            "name": "LSD sync client",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22494: {
-                            "name": "telemetry_evtli",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22511: {
-                            "name": "Decision",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22512: {
-                            "name": "TE",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22513: {
-                            "name": "MIB Traps",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                        22514: {
-                            "name": "Protect Infra",
-                            "pri": 20,
-                            "rt_pri": 0,
-                            "stack": "0K",
-                            "state": "Sleeping",
-                        },
-                    }
+                "process_state": "Run",                
+                "tid": {
+                    22464: {
+                        "name": "Management",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22471: {
+                        "name": "lwm_debug_threa",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22472: {
+                        "name": "isis",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22473: {
+                        "name": "lwm_service_thr",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22474: {
+                        "name": "qsm_service_thr",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22475: {
+                        "name": "aaa_tty_th",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22476: {
+                        "name": "aaa_util_th",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22477: {
+                        "name": "aaa_client_th",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22478: {
+                        "name": "aaa_login_th",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22479: {
+                        "name": "isis",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22480: {
+                        "name": "isis",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22481: {
+                        "name": "chkpt_evm",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22482: {
+                        "name": "isis",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22485: {
+                        "name": "isis",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22486: {
+                        "name": "isis",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22487: {
+                        "name": "lspv_lib ISIS",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22488: {
+                        "name": "async",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22489: {
+                        "name": "Hello",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22490: {
+                        "name": "Update",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22491: {
+                        "name": "SR-MPLS",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22492: {
+                        "name": "NSR",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22493: {
+                        "name": "LSD sync client",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22494: {
+                        "name": "telemetry_evtli",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22511: {
+                        "name": "Decision",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22512: {
+                        "name": "TE",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22513: {
+                        "name": "MIB Traps",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },
+                    22514: {
+                        "name": "Protect Infra",
+                        "pri": 20,
+                        "rt_pri": 0,
+                        "stack": "0K",
+                        "state": "Sleeping",
+                    },                    
                 },
                 "ready": "1.804s",
                 "respawn": "ON",
@@ -296,15 +294,15 @@ class TestShowProcesses(unittest.TestCase):
 
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowProcessesIsis(device=self.device)
+        obj = ShowProcesses(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            parsed_output = obj.parse(process='isis')
 
     def test_parsed_output_1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
-        obj = ShowProcessesIsis(device=self.device)
-        parsed_output = obj.parse()
+        obj = ShowProcesses(device=self.device)
+        parsed_output = obj.parse(process='isis')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':

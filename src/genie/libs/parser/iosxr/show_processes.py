@@ -10,8 +10,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any
 
-class ShowProcessesIsisSchema(MetaParser):
+class ShowProcessesSchema(MetaParser):
     ''' Schema for commands:
+        * show processes 
         * show processes isis
     '''
     schema = {
@@ -30,42 +31,45 @@ class ShowProcessesIsisSchema(MetaParser):
                 'started_on_config': str,
                 'process_group': str,
                 'core': str,
-                'max_core': str,
+                'max_core': int,
                 'placement': str,
                 'startup_path': str,
                 'ready': str,
                 'available': str,
                 'process_cpu_time': {
-                    'user': str,
-                    'kernel': str,
-                    'total': str,
-                },
-                'processes': {
-                    'tid': {
-                        Any(): {
-                            'stack': str,
-                            'pri': int,
-                            'state': str,
-                            'name': str,
-                            'rt_pri': int,
-                        }
+                    'user': float,
+                    'kernel': float,
+                    'total': float,
+                },                
+                'tid': {
+                    Any(): {
+                        'stack': str,
+                        'pri': int,
+                        'state': str,
+                        'name': str,
+                        'rt_pri': int,
                     }
-                }
+                }            
             }
         }
     }
 
-class ShowProcessesIsis(ShowProcessesIsisSchema):
+class ShowProcesses(ShowProcessesSchema):
     ''' Parser for:
+        * 'show processes'
         * 'show processes isis'
     '''
 
-    cli_command = 'show processes isis'
+    cli_command = ['show processes {process}', 
+                   'show processes']
 
-    def cli(self, output=None):
+    def cli(self, process=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if process:
+                output = self.device.execute(self.cli_command[0].format(process=process))
+            else:
+                output = self.device.execute(self.cli_command[1])
 
         parsed_output = {}
 
@@ -291,7 +295,7 @@ class ShowProcessesIsis(ShowProcessesIsisSchema):
             result = r15.match(line)
             if result:
                 group = result.groupdict()
-                max_core = group['max_core']
+                max_core = int(group['max_core'])
 
                 job_dict['max_core'] = max_core
 
@@ -341,9 +345,9 @@ class ShowProcessesIsis(ShowProcessesIsisSchema):
             result = r20.match(line)
             if result:
                 group = result.groupdict()
-                cpu_time_user = group['cpu_time_user']
-                cpu_time_kernel = group['cpu_time_kernel']
-                cpu_time_total = group['cpu_time_total']
+                cpu_time_user = float(group['cpu_time_user'])
+                cpu_time_kernel = float(group['cpu_time_kernel'])
+                cpu_time_total = float(group['cpu_time_total'])
 
                 process_cpu_time_dict = job_dict\
                     .setdefault('process_cpu_time', {})
@@ -375,7 +379,6 @@ class ShowProcessesIsis(ShowProcessesIsisSchema):
                 processes_dict = parsed_output\
                     .setdefault('job_id', {})\
                     .setdefault(jid, {})\
-                    .setdefault('processes', {})\
                     .setdefault('tid', {})\
                     .setdefault(tid, {})
 
