@@ -13,7 +13,7 @@ from genie.libs.parser.iosxe.show_isis import ShowIsisHostname,\
                                               ShowIsisNeighbors
 
 
-class test_show_isis_hostname(unittest.TestCase):
+class TestShowIsisHostname(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -103,7 +103,7 @@ class test_show_isis_hostname(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
 
-class test_show_isis_lsp_log(unittest.TestCase):
+class TestShowIsisLspLog(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -192,7 +192,7 @@ class test_show_isis_lsp_log(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class test_show_isis_database_detail(unittest.TestCase):
+class TestShowIsisDatabaseDetail(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -450,7 +450,7 @@ class test_show_isis_database_detail(unittest.TestCase):
         parsed_output = platform_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
-class test_show_run_sec_isis(unittest.TestCase):
+class TestShowRunSecIsis(unittest.TestCase):
     device = Device(name='aDevice')
 
     empty_output = {'execute.return_value': ''}
@@ -500,6 +500,25 @@ class test_show_run_sec_isis(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output_2 = {}
+
+    golden_output_2 = {'execute.return_value': '''
+         ip router isis
+         ipv6 router isis
+         ip router isis
+         ipv6 router isis
+         ip router isis
+         ipv6 router isis
+         ip router isis
+         ipv6 router isis
+        router isis
+         net 47.0002.0000.0000.0002.00
+         is-type level-1
+         metric-style wide
+         mpls traffic-eng router-id Loopback0
+         mpls traffic-eng level-1
+    '''}
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -507,11 +526,18 @@ class test_show_run_sec_isis(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRunSectionIsis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 # ====================================
 #  Unit test for 'show isis neighbors'
 # ====================================
 
-class test_show_isis_neighbors(unittest.TestCase):
+class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
     device = Device(name='aDevice')
