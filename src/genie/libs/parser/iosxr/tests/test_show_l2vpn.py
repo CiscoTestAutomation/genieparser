@@ -38,7 +38,7 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                                 'mac_address': {
                                     '0000.f65a.357c': {
                                         'ip_address': 'fe80::200:f6ff:fe5a:357c'},
-                                '1000.0001.0001': {
+                                    '1000.0001.0001': {
                                         'ip_address': '10.1.1.11'}}}}}}},
             '7': {
                 'producer': {
@@ -71,9 +71,7 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output)
         obj = ShowL2vpnMacLearning(device=self.device)
-
         parsed_output = obj.parse()
-
         self.assertEqual(parsed_output, self.expected_output)
 
 

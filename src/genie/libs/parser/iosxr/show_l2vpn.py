@@ -5,8 +5,7 @@ show l2vpn parser class
 """
 # Python
 import re
-from netaddr import EUI
-from ipaddress import ip_address
+
 
 # Genie
 from genie.metaparser import MetaParser
@@ -39,42 +38,28 @@ class ShowL2vpnMacLearningSchema(MetaParser):
     }
 
 
-class AutoTree(dict):
-    def __missing__(self, key):
-        value = self[key] = type(self)()
-        return value
-
-
 class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
     """Parser class for show l2vpn mac-learning <mac_type> all location <location>"""
 
-    def __init__(self, mac_type='mac', location='local', **kwargs):
-        self.location = location
-        self.mac_type = mac_type
-        super().__init__(**kwargs)
-
     cli_command = 'show l2vpn mac-learning {mac_type} all location {location}'
 
-    def cli(self, output=None):
+    def cli(self, mac_type='', location='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(
-                mac_type=self.mac_type,
-                location=self.location))
+            cmd = self.cli_command[0].format(mac_type=mac_type, location=location)
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # Topo ID  Producer  Next Hop(s)  Mac Address     IP Address
 
         # 6        0/0/CPU0   BV1        1000.0001.0001      10.1.1.11
-        # 7        0/0/CPU0   BV2        0000.f65a.3570      10.1.2.91
-        # 7        0/0/CPU0   BV2        0000.f65a.357d      10.1.2.93
         # 6        0/0/CPU0   BV1        0000.f65a.357c      fe80::200:f6ff:fe5a:357c
         # 1        0/0/CPU0   BE1.7      7777.7777.0002
 
         p = re.compile(r'^(?P<topo_id>\d+) +'
-                       '(?P<producer>\S+) +'
-                       '(?P<next_hop>\S+) +'
-                       '(?P<mac_address>\S+)'
+                       r'(?P<producer>\S+) +'
+                       r'(?P<next_hop>\S+) +'
+                       r'(?P<mac_address>\S+)'
                        '( +(?P<ip_address>\S+))?$')
 
         parsed_dict = {}
@@ -86,13 +71,12 @@ class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
 
             if result:
                 group_dict = result.groupdict()
-                mac_address_dict = AutoTree()
+                ip_address_dict = {}
 
                 str_ip_address = group_dict['ip_address']
                 if str_ip_address:
-                    mac_address_dict[group_dict['mac_address']]['ip_address'] = group_dict['ip_address']
-                else:
-                    mac_address_dict[group_dict['mac_address']]
+                    ip_address_dict.update({'ip_address': str_ip_address})
+
                 parsed_dict.setdefault(
                     'topo_id',
                     {}).setdefault(
@@ -103,7 +87,10 @@ class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
                     group_dict['producer'], {}
                 ).setdefault('next_hop', {}).setdefault(
                     group_dict['next_hop'], {}
-                ).setdefault('mac_address', {}).update(mac_address_dict)
+                ).setdefault('mac_address', {}).setdefault(
+                    group_dict['mac_address'], {}
+                ).update(ip_address_dict)
+
                 continue
 
         return parsed_dict
