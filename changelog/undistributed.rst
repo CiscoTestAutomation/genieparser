@@ -397,7 +397,7 @@
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
     * Added ShowL2vpnMacLearning for:
-        * show l2vpn mac-learning <mac_type> all location <location>
+        * show l2vpn mac-learning {mac_type} all location {location}
     * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
         * show l2vpn forwarding bridge-domain mac-address location {location}
         * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}

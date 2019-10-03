@@ -8,15 +8,14 @@ from ats.topology import Device
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-
 # iosxr show_l2vpn_mac_learning
 from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnMacLearning)
 
-
 # iosxr show_mrib
-from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnBridgeDomain,
-                                                ShowL2vpnForwardingBridgeDomainMacAddress,
-                                                ShowL2vpnForwardingProtectionMainInterface)
+from genie.libs.parser.iosxr.show_l2vpn import (
+    ShowL2vpnBridgeDomain,
+    ShowL2vpnForwardingBridgeDomainMacAddress,
+    ShowL2vpnForwardingProtectionMainInterface)
 
 
 # ===========================================
@@ -36,7 +35,8 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                         'next_hop': {
                             'BE1.7': {
                                 'mac_address': {
-                                    '7777.7777.0002': {}}}}}}},
+                                    '7777.7777.0002': {
+                                        'ip_address': []}}}}}}},
             '6': {
                 'producer': {
                     '0/0/CPU0': {
@@ -44,9 +44,9 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                             'BV1': {
                                 'mac_address': {
                                     '0000.f65a.357c': {
-                                        'ip_address': 'fe80::200:f6ff:fe5a:357c'},
+                                        'ip_address': ['fe80::200:f6ff:fe5a:357c']},
                                     '1000.0001.0001': {
-                                        'ip_address': '10.1.1.11'}}}}}}},
+                                        'ip_address': ['10.1.1.11']}}}}}}},
             '7': {
                 'producer': {
                     '0/0/CPU0': {
@@ -54,16 +54,15 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
                             'BV2': {
                                 'mac_address': {
                                     '0000.f65a.3570': {
-                                        'ip_address': '10.1.2.91'},
-                                    '0000.f65a.357d': {
-                                        'ip_address': '10.1.2.93'}}}}}}}}}
+                                        'ip_address': [
+                                            '10.1.2.91', '10.1.2.93']}}}}}}}}}
 
     device_output = {'execute.return_value': '''
         Topo ID  Producer  Next Hop(s)  Mac Address     IP Address
 
         6        0/0/CPU0   BV1        1000.0001.0001      10.1.1.11
         7        0/0/CPU0   BV2        0000.f65a.3570      10.1.2.91
-        7        0/0/CPU0   BV2        0000.f65a.357d      10.1.2.93
+        7        0/0/CPU0   BV2        0000.f65a.3570      10.1.2.93
         1        0/0/CPU0   BE1.7      7777.7777.0002
         6        0/0/CPU0   BV1        0000.f65a.357c      fe80::200:f6ff:fe5a:357c
 
@@ -80,15 +79,15 @@ class TestShowL2vpnMacLearning(unittest.TestCase):
         self.device = Mock(**self.device_output)
         obj = ShowL2vpnMacLearning(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.expected_output)
 
+        self.assertEqual(parsed_output, self.expected_output)
 
 
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding bridge-domain mac-address location {location}'
 # ====================================================================================
 class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
-    '''Unit test for 
+    '''Unit test for
         show l2vpn forwarding bridge-domain mac-address location {location}
         show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
     '''
@@ -172,7 +171,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                     '0001.0000.000a': {
+                    '0001.0000.000a': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -273,25 +272,25 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         To Resynchronize MAC table from the Network Processors, use the command...
         l2vpn resynchronize forwarding mac-address-table location <r/s/i>
 
-        Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to 
-        -------------- ------- --------------------------- ---------- ---------------------- -------------- 
-        0001.0000.0002 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0003 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0004 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0005 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0006 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0007 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0008 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0009 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000a dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000b dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000c dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000d dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000e dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.000f dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0010 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0011 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
-        0001.0000.0012 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A 
+        Mac Address Type Learned from/Filtered on LC learned Resync Age/Last Change Mapped to
+        -------------- ------- --------------------------- ---------- ---------------------- --------------
+        0001.0000.0002 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0003 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0004 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0005 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0006 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0007 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0008 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0009 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.000a dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.000b dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.000c dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.000d dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.000e dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.000f dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0010 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0011 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
+        0001.0000.0012 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
         0001.0000.0013 dynamic Te0/0/1/0/3.3 N/A 0d 0h 0m 14s N/A
     '''}
 
@@ -302,71 +301,71 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                     '0021.0001.0002': {
                         'lc_learned': 'N/A',
                         'learned_from': '(10.25.40.40, '
-                                       '10007)',
+                                        '10007)',
                         'mapped_to': 'N/A',
                         'resync_age': '14 '
-                                     'Mar '
-                                     '12:46:04',
+                                      'Mar '
+                                      '12:46:04',
                         'type': 'dynamic'},
                     '1234.0001.0005': {'lc_learned': 'N/A',
-                        'learned_from': '(10.25.40.40, '
-                                       '10007)',
-                        'mapped_to': 'N/A',
-                        'resync_age': 'N/A',
-                        'type': 'static'}
+                                       'learned_from': '(10.25.40.40, '
+                                                       '10007)',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'static'}
                 }
             },
             'BD id:0': {
                 'mac_address': {
                     '0021.0001.0001': {
                         'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                        'learned_from': 'BD '
+                                        'id:0',
+                        'mapped_to': 'N/A',
+                        'resync_age': 'N/A',
+                        'type': 'EVPN'},
                     '0021.0001.0003': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '0021.0001.0004': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '0021.0001.0005': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.0001.0001': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.0001.0002': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.0001.0003': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.0001.0004': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'}
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'}
                 }
             },
             'BE1.2': {
@@ -434,11 +433,14 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         parsed_output = obj.parse(location=0, bridge_domain=0)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding protection main-interface location {location}'
 # ====================================================================================
+
+
 class TestShowL2vpnForwardingProtectionMainInterface(unittest.TestCase):
-    '''Unit test for 
+    '''Unit test for
         show l2vpn forwarding protection main-interface location {location}
     '''
 
@@ -466,11 +468,11 @@ class TestShowL2vpnForwardingProtectionMainInterface(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
         RP/0/RP0/CPU0:router# show l2vpn forwarding protection main-interface location 0/1/0
-        Main Interface ID                Instance    State    
-        -------------------------------- -------------- -------- 
-        GigabitEthernet0/0/0/0           1               forward       
-        GigabitEthernet0/0/0/0           2               forward                
-        GigabitEthernet0/0/0/1           1               forward  
+        Main Interface ID                Instance    State
+        -------------------------------- -------------- --------
+        GigabitEthernet0/0/0/0           1               forward
+        GigabitEthernet0/0/0/0           2               forward
+        GigabitEthernet0/0/0/1           1               forward
     '''}
 
     golden_parsed_output_1 = {

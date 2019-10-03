@@ -6,7 +6,6 @@ show l2vpn parser class
 # Python
 import re
 
-
 # Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
@@ -26,7 +25,7 @@ class ShowL2vpnMacLearningSchema(MetaParser):
                             Any(): {
                                 'mac_address': {
                                     Any(): {
-                                        Optional('ip_address'): str,
+                                        Optional('ip_address'): list
                                     }
                                 }
                             }
@@ -72,16 +71,12 @@ class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
 
             if result:
                 group_dict = result.groupdict()
-                ip_address_dict = {}
+                # ip_address_dict = {}
 
-                str_ip_address = group_dict['ip_address']
-                if str_ip_address:
-                    ip_address_dict.update({'ip_address': str_ip_address})
+                str_ip_address = group_dict.get('ip_address')
 
-                parsed_dict.setdefault(
-                    'topo_id',
-                    {}).setdefault(
-                    group_dict['topo_id'],
+                ip_address_dict = parsed_dict.setdefault(
+                    'topo_id', {}).setdefault(group_dict['topo_id'],
                     {}).setdefault(
                     'producer',
                     {}).setdefault(
@@ -90,7 +85,10 @@ class ShowL2vpnMacLearning(ShowL2vpnMacLearningSchema):
                     group_dict['next_hop'], {}
                 ).setdefault('mac_address', {}).setdefault(
                     group_dict['mac_address'], {}
-                ).update(ip_address_dict)
+                )
+                ip_address_list = ip_address_dict.setdefault('ip_address', [])
+                if str_ip_address:
+                    ip_address_list.append(str_ip_address)
 
                 continue
 
@@ -102,6 +100,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
         show l2vpn forwarding bridge-domain mac-address location <location>
         show l2vpn forwarding bridge-domain <bridge_domain> mac-address location <location>
     """
+
     # TODO schema
 
     def __init__(self, location=None, bridge_domain=None, **kwargs):
@@ -172,7 +171,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
             if not header_processed:
                 # 1. check proper title header exist
                 if re.match(
-                    r"^Mac Address\s+Type\s+Learned from/Filtered on\s+LC learned\s+Resync Age/Last Change\s+Mapped to",
+                        r"^Mac Address\s+Type\s+Learned from/Filtered on\s+LC learned\s+Resync Age/Last Change\s+Mapped to",
                         line):
                     title_found = True
                     continue
@@ -209,6 +208,7 @@ class ShowL2vpnForwardingBridgeDomainMacAddress(MetaParser):
 
 class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
     """Parser for show l2vpn forwarding protection main-interface location <location>"""
+
     # TODO schema
 
     def __init__(self, location=None, **kwargs):
@@ -297,6 +297,7 @@ class ShowL2vpnForwardingProtectionMainInterface(MetaParser):
                 })
 
         return result
+
 
 # vim: ft=python ts=8 sw=4 et
 
