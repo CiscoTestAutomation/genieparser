@@ -478,6 +478,248 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         byte totals: receive 0
         '''}
 
+    golden_parsed_output2 = {
+        'group': {
+            'pe1-to-spine1': {
+                'xc': {
+                    'vpws_bl1_tor31_200': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/0/0/5/1.200': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'vlan_ranges': ['200', '200'],
+                                'mtu': 1500,
+                                'xc_id': '0x2',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 3,
+                                        'send': 3,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 180,
+                                        'send': 180,
+                                    },
+                                    'drops': 'illegal',
+                                    'vlan': 0,
+                                    'illegal_length': 0,
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '67.70.219.82': {
+                                    'id': {
+                                        10200: {
+                                            'state': 'up ( established )',
+                                            'ac_id': 30200,
+                                            'xc_id': '0xc0000001',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '67.70.219.88',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100013',
+                                                    'remote': '100010',
+                                                },
+                                                'mtu': {
+                                                    'local': '1500',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'enabled',
+                                                },
+                                                'ac_id': {
+                                                    'local': '20200',
+                                                    'remote': '30200',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet',
+                                                },
+                                            },
+                                            'create_time': '24/09/2019 15:10:17 (1w0d ago)',
+                                            'last_time_status_changed': '24/09/2019 15:14:43 (1w0d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'vpws_pe1_spine1_100': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'TenGigE0/0/0/5/1.100': {
+                                'state': 'up',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'vlan_ranges': ['100', '100'],
+                                'mtu': 1500,
+                                'xc_id': '0x1',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 3,
+                                        'send': 3,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 180,
+                                        'send': 180,
+                                    },
+                                    'drops': 'illegal',
+                                    'vlan': 0,
+                                    'illegal_length': 0,
+                                },
+                            },
+                        },
+                        'evpn': {
+                            'neighbor': {
+                                '67.70.219.82': {
+                                    'id': {
+                                        10100: {
+                                            'state': 'up ( established )',
+                                            'ac_id': 30100,
+                                            'xc_id': '0xc0000002',
+                                            'encapsulation': 'MPLS',
+                                            'source_address': '67.70.219.88',
+                                            'encap_type': 'Ethernet',
+                                            'control_word': 'enabled',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'evpn': {
+                                                'label': {
+                                                    'local': '100012',
+                                                    'remote': '100009',
+                                                },
+                                                'mtu': {
+                                                    'local': '1500',
+                                                    'remote': 'unknown',
+                                                },
+                                                'control_word': {
+                                                    'local': 'enabled',
+                                                    'remote': 'enabled',
+                                                },
+                                                'ac_id': {
+                                                    'local': '20100',
+                                                    'remote': '30100',
+                                                },
+                                                'evpn_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet',
+                                                },
+                                            },
+                                            'create_time': '24/09/2019 15:10:17 (1w0d ago)',
+                                            'last_time_status_changed': '24/09/2019 15:14:43 (1w0d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 0,
+                                                    'send': 0,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+    show l2vpn xconnect detail
+
+    Wed Oct  2 14:36:55.184 EDT
+
+    Group pe1-to-spine1, XC vpws_bl1_tor31_200, state is up; Interworking none
+    AC: TenGigE0/0/0/5/1.200, state is up
+        Type VLAN; Num Ranges: 1
+        Rewrite Tags: []
+        VLAN ranges: [200, 200]
+        MTU 1500; XC ID 0x2; interworking none
+        Statistics:
+        packets: received 3, sent 0
+        bytes: received 180, sent 0
+        drops: illegal VLAN 0, illegal length 0
+    EVPN: neighbor 67.70.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
+        XC ID 0xc0000001
+        Encapsulation MPLS
+        Source address 67.70.219.88
+        Encap type Ethernet, control word enabled
+        Sequencing not set
+        LSP : Up
+
+        EVPN         Local                          Remote                        
+        ------------ ------------------------------ -----------------------------
+        Label        100013                         100010                        
+        MTU          1500                           unknown                       
+    --More--                 Control word enabled                        enabled                       
+        AC ID        20200                          30200                         
+        EVPN type    Ethernet                       Ethernet                      
+
+        ------------ ------------------------------ -----------------------------
+        Create time: 24/09/2019 15:10:17 (1w0d ago)
+        Last time status changed: 24/09/2019 15:14:43 (1w0d ago)
+        Statistics:
+        packets: received 0, sent 3
+        bytes: received 0, sent 180
+
+    Group pe1-to-spine1, XC vpws_pe1_spine1_100, state is up; Interworking none
+    AC: TenGigE0/0/0/5/1.100, state is up
+        Type VLAN; Num Ranges: 1
+        Rewrite Tags: []
+        VLAN ranges: [100, 100]
+        MTU 1500; XC ID 0x1; interworking none
+        Statistics:
+        packets: received 3, sent 0
+        bytes: received 180, sent 0
+        drops: illegal VLAN 0, illegal length 0
+    EVPN: neighbor 67.70.219.82, PW ID: evi 10100, ac-id 30100, state is up ( established )
+        XC ID 0xc0000002
+    --More--               Encapsulation MPLS
+        Source address 67.70.219.88
+        Encap type Ethernet, control word enabled
+        Sequencing not set
+        LSP : Up
+
+        EVPN         Local                          Remote                        
+        ------------ ------------------------------ -----------------------------
+        Label        100012                         100009                        
+        MTU          1500                           unknown                       
+        Control word enabled                        enabled                       
+        AC ID        20100                          30100                         
+        EVPN type    Ethernet                       Ethernet                      
+
+        ------------ ------------------------------ -----------------------------
+        Create time: 24/09/2019 15:10:17 (1w0d ago)
+        Last time status changed: 24/09/2019 15:14:43 (1w0d ago)
+        Statistics:
+        packets: received 0, sent 3
+        bytes: received 0, sent 180
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnXconnectDetail(device=self.device)
@@ -490,6 +732,13 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         obj = ShowL2vpnXconnectDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect summary'

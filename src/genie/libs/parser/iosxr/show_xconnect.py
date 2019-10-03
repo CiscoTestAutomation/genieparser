@@ -196,16 +196,21 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                 Optional('msti'): int,
                                 Optional('statistics'): {
                                     'packet_totals': {
-                                        'send': int
+                                        Optional('receive'): int,
+                                        Optional('send'): int
                                     },
                                     'byte_totals': {
-                                        'send': int
-                                    }
+                                        Optional('receive'): int,
+                                        Optional('send'): int
+                                    },
+                                    Optional('drops'): str,
+                                    Optional('vlan'): int,
+                                    Optional('illegal_length'): int,
                                 },
                                 Optional('vlan_ranges'): list,
                             }
                         },
-                        'pw': {
+                        Optional('pw'): {
                             'neighbor': {
                                 Any(): {
                                     'id': {
@@ -233,12 +238,53 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('last_time_status_changed'): str,
                                             Optional('statistics'): {
                                                 'packet_totals': {
-                                                    'receive': int
+                                                    Optional('receive'): int,
+                                                    Optional('send'): int
                                                 },
                                                 'byte_totals': {
-                                                    'receive': int
+                                                    Optional('receive'): int,
+                                                    Optional('send'): int
                                                 }
-                                            }
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        Optional('evpn'): {
+                            'neighbor': {
+                                Any(): {
+                                    'id': {
+                                        Any(): {
+                                            'state': str,
+                                            'ac_id': int,
+                                            'xc_id': str,
+                                            'encapsulation': str,
+                                            'source_address': str,
+                                            'encap_type': str,
+                                            'control_word': str,
+                                            'lsp': str,
+                                            Optional('sequencing'): str,
+                                            'evpn': {
+                                                Any(): {
+                                                    'local': str,
+                                                    'remote': str,
+                                                    Optional('local_type'): list,
+                                                    Optional('remote_type'): list,
+                                                }
+                                            },
+                                            'create_time': str,
+                                            'last_time_status_changed': str,
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    Optional('receive'): int,
+                                                    Optional('send'): int
+                                                },
+                                                'byte_totals': {
+                                                    Optional('receive'): int,
+                                                    Optional('send'): int
+                                                }
+                                            },
                                         }
                                     }
                                 }
@@ -272,12 +318,14 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             Optional('last_time_status_changed'): str,
                                             Optional('statistics'): {
                                                 'packet_totals': {
-                                                    'receive': int
+                                                    Optional('receive'): int,
+                                                    Optional('send'): int
                                                 },
                                                 'byte_totals': {
-                                                    'receive': int
+                                                    Optional('receive'): int,
+                                                    Optional('send'): int
                                                 }
-                                            }
+                                            },
                                         }
                                     }
                                 }
@@ -329,15 +377,29 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # packet totals: receive 98
         p6_1 = re.compile(r'^packet +totals: +receive +(?P<receive>\d+)$')
 
+        # packets: received 3, sent 0
+        p6_2 = re.compile(r'^packets: +received +(?P<received>\d+), +sent +(?P<send>\d+)')
+
         # byte totals: send 20798
         p7 = re.compile(r'^byte +totals: +send +(?P<send>\d+)$')
 
         # byte totals: send 20798
         p7_1 = re.compile(r'^byte +totals: +receive +(?P<receive>\d+)$')
 
+        # packets: received 3, sent 0
+        p7_2 = re.compile(r'^bytes: +received +(?P<received>\d+), +sent +(?P<send>\d+)')
+
+        # drops: illegal VLAN 0, illegal length 0
+        p7_3 = re.compile(r'^drops: +(?P<drops>\S+) +VLAN +(?P<vlan>\d+), +illegal +'
+            'length +(?P<illegal_length>\d+)$')
+
         # PW: neighbor 10.1.1.1, PW ID 1, state is down ( local ready )
         p8 = re.compile(r'^PW: +neighbor +(?P<neighbor>\S+), +PW +ID +'
             '(?P<id>\d+), state +is +(?P<state>[\S ]+)$')
+        
+        # EVPN: neighbor 67.70.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
+        p8_1 = re.compile(r'^EVPN: +neighbor +(?P<neighbor>\S+), +PW +ID: +'
+            'evi +(?P<pw_id>\d+), +ac-id +(?P<ac_id>\d+), +state +is +(?P<state>[\S ]+)$')
         
         # PW class not set, XC ID 0x5000001
         p9 = re.compile(r'^PW +class +(?P<pw_class>[\S ]+), +XC +ID +(?P<xc_id>\S+)$')
@@ -357,7 +419,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         p13 = re.compile(r'^Sequencing +(?P<sequencing>[\S ]+)$')
 
         # MPLS         Local                          Remote
-        p14 = re.compile(r'^MPLS +Local +Remote$')
+        p14 = re.compile(r'^(?P<label_name>MPLS|EVPN) +Local +Remote$')
 
         # Label        30005                          unknown
         # Group ID     0x5000300                      0x0
@@ -435,9 +497,34 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
         # Statistics:
         p37 = re.compile(r'^Statistics:$')
 
+        # Wed Oct  2 14:36:55.184 EDT
+        p38 = re.compile(r'^\S+ +\S+ +\d+ +\S+ +\S+$')
+
+        # Rewrite Tags: [] 
+        p39 = re.compile(r'^Rewrite +Tags: +\S+$')
+
+        # XC ID 0xc0000001
+        p40 = re.compile(r'^XC +ID +(?P<xc_id>\S+)$')
+
+        # Encapsulation MPLS
+        p41 = re.compile(r'^Encapsulation +(?P<encapsulation>\S+)$')
+
+        # Source address 67.70.219.88
+        p42 = re.compile(r'^Source +address +(?P<source_address>\S+)$')
+
+        # Encap type Ethernet, control word enabled
+        p43 = re.compile(r'^Encap +type +(?P<encap_type>\S+), +control +word +(?P<control_word>\S+)$')
+
+        # LSP : Up
+        p44 = re.compile(r'^LSP +: +(?P<lsp>\S+)$')
+
         for line in out.splitlines():
             original_line = line
+            line = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', line)
+            line = line.replace('--More--', '')
             line = line.strip()
+            original_line = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', original_line)
+            original_line = original_line.replace('--More--', '')
             
             # Avoid show commands : show l2vpn xconnect detail
             # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
@@ -447,6 +534,16 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             
             # Statistics:
             m = p37.match(line)
+            if m:
+                continue
+            
+            # Wed Oct  2 14:36:55.184 EDT
+            m = p38.match(line)
+            if m:
+                continue
+
+            # Rewrite Tags: []
+            m = p39.match(line)
             if m:
                 continue
 
@@ -548,6 +645,18 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     setdefault('packet_totals', {}). \
                     update({'receive': receive})
                 continue
+            
+            # packets: received 3, sent 0
+            m = p6_2.match(line)
+            if m:
+                group = m.groupdict()
+                receive = int(group['received'])
+                send = int(group['send'])
+                packet_dict = current_dict.setdefault('statistics', {}). \
+                    setdefault('packet_totals', {})
+                packet_dict.update({'receive': receive})
+                packet_dict.update({'send': receive})
+                continue
 
             # byte totals: send 98
             m = p7.match(line)
@@ -569,6 +678,31 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                     update({'receive': receive})
                 continue
 
+            # packets: received 3, sent 0
+            m = p7_2.match(line)
+            if m:
+                group = m.groupdict()
+                receive = int(group['received'])
+                send = int(group['send'])
+                packet_dict = current_dict.setdefault('statistics', {}). \
+                    setdefault('byte_totals', {})
+                packet_dict.update({'receive': receive})
+                packet_dict.update({'send': receive})
+                continue
+
+            # drops: illegal VLAN 0, illegal length 0
+            m = p7_3.match(line)
+            if m:
+                group = m.groupdict()
+                drops = group['drops']
+                vlan = int(group['vlan'])
+                illegal_length = int(group['illegal_length'])
+                statistics_dict = current_dict.setdefault('statistics', {})
+                statistics_dict.update({'drops': drops})
+                statistics_dict.update({'vlan': vlan})
+                statistics_dict.update({'illegal_length': illegal_length})
+                continue
+
             # PW: neighbor 10.1.1.1, PW ID 1, state is down ( local ready )
             m = p8.match(line)
             if m:
@@ -585,6 +719,25 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                         setdefault(pw_id, {})
 
                 current_dict.update({'state': state})
+                continue
+
+            # EVPN: neighbor 67.70.219.82, PW ID: evi 10200, ac-id 30200, state is up ( established )
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                pw_id = int(group['pw_id'])
+                ac_id = int(group['ac_id'])
+                state = group['state']
+                current_dict = xc_dict.setdefault('evpn', {})
+                
+                current_dict = current_dict.setdefault('neighbor', {}). \
+                        setdefault(neighbor, {}). \
+                        setdefault('id', {}). \
+                        setdefault(pw_id, {})
+
+                current_dict.update({'state': state})
+                current_dict.update({'ac_id': ac_id})
                 continue
             
             # PW class not set, XC ID 0x5000001
@@ -636,8 +789,11 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 continue
 
             # MPLS         Local                          Remote
+            # EVPN         Local                          Remote
             m = p14.match(line)
             if m:
+                group = m.groupdict()
+                label_name = group['label_name'].lower()
                 continue
             
             # Create time: 20/11/2007 21:45:06 (00:53:31 ago)
@@ -667,11 +823,12 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # ------------ ------------------------------ -----------------------------
             m = p19.match(line)
             if m:
+                first_non_empty_char = re.search('[^ ]', original_line).start()
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
                     mpls_pairs.update({m.start(): m.end()})
                 continue
-            
+
             # Backup for neighbor 10.1.1.1 PW ID 1 ( active )
             m = p21.match(line)
             if m:
@@ -790,6 +947,42 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 ce_range = int(group['ce_range'])
                 signaling_protocol_dict.update({'ce_range': ce_range})
                 continue
+
+            # XC ID 0xc0000001
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'xc_id': group['xc_id']})
+                continue
+
+            # Encapsulation MPLS
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'encapsulation': group['encapsulation']})
+                continue
+
+            # Source address 67.70.219.88
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'source_address': group['source_address']})
+                continue
+
+            # Encap type Ethernet, control word enabled
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'encap_type': group['encap_type']})
+                current_dict.update({'control_word': group['control_word']})
+                continue
+
+            # LSP : Up
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                current_dict.update({'lsp': group['lsp']})
+                continue
             
             #     (LSP ping verification)               
             #                                    (none)
@@ -800,53 +993,75 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # VCCV CV type 0x2                            0x0
             m = p15.match(line)
             if m:
-                try:
-                    group = m.groupdict()
-                    mpls_items = list(mpls_pairs.items())
+                group = m.groupdict()
+                mpls_items = list(mpls_pairs.items())
+
+                if ')' not in line:
+
                     mpls_value = (original_line[:mpls_items[0][1]+1].
-                                    replace('(','').
-                                    replace(')', '').
-                                    strip().
-                                    replace(' ', '_').
-                                    replace('-', '_').
-                                    lower())
+                                strip().
+                                replace('-', '_').
+                                replace(' ', '_').
+                                lower())
+                    
                     local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
                                     replace('(','').
                                     replace(')', '').
                                     strip()) 
                     remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
                                     replace('(','').replace(')', '').strip())
-                    if mpls_value:
-                        if mpls_value == 'interface':
-                            if interface_found:
-                                interface_dict = current_dict.setdefault('mpls', {}). \
-                                    setdefault('monitor_interface', {})
-                                interface_dict.update({'local': local_value})
-                                interface_dict.update({'remote': remote_value})
-                            else:
-                                interface_found = True
-                                mpls_dict = current_dict.setdefault('mpls', {}). \
-                                    setdefault(mpls_value, {})
-                                mpls_dict.update({'local': local_value})
-                                mpls_dict.update({'remote': remote_value})
+
+                    if not mpls_value:
+                        original_line = original_line.lstrip()
+                        original_line = original_line.rjust(first_non_empty_char)
+                        mpls_value = (original_line[:(mpls_items[0][1]-first_non_empty_char)].
+                                strip().
+                                replace('-', '_').
+                                replace(' ', '_').
+                                lower())
+
+                        local_value = (original_line[(mpls_items[1][0]-first_non_empty_char):(mpls_items[1][1]-first_non_empty_char)].
+                                    replace('(','').
+                                    replace(')', '').
+                                    strip()) 
+                        remote_value = (original_line[(mpls_items[2][0]-first_non_empty_char):(mpls_items[2][1]-first_non_empty_char)].
+                                        replace('(','').replace(')', '').strip())
+
+                    if mpls_value == 'interface':
+                        if interface_found:
+                            interface_dict = current_dict.setdefault(label_name, {}). \
+                                setdefault('monitor_interface', {})
+                            interface_dict.update({'local': local_value})
+                            interface_dict.update({'remote': remote_value})
                         else:
-                            mpls_dict = current_dict.setdefault('mpls', {}). \
+                            interface_found = True
+                            mpls_dict = current_dict.setdefault(label_name, {}). \
                                 setdefault(mpls_value, {})
                             mpls_dict.update({'local': local_value})
                             mpls_dict.update({'remote': remote_value})
                     else:
-                        local_type = mpls_dict.get('local_type', [])
-                        remote_type = mpls_dict.get('remote_type', [])
-                        if local_value:
-                            local_type.append(local_value)
-                        if remote_value:
-                            remote_type.append(remote_value)
-                        mpls_dict.update({'local_type': local_type})
-                        mpls_dict.update({'remote_type': remote_type})
-                except Exception:
-                    print(original_line)
-                continue
+                        mpls_dict = current_dict.setdefault(label_name, {}). \
+                            setdefault(mpls_value, {})
+                        mpls_dict.update({'local': local_value})
+                        mpls_dict.update({'remote': remote_value})
+                else:
 
+                    local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
+                                replace('(','').
+                                replace(')', '').
+                                strip()) 
+                    remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
+                                    replace('(','').replace(')', '').strip())
+
+                    local_type = mpls_dict.get('local_type', [])
+                    remote_type = mpls_dict.get('remote_type', [])
+                    if local_value:
+                        local_type.append(local_value)
+                    if remote_value:
+                        remote_type.append(remote_value)
+                    mpls_dict.update({'local_type': local_type})
+                    mpls_dict.update({'remote_type': remote_type})
+                continue
         return ret_dict
 
 # ===========================================================
