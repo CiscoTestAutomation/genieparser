@@ -323,3 +323,9 @@
         * Added fields to schema
         * Changed fields in schema to Optional
         * Added regex for additional outputs
+--------------------------------------------------------------------------------
+                                EVPN
+--------------------------------------------------------------------------------
+* IOSXR:
+    * Added ShowEvpnInternalLabel for:
+        * show evpn internal-label
