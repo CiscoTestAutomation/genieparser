@@ -1529,6 +1529,19 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): 
+                                                    {
+                                                        Optional('topology_id'): str,
+                                                        Optional('teapp'): str,
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        }
+                                                    },
                                                 },
                                             },
                                         Optional('virtual_links'): 
@@ -1605,6 +1618,19 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): 
+                                                    {
+                                                        Optional('topology_id'): str,
+                                                        Optional('teapp'): str,
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        }
+                                                    },
                                                 },
                                             },
                                         Optional('sham_links'): 
@@ -1679,6 +1705,19 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         {'crypto_algorithm': str,
                                                         Optional('youngest_key_id'): int,
                                                         },
+                                                    },
+                                                Optional('teapp'): 
+                                                    {
+                                                        Optional('topology_id'): str,
+                                                        Optional('teapp'): str,
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        }
                                                     },
                                                 },
                                             },
@@ -1843,6 +1882,21 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                             ' +neighbor(s) +using +the +old +key(s):$')
  
         p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
+
+        # TEAPP:
+        p29 = re.compile(r'^TEAPP:$')
+
+        # Topology Id:0x0
+        p29_1 = re.compile(r'^Topology +Id: *(?P<topology_id>[\w]+)$')
+
+        # TEAPP:SRTE
+        p29_2 = re.compile(r'^TEAPP: *(?P<teapp>[\w]+)$')
+
+        # Affinity: length 32, bits 0x00000010
+        p29_3 = re.compile(r'^Affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # Extended affinity: length 32, bits 0x00000010
+        p29_4 = re.compile(r'^Extended +affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2402,6 +2456,50 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sub_dict['authentication']['auth_trailer_key'] = {}
                 sub_dict['authentication']['auth_trailer_key']\
                     ['crypto_algorithm'] = 'md5'
+                continue
+
+            # TEAPP:
+            m = p29.match(line)
+            if m:
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                continue
+
+            # Topology Id:0x0
+            m = p29_1.match(line)
+            if m:
+                topology_id = m.groupdict()['topology_id']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                teapp_dict.update({'topology_id': topology_id})
+                continue
+
+            # TEAPP:SRTE
+            m = p29_2.match(line)
+            if m:
+                teapp = m.groupdict()['teapp']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                teapp_dict.update({'teapp': teapp})
+                continue
+
+            # Affinity: length 32, bits 0x00000010
+            p29_3 = re.compile(r'^Affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+            m = p29_3.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                aff_dict = teapp_dict.setdefault('affinity', {})
+                aff_dict.update({'length': length})
+                aff_dict.update({'bits': bits})
+                continue
+
+            # Extended affinity: length 32, bits 0x00000010
+            p29_4 = re.compile(r'^Extended +affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+            m = p29_4.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                exa_dict = teapp_dict.setdefault('extended_affinity', {})
+                exa_dict.update({'length': length})
+                exa_dict.update({'bits': bits})
                 continue
 
         return ret_dict

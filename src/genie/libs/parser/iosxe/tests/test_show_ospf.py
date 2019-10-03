@@ -1285,6 +1285,96 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 'transmit_delay': 1,
                                                 'wait_interval': 40}}}}}}}}}}}
 
+    golden_parsed_output4 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            '8888': {
+                                'areas': {
+                                    '0.0.0.8': {
+                                        'interfaces': {
+                                            'GigabitEthernet2': {
+                                                'router_id': '1.1.1.1',
+                                                'interface_type': 'point-to-point',
+                                                'cost': 1,
+                                                'demand_circuit': False,
+                                                'bfd': {
+                                                    'enable': False,
+                                                },
+                                                'name': 'GigabitEthernet2',
+                                                'ip_address': '10.0.0.6/30',
+                                                'interface_id': 8,
+                                                'attached': 'network statement',
+                                                'enable': True,
+                                                'line_protocol': True,
+                                                'topology': {
+                                                    0: {
+                                                        'cost': 1,
+                                                        'name': 'Base',
+                                                        'disabled': False,
+                                                        'shutdown': False,
+                                                    },
+                                                },
+                                                'transmit_delay': 1,
+                                                'state': 'point-to-point',
+                                                'hello_interval': 10,
+                                                'dead_interval': 40,
+                                                'wait_interval': 40,
+                                                'retransmit_interval': 5,
+                                                'oob_resync_timeout': 40,
+                                                'passive': False,
+                                                'hello_timer': '00:00:00',
+                                                'lls': True,
+                                                'graceful_restart': {
+                                                    'cisco': {
+                                                        'type': 'cisco',
+                                                        'helper': True,
+                                                    },
+                                                    'ietf': {
+                                                        'type': 'ietf',
+                                                        'helper': True,
+                                                    },
+                                                },
+                                                'ipfrr_protected': True,
+                                                'ipfrr_candidate': True,
+                                                'ti_lfa_protected': False,
+                                                'index': '1/1/1',
+                                                'flood_queue_length': 0,
+                                                'next': '0x0(0)/0x0(0)/0x0(0)',
+                                                'last_flood_scan_length': 1,
+                                                'max_flood_scan_length': 14,
+                                                'last_flood_scan_time_msec': 1,
+                                                'max_flood_scan_time_msec': 8,
+                                                'statistics': {
+                                                    'nbr_count': 1,
+                                                    'adj_nbr_count': 1,
+                                                    'num_nbrs_suppress_hello': 0,
+                                                },
+                                                'teapp': {
+                                                    'topology_id': '0x0',
+                                                    'teapp': 'SRTE',
+                                                    'affinity': {
+                                                        'length': 32,
+                                                        'bits': '0x00000010',
+                                                    },
+                                                    'extended_affinity': {
+                                                        'length': 32,
+                                                        'bits': '0x00000010',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     def test_show_ip_ospf_interface_full1(self):
         
@@ -1653,6 +1743,68 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
+    def test_show_ip_ospf_interface_full4(self):
+
+        self.maxDiff = None
+
+        raw1='''\
+            show ip ospf interface GigabitEthernet2
+            GigabitEthernet2 is up, line protocol is up 
+                Internet Address 10.0.0.6/30, Interface ID 8, Area 8
+                Attached via Network Statement
+                Process ID 8888, Router ID 1.1.1.1, Network Type POINT_TO_POINT, Cost: 1
+                Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+                        0           1         no          no            Base
+                Transmit Delay is 1 sec, State POINT_TO_POINT
+                Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+                    oob-resync timeout 40
+                    Hello due in 00:00:00
+                Supports Link-local Signaling (LLS)
+                Cisco NSF helper support enabled
+                IETF NSF helper support enabled
+                Can be protected by per-prefix Loop-Free FastReroute
+                Can be used for per-prefix Loop-Free FastReroute repair paths
+                Not Protected by per-prefix TI-LFA
+                Segment Routing enabled for MPLS forwarding
+                Index 1/1/1, flood queue length 0
+                Next 0x0(0)/0x0(0)/0x0(0)
+                Last flood scan length is 1, maximum is 14
+                Last flood scan time is 1 msec, maximum is 8 msec
+                Neighbor Count is 1, Adjacent neighbor count is 1 
+                    Adjacent with neighbor 11.11.11.11
+                Suppress hello for 0 neighbor(s)
+                TEAPP:
+                    Topology Id:0x0
+                    TEAPP:SRTE
+                        Affinity: length 32, bits 0x00000010
+                        Extended affinity: length 32, bits 0x00000010 
+                SR Policy Manager:
+                    TE Opaque LSA: Source of link information OSPF
+        '''
+
+        raw2='''\
+         PE1#show running-config | section router ospf 8888 
+            router ospf 8888
+            router-id 1.1.1.1
+            segment-routing area 8 mpls
+            segment-routing mpls
+            network 0.0.0.0 255.255.255.255 area 8
+        '''
+
+        def mapper(key):
+            return self.outputs[key]
+
+        self.outputs = {}
+        self.outputs['show ip ospf interface GigabitEthernet2'] = raw1
+        self.outputs['show running-config | section router ospf 8888'] = raw2        
+
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
+        
+        obj = ShowIpOspfInterface(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet2')
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
     def test_show_ip_ospf_interface_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -1660,7 +1812,6 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
-    
 
 # ============================================
 # Unit test for 'show ip ospf neighbor detail'
