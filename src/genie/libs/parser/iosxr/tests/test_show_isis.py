@@ -374,9 +374,8 @@ class test_show_isis_segment_routing_label_table(unittest.TestCase):
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
         * show isis hostname -> ShowIsisHostname
-    ''' 
-
-    device = Device(name='aDevice')
+    '''         
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
@@ -471,6 +470,67 @@ class TestIsisHostname(unittest.TestCase):
          2   * 1720.1600.2089 tor2-tatooine
     '''}
 
+    golden_parsed_output_2 = {
+        "isis": {
+            "test": {
+                "vrf": {
+                    "default": {
+                        "level": {
+                            2: {
+                                "hostname": {
+                                    "R2": {
+                                        "system_id": "2222.2222.2222"},
+                                    "R8": {
+                                        "system_id": "8888.8888.8888"},
+                                    "R7": {
+                                        "system_id": "7777.7777.7777"},
+                                    "R3": {
+                                        "system_id": "3333.3333.3333",
+                                        "local_router": True,
+                                    },
+                                    "R5": {
+                                        "system_id": "5555.5555.5555"},
+                                    "R9": {
+                                        "system_id": "9999.9999.9999"},
+                                }
+                            },
+                            1: {
+                                "hostname": {
+                                    "R4": {
+                                        "system_id": "4444.4444.4444"},
+                                    "R6": {
+                                        "system_id": "6666.6666.6666"},
+                                    "R7": {
+                                        "system_id": "7777.7777.7777"},
+                                    "R3": {
+                                        "system_id": "3333.3333.3333",
+                                        "local_router": True,
+                                    },
+                                    "R5": {
+                                        "system_id": "5555.5555.5555"},
+                                }
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        show isis hostname
+        IS-IS test hostnames
+        Level  System ID      Dynamic Hostname
+         2     2222.2222.2222 R2
+         1     4444.4444.4444 R4
+         1     6666.6666.6666 R6
+         2     8888.8888.8888 R8
+         1,2   7777.7777.7777 R7
+         1,2 * 3333.3333.3333 R3
+         1,2   5555.5555.5555 R5
+         2     9999.9999.9999 R9
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisHostname(device=self.device)
@@ -478,12 +538,16 @@ class TestIsisHostname(unittest.TestCase):
             obj.parse()
 
     def test_golden_output_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsisHostname(device=self.device)
         parsed_output = obj.parse()
-        print(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()

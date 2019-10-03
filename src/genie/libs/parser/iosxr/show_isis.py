@@ -368,7 +368,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         # 2     1720.1800.0254 tor-28.tenlab-cloud
         # 2     1720.1800.0213 leaf-2.qa-site1
         # 2     1720.1800.0250 tor-23.tenlab-cloud
-        r2 = re.compile(r'(?P<level>\d)\s+(?P<local_router>\**)\s+(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
+        r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
 
         parsed_output = {}
         vrf = 'default'
@@ -397,20 +397,21 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
             if result:
                 group = result.groupdict()
 
-                level = int(group['level'])
+                levels = group['level']
                 system_id = group['system_id']
                 local_router = group.get('local_router', None)
                 dynamic_hostname = group['dynamic_hostname']
 
-                hostname_dict = isis_dict\
-                    .setdefault('level', {})\
-                    .setdefault(level, {})\
-                    .setdefault('hostname', {})\
-                    .setdefault(dynamic_hostname, {})\
+                for level in levels.split(','):
+                    hostname_dict = isis_dict\
+                        .setdefault('level', {})\
+                        .setdefault(int(level), {})\
+                        .setdefault('hostname', {})\
+                        .setdefault(dynamic_hostname, {})\
 
-                hostname_dict['system_id'] = system_id
-                if local_router:
-                    hostname_dict['local_router'] = True
+                    hostname_dict['system_id'] = system_id
+                    if local_router:
+                        hostname_dict['local_router'] = True
 
                 continue
 
