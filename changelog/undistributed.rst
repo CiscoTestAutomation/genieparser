@@ -290,6 +290,8 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowIpv6MldInterfaceSchema
         * Added support for 'show ipv6 mld interface vrf all'
+    * Update ShowInterface
+        * Fixed parser ShowInterface to match duplex and speed line
 
 --------------------------------------------------------------------------------
                                 IPv6
