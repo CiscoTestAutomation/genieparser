@@ -56,7 +56,7 @@ class ShowAccessListsSchema(MetaParser):
                                 'protocol': str,
                                 Optional('precedence'): str,
                                 Optional('precedence_code'): int,
-                                'destination_network': {
+                                Optional('destination_network'): {
                                     Any(): {
                                         'destination_network': str,
                                     }
@@ -252,16 +252,12 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 20 permit 10.2.0.0
         # 20 deny   any
         # 10 permit 7.7.7.7
-        # 20 permit 7.7.7.8
         # 30 deny   any
-
-        p_ip_acl_standard = re.compile(r'^(?P<seq>\d+) (?P<actions_forwarding>permit|deny) '
-                                       '+(?P<src>[\w.]+|any)(?:, +wildcard +bits +(?P<wildcard_bits>any|[\w.]+))?$')
         # permit 172.20.10.10
         # permit 10.66.12.12
 
-        p_ip_acl_standard_2 = re.compile(
-            r'^(?P<actions_forwarding>deny|permit) +(?P<src>[\d.]+)$(?:, +wildcard +bits +(?P<wildcard_bits>any|[\w.]+))?$')
+        p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? ?(?P<actions_forwarding>permit|deny) +(?P<src>[\w\.]+|any)(?:, +wildcard +bits +(?P<wildcard_bits>any|[\w\.]+))?$')
+
         # 10 permit ip host 10.3.3.3 host 10.5.5.34
         # 20 permit icmp any any
         # 30 permit ip host 10.34.2.2 host 10.2.54.2
@@ -353,12 +349,9 @@ class ShowAccessLists(ShowAccessListsSchema):
             # 20 permit 10.2.0.0
             # 30 deny   any
             m = p_ip_acl_standard.match(line)
-            m_2 = p_ip_acl_standard_2.match(line)
-            if m or m_2:
-                if m:
-                    group = m.groupdict()
-                if m_2:
-                    group = m_2.groupdict()
+
+            if m:
+                group = m.groupdict()
 
                 seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(str(seq), {})
@@ -373,17 +366,19 @@ class ShowAccessLists(ShowAccessListsSchema):
                 seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
 
                 # l3 dict
-                if group['wildcard_bits']:
+                if group['wildcard_bits'] and 'wildcard_bits' in group:  
                     source_ipv4_network = group['src'] + ' ' + group['wildcard_bits']
                 else:
-                    source_ipv4_network = group['src']
+                    if group['src'] == 'any':
+                        source_ipv4_network = group['src']
+                    else:
+                        source_ipv4_network = group['src'] + ' ' + '0.0.0.0'
     
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {}).setdefault(protocol, {})
                 l3_dict['protocol'] = protocol
                 l3_dict.setdefault('source_network', {}).setdefault(
                     source_ipv4_network, {}).setdefault('source_network', source_ipv4_network)
-                l3_dict.setdefault('destination_network', {}).setdefault(
-                    source_ipv4_network, {}).setdefault('destination_network', source_ipv4_network)
+
                 continue
 
             # 10 permit ip any any (10031 matches)
@@ -411,8 +406,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 src = group['src'] if group['src'] else group['src1']
                 dst = group['dst']
                 src = src.strip()
-                #if 'dst1' in group:
-                #    dst = dst if dst else group['dst1']
+
                 if dst:
                     dst = dst.strip()
                 # optional keys

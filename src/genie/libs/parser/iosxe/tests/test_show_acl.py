@@ -1494,11 +1494,6 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.2.0.0 0.0.255.255': {
-                                        'destination_network': '10.2.0.0 0.0.255.255'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
                                     '10.2.0.0 0.0.255.255': {
@@ -1517,15 +1512,10 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.2.0.0': {
-                                        'destination_network': '10.2.0.0'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '10.2.0.0': {
-                                        'source_network': '10.2.0.0'
+                                    '10.2.0.0 0.0.0.0': {
+                                        'source_network': '10.2.0.0 0.0.0.0'
                                     }
                                 }
                             }
@@ -1540,11 +1530,6 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    'any': {
-                                        'destination_network': 'any'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
                                     'any': {
@@ -1563,15 +1548,10 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '7.7.7.7': {
-                                        'destination_network': '7.7.7.7'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '7.7.7.7': {
-                                        'source_network': '7.7.7.7'
+                                    '7.7.7.7 0.0.0.0': {
+                                        'source_network': '7.7.7.7 0.0.0.0'
                                     }
                                 }
                             }
@@ -1592,11 +1572,6 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.2.0.0 0.0.255.255': {
-                                        'destination_network': '10.2.0.0 0.0.255.255'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
                                     '10.2.0.0 0.0.255.255': {
@@ -1615,15 +1590,10 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '7.7.7.8': {
-                                        'destination_network': '7.7.7.8'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '7.7.7.8': {
-                                        'source_network': '7.7.7.8'
+                                    '7.7.7.8 0.0.0.0': {
+                                        'source_network': '7.7.7.8 0.0.0.0'
                                     }
                                 }
                             }
@@ -1638,11 +1608,6 @@ IPv6 access list OutFilter_IPv6
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    'any': {
-                                        'destination_network': 'any'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
                                     'any': {

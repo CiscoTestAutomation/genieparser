@@ -36,15 +36,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '172.20.10.10': {
-                                        'destination_network': '172.20.10.10'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '172.20.10.10': {
-                                        'source_network': '172.20.10.10'
+                                    '172.20.10.10 0.0.0.0': {
+                                        'source_network': '172.20.10.10 0.0.0.0'
                                     }
                                 }
                             }
@@ -65,15 +60,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.66.12.12': {
-                                        'destination_network': '10.66.12.12'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '10.66.12.12': {
-                                        'source_network': '10.66.12.12'
+                                    '10.66.12.12 0.0.0.0': {
+                                        'source_network': '10.66.12.12 0.0.0.0'
                                     }
                                 }
                             }
@@ -94,15 +84,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.16.3.2': {
-                                        'destination_network': '10.16.3.2'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '10.16.3.2': {
-                                        'source_network': '10.16.3.2'
+                                    '10.16.3.2 0.0.0.0': {
+                                        'source_network': '10.16.3.2 0.0.0.0'
                                     }
                                 }
                             }
@@ -123,15 +108,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '172.20.20.20': {
-                                        'destination_network': '172.20.20.20'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '172.20.20.20': {
-                                        'source_network': '172.20.20.20'
+                                    '172.20.20.20 0.0.0.0': {
+                                        'source_network': '172.20.20.20 0.0.0.0'
                                     }
                                 }
                             }
@@ -152,15 +132,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.24.35.56': {
-                                        'destination_network': '10.24.35.56'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '10.24.35.56': {
-                                        'source_network': '10.24.35.56'
+                                    '10.24.35.56 0.0.0.0': {
+                                        'source_network': '10.24.35.56 0.0.0.0'
                                     }
                                 }
                             }
@@ -175,15 +150,10 @@ class TestShowAccessLists(TestShowAccessListsIosxe):
                     'matches': {
                         'l3': {
                             'ipv4': {
-                                'destination_network': {
-                                    '10.34.56.34': {
-                                        'destination_network': '10.34.56.34'
-                                    }
-                                },
                                 'protocol': 'ipv4',
                                 'source_network': {
-                                    '10.34.56.34': {
-                                        'source_network': '10.34.56.34'
+                                    '10.34.56.34 0.0.0.0': {
+                                        'source_network': '10.34.56.34 0.0.0.0'
                                     }
                                 }
                             }
