@@ -501,8 +501,10 @@ class ShowInterface(ShowInterfaceSchema):
 
             #full-duplex, 1000 Mb/s
             # auto-duplex, auto-speed
-            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z]+)-duplex,'
-                              ' *(?P<port_speed>[a-z0-9\-]+)(?: *Mb/s)?$')
+            # full-duplex, 1000 Mb/s, media type is 1G
+            # auto-duplex, auto-speed, media type is 10G
+            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z]+)-duplex, '
+                              '*(?P<port_speed>[a-z0-9\-]+)(?: *Mb/s)?(?:, +media +type +is \w+)?$')
             m = p10.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()

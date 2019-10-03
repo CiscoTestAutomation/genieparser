@@ -426,3 +426,9 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* NXOS
+    * Fixed regex to accommodate various outputs
