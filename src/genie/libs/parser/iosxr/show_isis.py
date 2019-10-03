@@ -5,6 +5,7 @@ IOSXR parsers for the following show commands:
     * show isis adjacency
     * show isis neighbors
     * show isis
+
 """
 
 # Python
@@ -256,6 +257,73 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         return isis_neighbors_dict
 
+
+# ======================================================
+#  Schema for 'show isis segment-routing label table'
+# ======================================================
+class ShowIsisSegmentRoutingLabelTableSchema(MetaParser):
+    """Schema for show isis segment-routing label table"""
+
+    schema = {
+        'instance': {
+            'SR': {
+                'label': {
+                    Any(): {
+                        'prefix_interface': str,
+                    },
+                }
+            }
+        }
+    }
+
+
+class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
+    """Parser for show isis segment-routing label table"""
+    
+    cli_command = ['show isis segment-routing label table']
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        isis_dict = {}
+
+        # IS-IS SR IS Label Table
+        p1 = re.compile(r'^IS-IS\s+(?P<instance>\S+)\s+IS\s+Label\s+Table$')
+
+        # Label         Prefix/Interface
+        # ----------    ----------------
+        # 16001         Loopback0
+        # 16002         10.2.2.2/32
+        p2 = re.compile(r'^(?P<label>\d+)\s+(?P<prefix_interface>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # IS-IS SR IS Label Table
+            m = p1.match(line)
+            if m:
+                instance = m.groupdict()['instance']
+                final_dict = isis_dict.setdefault('instance', {}).\
+                    setdefault(instance, {})
+                continue
+
+            # Label         Prefix/Interface
+            # ----------    ----------------
+            # 16001         Loopback0
+            # 16002         10.2.2.2/32
+            m = p2.match(line)
+            if m:
+                label = int(m.groupdict()['label'])
+                prefix_interface = m.groupdict()['prefix_interface']
+                final_dict.setdefault('label', {}).setdefault(
+                    label, {}).update(
+                    {'prefix_interface': prefix_interface})
+                continue
+
+        return isis_dict
 
 class ShowIsisSchema(MetaParser):
     ''' Schema for commands:

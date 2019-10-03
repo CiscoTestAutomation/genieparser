@@ -9,10 +9,12 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_isis
+# iosxr show_mrib
 from genie.libs.parser.iosxr.show_isis import (ShowIsis,
-                                               ShowIsisAdjacency,
-                                               ShowIsisNeighbors)
+                                               ShowIsisAdjacency, 
+                                               ShowIsisNeighbors, 
+                                               ShowIsisSegmentRoutingLabelTable)
+
 
 # ==================================================
 #  Unit test for 'show isis adjacency'
@@ -318,6 +320,57 @@ class TestShowIsisNeighbors(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+
+# ======================================================
+#  Unit test for 'show isis segment-routing label table'
+# ======================================================
+
+class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
+    '''Unit test for "show isis segment-routing label table"'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'instance': {
+            'SR': {
+                'label': {
+                    16001: {
+                        'prefix_interface': 'Loopback0'},
+                    16002: {
+                        'prefix_interface': '10.2.2.2/32'},
+                    16003: {
+                        'prefix_interface': '10.3.3.3/32'}
+                }
+            }
+        }
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:iosxrv9000-1#show isis segment-routing label table 
+        Mon Sep 30 13:22:32.921 EDT
+            
+        IS-IS SR IS Label Table
+        Label         Prefix/Interface
+        ----------    ----------------
+        16001         Loopback0
+        16002         10.2.2.2/32
+        16003         10.3.3.3/32
+    '''}
+
+    def test_show_isis_segment_routing_label_table_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisSegmentRoutingLabelTable(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_segment_routing_label_table_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowIsisSegmentRoutingLabelTable(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 class TestShowIsis(unittest.TestCase):
     ''' Unitest for commands:
         * show isis -> ShowIsis
@@ -469,6 +522,7 @@ class TestShowIsis(unittest.TestCase):
         obj = ShowIsis(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 if __name__ == '__main__':
     unittest.main()
