@@ -324,5 +324,86 @@ class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
 
         return isis_dict
 
+class ShowIsisHostnameSchema(MetaParser):
+    ''' Schema for commands:
+        * show isis hostname
+    '''
 
+    schema = {
+        'isis': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'system_id': {
+                            Any(): {
+                                'level': int,
+                                'dynamic_hostname': str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+class ShowIsisHostname(ShowIsisHostnameSchema):
+    ''' Parser for commands:
+        * show isis hostname
+    '''
+
+    cli_command = 'show hostname'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IS-IS TEST1 hostnames
+        r1 = re.compile(r'IS\-IS\s(?P<isis>.+)\s+hostnames')
+
+        # 2     1720.1800.0254 tor-28.tenlab-cloud
+        # 2     1720.1800.0213 leaf-2.qa-site1
+        # 2     1720.1800.  0250 tor-23.tenlab-cloud
+        r2 = re.compile(r'(?P<level>\d)\s+(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
+
+        parsed_output = {}
+        vrf = 'default'
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IS-IS TEST1 hostnames            
+            result = r1.match(line)
+            if result:                
+                group = result.groupdict()
+                isis = group['isis']
+
+                isis_dict = parsed_output\
+                    .setdefault('isis', {})\
+                    .setdefault(isis, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})                    
+
+                continue
+
+            # 2     1720.1800.0254 tor-28.tenlab-cloud
+            # 2     1720.1800.0213 leaf-2.qa-site1
+            # 2     1720.1800.0250 tor-23.tenlab-cloud            
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+
+                level = int(group['level'])
+                system_id = group['system_id']
+                dynamic_hostname = group['dynamic_hostname']
+
+                level_dict = isis_dict\
+                    .setdefault('system_id', {})\
+                    .setdefault(system_id, {})
+
+                level_dict['level'] = level                
+                level_dict['dynamic_hostname'] = dynamic_hostname
+
+                continue
+
+        return parsed_output
