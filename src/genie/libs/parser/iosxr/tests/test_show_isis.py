@@ -383,84 +383,77 @@ class TestShowIsis(unittest.TestCase):
     golden_parsed_output_1 = {
         "isis": {
             "test": {
+                "process_id": "test",
+                "instance": "0",
                 "vrf": {
                     "default": {
-                        "system_id": {
-                            "3333.3333.3333": {
-                                "instance": {
-                                    "0": {
-                                        "is_levels": "level-1-2",
-                                        "manual_area_address": "49.0002",
-                                        "routing_area_address": "49.0002",
-                                        "non_stop_forwarding": "Disabled",
-                                        "most_recent_startup_mode": "Cold Restart",
-                                        "te_connection_status": "Down",
-                                        "topology": {
-                                            "IPv4 Unicast": {
-                                                "level": {
-                                                    1: {
-                                                        "generate_style": "Wide",
-                                                        "accept_style": "Wide",
-                                                        "metric": 10,
-                                                        "ispf_status": "Disabled",
-                                                    },
-                                                    2: {
-                                                        "generate_style": "Wide",
-                                                        "accept_style": "Wide",
-                                                        "metric": 10,
-                                                        "ispf_status": "Disabled",
-                                                    },
-                                                },
-                                                "protocols_redistributed": False,
-                                                "distance": 115,
-                                                "passive_interface_only": False,
-                                            },
-                                            "IPv6 Unicast": {
-                                                "level": {
-                                                    1: {
-                                                        "metric": 10,
-                                                        "ispf_status": "Disabled",
-                                                    },
-                                                    2: {
-                                                        "metric": 10,
-                                                        "ispf_status": "Disabled",
-                                                    },
-                                                },
-                                                "protocols_redistributed": False,
-                                                "distance": 115,
-                                                "passive_interface_only": False,
-                                            },
-                                        },
-                                        "srlb": "not allocated",
-                                        "srgb": "not allocated",
-                                        "interfaces": {
-                                            "Loopback0": {
-                                                "running_state": "running actively",
-                                                "configuration_state": "active in configuration",
-                                            },
-                                            "GigabitEthernet0/0/0/0": {
-                                                "running_state": "running actively",
-                                                "configuration_state": "active in configuration",
-                                            },
-                                            "GigabitEthernet0/0/0/1": {
-                                                "running_state": "running actively",
-                                                "configuration_state": "active in configuration",
-                                            },
-                                            "GigabitEthernet0/0/0/2": {
-                                                "running_state": "running actively",
-                                                "configuration_state": "active in configuration",
-                                            },
-                                            "GigabitEthernet0/0/0/3": {
-                                                "running_state": "running actively",
-                                                "configuration_state": "active in configuration",
-                                            },
-                                        },
-                                    }
-                                }
-                            }
-                        }
+                        "system_id": "3333.3333.3333",
+                        "is_levels": "level-1-2",
+                        "manual_area_address": ["49.0002"],
+                        "routing_area_address": ["49.0002", "49.0001"],
+                        "non_stop_forwarding": "Disabled",
+                        "most_recent_startup_mode": "Cold Restart",
+                        "te_connection_status": "Down",
+                        "topology": {
+                            "IPv4 Unicast": {
+                                "level": {
+                                    1: {
+                                        "generate_style": "Wide",
+                                        "accept_style": "Wide",
+                                        "metric": 10,
+                                        "ispf_status": "Disabled",
+                                    },
+                                    2: {
+                                        "generate_style": "Wide",
+                                        "accept_style": "Wide",
+                                        "metric": 10,
+                                        "ispf_status": "Disabled",
+                                    },
+                                },
+                                "protocols_redistributed": False,
+                                "distance": 115,
+                                "adv_passive_only": False,
+                            },
+                            "IPv6 Unicast": {
+                                "level": {
+                                    1: {
+                                        "metric": 10, 
+                                        "ispf_status": "Disabled"},
+                                    2: {
+                                        "metric": 10, 
+                                        "ispf_status": "Disabled"},
+                                },
+                                "protocols_redistributed": False,
+                                "distance": 115,
+                                "adv_passive_only": False,
+                            },
+                        },
+                        "srlb": "not allocated",
+                        "srgb": "not allocated",
+                        "interfaces": {
+                            "Loopback0": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/0": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/1": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/2": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/3": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                        },
                     }
-                }
+                },
             }
         }
     }
@@ -474,6 +467,7 @@ class TestShowIsis(unittest.TestCase):
             49.0002
           Routing for area address(es):
             49.0002
+            49.0001
           Non-stop forwarding: Disabled
           Most recent startup mode: Cold Restart
           TE connection status: Down

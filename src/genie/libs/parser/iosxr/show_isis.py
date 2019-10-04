@@ -332,41 +332,36 @@ class ShowIsisSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
+                'process_id': str,
+                'instance': str,
                 'vrf': {
-                    Any(): {
-                        'system_id': {
+                    Any(): {                        
+                        'system_id': str,
+                        'is_levels': str,
+                        'manual_area_address': list,
+                        'routing_area_address': list,
+                        'non_stop_forwarding': str,
+                        'most_recent_startup_mode': str,
+                        'te_connection_status': str,
+                        'srlb': str,
+                        'srgb': str,
+                        'interfaces': {
                             Any(): {
-                                'instance': {
+                                'running_state': str,
+                                'configuration_state': str,
+                            }
+                        },
+                        'topology': {
+                            Any(): {
+                                'distance': int,
+                                'adv_passive_only': bool,
+                                'protocols_redistributed': bool,
+                                'level': {
                                     Any(): {
-                                        'is_levels': str,
-                                        'manual_area_address': str,
-                                        'routing_area_address': str,
-                                        'non_stop_forwarding': str,
-                                        'most_recent_startup_mode': str,
-                                        'te_connection_status': str,
-                                        'srlb': str,
-                                        'srgb': str,
-                                        'interfaces': {
-                                            Any(): {
-                                                'running_state': str,
-                                                'configuration_state': str,
-                                            }
-                                        },
-                                        'topology': {
-                                            Any(): {
-                                                'distance': int,
-                                                'passive_interface_only': bool,
-                                                'protocols_redistributed': bool,
-                                                'level': {
-                                                    Any(): {
-                                                        Optional('generate_style'): str,
-                                                        Optional('accept_style'): str,
-                                                        'metric': int,
-                                                        'ispf_status': str,
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        Optional('generate_style'): str,
+                                        Optional('accept_style'): str,
+                                        'metric': int,
+                                        'ispf_status': str,
                                     }
                                 }
                             }
@@ -376,6 +371,8 @@ class ShowIsisSchema(MetaParser):
             }
         }
     }
+
+    
     
 
 class ShowIsis(ShowIsisSchema):
@@ -432,7 +429,8 @@ class ShowIsis(ShowIsisSchema):
         r13 = re.compile(r'Level\-(?P<level>\d+)')
 
         # Metric style (generate/accept): Wide/Wide
-        r14 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
+        r14 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*'
+                          '(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
 
         # Metric: 10
         r15 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)')
@@ -445,7 +443,8 @@ class ShowIsis(ShowIsisSchema):
         r18 = re.compile(r'Distance\s*:\s*(?P<distance>\d+)')
 
         # Advertise Passive Interface Prefixes Only: No
-        r19 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only\s*:\s*(?P<passive_interface_only>\S+)')                
+        r19 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
+                          '\s*:\s*(?P<adv_passive_only>\S+)')                
 
         # SRLB not allocated
         r20 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)')
@@ -456,7 +455,8 @@ class ShowIsis(ShowIsisSchema):
 
         # Loopback0 is running actively (active in configuration)
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
-        r22 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)\s+\((?P<configuration_state>[\w\s]+)\)')
+        r22 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
+                          '\s+\((?P<configuration_state>[\w\s]+)\)')
 
         parsed_output = {}
         vrf = 'default'
@@ -469,11 +469,11 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 isis_router = group['isis_router']
-                vrf_dict = parsed_output\
+                instance_dict = parsed_output\
                     .setdefault('isis', {})\
-                    .setdefault(isis_router, {})\
-                    .setdefault('vrf', {})\
-                    .setdefault(vrf, {})
+                    .setdefault(isis_router, {})
+                instance_dict['process_id'] = isis_router
+                    
                 continue
 
             # System Id: 3333.3333.3333
@@ -481,10 +481,7 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 system_id = group['system_id']
-                
-                system_id_dict = vrf_dict\
-                    .setdefault('system_id', {})\
-                    .setdefault(system_id, {})
+
                 continue
 
             # Instance Id: 0
@@ -492,10 +489,12 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 instance_id = group['instance_id']
+                instance_dict['instance'] = instance_id
+                vrf_dict = instance_dict\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})
+                vrf_dict['system_id'] = system_id
 
-                instance_dict = system_id_dict\
-                    .setdefault('instance', {})\
-                    .setdefault(instance_id, {})
                 continue
 
             # IS Levels: level-1-2
@@ -503,19 +502,22 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 is_levels = group['is_levels']
-                instance_dict['is_levels'] = is_levels
+                vrf_dict['is_levels'] = is_levels
+
                 continue
 
             # Manual area address(es):
             result = r5.match(line)
             if result:
                 area_address_field = 'manual_area_address'
+
                 continue
 
             # Routing for area address(es):
             result = r6.match(line)
             if result:
                 area_address_field = 'routing_area_address'
+
                 continue
 
             # 49.0002            
@@ -523,7 +525,10 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 area_address = group['area_address']
-                instance_dict[area_address_field] = area_address                
+                area_address_list = vrf_dict.get(area_address_field, [])
+                area_address_list.append(area_address)
+                vrf_dict[area_address_field] = area_address_list
+
                 continue
 
             # Non-stop forwarding: Disabled            
@@ -531,7 +536,8 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 non_stop_forwarding = group['non_stop_forwarding']                
-                instance_dict['non_stop_forwarding'] = non_stop_forwarding
+                vrf_dict['non_stop_forwarding'] = non_stop_forwarding
+
                 continue
 
             # Most recent startup mode: Cold Restart            
@@ -539,7 +545,8 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 most_recent_startup_mode = group['most_recent_startup_mode']                
-                instance_dict['most_recent_startup_mode'] = most_recent_startup_mode
+                vrf_dict['most_recent_startup_mode'] = most_recent_startup_mode
+
                 continue
 
             # TE connection status: Down
@@ -547,13 +554,15 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 te_connection_status = group['te_connection_status']
-                instance_dict['te_connection_status'] = te_connection_status
+                vrf_dict['te_connection_status'] = te_connection_status
+
                 continue
 
             # Topologies supported by IS-IS:
             result = r11.match(line)
             if result:
-                topology_dict = instance_dict.setdefault('topology', {})
+                topology_dict = vrf_dict.setdefault('topology', {})
+
                 continue
 
             # IPv4 Unicast
@@ -563,6 +572,7 @@ class ShowIsis(ShowIsisSchema):
                 group = result.groupdict()
                 topology = group['topology']
                 address_family_dict = topology_dict.setdefault(topology, {})
+
                 continue
 
             # Level-1
@@ -574,6 +584,7 @@ class ShowIsis(ShowIsisSchema):
                 level_dict = address_family_dict\
                     .setdefault('level', {})\
                     .setdefault(level, {})
+
                 continue
 
             # Metric style (generate/accept): Wide/Wide
@@ -584,6 +595,7 @@ class ShowIsis(ShowIsisSchema):
                 accept_style = group['accept_style']
                 level_dict['generate_style'] = generate_style
                 level_dict['accept_style'] = accept_style
+
                 continue
 
             # Metric: 10
@@ -591,7 +603,8 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 metric = int(group['metric'])                
-                level_dict['metric'] = metric                
+                level_dict['metric'] = metric
+
                 continue
 
             # ISPF status: Disabled
@@ -600,12 +613,14 @@ class ShowIsis(ShowIsisSchema):
                 group = result.groupdict()
                 ispf_status = group['ispf_status']                
                 level_dict['ispf_status'] = ispf_status
+
                 continue
 
             # No protocols redistributed
             result = r17.match(line)
             if result:
                 address_family_dict['protocols_redistributed'] = False
+
                 continue
 
             # Distance: 115
@@ -614,17 +629,19 @@ class ShowIsis(ShowIsisSchema):
                 group = result.groupdict()
                 distance = int(group['distance'])                
                 address_family_dict['distance'] = distance
+
                 continue
 
             # Advertise Passive Interface Prefixes Only: No
             result = r19.match(line)
             if result:
                 group = result.groupdict()
-                if group['passive_interface_only'] == 'No':
-                    passive_interface_only = False
+                if group['adv_passive_only'] == 'No':
+                    adv_passive_only = False
                 else:
-                    passive_interface_only = True
-                address_family_dict['passive_interface_only'] = passive_interface_only
+                    adv_passive_only = True
+                address_family_dict['adv_passive_only'] = adv_passive_only
+
                 continue
 
             # SRLB not allocated
@@ -632,7 +649,8 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 srlb = group['srlb']
-                instance_dict['srlb'] = srlb                
+                vrf_dict['srlb'] = srlb   
+
                 continue
 
             # SRGB not allocated
@@ -640,7 +658,8 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 srgb = group['srgb']
-                instance_dict['srgb'] = srgb
+                vrf_dict['srgb'] = srgb
+
                 continue
 
             # Loopback0 is running actively (active in configuration)
@@ -651,11 +670,12 @@ class ShowIsis(ShowIsisSchema):
                 interface = group['interface']
                 running_state = group['running_state']
                 configuration_state = group['configuration_state']
-                interfaces_dict = instance_dict\
+                interfaces_dict = vrf_dict\
                     .setdefault('interfaces', {})\
                     .setdefault(interface, {})
                 interfaces_dict['running_state'] = running_state
                 interfaces_dict['configuration_state'] = configuration_state
+
                 continue
 
         return parsed_output
