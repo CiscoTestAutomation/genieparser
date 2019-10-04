@@ -1216,7 +1216,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             m = p31.match(line)
             if m:
                 group = m.groupdict()
-                shg_label = int(group['shg_label'])
+                shg_label = group['shg_label']
                 next_hop = group['next_hop']
                 label_dict.setdefault('label', {}). \
                     setdefault(shg_label, {}). \

@@ -939,7 +939,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
                         'remote_shg_labels': {
                             '1': {
                                 'label': {
-                                    75116: {
+                                    '75116': {
                                         'nexthop': '4.4.4.48',
                                     },
                                 },

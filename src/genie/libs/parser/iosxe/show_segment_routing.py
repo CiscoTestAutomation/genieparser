@@ -758,19 +758,6 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                 },
             },
             "candidate_paths": {
-                Any(): {
-                    "preference": int,
-                    Optional("dynamic"): str,
-                    Optional("explicit"): str,
-                    "weight": int,
-                    "metric_type": str,
-                    Optional("path_accumulated_metric"): int,
-                    Optional("prefix_sid"): {
-                         Any(): str,
-                    },
-                },
-            },
-            "candidate_paths": {
                 "preference": {
                     Any(): {
                         "path_type": {
