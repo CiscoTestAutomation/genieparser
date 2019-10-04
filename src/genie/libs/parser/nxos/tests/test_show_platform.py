@@ -254,35 +254,151 @@ class test_show_inventory(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
  
-    NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "     
-    PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG          
+        NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "     
+        PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG          
 
-    NAME: "Slot 1",  DESCR: "Supervisor Module-2"                   
-    PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH          
+        NAME: "Slot 1",  DESCR: "Supervisor Module-2"                   
+        PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH          
 
-    NAME: "Slot 2",  DESCR: "Supervisor Module-2"                   
-    PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH          
+        NAME: "Slot 2",  DESCR: "Supervisor Module-2"                   
+        PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH          
 
-    NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"             
-    PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND          
+        NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"             
+        PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND          
 
-    NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"            
-    PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU      
+        NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"            
+        PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU      
 
-    NAME: "Slot 33",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Power Supply"
-    PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB                   
+        NAME: "Slot 33",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Power Supply"
+        PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB                   
 
-    NAME: "Slot 35",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Fan Module"
-    PID: N7K-C7009-FAN       ,  VID: V01 ,  SN: JAF1702AEBE
+        NAME: "Slot 35",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Fan Module"
+        PID: N7K-C7009-FAN       ,  VID: V01 ,  SN: JAF1702AEBE
  
-'''}
+    '''}
+
+    golden_parsed_output1 = {
+        'name': {
+            'Slot 38': {
+                'description': 'Nexus7700 C7706 (6 Slot) Chassis Fan Module',
+                'slot': '38',
+                'pid': 'N77-C7706-FAN',
+                'vid': 'V01',
+                'serial_number': 'DCH212300ZQ',
+            },
+            'Slot 39': {
+                'description': 'Nexus7700 C7706 (6 Slot) Chassis Fan Module',
+                'slot': '39',
+                'pid': 'N77-C7706-FAN',
+                'vid': 'V01',
+                'serial_number': 'DCH212300ZR',
+            },
+            'FEX 106 CHASSIS': {
+                'description': 'N2K-C2248TP-E-1GE  CHASSIS',
+                'slot': 'None',
+                'pid': 'N2K-C2248TP-E-1GE',
+                'vid': 'V03',
+                'serial_number': 'FOX2129PR28',
+            },
+            'FEX 106 Module 1': {
+                'description': 'Fabric Extender Module: 48x1GE, 4x10GE Supervisor',
+                'slot': 'None',
+                'pid': 'N2K-C2248TP-E-1GE',
+                'vid': 'V03',
+                'serial_number': 'FOC21306SY6',
+            },
+            'FEX 106 Fan 1': {
+                'description': 'Fabric Extender Fan module',
+                'slot': 'None',
+                'pid': 'N2K-C2248-FAN',
+                'vid': 'N/A',
+                'serial_number': 'N/A',
+            },
+            'FEX 106 Power Supply 1': {
+                'description': 'Fabric Extender AC power supply',
+                'slot': 'None',
+                'pid': 'N2200-PAC-400W',
+                'vid': 'V06',
+                'serial_number': 'DCA21265683',
+            },
+            'FEX 106 Power Supply 2': {
+                'description': 'Fabric Extender AC power supply',
+                'slot': 'None',
+                'pid': 'N2200-PAC-400W',
+                'vid': 'V06',
+                'serial_number': 'DCA21265681',
+            },
+            'FEX 108 CHASSIS': {
+                'description': 'N2K-C2248TP-E-1GE  CHASSIS',
+                'slot': 'None',
+                'pid': 'N2K-C2248TP-E-1GE',
+                'vid': 'V03',
+                'serial_number': 'FOX2131P982',
+            },
+            'FEX 108 Module 1': {
+                'description': 'Fabric Extender Module: 48x1GE, 4x10GE Supervisor',
+                'slot': 'None',
+                'pid': 'N2K-C2248TP-E-1GE',
+                'vid': 'V03',
+                'serial_number': 'FOC21306TAS',
+            },
+            'FEX 108 Fan 1': {
+                'description': 'Fabric Extender Fan module',
+                'slot': 'None',
+                'pid': 'N2K-C2248-FAN',
+                'vid': 'N/A',
+                'serial_number': 'N/A',
+            },
+        },
+    }
+    golden_output1 = {'execute.return_value': '''
+        show inventory
+        NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
+        PID: N77-C7706-FAN       ,  VID: V01 ,  SN: DCH212300ZQ
+        
+        NAME: "Slot 39",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
+        PID: N77-C7706-FAN       ,  VID: V01 ,  SN: DCH212300ZR
+        
+        NAME: "FEX 106 CHASSIS",  DESCR: "N2K-C2248TP-E-1GE  CHASSIS"
+        PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOX2129PR28
+        
+        NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
+        PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOC21306SY6
+        
+        NAME: "FEX 106 Fan 1",  DESCR: "Fabric Extender Fan module"
+        PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
+        
+        NAME: "FEX 106 Power Supply 1",  DESCR: "Fabric Extender AC power supply"
+        PID: N2200-PAC-400W      ,  VID: V06 ,  SN: DCA21265683
+        
+        NAME: "FEX 106 Power Supply 2",  DESCR: "Fabric Extender AC power supply"
+        PID: N2200-PAC-400W      ,  VID: V06 ,  SN: DCA21265681
+        
+        NAME: "FEX 108 CHASSIS",  DESCR: "N2K-C2248TP-E-1GE  CHASSIS"
+        PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOX2131P982
+        
+        NAME: "FEX 108 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
+        PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOC21306TAS
+        
+        NAME: "FEX 108 Fan 1",  DESCR: "Fabric Extender Fan module"
+        PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
+    '''}
 
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
