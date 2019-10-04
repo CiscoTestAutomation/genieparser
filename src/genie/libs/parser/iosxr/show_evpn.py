@@ -71,10 +71,10 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
                 evi = int(group['evi'])
                 bridge_domain = group['bridge_domain']
                 evi_type = group['type']
-                evi_dict = ret_dict.setdefault('evi', {}). \
+                sub_dict = ret_dict.setdefault('evi', {}). \
                     setdefault(evi, {})
-                evi_dict.update({'bridge_domain': bridge_domain})
-                evi_dict.update({'type': evi_type})
+                sub_dict.update({'bridge_domain': bridge_domain})
+                sub_dict.update({'type': evi_type})
                 continue
             
             # 100:145                        Import 
@@ -84,7 +84,7 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
                 group = m.groupdict()
                 route_target_in_use = group['route_target_in_use']
                 route_type = group['type']
-                type_dict = evi_dict.setdefault('route_target_in_use', {}). \
+                type_dict = sub_dict.setdefault('route_target_in_use', {}). \
                     setdefault(route_target_in_use, {})
                 type_dict.update({route_type.lower(): True})
                 continue
@@ -102,7 +102,7 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
                 group = m.groupdict()
                 key = group['key'].strip().lower().replace(' ', '_')
                 value = group['value'].strip()
-                evi_dict.update({key: value})
+                sub_dict.update({key: value})
                 continue
             
         return ret_dict
@@ -391,21 +391,68 @@ class ShowEvpnEthernetSegment(MetaParser):
         return kl
 
 
-# ============================================
-# Schema for 'show evpn internal-label detail'
-# ============================================
+# =========================================================
+# Schema for:
+#   * 'show evpn internal-label detail'
+#   * 'show evpn internal-label detail location {location}'
+# =========================================================
 class ShowEvpnInternalLabelDetailSchema(MetaParser):
     '''Schema for:
         * show evpn internal-label detail
     '''
 
     schema = {
-        'evi':
+        Optional('evi'):
             {Any():
-                {'esi': str,
-                'eth_tag': str,
-                'internal_label': str,
-                'mp_resolved': bool,
+                {'evi': int,
+                'esi': str,
+                'eth_tag': int,
+                'internal_label': int,
+                Optional('mp_resolved'): bool,
+                Optional('mp_single_active'): str,
+                Optional('pathlists'):
+                    {Optional('mac'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                     Optional('es_ead'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                     Optional('evi_ead'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                     Optional('summary'):
+                        {'nexthop':
+                            {Any():
+                                {'label': int,
+                                Optional('flag'): str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        Optional('vpn_id'):
+            {Any():
+                {'vpn_id': int,
+                'esi': str,
+                'eth_tag': int,
+                'internal_label': int,
+                Optional('mp_resolved'): bool,
                 Optional('mp_single_active'): str,
                 Optional('pathlists'):
                     {Optional('mac'):
@@ -446,20 +493,28 @@ class ShowEvpnInternalLabelDetailSchema(MetaParser):
         }
 
 
-# ============================================
-# Parser for 'show evpn internal-label detail'
-# ============================================
-class ShowEvpnInternalLabelDetail(MetaParser):
+# =========================================================
+# Parser for:
+#   * 'show evpn internal-label detail'
+#   * 'show evpn internal-label detail location {location}'
+# =========================================================
+class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
     '''Parser for:
         * show evpn internal-label detail
+        * 'show evpn internal-label detail location {location}'
     '''
 
-    cli_command = 'show evpn internal-label detail'
+    cli_command = ['show evpn internal-label detail',
+                   'show evpn internal-label detail location {location}']
 
-    def cli(self, output=None):
+    def cli(self, location=None, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if location:
+                out = self.device.execute(self.cli_command[1].\
+                                                format(location=location))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -472,26 +527,38 @@ class ShowEvpnInternalLabelDetail(MetaParser):
             'Summary': 'summary',
             }
 
+        # EVI   Ethernet Segment Id                     EtherTag Label  
+        # VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label
+
         # 5     0012.1200.0000.0000.0002                0        24114
         # 100   0100.0000.acce.5500.0100                0        24005
         p1 = re.compile(r'^(?P<evi>(\d+)) +(?P<esi>([a-z0-9\.]+))'
                          ' +(?P<eth_tag>(\d+)) +(?P<internal_label>(\d+))$')
 
+        # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
+        # 16003      VXLAN  0001.0407.0405.0607.0811    0          24004
+        p2 = re.compile(r'^(?P<vpn_id>(\d+)) +(?P<encap>([a-zA-Z]+))'
+                         ' +(?P<esi>([a-z0-9\.]+)) +(?P<eth_tag>(\d+))'
+                         ' +(?P<internal_label>(\d+))$')
+
         # Multi-paths resolved: TRUE
         # Multi-paths resolved: TRUE (Remote single-active)
-        p2 = re.compile(r'^Multi-paths +resolved: +(?P<mp_resolved>(\S+))'
+        p3 = re.compile(r'^Multi-paths +resolved: +(?P<mp_resolved>(\S+))'
                          ' +\((?P<mp_single_active>(.*))\)$')
 
+        # Pathlists:
         # MAC     10.70.20.20                              24212
         # EAD/ES  10.10.10.10                              0
         # EAD/EVI 10.10.10.10                              24012
         # Summary 10.70.20.20                              24212
-        p3 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary)) +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
+        p4 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary)) +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
 
         #         10.70.20.20                              0
         #         10.10.10.10 (B)                          24012
-        p4 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<flag>(\S+))\))? +(?P<label>(\d+))$')
+        p5 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<flag>(\S+))\))? +(?P<label>(\d+))$')
 
+        # Summary pathlist:
+        #   0x03000001 123.1.1.2                                16002
 
         for line in out.splitlines():
             line = line.strip()
@@ -500,42 +567,59 @@ class ShowEvpnInternalLabelDetail(MetaParser):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                evi_dict = parsed_dict.setdefault('evi', {}).\
+                sub_dict = parsed_dict.setdefault('evi', {}).\
                                        setdefault(int(group['evi']), {})
                 for key, value in group.items():
-                    if "." not in value:
-                        value = int(value)
-                    evi_dict[key] = value
+                    if re.match('[a-z]+', value):
+                        sub_dict[key] = value
+                    else:
+                        sub_dict[key] = int(value)
+                continue
+
+            # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
+            # 16003      VXLAN  0001.0407.0405.0607.0811    0          24004
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict = parsed_dict.setdefault('vpn_id', {}).\
+                                       setdefault(int(group['vpn_id']), {})
+                for key, value in group.items():
+                    if re.match('[a-z]+', value):
+                        sub_dict[key] = value
+                    else:
+                        sub_dict[key] = int(value)
                 continue
 
             # Multi-paths resolved: TRUE
             # Multi-paths resolved: TRUE (Remote single-active)
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
-                evi_dict['mp_resolved'] = True
+                sub_dict['mp_resolved'] = True
                 if m.groupdict()['mp_single_active']:
-                    evi_dict['mp_single_active'] = m.groupdict()['mp_single_active']
+                    sub_dict['mp_single_active'] = m.groupdict()['mp_single_active']
                 continue
 
             # MAC     10.70.20.20                              24212
             # EAD/ES  10.10.10.10                              0
             # EAD/EVI 10.10.10.10                              24012
             # Summary 10.70.20.20                              24212
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
-                pathlists_dict = evi_dict.setdefault('pathlists', {}).\
+                pathlists_dict = sub_dict.setdefault('pathlists', {}).\
                                         setdefault(type_dict[group['type']], {})
-                type_nh_dict = pathlists_dict.setdefault(group['nexthop'], {})
+                type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
+                                              setdefault(group['nexthop'], {})
                 type_nh_dict['label'] = int(group['label'])
                 continue
 
             #         10.70.20.20                              0
             #         10.10.10.10 (B)                          24012
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
-                type_nh_dict = pathlists_dict.setdefault(group['nexthop'], {})
+                type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
+                                              setdefault(group['nexthop'], {})
                 type_nh_dict['label'] = int(group['label'])
                 if group['flag']:
                     type_nh_dict['flag'] = group['flag']

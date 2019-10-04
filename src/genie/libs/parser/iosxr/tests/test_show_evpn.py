@@ -28,34 +28,36 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'evi': 
-            {5: 
+        'evi':
+            {5:
                 {'esi': '0012.1200.0000.0000.0002',
                 'eth_tag': 0,
                 'evi': 5,
                 'internal_label': 24114,
                 'mp_resolved': True,
-               'mp_single_active': 'Remote single-active',
-               'pathlists':
-                {'es_ead':
-                    {'10.10.10.10':
-                        {'label': 0}
-                        },
-                'evi_ead':
-                    {'10.10.10.10':
-                        {'label': 24012},
-                        },
-                'mac':
-                    {'10.70.20.20':
-                        {'label': 24212},
-                    '10.70.21.21':
-                        {'label': 0}},
-                'summary':
-                    {'10.10.10.10':
-                        {'flag': 'B',
-                        'label': 24012},
-                    '10.70.20.20':
-                        {'label': 24212}}}},
+                'mp_single_active': 'Remote single-active',
+                'pathlists':
+                    {'es_ead':
+                        {'nexthop':
+                            {'10.10.10.10':
+                                {'label': 0}}},
+                    'evi_ead':
+                        {'nexthop':
+                            {'10.10.10.10':
+                                {'label': 24012}}},
+                    'mac':
+                        {'nexthop':
+                            {'10.70.20.20':
+                                {'label': 24212},
+                            '10.70.21.21':
+                                {'label': 0}}},
+                    'summary':
+                        {'nexthop':
+                            {'10.10.10.10':
+                                {'flag': 'B',
+                                'label': 24012},
+                            '10.70.20.20':
+                                {'label': 24212}}}}},
             100:
                 {'esi': '0100.0000.acce.5500.0100',
                 'eth_tag': 0,
@@ -89,8 +91,9 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'internal_label': 24005,
                 'pathlists':
                     {'summary':
-                        {'192.168.0.3':
-                            {'label': 524288}}}}}}
+                        {'nexthop':
+                            {'192.168.0.3':
+                                {'label': 524288}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
         RP/0/0/CPU0:PE1#show evpn internal-label 
@@ -101,6 +104,36 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         145   ff00.0002.be23.ce01.0000                0        24005
               Summary 192.168.0.3                              524288
 
+        '''}
+
+    golden_parsed_output3 = {}
+
+    golden_output3 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:RGT-HVS-1#show evpn internal-label detail location 0/RP0/CPU0 
+        Sat Jun  9 10:20:21.939 UTC
+
+        VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label   
+        ---------- ------ --------------------------- --------   --------
+        16001      VXLAN  0001.0407.0405.0607.0811    0          24002   
+           Multi-paths resolved: TRUE (Remote all-active) 
+           Multi-paths Internal label: 24002
+           Pathlists:
+             EAD/ES     123.1.1.2                                0              
+             EAD/EVI    123.1.1.2                                16001          
+           Summary pathlist:
+             0x03000001 123.1.1.2                                16001          
+
+        16002      VXLAN  0001.0407.0405.0607.0811    0          24003   
+           Multi-paths resolved: TRUE (Remote all-active) 
+           Multi-paths Internal label: 24003
+           Pathlists:
+             EAD/ES     123.1.1.2                                0              
+             EAD/EVI    123.1.1.2                                16002          
+           Summary pathlist:
+             0x03000001 123.1.1.2                                16002          
+
+        16003      VXLAN  0001.0407.0405.0607.0811    0          24004   
+           Multi-paths resolved: TRUE (Remote all-active) 
         '''}
 
     def test_empty(self):
@@ -121,6 +154,11 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ===================================================
 #  Unit test for 'show evpn evi'
