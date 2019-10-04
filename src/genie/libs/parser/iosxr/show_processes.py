@@ -8,35 +8,35 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 class ShowProcessesSchema(MetaParser):
     ''' Schema for commands:
         * show processes 
-        * show processes isis
+        * show processes {process}
     '''
     schema = {
         'job_id': {
             Any(): {
-                'pid': int,
-                'process_name': str,
-                'executable_path': str,
-                'instance': str,
-                'version_id': str,
-                'respawn': str,
-                'respawn_count': int,
-                'last_started': str,
-                'process_state': str,
-                'package_state': str,
-                'started_on_config': str,
-                'process_group': str,
-                'core': str,
-                'max_core': int,
-                'placement': str,
-                'startup_path': str,
-                'ready': str,
-                'available': str,
-                'process_cpu_time': {
+                Optional('pid'): int,
+                Optional('process_name'): str,
+                Optional('executable_path'): str,
+                Optional('instance'): str,
+                Optional('version_id'): str,
+                Optional('respawn'): str,
+                Optional('respawn_count'): int,
+                Optional('last_started'): str,
+                Optional('process_state'): str,
+                Optional('package_state'): str,
+                Optional('started_on_config'): str,
+                Optional('process_group'): str,
+                Optional('core'): str,
+                Optional('max_core'): int,
+                Optional('placement'): str,
+                Optional('startup_path'): str,
+                Optional('ready'): str,
+                Optional('available'): str,
+                Optional('process_cpu_time'): {
                     'user': float,
                     'kernel': float,
                     'total': float,
@@ -57,7 +57,7 @@ class ShowProcessesSchema(MetaParser):
 class ShowProcesses(ShowProcessesSchema):
     ''' Parser for:
         * 'show processes'
-        * 'show processes isis'
+        * 'show processes {process}'
     '''
 
     cli_command = ['show processes {process}', 
