@@ -64,6 +64,8 @@
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
         * update schema to support 'Merged' key
+    * Update ShowMplsForwardingTableDetail
+        * Add command 'show mpls forwarding-table labels {label} detail'
 * IOSXR
     * Added ShowMplsLabelTableDetail for:
         'show mpls label table detail'
@@ -121,6 +123,7 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
+
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -401,6 +404,8 @@
         * show l2vpn bridge-domain brief
     * Added ShowL2vpnBridgeDomainDetail for:
         * show l2vpn bridge-domain detail
+    * Added ShowL2vpnMacLearning for:
+        * show l2vpn mac-learning {mac_type} all location {location}
     * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
         * show l2vpn forwarding bridge-domain mac-address location {location}
         * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
