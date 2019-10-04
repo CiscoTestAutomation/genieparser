@@ -380,65 +380,24 @@ class TestIsisHostname(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-        "isis": {
-            "TEST1": {
-                "vrf": {
-                    "default": {
-                        "level": {
+        'isis': {
+            'TEST1': {
+                'vrf': {
+                    'default': {
+                        'level': {
                             2: {
-                                "hostname": {
-                                    "tor-1.tenlab-cloud": {
-                                        "system_id": "1720.1800.0224"},
-                                    "tor-3.tenlab-cloud": {
-                                        "system_id": "1720.1800.0226"},
-                                    "tor-2.tenlab-cloud": {
-                                        "system_id": "1720.1800.0225"},
-                                    "tor-4.tenlab-cloud": {
-                                        "system_id": "1720.1800.0227"},
-                                    "tor-9.tenlab-cloud": {
-                                        "system_id": "1720.1800.0238"},
-                                    "tor-21.tenlab-cloud": {
-                                        "system_id": "1720.1800.0234"},
-                                    "tor-7.tenlab-cloud": {
-                                        "system_id": "1720.1800.0236"},
-                                    "lef-arista.qa-site1": {
-                                        "system_id": "1720.1800.0223"},
-                                    "tor-32.tenlab-cloud": {
-                                        "system_id": "1720.1800.0232"},
-                                    "tor-1.qa-site1": {
-                                        "system_id": "1720.1800.0208"},
-                                    "tor-10.tenlab-cloud": {
-                                        "system_id": "1720.1800.0239"},
-                                    "tor-22.tenlab-cloud": {
-                                        "system_id": "1720.1800.0235"},
-                                    "tor-8.tenlab-cloud": {
-                                        "system_id": "1720.1800.0237"},
-                                    "leaf-1.kamino": {
-                                        "system_id": "1720.1904.0062"},
-                                    "tor-31.tenlab-cloud": {
-                                        "system_id": "1720.1800.0233"},
-                                    "tor-3.qa-site1": {
-                                        "system_id": "1720.1800.0210"},
-                                    "leaf-1.qa-site1": {
-                                        "system_id": "1720.1800.0212"},
-                                    "tcore3-rohan": {
-                                        "system_id": "0670.7021.9096"},
-                                    "tor-2.qa-site1": {
-                                        "system_id": "1720.1800.0209"},
-                                    "spine2-tatooine": {
-                                        "system_id": "0670.7021.9090"},
-                                    "tor2-tatooine": {
-                                        "system_id": "1720.1600.2089",
-                                        "local_router": True,
-                                    },
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                'system_id': {
+                                    '5286.4470.2149': {
+                                        'dynamic_hostname': 'host-1.bla-site3'}, 
+                                    '9839.2319.8337': {
+                                        'dynamic_hostname': 'host3-bla'}, 
+                                    '3549.6375.2540': {
+                                        'dynamic_hostname': 'abc-3.bla-site4'}, 
+                                    '0670.7021.9090': {
+                                            'dynamic_hostname': 'host2-abc'},
+                                    '9853.9997.6489': {
+                                        'dynamic_hostname': 'abc2-xyz', 
+                                        'local_router': True}}}}}}}}}
 
     golden_output_1 = {'execute.return_value': '''
         show isis hostname
@@ -447,27 +406,11 @@ class TestIsisHostname(unittest.TestCase):
 
         IS-IS TEST1 hostnames
         Level  System ID      Dynamic Hostname
-         2     1720.1800.0224 tor-1.tenlab-cloud
-         2     1720.1800.0226 tor-3.tenlab-cloud
-         2     1720.1800.0225 tor-2.tenlab-cloud
-         2     1720.1800.0227 tor-4.tenlab-cloud
-         2     1720.1800.0238 tor-9.tenlab-cloud
-         2     1720.1800.0234 tor-21.tenlab-cloud
-         2     1720.1800.0236 tor-7.tenlab-cloud
-         2     1720.1800.0223 lef-arista.qa-site1
-         2     1720.1800.0232 tor-32.tenlab-cloud
-         2     1720.1800.0208 tor-1.qa-site1
-         2     1720.1800.0239 tor-10.tenlab-cloud
-         2     1720.1800.0235 tor-22.tenlab-cloud
-         2     1720.1800.0237 tor-8.tenlab-cloud
-         2     1720.1904.0062 leaf-1.kamino
-         2     1720.1800.0233 tor-31.tenlab-cloud
-         2     1720.1800.0210 tor-3.qa-site1
-         2     1720.1800.0212 leaf-1.qa-site1
-         2     0670.7021.9096 tcore3-rohan
-         2     1720.1800.0209 tor-2.qa-site1
-         2     0670.7021.9090 spine2-tatooine
-         2   * 1720.1600.2089 tor2-tatooine
+         2     5286.4470.2149 host-1.bla-site3
+         2     9839.2319.8337 host3-bla
+         2     3549.6375.2540 abc-3.bla-site4
+         2     0670.7021.9090 host2-abc
+         2   * 9853.9997.6489 abc2-xyz
     '''}
 
     golden_parsed_output_2 = {
@@ -477,37 +420,37 @@ class TestIsisHostname(unittest.TestCase):
                     "default": {
                         "level": {
                             2: {
-                                "hostname": {
-                                    "R2": {
-                                        "system_id": "2222.2222.2222"},
-                                    "R8": {
-                                        "system_id": "8888.8888.8888"},
-                                    "R7": {
-                                        "system_id": "7777.7777.7777"},
-                                    "R3": {
-                                        "system_id": "3333.3333.3333",
+                                "system_id": {
+                                    "2222.2222.2222": {
+                                        "dynamic_hostname": "R2"},
+                                    "8888.8888.8888": {
+                                        "dynamic_hostname": "R8"},
+                                    "7777.7777.7777": {
+                                        "dynamic_hostname": "R7"},
+                                    "3333.3333.3333": {
+                                        "dynamic_hostname": "R3",
                                         "local_router": True,
                                     },
-                                    "R5": {
-                                        "system_id": "5555.5555.5555"},
-                                    "R9": {
-                                        "system_id": "9999.9999.9999"},
+                                    "5555.5555.5555": {
+                                        "dynamic_hostname": "R5"},
+                                    "9999.9999.9999": {
+                                        "dynamic_hostname": "R9"},
                                 }
                             },
                             1: {
-                                "hostname": {
-                                    "R4": {
-                                        "system_id": "4444.4444.4444"},
-                                    "R6": {
-                                        "system_id": "6666.6666.6666"},
-                                    "R7": {
-                                        "system_id": "7777.7777.7777"},
-                                    "R3": {
-                                        "system_id": "3333.3333.3333",
+                                "system_id": {
+                                    "4444.4444.4444": {
+                                        "dynamic_hostname": "R4"},
+                                    "6666.6666.6666": {
+                                        "dynamic_hostname": "R6"},
+                                    "7777.7777.7777": {
+                                        "dynamic_hostname": "R7"},
+                                    "3333.3333.3333": {
+                                        "dynamic_hostname": "R3",
                                         "local_router": True,
                                     },
-                                    "R5": {
-                                        "system_id": "5555.5555.5555"},
+                                    "5555.5555.5555": {
+                                        "dynamic_hostname": "R5"},
                                 }
                             },
                         }
@@ -516,6 +459,7 @@ class TestIsisHostname(unittest.TestCase):
             }
         }
     }
+
 
     golden_output_2 = {'execute.return_value': '''
         show isis hostname
