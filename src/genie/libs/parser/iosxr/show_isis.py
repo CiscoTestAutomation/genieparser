@@ -326,7 +326,8 @@ class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
 
 class ShowIsisHostnameSchema(MetaParser):
     ''' Schema for commands:
-        * show isis hostname
+        * 'show isis hostname'
+        * 'show isis instance {instance} hostname'
     '''
 
     schema = {
@@ -336,9 +337,9 @@ class ShowIsisHostnameSchema(MetaParser):
                     Any(): {
                         'level': {
                             Any(): {
-                                'hostname': {
+                                'system_id': {
                                     Any(): {
-                                        'system_id': str,
+                                        'dynamic_hostname': str,
                                         Optional('local_router'): bool
                                     }
                                 }
@@ -348,19 +349,25 @@ class ShowIsisHostnameSchema(MetaParser):
                 }
             }
         }
-    }
+    }    
 
 class ShowIsisHostname(ShowIsisHostnameSchema):
     ''' Parser for commands:
-        * show isis hostname
+        * 'show isis hostname'
+        * 'show isis instance {instance} hostname'
     '''
 
-    cli_command = 'show hostname'
+    cli_command = ['show isis instance {instance} hostname',
+                   'show isis hostname']
 
-    def cli(self, output=None):
+    def cli(self, instance=None, output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if instance:
+                command = self.cli_command[0].format(instance=instance)
+            else:
+                command = self.cli_command[1]
+            output = self.device.execute(command)
 
         # IS-IS TEST1 hostnames
         r1 = re.compile(r'IS\-IS\s(?P<isis>.+)\s+hostnames')
@@ -368,7 +375,8 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         # 2     1720.1800.0254 tor-28.tenlab-cloud
         # 2     1720.1800.0213 leaf-2.qa-site1
         # 2     1720.1800.0250 tor-23.tenlab-cloud
-        r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
+        r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+'
+                         '(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
 
         parsed_output = {}
         vrf = 'default'
@@ -406,10 +414,10 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
                     hostname_dict = isis_dict\
                         .setdefault('level', {})\
                         .setdefault(int(level), {})\
-                        .setdefault('hostname', {})\
-                        .setdefault(dynamic_hostname, {})\
+                        .setdefault('system_id', {})\
+                        .setdefault(system_id, {})
 
-                    hostname_dict['system_id'] = system_id
+                    hostname_dict['dynamic_hostname'] = dynamic_hostname
                     if local_router:
                         hostname_dict['local_router'] = True
 
