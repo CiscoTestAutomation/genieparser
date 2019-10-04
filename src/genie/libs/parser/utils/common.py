@@ -204,12 +204,12 @@ class Common():
                    'Hs': 'HSSI',
                    'AT': 'ATM',
                    'Et': 'Ethernet',
-                   'BD': 'BridgeDomain',
+                   'BD': 'BDI',
                    'Se': 'Serial',
                    'Fo': 'FortyGigabitEthernet',
                    'Hu': 'HundredGigE',
                    'vl': 'vasileft',
-                   'rl': 'vasiright'
+                   'vr': 'vasiright'
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)
