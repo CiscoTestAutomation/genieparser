@@ -5496,12 +5496,14 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                             '(?P<origin_codes>(i|e|\?|\|))$')
         p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
         p4 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>(\S+))'
-            '(?: +\(((VRF +(?P<default_vrf>\S+))|((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)'
-            '|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
+                            '(?: +\(((VRF +(?P<default_vrf>\S+))|'
+                            '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)'
+                            '|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
         
         p5 = re.compile(r'^\s*BGP *router *identifier *(?P<router_identifier>[0-9\.]+)'
                          ', *local *AS *number *(?P<local_as>[0-9]+)$')
-        p6 =  re.compile(r'^\s*BGP *generic *scan *interval *(?P<generic_scan_interval>[0-9]+) *secs$')
+        p6 =  re.compile(r'^\s*BGP *generic *scan *interval *'
+                            '(?P<generic_scan_interval>[0-9]+) *secs$')
         p7 = re.compile(r'^\s*Non-stop *routing *is'
                         ' *(?P<non_stop_routing>[A-Za-z]+)$')
         p8 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
@@ -5509,16 +5511,18 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                          ' *RD *version: (?P<rd_version>[0-9]+)$')
         p10 = re.compile(r'^\s*BGP *main *routing *table *version'
                          ' *(?P<bgp_table_version>[0-9]+)$')
-        p11 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *(?P<nsr_initial_initsync_version>[0-9]+)'
+        p11 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *'
+                            '(?P<nsr_initial_initsync_version>[0-9]+)'
                           ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
-        p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+        p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *'
+                            '(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
         p13 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
         p14 = re.compile(r'(--More-- +)?(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
-            '(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
+                            '(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
         p15 = re.compile(r'(--More-- +)?(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
-            '(?: *(?P<origin_codes>(i|e|\?)))$')
+                            '(?: *(?P<origin_codes>(i|e|\?)))$')
         p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +'
-            '(?P<processed_paths>[0-9]+) +paths$')
+                            '(?P<processed_paths>[0-9]+) +paths$')
 
         for line in out.splitlines():
             line = line.strip()
