@@ -16,7 +16,7 @@ class TestShowProcesses(unittest.TestCase):
         * 'show processes isis' : Parser ShowProcesses
     '''
 
-    device = Device(name='aDevice')
+    maxDiff = None
 
     empty_output = {'execute.return_value': ''}
 
@@ -292,6 +292,198 @@ class TestShowProcesses(unittest.TestCase):
         1011   22514    0K  20   Sleeping     Protect Infra    0
     '''}
 
+    golden_parsed_output_2 = {
+        "job_id": {
+            "1": {
+                "tid": {
+                    1: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "init",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67168": {
+                "tid": {
+                    1632: {
+                        "stack": "0K",
+                        "pri": 0,
+                        "state": "Sleeping",
+                        "name": "cgroup_oom",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67677": {
+                "tid": {
+                    2141: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "app_config_back",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67684": {
+                "tid": {
+                    2148: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "bash",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67697": {
+                "tid": {
+                    2161: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "inotifywait",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67698": {
+                "tid": {
+                    2162: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "bash",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67741": {
+                "tid": {
+                    2205: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "dbus-daemon",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67775": {
+                "tid": {
+                    2239: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "sshd",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67785": {
+                "tid": {
+                    2249: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "rpcbind",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67870": {
+                "tid": {
+                    2334: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "rngd",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67879": {
+                "tid": {
+                    2343: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "syslogd",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67910": {
+                "tid": {
+                    2374: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "xinetd",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67945": {
+                "tid": {
+                    2409: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "crond",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "53": {
+                "tid": {
+                    3529: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "dsr",
+                        "rt_pri": 0,
+                    },
+                    3614: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "lwm_debug_threa",
+                        "rt_pri": 0,
+                    },
+                }
+            },
+        }
+    }
+
+
+    golden_output_2 = {'execute.return_value': '''
+        RX#show processes
+        Fri Oct  4 18:35:26.878 UTC
+        JID    TID  Stack  pri  state        NAME             rt_pri
+        1      1       0K  20   Sleeping     init             0
+        67110  1574    0K  20   Sleeping     oom.sh           0
+        67134  1598    0K  20   Sleeping     cgroup_oom.sh    0
+        67135  1599    0K  20   Sleeping     oom.sh           0
+        67168  1632    0K  0    Sleeping     cgroup_oom       0
+        67677  2141    0K  20   Sleeping     app_config_back  0
+        67684  2148    0K  20   Sleeping     bash             0
+        67697  2161    0K  20   Sleeping     inotifywait      0
+        67698  2162    0K  20   Sleeping     bash             0
+        67741  2205    0K  20   Sleeping     dbus-daemon      0
+        67775  2239    0K  20   Sleeping     sshd             0
+        67785  2249    0K  20   Sleeping     rpcbind          0
+        67870  2334    0K  20   Sleeping     rngd             0
+        67879  2343    0K  20   Sleeping     syslogd          0
+        67910  2374    0K  20   Sleeping     xinetd           0
+        67945  2409    0K  20   Sleeping     crond            0
+        69064  3528    0K  20   Sleeping     ds_startup.sh    0
+        53     3529    0K  20   Sleeping     dsr              0
+        53     3614    0K  20   Sleeping     lwm_debug_threa  0
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowProcesses(device=self.device)
@@ -299,11 +491,16 @@ class TestShowProcesses(unittest.TestCase):
             parsed_output = obj.parse(process='isis')
 
     def test_parsed_output_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowProcesses(device=self.device)
         parsed_output = obj.parse(process='isis')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_parsed_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowProcesses(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
