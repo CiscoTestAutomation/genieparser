@@ -1249,12 +1249,10 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 static_mac_address = group['static_mac_address']
                 if dict_type == 'ac':
                     static_mac_address_list = interface_dict.get('static_mac_address', [])
-                    static_mac_address_list.append(static_mac_address)
-                    interface_dict.update({'static_mac_address': static_mac_address_list})
                 else:
                     static_mac_address_list = vfi_obj_dict.get('static_mac_address', [])
-                    static_mac_address_list.append(static_mac_address)
-                    interface_dict.update({'static_mac_address': static_mac_address_list})
+                static_mac_address_list.append(static_mac_address)
+                interface_dict.update({'static_mac_address': static_mac_address_list})
                 continue
 
             # Statistics:
@@ -1271,14 +1269,11 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
 
                 if dict_type != 'ac':
                     statistics_dict = pw_id_dict.setdefault('statistics', {})
-                    packet_totals_dict = statistics_dict.setdefault('packet_totals', {})
-                    packet_totals_dict.update({'receive': receive})
-                    packet_totals_dict.update({'send': send})
                 else:
                     statistics_dict = interface_dict.setdefault('statistics', {})
-                    packet_totals_dict = statistics_dict.setdefault('packet_totals', {})
-                    packet_totals_dict.update({'receive': receive})
-                    packet_totals_dict.update({'send': send})
+                packet_totals_dict = statistics_dict.setdefault('packet_totals', {})
+                packet_totals_dict.update({'receive': receive})
+                packet_totals_dict.update({'send': send})
                 continue
 
             # byte totals: receive 305735040,send 15022146
@@ -1290,14 +1285,11 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
 
                 if dict_type != 'ac':
                     statistics_dict = pw_id_dict.setdefault('statistics', {})
-                    packet_totals_dict = statistics_dict.setdefault('byte_totals', {})
-                    packet_totals_dict.update({'receive': receive})
-                    packet_totals_dict.update({'send': send})
                 else:
                     statistics_dict = interface_dict.setdefault('statistics', {})
-                    packet_totals_dict = statistics_dict.setdefault('byte_totals', {})
-                    packet_totals_dict.update({'receive': receive})
-                    packet_totals_dict.update({'send': send})
+                packet_totals_dict = statistics_dict.setdefault('byte_totals', {})
+                packet_totals_dict.update({'receive': receive})
+                packet_totals_dict.update({'send': send})
                 continue
 
             # List of Access PWs:
