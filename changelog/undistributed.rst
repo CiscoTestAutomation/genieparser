@@ -231,6 +231,9 @@
 --------------------------------------------------------------------------------
                                 INVENTORY
 --------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInventory:
+        * Matching more slots
 * IOS
     * Updated ShowInventory:
         * Matching more slots

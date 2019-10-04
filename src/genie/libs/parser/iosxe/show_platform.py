@@ -1304,7 +1304,6 @@ class ShowInventory(ShowInventorySchema):
         p2 = re.compile(r'^PID: +(?P<pid>(\S+)) *, +VID:(?: +(?P<vid>(\S+)))? *,'
                          ' +SN:(?: +(?P<sn>(\S+)))?$')
 
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1433,7 +1432,8 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ASR1000-SIP40     , VID: V02  , SN: JAE200609WP
                 # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
                 # PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
-                elif ('SIP' in pid) or ('ISR' in pid) or ('-X' in pid):
+                # PID: ASR1002-HX        , VID:      , SN:
+                elif ('SIP' in pid) or ('ISR' in pid) or ('-X' in pid) or ('-HX' in pid):
                     lc_dict = slot_dict.setdefault('lc', {}).\
                                         setdefault(pid, {})
                     lc_dict['name'] = name
