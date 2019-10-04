@@ -15,8 +15,8 @@ from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer
 class test_show_msdp_peer(unittest.TestCase):
     """
         Commands:
-        show ip msdp peer
-        show ip msdp vrf <vrf> peer
+        show msdp peer
+        show msdp vrf <vrf> peer
     """
     device = Device(name='aDevice')
 
