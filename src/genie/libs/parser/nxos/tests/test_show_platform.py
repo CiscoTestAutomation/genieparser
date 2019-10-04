@@ -396,8 +396,6 @@ class test_show_inventory(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_empty(self):
