@@ -381,7 +381,7 @@ class TestShowIsis(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-        "isis": {
+        "instance": {
             "test": {
                 "process_id": "test",
                 "instance": "0",

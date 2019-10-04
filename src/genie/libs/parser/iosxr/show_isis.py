@@ -330,12 +330,12 @@ class ShowIsisSchema(MetaParser):
         * show isis
     '''
     schema = {
-        'isis': {
+        'instance': {
             Any(): {
                 'process_id': str,
                 'instance': str,
                 'vrf': {
-                    Any(): {                        
+                    Any(): {
                         'system_id': str,
                         'is_levels': str,
                         'manual_area_address': list,
@@ -444,7 +444,7 @@ class ShowIsis(ShowIsisSchema):
 
         # Advertise Passive Interface Prefixes Only: No
         r19 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
-                          '\s*:\s*(?P<adv_passive_only>\S+)')                
+                          '\s*:\s*(?P<adv_passive_only>\S+)')
 
         # SRLB not allocated
         r20 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)')
@@ -470,7 +470,7 @@ class ShowIsis(ShowIsisSchema):
                 group = result.groupdict()
                 isis_router = group['isis_router']
                 instance_dict = parsed_output\
-                    .setdefault('isis', {})\
+                    .setdefault('instance', {})\
                     .setdefault(isis_router, {})
                 instance_dict['process_id'] = isis_router
                     
@@ -520,7 +520,7 @@ class ShowIsis(ShowIsisSchema):
 
                 continue
 
-            # 49.0002            
+            # 49.0002
             result = r7.match(line)
             if result:
                 group = result.groupdict()
@@ -531,20 +531,20 @@ class ShowIsis(ShowIsisSchema):
 
                 continue
 
-            # Non-stop forwarding: Disabled            
+            # Non-stop forwarding: Disabled
             result = r8.match(line)
             if result:
                 group = result.groupdict()
-                non_stop_forwarding = group['non_stop_forwarding']                
+                non_stop_forwarding = group['non_stop_forwarding']
                 vrf_dict['non_stop_forwarding'] = non_stop_forwarding
 
                 continue
 
-            # Most recent startup mode: Cold Restart            
+            # Most recent startup mode: Cold Restart
             result = r9.match(line)
             if result:
                 group = result.groupdict()
-                most_recent_startup_mode = group['most_recent_startup_mode']                
+                most_recent_startup_mode = group['most_recent_startup_mode']
                 vrf_dict['most_recent_startup_mode'] = most_recent_startup_mode
 
                 continue
@@ -602,7 +602,7 @@ class ShowIsis(ShowIsisSchema):
             result = r15.match(line)
             if result:
                 group = result.groupdict()
-                metric = int(group['metric'])                
+                metric = int(group['metric'])
                 level_dict['metric'] = metric
 
                 continue
@@ -611,7 +611,7 @@ class ShowIsis(ShowIsisSchema):
             result = r16.match(line)
             if result:
                 group = result.groupdict()
-                ispf_status = group['ispf_status']                
+                ispf_status = group['ispf_status']
                 level_dict['ispf_status'] = ispf_status
 
                 continue
@@ -627,7 +627,7 @@ class ShowIsis(ShowIsisSchema):
             result = r18.match(line)
             if result:
                 group = result.groupdict()
-                distance = int(group['distance'])                
+                distance = int(group['distance'])
                 address_family_dict['distance'] = distance
 
                 continue
