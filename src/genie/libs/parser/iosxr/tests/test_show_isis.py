@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 # iosxr show_mrib
 from genie.libs.parser.iosxr.show_isis import ShowIsisAdjacency, \
                                               ShowIsisNeighbors, \
-                                              ShowIsisSegmentRoutingLabelTable
+                                              ShowIsisSegmentRoutingLabelTable,\
+                                              ShowIsisInterface
 
 
 # ==================================================
@@ -369,6 +370,1075 @@ class test_show_isis_segment_routing_label_table(unittest.TestCase):
         obj = ShowIsisSegmentRoutingLabelTable(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+class TestShowIsisInterface(unittest.TestCase):
+    ''' Unit test for commands:
+        * show isis interface -> ShowIsisInterface
+    ''' 
+
+    maxDiff = None 
+
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output_1 = {
+        "instance": {
+            "test": {
+                "vrf": {
+                    "default": {
+                        "interface": {
+                            "Loopback0": {
+                                "state": "Enabled",
+                                "adjacency_formation": True,
+                                "prefix_advertisement": False,
+                                "ipv4_bfd": False,
+                                "ipv6_bfd": False,
+                                "bfd_min_interval": 150,
+                                "bfd_multiplier": 3,
+                                "bandwidth": 0,
+                                "circuit_type": "level-1-2",
+                                "media_type": "Loop",
+                                "circuit_number": 0,
+                                "level": {
+                                    1: {
+                                        "adjacency_count": 0,
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                    2: {
+                                        "adjacency_count": 0,
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                },
+                                "clns": {
+                                    "protocol_state": "Up", 
+                                    "mtu": 1500},
+                                "topology": {
+                                    "ipv4 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10,
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                    "ipv6 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10,
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                },
+                                "address_family": {
+                                    "IPv4": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "0.0.0.0",
+                                        "global_prefix": "3.3.3.0/24",
+                                    },
+                                    "IPv6": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "::",
+                                        "global_prefix": "2001:db8:3:3:3::3/128",
+                                    },
+                                },
+                                "lsp": {
+                                    "expiration": "0 ms",
+                                    "transmission_state": "idle",
+                                    "send_status": {
+                                        "quantity": 10, 
+                                        "time": "0 ms"},
+                                },
+                            },
+                            "GigabitEthernet0/0/0/0": {
+                                "state": "Enabled",
+                                "adjacency_formation": True,
+                                "prefix_advertisement": False,
+                                "ipv4_bfd": False,
+                                "ipv6_bfd": False,
+                                "bfd_min_interval": 150,
+                                "bfd_multiplier": 3,
+                                "bandwidth": 1000000,
+                                "circuit_type": "level-1-2",
+                                "media_type": "LAN",
+                                "circuit_number": 7,
+                                "level": {
+                                    1: {
+                                        "adjacency_count": 0,
+                                        "lan_id": "R3.07",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "none"},
+                                        "next_lan_iih": "5 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                    2: {
+                                        "adjacency_count": 1,
+                                        "lan_id": "R3.07",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "64"},
+                                        "next_lan_iih": "3 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                },
+                                "clns": {
+                                    "protocol_state": "Up",
+                                    "mtu": 1497,
+                                    "snpa": "fa16.3ee6.6bd7",
+                                    "membership": {
+                                        "layer": {                                        
+                                            2: {
+                                                "level": {
+                                                    1: {
+                                                        "iss": True},
+                                                    2: {
+                                                        "iss": True}}}}
+                                    },
+                                },
+                                "topology": {
+                                    "ipv4 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10,
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                    "ipv6 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10, 
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                },
+                                "address_family": {
+                                    "IPv4": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "10.2.3.3",
+                                        "global_prefix": "10.2.3.0/24",
+                                    },
+                                    "IPv6": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "fe80::f816:3eff:fee6:6bd7",
+                                        "global_prefix": "2001:db8:10:2::/64",
+                                    },
+                                },
+                                "lsp": {
+                                    "expiration": "0 ms",
+                                    "transmission_state": "idle",
+                                    "send_status": {
+                                        "quantity": 9, 
+                                        "time": "0 ms"},
+                                },
+                            },
+                            "GigabitEthernet0/0/0/1": {
+                                "state": "Enabled",
+                                "adjacency_formation": True,
+                                "prefix_advertisement": False,
+                                "ipv4_bfd": False,
+                                "ipv6_bfd": False,
+                                "bfd_min_interval": 150,
+                                "bfd_multiplier": 3,
+                                "bandwidth": 1000000,
+                                "circuit_type": "level-1-2",
+                                "media_type": "LAN",
+                                "circuit_number": 5,
+                                "level": {
+                                    1: {
+                                        "adjacency_count": 1,
+                                        "lan_id": "R3.05",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "64"},
+                                        "next_lan_iih": "2 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                    2: {
+                                        "adjacency_count": 0,
+                                        "lan_id": "R3.05",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "none"},
+                                        "next_lan_iih": "6 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                },
+                                "clns": {
+                                    "protocol_state": "Up",
+                                    "mtu": 1497,
+                                    "snpa": "fa16.3eb0.d50f",
+                                    "membership": {
+                                        "layer": {
+                                            2: {"level": {
+                                                1: {
+                                                    "iss": True},
+                                                2: {
+                                                    "iss": True}}}}
+                                    },
+                                },
+                                "topology": {
+                                    "ipv4 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10, 
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                    "ipv6 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10, 
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                },
+                                "address_family": {
+                                    "IPv4": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "10.3.6.3",
+                                        "global_prefix": "10.3.6.0/24",
+                                    },
+                                    "IPv6": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "fe80::f816:3eff:feb0:d50f",
+                                        "global_prefix": "2001:db8:10:3::/64",
+                                    },
+                                },
+                                "lsp": {
+                                    "expiration": "0 ms",
+                                    "transmission_state": "idle",
+                                    "send_status": {
+                                        "quantity": 9, 
+                                        "time": "0 ms"},
+                                },
+                            },
+                            "GigabitEthernet0/0/0/2": {
+                                "state": "Enabled",
+                                "adjacency_formation": True,
+                                "prefix_advertisement": False,
+                                "ipv4_bfd": False,
+                                "ipv6_bfd": False,
+                                "bfd_min_interval": 150,
+                                "bfd_multiplier": 3,
+                                "bandwidth": 1000000,
+                                "circuit_type": "level-1-2",
+                                "media_type": "LAN",
+                                "circuit_number": 3,
+                                "level": {
+                                    1: {
+                                        "adjacency_count": 1,
+                                        "lan_id": "R3.03",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "64"},
+                                        "next_lan_iih": "1 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                    2: {
+                                        "adjacency_count": 0,
+                                        "lan_id": "R3.03",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "none"},
+                                        "next_lan_iih": "6 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                },
+                                "clns": {
+                                    "protocol_state": "Up",
+                                    "mtu": 1497,
+                                    "snpa": "fa16.3ead.2906",
+                                    "membership": {
+                                        "layer": {
+                                            2: {
+                                                "level": {
+                                                    1: {
+                                                        "iss": True},
+                                                    2: {
+                                                        "iss": True}}}}
+                                    },
+                                },
+                                "topology": {
+                                    "ipv4 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10, 
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {1: "Disabled", 2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                    "ipv6 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10, 
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                },
+                                "address_family": {
+                                    "IPv4": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "10.3.4.3",
+                                        "global_prefix": "10.3.4.0/24",
+                                    },
+                                    "IPv6": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "fe80::f816:3eff:fead:2906",
+                                        "global_prefix": "None",
+                                    },
+                                },
+                                "lsp": {
+                                    "expiration": "0 ms",
+                                    "transmission_state": "idle",
+                                    "send_status": {
+                                        "quantity": 9, 
+                                        "time": "0 ms"},
+                                },
+                            },
+                            "GigabitEthernet0/0/0/3": {
+                                "state": "Enabled",
+                                "adjacency_formation": True,
+                                "prefix_advertisement": False,
+                                "ipv4_bfd": False,
+                                "ipv6_bfd": False,
+                                "bfd_min_interval": 150,
+                                "bfd_multiplier": 3,
+                                "bandwidth": 1000000,
+                                "circuit_type": "level-1-2",
+                                "media_type": "LAN",
+                                "circuit_number": 1,
+                                "level": {
+                                    1: {
+                                        "adjacency_count": 1,
+                                        "lan_id": "R5.01",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "64"},
+                                        "next_lan_iih": "3 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                    2: {
+                                        "adjacency_count": 1,
+                                        "lan_id": "R5.01",
+                                        "priority": {
+                                            "local": "64", 
+                                            "dis": "64"},
+                                        "next_lan_iih": "2 s",
+                                        "psnp_entry_queue_size": 0,
+                                        "hello_multiplier": 3,
+                                    },
+                                },
+                                "clns": {
+                                    "protocol_state": "Up",
+                                    "mtu": 1497,
+                                    "snpa": "fa16.3e1c.d826",
+                                    "membership": {
+                                        "layer": {
+                                            2: {
+                                                "level": {
+                                                    1: {
+                                                        "iss": True},
+                                                    2: {
+                                                        "iss": True}}}}
+                                    },
+                                },
+                                "topology": {
+                                    "ipv4 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {
+                                            "level": {
+                                                1: 10,
+                                                2: 10}},
+                                        "weight": {
+                                            "level": {
+                                                1: 0, 
+                                                2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                    "ipv6 unicast": {
+                                        "state": "Enabled",
+                                        "adjacency_formation": "Running",
+                                        "prefix_advertisement": "",
+                                        "metric": {"level": {1: 10, 2: 10}},
+                                        "weight": {"level": {1: 0, 2: 0}},
+                                        "mpls": {
+                                            "max_label_stack": {
+                                                "pri": 1,
+                                                "bkp": 3,
+                                                "srte": 10,
+                                            },
+                                            "sync": {
+                                                "level": {
+                                                    1: "Disabled", 
+                                                    2: "Disabled"}
+                                            },
+                                        },
+                                        "frr": {
+                                            "level": {
+                                                1: {
+                                                    "state": "Not Enabled",
+                                                    "type": "None",
+                                                },
+                                                2: {
+                                                    "state": "Not Enabled", 
+                                                    "type": "None"},
+                                            }
+                                        },
+                                    },
+                                },
+                                "address_family": {
+                                    "IPv4": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "10.3.5.3",
+                                        "global_prefix": "10.3.5.0/24",
+                                    },
+                                    "IPv6": {
+                                        "state": "Enabled",
+                                        "forwarding_address": "fe80::f816:3eff:fe1c:d826",
+                                        "global_prefix": "None",
+                                    },
+                                },
+                                "lsp": {
+                                    "expiration": "0 ms",
+                                    "transmission_state": "idle",
+                                    "send_status": {
+                                        "quantity": 9, 
+                                        "time": "0 ms"},
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    golden_parsed_output_1 = {'execute.return_value': '''
+        IS-IS test Interfaces
+        Loopback0                   Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                0
+
+          Circuit Type:             level-1-2
+          Media Type:               Loop
+          Circuit Number:           0
+
+          Level-1
+            Adjacency Count:        0
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        0
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1500
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 0.0.0.0
+            Global Prefix(es):      3.3.3.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): ::
+            Global Prefix(es):      2001:db8:3:3:3::3/128
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 10 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/0      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           7
+
+          Level-1
+            Adjacency Count:        0
+            LAN ID:                 R3.07
+            Priority (Local/DIS):   64/none (no DIS elected)
+            Next LAN IIH in:        5 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        1
+            LAN ID:                 R3.07
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        3 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3ee6.6bd7
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.2.3.3
+            Global Prefix(es):      10.2.3.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:fee6:6bd7
+            Global Prefix(es):      2001:db8:10:2::/64
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/1      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           5
+
+          Level-1
+            Adjacency Count:        1
+            LAN ID:                 R3.05
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        2 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        0
+            LAN ID:                 R3.05
+            Priority (Local/DIS):   64/none (no DIS elected)
+            Next LAN IIH in:        6 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3eb0.d50f
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.6.3
+            Global Prefix(es):      10.3.6.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:feb0:d50f
+            Global Prefix(es):      2001:db8:10:3::/64
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/2      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           3
+
+          Level-1
+            Adjacency Count:        1
+            LAN ID:                 R3.03
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        1 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        0
+            LAN ID:                 R3.03
+            Priority (Local/DIS):   64/none (no DIS elected)
+            Next LAN IIH in:        6 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3ead.2906
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.4.3
+            Global Prefix(es):      10.3.4.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:fead:2906
+            Global Prefix(es):      None (No global addresses are configured)
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+
+        GigabitEthernet0/0/0/3      Enabled
+          Adjacency Formation:      Enabled
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          Bandwidth:                1000000
+
+          Circuit Type:             level-1-2
+          Media Type:               LAN
+          Circuit Number:           1
+
+          Level-1
+            Adjacency Count:        1
+            LAN ID:                 R5.01
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        3 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+          Level-2
+            Adjacency Count:        1
+            LAN ID:                 R5.01
+            Priority (Local/DIS):   64/64
+            Next LAN IIH in:        2 s
+            LSP Pacing Interval:    33 ms
+            PSNP Entry Queue Size:  0
+            Hello Interval:         10 s
+            Hello Multiplier:       3
+
+          CLNS I/O
+            Protocol State:         Up
+            MTU:                    1497
+            SNPA:                   fa16.3e1c.d826
+            Layer-2 MCast Groups Membership:
+              All Level-1 ISs:      Yes
+              All Level-2 ISs:      Yes
+
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+          IPv6 Unicast Topology:    Enabled
+            Adjacency Formation:    Running
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+              FRR Type:             None               None
+
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.5.3
+            Global Prefix(es):      10.3.5.0/24
+          IPv6 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): fe80::f816:3eff:fe1c:d826
+            Global Prefix(es):      None (No global addresses are configured)
+
+          LSP transmit timer expires in 0 ms
+          LSP transmission is idle
+          Can send up to 9 back-to-back LSPs in the next 0 ms
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        self.device = Mock(**self.golden_parsed_output_1)
+        obj = ShowIsisInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_1)
 
 
 if __name__ == '__main__':
