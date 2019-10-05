@@ -12,7 +12,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 from genie.libs.parser.base import *
 
-
+from genie.libs.parser.utils.common import Common
 
 class ShowEvpnEviSchema(MetaParser):
     schema = {
@@ -120,7 +120,6 @@ class ShowEvpnEviDetail(ShowEvpnEvi):
         else:
             out = output
         return super().cli(output=output)
-
 
 class ShowEvpnEviMac(MetaParser):
     """Parser class for 'show evpn evi mac' CLI."""
@@ -491,7 +490,6 @@ class ShowEvpnInternalLabelDetailSchema(MetaParser):
                 },
             },
         }
-
 
 # =========================================================
 # Parser for:
@@ -1115,6 +1113,519 @@ class ShowEvpnEviMacPrivate(ShowEvpnEviMac):
         
         if output is None:
             out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=out)
+
+class ShowEvpnEthernetSegmentSchema(MetaParser):
+    schema = {
+        'segment_id': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'next_hops': list,
+                        Optional('es_to_bgp_gates'): str,
+                        Optional('es_to_l2fib_gates'): str,
+                        Optional('main_port'): {
+                            'interface': str,
+                            Optional('interface_mac'): str,
+                            'if_handle': str,
+                            'state': str,
+                            'redundancy': str,
+                        },
+                        Optional('esi'): {
+                            'type': int,
+                            'value': str,
+                        },
+                        Optional('value'): str,
+                        Optional('es_import_rt'): str,
+                        Optional('source_mac'): str,
+                        Optional('topology'): {
+                            'operational': str,
+                            'configured': str,
+                        },
+                        Optional('primary_services'): str,
+                        Optional('secondary_services'): str,
+                        Optional('service_carving'): str,
+                        Optional('peering_details'): list,
+                        Optional('service_carving_results'): {
+                            Optional('forwarders'): int,
+                            Optional('permanent'): int,
+                            Optional('bridge_ports'): {
+                                'num_of_total': int,
+                            },
+                            'elected': {
+                                'num_of_total': int,
+                                Optional('i_sid_e'): list,
+                            },
+                            'not_elected': {
+                                'num_of_total': int,
+                                Optional('i_sid_ne'): list,
+                            },
+                        },
+                        Optional('mac_flushing_mode'): str,
+                        Optional('peering_timer'): str,
+                        Optional('recovery_timer'): str,
+                        Optional('carving_timer'): str,
+                        Optional('local_shg_label'): str,
+                        Optional('remote_shg_labels'): {
+                            Any(): {
+                                'label': {
+                                    Any(): {
+                                        'nexthop': str
+                                    }
+                                }
+                            }
+                        },
+                        Optional('flush_again_timer'): str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
+    """Parser class for 'show evpn ethernet-segment' CLI."""
+
+    cli_command = 'show evpn ethernet-segment'
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        ret_dict = {}
+        num_of_label = {}
+
+        # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+        p1 = re.compile(r'^(?P<segment_id>\S+) +(?P<interface>\S+) +(?P<next_hop>[\d\.]+)$')
+
+        # 2.100.100.100   
+        p1_1 = re.compile(r'^(?P<next_hop>[\d\.]+)$')
+
+        # ES to BGP Gates   : Ready
+        p2 = re.compile(r'^ES +to +BGP +Gates +: +(?P<es_to_bgp_gates>\S+)$')
+
+        # ES to L2FIB Gates : Ready
+        p3 = re.compile(r'^ES +to +L2FIB +Gates +: +(?P<es_to_l2fib_gates>\S+)$')
+
+        # Interface name : GigabitEthernet0/3/0/0
+        p4 = re.compile(r'^Interface name +: +(?P<interface>\S+)$')
+
+        # Interface MAC  : 008a.9644.d8dd
+        p4_1 = re.compile(r'^Interface +MAC *: +(?P<interface_mac>[\S ]+)$')
+
+        # IfHandle       : 0x1800300
+        p5 = re.compile(r'^IfHandle +: +(?P<if_handle>\S+)$')
+
+        # State          : Up
+        p6 = re.compile(r'^State + : +(?P<state>\S+)$')
+
+        # Redundancy     : Not Defined
+        p7 = re.compile(r'^Redundancy +: +(?P<redundancy>[\S ]+)$')
+
+        # Source MAC        : 0001.ed9e.0001 (PBB BSA)
+        p8 = re.compile(r'^Source +MAC +: +(?P<source_mac>[\S ]+)$')
+
+        # Operational    : MHN
+        # Operational    : MH, All-active
+        p9 = re.compile(r'^Operational +: +(?P<operational>[\S+ ]+)$')
+
+        # Configured     : A/A per service (default)
+        p10 = re.compile(r'^Configured +: +(?P<configured>[\S ]+)$')
+
+        # Primary Services  : Auto-selection
+        p11 = re.compile(r'^Primary +Services +: +(?P<primary_services>\S+)$')
+        
+        # Secondary Services: Auto-selection
+        p12 = re.compile(r'^Secondary +Services *: +(?P<secondary_services>\S+)$')
+
+        # Bridge ports   : 3
+        p13 = re.compile(r'^Bridge +ports +: +(?P<bridge_ports>\d+)$')
+
+        # Elected        : 0
+        p14 = re.compile(r'^Elected +: +(?P<elected>\d+)$')
+
+        # Not Elected    : 3
+        p15 = re.compile(r'^Not +Elected +: +(?P<not_elected>\d+)$')
+
+        # I-Sid E  :  1450101, 1650205, 1850309
+        p16 = re.compile(r'^I-Sid +E +: +(?P<i_sid_e>[\S ]+)$')
+
+        # I-Sid NE  :  1450101, 1650205, 1850309
+        p16_1 = re.compile(r'^I-Sid +NE +: +(?P<i_sid_ne>[\S ]+)$')
+        
+        # MAC Flushing mode : STP-TCN
+        p17 = re.compile(r'^MAC +Flushing +mode +: +(?P<mac_flushing_mode>\S+)$')
+
+        # Peering timer     : 45 sec [not running]
+        p18 = re.compile(r'^Peering +timer +: +(?P<peering_timer>[\S ]+)$')
+
+        # Recovery timer    : 20 sec [not running]
+        p19 = re.compile(r'^Recovery +timer +: +(?P<recovery_timer>[\S ]+)$')
+
+        # Flushagain timer  : 60 sec
+        p20 = re.compile(r'^Flushagain +timer +: +(?P<flush_again_timer>[\S ]+)$')
+
+        # ESI type          : 0
+        p21 = re.compile(r'^ESI +type *: +(?P<esi_type>\d+)$')
+
+        # Value          : 36.3700.0000.0000.1100
+        p22 = re.compile(r'^Value *: +(?P<value>[\S ]+)$')
+
+        # ES Import RT      : 3637.0000.0000 (from ESI)
+        p23 = re.compile(r'^ES +Import +RT *: +(?P<es_import_rt>[\S ]+)$')
+
+        # Service Carving   : Auto-selection
+        p24 = re.compile(r'^Service +Carving *: +(?P<service_carving>[\S ]+)$')
+
+        # Peering Details   : 3.3.3.36[MOD:P:00] 3.3.3.37[MOD:P:00]
+        p25 = re.compile(r'^Peering +Details *: +(?P<peering_details>[\S ]+)$')
+
+        # Forwarders     : 1
+        p26 = re.compile(r'^Forwarders *: +(?P<forwarders>\d+)$')
+
+        # Permanent      : 0
+        p27 = re.compile(r'^Permanent *: +(?P<permanent>\d+)$')
+
+        # Carving timer     : 0 sec [not running]
+        p28 = re.compile(r'^Carving +timer *: +(?P<carving_timer>[\S ]+)$')
+
+        # Local SHG label   : 64005
+        # Local SHG label   : None
+        p29 = re.compile(r'^Local +SHG +label *: +(?P<local_shg_label>\S+)$')
+
+        # Remote SHG labels : 1
+        p30 = re.compile(r'^Remote +SHG +labels? *: +(?P<remote_shg_label>\d+)$')
+
+        # 64005 : nexthop 3.3.3.37
+        p31 = re.compile(r'^(?P<shg_label>\d+) *: +nexthop +(?P<next_hop>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # ES to L2FIB Gates : Ready
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # ES to L2FIB Gates : Ready
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Interface name : GigabitEthernet0/3/0/0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Interface MAC  : 008a.9644.d8dd
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # IfHandle       : 0x1800300
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # State          : Up
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Redundancy     : Not Defined
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                main_port_dict = interface_dict.setdefault('main_port', {})
+                main_port_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Source MAC        : 0001.ed9e.0001 (PBB BSA)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Operational    : MHN
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                topology_dict = interface_dict.setdefault('topology', {})
+                topology_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Configured     : A/A per service (default)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                topology_dict = interface_dict.setdefault('topology', {})
+                topology_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Primary Services  : Auto-selection
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Secondary Services: Auto-selection
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+            
+            # Bridge ports   : 3
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                bridge_ports = int(group['bridge_ports'])
+                bridge_ports_dict = interface_dict.setdefault('service_carving_results', {}). \
+                    setdefault('bridge_ports', {})
+                bridge_ports_dict.update({'num_of_total': bridge_ports})
+                continue
+            
+            # Elected        : 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                elected = int(group['elected'])
+                elected_dict = interface_dict.setdefault('service_carving_results', {}). \
+                    setdefault('elected', {})
+                elected_dict.update({'num_of_total': elected})
+                continue
+            
+            # Not Elected    : 3
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                not_elected = int(group['not_elected'])
+                not_elected_dict = interface_dict.setdefault('service_carving_results', {}). \
+                    setdefault('not_elected', {})
+                not_elected_dict.update({'num_of_total': not_elected})
+                continue
+
+            # I-Sid E  :  1450101, 1650205, 1850309
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                i_sid_e = group['i_sid_e']
+                elected_dict.update({'i_sid_e': i_sid_e.replace(' ', '').split(',')})
+                continue
+
+            # I-Sid NE  :  1450101, 1650205, 1850309
+            m = p16_1.match(line)
+            if m:
+                group = m.groupdict()
+                i_sid_ne = group['i_sid_ne']
+                not_elected_dict.update({'i_sid_ne': i_sid_ne.replace(' ', '').split(',')})
+                continue
+
+            # MAC Flushing mode : STP-TCN
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Peering timer     : 45 sec [not running]
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Recovery timer    : 20 sec [not running]
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Flushagain timer  : 60 sec
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # ESI type          : 0
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                esi_type = group['esi_type']
+                esi_dict = interface_dict.setdefault('esi', {})
+                esi_dict.update({'type': int(esi_type)})
+                continue
+
+            # Value          : 36.3700.0000.0000.1100
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                esi_value = group['value']
+                esi_dict.update({'value': esi_value})
+                continue
+
+            # ES Import RT      : 3637.0000.0000 (from ESI)
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Service Carving   : Auto-selection
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Peering Details   : 3.3.3.36[MOD:P:00] 3.3.3.37[MOD:P:00]
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                peering_details = group['peering_details']
+                interface_dict.update({'peering_details': peering_details.split(' ')})
+                continue
+
+            # Forwarders     : 1
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Permanent      : 0
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                service_carving_results = interface_dict.setdefault('service_carving_results', {})
+                service_carving_results.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Carving timer     : 0 sec [not running]
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({k:v for k, v in group.items() if v is not None})
+                continue
+
+            # Local SHG label   : 64005
+            # Local SHG label   : None
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                local_shg_label = group['local_shg_label']
+                interface_dict.update({'local_shg_label': local_shg_label})
+                continue
+
+            # Remote SHG labels : 1
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                remote_shg_label = group['remote_shg_label']
+                label_dict = interface_dict.setdefault('remote_shg_labels', {}). \
+                    setdefault(remote_shg_label, {})
+                continue
+
+            # 64005 : nexthop 3.3.3.37
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                shg_label = group['shg_label']
+                next_hop = group['next_hop']
+                label_dict.setdefault('label', {}). \
+                    setdefault(shg_label, {}). \
+                    update({'nexthop': next_hop})
+                continue
+
+            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                segment_id = group['segment_id']
+                interface = Common.convert_intf_name(group['interface'])
+                next_hop = group['next_hop']
+                interface_dict = ret_dict.setdefault('segment_id', {}). \
+                    setdefault(segment_id, {}). \
+                    setdefault('interface', {}). \
+                    setdefault(interface, {})
+                next_hop_list = interface_dict.setdefault('next_hops', [next_hop])
+                continue
+            
+            # 2.100.100.100
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop = group['next_hop']
+                next_hop_list.append(next_hop)
+                continue
+
+        return ret_dict
+
+class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegment):
+    """Parser class for 'show evpn ethernet-segment detail' CLI."""
+
+    cli_command = 'show evpn ethernet-segment detail'
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=out)
+
+class ShowEvpnEthernetSegmentPrivate(ShowEvpnEthernetSegment):
+    """Parser class for 'show evpn ethernet-segment private' CLI."""
+
+    cli_command = 'show evpn ethernet-segment private'
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        return super().cli(output=out)
+
+class ShowEvpnEthernetSegmentEsiDetail(ShowEvpnEthernetSegment):
+    """Parser class for 'show evpn ethernet-segment esi {esi} detail' CLI."""
+
+    cli_command = 'show evpn ethernet-segment esi {esi} detail'
+    def cli(self, esi, output=None):
+        """parsing mechanism: cli
+        """
+        
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                    esi=esi))
         else:
             out = output
         return super().cli(output=out)
