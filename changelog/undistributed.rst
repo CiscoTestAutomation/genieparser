@@ -240,6 +240,9 @@
 * IOS
     * Updated ShowInventory:
         * Matching more slots
+* NXOS
+    * Updated ShowInventory:
+        * Matching more slots
 
 --------------------------------------------------------------------------------
                                 Spanning-tree
