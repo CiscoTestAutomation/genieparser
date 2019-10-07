@@ -441,7 +441,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                 },
                 "level": {
                     1: {
-                        "lsp_sourced": {
+                        "lsp": {
                             "new": 11, 
                             "refresh": 15},
                         "address_family": {
@@ -464,7 +464,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                         },
                     },
                     2: {
-                        "lsp_sourced": {
+                        "lsp": {
                             "new": 13, 
                             "refresh": 11},
                         "address_family": {
@@ -491,7 +491,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                     "Loopback0": {
                         "level": {
                             1: {
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 0,
                                     "received": 0,
                                     "flooding_duplicates": 51,
@@ -505,7 +505,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "received": 0},
                             },
                             2: {
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 0,
                                     "received": 0,
                                     "flooding_duplicates": 46,
@@ -528,7 +528,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 593},
                                 "dr": {
                                     "elections": 1},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 0,
                                     "received": 0,
                                     "flooding_duplicates": 51,
@@ -547,7 +547,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 594},
                                 "dr": {
                                     "elections": 1},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 63,
                                     "received": 7,
                                     "flooding_duplicates": 0,
@@ -570,7 +570,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 604},
                                 "dr": {
                                     "elections": 5},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 47,
                                     "received": 15,
                                     "flooding_duplicates": 8,
@@ -589,7 +589,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 281},
                                 "dr": {
                                     "elections": 5},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 0,
                                     "received": 0,
                                     "flooding_duplicates": 42,
@@ -612,7 +612,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 572},
                                 "dr": {
                                     "elections": 3},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 51,
                                     "received": 31,
                                     "flooding_duplicates": 0,
@@ -631,7 +631,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 0},
                                 "dr": {
                                     "elections": 1},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 0,
                                     "received": 0,
                                     "flooding_duplicates": 46,
@@ -654,7 +654,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 1115},
                                 "dr": {
                                     "elections": 3},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 38,
                                     "received": 26,
                                     "flooding_duplicates": 5,
@@ -673,7 +673,7 @@ class TestShowIsisStatistics(unittest.TestCase):
                                     "sent": 1113},
                                 "dr": {
                                     "elections": 3},
-                                "lsp": {
+                                "lsps_sourced": {
                                     "sent": 18,
                                     "received": 39,
                                     "flooding_duplicates": 3,
