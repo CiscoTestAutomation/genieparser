@@ -209,7 +209,12 @@ class Common():
                    'Fo': 'FortyGigabitEthernet',
                    'Hu': 'HundredGigE',
                    'vl': 'vasileft',
+<<<<<<< HEAD
                    'vr': 'vasiright'
+=======
+                   'rl': 'vasiright',
+                   'BE': 'Bundle-Ether'
+>>>>>>> dev
                    }
         m = re.search('([a-zA-Z]+)', intf) 
         m1 = re.search('([\d\/\.]+)', intf)
