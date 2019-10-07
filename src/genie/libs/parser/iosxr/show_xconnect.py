@@ -100,6 +100,11 @@ class ShowL2VpnXconnectBriefSchema(MetaParser):
                     'unr': int,
                     },
                 },
+            'total':
+                {'up': int,
+                'down': int,
+                'unr': int,
+                },
             },
         'atom':
             {'like_to_like':
@@ -108,6 +113,11 @@ class ShowL2VpnXconnectBriefSchema(MetaParser):
                     'down': int,
                     'unr': int,
                     },
+                },
+            'total':
+                {'up': int,
+                'down': int,
+                'unr': int,
                 },
             },
         }
@@ -140,14 +150,14 @@ class ShowL2VpnXconnectBrief(ShowL2VpnXconnectBriefSchema):
         p2 = re.compile(r'^AToM$')
 
         # Like-to-Like                        UP       DOWN        UNR
+        p3 = re.compile(r'^Like-to-Like.*$')
+
         #   Invalid AC                         0          0          1
         #   EFP/Invalid AC                     0          0          1
         #   EFP                                3          0          0
         #   Total                              3          0          2
-        p3 = re.compile(r'^(?P<like_to_like>([a-zA-Z\-\/\s]+)) +(?P<up>(\d+))'
+        p4 = re.compile(r'^(?P<item>([a-zA-Z\-\/\s]+)) +(?P<up>(\d+))'
                          ' +(?P<down>(\d+)) +(?P<unr>(\d+))$')
-
-        # Total                               10          0          0
 
         for line in out.splitlines():
             line = line.strip()
@@ -155,30 +165,43 @@ class ShowL2VpnXconnectBrief(ShowL2VpnXconnectBriefSchema):
             # Locally Switching
             m = p1.match(line)
             if m:
-                sub_dict = parsed_dict.setdefault('locally_switching', {}).\
-                                    setdefault('like_to_like', {})
+                sub_dict = parsed_dict.setdefault('locally_switching', {})
                 continue
 
             # AToM
             m = p2.match(line)
             if m:
-                sub_dict = parsed_dict.setdefault('atom', {}).\
-                                        setdefault('like_to_like', {})
+                sub_dict = parsed_dict.setdefault('atom', {})
                 continue
 
             # Like-to-Like                        UP       DOWN        UNR
+            m = p3.match(line)
+            if m:
+                ltl_parsed = True
+                continue
+
             #   Invalid AC                         0          0          1
             #   EFP/Invalid AC                     0          0          1
             #   EFP                                3          0          0
             #   Total                              3          0          2
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
-                ll_dict = sub_dict.setdefault(group['like_to_like'].strip().\
-                                                    lower().replace(" ", "_"), {})
-                ll_dict['up'] = int(group['up'])
-                ll_dict['down'] = int(group['down'])
-                ll_dict['unr'] = int(group['unr'])
+                ltl = group['item'].strip().lower().replace(" ", "_").\
+                                                    replace("/", "_")
+                if not ltl_parsed:
+                    total_dict = sub_dict.setdefault(ltl, {})
+                    total_dict['up'] = int(group['up'])
+                    total_dict['down'] = int(group['down'])
+                    total_dict['unr'] = int(group['unr'])
+                else:
+                    ltl_dict = sub_dict.setdefault('like_to_like', {}).\
+                                        setdefault(ltl, {})
+                    ltl_dict['up'] = int(group['up'])
+                    ltl_dict['down'] = int(group['down'])
+                    ltl_dict['unr'] = int(group['unr'])
+                    if ltl == 'total':
+                        ltl_parsed = False
                 continue
 
 

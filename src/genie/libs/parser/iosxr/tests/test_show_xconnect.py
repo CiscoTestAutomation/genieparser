@@ -30,14 +30,18 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
                 'total': 
                     {'down': 0,
                     'unr': 0,
-                    'up': 10}}},
+                    'up': 10}},
+            'total':
+                {'down': 0,
+                'unr': 0,
+                'up': 10}},
         'locally_switching': 
             {'like_to_like': 
                 {'efp': 
                     {'down': 0,
                     'unr': 0,
                     'up': 3},
-                'efp/invalid_ac':
+                'efp_invalid_ac':
                     {'down': 0,
                     'unr': 1,
                     'up': 0},
@@ -48,7 +52,11 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
                 'total': 
                     {'down': 0,
                     'unr': 2,
-                    'up': 3}}}}
+                    'up': 3}},
+            'total':
+                {'down': 0,
+                'unr': 2,
+                'up': 3}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:ios# show l2vpn xconnect brief 
@@ -80,7 +88,11 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
                 'total': 
                     {'down': 0,
                     'unr': 0,
-                    'up': 32}}},
+                    'up': 32}},
+            'total': 
+                {'down': 0,
+                'unr': 0,
+                'up': 32}},
         'locally_switching': 
             {'like_to_like': 
                 {'ether': 
@@ -90,7 +102,11 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
                 'total':
                     {'down': 0,
                     'unr': 0,
-                    'up': 1}}}}
+                    'up': 1}},
+            'total':
+                {'down': 0,
+                'unr': 0,
+                'up': 1}}}
 
     golden_output2 = {'execute.return_value': '''
         RP/0/RP0/CPU0:SIT-540#show l2vpn xconnect brief 
