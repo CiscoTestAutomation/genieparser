@@ -1022,6 +1022,7 @@ class TestShowInterface(unittest.TestCase):
                         'interface_reset': 9,
                         'last_link_flapped': '3d22h',
                         'mac_address': '80e0.1dbf.abf6',
+                        'media_type': '1G',
                         'medium': 'broadcast',
                         'mtu': 1500,
                         'oper_status': 'up',
@@ -1102,6 +1103,7 @@ class TestShowInterface(unittest.TestCase):
                          'interface_reset': 16,
                          'link_state': 'Administratively down',
                          'mac_address': '80e0.1dbf.ac04',
+                         'media_type': '10G',
                          'medium': 'broadcast',
                          'mtu': 1500,
                          'oper_status': 'down',
@@ -1189,7 +1191,7 @@ class TestShowInterface(unittest.TestCase):
 # # Unitest For Show Ip Interface Vrf All
 # #############################################################################
 
-class test_show_ip_interface_vrf_all(unittest.TestCase):
+class TestShowIpInterfaceVrfAll(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -2645,7 +2647,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
 # # Unitest For Show Vrf All Interface
 # #############################################################################
 
-class test_show_vrf_all_interface(unittest.TestCase):
+class TestShowVrfAllInterface(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -2982,7 +2984,7 @@ class test_show_vrf_all_interface(unittest.TestCase):
 # #############################################################################
 
 
-class test_show_interface_switchport(unittest.TestCase):
+class TestShowInterfaceSwitchport(unittest.TestCase):
 
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -3191,7 +3193,7 @@ class test_show_interface_switchport(unittest.TestCase):
 # #############################################################################
 
 
-class test_show_ipv6_interface_vrf_all(unittest.TestCase):
+class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -3387,7 +3389,7 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
-class test_show_ip_interface_brief(unittest.TestCase):
+class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -3495,7 +3497,7 @@ class test_show_ip_interface_brief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-class test_show_ip_interface_brief_Pipe_Vlan(unittest.TestCase):
+class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -3525,7 +3527,7 @@ class test_show_ip_interface_brief_Pipe_Vlan(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-class test_show_interface_brief(unittest.TestCase):
+class TestShowInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -3647,7 +3649,7 @@ Lo0           up         --
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-class test_show_run_interface(unittest.TestCase):
+class TestShowRunInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
@@ -3838,7 +3840,7 @@ class test_show_run_interface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
 
-class test_show_nve_interface(unittest.TestCase):
+class TestShowNveInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -3897,7 +3899,7 @@ class test_show_nve_interface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(interface='nve1')
 
-class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
+class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}

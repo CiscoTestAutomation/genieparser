@@ -61,6 +61,7 @@ class ShowInterfaceSchema(MetaParser):
             Optional('txload'): str,
             Optional('rxload'): str,
             Optional('delay'): int,
+            Optional('media_type'): str,
             Optional('flow_control'):
                 {Optional('receive'): bool,
                 Optional('send'): bool,
@@ -503,12 +504,16 @@ class ShowInterface(ShowInterfaceSchema):
             # auto-duplex, auto-speed
             # full-duplex, 1000 Mb/s, media type is 1G
             # auto-duplex, auto-speed, media type is 10G
-            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z]+)-duplex, '
-                              '*(?P<port_speed>[a-z0-9\-]+)(?: *Mb/s)?(?:, +media +type +is \w+)?$')
+            p10 = re.compile(r'^\s*(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+)(?: '
+                              '*Mb/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
             m = p10.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()
                 port_speed = m.groupdict()['port_speed']
+                if m.groupdict()['media_type']:
+                    interface_dict[interface]['media_type'] = m.groupdict()['media_type']
+                else:
+                    media_type = None
 
                 interface_dict[interface]['duplex_mode'] = duplex_mode
                 interface_dict[interface]['port_speed'] = port_speed
