@@ -388,7 +388,9 @@
         * show evpn ethernet-segment private
     * Added ShowEvpnEthernetSegmentEsiDetail for:
         * show evpn ethernet-segment esi {esi} detail
-
+    * Added ShowEvpnInternalLabel for:
+        * show evpn internal-label
+        
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
