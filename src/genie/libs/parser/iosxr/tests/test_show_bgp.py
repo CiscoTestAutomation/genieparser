@@ -24,6 +24,7 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
                                   ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
                                   ShowBgpVrfDbVrfAll, \
+                                  ShowBgpL2vpnEvpnAdvertised, \
                                   ShowBgpSessions, \
                                   ShowBgpInstanceAllSessions
 
@@ -8918,9 +8919,80 @@ class TestShowBgpVrfDbVrfAll(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
-"""
-Unit test for 'show bgp sessions'
-"""
+# ===============================================
+#  Unit test for 'show bgp l2vpn evpn advertised'
+# ===============================================
+class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
+    '''Unit test for 'show bgp l2vpn evpn advertised' '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'route_distinguisher': 
+            {'7.7.7.7:3': 
+                {'prefix': 
+                    {'[1][0009.0807.0605.0403.0201][0]':
+                        {'neighbor': '5.5.5.5',
+                        'path_info': 
+                            {'neighbor': 'Local',
+                            'neighbor_router_id': '7.7.7.7',
+                            'flags': ['valid', 'redistributed', 'best', 'import-candidate'],
+                            'rx_path_id': 0,
+                            'local_path_id': 0,
+                            'version': 12,
+                            'inbound_attributes': 
+                                {'extcomm': 'extcomm',
+                                'nexthop': '0.0.0.0',
+                                'origin': 'IGP'},                                                                                                                         
+                            'outbound_attributes':
+                                {'extcomm': 'org as extcomm',
+                                'extended_community': ['RT:100:2'],
+                                'nexthop': '7.7.7.7',
+                                'origin': 'IGP'}},
+                        'prefix_length': 120}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:leafZ#sh bgp l2vpn evpn advertised
+        Mon Jul 11 19:22:38.235 UTC
+
+        Route Distinguisher: 7.7.7.7:3
+         [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+         Path info:
+           neighbor: Local           neighbor router id: 7.7.7.7
+           valid  redistributed  best  import-candidate  
+           Received Path ID 0, Local Path ID 0, version 12
+           Attributes after inbound policy was applied:
+            next hop: 0.0.0.0
+            EXTCOMM 
+            origin: IGP  
+            aspath: 
+            extended community: 
+           Attributes after outbound policy was applied:
+            next hop: 7.7.7.7
+            ORG AS EXTCOMM 
+            origin: IGP  
+            aspath: 
+            extended community: RT:100:2
+        '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnAdvertised(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpL2vpnEvpnAdvertised(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ==================================
+#  Unit test for 'show bgp sessions'
+# ==================================
 class TestShowBgpSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -9032,9 +9104,10 @@ class TestShowBgpSessions(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-"""
-Unit test for 'show bgp instance all sessions'
-"""
+
+# ===============================================
+#  Unit test for 'show bgp instance all sessions'
+# ===============================================
 class TestShowBgpInstanceAllSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}

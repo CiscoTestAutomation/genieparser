@@ -5284,7 +5284,9 @@ class ShowBgpInstanceAllSessions(ShowBgpSessions):
 # Schema for 'show bgp vrf-db vrf all'
 # ====================================
 class ShowBgpVrfDbVrfAllSchema(MetaParser):
-    ''' Schema for 'show bgp vrf-db vrf all' '''
+    ''' Schema for:
+        * 'show bgp vrf-db vrf all'
+    '''
 
     schema = {
         'vrf': 
@@ -5301,7 +5303,9 @@ class ShowBgpVrfDbVrfAllSchema(MetaParser):
 # Parser for 'show bgp vrf-db vrf all'
 # ====================================
 class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
-    ''' Parser for 'show bgp vrf-db vrf all' '''
+    ''' Parser for:
+        * 'show bgp vrf-db vrf all'
+    '''
 
     cli_command = 'show bgp vrf-db vrf all'
 
@@ -6131,144 +6135,212 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
 
         return parsed_dict
 
+# ===========================================
+# Schema for 'show bgp l2vpn evpn advertised'
+# ===========================================
+class ShowBgpL2vpnEvpnAdvertisedSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp l2vpn evpn advertised'
+    '''
+
+    schema = {
+        'route_distinguisher':
+            {Any():
+                {'prefix':
+                    {Any():
+                        {'prefix_length': int,
+                        'neighbor': str,
+                        'path_info':
+                            {'neighbor': str,
+                            'neighbor_router_id': str,
+                            'flags': list,
+                            'rx_path_id': int,
+                            'local_path_id': int,
+                            'version': int,
+                            'inbound_attributes':
+                                {'nexthop': str,
+                                'extcomm': str,
+                                Optional('origin'): str,
+                                Optional('aspath'): str,
+                                Optional('community'): list,
+                                Optional('extended_community'): list,
+                                },
+                            'outbound_attributes':
+                                {'nexthop': str,
+                                'extcomm': str,
+                                Optional('origin'): str,
+                                Optional('aspath'): str,
+                                Optional('community'): list,
+                                Optional('extended_community'): list,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
 
 # ===========================================
 # Parser for 'show bgp l2vpn evpn advertised'
 # ===========================================
+class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
+    '''Parser for:
+        * 'show bgp l2vpn evpn advertised'
+    '''
 
-class ShowBgpL2vpnEvpnAdvertised(MetaParser):
-    """Parser class for 'show bgp l2vpn evpn advertised' CLI."""
-
-    # TODO schema
     cli_command = 'show bgp l2vpn evpn advertised'
 
-    def cli(self,output=None):
+    def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        result = {
-            'entries': [],
-        }
+        # Init
+        parsed_dict = {}
 
-        attr_strings = (
-            'MET',
-            'ORG',
-            'AS',
-            'LOCAL',
-            'AGG',
-            'COMM',
-            'ATOM',
-            'EXTCOMM',
-            'ATTRSET',
-            'LBLIDX',
-        )
-        re_attr_string = r'(?:' + r'|'.join(attr_strings) + ')'
+        # Route Distinguisher: 7.7.7.7:3
+        p1 = re.compile(r'^Route +Distinguisher: +(?P<rd>(\S+))$')
 
-        entry = None
+        # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
+        # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+        p2 = re.compile(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>(\d+)) +is'
+                         ' +advertised +to +(?P<neighbor>(\S+))$')
+
+        #  Path info:
+        p3 = re.compile(r'^Path info:$')
+
+        #    neighbor: Local           neighbor router id: 10.1.8.8
+        #    neighbor: Local           neighbor router id: 7.7.7.7
+        p4 = re.compile(r'^neighbor: +(?P<neighbor>(\S+)) +neighbor +router'
+                         ' +id: +(?P<neighbor_router_id>(\S+))$')
+
+        #    valid  redistributed  best  import-candidate
+        p5 = re.compile(r'^(?P<flags>(valid.*))$')
+
+        #    Received Path ID 0, Local Path ID 0, version 12
+        p6 = re.compile(r'^Received +Path +ID +(?P<rx_path_id>(\d+)), +Local'
+                         ' +Path +ID +(?P<local_path_id>(\d+)), +version'
+                         ' (?P<version>(\d+))$')
+
+        #  Attributes after inbound policy was applied:
+        #  Attributes after outbound policy was applied:
+        p7 = re.compile(r'^Attributes +after +(?P<type>(outbound|inbound))'
+                         ' +policy +was +applied:$')
+
+        #    next hop: 10.1.8.8
+        p8 = re.compile(r'^next +hop: +(?P<nexthop>(\S+))$')
+
+        #    EXTCOMM
+        #    ORG AS EXTCOMM
+        p9 = re.compile(r'^(?P<extcomm>(EXTCOMM|ORG AS EXTCOMM))$')
+
+        #    origin: IGP  
+        p10 = re.compile(r'^origin: +(?P<origin>.*)$')
+
+        #    aspath: 
+        p11 = re.compile(r'^aspath: +(?P<aspath>.*)$')
+
+        #    community: no-export
+        p12 = re.compile(r'^community: +(?P<community>.*)$')
+
+        #    extended community: SoO:0.0.0.0:0 RT:100:7
+        p13 = re.compile(r'^extended +community: +(?P<extended_community>.*)$')
+
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
+
+            # Route Distinguisher: 7.7.7.7:3
+            m = p1.match(line)
+            if m:
+                rd_dict = parsed_dict.setdefault('route_distinguisher', {}).\
+                                      setdefault(m.groupdict()['rd'], {})
 
             # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-            m = re.match(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>[0-9]+) is advertised to (?P<neighbor>\S+)$', line)
+            m = p2.match(line)
             if m:
-                entry = m.groupdict()
-                result['entries'].append(entry)
-                entry.update({
-                    'paths': [],
-                })
-                path_info = None
-                attr_info = None
+                group = m.groupdict()
+                prefix_dict = rd_dict.setdefault('prefix', {}).\
+                                      setdefault(group['prefix'], {})
+                prefix_dict['prefix_length'] = int(group['prefix_length'])
+                prefix_dict['neighbor'] = group['neighbor']
                 continue
 
             #  Path info:
-            m = re.match(r'^ +Path info:$', line)
+            m = p3.match(line)
             if m:
-                assert 'path_info' not in entry
-                path_info = entry['path_info'] = {}
+                path_dict = prefix_dict.setdefault('path_info', {})
                 continue
 
             #    neighbor: Local           neighbor router id: 10.1.8.8
-            m = re.match(r'^ +neighbor: (?P<neighbor>\S+) +neighbor router id: (?P<neighbor_router_id>\S+)$', line)
+            #    neighbor: Local           neighbor router id: 7.7.7.7
+            m = p4.match(line)
             if m:
-                if attr_info:
-                    attr_info.update(m.groupdict())
-                else:
-                    path_info.update(m.groupdict())
+                group = m.groupdict()
+                path_dict['neighbor'] = group['neighbor']
+                path_dict['neighbor_router_id'] = group['neighbor_router_id']
                 continue
 
             #    valid  redistributed  best  import-candidate
-            m = re.match(r'^ +(?P<flags>[A-Za-z-]+(?:  [A-Za-z-]+)*)$', line)
+            m = p5.match(line)
             if m:
-                path_info['flags'] = m.group('flags').split()
+                path_dict['flags'] = m.groupdict()['flags'].split()
+                continue
 
             # Received Path ID 0, Local Path ID 0, version 193217
-            m = re.match(r'^ *Received Path ID (?P<rx_path_id>\d+), Local Path ID (?P<local_path_id>\d+), version (?P<pelem_version>\d+)$', line)
+            m = p6.match(line)
             if m:
-                path_info = m.groupdict()
-                entry['paths'].append(path_info)
+                group = m.groupdict()
+                for key, value in group.items():
+                    path_dict[key] = int(value)
                 continue
 
             #  Attributes after inbound policy was applied:
-            m = re.match(r'^ *Attributes after inbound policy was applied:$', line)
-            if m:
-                assert 'attr_in' not in path_info
-                attr_info = path_info['attr_in'] = {}
-                continue
-
             #  Attributes after outbound policy was applied:
-            m = re.match(r'^ *Attributes after outbound policy was applied:$', line)
+            m = p7.match(line)
             if m:
-                assert 'attr_out' not in path_info
-                attr_info = path_info['attr_out'] = {}
+                attr_dict = path_dict.setdefault(m.groupdict()['type']+"_attributes", {})
                 continue
 
             #    next hop: 10.1.8.8
-            m = re.match(r'^ +next hop: (?P<next_hop>\S+)$', line)
+            m = p8.match(line)
             if m:
-                attr_info.update(m.groupdict())
+                attr_dict.update(m.groupdict())
                 continue
 
             #    EXTCOMM
             #    ORG AS EXTCOMM
-            m = re.match(r'^(?: +' + re_attr_string + r')+$', line)
+            m = p9.match(line)
             if m:
-                attr_info['attributes'] = list(dict.fromkeys(line.split()))
+                attr_dict['extcomm'] = m.groupdict()['extcomm'].lower()
                 continue
 
             #    origin: IGP
-            m = re.match(r'^ +origin: (?P<origin>.+)$', line)
+            m = p10.match(line)
             if m:
-                attr_info.update(m.groupdict())
+                attr_dict.update(m.groupdict())
                 continue
 
             #    aspath:
-            m = re.match(r'^ +aspath: (?P<aspath>.+)$', line)
+            m = p11.match(line)
             if m:
-                attr_info.update(m.groupdict())
+                attr_dict.update(m.groupdict())
                 continue
 
             #    community: no-export
-            m = re.match(r'^ +community: (?P<comms>.+)$', line)
+            m = p12.match(line)
             if m:
-                attr_info['comms'] = m.group('comms').split()
+                attr_dict['community'] = m.groupdict()['community'].split()
                 continue
 
             #    extended community: SoO:0.0.0.0:0 RT:100:7
-            m = re.match(r'^ +extended community: (?P<extcomms>.+)$', line)
+            m = p13.match(line)
             if m:
-                attr_info['extcomms'] = extcomms = []
-                s = ' ' + m.group('extcomms')
-                while s:
-                    ms = re.match(' +(?P<type>[^:]+):(?P<value>[^ +]+)(?P<next_extcomm> +.+)?$', s)
-                    assert ms
-                    extcomm = ms.groupdict()
-                    s = extcomm.pop('next_extcomm')
-                    extcomms.append(extcomm)
+                attr_dict['extended_community'] = \
+                                    m.groupdict()['extended_community'].split()
                 continue
 
-        return result
+        return parsed_dict
 
 
 class ShowBgpL2vpnEvpnNeighbors(ShowBgpInstanceNeighborsDetail):
