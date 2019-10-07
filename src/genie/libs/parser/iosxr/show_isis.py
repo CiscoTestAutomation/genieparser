@@ -266,7 +266,7 @@ class ShowIsisSegmentRoutingLabelTableSchema(MetaParser):
 
     schema = {
         'instance': {
-            'SR': {
+            Any(): {
                 'label': {
                     Any(): {
                         'prefix_interface': str,

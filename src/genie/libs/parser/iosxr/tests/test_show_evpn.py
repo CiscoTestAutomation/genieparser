@@ -18,7 +18,8 @@ from genie.libs.parser.iosxr.show_evpn import (ShowEvpnEvi,
                                                ShowEvpnInternalLabelDetail,
                                                ShowEvpnEthernetSegment,
                                                ShowEvpnEthernetSegmentDetail,
-                                               ShowEvpnEthernetSegmentEsiDetail)
+                                               ShowEvpnEthernetSegmentEsiDetail,
+                                               ShowEvpnInternalLabel)
 
 # ===================================================
 #  Unit test for 'show evpn evi'
@@ -1262,5 +1263,229 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
         parsed_output = obj.parse(esi='0047.4700.0000.0000.2200')
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
+# ===================================================
+#  Unit test for 'show evpn internal-label'
+# ===================================================
+class TestShowEvpnInternalLabel(unittest.TestCase):
+
+    '''Unit test for 'show evpn internal-label'''
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output1 = {
+        'evi': {
+            1000: {
+                'ethernet_segment_id': {
+                    '0000.0102.0304.0506.07aa': {
+                        'index': {
+                            1: {
+                                'ether_tag': '0',
+                                'label': 'None',
+                            },
+                            2: {
+                                'ether_tag': '200',
+                                'label': '24011',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        EVI     Ethernet    Segment Id                 EtherTag Label
+        ----- --------------------------------------- -------- --------
+        1000    0000.0102.0304.0506.07aa                0       None
+        1000    0000.0102.0304.0506.07aa                200     24011
+        '''}
+
+    golden_parsed_output2 = {
+        'evi': {
+            1: {
+                'ethernet_segment_id': {
+                    '0055.5555.5555.5555.5555': {
+                        'index': {
+                            1: {
+                                'ether_tag': '0',
+                                'label': 'None',
+                                'encap': 'MPLS',
+                            },
+                            2: {
+                                'ether_tag': '1',
+                                'label': '29348',
+                                'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        1: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29213',
+                                        },
+                                    },
+                                },
+                            },
+                            3: {
+                                'ether_tag': '3',
+                                'label': '29352',
+                                'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        2: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29224',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    '0088.8888.8888.8888.8888': {
+                        'index': {
+                            1: {
+                                'ether_tag': '0',
+                                'label': 'None',
+                                'encap': 'MPLS',
+                            },
+                            2: {
+                                'ether_tag': '1',
+                                'label': '29350',
+                                'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        3: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29340',
+                                        },
+                                    },
+                                },
+                            },
+                            3: {
+                                'ether_tag': '2',
+                                'label': '29349',
+                                'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        4: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29216',
+                                        },
+                                        5: {
+                                            'tep_id': '0x00000000',
+                                            'df_role': '(B)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29341',
+                                        },
+                                    },
+                                },
+                            },
+                            4: {
+                                'ether_tag': '3',
+                                'label': '29355',
+                                'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        6: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29352',
+                                        },
+                                    },
+                                },
+                            },
+                            5: {
+                                'ether_tag': '4',
+                                'label': '29354',
+                                'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        7: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29226',
+                                        },
+                                        8: {
+                                            'tep_id': '0x00000000',
+                                            'df_role': '(B)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29353',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''
+    Device#show evpn internal-label
+    Fri Jun 28 13:42:20.616 EST
+
+    VPN-ID     Encap  Ethernet Segment Id         EtherTag     Label
+    ---------- ------ --------------------------- ----------   --------
+    1          MPLS   0055.5555.5555.5555.5555    0            None
+
+    1          MPLS   0055.5555.5555.5555.5555    1            29348
+    Summary pathlist:
+    0xffffffff (P) 192.168.0.3                              29213
+
+    1          MPLS   0055.5555.5555.5555.5555    3            29352
+    Summary pathlist:
+    0xffffffff (P) 192.168.0.3                              29224
+
+    1          MPLS   0088.8888.8888.8888.8888    0            None
+
+    1          MPLS   0088.8888.8888.8888.8888    1            29350
+    Summary pathlist:
+    0xffffffff (P) 192.168.0.4                              29340
+
+    1          MPLS   0088.8888.8888.8888.8888    2            29349
+    Summary pathlist:
+    0xffffffff (P) 192.168.0.3                              29216
+    0x00000000 (B) 192.168.0.4                              29341
+
+    1          MPLS   0088.8888.8888.8888.8888    3            29355
+    Summary pathlist:
+    0xffffffff (P) 192.168.0.4                              29352
+
+    1          MPLS   0088.8888.8888.8888.8888    4            29354
+    Summary pathlist:
+    0xffffffff (P) 192.168.0.3                              29226
+    0x00000000 (B) 192.168.0.4                              29353
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowEvpnInternalLabel(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowEvpnInternalLabel(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowEvpnInternalLabel(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
+       
 if __name__ == '__main__':
     unittest.main()

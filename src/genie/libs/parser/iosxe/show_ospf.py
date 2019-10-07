@@ -1529,8 +1529,25 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
                                                 },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
                                             },
+                                        },
                                         Optional('virtual_links'): 
                                             {Any(): 
                                                 {'name': str,
@@ -1605,8 +1622,25 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
                                                 },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
                                             },
+                                        },
                                         Optional('sham_links'): 
                                             {Any(): 
                                                 {'name': str,
@@ -1680,7 +1714,23 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
                                                 },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
                                             },
                                         },
                                     },
@@ -1690,7 +1740,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ===========================================
@@ -1843,6 +1894,30 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                             ' +neighbor(s) +using +the +old +key(s):$')
  
         p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
+
+        # Segment Routing enabled for MPLS forwarding
+        p29 = re.compile(r'^Segment +Routing +enabled +for +MPLS +forwarding$')
+
+        # TEAPP:
+        p30 = re.compile(r'^TEAPP:$')
+
+        # Topology Id:0x0
+        p30_1 = re.compile(r'^Topology +Id: *(?P<topology_id>[\w]+)$')
+
+        # TEAPP:SRTE
+        p30_2 = re.compile(r'^TEAPP: *(?P<teapp>[\w]+)$')
+
+        # Affinity: length 32, bits 0x00000010
+        p30_3 = re.compile(r'^Affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # Extended affinity: length 32, bits 0x00000010
+        p30_4 = re.compile(r'^Extended +affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # SR Policy Manager:
+        p31 = re.compile(r'^SR +Policy +Manager:$')
+
+        # TE Opaque LSA: Source of link information OSPF
+        p31_1 = re.compile(r'^TE +Opaque +LSA: +(?P<te_opaque_lsa>[\S\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -2403,6 +2478,65 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict['authentication']['auth_trailer_key']\
                     ['crypto_algorithm'] = 'md5'
                 continue
+
+            # Segment Routing enabled for MPLS forwarding
+            m = p29.match(line)
+            if m:
+                sub_dict.update({'sr_mpls_enabled': True})
+                continue
+
+            # TEAPP:
+            m = p30.match(line)
+            if m:
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                continue
+
+            # Topology Id:0x0
+            m = p30_1.match(line)
+            if m:
+                topology_id = m.groupdict()['topology_id']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                teapp_dict.update({'topology_id': topology_id})
+                continue
+
+            # TEAPP:SRTE
+            m = p30_2.match(line)
+            if m:
+                teapp = m.groupdict()['teapp']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                item_dict = teapp_dict.setdefault(teapp, {})
+                continue
+
+            # Affinity: length 32, bits 0x00000010
+            m = p30_3.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                aff_dict = item_dict.setdefault('affinity', {})
+                aff_dict.update({'length': length})
+                aff_dict.update({'bits': bits})
+                continue
+
+            # Extended affinity: length 32, bits 0x00000010
+            m = p30_4.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                exa_dict = item_dict.setdefault('extended_affinity', {})
+                exa_dict.update({'length': length})
+                exa_dict.update({'bits': bits})
+                continue
+            
+            # SR Policy Manager:
+            m = p31.match(line)
+            if m:
+                mgn_dict = sub_dict.setdefault('sr_policy_manager', {})
+                continue
+
+            # TE Opaque LSA: Source of link information OSPF
+            m = p31_1.match(line)
+            if m:
+                mgn_dict.update({'te_opaque_lsa': m.groupdict()['te_opaque_lsa']})
 
         return ret_dict
 
