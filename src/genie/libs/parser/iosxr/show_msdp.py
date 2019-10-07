@@ -380,3 +380,439 @@ class ShowMsdpPeer(ShowMsdpPeerSchema):
                 continue
 
         return parsed_dict
+
+
+class ShowMsdpContextSchema(MetaParser):
+    """Schema for:
+    * 'show msdp context'
+    """
+    schema = {
+        'vrf': {
+            Any(): {
+                'context_info': {
+                    'vrf_id': str,
+                    'table_id': str,
+                    'table_count': {
+                        'active': int,
+                        'total': int,
+                    }
+                },
+                'inheritable_config': {
+                    'ttl': int,
+                    'maximum_sa': int,
+                    'keepalive_period': int,
+                    'peer_timeout_period': int,
+                    Optional('connect_source'): str,
+                    Optional('sa_filter'): {
+                        'in': str,
+                        'out': str,
+                    },
+                    Optional('rp_filter'): {
+                        'in': str,
+                        'out': str,
+                    }
+                },
+                'config': {
+                    'originator_address': str,
+                    'originator_interface': str,
+                    'default_peer_address': str,
+                    'sa_holdtime': int,
+                    'allow_encaps_count': int,
+                    'maximum_sa': int,
+                },
+                'sa_cache': {
+                    'groups': {
+                        'current': int,
+                        'high_water_mark': int,
+                    },
+                    'sources': {
+                        'current': int,
+                        'high_water_mark': int,
+                    },
+                    'rps': {
+                        'current': int,
+                        'high_water_mark': int,
+                    },
+                    'external_sas': {
+                        'current': int,
+                        'high_water_mark': int,
+                    }
+                },
+                'mrib_update_counts': {
+                    'total_updates': int,
+                    'with_no_changes': int,
+                    'g_routes': int,
+                    'sg_routes': int,
+                },
+                'mrib_update_drops': {
+                    'invalid_group': int,
+                    'invalid_group_length': int,
+                    'invalid_source': int,
+                    'auto_rp_address': int,
+                }
+            }
+        }
+    }
+
+
+class ShowMsdpContext(ShowMsdpContextSchema):
+    """ Parser for:
+        * 'show msdp context'
+        * 'show msdp vrf <vrf> context'
+    """
+
+    cli_command = ['show msdp vrf {vrf} context',
+                   'show msdp context']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # VRF ID                     : 0x60000000
+        # Table ID                   : 0xe0000000
+        # Table Count (Active/Total) : 2/2
+        r1 = re.compile(r'^VRF\sID\s+:\s(?P<vrf_id>\S+)')
+
+        r2 = re.compile(r'\s*Table\sID\s+:\s(?P<table_id>\S+)')
+
+        r3 = re.compile(r'\s*Table\sCount\s*\(Active\/Total\)\s*:\s*'
+                        r'(?P<table_count_active>\d+)\/'
+                        r'(?P<table_count_total>\d+)')
+
+        # TTL                 : 2
+        # Maximum SAs         : 0
+        # Keepalive Period    : 30
+        # Peer Timeout Period : 75
+        # Connect Source      :
+        # SA Filter In        :
+        # SA Filter Out       :
+        # RP Filter In        :
+        # RP Filter Out       :
+        r4 = re.compile(r'\s*TTL\s+:\s(?P<ttl>\d+)')
+
+        r5 = re.compile(r'\s*Maximum\s+SAs\s+:\s(?P<maximum_sa>\d+)')
+
+        r6 = re.compile(r'\s*Keepalive Period\s+:\s(?P<keepalive_period>\d+)')
+
+        r7 = re.compile(
+            r'\s*Peer\s+Timeout\s+Period\s+:\s(?P<peer_timeout_period>\d+)')
+
+        r8 = re.compile(r'\s*Connect Source\s+:\s(?:(?P<connect_source>\S+))?')
+
+        r9 = re.compile(r'\s*SA\s+Filter\s+In\s+:\s(?:(?P<sa_filter_in>\S+))?')
+
+        r10 = re.compile(r'\s*SA\s+Filter\s+Out\s+:\s(?:(?P<sa_filter_out>\S+))?')
+
+        r11 = re.compile(
+            r'\s*RP\s+Filter\s+In\s+:\s(?:(?P<rp_filter_in>\S+))?')
+
+        r12 = re.compile(
+            r'\s*RP\s+Filter\s+Out\s+:\s(?:(?P<rp_filter_out>\S+))?')
+
+        # Originator Address         : 150.150.1.1
+        # Originator Interface Name  : Loopback150
+        # Default Peer Address       : 0.0.0.0
+        # SA Holdtime                : 150
+        # Allow Encaps Count         : 0
+        # Context Maximum SAs        : 20000
+        r13 = re.compile(
+            r'\s*Originator\sAddress\s+:\s(?P<originator_address>\S+)')
+
+        r14 = re.compile(
+            r'\s*Originator\sInterface\sName\s+:\s(?P<originator_interface>\S+)')
+
+        r15 = re.compile(
+            r'\s*Default\sPeer\sAddress\s*:\s(?P<default_peer_address>\S+)')
+
+        r16 = re.compile(r'\s*SA\sHoldtime\s+:\s(?P<sa_holdtime>\d+)')
+
+        r17 = re.compile(
+            r'\s*Allow\sEncaps\sCount\s*:\s(?P<allow_encaps_count>\d+)')
+
+        r18 = re.compile(
+            r'\s*Context\sMaximum\sSAs\s*:\s(?P<config_maximum_sa>\d+)')
+
+        # Groups       :          2/2
+        # Sources      :         12/12
+        # RPs          :          3/0
+        # External SAs :          3/3
+        r19 = re.compile(
+            r'\s*Groups\s+:\s+(?P<groups_current>\d+)\/(?P<groups_high>\d+)')
+
+        r20 = re.compile(
+            r'\s*Sources\s+:\s+(?P<sources_current>\d+)\/(?P<sources_high>\d+)')
+
+        r21 = re.compile(
+            r'\s*RPs\s+:\s+(?P<rps_current>\d+)\/(?P<rps_high>\d+)')
+
+        r22 = re.compile(
+            r'\s*External\sSAs\s+:\s+(?P<sas_current>\d+)\/(?P<sas_high>\d+)')
+
+        # Total updates        : 473
+        # With no changes      : 0
+        # (*,G) routes         : 26
+        # (S,G) routes         : 447
+        r23 = re.compile(r'\s*Total\supdates\s+:\s(?P<total_updates>\d+)')
+        r24 = re.compile(
+            r'\s*With\sno\schanges\s+:\s(?P<with_no_changes>\d+)\s*')
+        r25 = re.compile(r'\s*\(\*,G\)\sroutes\s+:\s(?P<g_routes>\d+)')
+        r26 = re.compile(r'\s*\(S,G\)\sroutes\s+:\s(?P<sg_routes>\d+)')
+
+        # Invalid group        : 0
+        # Invalid group length : 0
+        # Invalid source       : 0
+        # Auto-RP Address      : 2
+        r27 = re.compile(r'\s*Invalid\sgroup\s+:\s(?P<invalid_group>\d+)')
+        r28 = re.compile(
+            r'\s*Invalid\sgroup\slength\s+:\s(?P<invalid_group_length>\d+)')
+        r29 = re.compile(r'\s*Invalid\ssource\s+:\s(?P<invalid_source>\d+)')
+        r30 = re.compile(r'\s*Auto\-RP\sAddress\s+:\s(?P<auto_rp_address>\d+)')
+
+        parsed_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            # MSDP context information for default
+            #   VRF ID                     : 0x60000000
+            result = r1.match(line)
+            if result:
+                group_dict = result.groupdict()
+                if not vrf:
+                    vrf = 'default'
+                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                context_dict = vrf_dict.setdefault('context_info', {})
+                context_dict['vrf_id'] = group_dict['vrf_id']
+                continue
+
+            #   Table ID                   : 0xe0000000
+            result = r2.match(line)
+            if result:
+                group_dict = result.groupdict()
+                context_dict['table_id'] = group_dict['table_id']
+                continue
+
+            #   Table Count (Active/Total) : 2/2
+            result = r3.match(line)
+            if result:
+                group_dict = result.groupdict()
+                table_dict = context_dict.setdefault('table_count', {})
+                table_dict['active'] = int(group_dict['table_count_active'])
+                table_dict['total'] = int(group_dict['table_count_total'])
+                continue
+
+            # Inheritable Configuration
+            #   TTL                 : 2
+            result = r4.match(line)
+            if result:
+                group_dict = result.groupdict()
+                inheritable_dict = vrf_dict.setdefault('inheritable_config', {})
+                inheritable_dict['ttl'] = int(group_dict['ttl'])
+                continue
+
+            #   Maximum SAs         : 0
+            result = r5.match(line)
+            if result:
+                group_dict = result.groupdict()
+                inheritable_dict['maximum_sa'] = int(group_dict['maximum_sa'])
+                continue
+
+            #   Keepalive Period    : 30
+            result = r6.match(line)
+            if result:
+                group_dict = result.groupdict()
+                inheritable_dict['keepalive_period'] = int(group_dict['keepalive_period'])
+                continue
+
+            #   Peer Timeout Period : 75
+            result = r7.match(line)
+            if result:
+                group_dict = result.groupdict()
+                inheritable_dict['peer_timeout_period'] = int(group_dict['peer_timeout_period'])
+                continue
+
+            #   Connect Source      :
+            result = r8.match(line)
+            if result:
+                group_dict = result.groupdict()
+                inheritable_dict['connect_source'] = group_dict['connect_source']
+                continue
+
+            #   SA Filter In        :
+            result = r9.match(line)
+            if result:
+                group_dict = result.groupdict()
+                sa_filter_dict = inheritable_dict.setdefault('sa_filter', {})
+                sa_filter_dict['in'] = group_dict['sa_filter_in']
+                continue
+
+            #   SA Filter Out       :
+            result = r10.match(line)
+            if result:
+                group_dict = result.groupdict()
+                sa_filter_dict['out'] = group_dict['sa_filter_out']
+                continue
+
+            #   RP Filter In        :
+            result = r11.match(line)
+            if result:
+                group_dict = result.groupdict()
+                rp_filter_dict = inheritable_dict.setdefault('rp_filter', {})
+                rp_filter_dict['in'] = group_dict['rp_filter_in']
+                continue
+
+            #   RP Filter Out       :
+            result = r12.match(line)
+            if result:
+                group_dict = result.groupdict()
+                rp_filter_dict['out'] = group_dict['rp_filter_out']
+                continue
+
+            # Configuration:
+            #   Originator Address         : 150.150.1.1
+            result = r13.match(line)
+            if result:
+                group_dict = result.groupdict()
+                config_dict = vrf_dict.setdefault('config', {})
+                config_dict['originator_address'] = group_dict['originator_address']
+                continue
+
+            #   Originator Interface Name  : Loopback150
+            result = r14.match(line)
+            if result:
+                group_dict = result.groupdict()
+                config_dict['originator_interface'] = group_dict['originator_interface']
+                continue
+
+            #   Default Peer Address       : 0.0.0.0
+            result = r15.match(line)
+            if result:
+                group_dict = result.groupdict()
+                config_dict['default_peer_address'] = group_dict['default_peer_address']
+                continue
+
+            #   SA Holdtime                : 150
+            result = r16.match(line)
+            if result:
+                group_dict = result.groupdict()
+                config_dict['sa_holdtime'] = int(group_dict['sa_holdtime'])
+                continue
+
+            #   Allow Encaps Count         : 0
+            result = r17.match(line)
+            if result:
+                group_dict = result.groupdict()
+                config_dict['allow_encaps_count'] = int(group_dict['allow_encaps_count'])
+                continue
+
+            #   Context Maximum SAs        : 20000
+            result = r18.match(line)
+            if result:
+                group_dict = result.groupdict()
+                config_dict['maximum_sa'] = int(group_dict['config_maximum_sa'])
+                continue
+
+            # SA Cache Counts  (Current/High Water Mark)
+            #   Groups       :          2/2
+            result = r19.match(line)
+            if result:
+                group_dict = result.groupdict()
+                sa_cache = vrf_dict.setdefault('sa_cache', {})
+                groups_dict = sa_cache.setdefault('groups', {})
+                groups_dict['current'] = int(group_dict['groups_current'])
+                groups_dict['high_water_mark'] = int(group_dict['groups_high'])
+                continue
+
+            #   Sources      :         12/12
+            result = r20.match(line)
+            if result:
+                group_dict = result.groupdict()
+                sources_dict = sa_cache.setdefault('sources', {})
+                sources_dict['current'] = int(group_dict['sources_current'])
+                sources_dict['high_water_mark'] = int(group_dict['sources_high'])
+                continue
+
+            #   RPs          :          3/0
+            result = r21.match(line)
+            if result:
+                group_dict = result.groupdict()
+                rps_dict = sa_cache.setdefault('rps', {})
+                rps_dict['current'] = int(group_dict['rps_current'])
+                rps_dict['high_water_mark'] = int(group_dict['rps_high'])
+                continue
+
+            #   External SAs :          3/3
+            result = r22.match(line)
+            if result:
+                group_dict = result.groupdict()
+                external_dict = sa_cache.setdefault('external_sas', {})
+                external_dict['current'] = int(group_dict['sas_current'])
+                external_dict['high_water_mark'] = int(group_dict['sas_high'])
+                continue
+
+            # MRIB Update Counts
+            #   Total updates        : 473
+            result = r23.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_counts_dict = vrf_dict.setdefault('mrib_update_counts', {})
+                mrib_counts_dict['total_updates'] = int(group_dict['total_updates'])
+                continue
+
+            #   With no changes      : 0
+            result = r24.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_counts_dict['with_no_changes'] = int(group_dict['with_no_changes'])
+                continue
+
+            #   (*,G) routes         : 26
+            result = r25.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_counts_dict['g_routes'] = int(group_dict['g_routes'])
+                continue
+
+            #   (S,G) routes         : 447
+            result = r26.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_counts_dict['sg_routes'] = int(group_dict['sg_routes'])
+                continue
+
+            # MRIB Update Drops
+            #   Invalid group        : 0
+            result = r27.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_drops_dict = vrf_dict.setdefault('mrib_update_drops', {})
+                mrib_drops_dict['invalid_group'] = int(group_dict['invalid_group'])
+                continue
+
+            #   Invalid group length : 0
+            result = r28.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_drops_dict['invalid_group_length'] = int(group_dict['invalid_group_length'])
+                continue
+
+            #   Invalid source       : 0
+            result = r29.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_drops_dict['invalid_source'] = int(group_dict['invalid_source'])
+                continue
+
+            #   Auto-RP Address      : 2
+            result = r30.match(line)
+            if result:
+                group_dict = result.groupdict()
+                mrib_drops_dict['auto_rp_address'] = int(group_dict['auto_rp_address'])
+                continue
+
+        return parsed_dict

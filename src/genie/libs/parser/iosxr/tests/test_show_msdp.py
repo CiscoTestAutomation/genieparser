@@ -9,7 +9,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxr show msdp
-from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer
+from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer, ShowMsdpContext
 
 
 class test_show_msdp_peer(unittest.TestCase):
@@ -70,7 +70,7 @@ class test_show_msdp_peer(unittest.TestCase):
     device_output_1 = {
         'execute.return_value': '''
         Router# show msdp peer
-        
+
         MSDP Peer 202.202.33.3 (?), AS 65109
         Description:
           Connection status:
@@ -145,7 +145,7 @@ class test_show_msdp_peer(unittest.TestCase):
 
     device_output_2 = {'execute.return_value': '''
         Router# show msdp vrf VRF1 peer
-        
+
         MSDP Peer 1.1.1.1 (?), AS 0
         Description: R1
           Connection status:
@@ -191,6 +191,216 @@ class test_show_msdp_peer(unittest.TestCase):
         self.device = Mock(**self.device_output_2)
         obj = ShowMsdpPeer(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
+        self.assertEqual(parsed_output, self.expected_output_2)
+
+
+class test_show_msdp_context(unittest.TestCase):
+    """
+        Commands:
+        show msdp context
+        show msdp vrf <vrf> context
+    """
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    expected_output_1 = {
+        'vrf': {
+            'default': {
+                'config': {
+                    'allow_encaps_count': 0,
+                    'default_peer_address': '0.0.0.0',
+                    'maximum_sa': 20000,
+                    'originator_address': '150.150.1.1',
+                    'originator_interface': 'Loopback150',
+                    'sa_holdtime': 150},
+                'context_info': {
+                    'table_count': {
+                        'active': 2,
+                        'total': 2},
+                    'table_id': '0xe0000000',
+                    'vrf_id': '0x60000000'},
+                'inheritable_config': {
+                    'keepalive_period': 30,
+                    'maximum_sa': 0,
+                    'peer_timeout_period': 75,
+                    'ttl': 2},
+                'mrib_update_counts': {
+                    'g_routes': 26,
+                    'sg_routes': 447,
+                    'total_updates': 473,
+                    'with_no_changes': 0},
+                'mrib_update_drops': {
+                    'auto_rp_address': 2,
+                    'invalid_group': 0,
+                    'invalid_group_length': 0,
+                    'invalid_source': 0},
+                'sa_cache': {
+                    'external_sas': {
+                        'current': 3,
+                        'high_water_mark': 3},
+                    'groups': {
+                        'current': 2,
+                        'high_water_mark': 2},
+                    'rps': {
+                        'current': 3,
+                        'high_water_mark': 0},
+                    'sources': {
+                        'current': 12,
+                        'high_water_mark': 12}}}}}
+
+    device_output_1 = {'execute.return_value': '''
+        Router# show msdp context
+
+        MSDP context information for default
+          VRF ID                     : 0x60000000
+          Table ID                   : 0xe0000000
+          Table Count (Active/Total) : 2/2
+        Inheritable Configuration
+          TTL                 : 2
+          Maximum SAs         : 0
+          Keepalive Period    : 30
+          Peer Timeout Period : 75
+          Connect Source      : 
+          SA Filter In        : 
+          SA Filter Out       : 
+          RP Filter In        : 
+          RP Filter Out       : 
+        Configuration
+          Originator Address         : 150.150.1.1
+          Originator Interface Name  : Loopback150
+          Default Peer Address       : 0.0.0.0
+          SA Holdtime                : 150
+          Allow Encaps Count         : 0
+          Context Maximum SAs        : 20000
+        SA Cache Counts    (Current/High Water Mark)
+          Groups       :          2/2         
+          Sources      :         12/12        
+          RPs          :          3/0         
+          External SAs :          3/3         
+        MRIB Update Counts
+          Total updates        : 473
+          With no changes      : 0
+          (*,G) routes         : 26
+          (S,G) routes         : 447
+        MRIB Update Drops
+          Invalid group        : 0
+          Invalid group length : 0
+          Invalid source       : 0
+          Auto-RP Address      : 2
+'''}
+
+    expected_output_2 = {
+        'vrf': {
+            'VRF1': {
+                'config': {
+                    'allow_encaps_count': 0,
+                    'default_peer_address': '0.0.0.0',
+                    'maximum_sa': 22222,
+                    'originator_address': '22.22.22.23',
+                    'originator_interface': 'Loopback3',
+                    'sa_holdtime': 150},
+                'context_info': {
+                    'table_count': {
+                        'active': 1,
+                        'total': 1},
+                    'table_id': '0xe0000011',
+                    'vrf_id': '0x60000002'},
+                'inheritable_config': {
+                    'connect_source': 'Loopback3',
+                    'keepalive_period': 30,
+                    'maximum_sa': 0,
+                    'peer_timeout_period': 75,
+                    'sa_filter': {
+                        'in': 'safilin',
+                        'out': 'safilout'},
+                    'ttl': 222},
+                'mrib_update_counts': {
+                    'g_routes': 0,
+                    'sg_routes': 0,
+                    'total_updates': 0,
+                    'with_no_changes': 0},
+                'mrib_update_drops': {
+                    'auto_rp_address': 0,
+                    'invalid_group': 0,
+                    'invalid_group_length': 0,
+                    'invalid_source': 0},
+                'sa_cache': {
+                    'external_sas': {
+                        'current': 0,
+                        'high_water_mark': 0},
+                    'groups': {
+                        'current': 0,
+                        'high_water_mark': 0},
+                    'rps': {
+                        'current': 0,
+                        'high_water_mark': 0},
+                    'sources': {
+                        'current': 0,
+                        'high_water_mark': 0}}}}}
+
+    device_output_2 = {'execute.return_value': '''
+    Router# show msdp vrf VRF1 context
+
+    MSDP context information for VRF1
+      VRF ID                     : 0x60000002
+      Table ID                   : 0xe0000011
+      Table Count (Active/Total) : 1/1
+    Inheritable Configuration
+      TTL                 : 222
+      Maximum SAs         : 0
+      Keepalive Period    : 30
+      Peer Timeout Period : 75
+      Connect Source      : Loopback3
+      SA Filter In        : safilin
+      SA Filter Out       : safilout
+      RP Filter In        : 
+      RP Filter Out       : 
+    Configuration
+      Originator Address         : 22.22.22.23
+      Originator Interface Name  : Loopback3
+      Default Peer Address       : 0.0.0.0
+      SA Holdtime                : 150
+      Allow Encaps Count         : 0
+      Context Maximum SAs        : 22222
+    SA Cache Counts    (Current/High Water Mark)
+      Groups       :          0/0         
+      Sources      :          0/0         
+      RPs          :          0/0         
+      External SAs :          0/0         
+    MRIB Update Counts
+      Total updates        : 0
+      With no changes      : 0
+      (*,G) routes         : 0
+      (S,G) routes         : 0
+    MRIB Update Drops
+      Invalid group        : 0
+      Invalid group length : 0
+      Invalid source       : 0
+      Auto-RP Address      : 0
+    '''}
+
+    def test_show_msdp_peer_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowMsdpContext(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_msdp_peer_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowMsdpContext(device=self.device)
+        parsed_output = obj.parse()
+
+        self.assertEqual(parsed_output, self.expected_output_1)
+
+    def test_show_msdp_peer_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowMsdpContext(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+
         self.assertEqual(parsed_output, self.expected_output_2)
 
 
