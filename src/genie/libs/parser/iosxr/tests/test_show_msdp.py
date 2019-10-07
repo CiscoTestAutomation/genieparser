@@ -34,7 +34,7 @@ class test_show_msdp_peer(unittest.TestCase):
                             'state': 'StopRead',
                             'up_down_time': '1d02h'},
                         'password': 'None',
-                        'peer_as': 4134,
+                        'peer_as': 65109,
                         'reset': '999',
                         'sa_filter': {
                             'in': {
@@ -68,7 +68,10 @@ class test_show_msdp_peer(unittest.TestCase):
                         'ttl_threshold': 2}}}}}
 
     device_output_1 = {
-        'execute.return_value': '''MSDP Peer 202.202.33.3 (?), AS 4134
+        'execute.return_value': '''
+        Router# show msdp peer
+        
+        MSDP Peer 202.202.33.3 (?), AS 65109
         Description:
           Connection status:
             State: Inactive, Resets: 999, Connection Source: 202.202.11.1
@@ -96,7 +99,7 @@ class test_show_msdp_peer(unittest.TestCase):
 
     expected_output_2 = {
         'vrf': {
-            'default': {
+            'VRF1': {
                 'peer': {
                     '1.1.1.1': {
                         'connect_source_address': '22.22.22.23',
@@ -141,6 +144,8 @@ class test_show_msdp_peer(unittest.TestCase):
                         'ttl_threshold': 222}}}}}
 
     device_output_2 = {'execute.return_value': '''
+        Router# show msdp vrf VRF1 peer
+        
         MSDP Peer 1.1.1.1 (?), AS 0
         Description: R1
           Connection status:
@@ -179,15 +184,13 @@ class test_show_msdp_peer(unittest.TestCase):
         self.device = Mock(**self.device_output_1)
         obj = ShowMsdpPeer(device=self.device)
         parsed_output = obj.parse()
-
         self.assertEqual(parsed_output, self.expected_output_1)
 
     def test_show_msdp_peer_2(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowMsdpPeer(device=self.device)
-        parsed_output = obj.parse()
-
+        parsed_output = obj.parse(vrf='VRF1')
         self.assertEqual(parsed_output, self.expected_output_2)
 
 
