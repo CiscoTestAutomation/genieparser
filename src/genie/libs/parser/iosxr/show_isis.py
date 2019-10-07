@@ -332,112 +332,96 @@ class ShowIsisInterfaceSchema(MetaParser):
     schema = {
         'instance': {
             Any(): {
-                'vrf': {
+                'interface': {
                     Any(): {
-                        'interface': {
+                        'state': str,
+                        'adjacency_formation': str,
+                        'prefix_advertisement': str,
+                        'ipv6_bfd': bool,
+                        'ipv4_bfd': bool,
+                        'bfd_min_interval': int,
+                        'bfd_multiplier': int,
+                        'bandwidth': int,
+                        'circuit_type': str,
+                        'media_type': str,
+                        'circuit_number': int,
+                        'lsp': {
+                            'transmit_timer_expires_ms': int,
+                            'transmission_state': str,
+                            'lsp_transmit_back_to_back_limit': int,
+                            'lsp_transmit_back_to_back_limit_window_msec': int,
+                        },
+                        'level': {
                             Any(): {
+                                'adjacency_count':int,
+                                Optional('lsp_pacing_interval_ms'): int,
+                                'psnp_entry_queue_size': int,
+                                Optional('next_lan_iih_sec'): int,
+                                Optional('lan_id'): str,
+                                Optional('hello_interval_sec'): int,
+                                'hello_multiplier': int,
+                                Optional('priority'): {
+                                    'local': str,
+                                    'dis': str
+                                }
+                            },
+                        },
+                        'clns_io': {
+                            'protocol_state': str,
+                            'mtu': int,
+                            Optional('snpa'): str,
+                            Optional('layer2_mcast_groups_membership'): {
+                                'all_level_1_iss': str,
+                                'all_level_2_iss': str,
+                            },
+                        },
+                        'topology': {
+                            Any(): {
+                                'adjacency_formation': str,
                                 'state': str,
-                                'adjacency_formation': bool,
-                                'prefix_advertisement': bool,
-                                'ipv6_bfd': bool,
-                                'ipv4_bfd': bool,
-                                'bfd_min_interval': int,
-                                'bfd_multiplier': int,
-                                'bandwidth': int,
-                                'circuit_type': str,
-                                'media_type': str,
-                                'circuit_number': int,
-                                'lsp': {
-                                    'expiration': str,
-                                    'transmission_state': str,
-                                    'send_status': {
-                                        'quantity': int,
-                                        'time': str
+                                'prefix_advertisement': str,
+                                'metric': {
+                                    'level': {
+                                        Any(): int
                                     }
                                 },
-                                'level': {
-                                    Any(): {
-                                        'adjacency_count':int,
-                                        Optional('lsp_pacing_interval'): str,
-                                        'psnp_entry_queue_size': int,
-                                        Optional('next_lan_iih'): str,
-                                        Optional('lan_id'): str,
-                                        Optional('hello_interval'): int,
-                                        'hello_multiplier': int,
-                                        Optional('priority'): {
-                                            'local': str,
-                                            'dis': str
+                                'weight': {
+                                    'level': {
+                                        Any(): int
+                                    }
+                                },
+                                'mpls': {
+                                    'mpls_max_label_stack': str,
+                                    'ldp_sync': {
+                                        'level': {
+                                            Any(): str,
                                         }
                                     },
                                 },
-                                'clns': {
-                                    'protocol_state': str,
-                                    'mtu': int,
-                                    Optional('snpa'): str,
-                                    Optional('membership'): {
-                                        'layer': {
-                                            Any(): {
-                                                'level': {
-                                                    Any(): {
-                                                        'iss': bool
-                                                    }
-                                                }
-                                            }
-                                        }
+                                'frr': {
+                                    'level': {
+                                        Any(): {
+                                            'state': str,
+                                            'type': str,
+                                        },
                                     },
                                 },
-                                'topology': {
-                                    Any(): {
-                                        'adjacency_formation': str,
-                                        'state': str,
-                                        'prefix_advertisement': str,
-                                        'metric': {
-                                            'level': {
-                                                Any(): int
-                                            }
-                                        },
-                                        'weight': {
-                                            'level': {
-                                                Any(): int
-                                            }
-                                        },
-                                        'mpls': {
-                                            'max_label_stack': {
-                                                'pri': int,
-                                                'bkp': int,
-                                                'srte': int,
-                                            },
-                                            'sync': {
-                                                'level': {
-                                                    Any(): str,
-                                                }
-                                            },
-                                        },
-                                        'frr': {
-                                            'level': {
-                                                Any(): {
-                                                    'state': str,
-                                                    'type': str,
-                                                },
-                                            },
-                                        },
 
-                                    },
-                                },
-                                'address_family': {
-                                    Any(): {
-                                        'state': str,
-                                        'forwarding_address': str,
-                                        'global_prefix': str,
-                                    },
-                                }
-                            }
+                            },
                         },
+                        'address_family': {
+                            Any(): {
+                                'state': str,
+                                'forwarding_address': str,
+                                'global_prefix': str,
+                            },
+                        }
                     }
-                }
+                },
             }
         }
     }
+
 
 class ShowIsisInterface(ShowIsisInterfaceSchema):
     ''' Parser for commands:
@@ -471,7 +455,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Prefix Advertisement:     Enabled
         # Prefix Advertisement:   Running
         r4 = re.compile(r'Prefix\s+Advertisement\s*:\s*'
-                         '(?P<prefix_advertisement_state>)')
+                         '(?P<prefix_advertisement_state>.+)')
 
         # IPv4 BFD:                 Disabled
         # IPv6 BFD:                 Disabled
@@ -507,14 +491,14 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # LSP Pacing Interval:    33 ms
         r14 = re.compile(r'LSP\s+Pacing\s+Interval\s*:\s*'
-                          '(?P<lsp_pacing_interval>[\d\s\w]+)^')
+                          '(?P<lsp_pacing_interval>\d+)\s+ms')
 
         # PSNP Entry Queue Size:  0
         r15 = re.compile(r'PSNP\s+Entry\s+Queue\s+Size\s*:\s*'
                           '(?P<psnp_entry_queue_size>\d+)')
 
         # Hello Interval:         10 s
-        r16 = re.compile(r'Hello\s+Interval\s*:\s*(?P<hello_interval>[\d\s\w]+)^')
+        r16 = re.compile(r'Hello\s+Interval\s*:\s*(?P<hello_interval>\d+)\s*s')
 
         # Hello Multiplier:       3
         r17 = re.compile(r'Hello\s+Multiplier\a*:\s*(?P<hello_multiplier>\d+)')
@@ -542,8 +526,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                           '\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
 
         # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
-        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_stack_pri>'
-                          '\d+)/(?P<mpls_stack_bkp>\d+)/(?P<mpls_stack_srte>\d+)\s*\(PRI/BKP/SRTE\)')
+        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
 
         # MPLS LDP Sync (L1/L2):  Disabled/Disabled
         r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
@@ -573,7 +556,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # LSP transmit timer expires in 0 ms
         r31 = re.compile(r'LSP\s+transmit\s+timer\s+expires\s+in\s+'
-                          '(?P<lsp_timer>[\d\s\w]+)')
+                          '(?P<lsp_timer>\d+)\s+ms')
 
         # LSP transmission is idle
         r32 = re.compile(r'LSP\s+transmission\s+is\s+'
@@ -582,7 +565,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Can send up to 10 back-to-back LSPs in the next 0 ms
         r33 = re.compile(r'Can\s+send\s+up\s+to\s+(?P<number_lsp_send>\d+)'
                           '\s+back\-to\-back\s+LSPs\s+in\s+the\s+next\s+'
-                          '(?P<time_to_sent>[\d\s\w]+)')       
+                          '(?P<time_to_sent>\d+)\s+ms')       
 
         # LAN ID:                 R3.07
         r34 = re.compile(r'LAN\s+ID\s*:\s*(?P<lan_id>\S+)')
@@ -590,12 +573,12 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Priority (Local/DIS):   64/none (no DIS elected)
         # Priority (Local/DIS):   64/64
         r35 = re.compile(r'Priority\s*\(Local/DIS\)\s*:\s*'
-                          '(?P<priority_local>\S+)/(?P<priority_dis>\S+)\s*.*')
+                          '(?P<priority_local>\S+)/(?P<priority_dis>.+)')
 
         # Next LAN IIH in:        5 s
         # Next LAN IIH in:        3 s 
         r36 = re.compile(r'Next\s+LAN\s+IIH\s+in\s*:\s*'
-                          '(?P<next_lan_iih>[\w\d\s]+)')
+                          '(?P<next_lan_iih>\d+)\s*s')
 
         # SNPA:                   fa16.3eb0.d50f
         r37 = re.compile(r'SNPA\s*:\s*(?P<snpa>\S+)')
@@ -608,8 +591,10 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r39 = re.compile(r'All\s+Level\-(?P<level>\d+)\s+ISs\s*:\s*'
                           '(?P<iss_state>\S+)')
 
+        # All ISs:              Yes
+        r40 = re.compile(r'All\s+ISs\s*:\s*(?P<all_iss>(Yes|No))')
+
         parsed_output = {}
-        vrf = 'default'
         interface_flag = False
         clns_flag = False
 
@@ -623,9 +608,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 instance = group['instance']
                 instance_dict = parsed_output\
                     .setdefault('instance', {})\
-                    .setdefault(instance, {})\
-                    .setdefault('vrf', {})\
-                    .setdefault(vrf, {})
+                    .setdefault(instance, {})
 
                 continue
 
@@ -651,12 +634,9 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if result:
                 group = result.groupdict()
                 adjacency_formation_state = group['adjacency_formation_state']
-                adjacency_formation = False
-                if adjacency_formation_state.lower() == 'enabled':
-                    adjacency_formation = True
 
                 if interface_flag:
-                    interface_dict['adjacency_formation'] = adjacency_formation
+                    interface_dict['adjacency_formation'] = adjacency_formation_state
                 else:
                     topology_dict['adjacency_formation'] = adjacency_formation_state
 
@@ -667,12 +647,9 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r4.match(line)
             if result:
                 group = result.groupdict()
-                prefix_advertisement_state = group['prefix_advertisement_state'].lower()
-                prefix_advertisement = False
-                if prefix_advertisement_state == 'enabled':
-                    prefix_advertisement = True
+                prefix_advertisement_state = group['prefix_advertisement_state'].strip()
                 if interface_flag:
-                    interface_dict['prefix_advertisement'] = prefix_advertisement
+                    interface_dict['prefix_advertisement'] = prefix_advertisement_state
                 else:
                     topology_dict['prefix_advertisement'] = prefix_advertisement_state
 
@@ -770,8 +747,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r14.match(line)
             if result:                
                 group = result.groupdict()
-                lsp_pacing_interval = group['lsp_pacing_interval']
-                level_dict['lsp_pacing_interval'] = lsp_pacing_interval
+                lsp_pacing_interval = int(group['lsp_pacing_interval'])
+                level_dict['lsp_pacing_interval_ms'] = lsp_pacing_interval
 
                 continue
 
@@ -789,7 +766,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if result:
                 group = result.groupdict()
                 hello_interval = int(group['hello_interval'])
-                level_dict['hello_interval'] = hello_interval
+                level_dict['hello_interval_sec'] = hello_interval
 
                 continue
 
@@ -805,7 +782,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             r18 = re.compile(r'CLNS\s+I\/O')
             result = r18.match(line)
             if result:
-                clns_dict = interface_dict.setdefault('clns', {})
+                clns_dict = interface_dict.setdefault('clns_io', {})
                 clns_flag = True
                 continue
 
@@ -881,15 +858,9 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r24.match(line)            
             if result:
                 group = result.groupdict()
-                mpls_stack_pri = int(group['mpls_stack_pri'])
-                mpls_stack_bkp = int(group['mpls_stack_bkp'])
-                mpls_stack_srte = int(group['mpls_stack_srte'])
+                mpls_stack = group['mpls_max_label_stack'].strip()
                 mpls_dict = topology_dict.setdefault('mpls', {})                
-                mpls_dict['max_label_stack'] = {
-                    'pri':mpls_stack_pri,
-                    'bkp':mpls_stack_bkp,
-                    'srte':mpls_stack_srte,
-                }
+                mpls_dict['mpls_max_label_stack'] = mpls_stack
 
                 continue
 
@@ -902,7 +873,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 state_level_1 = group['state_level_1']
                 state_level_2 = group['state_level_2']
                 sync_level_dict = mpls_dict\
-                    .setdefault('sync', {})\
+                    .setdefault('ldp_sync', {})\
                     .setdefault('level', {})
 
                 sync_level_dict[level_1] = state_level_1
@@ -976,10 +947,10 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r31.match(line)
             if result:
                 group = result.groupdict()
-                lsp_timer = group['lsp_timer']
+                lsp_timer = int(group['lsp_timer'])
                 lsp_dict = interface_dict\
                     .setdefault('lsp', {})
-                lsp_dict['expiration'] = lsp_timer
+                lsp_dict['transmit_timer_expires_ms'] = lsp_timer
 
                 continue
 
@@ -997,12 +968,9 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if result:
                 group = result.groupdict()
                 number_lsp_send = int(group['number_lsp_send'])
-                time_to_sent = group['time_to_sent']
-                lsp_dict['send_status'] = {
-                    'quantity': number_lsp_send,
-                    'time': time_to_sent,
-                }
-
+                time_to_sent = int(group['time_to_sent'])
+                lsp_dict['lsp_transmit_back_to_back_limit_window_msec'] = time_to_sent
+                lsp_dict['lsp_transmit_back_to_back_limit'] = number_lsp_send
                 continue
 
             # LAN ID:                 R3.07
@@ -1032,8 +1000,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             result = r36.match(line)
             if result:
                 group = result.groupdict()
-                next_lan_iih = group['next_lan_iih']
-                level_dict['next_lan_iih'] = next_lan_iih
+                next_lan_iih = int(group['next_lan_iih'])
+                level_dict['next_lan_iih_sec'] = next_lan_iih
 
                 continue
 
@@ -1052,9 +1020,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 group = result.groupdict()
                 layer = int(group['layer'])
                 layer_dict = clns_dict\
-                    .setdefault('membership', {})\
-                    .setdefault('layer', {})\
-                    .setdefault(layer, {})                    
+                    .setdefault('layer2_mcast_groups_membership', {})         
 
                 continue
 
@@ -1064,13 +1030,20 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if result:
                 group = result.groupdict()
                 level = int(group['level'])
-                iss_state = False
-                if group['iss_state'].lower() == 'yes':
-                    iss_state = True
-                layer_dict.setdefault('level', {})\
-                    .setdefault(level, {})\
-                    .setdefault('iss', iss_state)
+                iss_state = group['iss_state']
+                layer_dict['all_level_{level}_iss'\
+                    .format(level=level)] = iss_state
                     
+                continue
+
+            # All ISs:              Yes
+            result = r40.match(line)
+            if result:
+                group = result.groupdict()
+                all_iss = group['all_iss']
+                layer_dict['all_level_1_iss'] = all_iss
+                layer_dict['all_level_2_iss'] = all_iss
+
                 continue
 
         return parsed_output
