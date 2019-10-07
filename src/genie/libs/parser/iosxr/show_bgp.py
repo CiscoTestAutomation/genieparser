@@ -5294,7 +5294,7 @@ class ShowBgpVrfDbVrfAllSchema(MetaParser):
                 {'id': str,
                 'rd': str,
                 'ref': int,
-                'afs': str,
+                'afs': list,
                 },
             },
         }
@@ -5318,6 +5318,7 @@ class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
 
         # Init
         parsed_dict = {}
+        vrf_dict = {}
 
         # VRF                              ID          RD                REF AFs
         # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u, 
@@ -5333,7 +5334,7 @@ class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
                          ' +(?P<ref>(\d+)) +(?P<afs>(.*))$')
 
         #                                                                  Vv6u, L2evpn
-        p2 = re.compile(r'^(?P<afs>(V))$')
+        p2 = re.compile(r'^(?P<item>([a-zA-Z0-9\,\s]+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5356,7 +5357,15 @@ class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
                 vrf_dict['id'] = group['id']
                 vrf_dict['rd'] = group['rd']
                 vrf_dict['ref'] = int(group['ref'])
-                vrf_dict['afs'] = group['afs']
+                vrf_dict['afs'] = group['afs'].strip().replace(",", "").split()
+                continue
+
+            #                                                                  Vv6u, L2evpn
+            m = p2.match(line)
+            if m:
+                if vrf_dict:
+                    afs = m.groupdict()['item'].strip().replace(",", "").split()
+                    vrf_dict['afs'].extend(afs)
                 continue
 
         return parsed_dict

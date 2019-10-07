@@ -607,37 +607,35 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
     golden_parsed_output1 = {
         'nodes': 
             {'0/0/CPU0': 
-                {'entries': 
-                    {'00:00:03:00:01:0c': 
-                        {'encap_id': '0x301d',
-                        'gport': '0xc000001',
-                        'mac': '00:00:03:00:01:0c',
-                        'trunk': 1,
-                        'vlan': 4},
-                    'fc:00:00:01:00:02': 
-                        {'encap_id': '0xffffffff',
-                        'gport': '0x9800401d',
-                        'mac': 'fc:00:00:01:00:02',
-                        'static': True,
-                        'vlan': 2522},
-                    'fc:00:00:01:00:0b': 
-                        {'encap_id': '0x3001',
-                        'gport': '0xc000000',
-                        'mac': 'fc:00:00:01:00:0b',
-                        'static': True,
-                        'trunk': 0,
-                        'vlan': 2524},
-                    'fc:00:00:01:00:8b': 
-                        {'encap_id': '0x2007',
-                        'gport': '0x8000048',
-                        'mac': 'fc:00:00:01:00:8b',
-                        'vlan': 2544},
-                    'fc:00:00:01:00:9b': 
-                        {'encap_id': '0x2007',
-                        'gport': '0x8000048',
-                        'mac': 'fc:00:00:01:00:9b',
-                        'trunk': 0,
-                        'vlan': 2544}}}}}
+                {'vlan': 
+                    {4: 
+                        {'mac': 
+                            {'00:00:03:00:01:0c': 
+                                {'encap_id': '0x301d',
+                                'gport': '0xc000001',
+                                'trunk': 1}}},
+                    2522: 
+                        {'mac': 
+                            {'fc:00:00:01:00:02': 
+                                {'encap_id': '0xffffffff',
+                                'gport': '0x9800401d',
+                                'static': True}}},
+                    2524: 
+                        {'mac': 
+                            {'fc:00:00:01:00:0b': 
+                                {'encap_id': '0x3001',
+                                'gport': '0xc000000',
+                                'static': True,
+                                'trunk': 0}}},
+                    2544: 
+                        {'mac': 
+                            {'fc:00:00:01:00:8b': 
+                                {'encap_id': '0x2007',
+                                'gport': '0x8000048'},
+                            'fc:00:00:01:00:9b': 
+                                {'encap_id': '0x2007',
+                                'gport': '0x8000048',
+                                'trunk': 0}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:UUT4#show controller fia diagshell 0 "l2 show" location all

@@ -27,14 +27,16 @@ class ShowControllersFiaDiagshellL2showLocationSchema(MetaParser):
     schema = {
         'nodes':
             {Any():
-                {'entries':
+                {'vlan':
                     {Any():
-                        {'mac': str,
-                         'vlan': int,
-                         'gport': str,
-                         Optional('trunk'): int,
-                         Optional('static'): bool,
-                        'encap_id': str,
+                        {'mac': 
+                            {Any():
+                                {'encap_id': str,
+                                'gport': str,
+                                Optional('trunk'): int,
+                                Optional('static'): bool
+                                },
+                            },
                         },
                     },
                 },
@@ -95,10 +97,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                mac_dict = nodes_dict.setdefault('entries', {}).\
+                mac_dict = nodes_dict.setdefault('vlan', {}).\
+                                      setdefault(int(group['vlan']), {}).\
+                                      setdefault('mac', {}).\
                                       setdefault(group['mac'], {})
-                mac_dict['mac'] = group['mac']
-                mac_dict['vlan'] = int(group['vlan'])
                 mac_dict['gport'] = group['gport']
                 if group['b_static']:
                     mac_dict['static'] = bool(group['b_static'])

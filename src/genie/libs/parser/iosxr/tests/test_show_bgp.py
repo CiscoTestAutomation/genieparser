@@ -8843,47 +8843,47 @@ class TestShowBgpVrfDbVrfAll(unittest.TestCase):
     golden_parsed_output1 = {
         'vrf':
             {'BTV-nPVR-MULTICAST-IAAS':
-                {'afs': 'v4u',
+                {'afs': ['v4u'],
                 'id': '0x60000004',
                 'rd': '172.16.2.88:1',
                 'ref': 4},
             'ES:GLOBAL':
-                {'afs': 'L2evpn',
+                {'afs': ['L2evpn'],
                 'id': '-',
                 'rd': '172.16.2.88:0',
                 'ref': 2},
             'EVPN-Multicast-BTV':
-                {'afs': 'L2evpn',
+                {'afs': ['L2evpn'],
                 'id': '-',
                 'rd': '172.16.2.88:1000',
                 'ref': 2},
             'NOVI-TST':
-                {'afs': 'v4u',
+                {'afs': ['v4u'],
                 'id': '0x60000001',
                 'rd': '172.16.2.88:0',
                 'ref': 4},
             'VPWS:10293':
-                {'afs': 'L2evpn',
+                {'afs': ['L2evpn'],
                 'id': '-',
                 'rd': '172.16.2.88:10293',
                 'ref': 2},
             'VPWS:2000':
-                {'afs': 'L2evpn',
+                {'afs': ['L2evpn'],
                 'id': '-',
                 'rd': '172.16.2.88:2000',
                 'ref': 2},
             'VPWS:2078':
-                {'afs': 'L2evpn',
+                {'afs': ['L2evpn'],
                 'id': '-',
                 'rd': '172.16.2.88:2078',
                 'ref': 2},
             'default':
-                {'afs': 'v4u, Vv4u, v6u,',
+                {'afs': ['v4u', 'Vv4u', 'v6u', 'Vv6u', 'L2evpn'],
                 'id': '0x60000000',
                 'rd': '0:0:0',
                 'ref': 8},
             'test_ipv6_overlay':
-                {'afs': 'v4u, v6u',
+                {'afs': ['v4u', 'v6u'],
                 'id': '0x0',
                 'rd': '0:0:0',
                 'ref': 2}}}
