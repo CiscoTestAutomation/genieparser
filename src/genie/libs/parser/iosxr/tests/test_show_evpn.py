@@ -662,11 +662,31 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
                                 'ether_tag': '1',
                                 'label': '29348',
                                 'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        1: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29213',
+                                        },
+                                    },
+                                },
                             },
                             3: {
                                 'ether_tag': '3',
                                 'label': '29352',
                                 'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        2: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29224',
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -681,74 +701,74 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
                                 'ether_tag': '1',
                                 'label': '29350',
                                 'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        3: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29340',
+                                        },
+                                    },
+                                },
                             },
                             3: {
                                 'ether_tag': '2',
                                 'label': '29349',
                                 'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        4: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29216',
+                                        },
+                                        5: {
+                                            'tep_id': '0x00000000',
+                                            'df_role': '(B)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29341',
+                                        },
+                                    },
+                                },
                             },
                             4: {
                                 'ether_tag': '3',
                                 'label': '29355',
                                 'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        6: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29352',
+                                        },
+                                    },
+                                },
                             },
                             5: {
                                 'ether_tag': '4',
                                 'label': '29354',
                                 'encap': 'MPLS',
+                                'summary_pathlist': {
+                                    'index': {
+                                        7: {
+                                            'tep_id': '0xffffffff',
+                                            'df_role': '(P)',
+                                            'nexthop': '192.168.0.3',
+                                            'label': '29226',
+                                        },
+                                        8: {
+                                            'tep_id': '0x00000000',
+                                            'df_role': '(B)',
+                                            'nexthop': '192.168.0.4',
+                                            'label': '29353',
+                                        },
+                                    },
+                                },
                             },
-                        },
-                    },
-                },
-                'summary_pathlist': {
-                    'index': {
-                        1: {
-                            'tep_id': '0xffffffff',
-                            'df_role': '(P)',
-                            'nexthop': '192.168.0.3',
-                            'label': '29213',
-                        },
-                        2: {
-                            'tep_id': '0xffffffff',
-                            'df_role': '(P)',
-                            'nexthop': '192.168.0.3',
-                            'label': '29224',
-                        },
-                        3: {
-                            'tep_id': '0xffffffff',
-                            'df_role': '(P)',
-                            'nexthop': '192.168.0.4',
-                            'label': '29340',
-                        },
-                        4: {
-                            'tep_id': '0xffffffff',
-                            'df_role': '(P)',
-                            'nexthop': '192.168.0.3',
-                            'label': '29216',
-                        },
-                        5: {
-                            'tep_id': '0x00000000',
-                            'df_role': '(B)',
-                            'nexthop': '192.168.0.4',
-                            'label': '29341',
-                        },
-                        6: {
-                            'tep_id': '0xffffffff',
-                            'df_role': '(P)',
-                            'nexthop': '192.168.0.4',
-                            'label': '29352',
-                        },
-                        7: {
-                            'tep_id': '0xffffffff',
-                            'df_role': '(P)',
-                            'nexthop': '192.168.0.3',
-                            'label': '29226',
-                        },
-                        8: {
-                            'tep_id': '0x00000000',
-                            'df_role': '(B)',
-                            'nexthop': '192.168.0.4',
-                            'label': '29353',
                         },
                     },
                 },

@@ -1089,21 +1089,21 @@ class ShowEvpnInternalLabelSchema(MetaParser):
                             Any(): {
                                 'ether_tag': str,
                                 'label': str,
-                                Optional('encap'): str
+                                Optional('encap'): str,
+                                Optional('summary_pathlist'): {
+                                    'index': {
+                                        Any(): {
+                                            'tep_id': str,
+                                            'df_role': str,
+                                            'nexthop': str,
+                                            'label': str
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 },
-                Optional('summary_pathlist'): {
-                    'index': {
-                        Any(): {
-                            'tep_id': str,
-                            'df_role': str,
-                            'nexthop': str,
-                            'label': str
-                        }
-                    }
-                }
             }
         }
     }
@@ -1178,7 +1178,7 @@ class ShowEvpnInternalLabel(ShowEvpnInternalLabelSchema):
                 nexthop = group['nexthop']
                 label = group['label']
                 summary_pathlist_index += 1
-                summary_pathlist_dict = evi_dict.setdefault('summary_pathlist', {}). \
+                summary_pathlist_dict = segment_id_dict.setdefault('summary_pathlist', {}). \
                     setdefault('index', {}). \
                     setdefault(summary_pathlist_index, {})
 
