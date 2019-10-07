@@ -627,15 +627,15 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'esi': '0012.1200.0000.0000.0002',
                 'eth_tag': 0,
                 'evi': 5,
-                'internal_label': 24114,
+                'label': 24114,
                 'mp_resolved': True,
-                'mp_single_active': 'Remote single-active',
+                'mp_info': 'Remote single-active',
                 'pathlists':
-                    {'es_ead':
+                    {'ead_es':
                         {'nexthop':
                             {'10.10.10.10':
                                 {'label': 0}}},
-                    'evi_ead':
+                    'ead_evi':
                         {'nexthop':
                             {'10.10.10.10':
                                 {'label': 24012}}},
@@ -648,7 +648,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                     'summary':
                         {'nexthop':
                             {'10.10.10.10':
-                                {'flag': 'B',
+                                {'df_role': 'B',
                                 'label': 24012},
                             '10.70.20.20':
                                 {'label': 24212}}}}},
@@ -656,7 +656,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'esi': '0100.0000.acce.5500.0100',
                 'eth_tag': 0,
                 'evi': 100,
-                'internal_label': 24005}}}
+                'label': 24005}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/0/CPU0:PE1#show evpn internal-label
@@ -682,7 +682,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'esi': 'ff00.0002.be23.ce01.0000',
                 'eth_tag': 0,
                 'evi': 145,
-                'internal_label': 24005,
+                'label': 24005,
                 'pathlists':
                     {'summary':
                         {'nexthop':
@@ -706,11 +706,11 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'encap': 'VXLAN',
                 'esi': '0001.0407.0405.0607.0811',
                 'eth_tag': 0,
-                'internal_label': 24002,
+                'mp_internal_label': 24002,
                 'mp_resolved': True,
-                'mp_single_active': 'Remote all-active',
+                'mp_info': 'Remote all-active',
                 'pathlists': 
-                    {'es_ead': 
+                    {'ead_es': 
                         {'nexthop': 
                             {'123.1.1.2': 
                                 {'label': 0}}},
@@ -719,7 +719,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                             {'123.1.1.2': 
                                 {'label': 16001,
                                 'value': '0x03000001'}}},
-                    'evi_ead': 
+                    'ead_evi': 
                         {'nexthop': 
                             {'123.1.1.2': 
                                 {'label': 16001}}}},
@@ -728,11 +728,11 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'encap': 'VXLAN',
                 'esi': '0001.0407.0405.0607.0811',
                 'eth_tag': 0,
-                'internal_label': 24003,
+                'mp_internal_label': 24003,
                 'mp_resolved': True,
-                'mp_single_active': 'Remote all-active',
+                'mp_info': 'Remote all-active',
                 'pathlists': 
-                    {'es_ead': 
+                    {'ead_es': 
                         {'nexthop': 
                             {'123.1.1.2': 
                                 {'label': 0}}},
@@ -741,7 +741,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                             {'123.1.1.2': 
                                 {'label': 16002,
                                     'value': '0x03000001'}}},
-                    'evi_ead': 
+                    'ead_evi': 
                         {'nexthop': 
                             {'123.1.1.2': 
                                 {'label': 16002}}}},
@@ -750,9 +750,9 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'encap': 'VXLAN',
                 'esi': '0001.0407.0405.0607.0811',
                 'eth_tag': 0,
-                'internal_label': 24004,
+                'mp_internal_label': 24004,
                 'mp_resolved': True,
-                'mp_single_active': 'Remote all-active',
+                'mp_info': 'Remote all-active',
                 'vpn_id': 16003}}}
 
     golden_output3 = {'execute.return_value': '''
