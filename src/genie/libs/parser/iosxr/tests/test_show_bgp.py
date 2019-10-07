@@ -8929,28 +8929,32 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'route_distinguisher': 
-            {'7.7.7.7:3': 
-                {'prefix': 
-                    {'[1][0009.0807.0605.0403.0201][0]':
-                        {'neighbor': '5.5.5.5',
-                        'path_info': 
-                            {'neighbor': 'Local',
-                            'neighbor_router_id': '7.7.7.7',
-                            'flags': ['valid', 'redistributed', 'best', 'import-candidate'],
-                            'rx_path_id': 0,
-                            'local_path_id': 0,
-                            'version': 12,
-                            'inbound_attributes': 
-                                {'extcomm': 'extcomm',
-                                'nexthop': '0.0.0.0',
-                                'origin': 'IGP'},                                                                                                                         
-                            'outbound_attributes':
-                                {'extcomm': 'org as extcomm',
-                                'extended_community': ['RT:100:2'],
-                                'nexthop': '7.7.7.7',
-                                'origin': 'IGP'}},
-                        'prefix_length': 120}}}}}
+        'neighbor': 
+            {'5.5.5.5': 
+                {'address_family': 
+                    {'l2vpn evpn RD 7.7.7.7:3':
+                        {'advertised': 
+                            {'[1][0009.0807.0605.0403.0201][0]/120': 
+                                {'index': 
+                                    {1: 
+                                        {'neighbor': 'Local',
+                                        'neighbor_router_id': '7.7.7.7',
+                                        'flags': ['valid', 'redistributed', 'best', 'import-candidate'],
+                                        'rx_path_id': 0,
+                                        'local_path_id': 0,
+                                        'version': 12,
+                                        'inbound_attributes': 
+                                            {'community_attributes': 'EXTCOMM',
+                                            'nexthop': '0.0.0.0',
+                                            'aspath': "",
+                                            'origin': 'IGP',
+                                            'extended_community': []},
+                                        'outbound_attributes': 
+                                            {'community_attributes': 'ORG AS EXTCOMM',
+                                            'nexthop': '7.7.7.7',
+                                            'aspath': "",
+                                            'origin': 'IGP',
+                                            'extended_community': ['SoO:0.0.0.0:0', 'RT:100:7']}}}}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
         RP/0/RP0/CPU0:leafZ#sh bgp l2vpn evpn advertised
@@ -8973,7 +8977,7 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
             ORG AS EXTCOMM 
             origin: IGP  
             aspath: 
-            extended community: RT:100:2
+            extended community: SoO:0.0.0.0:0 RT:100:7
         '''}
 
 
