@@ -4,6 +4,7 @@ show xsconnect parser class
 
   supported commands:
    *  show l2vpn xconnect
+   *  show l2vpn xconnect brief
    *  show l2vpn xconnect detail
    *  show l2vpn xconnect mp2mp detail
 """

@@ -5281,74 +5281,81 @@ class ShowBgpInstanceAllSessions(ShowBgpSessions):
         return super().cli(output=out)
 
 # ====================================
+# Schema for 'show bgp vrf-db vrf all'
+# ====================================
+class ShowBgpVrfDbVrfAllSchema(MetaParser):
+    ''' Schema for 'show bgp vrf-db vrf all' '''
+
+    schema = {
+        'vrf': 
+            {Any():
+                {'id': str,
+                'rd': str,
+                'ref': int,
+                'afs': str,
+                },
+            },
+        }
+
+# ====================================
 # Parser for 'show bgp vrf-db vrf all'
 # ====================================
+class ShowBgpVrfDbVrfAll(ShowBgpVrfDbVrfAllSchema):
+    ''' Parser for 'show bgp vrf-db vrf all' '''
 
-class ShowBgpVrfDbVrfAll(MetaParser):
-    """Parser for show bgp vrf-db vrf all"""
-
-    # TODO schema
     cli_command = 'show bgp vrf-db vrf all'
-    def cli(self,output=None):
-        """ parsing mechanism: cli
-        """
+
+    def cli(self, output=None):
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        result = {
-            'entries': [],
-        }
+        # Init
+        parsed_dict = {}
 
-        vrf_entry = None
-        afs_col = None
+        # VRF                              ID          RD                REF AFs
+        # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u, 
+        # NOVI-TST                         0x60000001  172.16.2.88:0     4   v4u
+        # test_ipv6_overlay                0x0         0:0:0             2   v4u, v6u
+        # BTV-nPVR-MULTICAST-IAAS          0x60000004  172.16.2.88:1     4   v4u
+        # ES:GLOBAL                        -           172.16.2.88:0     2   L2evpn
+        # VPWS:2000                        -           172.16.2.88:2000  2   L2evpn
+        # VPWS:2078                        -           172.16.2.88:2078  2   L2evpn
+        # VPWS:10293                       -           172.16.2.88:10293 2   L2evpn
+        # EVPN-Multicast-BTV               -           172.16.2.88:1000  2   L2evpn
+        p1 = re.compile(r'^(?P<vrf>(\S+)) +(?P<id>([x0-9\-]+)) +(?P<rd>(\S+))'
+                         ' +(?P<ref>(\d+)) +(?P<afs>(.*))$')
+
+        #                                                                  Vv6u, L2evpn
+        p2 = re.compile(r'^(?P<afs>(V))$')
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
-            if not line:
-                continue
-
-            if afs_col is not None:
-                # Continuation of address families column
-
-                if len(line) >= afs_col \
-                        and line[:afs_col].isspace():
-                    # default                          0x60000000  0:0:0           6   v4u, Vv4u,
-                    #                                                                  L2evpn
-                    assert vrf_entry['afs'][-1] == ''
-                    vrf_entry['afs'][-1:] = [s.strip() for s in line[afs_col:].split(',')]
-                    if vrf_entry['afs'][-1] != '':
-                        afs_col = None
-                    continue
-
-                logger.warning('Failed to parse continuation of VRF address families')
-                afs_col = None
-
-            # VRF                              ID          RD              REF AFs
-
-            # irb1                             0x6000003a  192.0.0.0:2     4   v4u
-            # default                          0x60000000  0:0:0           6   v4u, Vv4u,
-            # bd1                              -           192.0.0.3:1     2   L2evpn
-            # bd2                              -           192.0.0.3:2     2   L2evpn
-            # ES:GLOBAL                        -           192.0.0.3:0     2   L2evpn
-            m = re.match(r'^(?P<name>\S+)' r' +(?:-|(?P<id>0x[A-Fa-f0-9]+))' r' +(?P<rd>\S+)' r' +(?P<refs>\d+)' r' +(?P<afs>.+)' r'$', line)
+            # VRF                              ID          RD                REF AFs
+            # default                          0x60000000  0:0:0             8   v4u, Vv4u, v6u, 
+            # NOVI-TST                         0x60000001  172.16.2.88:0     4   v4u
+            # test_ipv6_overlay                0x0         0:0:0             2   v4u, v6u
+            # BTV-nPVR-MULTICAST-IAAS          0x60000004  172.16.2.88:1     4   v4u
+            # ES:GLOBAL                        -           172.16.2.88:0     2   L2evpn
+            # VPWS:2000                        -           172.16.2.88:2000  2   L2evpn
+            # VPWS:2078                        -           172.16.2.88:2078  2   L2evpn
+            # VPWS:10293                       -           172.16.2.88:10293 2   L2evpn
+            # EVPN-Multicast-BTV               -           172.16.2.88:1000  2   L2evpn
+            m = p1.match(line)
             if m:
-                vrf_entry = {
-                    'name': m.group('name'),
-                    'id': m.group('id') and eval(m.group('id')),
-                    'rd': m.group('rd'),
-                    'refs': int(m.group('refs')),
-                    'afs': [s.strip() for s in m.group('afs').split(',')],
-                }
-                result['entries'].append(vrf_entry)
-                # NOTE: a ',' at the end of afs will leave an empty element which will be completed later
-                if vrf_entry['afs'][-1] == '':
-                    afs_col = m.span('afs')[0]
+                group = m.groupdict()
+                vrf_dict = parsed_dict.setdefault('vrf', {}).\
+                                        setdefault(group['vrf'], {})
+                vrf_dict['id'] = group['id']
+                vrf_dict['rd'] = group['rd']
+                vrf_dict['ref'] = int(group['ref'])
+                vrf_dict['afs'] = group['afs']
                 continue
 
-        return result
+        return parsed_dict
 
 
 # ===========================================================
