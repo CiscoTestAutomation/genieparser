@@ -84,6 +84,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('last_input'): str,
                 Optional('last_output'): str,
                 Optional('output_hang'): str, 
+                Optional('autostate'): bool,
                 Optional('queues'): {             
                     Optional('input_queue_size'): int,
                     Optional('input_queue_max'): int,
@@ -209,10 +210,14 @@ class ShowInterfaces(ShowInterfacesSchema):
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
-            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<line_protocol>\w+)'
-                              '( *\((?P<attribute>\S+)\))?$')
+            # Dialer1 is up (spoofing), line protocol is up (spoofing)
+            
+            #p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
+                            #  '\S+)?, +line +protocol +is +(?P<line_protocol>\w+)( '
+                            #  '*\((?P<attribute>\S+)\))?.*$')
+            p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
+                             '+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
+                             '*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
             p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
                               ' +(?P<enabled>[\w\s]+),'
                               ' +line +protocol +is +(?P<line_protocol>\w+)'
@@ -225,6 +230,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 connected = m.groupdict()['attribute']
+                
+                if m.groupdict()['autostate']:
+                    autostate = m.groupdict()['autostate'].lower()
+                else:
+                    autostate = None
 
                 if interface not in interface_dict:
                     interface_dict[interface] = {}
@@ -248,6 +258,13 @@ class ShowInterfaces(ShowInterfacesSchema):
                         interface_dict[interface]['connected'] = True
                     else:
                         interface_dict[interface]['connected'] = False
+
+                if autostate:
+                    if autostate == 'enabled':
+                        interface_dict[interface]['autostate'] = True
+                    else:
+                        interface_dict[interface]['autostate'] = False
+
                 continue
 
             # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
@@ -270,7 +287,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 if phys_address:
                     interface_dict[interface]['phys_address'] = phys_address
                 continue
-
             # Description: desc
             # Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
             p3 = re.compile(r'^Description: *(?P<description>.*)$')

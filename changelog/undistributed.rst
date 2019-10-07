@@ -426,3 +426,9 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed regex to accommodate more outputs
