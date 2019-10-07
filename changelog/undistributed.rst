@@ -39,7 +39,8 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowNveInterface:
         * Change {intf} and argument 'intf' into {interface} and 'interface'
-
+    * Update ShowInterface
+        * Fixed parser ShowInterface to match duplex and speed line
 --------------------------------------------------------------------------------
                                 EIGRP
 --------------------------------------------------------------------------------
@@ -64,6 +65,8 @@
         * Add command 'show mpls forwarding-table {prefix}'
         * update regex to support local label 'None'
         * update schema to support 'Merged' key
+    * Update ShowMplsForwardingTableDetail
+        * Add command 'show mpls forwarding-table labels {label} detail'
 * IOSXR
     * Added ShowMplsLabelTableDetail for:
         'show mpls label table detail'
@@ -121,6 +124,7 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
+
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
@@ -375,9 +379,17 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
+* IOSXR:
+    * Added ShowEvpnEthernetSegment for:
+        * show evpn ethernet-segment
+    * Added ShowEvpnEthernetSegmentDetail for:
+        * show evpn ethernet-segment detail
+    * Added ShowEvpnEthernetSegmentPrivate for:
+        * show evpn ethernet-segment private
+    * Added ShowEvpnEthernetSegmentEsiDetail for:
+        * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
-
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -397,6 +409,14 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
+    * Added ShowL2vpnBridgeDomainSummary for:
+        * show l2vpn bridge-domain summary
+    * Added ShowL2vpnBridgeDomainBrief for:
+        * show l2vpn bridge-domain brief
+    * Added ShowL2vpnBridgeDomainDetail for:
+        * show l2vpn bridge-domain detail
+    * Added ShowL2vpnMacLearning for:
+        * show l2vpn mac-learning {mac_type} all location {location}
     * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
         * show l2vpn forwarding bridge-domain mac-address location {location}
         * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
@@ -428,3 +448,5 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+    * Added parser ShowIsis for:
+        * show isis
