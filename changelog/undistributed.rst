@@ -147,6 +147,8 @@
         * show ip ospf {process_id} segment-routing adjacency-sid
     * Updated ShowIpOspfInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowIpOspfInterface:
+        * added 'teapp' section to parse more varied output
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
