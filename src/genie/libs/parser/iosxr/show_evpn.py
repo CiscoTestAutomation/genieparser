@@ -250,12 +250,6 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
 
         # Init
         parsed_dict = {}
-        type_dict = {
-            'MAC': 'mac',
-            'EAD/ES': 'ead_es',
-            'EAD/EVI': 'ead_evi',
-            'Summary': 'summary',
-            }
 
         # EVI   Ethernet Segment Id                     EtherTag Label  
         # VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label
@@ -342,7 +336,8 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
             if m:
                 group = m.groupdict()
                 pathlists_dict = sub_dict.setdefault('pathlists', {}).\
-                                        setdefault(type_dict[group['type']], {})
+                                    setdefault(group['type'].lower().\
+                                                replace("/", "_"), {})
                 type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
                                               setdefault(group['nexthop'], {})
                 type_nh_dict['label'] = int(group['label'])
