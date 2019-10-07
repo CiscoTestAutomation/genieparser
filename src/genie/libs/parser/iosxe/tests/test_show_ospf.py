@@ -1354,16 +1354,21 @@ class test_show_ip_ospf_interface(unittest.TestCase):
                                                 },
                                                 'teapp': {
                                                     'topology_id': '0x0',
-                                                    'teapp': 'SRTE',
-                                                    'affinity': {
-                                                        'length': 32,
-                                                        'bits': '0x00000010',
-                                                    },
-                                                    'extended_affinity': {
-                                                        'length': 32,
-                                                        'bits': '0x00000010',
+                                                    'SRTE': {
+                                                        'affinity': {
+                                                            'length': 32,
+                                                            'bits': '0x00000010',
+                                                        },
+                                                        'extended_affinity': {
+                                                            'length': 32,
+                                                            'bits': '0x00000010',
+                                                        },
                                                     },
                                                 },
+                                                'sr_policy_manager': {
+                                                    'te_opaque_lsa': 'Source of link information OSPF',
+                                                },
+                                                'sr_mpls_enabled': True,
                                             },
                                         },
                                     },
