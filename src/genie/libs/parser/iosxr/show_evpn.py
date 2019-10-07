@@ -448,6 +448,7 @@ class ShowEvpnInternalLabelDetailSchema(MetaParser):
         Optional('vpn_id'):
             {Any():
                 {'vpn_id': int,
+                'encap': str,
                 'esi': str,
                 'eth_tag': int,
                 'internal_label': int,
@@ -483,6 +484,7 @@ class ShowEvpnInternalLabelDetailSchema(MetaParser):
                             {Any():
                                 {'label': int,
                                 Optional('flag'): str,
+                                Optional('value'): str,
                                 },
                             },
                         },
@@ -556,7 +558,10 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         p5 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<flag>(\S+))\))? +(?P<label>(\d+))$')
 
         # Summary pathlist:
+        p6 = re.compile(r'^Summary pathlist:$')
+
         #   0x03000001 123.1.1.2                                16002
+        p7 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -567,11 +572,10 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 group = m.groupdict()
                 sub_dict = parsed_dict.setdefault('evi', {}).\
                                        setdefault(int(group['evi']), {})
-                for key, value in group.items():
-                    if re.match('[a-z]+', value):
-                        sub_dict[key] = value
-                    else:
-                        sub_dict[key] = int(value)
+                sub_dict['evi'] = int(group['evi'])
+                sub_dict['esi'] = group['esi']
+                sub_dict['eth_tag'] = int(group['eth_tag'])
+                sub_dict['internal_label'] = int(group['internal_label'])
                 continue
 
             # 16001      VXLAN  0001.0407.0405.0607.0811    0          24002
@@ -581,11 +585,11 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 group = m.groupdict()
                 sub_dict = parsed_dict.setdefault('vpn_id', {}).\
                                        setdefault(int(group['vpn_id']), {})
-                for key, value in group.items():
-                    if re.match('[a-z]+', value):
-                        sub_dict[key] = value
-                    else:
-                        sub_dict[key] = int(value)
+                sub_dict['vpn_id'] = int(group['vpn_id'])
+                sub_dict['encap'] = group['encap']
+                sub_dict['esi'] =  group['esi']
+                sub_dict['eth_tag'] =  int(group['eth_tag'])
+                sub_dict['internal_label'] =  int(group['internal_label'])
                 continue
 
             # Multi-paths resolved: TRUE
@@ -621,6 +625,23 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 type_nh_dict['label'] = int(group['label'])
                 if group['flag']:
                     type_nh_dict['flag'] = group['flag']
+                continue
+
+            # Summary pathlist:
+            m = p6.match(line)
+            if m:
+                pathlists_dict = sub_dict.setdefault('pathlists', {}).\
+                                        setdefault('summary', {})
+                continue
+
+            #   0x03000001 123.1.1.2                                16002
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
+                                              setdefault(group['nexthop'], {})
+                type_nh_dict['label'] = int(group['label'])
+                type_nh_dict['value'] = group['value']
                 continue
 
         return parsed_dict

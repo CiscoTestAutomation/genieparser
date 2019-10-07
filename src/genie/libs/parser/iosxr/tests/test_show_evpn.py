@@ -109,7 +109,60 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
 
         '''}
 
-    golden_parsed_output3 = {}
+    golden_parsed_output3 = {
+        'vpn_id':
+            {16001:
+                {'encap': 'VXLAN',
+                'esi': '0001.0407.0405.0607.0811',
+                'eth_tag': 0,
+                'internal_label': 24002,
+                'mp_resolved': True,
+                'mp_single_active': 'Remote all-active',
+                'pathlists': 
+                    {'es_ead': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 0}}},
+                    'summary': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16001,
+                                'value': '0x03000001'}}},
+                    'evi_ead': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16001}}}},
+                'vpn_id': 16001},
+            16002:
+                {'encap': 'VXLAN',
+                'esi': '0001.0407.0405.0607.0811',
+                'eth_tag': 0,
+                'internal_label': 24003,
+                'mp_resolved': True,
+                'mp_single_active': 'Remote all-active',
+                'pathlists': 
+                    {'es_ead': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 0}}},
+                    'summary': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16002,
+                                    'value': '0x03000001'}}},
+                    'evi_ead': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16002}}}},
+                'vpn_id': 16002},
+            16003: 
+                {'encap': 'VXLAN',
+                'esi': '0001.0407.0405.0607.0811',
+                'eth_tag': 0,
+                'internal_label': 24004,
+                'mp_resolved': True,
+                'mp_single_active': 'Remote all-active',
+                'vpn_id': 16003}}}
 
     golden_output3 = {'execute.return_value': '''
         RP/0/RP0/CPU0:RGT-HVS-1#show evpn internal-label detail location 0/RP0/CPU0 
