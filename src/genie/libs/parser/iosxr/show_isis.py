@@ -331,116 +331,113 @@ class ShowIsisStatisticsSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
-                'vrf': {
+                
+                'psnp_cache': {
+                    'hits': int,
+                    'tries': int,
+                },
+                'csnp_cache': {
+                    'hits': int,
+                    'tries': int,
+                    'updates': int,
+                },
+                'lsp': {
+                    'checksum_errors_received': int,
+                    'dropped': int,
+                },
+                'upd': {
+                    'max_queue_size': int,
+                    'queue_size': int,
+                },
+                'snp': {
+                    'dropped': int
+                },
+                'transmit_time': {
+                    'hello': {
+                        'rate_per_sec': int,
+                        'average_transmit_time_sec': int,
+                        'average_transmit_time_nsec': int,
+                    },
+                    'csnp': {
+                        'rate_per_sec': int,
+                        'average_transmit_time_sec': int,
+                        'average_transmit_time_nsec': int,
+                    },
+                    'psnp': {
+                        'rate_per_sec': int,
+                        'average_transmit_time_sec': int,
+                        'average_transmit_time_nsec': int,
+                    },
+                    'lsp': {
+                        'rate_per_sec': int,
+                        'average_transmit_time_sec': int,
+                        'average_transmit_time_nsec': int,
+                    },
+                },
+                'process_time': {
+                    'hello': {
+                        'rate_per_sec': int,
+                        'average_process_time_sec': int,
+                        'average_process_time_nsec': int,
+                    },
+                    'csnp': {
+                        'rate_per_sec': int,
+                        'average_process_time_sec': int,
+                        'average_process_time_nsec': int,
+                    },
+                    'psnp': {
+                        'rate_per_sec': int,
+                        'average_process_time_sec': int,
+                        'average_process_time_nsec': int,
+                    },
+                    'lsp': {
+                        'rate_per_sec': int,
+                        'average_process_time_sec': int,
+                        'average_process_time_nsec': int,
+                    },
+                },
+                'level': {
                     Any(): {
-                        'psnp_cache': {
-                            'hits': int,
-                            'tries': int,
+                        'lsp_sourced': {
+                            'new': int,
+                            'refresh': int,
                         },
-                        'csnp_cache': {
-                            'hits': int,
-                            'tries': int,
-                            'updates': int,
-                        },
-                        'lsp': {
-                            'checksum_errors_received': int,
-                            'dropped': int,
-                        },
-                        'upd': {
-                            'max_queue_size': int,
-                            'queue_size': int,
-                        },
-                        'snp': {
-                            'dropped': int
-                        },
-                        'transmit_time': {
-                            'hello': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                            'csnp': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                            'psnp': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                            'lsp': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                        },
-                        'process_time': {
-                            'hello': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                            'csnp': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                            'psnp': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                            'lsp': {
-                                'rate': str,
-                                'average_transmit_time_1': str,
-                                'average_transmit_time_2': str,
-                            },
-                        },
+                        'address_family': {
+                            Any(): {
+                                'total_spf_calculation': int,
+                                'full_spf_calculation': int,
+                                'ispf_calculation': int,
+                                'next_hop_calculation': int,
+                                'partial_route_calculation': int,
+                                'periodic_spf_calculation': int,
+                            }
+                        }
+                    }
+                },
+                'interface': {
+                    Any(): {
                         'level': {
                             Any(): {
-                                'lsp': {
-                                    'new': int,
-                                    'refresh': int,
+                                Optional('lsp'): {
+                                    'sent': int,
+                                    'received': int,
+                                    'arrival_time_throttled': int,
+                                    'flooding_duplicates': int,
                                 },
-                                'topology': {
-                                    Any(): {
-                                        'total_spf_calculation': int,
-                                        'full_spf_calculation': int,
-                                        'ispf_calculation': int,
-                                        'next_hop_calculation': int,
-                                        'partial_route_calculation': int,
-                                        'periodic_spf_calculation': int,
-                                    }
-                                }
-                            }
-                        },
-                        'interface': {
-                            Any(): {
-                                'level': {
-                                    Any(): {
-                                        Optional('lsp'): {
-                                            'sent': int,
-                                            'received': int,
-                                            'arrival_time_throttled': int,
-                                            'flooding_duplicates': int,
-                                        },
-                                        Optional('csnp'):  {
-                                            'sent': int,
-                                            'received': int,
-                                        },
-                                        Optional('psnp'): {
-                                            'sent': int,
-                                            'received': int,
-                                        },
-                                        Optional('dr'): {
-                                            'elections': int
-                                        },
-                                        Optional('hello'): {
-                                            'sent': int,
-                                            'received': int,
-                                        }
-                                    }
+                                Optional('csnp'):  {
+                                    'sent': int,
+                                    'received': int,
+                                },
+                                Optional('psnp'): {
+                                    'sent': int,
+                                    'received': int,
+                                },
+                                Optional('dr'): {
+                                    'elections': int
+                                },
+                                Optional('hello'): {
+                                    'sent': int,
+                                    'received': int,
                                 }
                             }
                         }
@@ -502,20 +499,20 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
         r11 = re.compile(r'Average\s+process\s+times\s+and\s+rate\s*:')
 
         # Hello:          0 s,      66473 ns,         15/s
-        r12 = re.compile(r'Hello\s*:\s+(?P<time1>\d+\s*\w+)\,\s+'
-                          '(?P<time2>\d+\s*\w+)\,\s+(?P<rate>\d+/\w+)')
+        r12 = re.compile(r'Hello\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
+                          '(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # CSNP:           0 s,      26914 ns,          1/s
-        r13 = re.compile(r'CSNP\s*:\s+(?P<time1>\d+\s*\w+)\,\s+'
-                          '(?P<time2>\d+\s*\w+)\,\s+(?P<rate>\d+/\w+)')
+        r13 = re.compile(r'CSNP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
+                          '(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # PSNP:           0 s,       4113 ns,          0/s
-        r14 = re.compile(r'PSNP\s*:\s+(?P<time1>\d+\s*\w+)\,\s+'
-                          '(?P<time2>\d+\s*\w+)\,\s+(?P<rate>\d+/\w+)')
+        r14 = re.compile(r'PSNP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+'
+                          '(?P<time_ns>\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # LSP:            0 s,      52706 ns,          0/s
-        r15 = re.compile(r'LSP\s*:\s+(?P<time1>\d+\s*\w+)\,\s+(?P<time2>'
-                          '\d+\s*\w+)\,\s+(?P<rate>\d+/\w+)')
+        r15 = re.compile(r'LSP\s*:\s+(?P<time_s>\d+)\s*\w+\,\s+(?P<time_ns>'
+                          '\d+)\s*\w+\,\s+(?P<rate>\d+)/\w+')
 
         # Level-1:
         r16 = re.compile(r'Level\-(?P<level>\d+):')
@@ -527,7 +524,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # IPv4 Unicast
         # IPv6 Unicast
-        r18 = re.compile(r'(?P<topology>(IPv4|IPv6) Unicast)')
+        r18 = re.compile(r'(?P<address_family>(IPv4|IPv6) Unicast)')
 
         # Total SPF calculations     : 23
         r19 = re.compile(r'Total\s+SPF\s+calculations\s*:\s*'
@@ -602,9 +599,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 isis = group['isis']
                 isis_dict = parsed_dict\
                     .setdefault('isis', {})\
-                    .setdefault(isis, {})\
-                    .setdefault('vrf', {})\
-                    .setdefault(vrf, {})
+                    .setdefault(isis, {})
 
                 continue
 
@@ -694,6 +689,8 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 process_transmit_time_dict = isis_dict\
                     .setdefault('transmit_time', {})
+                average_time_key_name_sec = 'average_transmit_time_sec'
+                average_time_key_name_nsec = 'average_transmit_time_nsec'
 
                 continue
             
@@ -702,6 +699,8 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 process_transmit_time_dict = isis_dict\
                     .setdefault('process_time', {})
+                average_time_key_name_sec = 'average_process_time_sec'
+                average_time_key_name_nsec = 'average_process_time_nsec'
 
                 continue
 
@@ -709,13 +708,13 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r12.match(line)
             if result:
                 group = result.groupdict()
-                time1 = group['time1']
-                time2 = group['time2']
-                rate = group['rate']
+                time1 = int(group['time_s'])
+                time2 = int(group['time_ns'])
+                rate = int(group['rate'])
                 hello_dict = process_transmit_time_dict.setdefault('hello', {})
-                hello_dict['average_transmit_time_1'] = time1
-                hello_dict['average_transmit_time_2'] = time2
-                hello_dict['rate'] = rate
+                hello_dict[average_time_key_name_sec] = time1
+                hello_dict[average_time_key_name_nsec] = time2
+                hello_dict['rate_per_sec'] = rate
 
                 continue
 
@@ -723,13 +722,13 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r13.match(line)
             if result:
                 group = result.groupdict()
-                time1 = group['time1']
-                time2 = group['time2']
-                rate = group['rate']
+                time1 = int(group['time_s'])
+                time2 = int(group['time_ns'])
+                rate = int(group['rate'])
                 csnp_dict = process_transmit_time_dict.setdefault('csnp', {})
-                csnp_dict['average_transmit_time_1'] = time1
-                csnp_dict['average_transmit_time_2'] = time2
-                csnp_dict['rate'] = rate
+                csnp_dict[average_time_key_name_sec] = time1
+                csnp_dict[average_time_key_name_nsec] = time2
+                csnp_dict['rate_per_sec'] = rate
 
                 continue
 
@@ -737,13 +736,13 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r14.match(line)
             if result:
                 group = result.groupdict()
-                time1 = group['time1']
-                time2 = group['time2']
-                rate = group['rate']
+                time1 = int(group['time_s'])
+                time2 = int(group['time_ns'])
+                rate = int(group['rate'])
                 psnp_dict = process_transmit_time_dict.setdefault('psnp', {})
-                psnp_dict['average_transmit_time_1'] = time1
-                psnp_dict['average_transmit_time_2'] = time2
-                psnp_dict['rate'] = rate
+                psnp_dict[average_time_key_name_sec] = time1
+                psnp_dict[average_time_key_name_nsec] = time2
+                psnp_dict['rate_per_sec'] = rate
 
                 continue
 
@@ -751,13 +750,13 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r15.match(line)
             if result:
                 group = result.groupdict()
-                time1 = group['time1']
-                time2 = group['time2']
-                rate = group['rate']
+                time1 = int(group['time_s'])
+                time2 = int(group['time_ns'])
+                rate = int(group['rate'])
                 lsp_dict = process_transmit_time_dict.setdefault('lsp', {})
-                lsp_dict['average_transmit_time_1'] = time1
-                lsp_dict['average_transmit_time_2'] = time2
-                lsp_dict['rate'] = rate
+                lsp_dict[average_time_key_name_sec] = time1
+                lsp_dict[average_time_key_name_nsec] = time2
+                lsp_dict['rate_per_sec'] = rate
 
                 continue
 
@@ -777,7 +776,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 group = result.groupdict()
                 lsp_source_new = int(group['lsp_source_new'])
                 lsp_source_refresh = int(group['lsp_source_refresh'])
-                lsp_level_dict = level_dict.setdefault('lsp', {})
+                lsp_level_dict = level_dict.setdefault('lsp_sourced', {})
                 lsp_level_dict['new'] = lsp_source_new
                 lsp_level_dict['refresh'] = lsp_source_refresh
 
@@ -788,10 +787,10 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             result = r18.match(line)
             if result:
                 group = result.groupdict()
-                topology = group['topology']
-                topology_dict = level_dict\
-                    .setdefault('topology', {})\
-                    .setdefault(topology, {})
+                address_family = group['address_family']
+                address_family_dict = level_dict\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})
 
                 continue
 
@@ -800,7 +799,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 group = result.groupdict()
                 total_spf_calculation = int(group['total_spf_calculation'])
-                topology_dict['total_spf_calculation'] = total_spf_calculation
+                address_family_dict['total_spf_calculation'] = total_spf_calculation
 
                 continue
 
@@ -809,7 +808,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 group = result.groupdict()
                 full_spf_calculation = int(group['full_spf_calculation'])
-                topology_dict['full_spf_calculation'] = full_spf_calculation
+                address_family_dict['full_spf_calculation'] = full_spf_calculation
 
                 continue
 
@@ -818,7 +817,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 group = result.groupdict()
                 ispf_calculation = int(group['ispf_calculation'])
-                topology_dict['ispf_calculation'] = ispf_calculation
+                address_family_dict['ispf_calculation'] = ispf_calculation
 
                 continue
 
@@ -827,7 +826,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 group = result.groupdict()
                 next_hop_calculation = int(group['next_hop_calculation'])
-                topology_dict['next_hop_calculation'] = next_hop_calculation
+                address_family_dict['next_hop_calculation'] = next_hop_calculation
 
                 continue
 
@@ -836,7 +835,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 group = result.groupdict()
                 partial_route_calculation = int(group['partial_route_calculation'])
-                topology_dict['partial_route_calculation'] = partial_route_calculation
+                address_family_dict['partial_route_calculation'] = partial_route_calculation
 
                 continue
 
@@ -845,7 +844,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             if result:
                 group = result.groupdict()
                 periodic_spf_calculation = int(group['periodic_spf_calculation'])
-                topology_dict['periodic_spf_calculation'] = periodic_spf_calculation
+                address_family_dict['periodic_spf_calculation'] = periodic_spf_calculation
 
                 continue
             
