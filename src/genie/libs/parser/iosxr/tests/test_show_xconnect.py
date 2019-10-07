@@ -8,7 +8,125 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.iosxr.show_xconnect import (ShowL2vpnXconnect,
                                                    ShowL2vpnXconnectDetail,
                                                    ShowL2vpnXconnectSummary,
+                                                   ShowL2VpnXconnectBrief,
                                                    ShowL2vpnXconnectMp2mpDetail)
+
+# ==========================================
+#  Unit test for 'show l2vpn xconnect brief'
+# ==========================================
+class TestShowL2vpnXconnectBrief(unittest.TestCase):
+    '''Unit test for 'show l2vpn xconnect brief' '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'atom': 
+            {'like_to_like': 
+                {'efp': 
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 10},
+                'total': 
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 10}}},
+        'locally_switching': 
+            {'like_to_like': 
+                {'efp': 
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 3},
+                'efp/invalid_ac':
+                    {'down': 0,
+                    'unr': 1,
+                    'up': 0},
+                'invalid_ac': 
+                    {'down': 0,
+                    'unr': 1,
+                    'up': 0},
+                'total': 
+                    {'down': 0,
+                    'unr': 2,
+                    'up': 3}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:ios# show l2vpn xconnect brief 
+        Mon Sep 19 10:52:27.818 UTC
+        Locally Switching
+          Like-to-Like                        UP       DOWN        UNR
+            Invalid AC                         0          0          1
+            EFP/Invalid AC                     0          0          1
+            EFP                                3          0          0
+            Total                              3          0          2
+
+          Total                                3          0          2
+
+        AToM
+          Like-to-Like                        UP       DOWN        UNR
+            EFP                               10          0          0
+            Total                             10          0          0
+
+          Total                               10          0          0
+        '''}
+
+    golden_parsed_output2 = {
+        'atom': 
+            {'like_to_like': 
+                {'efp': 
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 32},
+                'total': 
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 32}}},
+        'locally_switching': 
+            {'like_to_like': 
+                {'ether': 
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 1},
+                'total':
+                    {'down': 0,
+                    'unr': 0,
+                    'up': 1}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:SIT-540#show l2vpn xconnect brief 
+        Sat Aug  4 14:48:34.079 IST
+        Locally Switching
+          Like-to-Like                        UP       DOWN        UNR
+            Ether                              1          0          0
+            Total                              1          0          0
+
+          Total                                1          0          0
+
+        AToM
+          Like-to-Like                        UP       DOWN        UNR
+            EFP                               32          0          0
+            Total                             32          0          0
+
+          Total                               32          0          0
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2VpnXconnectBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowL2VpnXconnectBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowL2VpnXconnectBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 
 # ==================================================

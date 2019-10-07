@@ -551,17 +551,20 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         # EAD/ES  10.10.10.10                              0
         # EAD/EVI 10.10.10.10                              24012
         # Summary 10.70.20.20                              24212
-        p4 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary)) +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
+        p4 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary))'
+                         ' +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
 
         #         10.70.20.20                              0
         #         10.10.10.10 (B)                          24012
-        p5 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<flag>(\S+))\))? +(?P<label>(\d+))$')
+        p5 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<flag>(\S+))\))?'
+                         ' +(?P<label>(\d+))$')
 
         # Summary pathlist:
         p6 = re.compile(r'^Summary pathlist:$')
 
         #   0x03000001 123.1.1.2                                16002
-        p7 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
+        p7 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+))'
+                         ' +(?P<label>(\d+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -598,7 +601,8 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
             if m:
                 sub_dict['mp_resolved'] = True
                 if m.groupdict()['mp_single_active']:
-                    sub_dict['mp_single_active'] = m.groupdict()['mp_single_active']
+                    sub_dict['mp_single_active'] = \
+                                            m.groupdict()['mp_single_active']
                 continue
 
             # MAC     10.70.20.20                              24212

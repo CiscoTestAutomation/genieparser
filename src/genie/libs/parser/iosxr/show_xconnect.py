@@ -82,64 +82,107 @@ class ShowL2VpnXconnectSummary(MetaParser):
         return kl
 
 
-class ShowL2VpnXconnectBrief(MetaParser):
-    """Parser for show l2vpn xconnect brief"""
-    # parser class - implements detail parsing mechanisms for cli output.
+# ======================================
+# Schema for 'show l2vpn xconnect brief'
+# ======================================
+class ShowL2VpnXconnectBriefSchema(MetaParser):
+    '''Schema for:
+        * show l2vpn xconnect brief
+    '''
+
+    schema = {
+        'locally_switching':
+            {'like_to_like':
+                {Any():
+                    {'up': int,
+                    'down': int,
+                    'unr': int,
+                    },
+                },
+            },
+        'atom':
+            {'like_to_like':
+                {Any():
+                    {'up': int,
+                    'down': int,
+                    'unr': int,
+                    },
+                },
+            },
+        }
 
 
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-    """
-    schema = {'TODO:': {
-                        'module': {
-                                 Any(): {
-                                         'bios_compile_time': str,
-                                         'bios_version': str,
-                                         'image_compile_time': str,
-                                         'image_version': str,
-                                         'status': str},}},
-              'hardware': {
-                        'bootflash': str,
-                        'chassis': str,
-                        'cpu': str,
-                        'device_name': str,
-                        'memory': str,
-                        'model': str,
-                        'processor_board_id': str,
-                        'slots': str,
-                        Any(): str,},
-              'kernel_uptime': {
-                        'days': str,
-                        'hours': str,
-                        'minutes': str,
-                        'seconds': str},
-              'reason': str,
-              'software': {
-                        'bios': str,
-                        'bios_compile_time': str,
-                        'kickstart': str,
-                        'kickstart_compile_time': str,
-                        'kickstart_image_file': str,
-                        'system': str,
-                        'system_compile_time': str,
-                        'system_image_file': str},
-              'system_version': str,
-              Any(): str,}
-    """
+# ======================================
+# Parser for 'show l2vpn xconnect brief'
+# ======================================
+class ShowL2VpnXconnectBrief(ShowL2VpnXconnectBriefSchema):
+    '''Parser for:
+        * show l2vpn xconnect brief
+    '''
+
     cli_command = 'show l2vpn xconnect brief'
-    def cli(self):
-        '''parsing mechanism: cli
-        '''
 
-        tcl_package_require_caas_parsers()
-        kl = tcl_invoke_caas_abstract_parser(
-            device=self.device, exec=self.cli_command)
+    def cli(self, output=None):
 
-        return kl
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init
+        parsed_dict = {}
+
+        # Locally Switching
+        p1 = re.compile(r'^Locally Switching$')
+
+        # AToM
+        p2 = re.compile(r'^AToM$')
+
+        # Like-to-Like                        UP       DOWN        UNR
+        #   Invalid AC                         0          0          1
+        #   EFP/Invalid AC                     0          0          1
+        #   EFP                                3          0          0
+        #   Total                              3          0          2
+        p3 = re.compile(r'^(?P<like_to_like>([a-zA-Z\-\/\s]+)) +(?P<up>(\d+))'
+                         ' +(?P<down>(\d+)) +(?P<unr>(\d+))$')
+
+        # Total                               10          0          0
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Locally Switching
+            m = p1.match(line)
+            if m:
+                sub_dict = parsed_dict.setdefault('locally_switching', {}).\
+                                    setdefault('like_to_like', {})
+                continue
+
+            # AToM
+            m = p2.match(line)
+            if m:
+                sub_dict = parsed_dict.setdefault('atom', {}).\
+                                        setdefault('like_to_like', {})
+                continue
+
+            # Like-to-Like                        UP       DOWN        UNR
+            #   Invalid AC                         0          0          1
+            #   EFP/Invalid AC                     0          0          1
+            #   EFP                                3          0          0
+            #   Total                              3          0          2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ll_dict = sub_dict.setdefault(group['like_to_like'].strip().\
+                                                    lower().replace(" ", "_"), {})
+                ll_dict['up'] = int(group['up'])
+                ll_dict['down'] = int(group['down'])
+                ll_dict['unr'] = int(group['unr'])
+                continue
+
+
+        return parsed_dict
+
 
 # ===========================================================
 # Schema for:
