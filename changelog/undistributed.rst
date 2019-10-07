@@ -39,7 +39,8 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowNveInterface:
         * Change {intf} and argument 'intf' into {interface} and 'interface'
-
+    * Update ShowInterface
+        * Fixed parser ShowInterface to match duplex and speed line
 --------------------------------------------------------------------------------
                                 EIGRP
 --------------------------------------------------------------------------------
@@ -378,6 +379,15 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
+* IOSXR:
+    * Added ShowEvpnEthernetSegment for:
+        * show evpn ethernet-segment
+    * Added ShowEvpnEthernetSegmentDetail for:
+        * show evpn ethernet-segment detail
+    * Added ShowEvpnEthernetSegmentPrivate for:
+        * show evpn ethernet-segment private
+    * Added ShowEvpnEthernetSegmentEsiDetail for:
+        * show evpn ethernet-segment esi {esi} detail
 
 --------------------------------------------------------------------------------
                                 Route
@@ -437,3 +447,5 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+    * Added parser ShowIsis for:
+        * show isis

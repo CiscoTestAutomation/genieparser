@@ -824,7 +824,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                         }
                                     }
                                 },
-                                Optional('vfi_statistics'): {
+                                Optional('statistics'): {
                                     'drop': {
                                         'illegal_vlan': int,
                                         'illegal_length': int 
@@ -1433,7 +1433,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # drops: illegal VLAN 0, illegal length 0
             m = p41.match(line)
             if m:
-                vfi_statistics_dict = vfi_obj_dict.setdefault('vfi_statistics', {})
+                vfi_statistics_dict = vfi_obj_dict.setdefault('statistics', {})
                 group = m.groupdict()
                 drops = group['drops']
                 vlan = int(group['vlan'])

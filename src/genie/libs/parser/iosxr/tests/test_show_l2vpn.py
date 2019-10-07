@@ -910,7 +910,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                         },
                                     },
                                 },
-                                'vfi_statistics': {
+                                'statistics': {
                                     'drop': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0,
@@ -1137,7 +1137,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                         },
                                     },
                                 },
-                                'vfi_statistics': {
+                                'statistics': {
                                     'drop': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0,
@@ -1487,7 +1487,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                         },
                                     },
                                 },
-                                'vfi_statistics': {
+                                'statistics': {
                                     'drop': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0,
@@ -1714,7 +1714,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                         },
                                     },
                                 },
-                                'vfi_statistics': {
+                                'statistics': {
                                     'drop': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0,
