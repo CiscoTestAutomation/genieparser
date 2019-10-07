@@ -228,6 +228,33 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
+* NXOS:
+    * Updated ShowIpRoute for:
+        * show ip route {protocol} {route} interface {interface} vrf {vrf}
+        * show ip route {protocol} {route} interface {interface}
+        * show ip route {route} interface {interface} vrf {vrf}
+        * show ip route {protocol} {route}
+        * show ip route {route} interface {interface}
+        * show ip route interface {interface} vrf {vrf}
+        * show ip route {protocol}
+        * show ip route {route}
+        * show ip route interface {interface}
+        * show ip route vrf {vrf}
+        * show ip route vrf all
+        * show ip route
+    * Updated ShowIpv6Route for:
+        * show ipv6 route {protocol} {route} interface {interface} vrf {vrf}
+        * show ipv6 route {protocol} {route} interface {interface}
+        * show ipv6 route {route} interface {interface} vrf {vrf}
+        * show ipv6 route {protocol} {route}
+        * show ipv6 route {route} interface {interface}
+        * show ipv6 route interface {interface} vrf {vrf}
+        * show ipv6 route {protocol}
+        * show ipv6 route {route}
+        * show ipv6 route interface {interface}
+        * show ipv6 route vrf {vrf}
+        * show ipv6 route vrf all
+        * show ipv6 route
 
 --------------------------------------------------------------------------------
                                 INVENTORY
