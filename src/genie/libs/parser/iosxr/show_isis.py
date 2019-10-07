@@ -398,7 +398,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                 },
                 'level': {
                     Any(): {
-                        'lsp_sourced': {
+                        'lsp': {
                             'new': int,
                             'refresh': int,
                         },
@@ -418,7 +418,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                     Any(): {
                         'level': {
                             Any(): {
-                                Optional('lsp'): {
+                                Optional('lsps_sourced'): {
                                     'sent': int,
                                     'received': int,
                                     'arrival_time_throttled': int,
@@ -776,7 +776,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 group = result.groupdict()
                 lsp_source_new = int(group['lsp_source_new'])
                 lsp_source_refresh = int(group['lsp_source_refresh'])
-                lsp_level_dict = level_dict.setdefault('lsp_sourced', {})
+                lsp_level_dict = level_dict.setdefault('lsp', {})
                 lsp_level_dict['new'] = lsp_source_new
                 lsp_level_dict['refresh'] = lsp_source_refresh
 
@@ -870,7 +870,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 lsp_interface_dict = interface_dict\
                     .setdefault('level', {})\
                     .setdefault(level, {})\
-                    .setdefault('lsp', {})
+                    .setdefault('lsps_sourced', {})
                 lsp_interface_dict['sent'] = lsp_sent
                 lsp_interface_dict['received'] = lsp_received
 
@@ -919,7 +919,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 lsp_interface_dict = interface_dict\
                     .setdefault('level', {})\
                     .setdefault(level, {})\
-                    .setdefault('lsp', {})
+                    .setdefault('lsps_sourced', {})
                 lsp_interface_dict['flooding_duplicates'] = lsp_flooding_duplicates
 
                 continue
@@ -934,7 +934,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 lsp_interface_dict = interface_dict\
                     .setdefault('level', {})\
                     .setdefault(level, {})\
-                    .setdefault('lsp', {})
+                    .setdefault('lsps_sourced', {})
                 lsp_interface_dict['arrival_time_throttled'] = lsp_arrival_time_throttled
 
                 continue
