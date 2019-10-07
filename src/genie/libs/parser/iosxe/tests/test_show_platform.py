@@ -1975,8 +1975,19 @@ class test_show_inventory(unittest.TestCase):
                         },
                     },
                 },
+            'Fan_Tray': {
+                'other': {
+                    'ACS-4330-FANASSY': {
+                        'descr': 'Cisco ISR4330 Fan Assembly',
+                        'name': 'Fan Tray',
+                        'pid': 'ACS-4330-FANASSY',
+                        'sn': '',
+                        'vid': '',
+                    }
+                }
+            },
             'R0': 
-                {'lc': 
+                {'rp': 
                     {'ISR4331/K9': 
                         {'sn': 'FDO21520TGH',
                         'pid': 'ISR4331/K9',
@@ -2076,6 +2087,14 @@ class test_show_inventory(unittest.TestCase):
                                     'pid': 'ONS-SI-622-I1',
                                     'sn': 'ECL133706C3',
                                     'vid': 'A'}}},
+                        'vid': 'V01'}}},
+            'Fan_Tray': {
+                'other': {
+                    'ASR-920-FAN-M': {
+                        'descr': 'ASR 920 Fan tray',
+                        'name': 'Fan Tray',
+                        'pid': 'ASR-920-FAN-M',
+                        'sn': 'CAT1903V028',
                         'vid': 'V01'}}},
             'P0': 
                 {'other': 
@@ -2216,7 +2235,7 @@ class test_show_inventory(unittest.TestCase):
                 }
             },
             'R0': {
-                'lc': {
+                'rp': {
                     'ASR1002-X': {
                         'descr': 'Cisco ASR1002-X Route Processor',
                         'name': 'module R0',
@@ -2302,6 +2321,17 @@ class test_show_inventory(unittest.TestCase):
                     },
                 },
             },
+            'Fan_Tray': {
+                'other': {
+                    'ASR1002HX-FAN': {
+                        'descr': 'Cisco ASR1002-HX Fan Tray',
+                        'name': 'Fan Tray',
+                        'pid': 'ASR1002HX-FAN',
+                        'sn': '',
+                        'vid': ''
+                    }
+                }
+            },
             '0': {
                 'lc': {
                     'ASR1002-HX': {
@@ -2337,6 +2367,15 @@ class test_show_inventory(unittest.TestCase):
                                     'vid': '1.0',
                                     'sn': '1165124050',
                                 },
+                            },
+                            '0 transceiver 2': {
+                                '': {
+                                    'descr': 'GE LX',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'pid': '',
+                                    'sn': '1162722191',
+                                    'vid': '1.0'
+                                }
                             },
                             '0 transceiver 3': {
                                 'F24-CI-SFP-GE-T': {
@@ -2388,7 +2427,7 @@ class test_show_inventory(unittest.TestCase):
                 },
             },
             'R0': {
-                'lc': {
+                'rp': {
                     'ASR1002-HX': {
                         'name': 'module R0',
                         'descr': 'Cisco ASR1002-HX Route Processor',

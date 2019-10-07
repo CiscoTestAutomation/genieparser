@@ -1291,8 +1291,8 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Switch 5 - Power Supply A", DESCR: "Switch 5 - Power Supply A"
         # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
         # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
-        p1 = re.compile(r'^NAME: +\"(?P<name>(.*))\",'
-                         ' +DESCR: +\"(?P<descr>(.*))\"$')
+        p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
+                         ' +DESCR: +\"(?P<descr>.*)\"$')
 
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
         # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
@@ -1301,7 +1301,8 @@ class ShowInventory(ShowInventorySchema):
         # PID: ISR4331-3x1GE     , VID: V01  , SN:
         # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
         # PID: ISR4331/K9        , VID:      , SN:
-        p2 = re.compile(r'^PID: +(?P<pid>(\S+)) *, +VID:(?: +(?P<vid>(\S+)))? *,'
+        # PID: , VID: 1.0  , SN: 1162722191
+        p2 = re.compile(r'^PID: +(?P<pid>\S+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                          ' +SN:(?: +(?P<sn>(\S+)))?$')
 
         for line in out.splitlines():
@@ -1368,6 +1369,13 @@ class ShowInventory(ShowInventorySchema):
                     # Create slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
+                # Fan Tray
+                p1_6 = re.compile(r'^Fan +Tray$')
+                m1_6 = p1_6.match(name)
+                if m1_6:
+                    slot = name.replace(' ', '_')
+                    # Create slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
                 # go to next line
                 continue
 
@@ -1381,7 +1389,7 @@ class ShowInventory(ShowInventorySchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                pid = group['pid']
+                pid = group['pid'] or ''
                 vid = group['vid'] or ''
                 sn = group['sn'] or ''
 
@@ -1420,7 +1428,7 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ASR1000-RP2       , VID: V02  , SN: JAE153408NJ
                 # PID: ASR1000-RP2       , VID: V03  , SN: JAE1703094H
                 # PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
-                if ('RP' in pid) or ('WS-C' in pid):
+                if ('RP' in pid) or ('WS-C' in pid) or ('R' in name):
                     rp_dict = slot_dict.setdefault('rp', {}).\
                                         setdefault(pid, {})
                     rp_dict['name'] = name
