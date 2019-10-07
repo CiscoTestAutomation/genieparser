@@ -507,7 +507,8 @@ class ShowMsdpContext(ShowMsdpContextSchema):
 
         r9 = re.compile(r'\s*SA\s+Filter\s+In\s+:\s(?:(?P<sa_filter_in>\S+))?')
 
-        r10 = re.compile(r'\s*SA\s+Filter\s+Out\s+:\s(?:(?P<sa_filter_out>\S+))?')
+        r10 = re.compile(
+            r'\s*SA\s+Filter\s+Out\s+:\s(?:(?P<sa_filter_out>\S+))?')
 
         r11 = re.compile(
             r'\s*RP\s+Filter\s+In\s+:\s(?:(?P<rp_filter_in>\S+))?')
@@ -585,7 +586,8 @@ class ShowMsdpContext(ShowMsdpContextSchema):
                 group_dict = result.groupdict()
                 if not vrf:
                     vrf = 'default'
-                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                vrf_dict = parsed_dict.setdefault(
+                    'vrf', {}).setdefault(vrf, {})
                 context_dict = vrf_dict.setdefault('context_info', {})
                 context_dict['vrf_id'] = group_dict['vrf_id']
                 continue
@@ -611,7 +613,8 @@ class ShowMsdpContext(ShowMsdpContextSchema):
             result = r4.match(line)
             if result:
                 group_dict = result.groupdict()
-                inheritable_dict = vrf_dict.setdefault('inheritable_config', {})
+                inheritable_dict = vrf_dict.setdefault(
+                    'inheritable_config', {})
                 inheritable_dict['ttl'] = int(group_dict['ttl'])
                 continue
 
@@ -626,14 +629,16 @@ class ShowMsdpContext(ShowMsdpContextSchema):
             result = r6.match(line)
             if result:
                 group_dict = result.groupdict()
-                inheritable_dict['keepalive_period'] = int(group_dict['keepalive_period'])
+                inheritable_dict['keepalive_period'] = int(
+                    group_dict['keepalive_period'])
                 continue
 
             #   Peer Timeout Period : 75
             result = r7.match(line)
             if result:
                 group_dict = result.groupdict()
-                inheritable_dict['peer_timeout_period'] = int(group_dict['peer_timeout_period'])
+                inheritable_dict['peer_timeout_period'] = int(
+                    group_dict['peer_timeout_period'])
                 continue
 
             #   Connect Source      :
@@ -707,14 +712,16 @@ class ShowMsdpContext(ShowMsdpContextSchema):
             result = r17.match(line)
             if result:
                 group_dict = result.groupdict()
-                config_dict['allow_encaps_count'] = int(group_dict['allow_encaps_count'])
+                config_dict['allow_encaps_count'] = int(
+                    group_dict['allow_encaps_count'])
                 continue
 
             #   Context Maximum SAs        : 20000
             result = r18.match(line)
             if result:
                 group_dict = result.groupdict()
-                config_dict['maximum_sa'] = int(group_dict['config_maximum_sa'])
+                config_dict['maximum_sa'] = int(
+                    group_dict['config_maximum_sa'])
                 continue
 
             # SA Cache Counts  (Current/High Water Mark)
@@ -734,7 +741,8 @@ class ShowMsdpContext(ShowMsdpContextSchema):
                 group_dict = result.groupdict()
                 sources_dict = sa_cache.setdefault('sources', {})
                 sources_dict['current'] = int(group_dict['sources_current'])
-                sources_dict['high_water_mark'] = int(group_dict['sources_high'])
+                sources_dict['high_water_mark'] = int(
+                    group_dict['sources_high'])
                 continue
 
             #   RPs          :          3/0
@@ -760,15 +768,18 @@ class ShowMsdpContext(ShowMsdpContextSchema):
             result = r23.match(line)
             if result:
                 group_dict = result.groupdict()
-                mrib_counts_dict = vrf_dict.setdefault('mrib_update_counts', {})
-                mrib_counts_dict['total_updates'] = int(group_dict['total_updates'])
+                mrib_counts_dict = vrf_dict.setdefault(
+                    'mrib_update_counts', {})
+                mrib_counts_dict['total_updates'] = int(
+                    group_dict['total_updates'])
                 continue
 
             #   With no changes      : 0
             result = r24.match(line)
             if result:
                 group_dict = result.groupdict()
-                mrib_counts_dict['with_no_changes'] = int(group_dict['with_no_changes'])
+                mrib_counts_dict['with_no_changes'] = int(
+                    group_dict['with_no_changes'])
                 continue
 
             #   (*,G) routes         : 26
@@ -791,28 +802,143 @@ class ShowMsdpContext(ShowMsdpContextSchema):
             if result:
                 group_dict = result.groupdict()
                 mrib_drops_dict = vrf_dict.setdefault('mrib_update_drops', {})
-                mrib_drops_dict['invalid_group'] = int(group_dict['invalid_group'])
+                mrib_drops_dict['invalid_group'] = int(
+                    group_dict['invalid_group'])
                 continue
 
             #   Invalid group length : 0
             result = r28.match(line)
             if result:
                 group_dict = result.groupdict()
-                mrib_drops_dict['invalid_group_length'] = int(group_dict['invalid_group_length'])
+                mrib_drops_dict['invalid_group_length'] = int(
+                    group_dict['invalid_group_length'])
                 continue
 
             #   Invalid source       : 0
             result = r29.match(line)
             if result:
                 group_dict = result.groupdict()
-                mrib_drops_dict['invalid_source'] = int(group_dict['invalid_source'])
+                mrib_drops_dict['invalid_source'] = int(
+                    group_dict['invalid_source'])
                 continue
 
             #   Auto-RP Address      : 2
             result = r30.match(line)
             if result:
                 group_dict = result.groupdict()
-                mrib_drops_dict['auto_rp_address'] = int(group_dict['auto_rp_address'])
+                mrib_drops_dict['auto_rp_address'] = int(
+                    group_dict['auto_rp_address'])
+                continue
+
+        return parsed_dict
+
+
+class ShowMsdpSummarySchema(MetaParser):
+    """Schema for:
+        * 'show msdp summary'
+    """
+    schema = {
+        'vrf': {
+            Any(): {
+                'maximum_external_sa_global': int,
+                'current_external_active_sa': int,
+                'peer_status': {
+                    'address': str,
+                    'as': int,
+                    'state': str,
+                    'uptime_downtime': str,
+                    'reset_count': int,
+                    'name': str,
+                    'active_sa_cnt': int,
+                    'cfg_max_ext_sas': int,
+                    'tlv': {
+                        'receive': int,
+                        'sent': int,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowMsdpSummary(ShowMsdpSummarySchema):
+    """Parser for:
+        * 'show msdp summary'
+        * 'show msdp vrf <vrf> summary'
+    """
+
+    cli_command = ['show msdp vrf {vrf} summary',
+                   'show msdp summary']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        # Maximum External SA's Global : 20000
+        r1 = re.compile(r'\s*Maximum\sExternal\sSA\'s\sGlobal\s:\s(?P<maximum_external_sa_global>\d+)')
+
+        # Current External Active SAs : 0
+        r2 = re.compile(r'\s*Current\sExternal\sActive\sSAs\s:\s(?P<current_external_active_sa>\d+)')
+
+        # Peer Address    AS           State    Uptime/   Reset Peer    Active Cfg.Max   TLV
+        #                                       Downtime  Count Name    SA Cnt Ext.SAs recv/sent
+        # 4.4.4.4         200          Connect  20:35:48  0     R4       0      444      0/0
+        r3 = re.compile(r'\s*(?P<address>\S+)\s*'
+                        r'(?P<as>\d+)\s*'
+                        r'(?P<state>\S+)\s*'
+                        r'(?P<uptime_downtime>\S+)\s*'
+                        r'(?P<reset_count>\d+)\s*'
+                        r'(?P<name>\S+)\s*'
+                        r'(?P<active_sa_cnt>\d+)\s*'
+                        r'(?P<cfg_max_ext_sas>\d+)\s*'
+                        r'(?P<receive>\d+)\s*'
+                        r'(?P<sent>\d+)')
+
+        parsed_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Maximum External SA's Global : 20000
+            result = r1.match(line)
+            if result:
+                group_dict = result.groupdict()
+                if not vrf:
+                    vrf = 'default'
+                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                vrf_dict['maximum_external_sa_global'] = int(group_dict['maximum_external_sa_global'])
+                continue
+
+            # Current External Active SAs : 0
+            result = r2.match(line)
+            if result:
+                group_dict = result.groupdict()
+                vrf_dict['current_external_active_sa'] = int(group_dict['current_external_active_sa'])
+                continue
+
+            # 4.4.4.4         200          Connect  20:35:48  0     R4       0      444      0/0
+            result = r3.match(line)
+            if result:
+                group_dict = result.groupdict()
+                summary_dict = vrf_dict.setdefault('peer_status', {})
+                str_name_list = ['address', 'state', 'uptime_downtime',  'name']
+                int_name_list = ['as', 'reset_count','active_sa_cnt','cfg_max_ext_sas']
+
+                for i in str_name_list:
+                    summary_dict[i] = group_dict[i]
+                for i in int_name_list:
+                    summary_dict[i] = int(group_dict[i])
+
+                tlv_dict = summary_dict.setdefault('tlv', {})
+                tlv_dict['receive'] = int(group_dict['receive'])
+                tlv_dict['sent'] = int(group_dict['sent'])
                 continue
 
         return parsed_dict

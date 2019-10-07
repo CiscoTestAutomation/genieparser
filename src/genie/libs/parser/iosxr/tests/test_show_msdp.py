@@ -9,7 +9,7 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxr show msdp
-from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer, ShowMsdpContext
+from genie.libs.parser.iosxr.show_msdp import ShowMsdpPeer, ShowMsdpContext, ShowMsdpSummary
 
 
 class test_show_msdp_peer(unittest.TestCase):
@@ -399,6 +399,102 @@ class test_show_msdp_context(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.device_output_2)
         obj = ShowMsdpContext(device=self.device)
+        parsed_output = obj.parse(vrf='VRF1')
+
+        self.assertEqual(parsed_output, self.expected_output_2)
+
+
+class test_show_msdp_summary(unittest.TestCase):
+    """
+        Commands:
+        show msdp summary
+        show msdp vrf <vrf> summary
+    """
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    expected_output_1 = {
+        'vrf': {
+            'default': {
+                'current_external_active_sa': 0,
+                'maximum_external_sa_global': 20000,
+                'peer_status': {
+                    'active_sa_cnt': 1,
+                    'address': '1.1.1.1',
+                    'as': 0,
+                    'cfg_max_ext_sas': 0,
+                    'name': 'R',
+                    'reset_count': 0,
+                    'state': 'Listen',
+                    'tlv': {
+                        'receive': 0,
+                        'sent': 0},
+                    'uptime_downtime': '18:25:02'}}}}
+
+    device_output_1 = {'execute.return_value': '''
+    Router# show msdp summary
+
+    Maximum External SA's Global : 20000
+    Current External Active SAs : 0
+
+    MSDP Peer Status Summary
+     Peer Address    AS           State    Uptime/   Reset Peer    Active Cfg.Max   TLV
+                                           Downtime  Count Name    SA Cnt Ext.SAs recv/sent
+     1.1.1.1         0            Listen   18:25:02  0     R1       0      0        0/0
+     11.11.11.11     0            Listen   18:14:53  0     ?        0      0        0/0
+    '''}
+
+    expected_output_2 = {
+        'vrf': {
+            'VRF1': {
+                'current_external_active_sa': 0,
+                'maximum_external_sa_global': 20000,
+                'peer_status': {
+                    'active_sa_cnt': 1,
+                    'address': '1.1.1.1',
+                    'as': 0,
+                    'cfg_max_ext_sas': 0,
+                    'name': 'R',
+                    'reset_count': 0,
+                    'state': 'Listen',
+                    'tlv': {
+                        'receive': 0,
+                        'sent': 0},
+                    'uptime_downtime': '18:25:02'}}}}
+
+    device_output_2 = {'execute.return_value': '''
+    Router# show msdp vrf VRF1 context
+
+    Maximum External SA's Global : 20000
+    Current External Active SAs : 0
+
+    MSDP Peer Status Summary
+     Peer Address    AS           State    Uptime/   Reset Peer    Active Cfg.Max   TLV
+                                           Downtime  Count Name    SA Cnt Ext.SAs recv/sent
+     1.1.1.1         0            Listen   18:25:02  0     R1       0      0        0/0
+     11.11.11.11     0            Listen   18:14:53  0     ?        0      0        0/0
+    '''}
+
+    def test_show_msdp_peer_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowMsdpSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_msdp_peer_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_1)
+        obj = ShowMsdpSummary(device=self.device)
+        parsed_output = obj.parse()
+
+        self.assertEqual(parsed_output, self.expected_output_1)
+
+    def test_show_msdp_peer_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowMsdpSummary(device=self.device)
         parsed_output = obj.parse(vrf='VRF1')
 
         self.assertEqual(parsed_output, self.expected_output_2)
