@@ -500,7 +500,11 @@ class TestShowRunSecIsis(unittest.TestCase):
     '''
     }
 
-    golden_parsed_output_2 = {}
+    golden_parsed_output_2 = {
+        'instance': {
+            '': {
+                'vrf': {
+                    'default': {}}}}}
 
     golden_output_2 = {'execute.return_value': '''
          ip router isis
