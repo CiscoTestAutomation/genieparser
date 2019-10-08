@@ -8,7 +8,6 @@ from ats.topology import loader
 
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
-import genie.gre
 
 # iosxr show_mrib
 from genie.libs.parser.iosxr.show_isis import (ShowIsis,
@@ -2423,7 +2422,6 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset() 
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
