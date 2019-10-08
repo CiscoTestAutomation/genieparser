@@ -181,9 +181,10 @@ class ShowEvpnInternalLabelDetailSchema(MetaParser):
                 'encap': str,
                 'esi': str,
                 'eth_tag': int,
-                'mp_internal_label': int,
+                'label': int,
                 Optional('mp_resolved'): bool,
                 Optional('mp_info'): str,
+                Optional('mp_internal_label'): int,
                 Optional('pathlists'):
                     {Optional('mac'):
                         {'nexthop':
@@ -270,25 +271,29 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         p3 = re.compile(r'^Multi-paths +resolved: +(?P<mp_resolved>(\S+))'
                          ' +\((?P<mp_info>(.*))\)$')
 
+        # Multi-paths Internal label: 24002
+        p4 = re.compile(r'^Multi-paths +Internal +label: +(?P<internal>(\d+))$')
+
         # Pathlists:
         # MAC     10.70.20.20                              24212
         # EAD/ES  10.10.10.10                              0
         # EAD/EVI 10.10.10.10                              24012
         # Summary 10.70.20.20                              24212
-        p4 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary))'
+        p5 = re.compile(r'^(?P<type>(MAC|EAD\/ES|EAD\/EVI|Summary))'
                          ' +(?P<nexthop>(\S+)) +(?P<label>(\d+))$')
 
         #         10.70.20.20                              0
         #         10.10.10.10 (B)                          24012
-        p5 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<df_role>(\S+))\))?'
+        p6 = re.compile(r'^(?P<nexthop>(\S+))(?: +\((?P<df_role>(\S+))\))?'
                          ' +(?P<label>(\d+))$')
 
         # Summary pathlist:
-        p6 = re.compile(r'^Summary pathlist:$')
+        p7 = re.compile(r'^Summary pathlist:$')
 
         #   0x03000001 123.1.1.2                                16002
-        p7 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+))'
+        p8 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+))'
                          ' +(?P<label>(\d+))$')
+
 
         for line in out.splitlines():
             line = line.strip()
@@ -316,7 +321,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 sub_dict['encap'] = group['encap']
                 sub_dict['esi'] =  group['esi']
                 sub_dict['eth_tag'] = int(group['eth_tag'])
-                sub_dict['mp_internal_label'] = int(group['mp_internal_label'])
+                sub_dict['label'] = int(group['mp_internal_label'])
                 continue
 
             # Multi-paths resolved: TRUE
@@ -328,11 +333,17 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                     sub_dict['mp_info'] = m.groupdict()['mp_info']
                 continue
 
+            # Multi-paths Internal label: 24002
+            m = p4.match(line)
+            if m:
+                sub_dict['mp_internal_label'] = int(m.groupdict()['internal'])
+                continue
+
             # MAC     10.70.20.20                              24212
             # EAD/ES  10.10.10.10                              0
             # EAD/EVI 10.10.10.10                              24012
             # Summary 10.70.20.20                              24212
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 pathlists_dict = sub_dict.setdefault('pathlists', {}).\
@@ -345,7 +356,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
 
             #         10.70.20.20                              0
             #         10.10.10.10 (B)                          24012
-            m = p5.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\
@@ -356,14 +367,14 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                 continue
 
             # Summary pathlist:
-            m = p6.match(line)
+            m = p7.match(line)
             if m:
                 pathlists_dict = sub_dict.setdefault('pathlists', {}).\
                                         setdefault('summary', {})
                 continue
 
             #   0x03000001 123.1.1.2                                16002
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 type_nh_dict = pathlists_dict.setdefault('nexthop', {}).\

@@ -708,6 +708,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'encap': 'VXLAN',
                 'esi': '0001.0407.0405.0607.0811',
                 'eth_tag': 0,
+                'label': 24002,
                 'mp_internal_label': 24002,
                 'mp_resolved': True,
                 'mp_info': 'Remote all-active',
@@ -730,6 +731,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'encap': 'VXLAN',
                 'esi': '0001.0407.0405.0607.0811',
                 'eth_tag': 0,
+                'label': 24003,
                 'mp_internal_label': 24003,
                 'mp_resolved': True,
                 'mp_info': 'Remote all-active',
@@ -752,7 +754,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 {'encap': 'VXLAN',
                 'esi': '0001.0407.0405.0607.0811',
                 'eth_tag': 0,
-                'mp_internal_label': 24004,
+                'label': 24004,
                 'mp_resolved': True,
                 'mp_info': 'Remote all-active',
                 'vpn_id': 16003}}}
@@ -795,21 +797,18 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden3(self):
         self.device = Mock(**self.golden_output3)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ===================================================
