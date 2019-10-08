@@ -526,11 +526,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
 
         for line in out.splitlines():
             original_line = line
-            line = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', line)
-            line = line.replace('--More--', '')
             line = line.strip()
-            original_line = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', original_line)
-            original_line = original_line.replace('--More--', '')
             
             # Avoid show commands : show l2vpn xconnect detail
             # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
