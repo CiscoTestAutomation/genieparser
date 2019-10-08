@@ -1802,68 +1802,68 @@ class TestSShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             },
                         },
                         'es_statistics': {
-                            'RT': {
+                            'rt': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:15.582',
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'LocalBMAC': {
+                            'localbmac': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'ESI': {
+                            'esi': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'EAD/ES': {
+                            'ead/es': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'EAD/EVI': {
+                            'ead/evi': {
                                 'adv_cnt': 2,
                                 'adv_last_time': '27/08 09:49:16.091',
                                 'adv_last_arg': '000003e8',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'MST-AG VPW': {
+                            'mst_ag_vpw': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'DF ElectFW': {
+                            'df_electfw': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:15.582',
                                 'adv_last_arg': '00000000',
                             },
-                            'UpdateMAC': {
+                            'updatemac': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'MacFlushPE': {
+                            'macflushpe': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'MacFlushCE': {
+                            'macflushce': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'Instance': {
+                            'instance': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'MP Info': {
+                            'mp_info': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:37.024',
                                 'adv_last_arg': '00000000',
@@ -1889,8 +1889,8 @@ class TestSShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'nve_ingrreplic': 0,
                         'peering_done': 0,
                         'carving_done': 1,
-                        'inval/redundfwd': '0x00000000/0x00000000',
-                        'inval/redund_nh': '0x00000000/0x00000000',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
                         'chkpt_objid': '0x0',
                         'es_ead_update': {
                             'num_rds': 0,
@@ -2468,71 +2468,71 @@ class TestSShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             },
                         },
                         'es_statistics': {
-                            'RT': {
+                            'rt': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:15.582',
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'LocalBMAC': {
+                            'localbmac': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'ESI': {
+                            'esi': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:41.604',
                                 'adv_last_arg': '00000001',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'EAD/ES': {
+                            'ead/es': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:41.606',
                                 'adv_last_arg': '0000000a',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'EAD/EVI': {
+                            'ead/evi': {
                                 'adv_cnt': 3,
                                 'adv_last_time': '27/08 09:49:41.604',
                                 'adv_last_arg': '000003e8',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'MST-AG VPW': {
+                            'mst_ag_vpw': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'DF ElectFW': {
+                            'df_electfw': {
                                 'adv_cnt': 1,
                                 'adv_last_time': '27/08 09:49:15.582',
                                 'adv_last_arg': '00000000',
                             },
-                            'UpdateMAC': {
+                            'updatemac': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'MacFlushPE': {
+                            'macflushpe': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'MacFlushCE': {
+                            'macflushce': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'Instance': {
+                            'instance': {
                                 'adv_cnt': 2,
                                 'adv_last_time': '27/08 09:49:44.606',
                                 'adv_last_arg': '00007fff',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'MP Info': {
+                            'mp_info': {
                                 'adv_cnt': 3,
                                 'adv_last_time': '27/08 09:49:44.606',
                                 'adv_last_arg': '00000000',
@@ -2558,8 +2558,8 @@ class TestSShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'nve_ingrreplic': 0,
                         'peering_done': 1,
                         'carving_done': 1,
-                        'inval/redundfwd': '0x00000000/0x00000000',
-                        'inval/redund_nh': '0x00000000/0x00000000',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
                         'chkpt_objid': '0x40002f18',
                         'msti_mask': '0x7fff',
                         'es_ead_update': {
@@ -2789,67 +2789,67 @@ class TestSShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             },
                         },
                         'es_statistics': {
-                            'RT': {
+                            'rt': {
                                 'adv_cnt': 2,
                                 'adv_last_time': '27/08 09:49:15.583',
                                 'adv_last_arg': 'a5138016',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'LocalBMAC': {
+                            'localbmac': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'ESI': {
+                            'esi': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'EAD/ES': {
+                            'ead/es': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'EAD/EVI': {
+                            'ead/evi': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'MST-AG VPW': {
+                            'mst_ag_vpw': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'DF ElectFW': {
+                            'df_electfw': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'UpdateMAC': {
+                            'updatemac': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'MacFlushPE': {
+                            'macflushpe': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'MacFlushCE': {
+                            'macflushce': {
                                 'adv_cnt': 0,
                                 'adv_last_arg': '00000000',
                             },
-                            'Instance': {
+                            'instance': {
                                 'adv_cnt': 3,
                                 'adv_last_time': '27/08 09:49:37.025',
                                 'adv_last_arg': '00007fff',
                                 'wdw_cnt': 0,
                                 'wdw_last_arg': '00000000',
                             },
-                            'MP Info': {
+                            'mp_info': {
                                 'adv_cnt': 5,
                                 'adv_last_time': '27/08 09:49:37.025',
                                 'adv_last_arg': '00000000',
@@ -2875,8 +2875,8 @@ class TestSShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'nve_ingrreplic': 0,
                         'peering_done': 1,
                         'carving_done': 1,
-                        'inval/redundfwd': '0x00000000/0x00000000',
-                        'inval/redund_nh': '0x00000000/0x00000000',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
                         'chkpt_objid': '0x40002f58',
                         'msti_mask': '0x7fff',
                         'es_ead_update': {

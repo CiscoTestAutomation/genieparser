@@ -1379,7 +1379,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             m = p37.match(line)
             if m:
                 group = m.groupdict()
-                label = group.get('label').strip()
+                label = group.get('label').strip().lower().replace(' ', '_').replace('-', '_')
                 adv_cnt = group.get('adv_cnt', None)
                 adv_last_time = group.get('adv_last_time', None)
                 adv_last_arg = group.get('adv_last_arg', None)
@@ -1440,7 +1440,9 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             m = p39.match(line)
             if m:
                 group = m.groupdict()
-                label_1 = group['label_1'].strip().lower().replace(' ', '_').replace('-', '')
+                label_1 = group['label_1'].strip().lower(). \
+                            replace(' ', '_').replace('-', ''). \
+                            replace('/', '_')
                 val_1 = group['val_1'].strip()
                 if val_1.isdigit():
                     val_1 = int(val_1)
@@ -1457,7 +1459,9 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             m = p40.match(line)
             if m:
                 group = m.groupdict()
-                label_1 = group['label_1'].strip().lower().replace(' ', '_').replace('-', '')
+                label_1 = group['label_1'].strip().lower(). \
+                            replace(' ', '_').replace('-', ''). \
+                            replace('/', '_')
                 val_1 = group['val_1'].strip()
                 if val_1.isdigit():
                     val_1 = int(val_1)
