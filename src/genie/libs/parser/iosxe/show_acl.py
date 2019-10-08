@@ -245,7 +245,7 @@ class ShowAccessLists(ShowAccessListsSchema):
         # initial regexp pattern
         p_ip = re.compile(r'^(Extended|Standard) +IP +access +list[s]? +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
-        p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
+        p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?.*$')
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
 
         # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
@@ -386,7 +386,7 @@ class ShowAccessLists(ShowAccessListsSchema):
             # 30 deny ip any any
             # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
             # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
-            # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www               (matches on l4, but missing l3)
+            # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
             # 40 permit tcp any range ftp-data bgp any
             m_v4 = p_ip_acl.match(line)
 
