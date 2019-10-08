@@ -1,4 +1,5 @@
 
+import genie.gre
 # Python
 import unittest
 from unittest.mock import Mock
@@ -660,7 +661,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'label': 24005}}}
 
     golden_output1 = {'execute.return_value': '''
-        RP/0/0/CPU0:PE1#show evpn internal-label
+        RP/0/0/CPU0:PE1#show evpn internal-label detail
         Wed Jul 13 13:55:17.592 EDT
 
         EVI   Ethernet Segment Id                     EtherTag Label   
@@ -691,7 +692,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                                 {'label': 524288}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
-        RP/0/0/CPU0:PE1#show evpn internal-label 
+        RP/0/0/CPU0:PE1#show evpn internal-label detail
         Thu May  5 10:16:51.447 EDT
 
         EVI   Ethernet Segment Id                     EtherTag Label   
@@ -794,18 +795,21 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
+        import re ; print(re.colour_output()) ; re.reset() 
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
+        import re ; print(re.colour_output()) ; re.reset() 
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden3(self):
         self.device = Mock(**self.golden_output3)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
+        import re ; print(re.colour_output()) ; re.reset() 
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ===================================================
