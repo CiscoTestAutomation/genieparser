@@ -211,10 +211,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             # Dialer1 is up (spoofing), line protocol is up (spoofing)
-            
-            #p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
-                            #  '\S+)?, +line +protocol +is +(?P<line_protocol>\w+)( '
-                            #  '*\((?P<attribute>\S+)\))?.*$')
             p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
                              '+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
                              '*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
