@@ -830,7 +830,7 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                         Optional('local_shg_label'): str,
                         Optional('remote_shg_labels'): {
                             Any(): {
-                                'label': {
+                                Optional('label'): {
                                     Any(): {
                                         'nexthop': str
                                     }
@@ -838,6 +838,47 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                             }
                         },
                         Optional('flush_again_timer'): str,
+                        Optional('object'): {
+                            Any(): {
+                                Optional('base_info'): {
+                                    'version': str,
+                                    'flags': str,
+                                    'type': int,
+                                    'reserved': int
+                                },
+                                Optional('num_events'): int,
+                                Optional('event_history'): {
+                                    Any(): {
+                                        'time': str,
+                                        'event': str,
+                                        'flag_1': str,
+                                        'flag_2': str,
+                                        'code_1': str,
+                                        'code_2': str,
+                                    }
+                                }
+                            }
+                        },
+                        Optional('es_statistics'): {
+                            Any(): {
+                                'adv_cnt': int,
+                                Optional('adv_last_time'): str,
+                                'adv_last_arg': str,
+                                Optional('wdw_cnt'): int,
+                                Optional('wdw_last_time'): str,
+                                Optional('wdw_last_arg'): str,
+                            }
+                        },
+                        Optional('es_ead_update'): {
+                            'num_rds': int,
+                            Optional('rd'): {
+                                Any(): {
+                                    Optional('num_rts'): int,
+                                    Optional('rt_list'): str,
+                                }
+                            }
+                        },
+                        Optional(Any()): Any()
                     }
                 }
             }
@@ -859,9 +900,11 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         
         ret_dict = {}
         num_of_label = {}
+        event_history_index = {}
 
         # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
-        p1 = re.compile(r'^(?P<segment_id>\S+) +(?P<interface>\S+) +(?P<next_hop>[\d\.]+)$')
+        # 0210.0300.9e00.0210.0000 BE4                                78.81.321.95<
+        p1 = re.compile(r'^(?P<segment_id>\S+) +(?P<interface>\S+) +(?P<next_hop>[\d\.\<]+)$')
 
         # 2.100.100.100   
         p1_1 = re.compile(r'^(?P<next_hop>[\d\.]+)$')
@@ -963,10 +1006,52 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
 
         # 64005 : nexthop 3.3.3.37
         p31 = re.compile(r'^(?P<shg_label>\d+) *: +nexthop +(?P<next_hop>\S+)$')
+        
+        # Object: EVPN MAC
+        p32 = re.compile(r'^Object: +(?P<object_name>[\S ]+)$')
+
+        # Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
+        p33 = re.compile(r'^Base info: +version=(?P<version>\S+), +flags=(?P<flags>\S+)'
+                ', +type=(?P<type>\d+), +reserved=(?P<reserved>\d+)$')
+        
+        # EVPN ES event history  [Num events: 0]
+        p34 = re.compile(r'^EVPN +ES +event +history +\[Num +events: +(?P<num_events>\d+)\]$')
+
+        # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
+        # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+        p35 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>[\d\w]+)'
+                ', +(?P<flag_2>[\d\w]+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
+
+        # EVPN ES Statistics
+        p36 = re.compile(r'^EVPN +ES +Statistics$')
+
+        # RT|   1 27/08 09:49:15.582 00000000|   0                    00000000
+        # LocalBMAC|   0                    00000000|   0                    00000000
+        # ESI|   0                    00000000|   0                    00000000
+        p37 = re.compile(r'^(?P<label>[\S ]+)\| +(?P<adv_cnt>\d+)( +(?P<adv_last_time>\d+\/\d+ +\S+))?'
+                ' +(?P<adv_last_arg>[\w\d]+)\|( +(?P<wdw_cnt>\d+))?( +(?P<wdw_last_time>\d+\/\d+ +\S+))?'
+                '( +(?P<wdw_last_arg>[\w\d]+))?$')
+
+        # Num RDs:       : 1
+        p38 = re.compile(r'^Num +RDs: *: +(?P<num_rds>\d+)$')
+
+        # Diagnostic ESI : N/A                     Interface Name : N/A
+        # Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+        # Port Key       : 0x000088d4              MAC winner     : 1
+        p39 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+( +\(\w+\))?) +(?P<label_2>[\S ]+): +(?P<val_2>\S+( +\(\w+\))?)$')
+
+        # Carving Timer  : 0    (global)  
+        # Number of EVIs : 1
+        p40 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+( +\(\w+\))?)$')
+
+        # RD: 67.70.219.84:1, Num RTs: 1      RT List:
+        p41 = re.compile(r'^RD: +(?P<rd>\S+), +Num +RTs: +(?P<num_rts>\d+) +RT +List:( +(?P<rt_list>\d+:\d+))?$')
+        
+        # 4:1000,
+        p42 = re.compile(r'^(?P<rt_list>\d:\d+),$')
 
         for line in out.splitlines():
             line = line.strip()
-            
             # ES to L2FIB Gates : Ready
             m = p2.match(line)
             if m:
@@ -1245,6 +1330,141 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 next_hop_list.append(next_hop)
                 continue
 
+            # Object: EVPN MAC
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                object_name = group['object_name']
+                object_dict = interface_dict.setdefault('object', {}). \
+                    setdefault(object_name, {})
+                continue
+
+            # Base info: version=0xdbdb0008, flags=0x4000, type=8, reserved=0
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                version = group['version']
+                flags = group['flags']
+                base_info_type = int(group['type'])
+                reserved = int(group['reserved'])
+                base_info_dict = object_dict.setdefault('base_info', {})
+                base_info_dict.update({'version': version})
+                base_info_dict.update({'flags': flags})
+                base_info_dict.update({'type': base_info_type})
+                base_info_dict.update({'reserved': reserved})
+                continue
+            
+            # EVPN ES event history  [Num events: 0]
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                object_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+            
+            # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
+            # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                index = event_history_index.get('event_history', 0) + 1
+                event_history_dict = object_dict.setdefault('event_history', {}). \
+                    setdefault(index, {})
+                event_history_dict.update({k:v.strip() for k, v in group.items() if v is not None})
+                event_history_index.update({'event_history': index})
+                continue
+            
+            # RT|   1 27/08 09:49:15.582 00000000|   0                    00000000
+            # LocalBMAC|   0                    00000000|   0                    00000000
+            # ESI|   0                    00000000|   0                    00000000
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                label = group.get('label').strip()
+                adv_cnt = group.get('adv_cnt', None)
+                adv_last_time = group.get('adv_last_time', None)
+                adv_last_arg = group.get('adv_last_arg', None)
+                wdw_cnt = group.get('wdw_cnt', None)
+                wdw_last_time = group.get('wdw_last_time', None)
+                wdw_last_arg = group.get('wdw_last_arg', None)
+
+                es_statistics_dict = interface_dict.setdefault('es_statistics', {}). \
+                    setdefault(label, {})
+                
+                es_statistics_dict.update({'adv_cnt': int(adv_cnt)})
+                if adv_last_time:
+                    es_statistics_dict.update({'adv_last_time': adv_last_time})
+                if adv_last_arg:
+                    es_statistics_dict.update({'adv_last_arg': adv_last_arg})
+                
+                if wdw_cnt:
+                    es_statistics_dict.update({'wdw_cnt': int(wdw_cnt)})
+                if wdw_last_time:
+                    es_statistics_dict.update({'wdw_last_time': wdw_last_time})
+                if wdw_last_arg:
+                    es_statistics_dict.update({'wdw_last_arg': wdw_last_arg})
+                continue
+            
+            # Num RDs:       : 1
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                ead_update_dict = interface_dict.setdefault('es_ead_update', {})
+                ead_update_dict.update({'num_rds': int(group['num_rds'])})
+                continue
+            
+            # RD: 67.70.219.84:1, Num RTs: 1      RT List:
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                rd = group['rd']
+                num_rts = int(group['num_rts'])
+                rt_list = group.get('rt_list', None)
+                rd_dict = ead_update_dict.setdefault('rd', {}). \
+                            setdefault(rd, {})
+                rd_dict.update({'num_rts': num_rts})
+                if rt_list:
+                    rd_dict.update({'rt_list': rt_list})
+                continue
+            
+            # 4:1000,
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                rt_list = group['rt_list']
+                rd_dict.update({'rt_list': rt_list})
+                continue
+
+            # Diagnostic ESI : N/A                     Interface Name : N/A
+            # Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+            # Port Key       : 0x000088d4              MAC winner     : 1
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                label_1 = group['label_1'].strip().lower().replace(' ', '_').replace('-', '')
+                val_1 = group['val_1'].strip()
+                if val_1.isdigit():
+                    val_1 = int(val_1)
+                label_2 = group['label_2'].strip().lower().replace(' ', '_').replace('-', '')
+                val_2 = group['val_2'].strip()
+                if val_2.isdigit():
+                    val_2 = int(val_2)
+                interface_dict.update({label_1: val_1})
+                interface_dict.update({label_2: val_2})
+                continue
+
+            # Carving Timer  : 0    (global)  
+            # Number of EVIs : 1
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                label_1 = group['label_1'].strip().lower().replace(' ', '_').replace('-', '')
+                val_1 = group['val_1'].strip()
+                if val_1.isdigit():
+                    val_1 = int(val_1)
+                interface_dict.update({label_1: val_1})
+                continue
+
+            
         return ret_dict
 
 class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegment):
