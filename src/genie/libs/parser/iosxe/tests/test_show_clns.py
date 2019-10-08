@@ -211,8 +211,8 @@ class test_show_clns_protocol(unittest.TestCase):
 # =========================================================
 # Unit test for 'show clns neighbors detail'
 # =========================================================
-class test_show_clns_neighbors_detail(unittest.TestCase):
-    device = Device(name='aDevice')
+class TestShowClnsNeighborsDetail(unittest.TestCase):
+    maxDiff = None    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -272,6 +272,179 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
         System Id       Interface     SNPA                State  Holdtime  Type Protocol
     '''}
 
+    golden_parsed_output_3 = {
+        "tag": {
+            "test": {
+                "system_id": {
+                    "R2_xr": {
+                        "type": {
+                            1: {
+                                "holdtime": 26,
+                                "state": "up",
+                                "snpa": "fa16.3e21.73f6",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet2.115",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.12.115.2*"],
+                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                            2: {
+                                "holdtime": 26,
+                                "state": "up",
+                                "snpa": "fa16.3e21.73f6",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet2.115",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.12.115.2*"],
+                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                        }
+                    },
+                    "R3_nx": {
+                        "type": {
+                            1: {
+                                "holdtime": 29,
+                                "state": "up",
+                                "snpa": "5e00.8002.0007",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet3.115",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.13.115.3*"],
+                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                            2: {
+                                "holdtime": 29,
+                                "state": "up",
+                                "snpa": "5e00.8002.0007",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet3.115",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.13.115.3*"],
+                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                        }
+                    },
+                }
+            },
+            "test1": {
+                "system_id": {
+                    "2222.2222.2222": {
+                        "type": {
+                            1: {
+                                "holdtime": 29,
+                                "state": "init",
+                                "snpa": "fa16.3e21.73f6",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet2.415",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.12.115.2*"],
+                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                            2: {
+                                "holdtime": 29,
+                                "state": "init",
+                                "snpa": "fa16.3e21.73f6",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet2.415",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.12.115.2*"],
+                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                        }
+                    },
+                    "R3_nx": {
+                        "type": {
+                            1: {
+                                "holdtime": 29,
+                                "state": "up",
+                                "snpa": "5e00.8002.0007",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet3.415",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.13.115.3*"],
+                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                            2: {
+                                "holdtime": 29,
+                                "state": "up",
+                                "snpa": "5e00.8002.0007",
+                                "protocol": "M-ISIS",
+                                "interface": "GigabitEthernet3.415",
+                                "area_address": ["49.0001"],
+                                "ip_address": ["10.13.115.3*"],
+                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
+                                "uptime": "3d21h",
+                                "nsf": "capable",
+                                "topology": ["ipv4", "ipv6"],
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        Tag test:
+        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+        R2_xr           Gi2.115       fa16.3e21.73f6      Up     26        L1L2 M-ISIS
+          Area Address(es): 49.0001
+          IP Address(es):  10.12.115.2*
+          IPv6 Address(es): FE80::F816:3EFF:FE21:73F6
+          Uptime: 3d21h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet2.115
+        R3_nx           Gi3.115       5e00.8002.0007      Up     29        L1L2 M-ISIS
+          Area Address(es): 49.0001
+          IP Address(es):  10.13.115.3*
+          IPv6 Address(es): FE80::5C00:80FF:FE02:7
+          Uptime: 3d21h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet3.115
+
+        Tag test1:
+        System Id       Interface     SNPA                State  Holdtime  Type Protocol
+        2222.2222.2222  Gi2.415       fa16.3e21.73f6      Init   29        L1L2 M-ISIS
+          Area Address(es): 49.0001
+          IP Address(es):  10.12.115.2*
+          IPv6 Address(es): FE80::F816:3EFF:FE21:73F6
+          Uptime: 3d21h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet2.415
+        R3_nx           Gi3.415       5e00.8002.0007      Up     29        L1L2 M-ISIS
+          Area Address(es): 49.0001
+          IP Address(es):  10.13.115.3*
+          IPv6 Address(es): FE80::5C00:80FF:FE02:7
+          Uptime: 3d21h
+          NSF capable
+          Topology: IPv4, IPv6
+          Interface name: GigabitEthernet3.415
+    '''}
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         obj = ShowClnsNeighborsDetail(device=self.device1)
@@ -279,18 +452,23 @@ class test_show_clns_neighbors_detail(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden_clns_neighbor_detail(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowClnsNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden_clns_neighbor_detail_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowClnsNeighborsDetail(device=self.device)
         parsed_output = obj.parse()        
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_clns_neighbor_detail_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowClnsNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
 
 
 # =========================================================
