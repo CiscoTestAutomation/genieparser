@@ -870,6 +870,261 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Recovery timer    : 20 sec [not running]
         Flushagain timer  : 60 sec
         '''}
+    
+    golden_parsed_output2 = {
+        'segment_id': {
+            '0001.0000.aaab.0000.0003': {
+                'interface': {
+                    'Bundle-Ether3': {
+                        'next_hops': ['67.70.219.84'],
+                        'es_to_bgp_gates': 'M',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'Bundle-Ether3',
+                            'interface_mac': '00c1.6428.7cec',
+                            'if_handle': '0x080002a0',
+                            'state': 'Down',
+                            'redundancy': 'Not Defined',
+                        },
+                        'esi': {
+                            'type': 0,
+                            'value': '01.0000.aaab.0000.0003',
+                        },
+                        'es_import_rt': 'aaab.0000.0003 (Local)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'SH',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'service_carving_results': {
+                            'forwarders': 1,
+                            'permanent': 0,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 1,
+                            },
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3 sec [not running]',
+                        'recovery_timer': '30 sec [not running]',
+                        'carving_timer': '0 sec [not running]',
+                        'local_shg_label': '100564',
+                        'remote_shg_labels': {
+                            '0': {
+                            },
+                        },
+                    },
+                },
+            },
+            '0001.0000.aaab.0000.0004': {
+                'interface': {
+                    'Bundle-Ether4': {
+                        'next_hops': ['67.70.219.84'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'Bundle-Ether4',
+                            'interface_mac': '00c1.6428.7ceb',
+                            'if_handle': '0x080002e0',
+                            'state': 'Up',
+                            'redundancy': 'Not Defined',
+                        },
+                        'esi': {
+                            'type': 0,
+                            'value': '01.0000.aaab.0000.0004',
+                        },
+                        'es_import_rt': 'aaab.0000.0004 (Local)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'SH',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'service_carving_results': {
+                            'forwarders': 1,
+                            'permanent': 0,
+                            'elected': {
+                                'num_of_total': 1,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3 sec [not running]',
+                        'recovery_timer': '30 sec [not running]',
+                        'carving_timer': '0 sec [not running]',
+                        'local_shg_label': '100565',
+                        'remote_shg_labels': {
+                            '0': {
+                            },
+                        },
+                    },
+                },
+            },
+            'N/A': {
+                'interface': {
+                    'GigabitEthernet0/0/0/12': {
+                        'next_hops': ['67.70.219.84'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'GigabitEthernet0/0/0/12',
+                            'interface_mac': '00c1.641f.6048',
+                            'if_handle': '0x000005c0',
+                            'state': 'Up',
+                            'redundancy': 'Not Defined',
+                        },
+                        'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
+                        'source_mac': '00c1.6428.7ce8 (PBB BSA, no ESI)',
+                        'topology': {
+                            'operational': 'SH',
+                            'configured': 'Single-active (AApS) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'service_carving_results': {
+                            'forwarders': 1,
+                            'permanent': 1,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3 sec [not running]',
+                        'recovery_timer': '30 sec [not running]',
+                        'carving_timer': '0 sec [not running]',
+                        'local_shg_label': 'None',
+                        'remote_shg_labels': {
+                            '0': {
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
+    golden_output2 = {'execute.return_value': '''
+    show evpn ethernet-segment detail
+
+    Mon Oct  7 16:18:26.810 EDT
+    Legend:
+    B   - No Forwarders EVPN-enabled,
+    C   - Backbone Source MAC missing (PBB-EVPN),
+    RT  - ES-Import Route Target missing,
+    E   - ESI missing,
+    H   - Interface handle missing,
+    I   - Name (Interface or Virtual Access) missing,
+    M   - Interface in Down state,
+    O   - BGP End of Download missing,
+    P   - Interface already Access Protected,
+    Pf  - Interface forced single-homed,
+    R   - BGP RID not received,
+    S   - Interface in redundancy standby state,
+    X   - ESI-extracted MAC Conflict
+    SHG - No local split-horizon-group label allocated
+
+    Ethernet Segment Id      Interface                          Nexthops            
+    ------------------------ ---------------------------------- --------------------
+    0001.0000.aaab.0000.0003 BE3                                67.70.219.84
+    ES to BGP Gates   : M
+    ES to L2FIB Gates : Ready
+    Main port         :
+        Interface name : Bundle-Ether3
+    Interface MAC  : 00c1.6428.7cec
+        IfHandle       : 0x080002a0
+        State          : Down
+        Redundancy     : Not Defined
+    ESI type          : 0
+        Value          : 01.0000.aaab.0000.0003
+    ES Import RT      : aaab.0000.0003 (Local)
+    Source MAC        : 0000.0000.0000 (N/A)
+    Topology          :
+        Operational    : SH
+        Configured     : All-active (AApF) (default)
+    Service Carving   : Auto-selection
+    Peering Details   : 67.70.219.84[MOD:P:00]
+    Service Carving Results:
+        Forwarders     : 1
+        Permanent      : 0
+        Elected        : 0
+        Not Elected    : 1
+    MAC Flushing mode : STP-TCN
+    Peering timer     : 3 sec [not running]
+    Recovery timer    : 30 sec [not running]
+    Carving timer     : 0 sec [not running]
+    Local SHG label   : 100564
+    Remote SHG labels : 0
+
+    0001.0000.aaab.0000.0004 BE4                                67.70.219.84
+    ES to BGP Gates   : Ready
+    ES to L2FIB Gates : Ready
+    Main port         :
+        Interface name : Bundle-Ether4
+        Interface MAC  : 00c1.6428.7ceb
+        IfHandle       : 0x080002e0
+        State          : Up
+        Redundancy     : Not Defined
+    ESI type          : 0
+        Value          : 01.0000.aaab.0000.0004
+    ES Import RT      : aaab.0000.0004 (Local)
+    Source MAC        : 0000.0000.0000 (N/A)
+    Topology          :
+        Operational    : SH
+        Configured     : All-active (AApF) (default)
+    Service Carving   : Auto-selection
+    Peering Details   : 67.70.219.84[MOD:P:00]
+    Service Carving Results:
+        Forwarders     : 1
+        Permanent      : 0
+    Elected        : 1
+        Not Elected    : 0
+    MAC Flushing mode : STP-TCN
+    Peering timer     : 3 sec [not running]
+    Recovery timer    : 30 sec [not running]
+    Carving timer     : 0 sec [not running]
+    Local SHG label   : 100565
+    Remote SHG labels : 0
+
+    N/A                      Gi0/0/0/12                         67.70.219.84
+    ES to BGP Gates   : Ready
+    ES to L2FIB Gates : Ready
+    Main port         :
+        Interface name : GigabitEthernet0/0/0/12
+        Interface MAC  : 00c1.641f.6048
+        IfHandle       : 0x000005c0
+        State          : Up
+        Redundancy     : Not Defined
+    ESI type          : Invalid
+    ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
+    Source MAC        : 00c1.6428.7ce8 (PBB BSA, no ESI)
+    Topology          :
+        Operational    : SH
+    Configured     : Single-active (AApS) (default)
+    Service Carving   : Auto-selection
+    Peering Details   : 67.70.219.84[MOD:P:00]
+    Service Carving Results:
+        Forwarders     : 1
+        Permanent      : 1
+        Elected        : 0
+        Not Elected    : 0
+    MAC Flushing mode : STP-TCN
+    Peering timer     : 3 sec [not running]
+    Recovery timer    : 30 sec [not running]
+    Carving timer     : 0 sec [not running]
+    Local SHG label   : None
+    Remote SHG labels : 0
+
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -883,6 +1138,13 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         obj = ShowEvpnEthernetSegmentDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowEvpnEthernetSegmentDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 # ============================================================
 #  Unit test for 'show evpn ethernet-segment esi {esi} detail'

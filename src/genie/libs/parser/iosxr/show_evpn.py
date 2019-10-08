@@ -830,7 +830,7 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                         Optional('local_shg_label'): str,
                         Optional('remote_shg_labels'): {
                             Any(): {
-                                'label': {
+                                Optional('label'): {
                                     Any(): {
                                         'nexthop': str
                                     }
