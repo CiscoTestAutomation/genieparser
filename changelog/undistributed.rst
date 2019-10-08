@@ -459,5 +459,7 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisDatabaseDetail for command:
+        * show isis database detail
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
