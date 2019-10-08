@@ -147,6 +147,8 @@
         * show ip ospf {process_id} segment-routing adjacency-sid
     * Updated ShowIpOspfInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowIpOspfInterface:
+        * added 'teapp' section to parse more varied output
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
@@ -232,7 +234,13 @@
 --------------------------------------------------------------------------------
                                 INVENTORY
 --------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInventory:
+        * Matching more slots
 * IOS
+    * Updated ShowInventory:
+        * Matching more slots
+* NXOS
     * Updated ShowInventory:
         * Matching more slots
 
@@ -388,7 +396,9 @@
         * show evpn ethernet-segment private
     * Added ShowEvpnEthernetSegmentEsiDetail for:
         * show evpn ethernet-segment esi {esi} detail
-
+    * Added ShowEvpnInternalLabel for:
+        * show evpn internal-label
+        
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -449,10 +459,5 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
-
---------------------------------------------------------------------------------
-                                utils/common
---------------------------------------------------------------------------------
-* IOSXE:   
-    * Fixed BD to BDIxxx
-    * Fixed vr to vasirightxxx
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs

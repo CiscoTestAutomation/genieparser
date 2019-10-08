@@ -1289,3 +1289,116 @@ class ShowEvpnEthernetSegmentEsiDetail(ShowEvpnEthernetSegment):
         else:
             out = output
         return super().cli(output=out)
+
+# =====================================================
+# Schema for:
+#   * 'show evpn internal-label'
+# =====================================================
+
+class ShowEvpnInternalLabelSchema(MetaParser):
+    schema = {
+        'evi':{
+            Any(): {
+                'ethernet_segment_id': {
+                    Any(): {
+                        'index': {
+                            Any(): {
+                                'ether_tag': str,
+                                'label': str,
+                                Optional('encap'): str,
+                                Optional('summary_pathlist'): {
+                                    'index': {
+                                        Any(): {
+                                            'tep_id': str,
+                                            'df_role': str,
+                                            'nexthop': str,
+                                            'label': str
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+            }
+        }
+    }
+
+# =====================================================
+# Parser for:
+#   * 'show evpn internal-label'
+# =====================================================
+
+class ShowEvpnInternalLabel(ShowEvpnInternalLabelSchema):
+
+    cli_command = 'show evpn internal-label'
+    def cli(self, output=None):
+        
+        ret_dict = {}
+        index_dict = {}
+        summary_pathlist_index = 0
+        out = output if output else self.device.execute(self.cli_command)
+        
+        # 1000 0000.0102.0304.0506.07aa 0 None
+        # 1000 0000.0102.0304.0506.07aa 200 24011
+        p1 = re.compile(r'^(?P<evi>\d+)( +(?P<encap>\S+))? +'
+                '(?P<ethernet_segment_id>[\w\.]+) +(?P<ether_tag>\S+) +(?P<label>\S+)$')
+        
+        # 0xffffffff (P) 192.168.0.3                              29213
+        p2 = re.compile(r'^(?P<tep_id>\S+) +(?P<df_role>\(\w\)) +'
+            '(?P<nexthop>\S+) +(?P<label>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # 1000 0000.0102.0304.0506.07aa 0 None
+            # 1000 0000.0102.0304.0506.07aa 200 24011
+            # 100        MPLS   0036.3700.0000.0000.1100    0          64006
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                evi = int(group['evi'])
+                ethernet_segment_id = group['ethernet_segment_id']
+                ether_tag = group['ether_tag']
+                label = group['label']
+
+                index = index_dict.get(ethernet_segment_id, 0) + 1
+                
+                evi_dict = ret_dict.setdefault('evi', {}). \
+                    setdefault(evi, {})
+
+                segment_id_dict = evi_dict. \
+                    setdefault('ethernet_segment_id', {}). \
+                    setdefault(ethernet_segment_id, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+
+                segment_id_dict.update({'ether_tag': ether_tag})
+                segment_id_dict.update({'label': label})
+
+                if group['encap']:
+                    segment_id_dict.update({'encap': group['encap']})
+
+                index_dict.update({ethernet_segment_id: index})
+                continue
+
+            # 0xffffffff (P) 192.168.0.3                              29213
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                tep_id = group['tep_id']
+                df_role = group['df_role']
+                nexthop = group['nexthop']
+                label = group['label']
+                summary_pathlist_index += 1
+                summary_pathlist_dict = segment_id_dict.setdefault('summary_pathlist', {}). \
+                    setdefault('index', {}). \
+                    setdefault(summary_pathlist_index, {})
+
+                summary_pathlist_dict.update({'tep_id': tep_id})
+                summary_pathlist_dict.update({'df_role': df_role})
+                summary_pathlist_dict.update({'nexthop': nexthop})
+                summary_pathlist_dict.update({'label': label})
+                continue
+
+        return ret_dict
