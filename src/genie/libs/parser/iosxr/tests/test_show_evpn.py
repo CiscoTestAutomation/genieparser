@@ -795,21 +795,21 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset() 
+        import re ; print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset() 
+        import re ; print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden3(self):
         self.device = Mock(**self.golden_output3)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
-        import re ; print(re.colour_output()) ; re.reset() 
+        import re ; print(re.colour_output()) ; re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ===================================================
