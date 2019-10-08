@@ -683,7 +683,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         ------------ ------------------------------ -----------------------------
         Label        211124                         211121                        
         MTU          2611                           unknown                       
-    --More--                 Control word enabled                        enabled                       
+        Control word enabled                        enabled                       
         AC ID        31311                          41311                         
         EVPN type    Ethernet                       Ethernet                      
 
@@ -706,7 +706,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         drops: illegal VLAN 0, illegal length 0
     EVPN: neighbor 78.81.321.93, PW ID: evi 21211, ac-id 41211, state is up ( established )
         XC ID 1xd111113
-    --More--               Encapsulation MPLS
+        Encapsulation MPLS
         Source address 78.81.321.99
         Encap type Ethernet, control word enabled
         Sequencing not set

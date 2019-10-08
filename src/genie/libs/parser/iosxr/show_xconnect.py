@@ -831,10 +831,9 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # ------------ ------------------------------ -----------------------------
             m = p19.match(line)
             if m:
-                first_non_empty_char = re.search('[^ ]', original_line).start()
                 mpls_pairs = {}
                 for m in re.finditer(r'-+', original_line):
-                    mpls_pairs.update({m.start(): m.end()})
+                    mpls_pairs.update({m.start(): m.end() + 1})
                 continue
 
             # Backup for neighbor 10.1.1.1 PW ID 1 ( active )
@@ -1004,63 +1003,45 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 group = m.groupdict()
                 mpls_items = list(mpls_pairs.items())
 
+                # Last index of MPLS label section
+                mpls_end_index = mpls_items[0][1]
+
+                # Start and end index of Local section
+                local_start_index = mpls_items[1][0]
+                local_end_index = mpls_items[1][1]
+                
+                # Start and end index of Remote section
+                remote_start_index = mpls_items[2][0]
+                remote_end_index = mpls_items[2][1]
+
+                mpls_value = original_line[:mpls_end_index]
+                mpls_value = (original_line[:mpls_end_index].strip().
+                                replace('-', '_').
+                                replace(' ', '_').
+                                lower())
+                
+                local_value = (original_line[local_start_index:local_end_index])
+                local_value = local_value.replace('(',''). \
+                                    replace(')', ''). \
+                                    strip()
+
+                remote_value = (original_line[remote_start_index:remote_end_index])
+                remote_value = remote_value.replace('(',''). \
+                                replace(')', ''). \
+                                strip()
+                # Any thing between () brackets will be added to Local or Remote based on position
                 if ')' not in line:
-
-                    mpls_value = (original_line[:mpls_items[0][1]+1].
-                                strip().
-                                replace('-', '_').
-                                replace(' ', '_').
-                                lower())
-                    
-                    local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
-                                    replace('(','').
-                                    replace(')', '').
-                                    strip()) 
-                    remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
-                                    replace('(','').replace(')', '').strip())
-
-                    if not mpls_value:
-                        original_line = original_line.lstrip()
-                        original_line = original_line.rjust(first_non_empty_char)
-                        mpls_value = (original_line[:(mpls_items[0][1]-first_non_empty_char)].
-                                strip().
-                                replace('-', '_').
-                                replace(' ', '_').
-                                lower())
-
-                        local_value = (original_line[(mpls_items[1][0]-first_non_empty_char):(mpls_items[1][1]-first_non_empty_char)].
-                                    replace('(','').
-                                    replace(')', '').
-                                    strip()) 
-                        remote_value = (original_line[(mpls_items[2][0]-first_non_empty_char):(mpls_items[2][1]-first_non_empty_char)].
-                                        replace('(','').replace(')', '').strip())
-
                     if mpls_value == 'interface':
-                        if interface_found:
-                            interface_dict = current_dict.setdefault(label_name, {}). \
-                                setdefault('monitor_interface', {})
-                            interface_dict.update({'local': local_value})
-                            interface_dict.update({'remote': remote_value})
-                        else:
+                        mpls_dict = current_dict.setdefault(label_name, {}). \
+                                setdefault('monitor_interface' if interface_found else mpls_value, {})
+                        if not interface_found:
                             interface_found = True
-                            mpls_dict = current_dict.setdefault(label_name, {}). \
-                                setdefault(mpls_value, {})
-                            mpls_dict.update({'local': local_value})
-                            mpls_dict.update({'remote': remote_value})
                     else:
                         mpls_dict = current_dict.setdefault(label_name, {}). \
                             setdefault(mpls_value, {})
-                        mpls_dict.update({'local': local_value})
-                        mpls_dict.update({'remote': remote_value})
+                    mpls_dict.update({'local': local_value})
+                    mpls_dict.update({'remote': remote_value})
                 else:
-
-                    local_value = (original_line[mpls_items[1][0]:mpls_items[1][1]].
-                                replace('(','').
-                                replace(')', '').
-                                strip()) 
-                    remote_value = (original_line[mpls_items[2][0]:mpls_items[2][1]].
-                                    replace('(','').replace(')', '').strip())
-
                     local_type = mpls_dict.get('local_type', [])
                     remote_type = mpls_dict.get('remote_type', [])
                     if local_value:
