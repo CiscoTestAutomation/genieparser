@@ -638,7 +638,7 @@ class test_show_controllers_fia_diagshell_location(unittest.TestCase):
                                 'trunk': 0}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:UUT4#show controller fia diagshell 0 "l2 show" location all
+        RP/0/RP0/CPU0:UUT4#show controller fia diagshell 0 'l2 show' location all
 
         Node ID: 0/0/CPU0
         mac=fc:00:00:01:00:8b vlan=2544 GPORT=0x8000048 encap_id=0x2007

@@ -2,9 +2,9 @@
 
 IOSXR parsers for the following show commands:
 
-    * 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
-    * 'show controllers coherentDSP {port}'
-    * 'show controllers optics {port}'
+    * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
+    * show controllers coherentDSP {port}
+    * show controllers optics {port}
 '''
 
 # Python
@@ -17,11 +17,11 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # ==========================================================================================
-# Schema for 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
+# Schema for 'show controller fia diagshell {diagshell_unit} 'l2 show' location {location}'
 # ==========================================================================================
 class ShowControllersFiaDiagshellL2showLocationSchema(MetaParser):
     '''Schema for:
-        * show controllers fia diagshell {diagshell_unit} "l2 show" location {location}
+        * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     '''
 
     schema = {
@@ -45,14 +45,14 @@ class ShowControllersFiaDiagshellL2showLocationSchema(MetaParser):
 
 
 # ==========================================================================================
-# Parser for 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
+# Parser for 'show controller fia diagshell {diagshell_unit} 'l2 show' location {location}'
 # ==========================================================================================
 class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2showLocationSchema):
     '''Parser for:
-        * show controllers fia diagshell {diagshell_unit} "l2 show" location {location}
+        * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     '''
 
-    cli_command = 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
+    cli_command = "show controller fia diagshell {diagshell_unit} 'l2 show' location {location}"
 
 
     def cli(self, diagshell_unit=0, location='all', output=None):

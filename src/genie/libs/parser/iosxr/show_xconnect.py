@@ -92,7 +92,12 @@ class ShowL2VpnXconnectBriefSchema(MetaParser):
     '''
 
     schema = {
-        'locally_switching':
+        Optional('total'):
+            {'up': int,
+            'down': int,
+            'unr': int,
+            },
+        Optional('locally_switching'):
             {'like_to_like':
                 {Any():
                     {'up': int,
@@ -106,7 +111,7 @@ class ShowL2VpnXconnectBriefSchema(MetaParser):
                 'unr': int,
                 },
             },
-        'atom':
+        Optional('atom'):
             {'like_to_like':
                 {Any():
                     {'up': int,
@@ -159,6 +164,10 @@ class ShowL2VpnXconnectBrief(ShowL2VpnXconnectBriefSchema):
         p4 = re.compile(r'^(?P<item>([a-zA-Z\-\/\s]+)) +(?P<up>(\d+))'
                          ' +(?P<down>(\d+)) +(?P<unr>(\d+))$')
 
+        # Total: 0 UP, 0 DOWN, 0 UNRESOLVED
+        p5 = re.compile(r'^Total: +(?P<up>(\d+)) +UP, +(?P<down>(\d+)) +DOWN,'
+                         ' +(?P<unr>(\d+)) +UNRESOLVED$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -204,6 +213,14 @@ class ShowL2VpnXconnectBrief(ShowL2VpnXconnectBriefSchema):
                         ltl_parsed = False
                 continue
 
+            # Total: 0 UP, 0 DOWN, 0 UNRESOLVED
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                total_dict = parsed_dict.setdefault('total', {})
+                for key, value in group.items():
+                    total_dict[key] = int(value)
+                continue
 
         return parsed_dict
 

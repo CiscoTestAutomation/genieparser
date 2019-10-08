@@ -126,6 +126,19 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
           Total                               32          0          0
         '''}
 
+    golden_parsed_output3 = {
+        'total': 
+            {'down': 0,
+            'unr': 0,
+            'up': 0}}
+
+    golden_output3 = {'execute.return_value': '''
+        [2019-10-08 09:30:35,071] +++ R2_xr: executing command 'show l2vpn xconnect brief' +++
+        show l2vpn xconnect brief
+        Tue Oct  8 16:30:05.044 UTC
+        Total: 0 UP, 0 DOWN, 0 UNRESOLVED
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2VpnXconnectBrief(device=self.device)
@@ -143,6 +156,12 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
         obj = ShowL2VpnXconnectBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowL2VpnXconnectBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 
 # ==================================================
