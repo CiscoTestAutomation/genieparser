@@ -1685,14 +1685,21 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
         ipv6_vrf_all_interface_dict = {}
 
         for line in out.splitlines():
-            line = line.rstrip()
-
+            line = line.strip()
+            
+            # show ipv6 vrf {vrf} interface {interface}
+            # show ipv6 vrf {vrf} interface', 'show ipv6 vrf all interface
+            p1 = re.compile(r'^show +[\S\s]+$')
+            m = p1.match(line)
+            if m:
+                continue
+            
             # GigabitEthernet0/0/0/0 is Shutdown, ipv6 protocol is Down, Vrfid is VRF1 (0x60000002)
             # nve100 is Up, ipv6 protocol is Unknown, Vrfid is default (0x60000000)
-            p1 = re.compile(r'^\s*(?P<interface>\S+) +is +(?P<int_status>[a-zA-Z]+),'
+            p1_1 = re.compile(r'^\s*(?P<interface>\S+) +is +(?P<int_status>[a-zA-Z]+),'
                              ' +ipv6 +protocol +is +(?P<oper_status>[a-zA-Z]+),'
                              ' +Vrfid +is +(?P<vrf>\S+) +\((?P<vrf_id>[a-z0-9]+)\)$')
-            m = p1.match(line)
+            m = p1_1.match(line)
             if m:
                 interface = m.groupdict()['interface']
                 int_status = m.groupdict()['int_status'].lower()
@@ -1915,7 +1922,8 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 #Add to previous created list
                 for group in ipv6_group_address:
                     ipv6_groups.append(group)
-
+                ipv6_vrf_all_interface_dict.setdefault(interface, {}). \
+                    setdefault('ipv6', {})
                 ipv6_vrf_all_interface_dict[interface]['ipv6']['ipv6_groups'] = ipv6_groups
                 continue
 

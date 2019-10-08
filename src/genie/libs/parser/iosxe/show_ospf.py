@@ -52,23 +52,23 @@ class ShowIpOspfSegmentRoutingLocalBlockSchema(MetaParser):
     '''
 
     schema = {
-        'instance':
-            {Any():
-                {'router_id': str,
-                'areas':
-                    {Any():
-                        {'router_id':
-                            {Any():
-                                {'sr_capable': str,
-                                'srlb_base': int,
-                                'srlb_range': int,
-                                },
+        'instance': {
+            Any(): {
+                'router_id': str,
+                'areas': {
+                    Any(): {
+                        'router_id': {
+                            Any(): {
+                                'sr_capable': str,
+                                Optional('srlb_base'): int,
+                                Optional('srlb_range'): int,
                             },
                         },
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ===========================================================
@@ -110,9 +110,9 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         # --------------------------------------------------------
         # *10.4.1.1          Yes          15000       1000
         # 10.16.2.2          Yes          15000       1000
-        p3 = re.compile(r'^(?:(?P<value>(\*)))?(?P<router_id>(\S+))'
-                         ' +(?P<sr_capable>(Yes|No)) +(?P<srlb_base>(\d+))'
-                         ' +(?P<srlb_range>(\d+))$')
+        # 10.169.197.252    No 
+        p3 = re.compile(r'^(?P<value>\*)?(?P<router_id>\S+) +(?P<sr_capable>Yes|No)'
+                         '( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -143,8 +143,10 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
                 smgt_dict = area_dict.setdefault('router_id', {}).\
                                       setdefault(group['router_id'], {})
                 smgt_dict['sr_capable'] = group['sr_capable']
-                smgt_dict['srlb_base'] = int(group['srlb_base'])
-                smgt_dict['srlb_range'] = int(group['srlb_range'])
+                if group['srlb_base']:
+                    smgt_dict['srlb_base'] = int(group['srlb_base'])
+                if group['srlb_range']:
+                    smgt_dict['srlb_range'] = int(group['srlb_range'])
                 continue
 
         return ret_dict
@@ -1527,8 +1529,25 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
                                                 },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
                                             },
+                                        },
                                         Optional('virtual_links'): 
                                             {Any(): 
                                                 {'name': str,
@@ -1603,8 +1622,25 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
                                                 },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
                                             },
+                                        },
                                         Optional('sham_links'): 
                                             {Any(): 
                                                 {'name': str,
@@ -1678,7 +1714,23 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                                                         Optional('youngest_key_id'): int,
                                                         },
                                                     },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
                                                 },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
                                             },
                                         },
                                     },
@@ -1688,7 +1740,8 @@ class ShowIpOspfInterfaceSchema(MetaParser):
                     },
                 },
             },
-        }
+        },
+    }
 
 
 # ===========================================
@@ -1842,6 +1895,30 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
  
         p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
 
+        # Segment Routing enabled for MPLS forwarding
+        p29 = re.compile(r'^Segment +Routing +enabled +for +MPLS +forwarding$')
+
+        # TEAPP:
+        p30 = re.compile(r'^TEAPP:$')
+
+        # Topology Id:0x0
+        p30_1 = re.compile(r'^Topology +Id: *(?P<topology_id>[\w]+)$')
+
+        # TEAPP:SRTE
+        p30_2 = re.compile(r'^TEAPP: *(?P<teapp>[\w]+)$')
+
+        # Affinity: length 32, bits 0x00000010
+        p30_3 = re.compile(r'^Affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # Extended affinity: length 32, bits 0x00000010
+        p30_4 = re.compile(r'^Extended +affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # SR Policy Manager:
+        p31 = re.compile(r'^SR +Policy +Manager:$')
+
+        # TE Opaque LSA: Source of link information OSPF
+        p31_1 = re.compile(r'^TE +Opaque +LSA: +(?P<te_opaque_lsa>[\S\s]+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -1914,7 +1991,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     vl_transit_area_id = None
 
                     # Execute command to get virtual-link address
-                    cmd = 'show ip ospf virtual-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf virtual-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -1955,7 +2032,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
-                    cmd = 'show ip ospf sham-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf sham-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -2401,6 +2478,65 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 sub_dict['authentication']['auth_trailer_key']\
                     ['crypto_algorithm'] = 'md5'
                 continue
+
+            # Segment Routing enabled for MPLS forwarding
+            m = p29.match(line)
+            if m:
+                sub_dict.update({'sr_mpls_enabled': True})
+                continue
+
+            # TEAPP:
+            m = p30.match(line)
+            if m:
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                continue
+
+            # Topology Id:0x0
+            m = p30_1.match(line)
+            if m:
+                topology_id = m.groupdict()['topology_id']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                teapp_dict.update({'topology_id': topology_id})
+                continue
+
+            # TEAPP:SRTE
+            m = p30_2.match(line)
+            if m:
+                teapp = m.groupdict()['teapp']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                item_dict = teapp_dict.setdefault(teapp, {})
+                continue
+
+            # Affinity: length 32, bits 0x00000010
+            m = p30_3.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                aff_dict = item_dict.setdefault('affinity', {})
+                aff_dict.update({'length': length})
+                aff_dict.update({'bits': bits})
+                continue
+
+            # Extended affinity: length 32, bits 0x00000010
+            m = p30_4.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                exa_dict = item_dict.setdefault('extended_affinity', {})
+                exa_dict.update({'length': length})
+                exa_dict.update({'bits': bits})
+                continue
+            
+            # SR Policy Manager:
+            m = p31.match(line)
+            if m:
+                mgn_dict = sub_dict.setdefault('sr_policy_manager', {})
+                continue
+
+            # TE Opaque LSA: Source of link information OSPF
+            m = p31_1.match(line)
+            if m:
+                mgn_dict.update({'te_opaque_lsa': m.groupdict()['te_opaque_lsa']})
 
         return ret_dict
 
@@ -3124,18 +3260,21 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         * 'show ip ospf neighbor detail'
     '''
 
-    cli_command = 'show ip ospf neighbor detail'
+    cli_command = ['show ip ospf neighbor detail', 'show ip ospf neighbor {neighbor} detail']
     exclude = ['hello_timer', 'dead_timer', 'bdr_ip_addr',
         'bdr_router_id', 'index', 'last_retrans_max_scan_length',
         'last_retrans_max_scan_time_msec', 'total_retransmission',
         'uptime', 'last_retrans_scan_length', 'last_retrans_scan_time_msec']
 
 
-    def cli(self, output=None):
+    def cli(self, neighbor='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if neighbor:
+                out = self.device.execute(self.cli_command[1].format(neighbor=neighbor))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -3270,7 +3409,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     vl_transit_area_id = None
 
                     # Execute command to get virtual-link address
-                    cmd = 'show ip ospf virtual-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf virtual-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -3311,7 +3450,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     sl_remote_id = None
 
                     # Execute command to get sham-link remote_id
-                    cmd = 'show ip ospf sham-links | i {intf}'.format(intf=interface)
+                    cmd = 'show ip ospf sham-links | i {interface}'.format(interface=interface)
                     out = self.device.execute(cmd)
 
                     for line in out.splitlines():
@@ -4049,6 +4188,8 @@ class ShowIpOspfDatabaseTypeParser(MetaParser):
             # LS age: MAXAGE(3601)
             m = p3_2_1.match(line)
             if m:
+                tlv_type_flag = False
+                sub_tlv_type_flag = False
                 age = int(m.groupdict()['age'])
                 continue
 
@@ -5573,13 +5714,16 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         * 'show ip ospf mpls ldp interface'
     '''
 
-    cli_command = 'show ip ospf mpls ldp interface'
+    cli_command = ['show ip ospf mpls ldp interface', 'show ip ospf mpls ldp interface {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface='', output=None):
 
         if output is None:
             # Execute command on device
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -6321,7 +6465,7 @@ class ShowIpOspfTrafficSchema(MetaParser):
     '''
 
     schema = {
-        'ospf_statistics':
+        Optional('ospf_statistics'):
             {'last_clear_traffic_counters': str,
             'rcvd':
                 {'total': int,
@@ -6347,8 +6491,9 @@ class ShowIpOspfTrafficSchema(MetaParser):
                     {Any():
                         {'instance':
                             {Any():
-                                {'router_id': str,
-                                'ospf_queue_statistics':
+                                {
+                                Optional('router_id'): str,
+                                Optional('ospf_queue_statistics'):
                                     {'limit': 
                                         {'inputq': int,
                                         'outputq': int,
@@ -6439,7 +6584,7 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                             },
                                         },
                                     },
-                                'interface_statistics':
+                                Optional('interface_statistics'):
                                     {'interfaces':
                                         {Any():
                                             {'last_clear_traffic_counters': str,
@@ -6470,8 +6615,8 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                                 'unknown_neighbor': int,
                                                 'authentication': int,
                                                 'ttl_check_fail': int,
-                                                'adjacency_throttle': int,
-                                                'bfd': int,
+                                                Optional('adjacency_throttle'): int,
+                                                Optional('bfd'): int,
                                                 'test_discard': int,
                                                 },
                                             'ospf_lsa_errors':
@@ -6511,8 +6656,8 @@ class ShowIpOspfTrafficSchema(MetaParser):
                                         'unknown_neighbor': int,
                                         'authentication': int,
                                         'ttl_check_fail': int,
-                                        'adjacency_throttle': int,
-                                        'bfd': int,
+                                        Optional('adjacency_throttle'): int,
+                                        Optional('bfd'): int,
                                         'test_discard': int,
                                         },
                                     'ospf_lsa_errors':
@@ -6554,6 +6699,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Init vars
         ret_dict = {}
         address_family = 'ipv4'
+        vrf = 'default'
         received = False ; sent = False
         interface_stats = False ; summary_stats = False
         max_size_stats = False ; current_size_stats = False
@@ -6674,6 +6820,11 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         p19 = re.compile(r'^Authentication +(?P<authentication>(\d+)), +TTL'
                           ' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
                           ' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
+
+        # Authentication 0, TTL Check Fail 0, Test discard 0
+        p19_1 = re.compile(r'^Authentication +(?P<authentication>\d+), +TTL'
+                          ' +Check +Fail +(?P<ttl_check_fail>\d+), +Test discard'
+                          ' +(?P<test_discard>\d+),?$')
 
         # BFD 0, Test discard 0
         p20 = re.compile(r'^BFD +(?P<bfd>(\d+)), +Test +discard'
@@ -6961,6 +7112,15 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
                 ospf_header_errors_dict['adjacency_throttle'] = int(group['adjacency_throttle'])
                 continue
 
+            # Authentication 0, TTL Check Fail 0, Test discard 0
+            m = p19_1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_header_errors_dict['authentication'] = int(group['authentication'])
+                ospf_header_errors_dict['ttl_check_fail'] = int(group['ttl_check_fail'])
+                ospf_header_errors_dict['test_discard'] = int(group['test_discard'])
+                continue
+
             # BFD 0, Test discard 0
             m = p20.match(line)
             if m:
@@ -6994,9 +7154,17 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
             # Summary traffic statistics for process ID 65109:
             m = p23.match(line)
             if m:
+                pid = m.groupdict()['pid']
+                ospf_dict = ret_dict.setdefault('vrf', {}).\
+                                     setdefault(vrf, {}).\
+                                     setdefault('address_family', {}).\
+                                     setdefault(address_family, {}).\
+                                     setdefault('instance', {}).\
+                                     setdefault(pid, {})
                 summary_stats_dict = ospf_dict.\
                                 setdefault('summary_traffic_statistics', {})
                 interface_stats = False ; summary_stats = True
+                vrf = 'default'
                 continue
 
         return ret_dict
@@ -7113,7 +7281,7 @@ class ShowIpOspfDatabaseRouterSelfOriginate(ShowIpOspfDatabaseRouterSchema, Show
         return super().cli(db_type='router', out=output)
 
 
-class ShowIpOspfSegmentRoutingSchema(MetaParser):
+class ShowIpOspfSegmentRoutingAdjacencySidSchema(MetaParser):
     ''' Schema for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
@@ -7135,14 +7303,13 @@ class ShowIpOspfSegmentRoutingSchema(MetaParser):
         }
     }
         
-    
 
-class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
+class ShowIpOspfSegmentRoutingAdjacencySid(ShowIpOspfSegmentRoutingAdjacencySidSchema):
     ''' Parser for commands:
             * show ip ospf {process_id} segment-routing adjacency-sid
     '''
 
-    cli_commands = [
+    cli_command = [
         'show ip ospf {process_id} segment-routing adjacency-sid',
         'show ip ospf segment-routing adjacency-sid',
     ]
@@ -7151,9 +7318,9 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
         if output is None:
             if process_id:
-                command = self.cli_commands[0].format(process_id=process_id)
+                command = self.cli_command[0].format(process_id=process_id)
             else:
-                command = self.cli_commands[1]
+                command = self.cli_command[1]
 
             out = self.device.execute(command)
         else:

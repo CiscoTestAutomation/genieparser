@@ -20,7 +20,7 @@ from genie.libs.parser.iosxe.show_routing import ShowIpRouteDistributor, \
 # ============================================
 # unit test for 'show ip route'
 # =============================================
-class test_show_ip_route(unittest.TestCase):
+class TestShowIpRoute(unittest.TestCase):
     """
        unit test for show ip route
     """
@@ -871,8 +871,48 @@ class test_show_ip_route(unittest.TestCase):
                via 2001:DB8:1:1::2
           B   615:11:11:4::/64 [200/2219]
             via 10.4.1.1%default, indirectly connected
-          '''}
+    '''}
 
+    golden_parsed_output7 = {
+        "vrf": {
+            "default": {
+                "address_family": {
+                    "ipv6": {
+                        "routes": {
+                            "FF00::/8": {
+                                "route": "FF00::/8",
+                                "active": True,
+                                "metric": 0,
+                                "route_preference": 0,
+                                "source_protocol_codes": "L",
+                                "source_protocol": "local",
+                                "next_hop": {
+                                    "outgoing_interface": {
+                                        "Null0": {
+                                            "outgoing_interface": "Null0"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output7 = {'execute.return_value': '''
+        CE1#show ipv6 route
+        IPv6 Routing Table - default - 1 entries
+        Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+            B - BGP, R - RIP, H - NHRP, I1 - ISIS L1
+            I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP
+            EX - EIGRP external, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1
+            OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2
+            ls - LISP site, ld - LISP dyn-EID, a - Application
+        L   FF00::/8 [0/0]
+            via Null0, receive
+    '''}
 
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
@@ -922,10 +962,18 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = route_map_obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output6)
 
+    def test_golden7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output7)
+        route_map_obj = ShowIpv6RouteDistributor(device=self.device)
+        parsed_output = route_map_obj.parse()
+        self.assertDictEqual(parsed_output, self.golden_parsed_output7)
+
+
 ###################################################
 # unit test for show ipv6 route updated
 ####################################################
-class test_show_ipv6_route_updated(unittest.TestCase):
+class TestShowIpv6RouteUpdated(unittest.TestCase):
     """
     unit test for show ipv6 route updated
     """
@@ -1163,7 +1211,7 @@ class test_show_ipv6_route_updated(unittest.TestCase):
 ###################################################
 # unit test for show ip route <WROD>
 ####################################################
-class test_show_ip_route_word(unittest.TestCase):
+class TestShowIpRouteWord(unittest.TestCase):
     """unit test for show ip route <WORD>"""
 
     device = Device(name='aDevice')
@@ -1220,7 +1268,7 @@ class test_show_ip_route_word(unittest.TestCase):
           Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
          SR Incoming Label: 52610
           Routing Descriptor Blocks:
-          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, prefer-non-rib-labels, merge-labels
+          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, merge-labels
               Route metric is 5, traffic share count is 1
               MPLS label: 52610
               MPLS Flags: NSF
@@ -1263,7 +1311,7 @@ class test_show_ip_route_word(unittest.TestCase):
                         'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet4',
-                        'prefer_non_rib_labels': True,
+                        'prefer_non_rib_labels': False,
                         'merge_labels': True,
                         'metric': '5',
                         'share_count': '1',
@@ -1328,6 +1376,94 @@ class test_show_ip_route_word(unittest.TestCase):
         'total_prefixes': 4
     }
 
+    golden_output_3 = {'execute.return_value': '''\
+        Routing entry for 0.0.0.0/0, supernet
+            Known via "bgp 65161", distance 20, metric 0, candidate default path
+            Tag 65161, type external
+            Redistributing via ospf 1
+            Last update from 10.101.146.10 2d07h ago
+            Routing Descriptor Blocks:
+            * 10.101.146.10, from 10.101.146.10, 2d07h ago
+                Route metric is 0, traffic share count is 1
+                AS Hops 9
+                Route tag 65161
+                MPLS label: none 
+    '''
+    }
+
+    golden_parsed_output_3 = {
+        'entry': {
+            '0.0.0.0/0': {
+                'distance': '20',
+                'ip': '0.0.0.0',
+                'known_via': 'bgp 65161',
+                'mask': '0',
+                'metric': '0',
+                'net': 'supernet',
+                'paths': {
+                    1: {
+                        'age': '2d07h',
+                        'as_hops': '9',
+                        'from': '10.101.146.10',
+                        'merge_labels': False,
+                        'metric': '0',
+                        'mpls_label': 'none',
+                        'nexthop': '10.101.146.10',
+                        'prefer_non_rib_labels': False,
+                        'route_tag': '65161',
+                        'share_count': '1'
+                    }
+                },
+                'redist_via': 'ospf',
+                'redist_via_tag': '1',
+                'tag_name': '65161',
+                'tag_type': 'external',
+                'type': 'default path',
+                'update': {
+                    'age': '2d07h', 
+                    'from': '10.101.146.10'
+                }
+            }
+        },
+        'total_prefixes': 1
+    }
+
+    golden_output_4 = {'execute.return_value': '''\
+        lab-asr-1002# show ip route vrf Mgmt-intf 0.0.0.0
+        
+        Routing Table: Mgmt-intf
+        Routing entry for 0.0.0.0/0, supernet
+        Known via "static", distance 1, metric 0, candidate default path
+        Routing Descriptor Blocks:
+        * 10.255.207.129
+            Route metric is 0, traffic share count is 1
+    '''
+    }
+
+    golden_parsed_output_4 = {
+        'entry': {
+            '0.0.0.0/0': {
+                'distance': '1',
+                'ip': '0.0.0.0',
+                'known_via': 'static',
+                'mask': '0',
+                'metric': '0',
+                'net': 'supernet',
+                'paths': {
+                    1: {
+                        'merge_labels': False,
+                        'metric': '0',
+                        'nexthop': '10.255.207.129',
+                        'prefer_non_rib_labels': False,
+                        'share_count': '1'
+                    }
+                },
+                'type': 'default path'
+            }
+        },
+        'total_prefixes': 1
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpRouteDistributor(device=self.device)
@@ -1355,11 +1491,24 @@ class test_show_ip_route_word(unittest.TestCase):
         parsed_output = obj.parse(route='192.168.154.0')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowIpRouteWord(device=self.device)
+        parsed_output = obj.parse(route='0.0.0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 ###################################################
 # unit test for show ipv6 route <WROD>
 ####################################################
-class test_show_ipv6_route_word(unittest.TestCase):
+class TestShowIpv6RouteWord(unittest.TestCase):
     """unit test for show ipv6 route <WORD>"""
 
     device = Device(name='aDevice')
@@ -1416,7 +1565,7 @@ class test_show_ipv6_route_word(unittest.TestCase):
 ###################################################
 # unit test for show ip cef <prefix>
 ####################################################
-class test_show_ip_cef(unittest.TestCase):
+class TestShowIpCef(unittest.TestCase):
     """unit test for show ip cef <ip>
                      show ip cef"""
 
@@ -1653,9 +1802,8 @@ class test_show_ip_cef(unittest.TestCase):
                                         "outgoing_interface": {
                                             "GigabitEthernet3": {
                                                 "local_label": 16022,
-                                                "outgoing_label": [
-                                                    "16022|implicit-null"
-                                                ],
+                                                "outgoing_label": ["16022"],
+                                                "outgoing_label_backup": "implicit-null",
                                                 "repair": "attached-nexthop 10.0.0.13 GigabitEthernet4"
                                             }
                                         }
@@ -1677,6 +1825,74 @@ class test_show_ip_cef(unittest.TestCase):
         repair: attached-nexthop 10.0.0.13 GigabitEthernet4
       nexthop 10.0.0.13 GigabitEthernet4, repair
 
+    '''}
+
+    golden_parsed_output_6 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '10.169.196.241/32': {
+                                'nexthop': {
+                                    '10.19.198.25': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/1/6': {
+                                                'local_label': 17063,
+                                                'outgoing_label': ['16063'],
+                                                'outgoing_label_info': 'elc',
+                                            },
+                                        },
+                                    },
+                                    '10.19.198.26': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet0/1/7': {
+                                                'local_label': 17063,
+                                                'outgoing_label': ['16063'],
+                                                'outgoing_label_backup': '16063',
+                                                'repair': 'attached-nexthop 10.19.198.29 GigabitEthernet0/1/8',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_6 = {'execute.return_value': '''
+    show ip cef 10.169.196.241
+    10.169.196.241/32
+        nexthop 10.19.198.25 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
+        nexthop 10.19.198.26 GigabitEthernet0/1/7 label [16063|16063]-(local:17063)
+            repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/8
+    '''}
+
+    golden_parsed_output_7 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '0.0.0.0/0': {
+                                'epoch': 3,
+                                'flags': ['default route handler', 'default route'],
+                                'nexthop': {'no route': {}},
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+        show ip cef 10.169.196.241 detail
+        0.0.0.0/0, epoch 3, flags [default route handler, default route]
+        no route
     '''}
 
     def test_empty(self):
@@ -1720,11 +1936,25 @@ class test_show_ip_cef(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
+    def test_golden_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_6)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
 
 ###################################################
 # unit test for show ipv6 cef <prefix>
 ####################################################
-class test_show_ipv6_cef(unittest.TestCase):
+class TestShowIpv6Cef(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -1852,7 +2082,7 @@ class test_show_ipv6_cef(unittest.TestCase):
 # ==========================================
 # Unittest for 'show ip cef <prefix> detail'
 # ==========================================
-class test_show_ip_cef_detail(unittest.TestCase):
+class TestShowIpCefDetail(unittest.TestCase):
     '''Unittest for:
         * 'show ip cef <prefix> detail'
     '''
@@ -1888,25 +2118,29 @@ class test_show_ip_cef_detail(unittest.TestCase):
                                         {'outgoing_interface': 
                                             {'GigabitEthernet4': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.5 GigabitEthernet2'}}},
                                     '10.0.0.25': 
                                         {'outgoing_interface': 
                                             {'GigabitEthernet5': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.13 GigabitEthernet4'}}},
                                     '10.0.0.5': 
                                         {'outgoing_interface': 
                                             {'GigabitEthernet2': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.9 GigabitEthernet3'}}},
                                     '10.0.0.9': 
                                         {'outgoing_interface': 
                                             {'GigabitEthernet3': 
                                                 {'local_label': 16002,
-                                                'outgoing_label': ['16002|16002'],
+                                                'outgoing_label': ['16002'],
+                                                'outgoing_label_backup': "16002",
                                                 'repair': 'attached-nexthop 10.0.0.25 GigabitEthernet5'}}}},
                             'per_destination_sharing': True,
                             'sr_local_label_info': 'global/16002 [0x1B]'}}}}}}}
@@ -1927,7 +2161,7 @@ class test_show_ip_cef_detail(unittest.TestCase):
 ###################################################
 # unit test for show ip route summary
 ####################################################
-class test_show_ip_route_summary(unittest.TestCase):
+class TestShowIpRouteSummary(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 

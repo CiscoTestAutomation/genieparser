@@ -469,7 +469,7 @@ class ShowRunSectionIsis(ShowRunSectionIsisSchema):
         result_dict = {}
 
         # router isis VRF1
-        p1 = re.compile(r'^router +isis +(?P<instance>\S+)$')
+        p1 = re.compile(r'^router +isis *(?P<instance>\S*)$')
         # vrf VRF1
         p2 = re.compile(r'^vrf +(?P<vrf>\S+)$')
 
@@ -480,7 +480,10 @@ class ShowRunSectionIsis(ShowRunSectionIsisSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                tag_dict = result_dict.setdefault('instance', {}).setdefault(group['instance'],{})
+                instance = group['instance'] if group['instance'] else ''
+                tag_dict = result_dict\
+                    .setdefault('instance', {})\
+                    .setdefault(instance,{})
                 continue
 
             # vrf VRF1
@@ -491,8 +494,9 @@ class ShowRunSectionIsis(ShowRunSectionIsisSchema):
                                          setdefault(group['vrf'], {})
                 continue
 
-        for k in result_dict['instance']:
-            if 'vrf' not in result_dict['instance'][k]:
-                result_dict['instance'][k].setdefault('vrf',{}).setdefault('default' ,{})
+        if result_dict:
+            for k in result_dict['instance']:
+                if 'vrf' not in result_dict['instance'][k]:
+                    result_dict['instance'][k].setdefault('vrf',{}).setdefault('default' ,{})
 
         return result_dict

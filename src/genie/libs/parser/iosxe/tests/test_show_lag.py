@@ -1028,6 +1028,15 @@ class test_show_etherchannel_loadbalancing(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
+    golden_parsed_output = {
+        'global_lb_method': 'flow-based',
+        'lb_algo_type': 'Source Destination IP',
+        'port_channel': {
+            'Port-channel1': {
+                'lb_method': 'flow-based (Source Destination IP)'
+            }
+        }
+    }
     golden_output = {'execute.return_value': '''
         Router#sh etherchannel load-balancing
         Load for five secs: 50%/2%; one minute: 38%; five minutes: 56%
@@ -1040,15 +1049,21 @@ class test_show_etherchannel_loadbalancing(unittest.TestCase):
             Port-channel1                   :  flow-based (Source Destination IP)
     '''}
 
-    golden_parsed_output = {
+    golden_parsed_output1 = {
         'global_lb_method': 'flow-based',
         'lb_algo_type': 'Source Destination IP',
-        'port_channel': {
-            'Port-channel1': {
-                'lb_method': 'flow-based (Source Destination IP)'
-            }
-        }
     }
+    golden_output1 = {'execute.return_value': '''
+        P3#show etherchannel load-balancing
+        Load for five secs: 3%/0%; one minute: 4%; five minutes: 2%
+        No time source, *15:30:14.148 UTC Sat Jan 31 1970
+        EtherChannel Load-Balancing Method: 
+        Global LB Method: flow-based
+        LB Algo type: Source Destination IP
+
+          Port-Channel:                       LB Method
+
+    '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1062,6 +1077,13 @@ class test_show_etherchannel_loadbalancing(unittest.TestCase):
         obj = ShowEtherChannelLoadBalancing(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+    
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowEtherChannelLoadBalancing(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output1)
 
 
 ###################################################

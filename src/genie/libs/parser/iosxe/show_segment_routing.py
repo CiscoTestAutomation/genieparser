@@ -5,6 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show segment-routing mpls lb'
     * 'show segment-routing mpls state'
     * 'show segment-routing mpls lb lock'
+    * 'show segment-routing mpls lb assigned-sids'
     * 'show segment-routing mpls connected-prefix-sid-map ipv4'
     * 'show segment-routing mpls connected-prefix-sid-map ipv6'
     * 'show segment-routing mpls gb'
@@ -519,7 +520,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                 "area_id": int,
                 "domain_id": int,
                 "asn": int,
-                "prefix_sid": {
+                Optional("prefix_sid"): {
                     "prefix": str,
                     "label": int,
                     "label_type": str,
@@ -548,7 +549,7 @@ class ShowSegmentRoutingTrafficEngTopologySchema(MetaParser):
                         "bandwidth_total": int,
                         "bandwidth_reservable": int,
                         "admin_groups": str,
-                        "adj_sid": {
+                        Optional("adj_sid"): {
                             Any(): str,
                         },
                     },
@@ -739,6 +740,8 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
     """ Schema for 
         'show segment-routing traffic-eng policy all'
         'show segment-routing traffic-eng policy name {name}'
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
     """
 
     schema = {
@@ -752,19 +755,6 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     "state": str,
                     "time_for_state": str,
                     "since": str,
-                },
-            },
-            "candidate_paths": {
-                Any(): {
-                    "preference": int,
-                    Optional("dynamic"): str,
-                    Optional("explicit"): str,
-                    "weight": int,
-                    "metric_type": str,
-                    Optional("path_accumulated_metric"): int,
-                    Optional("prefix_sid"): {
-                         Any(): str,
-                    },
                 },
             },
             "candidate_paths": {
@@ -815,6 +805,19 @@ class ShowSegmentRoutingTrafficEngPolicySchema(MetaParser):
                     },
                 },
             },
+            Optional("forwarding_id"): str,
+            Optional("stats"): {
+                "packets": int,
+                "bytes": int,
+            },
+            Optional("event_history"): {
+                Any(): {
+                    "timestamp": str,
+                    "client": str,
+                    "event_type": str,
+                    "context": str,
+                },
+            },
         },
     }
 
@@ -838,7 +841,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         else:
             out = output
 
-        # Name: test1 (Color: 100 End-point: 106.162.196.241)
+        # Name: test1 (Color: 100 End-point: 10.169.196.241)
         p1 = re.compile(r'^Name: +(?P<name>\S+) +\(Color: +(?P<color>\d+) '
                          '+End-point: +(?P<end_point>\S+)\)$')
 
@@ -863,8 +866,8 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         p6 = re.compile(r'^Metric +Type: +(?P<metric_type>[\S]+), Path +Accumulated '
                          '+Metric: +(?P<path_accumulated_metric>[\d]+)$')
 
-        #         16063 [Prefix-SID, 106.162.196.241]
-        #         16072 [Prefix-SID, 111.87.5.253 - 111.87.6.253]
+        #         16063 [Prefix-SID, 10.169.196.241]
+        #         16072 [Prefix-SID, 10.189.5.253 - 10.189.6.253]
         p7 = re.compile(r'^(?P<sid>[\d]+) +\[(?P<sid_type>[\S]+), +(?P<local_address>[\S]+)'
                          '( +- +(?P<remote_address>[\S]+))?\]$')
 
@@ -881,15 +884,30 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
         #     State: Programmed
         p11 = re.compile(r'^State: +(?P<state>[\S]+)$')
 
+        #  Forwarding-ID: 65536 (0x18)
+        #  Forwarding-ID: 65536
+        p12 = re.compile(r'^Forwarding-ID: +(?P<id>[\d]+)(?P<extra>[\S\s]+)?$')
+
+        # Stats:
+        #   Packets: 44         Bytes: 1748
+        p13 = re.compile(r'^Packets: +(?P<packets>[\d]+) +Bytes: +(?P<bytes>[\d]+)$')
+
+        # Event history:
+        #   Timestamp                   Client                  Event type              Context: Value
+        #   08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+        p14 = re.compile(r'^(?P<timestamp>[\d\-]+ [\d:.]+) +(?P<client>(?:[\S]+ )+) '
+                          '+(?P<event_type>(?:[\S]+ )+) +(?P<context>(?: [\S]+)+: +(?:[\s\S]+))$')
+
         # initial variables
         ret_dict = {}
 
         for line in out.splitlines():
+            line = line.replace('\t', '    ')
             line = line.strip()
             if not line:
                 continue
 
-            # Name: test1 (Color: 100 End-point: 106.162.196.241)
+            # Name: test1 (Color: 100 End-point: 10.169.196.241)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -899,6 +917,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 policy_dict.update({'name': name})
                 policy_dict.update({'color': int(group['color'])})
                 policy_dict.update({'end_point': group['end_point']})
+                event_index = 0
                 continue
 
             # Status:
@@ -954,7 +973,7 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 path_dict.update({'path_accumulated_metric': metric})
                 continue
 
-            #   16063 [Prefix-SID, 106.162.196.241]
+            #   16063 [Prefix-SID, 10.169.196.241]
             m = p7.match(line)
             if m:
                 hop_index += 1
@@ -1006,7 +1025,54 @@ class ShowSegmentRoutingTrafficEngPolicy(ShowSegmentRoutingTrafficEngPolicySchem
                 bind_dict.update({'state': group['state'].lower()})
                 continue
 
+            #   Forwarding-ID: 65536 (0x18)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                policy_dict.update({'forwarding_id': group['id']})
+                continue
+
+            #   Packets: 44         Bytes: 1748
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                stats = policy_dict.setdefault('stats', {})
+                stats.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # Timestamp                   Client                  Event type              Context: Value 
+            # 08-29 14:51:29.074          FH Resolution           REOPT triggered         Status: REOPTIMIZED
+            m = p14.match(line)
+            if m:
+                event_index += 1
+                group = m.groupdict()
+                event = policy_dict.setdefault('event_history', {}).setdefault(event_index, {})
+                event.update({k: v.strip() for k, v in group.items()})
+                continue
+
         return ret_dict
+
+class ShowSegmentRoutingTrafficEngPolicyDetail(ShowSegmentRoutingTrafficEngPolicy):
+    """ Parser for 
+        'show segment-routing traffic-eng policy all detail'
+        'show segment-routing traffic-eng policy name {name} detail'
+    """
+
+    cli_command = ['show segment-routing traffic-eng policy all detail',
+                   'show segment-routing traffic-eng policy name {name} detail']
+
+    def cli(self, name=None, output=None):
+        if output is None:
+            if name:
+                cmd = self.cli_command[1].format(name=name)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out)
 
 
 # ====================================================
@@ -1235,5 +1301,79 @@ class ShowSegmentRoutingMplsMappingServer(ShowSegmentRoutingMplsMappingServerSch
                 if group['flags']:
                     algo_dict['flags'] = group['flags']
                 continue
+
+        return ret_dict
+
+
+class ShowSegmentRoutingMplsLbAssignedSidsSchema(MetaParser):
+    """ Schema for:
+            * show segment-routing mpls lb assigned-sids
+    """
+    schema = {
+        'segment_routing': {
+            'sid': {
+                Any(): {
+                    'state': str,
+                    'state_info': str,
+                    Optional('protocol'): str,
+                    Optional('topoid'): int,
+                    Optional('lan'): str,
+                    Optional('pro'): str,
+                    Optional('neighbor'): str,
+                    Optional('interface'): str
+                }
+            }
+        }
+    }
+
+
+class ShowSegmentRoutingMplsLbAssignedSids(ShowSegmentRoutingMplsLbAssignedSidsSchema):
+    """ Parser for:
+            * show segment-routing mpls lb assigned-sids
+    """
+
+    cli_command = "show segment-routing mpls lb assigned-sids"
+
+    state_mapping = {
+        "C": "In conflict",
+        "S": "Shared",
+        "R": "In range"
+    }
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # 12345   R
+        # 12345    S ISIS     2        N   N   192.168.0.1 Ethernet1
+        p1 = re.compile(r"^(?P<sid>\d+) +(?P<state>\w)(?: +(?P<protocol>\w+) +"
+                        r"(?P<topoid>\d+) +(?P<lan>\w+) +(?P<pro>\w+) +"
+                        r"(?P<neighbor>[\d\.]+) +(?P<interface>[\w\/\.]+))?$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 12345   R
+            # 12345    S ISIS     2        N   N   192.168.0.1 Ethernet1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+
+                sid_dict = ret_dict.setdefault("segment_routing", {})\
+                                   .setdefault("sid", {})\
+                                   .setdefault(groups["sid"], {})
+
+                sid_dict.update({"state": groups["state"]})
+                sid_dict.update({"state_info": self.state_mapping[groups["state"]]})
+
+                if groups["protocol"]:
+                    sid_dict.update({"protocol": groups["protocol"]})
+                    sid_dict.update({"topoid": int(groups['topoid'])})
+                    sid_dict.update({"lan": groups["lan"]})
+                    sid_dict.update({"pro": groups["pro"]})
+                    sid_dict.update({"neighbor": groups["neighbor"]})
+                    sid_dict.update({"interface": groups["interface"]})
 
         return ret_dict

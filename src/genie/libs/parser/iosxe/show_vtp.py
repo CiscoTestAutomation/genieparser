@@ -48,20 +48,19 @@ class ShowVtpPassword(ShowVtpPasswordSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            if 'vtp' not in ret_dict:
-                ret_dict['vtp'] = {}
-
             # The VTP password is not configured.
             m = p1.match(line)
             if m:
-                ret_dict['vtp']['configured'] = False
+                sub_dict = ret_dict.setdefault('vtp', {})
+                sub_dict['configured'] = False
                 continue
 
             # VTP Password: password-string
             m = p2.match(line)
             if m:
-                ret_dict['vtp']['configured'] = True
-                ret_dict['vtp']['password'] = m.groupdict()['val']
+                sub_dict = ret_dict.setdefault('vtp', {})
+                sub_dict['configured'] = True
+                sub_dict['password'] = m.groupdict()['val']
                 continue
 
         return ret_dict
@@ -108,8 +107,8 @@ class ShowVtpStatusSchema(MetaParser):
                     'mst': {
                         'enabled': bool,
                         'operating_mode': str,
-                        'configuration_revision': int,
-                        'primary_id': str,
+                        Optional('configuration_revision'): int,
+                        Optional('primary_id'): str,
                         Optional('primary_description'): str,
                         Optional('md5_digest'): str,
                     },
@@ -174,7 +173,8 @@ class ShowVtpStatus(ShowVtpStatusSchema):
         p9 = re.compile(r'^VTP +Operating +Mode +: (?P<val>\S+\s?\S*)$')
 
         # Maximum VLANs supported locally   : 1005
-        p10 = re.compile(r'^Maximum +VLANs +supported +locally +: (?P<val>\d+)$')
+        # Maximum VLANs supported locally   :  2048
+        p10 = re.compile(r'^Maximum +VLANs +supported +locally +: +(?P<val>\d+)$')
 
         # Number of existing VLANs          : 53
         p11 = re.compile(r'^Number +of +existing +VLANs +: (?P<val>\d+)$')
