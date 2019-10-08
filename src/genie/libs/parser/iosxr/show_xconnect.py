@@ -190,6 +190,7 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                 'state': str,
                                 'type': str,
                                 Optional('num_ranges'): int,
+                                Optional('rewrite_tags'): str,
                                 'mtu': int,
                                 'xc_id': str,
                                 'interworking': str,
@@ -551,6 +552,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             m = p39.match(line)
             if m:
                 group = m.groupdict()
+                current_dict.setdefault('rewrite_tags', '')
                 current_dict.update({k:v.strip() for k, v in group.items() if v is not None})
                 continue
 

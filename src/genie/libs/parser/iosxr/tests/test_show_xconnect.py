@@ -482,7 +482,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         'group': {
             'qf2-to-tqjof2': {
                 'xc': {
-                    'xstu_bo3_vqt53_422': {
+                    'genie_bo3_vqt53_422': {
                         'state': 'up',
                         'interworking': 'none',
                         'ac': {
@@ -491,6 +491,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                 'type': 'VLAN',
                                 'num_ranges': 1,
                                 'vlan_ranges': ['311', '311'],
+                                'rewrite_tags': '',
                                 'mtu': 2611,
                                 'xc_id': '1x3',
                                 'interworking': 'none',
@@ -577,6 +578,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                 'type': 'VLAN',
                                 'num_ranges': 1,
                                 'vlan_ranges': ['211', '211'],
+                                'rewrite_tags': '',
                                 'mtu': 2611,
                                 'xc_id': '1x2',
                                 'interworking': 'none',
@@ -659,7 +661,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
 
     Fri Oct  4 15:37:35.184 EDT
 
-    Group qf2-to-tqjof2, XC xstu_bo3_vqt53_422, state is up; Interworking none
+    Group qf2-to-tqjof2, XC genie_bo3_vqt53_422, state is up; Interworking none
     AC: TenGigE1/1/1/4/2.311, state is up
         Type VLAN; Num Ranges: 1
         Rewrite Tags: []
