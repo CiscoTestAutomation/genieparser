@@ -1895,6 +1895,39 @@ class TestShowIpCef(unittest.TestCase):
         no route
     '''}
 
+    golden_parsed_output_8 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'prefix': {
+                            '10.169.196.241/32': {
+                                'nexthop': {
+                                    '10.0.0.10': {
+                                        'outgoing_interface': {
+                                            'GigabitEthernet3': {
+                                                'local_label': 16022,
+                                                'outgoing_label': ['16022'],
+                                                'outgoing_label_backup': '16002',
+                                                'outgoing_label_info': 'elc',
+                                            },
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output_8 = {'execute.return_value': '''
+        show ip cef 10.169.196.241
+        10.169.196.241/32
+            nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
+        '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpCef(device=self.device)
@@ -1949,6 +1982,13 @@ class TestShowIpCef(unittest.TestCase):
         obj = ShowIpCef(device=self.device)
         parsed_output = obj.parse(prefix='10.169.196.241')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+    def test_golden_8(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowIpCef(device=self.device)
+        parsed_output = obj.parse(prefix='10.169.196.241')
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 
 ###################################################
