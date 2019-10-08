@@ -991,16 +991,15 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
                 current_dict.update({'lsp': group['lsp']})
                 continue
             
-            #     (LSP ping verification)               
-            #                                    (none)
-            #     (control word)                 (control word)
-            #     (control word) 
+            #              (LSP ping verification)               
+            #                                             (none)
+            #              (control word)                 (control word)
+            #              (control word) 
             # Label        30005                          unknown
             # Group ID     0x5000300                      0x0
             # VCCV CV type 0x2                            0x0
             m = p15.match(line)
             if m:
-                group = m.groupdict()
                 mpls_items = list(mpls_pairs.items())
 
                 # Last index of MPLS label section
