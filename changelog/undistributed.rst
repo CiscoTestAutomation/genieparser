@@ -39,7 +39,8 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowNveInterface:
         * Change {intf} and argument 'intf' into {interface} and 'interface'
-
+    * Update ShowInterface
+        * Fixed parser ShowInterface to match duplex and speed line
 --------------------------------------------------------------------------------
                                 EIGRP
 --------------------------------------------------------------------------------
@@ -146,6 +147,8 @@
         * show ip ospf {process_id} segment-routing adjacency-sid
     * Updated ShowIpOspfInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowIpOspfInterface:
+        * added 'teapp' section to parse more varied output
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
@@ -231,7 +234,13 @@
 --------------------------------------------------------------------------------
                                 INVENTORY
 --------------------------------------------------------------------------------
+* IOSXE
+    * Updated ShowInventory:
+        * Matching more slots
 * IOS
+    * Updated ShowInventory:
+        * Matching more slots
+* NXOS
     * Updated ShowInventory:
         * Matching more slots
 
@@ -378,7 +387,18 @@
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
-
+* IOSXR:
+    * Added ShowEvpnEthernetSegment for:
+        * show evpn ethernet-segment
+    * Added ShowEvpnEthernetSegmentDetail for:
+        * show evpn ethernet-segment detail
+    * Added ShowEvpnEthernetSegmentPrivate for:
+        * show evpn ethernet-segment private
+    * Added ShowEvpnEthernetSegmentEsiDetail for:
+        * show evpn ethernet-segment esi {esi} detail
+    * Added ShowEvpnInternalLabel for:
+        * show evpn internal-label
+        
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -398,6 +418,12 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
+    * Added ShowL2vpnBridgeDomainSummary for:
+        * show l2vpn bridge-domain summary
+    * Added ShowL2vpnBridgeDomainBrief for:
+        * show l2vpn bridge-domain brief
+    * Added ShowL2vpnBridgeDomainDetail for:
+        * show l2vpn bridge-domain detail
     * Added ShowL2vpnMacLearning for:
         * show l2vpn mac-learning {mac_type} all location {location}
     * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
@@ -433,3 +459,5 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
