@@ -31,6 +31,7 @@ class ShowProcessesSchema(MetaParser):
                 Optional('started_on_config'): str,
                 Optional('process_group'): str,
                 Optional('core'): str,
+                Optional('registered_item'): str,
                 Optional('max_core'): int,
                 Optional('placement'): str,
                 Optional('startup_path'): str,
@@ -41,7 +42,7 @@ class ShowProcessesSchema(MetaParser):
                     'kernel': float,
                     'total': float,
                 },                
-                'tid': {
+                Optional('tid'): {
                     Any(): {
                         'stack': str,
                         'pri': int,
@@ -136,6 +137,9 @@ class ShowProcesses(ShowProcessesSchema):
                           '\s+user,\s+(?P<cpu_time_kernel>\S+)\s+kernel,\s+'
                           '(?P<cpu_time_total>\S+)\s+total')
 
+        #Registered item(s): cfg/gl/isis/instance/.*/ord_A/
+        r21 = re.compile(r'Registered\s+item\(s\)\s*:\s*(?P<registered_item>.+)')
+
         # JID    TID   Stack  pri  state        NAME             rt_pri
         # 1011   22511    0K  20   Sleeping     Decision         0
         # 1011   22512    0K  20   Sleeping     TE               0
@@ -143,7 +147,7 @@ class ShowProcesses(ShowProcessesSchema):
         # 1011   22514    0K  20   Sleeping     Protect Infra    0
         # 1011   22494    0K  20   Sleeping     telemetry_evtli  0
         # 1011   22487    0K  20   Sleeping     lspv_lib ISIS    0
-        r21 = re.compile(r'(?P<jid>\d+)\s+(?P<tid>\d+)\s+(?P<stack>\S+)\s+'
+        r22 = re.compile(r'(?P<jid>\d+)\s+(?P<tid>\d+)\s+(?P<stack>\S+)\s+'
                           '(?P<pri>\d+)\s+(?P<state>\S+)\s+\s'
                           '(?P<name>[\sa-zA-Z\_\-\.]+)\s+(?P<rt_pri>\d+)')
 
@@ -166,7 +170,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 pid = int(group['pid'])
-
                 job_dict['pid'] = pid
 
                 continue
@@ -176,7 +179,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 process_name = group['process_name']
-
                 job_dict['process_name'] = process_name
 
                 continue
@@ -186,7 +188,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 executable_path = group['executable_path']
-
                 job_dict['executable_path'] = executable_path
 
                 continue
@@ -196,7 +197,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 instance_number = group['instance_number']
-
                 job_dict['instance'] = instance_number
 
                 continue
@@ -206,7 +206,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 version_id = group['version_id']
-
                 job_dict['version_id'] = version_id
 
                 continue
@@ -216,7 +215,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 respawn = group['respawn']
-
                 job_dict['respawn'] = respawn
 
                 continue
@@ -226,7 +224,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 respawn_count = int(group['respawn_count'])
-
                 job_dict['respawn_count'] = respawn_count
 
                 continue
@@ -236,7 +233,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 last_started = group['last_started']
-
                 job_dict['last_started'] = last_started
 
                 continue
@@ -246,7 +242,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 process_state = group['process_state']
-
                 job_dict['process_state'] = process_state
 
                 continue
@@ -256,7 +251,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 package_state = group['package_state']
-
                 job_dict['package_state'] = package_state
 
                 continue
@@ -266,7 +260,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 started_on_config = group['started_on_config']
-
                 job_dict['started_on_config'] = started_on_config
 
                 continue
@@ -276,7 +269,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 process_group = group['process_group']
-
                 job_dict['process_group'] = process_group
 
                 continue
@@ -286,7 +278,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 core = group['core']
-
                 job_dict['core'] = core
 
                 continue
@@ -296,7 +287,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 max_core = int(group['max_core'])
-
                 job_dict['max_core'] = max_core
 
                 continue
@@ -306,7 +296,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 placement = group['placement']
-
                 job_dict['placement'] = placement
 
                 continue
@@ -316,7 +305,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 startup_path = group['startup_path']
-
                 job_dict['startup_path'] = startup_path
 
                 continue
@@ -326,7 +314,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 ready = group['ready']
-
                 job_dict['ready'] = ready
 
                 continue
@@ -336,7 +323,6 @@ class ShowProcesses(ShowProcessesSchema):
             if result:
                 group = result.groupdict()
                 available = group['available']
-
                 job_dict['available'] = available
 
                 continue
@@ -348,13 +334,20 @@ class ShowProcesses(ShowProcessesSchema):
                 cpu_time_user = float(group['cpu_time_user'])
                 cpu_time_kernel = float(group['cpu_time_kernel'])
                 cpu_time_total = float(group['cpu_time_total'])
-
                 process_cpu_time_dict = job_dict\
                     .setdefault('process_cpu_time', {})
-
                 process_cpu_time_dict['user'] = cpu_time_user
                 process_cpu_time_dict['kernel'] = cpu_time_kernel
                 process_cpu_time_dict['total'] = cpu_time_total
+
+                continue
+
+            # Registered item(s): cfg/gl/isis/instance/.*/ord_A/
+            result = r21.match(line)
+            if result:
+                group = result.groupdict()
+                registered_item = group['registered_item']
+                job_dict['registered_item'] = registered_item
 
                 continue
 
@@ -365,7 +358,7 @@ class ShowProcesses(ShowProcessesSchema):
             # 1011   22514    0K  20   Sleeping     Protect Infra    0
             # 1011   22494    0K  20   Sleeping     telemetry_evtli  0
             # 1011   22487    0K  20   Sleeping     lspv_lib ISIS    0
-            result = r21.match(line)
+            result = r22.match(line)
             if result:
                 group = result.groupdict()
                 jid = group['jid']
@@ -375,13 +368,11 @@ class ShowProcesses(ShowProcessesSchema):
                 state = group['state']
                 name = group['name'].strip()
                 rt_pri = int(group['rt_pri'])
-
                 processes_dict = parsed_output\
                     .setdefault('job_id', {})\
                     .setdefault(jid, {})\
                     .setdefault('tid', {})\
                     .setdefault(tid, {})
-
                 processes_dict['stack'] = stack
                 processes_dict['pri'] = pri
                 processes_dict['state'] = state

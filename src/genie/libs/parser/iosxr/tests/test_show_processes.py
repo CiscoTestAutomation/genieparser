@@ -502,8 +502,6 @@ class TestShowProcesses(unittest.TestCase):
         }
     }
 
-
-
     golden_output_2 = {'execute.return_value': '''
         RX#show processes
         Fri Oct  4 18:35:26.878 UTC
@@ -529,6 +527,317 @@ class TestShowProcesses(unittest.TestCase):
         53     3614    0K  20   Sleeping     lwm_debug_threa  0
     '''}
 
+    golden_parsed_output_3 = {
+        "job_id": {
+            "1011": {
+                "pid": 10711,
+                "process_name": "isis",
+                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis",
+                "instance": "1",
+                "version_id": "00.00.0000",
+                "respawn": "ON",
+                "respawn_count": 1,
+                "last_started": "Fri Oct  4 15:47:07 2019",
+                "process_state": "Run",
+                "package_state": "Normal",
+                "started_on_config": "cfg/gl/isis/instance/test/ord_A/running",
+                "process_group": "v4-routing",
+                "core": "COPY",
+                "max_core": 0,
+                "placement": "Placeable",
+                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup",
+                "ready": "18.220s",
+                "available": "18.536s",
+                "process_cpu_time": {
+                    "user": 134.74, 
+                    "kernel": 40.88, 
+                    "total": 175.62},
+                "tid": {
+                    10711: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "Management",
+                        "rt_pri": 0,
+                    },
+                    11198: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "lwm_debug_threa",
+                        "rt_pri": 0,
+                    },
+                    11199: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "isis",
+                        "rt_pri": 0,
+                    },
+                    11201: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "lwm_service_thr",
+                        "rt_pri": 0,
+                    },
+                    11202: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "qsm_service_thr",
+                        "rt_pri": 0,
+                    },
+                    11218: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "aaa_tty_th",
+                        "rt_pri": 0,
+                    },
+                    11219: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "aaa_util_th",
+                        "rt_pri": 0,
+                    },
+                    11221: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "aaa_client_th",
+                        "rt_pri": 0,
+                    },
+                    11232: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "aaa_login_th",
+                        "rt_pri": 0,
+                    },
+                    11233: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "isis",
+                        "rt_pri": 0,
+                    },
+                    11236: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "isis",
+                        "rt_pri": 0,
+                    },
+                    11283: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "chkpt_evm",
+                        "rt_pri": 0,
+                    },
+                    11284: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "isis",
+                        "rt_pri": 0,
+                    },
+                    11298: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "isis",
+                        "rt_pri": 0,
+                    },
+                    11308: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "isis",
+                        "rt_pri": 0,
+                    },
+                    11311: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "lspv_lib ISIS",
+                        "rt_pri": 0,
+                    },
+                    11312: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "async",
+                        "rt_pri": 0,
+                    },
+                    11315: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "Hello",
+                        "rt_pri": 0,
+                    },
+                    11316: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "Update",
+                        "rt_pri": 0,
+                    },
+                    11317: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "SR-MPLS",
+                        "rt_pri": 0,
+                    },
+                    11318: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "NSR",
+                        "rt_pri": 0,
+                    },
+                    11319: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "LSD sync client",
+                        "rt_pri": 0,
+                    },
+                    11320: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "telemetry_evtli",
+                        "rt_pri": 0,
+                    },
+                    11980: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "Decision",
+                        "rt_pri": 0,
+                    },
+                    11985: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "TE",
+                        "rt_pri": 0,
+                    },
+                    11989: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "MIB Traps",
+                        "rt_pri": 0,
+                    },
+                    11996: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "Protect Infra",
+                        "rt_pri": 0,
+                    },
+                },
+            },
+            "1012": {
+                "pid": 10709,
+                "process_name": "isis",
+                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis",
+                "instance": "2",
+                "version_id": "00.00.0000",
+                "respawn": "ON",
+                "respawn_count": 1,
+                "last_started": "Fri Oct  4 15:47:07 2019",
+                "process_state": "Exited",
+                "package_state": "Normal",
+                "registered_item": "cfg/gl/isis/instance/.*/ord_A/",
+                "process_group": "v4-routing",
+                "core": "COPY",
+                "max_core": 0,
+                "placement": "Placeable",
+                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup",
+                "ready": "18.046s",
+            },
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        show processes isis
+        Wed Oct  9 20:56:33.874 UTC
+                          Job Id: 1011
+                             PID: 10711
+                    Process name: isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+                      Instance #: 1
+                      Version ID: 00.00.0000
+                         Respawn: ON
+                   Respawn count: 1
+                    Last started: Fri Oct  4 15:47:07 2019
+                   Process state: Run
+                   Package state: Normal
+               Started on config: cfg/gl/isis/instance/test/ord_A/running
+                   Process group: v4-routing
+                            core: COPY
+                       Max. core: 0
+                       Placement: Placeable
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup
+                           Ready: 18.220s
+                       Available: 18.536s
+                Process cpu time: 134.740 user, 40.880 kernel, 175.620 total
+        JID    TID  Stack  pri  state        NAME             rt_pri
+        1011   10711    0K  20   Sleeping     Management       0
+        1011   11198    0K  20   Sleeping     lwm_debug_threa  0
+        1011   11199    0K  20   Sleeping     isis             0
+        1011   11201    0K  20   Sleeping     lwm_service_thr  0
+        1011   11202    0K  20   Sleeping     qsm_service_thr  0
+        1011   11218    0K  20   Sleeping     aaa_tty_th       0
+        1011   11219    0K  20   Sleeping     aaa_util_th      0
+        1011   11221    0K  20   Sleeping     aaa_client_th    0
+        1011   11232    0K  20   Sleeping     aaa_login_th     0
+        1011   11233    0K  20   Sleeping     isis             0
+        1011   11236    0K  20   Sleeping     isis             0
+        1011   11283    0K  20   Sleeping     chkpt_evm        0
+        1011   11284    0K  20   Sleeping     isis             0
+        1011   11298    0K  20   Sleeping     isis             0
+        1011   11308    0K  20   Sleeping     isis             0
+        1011   11311    0K  20   Sleeping     lspv_lib ISIS    0
+        1011   11312    0K  20   Sleeping     async            0
+        1011   11315    0K  20   Sleeping     Hello            0
+        1011   11316    0K  20   Sleeping     Update           0
+        1011   11317    0K  20   Sleeping     SR-MPLS          0
+        1011   11318    0K  20   Sleeping     NSR              0
+        1011   11319    0K  20   Sleeping     LSD sync client  0
+        1011   11320    0K  20   Sleeping     telemetry_evtli  0
+        1011   11980    0K  20   Sleeping     Decision         0
+        1011   11985    0K  20   Sleeping     TE               0
+        1011   11989    0K  20   Sleeping     MIB Traps        0
+        1011   11996    0K  20   Sleeping     Protect Infra    0
+        -------------------------------------------------------------------------------
+                          Job Id: 1012
+                             PID: 10709
+                    Process name: isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+                      Instance #: 2
+                      Version ID: 00.00.0000
+                         Respawn: ON
+                   Respawn count: 1
+                    Last started: Fri Oct  4 15:47:07 2019
+                   Process state: Exited
+                   Package state: Normal
+              Registered item(s): cfg/gl/isis/instance/.*/ord_A/
+                   Process group: v4-routing
+                            core: COPY
+                       Max. core: 0
+                       Placement: Placeable
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup
+                           Ready: 18.046s
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowProcesses(device=self.device)
@@ -546,6 +855,13 @@ class TestShowProcesses(unittest.TestCase):
         obj = ShowProcesses(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_parsed_output_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowProcesses(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
 
 if __name__ == '__main__':
     unittest.main()
