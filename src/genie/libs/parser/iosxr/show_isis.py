@@ -708,7 +708,7 @@ class ShowIsis(ShowIsisSchema):
                 start = group['start']
                 end = group['end']
                 if start and end:
-                    srlb_dict = vrf_dict.setdefault('srgb', {})                
+                    srlb_dict = vrf_dict.setdefault('srgb', {})
                     srlb_dict['start'] = int(start)
                     srlb_dict['end'] = int(end) 
 
