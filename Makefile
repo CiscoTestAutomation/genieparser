@@ -86,8 +86,7 @@ coverage_all:
 	@echo ""
 	@echo "Running Code coverage on all unittests"
 	@echo ---------------------------------------
-	@$(TESTCMD) --coverage
-	@echo "Done Compiling"
+	@$(TESTCMD) --path tests/ --coverage --no-refresh
 	@echo ""
 
 pylint_all:
