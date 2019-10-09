@@ -93,6 +93,16 @@
         'show segment-routing mpls lb assigned-sids'
 
 --------------------------------------------------------------------------------
+                              Controllers
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowControllersFiaDiagshellL2show:
+        - renamed class to ShowControllersFiaDiagshellL2showLocation
+        - modified regex
+        - added schema
+        - added unittest
+
+--------------------------------------------------------------------------------
                                 ISSU
 --------------------------------------------------------------------------------
 * IOS
@@ -100,6 +110,7 @@
         * show issu state detail
     Added ShowIssuRollbackTimer for:
         * show issu rollback-timer
+
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -110,6 +121,14 @@
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowBgpVrfDbVrfAll:
+        - modified regex
+        - added schema
+        - added unittest
+    * Updated ShowBgpL2vpnEvpnAdvertised:
+        - modified regex
+        - added schema
+        - added unittest
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
@@ -124,6 +143,7 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
+    * Update ShowBgpL2vpnEvpn to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
@@ -370,6 +390,10 @@
                                 X-Connect
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowL2VpnXconnectBrief:
+        - modified regex
+        - added schema
+        - added unittest
     * Added ShowL2vpnXconnectDetail for:
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
@@ -378,16 +402,21 @@
         * show l2vpn xconnect summary
     * Added ShowL2vpnXconnectMp2mpDetail for:
         * show l2vpn xconnect mp2mp detail
+    * Updated ShowL2vpnXconnectDetail for:
+        * To support more varied output
 
 --------------------------------------------------------------------------------
                                 EVPN
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowEvpnInternalLabelDetail:
+        - modified regex
+        - added schema
+        - added unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
-* IOSXR:
     * Added ShowEvpnEthernetSegment for:
         * show evpn ethernet-segment
     * Added ShowEvpnEthernetSegmentDetail for:
@@ -439,6 +468,12 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowAccessLists:
+        * modified regex for both ipv4 and ipv6 to accommodate more outputs
+        * added to handle standard ACL
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
@@ -459,5 +494,15 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisHostname for:
+        * 'show isis hostname'
+        * 'show isis instance {instance} hostname'
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * Fixed regex to accommodate more outputs
+    
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
