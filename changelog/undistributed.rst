@@ -468,6 +468,12 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
+                                ACL
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowAccessLists:
+        * modified regex for both ipv4 and ipv6 to accommodate more outputs
+        * added to handle standard ACL
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
