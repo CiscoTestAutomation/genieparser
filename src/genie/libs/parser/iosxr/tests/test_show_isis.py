@@ -519,7 +519,8 @@ class TestShowIsis(unittest.TestCase):
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
-        * show isis hostname -> ShowIsisHostname
+        * show isis hostname / ShowIsisHostname
+        * show isis instance {instance} hostname / ShowIsisHostname
     '''         
     maxDiff = None
 
