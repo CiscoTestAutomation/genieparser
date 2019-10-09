@@ -53,7 +53,7 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
 
         # Unicast Label  : 24001
         # Multicast Label: 16001
-        # RD Auto  : (auto) 1.100.100.100:145
+        # RD Auto  : (auto) 10.1.100.100:145
         p4 = re.compile(r'^(?P<key>[\S ]+) *: +(?P<value>[\S ]+)$')
 
         for line in out.splitlines():
@@ -93,7 +93,7 @@ class ShowEvpnEvi(ShowEvpnEviSchema):
 
             # Unicast Label  : 24001
             # Multicast Label: 16001
-            # RD Auto  : (auto) 1.100.100.100:145
+            # RD Auto  : (auto) 10.1.100.100:145
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -290,7 +290,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
         # Summary pathlist:
         p7 = re.compile(r'^Summary pathlist:$')
 
-        #   0x03000001 123.1.1.2                                16002
+        #   0x03000001 10.76.1.2                                16002
         p8 = re.compile(r'^(?P<value>(\S+)) +(?P<nexthop>(\S+))'
                          ' +(?P<label>(\d+))$')
 
@@ -373,7 +373,7 @@ class ShowEvpnInternalLabelDetail(ShowEvpnInternalLabelDetailSchema):
                                         setdefault('summary', {})
                 continue
 
-            #   0x03000001 123.1.1.2                                16002
+            #   0x03000001 10.76.1.2                                16002
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -488,7 +488,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
         # 001b.0100.0001 N/A                                     24014    7  
         p1_1 = re.compile(r'^(?P<mac_address>\S+) +(?P<next_hop>\S+) +(?P<label>\d+) +(?P<vpn_id>\d+)$')
 
-        # IP Address   : 7.7.7.8
+        # IP Address   : 10.196.7.8
         p1_2 = re.compile(r'^IP +Address +: +(?P<ip_address>\S+)$')
 
         # Ethernet Tag                            : 0
@@ -626,7 +626,7 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
                 vpn_id_dict.update({'label': label}) 
                 continue
             
-            # IP Address   : 7.7.7.8
+            # IP Address   : 10.196.7.8
             m = p1_2.match(line)
             if m:
                 group = m.groupdict()
@@ -1017,11 +1017,11 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         }
         detail_type = None
 
-        # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+        # 0210.0300.9e00.0210.0000 Gi0/3/0/0      10.1.100.100
         # 0210.0300.9e00.0210.0000 BE4                                78.81.321.95<
         p1 = re.compile(r'^(?P<segment_id>[\w\.\/]+) +(?P<interface>\S+) +(?P<next_hop>[\d\.\<]+)$')
 
-        # 2.100.100.100   
+        # 10.204.100.100   
         p1_1 = re.compile(r'^(?P<next_hop>[\d\.]+)$')
 
         # ES to BGP Gates   : Ready
@@ -1100,7 +1100,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # Service Carving   : Auto-selection
         p24 = re.compile(r'^Service +Carving *: +(?P<service_carving>[\S ]+)$')
 
-        # Peering Details   : 3.3.3.36[MOD:P:00] 3.3.3.37[MOD:P:00]
+        # Peering Details   : 10.36.3.36[MOD:P:00] 10.36.3.37[MOD:P:00]
         p25 = re.compile(r'^Peering +Details *: +(?P<peering_details>[\S ]+)$')
 
         # Forwarders     : 1
@@ -1119,7 +1119,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # Remote SHG labels : 1
         p30 = re.compile(r'^Remote +SHG +labels? *: +(?P<remote_shg_label>\d+)$')
 
-        # 64005 : nexthop 3.3.3.37
+        # 64005 : nexthop 10.36.3.37
         p31 = re.compile(r'^(?P<shg_label>\d+) *: +nexthop +(?P<next_hop>\S+)$')
         
         # Object: EVPN MAC
@@ -1161,7 +1161,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # Number of EVIs : 1
         p40 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+)( +\((?P<per_es_1>\w+)\))?$')
 
-        # RD: 67.70.219.84:1, Num RTs: 1      RT List:
+        # RD: 10.154.219.84:1, Num RTs: 1      RT List:
         p41 = re.compile(r'^RD: +(?P<rd>\S+), +Num +RTs: +(?P<num_rts>\d+) +RT +List:( +(?P<rt_list>\d+:\d+))?$')
         
         # 4:1000,
@@ -1398,7 +1398,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 interface_dict.update({k:v for k, v in group.items() if v is not None})
                 continue
 
-            # Peering Details   : 3.3.3.36[MOD:P:00] 3.3.3.37[MOD:P:00]
+            # Peering Details   : 10.36.3.36[MOD:P:00] 10.36.3.37[MOD:P:00]
             m = p25.match(line)
             if m:
                 group = m.groupdict()
@@ -1447,7 +1447,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                     setdefault(remote_shg_label, {})
                 continue
 
-            # 64005 : nexthop 3.3.3.37
+            # 64005 : nexthop 10.36.3.37
             m = p31.match(line)
             if m:
                 group = m.groupdict()
@@ -1545,7 +1545,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 ead_update_dict.update({'num_rds': int(group['num_rds'])})
                 continue
             
-            # RD: 67.70.219.84:1, Num RTs: 1      RT List:
+            # RD: 10.154.219.84:1, Num RTs: 1      RT List:
             m = p41.match(line)
             if m:
                 group = m.groupdict()
@@ -1658,7 +1658,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 evpn_vpws_service_carving_results_dict = interface_dict.setdefault('evpn_vpws_service_carving_results', {})
                 continue
 
-            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      10.1.100.100
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1672,7 +1672,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 next_hop_list = interface_dict.setdefault('next_hops', [next_hop])
                 continue
             
-            # 2.100.100.100
+            # 10.204.100.100
             m = p1_1.match(line)
             if m:
                 group = m.groupdict()

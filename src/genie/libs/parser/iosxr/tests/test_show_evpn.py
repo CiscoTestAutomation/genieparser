@@ -93,7 +93,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
                 'unicast_label': '16000',
                 'multicast_label': '16001',
                 'rd_config': 'none',
-                'rd_auto': '(auto) 1.100.100.100:145',
+                'rd_auto': '(auto) 10.1.100.100:145',
                 'rt_auto': '100:145',
                 'route_target_in_use': {
                     '100:145': {
@@ -108,7 +108,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
                 'unicast_label': '16002',
                 'multicast_label': '16003',
                 'rd_config': 'none',
-                'rd_auto': '(auto) 1.100.100.100:165',
+                'rd_auto': '(auto) 10.1.100.100:165',
                 'rt_auto': '100:165',
                 'route_target_in_use': {
                     '100:165': {
@@ -123,7 +123,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
                 'unicast_label': '16004',
                 'multicast_label': '16005',
                 'rd_config': 'none',
-                'rd_auto': '(auto) 1.100.100.100:185',
+                'rd_auto': '(auto) 10.1.100.100:185',
                 'rt_auto': '100:185',
                 'route_target_in_use': {
                     '100:185': {
@@ -138,7 +138,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
                 'unicast_label': '0',
                 'multicast_label': '0',
                 'rd_config': 'none',
-                'rd_auto': '(auto) 1.100.100.100:0',
+                'rd_auto': '(auto) 10.1.100.100:0',
                 'rt_auto': 'none',
             },
         },
@@ -152,7 +152,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         Unicast Label  : 16000
         Multicast Label: 16001
         RD Config: none
-        RD Auto  : (auto) 1.100.100.100:145
+        RD Auto  : (auto) 10.1.100.100:145
         RT Auto  : 100:145
         Route Targets in Use           Type   
         ------------------------------ -------
@@ -163,7 +163,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         Unicast Label  : 16002
         Multicast Label: 16003
         RD Config: none
-        RD Auto  : (auto) 1.100.100.100:165
+        RD Auto  : (auto) 10.1.100.100:165
         RT Auto  : 100:165
         Route Targets in Use           Type   
         ------------------------------ -------
@@ -174,7 +174,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         Unicast Label  : 16004
         Multicast Label: 16005
         RD Config: none
-        RD Auto  : (auto) 1.100.100.100:185
+        RD Auto  : (auto) 10.1.100.100:185
         RT Auto  : 100:185
         Route Targets in Use           Type   
         ------------------------------ -------
@@ -185,7 +185,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         Unicast Label  : 0
         Multicast Label: 0
         RD Config: none
-        RD Auto  : (auto) 1.100.100.100:0
+        RD Auto  : (auto) 10.1.100.100:0
         RT Auto  : none
         Route Targets in Use           Type   
         ------------------------------ -------
@@ -437,7 +437,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
                     '001b.0100.0001': {
                         'next_hop': 'N/A',
                         'label': 24014,
-                        'ip_address': '7.7.7.8',
+                        'ip_address': '10.196.7.8',
                         'ethernet_segment': '0000.0000.0000.0000.0000',
                         'source': 'Local',
                         'object': {
@@ -562,7 +562,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         MAC address    Nexthop                                 Label    vpn-id 
         -------------- --------------------------------------- -------- --------
         001b.0100.0001 N/A                                     24014    7      
-        IP Address   : 7.7.7.8
+        IP Address   : 10.196.7.8
         Ether.Segment: 0000.0000.0000.0000.0000
         ESI port key : 0x0000
         Source       : Local
@@ -716,16 +716,16 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'pathlists': 
                     {'ead_es': 
                         {'nexthop': 
-                            {'123.1.1.2': 
+                            {'10.76.1.2': 
                                 {'label': 0}}},
                     'summary': 
                         {'nexthop': 
-                            {'123.1.1.2': 
+                            {'10.76.1.2': 
                                 {'label': 16001,
                                 'value': '0x03000001'}}},
                     'ead_evi': 
                         {'nexthop': 
-                            {'123.1.1.2': 
+                            {'10.76.1.2': 
                                 {'label': 16001}}}},
                 'vpn_id': 16001},
             16002:
@@ -739,16 +739,16 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'pathlists': 
                     {'ead_es': 
                         {'nexthop': 
-                            {'123.1.1.2': 
+                            {'10.76.1.2': 
                                 {'label': 0}}},
                     'summary': 
                         {'nexthop': 
-                            {'123.1.1.2': 
+                            {'10.76.1.2': 
                                 {'label': 16002,
                                     'value': '0x03000001'}}},
                     'ead_evi': 
                         {'nexthop': 
-                            {'123.1.1.2': 
+                            {'10.76.1.2': 
                                 {'label': 16002}}}},
                 'vpn_id': 16002},
             16003: 
@@ -770,19 +770,19 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
            Multi-paths resolved: TRUE (Remote all-active) 
            Multi-paths Internal label: 24002
            Pathlists:
-             EAD/ES     123.1.1.2                                0              
-             EAD/EVI    123.1.1.2                                16001          
+             EAD/ES     10.76.1.2                                0              
+             EAD/EVI    10.76.1.2                                16001          
            Summary pathlist:
-             0x03000001 123.1.1.2                                16001          
+             0x03000001 10.76.1.2                                16001          
 
         16002      VXLAN  0001.0407.0405.0607.0811    0          24003   
            Multi-paths resolved: TRUE (Remote all-active) 
            Multi-paths Internal label: 24003
            Pathlists:
-             EAD/ES     123.1.1.2                                0              
-             EAD/EVI    123.1.1.2                                16002          
+             EAD/ES     10.76.1.2                                0              
+             EAD/EVI    10.76.1.2                                16002          
            Summary pathlist:
-             0x03000001 123.1.1.2                                16002          
+             0x03000001 10.76.1.2                                16002          
 
         16003      VXLAN  0001.0407.0405.0607.0811    0          24004   
            Multi-paths resolved: TRUE (Remote all-active) 
@@ -834,7 +834,7 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
             },
             '0012.1200.0001.0000.0001': {
                 'interface': {
-                    'PW:40.40.40.40,10001': {
+                    'PW:10.25.40.40,10001': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
@@ -855,7 +855,7 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
             },
             '0012.1200.0002.0000.0001': {
                 'interface': {
-                    'PW:40.40.40.40,10011': {
+                    'PW:10.25.40.40,10011': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
@@ -869,10 +869,10 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
             },
             'N/A': {
                 'interface': {
-                    'PW:40.40.40.40,10007': {
+                    'PW:10.25.40.40,10007': {
                         'next_hops': ['10.10.10.10'],
                     },
-                    'PW:40.40.40.40,10017': {
+                    'PW:10.25.40.40,10017': {
                         'next_hops': ['10.10.10.10'],
                     },
                 },
@@ -886,13 +886,13 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
         Ethernet Segment Id      Interface                          Nexthops
         ------------------------ ---------------------------------- --------------------
         0012.1200.0000.0000.0000 nv101                              10.10.10.10
-        0012.1200.0001.0000.0001 PW:40.40.40.40,10001               10.10.10.10
+        0012.1200.0001.0000.0001 PW:10.25.40.40,10001               10.10.10.10
         0012.1200.0001.0000.0002 BE1                                10.10.10.10
         0012.1200.0001.0000.0003 VFI:ves-vfi-1                      10.10.10.10
-        0012.1200.0002.0000.0001 PW:40.40.40.40,10011               10.10.10.10
+        0012.1200.0002.0000.0001 PW:10.25.40.40,10011               10.10.10.10
         0012.1200.0002.0000.0003 VFI:ves-vfi-2                      10.10.10.10
-        N/A                      PW:40.40.40.40,10007               10.10.10.10
-        N/A                      PW:40.40.40.40,10017               10.10.10.10
+        N/A                      PW:10.25.40.40,10007               10.10.10.10
+        N/A                      PW:10.25.40.40,10017               10.10.10.10
     '''}
 
     def test_empty(self):
@@ -924,7 +924,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             '0210.0300.9e00.0210.0000': {
                 'interface': {
                     'GigabitEthernet0/3/0/0': {
-                        'next_hops': ['1.100.100.100', '2.100.100.100'],
+                        'next_hops': ['10.1.100.100', '10.204.100.100'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -962,7 +962,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             'be01.0300.be01.ce00.0001': {
                 'interface': {
                     'Bundle-Ether1': {
-                        'next_hops': ['1.100.100.100', '2.100.100.100'],
+                        'next_hops': ['10.1.100.100', '10.204.100.100'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1020,8 +1020,8 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
         Ethernet Segment Id      Interface      Nexthops                                
         ------------------------ -------------- ----------------------------------------
-        0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100                           
-                                                2.100.100.100                           
+        0210.0300.9e00.0210.0000 Gi0/3/0/0      10.1.100.100                           
+                                                10.204.100.100                           
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1045,8 +1045,8 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Recovery timer    : 20 sec [not running]
         Flushagain timer  : 60 sec
 
-        be01.0300.be01.ce00.0001 BE1            1.100.100.100                           
-                                                2.100.100.100                           
+        be01.0300.be01.ce00.0001 BE1            10.1.100.100                           
+                                                10.204.100.100                           
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1100,7 +1100,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
             '0047.4700.0000.0000.2200': {
                 'interface': {
                     'Bundle-Ether200': {
-                        'next_hops': ['4.4.4.47', '4.4.4.48'],
+                        'next_hops': ['10.64.4.47', '10.64.4.48'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1121,7 +1121,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['4.4.4.47[MOD:P:00]', '4.4.4.48[MOD:P:00]'],
+                        'peering_details': ['10.64.4.47[MOD:P:00]', '10.64.4.48[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -1141,7 +1141,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
                             '1': {
                                 'label': {
                                     '75116': {
-                                        'nexthop': '4.4.4.48',
+                                        'nexthop': '10.64.4.48',
                                     },
                                 },
                             },
@@ -1191,9 +1191,9 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
         ------------------------ ---------------------------------- --------------------
 
-        0047.4700.0000.0000.2200 BE200                              4.4.4.47
+        0047.4700.0000.0000.2200 BE200                              10.64.4.47
 
-                                                                    4.4.4.48
+                                                                    10.64.4.48
 
         ES to BGP Gates   : Ready
 
@@ -1227,7 +1227,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
         Service Carving   : Auto-selection
 
-        Peering Details   : 4.4.4.47[MOD:P:00] 4.4.4.48[MOD:P:00]
+        Peering Details   : 10.64.4.47[MOD:P:00] 10.64.4.48[MOD:P:00]
 
         Service Carving Results:
 
@@ -1251,7 +1251,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
         Remote SHG labels : 1
 
-                    75116 : nexthop 4.4.4.48
+                    75116 : nexthop 10.64.4.48
         '''}
 
     def test_empty(self):
@@ -1506,7 +1506,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             '0001.0000.aaab.0000.0003': {
                 'interface': {
                     'Bundle-Ether3': {
-                        'next_hops': ['67.70.219.84<'],
+                        'next_hops': ['10.154.219.84<'],
                         'es_to_bgp_gates': 'M',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1527,7 +1527,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00][1]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00][1]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -2103,7 +2103,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             '0001.0000.aaab.0000.0004': {
                 'interface': {
                     'Bundle-Ether4': {
-                        'next_hops': ['67.70.219.84<'],
+                        'next_hops': ['10.154.219.84<'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -2124,7 +2124,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00][1]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00][1]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -2772,7 +2772,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'es_ead_update': {
                             'num_rds': 1,
                             'rd': {
-                                '67.70.219.84:1': {
+                                '10.154.219.84:1': {
                                     'num_rts': 1,
                                     'rt_list': ['4:1000'],
                                 },
@@ -2784,7 +2784,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             'N/A': {
                 'interface': {
                     'GigabitEthernet0/0/0/12': {
-                        'next_hops': ['67.70.219.84<'],
+                        'next_hops': ['10.154.219.84<'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -2802,7 +2802,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                             'configured': 'Single-active (AApS) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00][1]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00][1]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 1,
@@ -3122,7 +3122,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops (*stale)   
         ------------------------ ---------------------------------- --------------------
-        0001.0000.aaab.0000.0003 BE3                                67.70.219.84<
+        0001.0000.aaab.0000.0003 BE3                                10.154.219.84<
         ES to BGP Gates   : M
         ES to L2FIB Gates : Ready
         Main port         :
@@ -3139,7 +3139,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             Operational    : SH
             Configured     : All-active (AApF) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00][1]
+        Peering Details   : 10.154.219.84[MOD:P:00][1]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 0
@@ -3248,7 +3248,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES EAD Update     :
             Num RDs:       : 0
 
-        0001.0000.aaab.0000.0004 BE4                                67.70.219.84<
+        0001.0000.aaab.0000.0004 BE4                                10.154.219.84<
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -3265,7 +3265,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             Operational    : SH
             Configured     : All-active (AApF) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00][1]
+        Peering Details   : 10.154.219.84[MOD:P:00][1]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 0
@@ -3384,9 +3384,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         ES EAD Update     :
             Num RDs:       : 1
 
-            RD: 67.70.219.84:1, Num RTs: 1      RT List:
+            RD: 10.154.219.84:1, Num RTs: 1      RT List:
                 4:1000, 
-        N/A                      Gi0/0/0/12                         67.70.219.84<
+        N/A                      Gi0/0/0/12                         10.154.219.84<
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -3402,7 +3402,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             Operational    : SH
             Configured     : Single-active (AApS) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00][1]
+        Peering Details   : 10.154.219.84[MOD:P:00][1]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 1
