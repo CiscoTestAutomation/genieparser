@@ -4,6 +4,7 @@ show_isis.py
 IOSXR parsers for the following show commands:
     * show isis adjacency
     * show isis neighbors
+    * show isis
 
 """
 
@@ -265,7 +266,7 @@ class ShowIsisSegmentRoutingLabelTableSchema(MetaParser):
 
     schema = {
         'instance': {
-            'SR': {
+            Any(): {
                 'label': {
                     Any(): {
                         'prefix_interface': str,
@@ -324,5 +325,357 @@ class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
 
         return isis_dict
 
+class ShowIsisSchema(MetaParser):
+    ''' Schema for commands:
+        * show isis
+    '''
+    schema = {
+        'instance': {
+            Any(): {
+                'process_id': str,
+                'instance': str,
+                'vrf': {
+                    Any(): {
+                        'system_id': str,
+                        'is_levels': str,
+                        'manual_area_address': list,
+                        'routing_area_address': list,
+                        'non_stop_forwarding': str,
+                        'most_recent_startup_mode': str,
+                        'te_connection_status': str,
+                        'srlb': str,
+                        'srgb': str,
+                        'interfaces': {
+                            Any(): {
+                                'running_state': str,
+                                'configuration_state': str,
+                            }
+                        },
+                        'topology': {
+                            Any(): {
+                                'distance': int,
+                                'adv_passive_only': bool,
+                                'protocols_redistributed': bool,
+                                'level': {
+                                    Any(): {
+                                        Optional('generate_style'): str,
+                                        Optional('accept_style'): str,
+                                        'metric': int,
+                                        'ispf_status': str,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
+    
+
+class ShowIsis(ShowIsisSchema):
+    ''' Parser for commands:
+        * show isis
+    '''
+
+    cli_command = 'show isis'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IS-IS Router: test
+        r1 = re.compile(r'IS\-IS\s+Router\s*:\s*(?P<isis_router>\S+)')
+
+        # System Id: 3333.3333.3333
+        r2 = re.compile(r'System\s+Id\s*:\s*(?P<system_id>\S+)')
+
+        # Instance Id: 0
+        r3 = re.compile(r'Instance\s+Id\s*:\s*(?P<instance_id>\S+)')
+
+        # IS Levels: level-1-2
+        r4 = re.compile(r'IS\s+Levels\s*:\s*(?P<is_levels>level-1-2)')
+
+        # Manual area address(es):
+        r5 = re.compile(r'Manual\s+area\s+address\(es\):')
+
+        # Routing for area address(es):
+        r6 = re.compile(r'Routing\s+for\s+area\s+address\(es\):')
+
+        # 49.0002
+        r7 = re.compile(r'(?P<area_address>\d+\.\d+)')
+
+        # Non-stop forwarding: Disabled
+        r8 = re.compile(r'Non\-stop\s+forwarding\s*:\s*(?P<non_stop_forwarding>\w+)')
+
+        # Most recent startup mode: Cold Restart
+        r9 = re.compile(r'Most\s+recent\s+startup\s+mode\s*:\s*(?P<most_recent_startup_mode>.+)')
+
+        # TE connection status: Down
+        r10 = re.compile(r'TE\s+connection\s+status\s*:\s*(?P<te_connection_status>.+)')
+
+        # Topologies supported by IS-IS:
+        r11 = re.compile(r'Topologies\s+supported\s+by\s+IS\-IS:')
+
+        # IPv4 Unicast
+        # IPv6 Unicast
+        r12 = re.compile(r'(?P<topology>(IPv6|IPv4)\s+Unicast)')
+
+        # Level-1
+        # Level-2
+        r13 = re.compile(r'Level\-(?P<level>\d+)')
+
+        # Metric style (generate/accept): Wide/Wide
+        r14 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*'
+                          '(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
+
+        # Metric: 10
+        r15 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)')
+
+        # ISPF status: Disabled
+        r16 = re.compile(r'ISPF\s+status\s*:\s*(?P<ispf_status>\w+)')
+        r17 = re.compile(r'No\s+protocols\s+redistributed')
+
+        # Distance: 115
+        r18 = re.compile(r'Distance\s*:\s*(?P<distance>\d+)')
+
+        # Advertise Passive Interface Prefixes Only: No
+        r19 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
+                          '\s*:\s*(?P<adv_passive_only>\S+)')
+
+        # SRLB not allocated
+        r20 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)')
 
 
+        # SRGB not allocated
+        r21 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)')
+
+        # Loopback0 is running actively (active in configuration)
+        # GigabitEthernet0/0/0/0 is running actively (active in configuration)
+        r22 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
+                          '\s+\((?P<configuration_state>[\w\s]+)\)')
+
+        parsed_output = {}
+        vrf = 'default'
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS Router: test
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                isis_router = group['isis_router']
+                instance_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault(isis_router, {})
+                instance_dict['process_id'] = isis_router
+                    
+                continue
+
+            # System Id: 3333.3333.3333
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                system_id = group['system_id']
+
+                continue
+
+            # Instance Id: 0
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                instance_id = group['instance_id']
+                instance_dict['instance'] = instance_id
+                vrf_dict = instance_dict\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})
+                vrf_dict['system_id'] = system_id
+
+                continue
+
+            # IS Levels: level-1-2
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                is_levels = group['is_levels']
+                vrf_dict['is_levels'] = is_levels
+
+                continue
+
+            # Manual area address(es):
+            result = r5.match(line)
+            if result:
+                area_address_field = 'manual_area_address'
+
+                continue
+
+            # Routing for area address(es):
+            result = r6.match(line)
+            if result:
+                area_address_field = 'routing_area_address'
+
+                continue
+
+            # 49.0002
+            result = r7.match(line)
+            if result:
+                group = result.groupdict()
+                area_address = group['area_address']
+                area_address_list = vrf_dict.get(area_address_field, [])
+                area_address_list.append(area_address)
+                vrf_dict[area_address_field] = area_address_list
+
+                continue
+
+            # Non-stop forwarding: Disabled
+            result = r8.match(line)
+            if result:
+                group = result.groupdict()
+                non_stop_forwarding = group['non_stop_forwarding']
+                vrf_dict['non_stop_forwarding'] = non_stop_forwarding
+
+                continue
+
+            # Most recent startup mode: Cold Restart
+            result = r9.match(line)
+            if result:
+                group = result.groupdict()
+                most_recent_startup_mode = group['most_recent_startup_mode']
+                vrf_dict['most_recent_startup_mode'] = most_recent_startup_mode
+
+                continue
+
+            # TE connection status: Down
+            result = r10.match(line)
+            if result:
+                group = result.groupdict()
+                te_connection_status = group['te_connection_status']
+                vrf_dict['te_connection_status'] = te_connection_status
+
+                continue
+
+            # Topologies supported by IS-IS:
+            result = r11.match(line)
+            if result:
+                topology_dict = vrf_dict.setdefault('topology', {})
+
+                continue
+
+            # IPv4 Unicast
+            # IPv6 Unicast
+            result = r12.match(line)
+            if result:
+                group = result.groupdict()
+                topology = group['topology']
+                address_family_dict = topology_dict.setdefault(topology, {})
+
+                continue
+
+            # Level-1
+            # Level-2
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                level = int(group['level'])
+                level_dict = address_family_dict\
+                    .setdefault('level', {})\
+                    .setdefault(level, {})
+
+                continue
+
+            # Metric style (generate/accept): Wide/Wide
+            result = r14.match(line)
+            if result:
+                group = result.groupdict()
+                generate_style = group['generate_style']
+                accept_style = group['accept_style']
+                level_dict['generate_style'] = generate_style
+                level_dict['accept_style'] = accept_style
+
+                continue
+
+            # Metric: 10
+            result = r15.match(line)
+            if result:
+                group = result.groupdict()
+                metric = int(group['metric'])
+                level_dict['metric'] = metric
+
+                continue
+
+            # ISPF status: Disabled
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                ispf_status = group['ispf_status']
+                level_dict['ispf_status'] = ispf_status
+
+                continue
+
+            # No protocols redistributed
+            result = r17.match(line)
+            if result:
+                address_family_dict['protocols_redistributed'] = False
+
+                continue
+
+            # Distance: 115
+            result = r18.match(line)
+            if result:
+                group = result.groupdict()
+                distance = int(group['distance'])
+                address_family_dict['distance'] = distance
+
+                continue
+
+            # Advertise Passive Interface Prefixes Only: No
+            result = r19.match(line)
+            if result:
+                group = result.groupdict()
+                if group['adv_passive_only'] == 'No':
+                    adv_passive_only = False
+                else:
+                    adv_passive_only = True
+                address_family_dict['adv_passive_only'] = adv_passive_only
+
+                continue
+
+            # SRLB not allocated
+            result = r20.match(line)
+            if result:
+                group = result.groupdict()
+                srlb = group['srlb']
+                vrf_dict['srlb'] = srlb   
+
+                continue
+
+            # SRGB not allocated
+            result = r21.match(line)
+            if result:
+                group = result.groupdict()
+                srgb = group['srgb']
+                vrf_dict['srgb'] = srgb
+
+                continue
+
+            # Loopback0 is running actively (active in configuration)
+            # GigabitEthernet0/0/0/0 is running actively (active in configuration)
+            result = r22.match(line)
+            if result:
+                group = result.groupdict()
+                interface = group['interface']
+                running_state = group['running_state']
+                configuration_state = group['configuration_state']
+                interfaces_dict = vrf_dict\
+                    .setdefault('interfaces', {})\
+                    .setdefault(interface, {})
+                interfaces_dict['running_state'] = running_state
+                interfaces_dict['configuration_state'] = configuration_state
+
+                continue
+
+        return parsed_output

@@ -86,6 +86,7 @@ class CreateApiDoc(object):
                 self.output['tokens'].append(token)
 
         output['module_name'] = mod.__name__.rsplit('.', 1)[-1]
+        output['package'] = self.package
         output['class'] = parser.__name__
         output['doc'] = parser.__doc__
         output['schema'] = format(parser.schema)
@@ -148,6 +149,7 @@ class CreateApiDoc(object):
 
             # Figure out location of package so you can walk it
             self.root = values
+            self.package = self.root['root']
             self.module_loc = importlib.import_module(self.root['root']).__path__[0]
 
             # Walk all file in there and go through the parsers
