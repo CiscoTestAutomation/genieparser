@@ -501,25 +501,43 @@ class ShowAccessLists(ShowAccessListsSchema):
 
                 # destination_port operator
                 if group['dst_operator']:
-                    val1 = group['dst_port']
-                    if val1.isdigit():
-                        val1 = int(val1)
-                    else:
-                        try:
-                            val1 = self.OPER_MAP[val1]
-                        except Exception:
-                            pass
+                    dst_port = group['dst_port'].split()
+                    if len(dst_port) == 1 and 'range' not in group:
+                        val1 = group['dst_port']
+                        if val1.isdigit():
+                            val1 = int(val1)
+                        else:
+                            try:
+                                val1 = self.OPER_MAP[val1]
+                            except Exception:
+                                pass
+                        l4_dict_operator = l4_dict.setdefault('destination_port', {}).setdefault('operator', {})
+                        l4_dst_dict = l4_dict_operator.setdefault('operator', group['dst_operator'])
+                        l4_dict_port = l4_dict.setdefault('destination_port', {}).setdefault('operator', {})
+                        l4_dict_port_val1 = l4_dict_port.setdefault('port', val1)
 
-                    if 'range' not in group:
-                        l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
-                            .setdefault('operator', group['dst_operator'])
-                        l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
-                            .setdefault('port', val1)
-                    else:
-                        l4_dict.setdefault('destination_port', {}).setdefault('range', {})\
-                            .setdefault('lower_port', val1)
-                        l4_dict.setdefault('destination_port', {}).setdefault('range', {})\
-                            .setdefault('upper_port', val2)
+                    else:  
+                        val1 = group['dst_port'].split()[0]
+                        val2 = group['dst_port'].split()[1]
+                        if val1.isdigit():
+                            val1 = int(val1)
+                        else:
+                            try:
+                                val1 = self.OPER_MAP[val1]
+                            except Exception:
+                                pass
+                        if val2 and val2.isdigit():
+                            val2 = int(val2)
+                        elif val2:
+                            try:
+                                val2 = self.OPER_MAP[val2]
+                            except Exception:
+                                pass
+                        
+                        l4_dict_operator_lower = l4_dict.setdefault('destination_port', {}).setdefault('range', {})
+                        l4_dst_dict_lower = l4_dict_operator_lower.setdefault('lower_port', val1)
+                        l4_dict_port_upper = l4_dict.setdefault('destination_port', {}).setdefault('range', {})
+                        l4_dst_dict_upper = l4_dict_port_upper.setdefault('upper_port', val2)
 
                 # icmp type and code
                 if protocol == 'icmp':
