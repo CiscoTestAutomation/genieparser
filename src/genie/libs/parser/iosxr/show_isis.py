@@ -343,8 +343,18 @@ class ShowIsisSchema(MetaParser):
                         'non_stop_forwarding': str,
                         'most_recent_startup_mode': str,
                         'te_connection_status': str,
-                        'srlb': str,
-                        'srgb': str,
+                        'srlb': {
+                            Any(): {
+                                Optional('start'): int,
+                                Optional('end'): int,
+                            }
+                        },
+                        'srgb': {  
+                            Any(): {
+                                Optional('start'): int,
+                                Optional('end'): int,
+                            }
+                        },
                         'interfaces': {
                             Any(): {
                                 'running_state': str,
@@ -397,7 +407,8 @@ class ShowIsis(ShowIsisSchema):
         r3 = re.compile(r'Instance\s+Id\s*:\s*(?P<instance_id>\S+)')
 
         # IS Levels: level-1-2
-        r4 = re.compile(r'IS\s+Levels\s*:\s*(?P<is_levels>level-1-2)')
+        r4 = re.compile(r'IS\s+Levels\s*:\s*'
+                         '(?P<is_levels>level-1-2|level-2-only|level-1-only)')
 
         # Manual area address(es):
         r5 = re.compile(r'Manual\s+area\s+address\(es\):')
@@ -437,6 +448,7 @@ class ShowIsis(ShowIsisSchema):
 
         # ISPF status: Disabled
         r16 = re.compile(r'ISPF\s+status\s*:\s*(?P<ispf_status>\w+)')
+
         r17 = re.compile(r'No\s+protocols\s+redistributed')
 
         # Distance: 115
@@ -447,11 +459,14 @@ class ShowIsis(ShowIsisSchema):
                           '\s*:\s*(?P<adv_passive_only>\S+)')
 
         # SRLB not allocated
-        r20 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)')
+        # SRLB allocated: 15000 - 15999
+        r20 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)'
+                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
-
+        # SRGB allocated: 16000 - 81534
         # SRGB not allocated
-        r21 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)')
+        r21 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)'
+                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
         # Loopback0 is running actively (active in configuration)
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
@@ -645,20 +660,36 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # SRLB not allocated
+            # SRLB allocated: 15000 - 15999
             result = r20.match(line)
             if result:
                 group = result.groupdict()
                 srlb = group['srlb']
-                vrf_dict['srlb'] = srlb   
+                start = group['start']
+                end = group['end']
+                srlb_dict = vrf_dict\
+                    .setdefault('srlb', {})\
+                    .setdefault(srlb, {})
+                if start and end:
+                    srlb_dict['start'] = int(start)
+                    srlb_dict['end'] = int(end)                    
 
                 continue
-
+            
+            # SRGB allocated: 16000 - 81534
             # SRGB not allocated
             result = r21.match(line)
             if result:
                 group = result.groupdict()
                 srgb = group['srgb']
-                vrf_dict['srgb'] = srgb
+                start = group['start']
+                end = group['end']
+                srlb_dict = vrf_dict\
+                    .setdefault('srgb', {})\
+                    .setdefault(srgb, {})
+                if start and end:
+                    srlb_dict['start'] = int(start)
+                    srlb_dict['end'] = int(end) 
 
                 continue
 
@@ -679,3 +710,11 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
         return parsed_output
+
+
+class ShowIsisProtocol(ShowIsis):
+    ''' Parser for commands:
+        * show isis protocol
+    '''
+    cli_command = 'show isis protocol'
+    pass
