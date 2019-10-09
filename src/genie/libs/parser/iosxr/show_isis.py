@@ -739,4 +739,10 @@ class ShowIsisProtocol(ShowIsis):
         * show isis protocol
     '''
     cli_command = 'show isis protocol'
-    pass
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
+        
