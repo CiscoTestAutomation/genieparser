@@ -23,6 +23,8 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceSummary,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
                                   ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
+                                  ShowBgpVrfDbVrfAll, \
+                                  ShowBgpL2vpnEvpnAdvertised, \
                                   ShowBgpSessions, \
                                   ShowBgpInstanceAllSessions
 
@@ -8828,9 +8830,173 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
         parsed_output = obj.parse(neighbor='192.168.99.11')
         self.assertEqual(parsed_output,self.golden_parsed_output_neighbor)
 
-"""
-Unit test for 'show bgp sessions'
-"""
+
+# ========================================
+#  Unit test for 'show bgp vrf-db vrf all'
+# ========================================
+class TestShowBgpVrfDbVrfAll(unittest.TestCase):
+    '''Unit test for 'show bgp vrf-db vrf all' '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf':
+            {'BTV-nPVR-MULTICAST-IAAS':
+                {'afs': ['v4u'],
+                'id': '0x60000004',
+                'rd': '172.16.2.88:1',
+                'ref': 4},
+            'ES:GLOBAL':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:0',
+                'ref': 2},
+            'EVPN-Multicast-BTV':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:1000',
+                'ref': 2},
+            'NOVI-TST':
+                {'afs': ['v4u'],
+                'id': '0x60000001',
+                'rd': '172.16.2.88:0',
+                'ref': 4},
+            'VPWS:10293':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:10293',
+                'ref': 2},
+            'VPWS:2000':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:2000',
+                'ref': 2},
+            'VPWS:2078':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:2078',
+                'ref': 2},
+            'default':
+                {'afs': ['v4u', 'Vv4u', 'v6u', 'Vv6u', 'L2evpn'],
+                'id': '0x60000000',
+                'rd': '0:0:0',
+                'ref': 8},
+            'test_ipv6_overlay':
+                {'afs': ['v4u', 'v6u'],
+                'id': '0x0',
+                'rd': '0:0:0',
+                'ref': 2}}}
+
+    golden_output1 = {'execute.return_value': '''
+        +++ PE1: executing command 'show bgp vrf-db vrf all' +++
+        show bgp vrf-db vrf all
+
+        Fri Jun 12 16:57:48.790 EDT
+        VRF                              ID          RD              REF AFs
+        default                          0x60000000  0:0:0           8   v4u, Vv4u, v6u, 
+                                                                         Vv6u, L2evpn
+        NOVI-TST                         0x60000001  172.16.2.88:0   4   v4u
+        test_ipv6_overlay                0x0         0:0:0           2   v4u, v6u
+        BTV-nPVR-MULTICAST-IAAS          0x60000004  172.16.2.88:1   4   v4u
+        ES:GLOBAL                        -           172.16.2.88:0   2   L2evpn
+        VPWS:2000                        -           172.16.2.88:2000 2   L2evpn
+        VPWS:2078                        -           172.16.2.88:2078 2   L2evpn
+        VPWS:10293                       -           172.16.2.88:10293 2   L2evpn
+        EVPN-Multicast-BTV               -           172.16.2.88:1000 2   L2evpn
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpVrfDbVrfAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpVrfDbVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ===============================================
+#  Unit test for 'show bgp l2vpn evpn advertised'
+# ===============================================
+class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
+    '''Unit test for 'show bgp l2vpn evpn advertised' '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'neighbor': 
+            {'5.5.5.5': 
+                {'address_family': 
+                    {'l2vpn evpn RD 7.7.7.7:3':
+                        {'advertised': 
+                            {'[1][0009.0807.0605.0403.0201][0]/120': 
+                                {'index': 
+                                    {1: 
+                                        {'neighbor': 'Local',
+                                        'neighbor_router_id': '7.7.7.7',
+                                        'flags': ['valid', 'redistributed', 'best', 'import-candidate'],
+                                        'rx_path_id': 0,
+                                        'local_path_id': 0,
+                                        'version': 12,
+                                        'inbound_attributes': 
+                                            {'community_attributes': 'EXTCOMM',
+                                            'nexthop': '0.0.0.0',
+                                            'aspath': "",
+                                            'origin': 'IGP',
+                                            'extended_community': []},
+                                        'outbound_attributes': 
+                                            {'community_attributes': 'ORG AS EXTCOMM',
+                                            'nexthop': '7.7.7.7',
+                                            'aspath': "",
+                                            'origin': 'IGP',
+                                            'extended_community': ['SoO:0.0.0.0:0', 'RT:100:7']}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:leafZ#sh bgp l2vpn evpn advertised
+        Mon Jul 11 19:22:38.235 UTC
+
+        Route Distinguisher: 7.7.7.7:3
+         [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+         Path info:
+           neighbor: Local           neighbor router id: 7.7.7.7
+           valid  redistributed  best  import-candidate  
+           Received Path ID 0, Local Path ID 0, version 12
+           Attributes after inbound policy was applied:
+            next hop: 0.0.0.0
+            EXTCOMM 
+            origin: IGP  
+            aspath: 
+            extended community: 
+           Attributes after outbound policy was applied:
+            next hop: 7.7.7.7
+            ORG AS EXTCOMM 
+            origin: IGP  
+            aspath: 
+            extended community: SoO:0.0.0.0:0 RT:100:7
+        '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnAdvertised(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpL2vpnEvpnAdvertised(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ==================================
+#  Unit test for 'show bgp sessions'
+# ==================================
 class TestShowBgpSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -8942,9 +9108,10 @@ class TestShowBgpSessions(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-"""
-Unit test for 'show bgp instance all sessions'
-"""
+
+# ===============================================
+#  Unit test for 'show bgp instance all sessions'
+# ===============================================
 class TestShowBgpInstanceAllSessions(unittest.TestCase):
     dev = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
