@@ -484,6 +484,8 @@
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
     * Added parser ShowIsis for:
-        * show isis
+        * show isisi
+    * Added parser ShowIsisLspLog for:
+        * show isis lsp-log
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
