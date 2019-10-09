@@ -32,12 +32,12 @@ from genie.libs.parser.ios.show_interface import \
                                         ShowInterfacesStats
 
 from genie.libs.parser.iosxe.tests.test_show_interface import \
-                test_show_interfaces_counters as test_show_interfaces_counters_iosxe,\
-                test_show_interfaces_switchport as test_show_interfaces_switchport_iosxe,\
-                test_show_interfaces_trunk as test_show_interfaces_trunk_iosxe,\
-                test_show_interfaces_stats as test_show_interfaces_stats_iosxe
+                TestShowInterfacesCounters as TestShowInterfacesCounters_iosxe,\
+                TestShowInterfacesSwitchport as TestShowInterfacesSwitchport_iosxe,\
+                TestShowInterfacesTrunk as TestShowInterfacesTrunk_iosxe,\
+                TestShowInterfacesStats as TestShowInterfacesStats_iosxe
 
-class test_show_interface_parsergen(unittest.TestCase):
+class TestShowInterfaceParsergen(unittest.TestCase):
 
     def test_tabular_parser(self):
         self.showCommandOutput='''
@@ -988,7 +988,7 @@ class test_show_interfaces_accounting(unittest.TestCase):
 #############################################################################
 # unitest For show interfaces <WORD> counters
 #############################################################################
-class test_show_interfaces_counters(test_show_interfaces_counters_iosxe):
+class TestShowInterfacesCounters(TestShowInterfacesCounters_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1006,7 +1006,7 @@ class test_show_interfaces_counters(test_show_interfaces_counters_iosxe):
 #############################################################################
 # unitest For Show Interfaces switchport
 #############################################################################
-class test_show_interfaces_switchport(test_show_interfaces_switchport_iosxe):
+class TestShowInterfacesSwitchport(TestShowInterfacesSwitchport_iosxe):
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
@@ -1025,7 +1025,7 @@ class test_show_interfaces_switchport(test_show_interfaces_switchport_iosxe):
 #############################################################################
 # unitest For show interfaces trunk
 #############################################################################
-class test_show_interfaces_trunk(test_show_interfaces_trunk_iosxe):
+class TestShowInterfacesTrunk(TestShowInterfacesTrunk_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1043,7 +1043,7 @@ class test_show_interfaces_trunk(test_show_interfaces_trunk_iosxe):
 ###################################################
 # unit test for show interfaces stats
 ####################################################
-class test_show_interfaces_stats(test_show_interfaces_stats_iosxe):
+class TestShowInterfacesStats(TestShowInterfacesStats_iosxe):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
