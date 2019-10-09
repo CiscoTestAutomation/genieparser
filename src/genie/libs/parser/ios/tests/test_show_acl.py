@@ -7,9 +7,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.ios.show_acl import ShowAccessLists
 
-from genie.libs.parser.iosxe.tests.test_show_acl import test_show_access_lists as test_show_access_lists_iosxe
+from genie.libs.parser.iosxe.tests.test_show_acl import TestShowAccessLists as TestShowAccessListsIosxe
 
-class test_show_access_lists(test_show_access_lists_iosxe):
+class TestShowAccessLists(TestShowAccessListsIosxe):
 
     golden_output_standard = {'execute.return_value': '''\
         Switch# show ip access-lists
@@ -27,173 +27,143 @@ class test_show_access_lists(test_show_access_lists_iosxe):
     '''}
 
     golden_parsed_output_standard = {
-        "1": {
-            "name": "1",
-            "type": "ipv4-acl-type",
-            "aces": {
-                "10": {
-                    "name": "10",
-                    "actions": {
-                        "forwarding": "permit"
+        '1': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
                     },
-                    "matches": {
-                        "l3": {
-                            "ipv4": {
-                                "protocol": "ipv4",
-                                "source_network": {
-                                    "172.20.10.10": {
-                                        "source_network": "172.20.10.10"
-                                    }
-                                },
-                                "destination_network": {
-                                    "172.20.10.10": {
-                                        "destination_network": "172.20.10.10"
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '172.20.10.10 0.0.0.0': {
+                                        'source_network': '172.20.10.10 0.0.0.0'
                                     }
                                 }
                             }
                         }
-                    }
+                    },
+                    'name': '10'
                 }
-            }
+            },
+            'name': '1',
+            'type': 'ipv4-acl-type'
         },
-        "10": {
-            "name": "10",
-            "type": "ipv4-acl-type",
-            "aces": {
-                "10": {
-                    "name": "10",
-                    "actions": {
-                        "forwarding": "permit"
+        '10': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
                     },
-                    "matches": {
-                        "l3": {
-                            "ipv4": {
-                                "protocol": "ipv4",
-                                "source_network": {
-                                    "10.66.12.12": {
-                                        "source_network": "10.66.12.12"
-                                    }
-                                },
-                                "destination_network": {
-                                    "10.66.12.12": {
-                                        "destination_network": "10.66.12.12"
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.66.12.12 0.0.0.0': {
+                                        'source_network': '10.66.12.12 0.0.0.0'
                                     }
                                 }
                             }
                         }
-                    }
+                    },
+                    'name': '10'
                 }
-            }
+            },
+            'name': '10',
+            'type': 'ipv4-acl-type'
         },
-        "12": {
-            "name": "12",
-            "type": "ipv4-acl-type",
-            "aces": {
-                "10": {
-                    "name": "10",
-                    "actions": {
-                        "forwarding": "deny"
+        '12': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'deny'
                     },
-                    "matches": {
-                        "l3": {
-                            "ipv4": {
-                                "protocol": "ipv4",
-                                "source_network": {
-                                    "10.16.3.2": {
-                                        "source_network": "10.16.3.2"
-                                    }
-                                },
-                                "destination_network": {
-                                    "10.16.3.2": {
-                                        "destination_network": "10.16.3.2"
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.16.3.2 0.0.0.0': {
+                                        'source_network': '10.16.3.2 0.0.0.0'
                                     }
                                 }
                             }
                         }
-                    }
+                    },
+                    'name': '10'
                 }
-            }
+            },
+            'name': '12',
+            'type': 'ipv4-acl-type'
         },
-        "32": {
-            "name": "32",
-            "type": "ipv4-acl-type",
-            "aces": {
-                "10": {
-                    "name": "10",
-                    "actions": {
-                        "forwarding": "permit"
+        '32': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
                     },
-                    "matches": {
-                        "l3": {
-                            "ipv4": {
-                                "protocol": "ipv4",
-                                "source_network": {
-                                    "172.20.20.20": {
-                                        "source_network": "172.20.20.20"
-                                    }
-                                },
-                                "destination_network": {
-                                    "172.20.20.20": {
-                                        "destination_network": "172.20.20.20"
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '172.20.20.20 0.0.0.0': {
+                                        'source_network': '172.20.20.20 0.0.0.0'
                                     }
                                 }
                             }
                         }
-                    }
+                    },
+                    'name': '10'
                 }
-            }
+            },
+            'name': '32',
+            'type': 'ipv4-acl-type'
         },
-        "34": {
-            "name": "34",
-            "type": "ipv4-acl-type",
-            "aces": {
-                "10": {
-                    "name": "10",
-                    "actions": {
-                        "forwarding": "permit"
+        '34': {
+            'aces': {
+                '10': {
+                    'actions': {
+                        'forwarding': 'permit'
                     },
-                    "matches": {
-                        "l3": {
-                            "ipv4": {
-                                "protocol": "ipv4",
-                                "source_network": {
-                                    "10.24.35.56": {
-                                        "source_network": "10.24.35.56"
-                                    }
-                                },
-                                "destination_network": {
-                                    "10.24.35.56": {
-                                        "destination_network": "10.24.35.56"
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.24.35.56 0.0.0.0': {
+                                        'source_network': '10.24.35.56 0.0.0.0'
                                     }
                                 }
                             }
                         }
-                    }
+                    },
+                    'name': '10'
                 },
-                "20": {
-                    "name": "20",
-                    "actions": {
-                        "forwarding": "permit"
+                '20': {
+                    'actions': {
+                        'forwarding': 'permit'
                     },
-                    "matches": {
-                        "l3": {
-                            "ipv4": {
-                                "protocol": "ipv4",
-                                "source_network": {
-                                    "10.34.56.34": {
-                                        "source_network": "10.34.56.34"
-                                    }
-                                },
-                                "destination_network": {
-                                    "10.34.56.34": {
-                                        "destination_network": "10.34.56.34"
+                    'matches': {
+                        'l3': {
+                            'ipv4': {
+                                'protocol': 'ipv4',
+                                'source_network': {
+                                    '10.34.56.34 0.0.0.0': {
+                                        'source_network': '10.34.56.34 0.0.0.0'
                                     }
                                 }
                             }
                         }
-                    }
+                    },
+                    'name': '20'
                 }
-            }
+            },
+            'name': '34',
+            'type': 'ipv4-acl-type'
         }
     }
 
