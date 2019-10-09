@@ -167,3 +167,117 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
                 continue
 
         return mpls_dict
+
+# ======================================================
+# Parser for 'show mpls label table detail'
+# ======================================================
+
+class ShowMplsLabelTableDetailSchema(MetaParser):
+    
+    """Schema for show mpls label table detail"""
+
+    schema = {
+        'table': {
+            Any(): {
+                'label': {
+                    Any(): {
+                        'owner': str,
+                        'state': str,
+                        'rewrite': str,
+                        Optional('label_type'): {
+                            Any(): {
+                                Optional('vers'): int,
+                                Optional('start_label'): int,
+                                Optional('size'): int,
+                                Optional('app_notify'): int,
+                                Optional('index'): int,
+                                Optional('type'): int,
+                                Optional('interface'): str,
+                                Optional('nh'): str,
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
+
+    """Parser for show mpls label table detail"""
+
+    cli_command = ['show mpls label table detail']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        # Init vars
+        mpls_dict = {}
+        table = ''
+
+        # Table Label   Owner                           State  Rewrite
+        # ----- ------- ------------------------------- ------ -------
+        # 0     0       LSD(A)                          InUse  Yes
+        # 0     16000   ISIS(A):SR                      InUse  No
+        p1 = re.compile(r'^(?P<table>\d+)\s+(?P<label>\d+)\s+(?P<owner>[\S]+)\s+(?P<state>\S+)'
+            '\s+(?P<rewrite>\S+)$')
+
+        # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
+        # (Lbl-blk SRLB, vers:0, (start_label=15000, size=1000, app_notify=0)
+        p2 = re.compile(r'^\((?P<label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
+            '\s+\(start_label=(?P<start_label>\d+),\s+size=(?P<size>\d+)'
+            '(,\s+app_notify=(?P<app_notify>\d+))?\)$')
+
+        # (SR Adj Segment IPv4, vers:0, index=0, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)
+        p3 = re.compile(r'^\((?P<sr_label_type>[\S\s]+),\s+vers:(?P<vers>\d+),'
+            '\s+index=(?P<index>\d+),\s+type=(?P<type>\d+),\s+intf=(?P<interface>\S+),'
+            '\s+nh=(?P<nh>\S+)\)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Table Label   Owner                           State  Rewrite
+            # ----- ------- ------------------------------- ------ -------
+            # 0     0       LSD(A)                          InUse  Yes
+            # 0     16000   ISIS(A):SR                      InUse  No
+            m = p1.match(line)
+            if m:
+                table = int(m.groupdict()['table'])
+                label = int(m.groupdict()['label'])
+                final_dict = mpls_dict.setdefault('table', {}).setdefault(table, {}).\
+                    setdefault('label', {}).setdefault(label, {})
+                label_list = ['owner', 'state', 'rewrite']
+                for key in label_list:
+                    final_dict.update({key:m.groupdict()[key]})
+                continue
+
+            # (Lbl-blk SRGB, vers:0, (start_label=16000, size=8000)
+            # (Lbl-blk SRLB, vers:0, (start_label=15000, size=1000, app_notify=0)
+            m = p2.match(line)
+            if m:
+                label_type = m.groupdict()['label_type']
+                latest_dict = final_dict.setdefault('label_type', {}).setdefault(label_type, {})
+                label_list = ['vers', 'start_label', 'size']
+                for key in label_list:
+                    latest_dict.update({key:int(m.groupdict()[key])})
+                if m.groupdict()['app_notify']:
+                    latest_dict.update({'app_notify':int(m.groupdict()['app_notify'])})
+                continue
+
+            # (SR Adj Segment IPv4, vers:0, index=0, type=0, intf=Gi0/0/0/1, nh=10.1.2.2)
+            m = p3.match(line)
+            if m:
+                label_type = m.groupdict()['sr_label_type']
+                latest_dict = final_dict.setdefault('label_type', {}).setdefault(label_type, {})
+                label_list = ['vers', 'index', 'type']
+                for key in label_list:
+                    latest_dict.update({key:int(m.groupdict()[key])})
+                latest_dict.update({'interface':m.groupdict()['interface']})
+                latest_dict.update({'nh':m.groupdict()['nh']})
+                continue
+
+        return mpls_dict

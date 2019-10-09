@@ -2043,11 +2043,11 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
                         "outgoing_label_or_vc": {
                             "Pop Label": {
                                 "prefix_or_tunnel_id": {
-                                    "1/1[TE-Bind]": {
+                                    "192.168.0.1/32": {
                                         "outgoing_interface": {
-                                            "Tunnel1": {
-                                                "next_hop": "point2point",
-                                                "tsp_tunnel": True,
+                                            "GigabitEthernet2": {
+                                                "next_hop": "192.168.0.2",
+                                                "merged": True,
                                                 "bytes_label_switched": 0
                                             }
                                         }
@@ -2236,7 +2236,7 @@ class test_show_mpls_forwarding_table(unittest.TestCase):
         19         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
         20         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
         21         Pop Label  10.135.15.2-A    0             Et0/1      10.135.15.2
-        22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        22    [M]  Pop Label  192.168.0.1/32  0        Gi2    192.168.0.2
         16110      Pop Label  10.70.20.20/32   0             Et0/0      10.4.1.2
         16120      16120      10.30.30.30/32   0             Et0/0      10.4.1.2
         16130      16130      10.25.40.40/32   0             Et0/0      10.4.1.2
@@ -2580,7 +2580,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 18,
                                                 "encaps": 18,
                                                 "mru": 1530,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "macstr": "00002440156384B261CB1480810000330800",
                                                 "vpn_route": "L3VPN-0051",
                                                 "output_feature_configured": False,
@@ -2616,7 +2616,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 18,
                                                 "encaps": 18,
                                                 "mru": 1530,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "via": "Ls0",
                                                 "macstr": "AABBCC032800AABBCC0325018847",
                                                 "lstack": "00010000",
@@ -2640,7 +2640,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 0,
                                                 "encaps": 0,
                                                 "mru": 0,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "vpn_route": "L3VPN-0051",
                                                 "output_feature_configured": False,
                                                 "broadcast": True
@@ -2699,7 +2699,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 14,
                                                 "encaps": 18,
                                                 "mru": 1500,
-                                                "label_stack": "{16}",
+                                                "label_stack": "16",
                                                 "macstr": "AABBCC032800AABBCC0325018847",
                                                 "lstack": "00010000",
                                                 "output_feature_configured": False,
@@ -2723,7 +2723,7 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
                                                 "mac": 0,
                                                 "encaps": 0,
                                                 "mru": 0,
-                                                "label_stack": "{}",
+                                                "label_stack": "",
                                                 "via": "Ls0"
                                             }
                                         }
@@ -2752,6 +2752,48 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
             MAC/Encaps=0/0, MRU=0, Label Stack{}, via Ls0
     '''}
 
+    golden_parsed_output_3 = {
+        'vrf': {
+            'default': {
+                'local_label': {
+                    40: {
+                        'outgoing_label_or_vc': {
+                            'Pop Label': {
+                                'prefix_or_tunnel_id': {
+                                    '65536/1[TE-Bind]': {
+                                        'outgoing_interface': {
+                                            'Tunnel65536': {
+                                                'next_hop': 'point2point',
+                                                'bytes_label_switched': 0,
+                                                'mac': 14,
+                                                'encaps': 26,
+                                                'mru': 1492,
+                                                'label_stack': '16052 16062 16063',
+                                                'via': 'GigabitEthernet0/1/7',
+                                                'macstr': '0050568DA282BC16652F3A178847',
+                                                'lstack': '03EB400003EBE00003EBF000',
+                                                'output_feature_configured': False,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output_3 = {'execute.return_value': '''\
+        PE1# show mpls forwarding-table labels 40 detail
+        Local      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop
+        Label      Label      or Tunnel Id     Switched      interface
+        40         Pop Label  65536/1[TE-Bind] 0             Tu65536    point2point
+                MAC/Encaps=14/26, MRU=1492, Label Stack{16052 16062 16063}, via Gi0/1/7
+                0050568DA282BC16652F3A178847 03EB400003EBE00003EBF000
+                No output feature configured
+    '''}
+
     def test_empty(self):
         self.dev1 = Mock(**self.empty_output)
         obj = ShowMplsForwardingTableDetail(device=self.dev1)
@@ -2771,6 +2813,13 @@ class test_show_mpls_forwarding_table_detail(unittest.TestCase):
         obj = ShowMplsForwardingTableDetail(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.golden_output_3)
+        obj = ShowMplsForwardingTableDetail(device=self.dev)
+        parsed_output = obj.parse(label='40')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 class test_show_mpls_interface(unittest.TestCase):

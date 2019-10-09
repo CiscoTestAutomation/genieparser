@@ -1268,7 +1268,7 @@ class TestShowIpRouteWord(unittest.TestCase):
           Last update from 192.168.0.3 on GigabitEthernet2, 00:00:14 ago
          SR Incoming Label: 52610
           Routing Descriptor Blocks:
-          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, prefer-non-rib-labels, merge-labels
+          * 192.168.0.1, from 10.16.2.2, 00:00:14 ago, via GigabitEthernet4, merge-labels
               Route metric is 5, traffic share count is 1
               MPLS label: 52610
               MPLS Flags: NSF
@@ -1311,7 +1311,7 @@ class TestShowIpRouteWord(unittest.TestCase):
                         'from': '10.16.2.2',
                         'age': '00:00:14',
                         'interface': 'GigabitEthernet4',
-                        'prefer_non_rib_labels': True,
+                        'prefer_non_rib_labels': False,
                         'merge_labels': True,
                         'metric': '5',
                         'share_count': '1',

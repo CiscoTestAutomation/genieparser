@@ -22,7 +22,11 @@ from genie.libs.parser.iosxr.show_bgp import ShowPlacementProgramAll,\
                                   ShowBgpInstanceNeighborsRoutes,\
                                   ShowBgpInstanceSummary,\
                                   ShowBgpInstanceAllAll, ShowBgpInstances,\
-                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors
+                                  ShowBgpL2vpnEvpn, ShowBgpL2vpnEvpnNeighbors, \
+                                  ShowBgpVrfDbVrfAll, \
+                                  ShowBgpL2vpnEvpnAdvertised, \
+                                  ShowBgpSessions, \
+                                  ShowBgpInstanceAllSessions
 
 
 # ==================================
@@ -7862,7 +7866,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''
-        show bgp l2vpn evpn
+         show bgp l2vpn evpn
 
         BGP routing table information for VRF default, address family L2VPN EVPN
 
@@ -8004,6 +8008,8 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         RP/0/RP0/CPU0:Router2#
 
     '''}
+
+
     golden_parsed_output2 = {
         'vrf': {
             'default': {
@@ -8021,6 +8027,11 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'nsr_initial_init_ver_status': 'reached',
                         'nsr_issu_sync_group_versions': '0/0',
                         'scan_interval': 60,
+                    },
+                    'l2vpn evpn RD 192.168.99.25:100': {
+                        'bgp_table_version': 2,
+                        'local_router_id': '',
+                        'route_distinguisher': '192.168.99.25:100',
                         'prefixes': {
                             '[3][0][32][192.168.99.25]/80': {
                                 'index': {
@@ -8034,6 +8045,2082 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         },
                         'processed_prefix': 1,
                         'processed_paths': 1,
+                    },
+                },
+            },
+        },
+    }
+
+    
+    golden_parsed_output3 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'l2vpn evpn': {
+                        'router_identifier': '172.16.2.88',
+                        'local_as': 64577,
+                        'generic_scan_interval': '60',
+                        'non_stop_routing': 'enabled',
+                        'table_state': 'active',
+                        'table_id': '0x0',
+                        'rd_version': 0,
+                        'bgp_table_version': 730,
+                        'nsr_initial_initsync_version': '65',
+                        'nsr_initial_init_ver_status': 'reached',
+                        'nsr_issu_sync_group_versions': '0/0',
+                        'scan_interval': 60,
+                    },
+                    'l2vpn evpn RD 172.16.2.88:1000': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.16.2.88:1000',
+                        'prefixes': {
+                            '[2][0][48][0012.0100.0001][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0002][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0003][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0004][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0005][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0006][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0007][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0008][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0009][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000a][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000b][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000c][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000d][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000e][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000f][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0010][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0011][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0012][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0013][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0014][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0015][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0016][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0017][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0018][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0019][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001a][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001b][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001c][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001d][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001e][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001f][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0020][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0021][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0022][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0023][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0024][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0025][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0026][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0027][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0028][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0029][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002a][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002b][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002c][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002d][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002e][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002f][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0030][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0031][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0032][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0001][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0002][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0003][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0004][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0005][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0006][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0007][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0008][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0009][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.000a][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.000b][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.000c][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.000d][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.000e][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.000f][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0010][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0011][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0012][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0013][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0014][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0015][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0016][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0017][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0018][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0019][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.001a][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.001b][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.001c][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.001d][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.001e][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.001f][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0020][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0021][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0022][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0023][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0024][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0025][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0026][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0027][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0028][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0029][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.002a][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.002b][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.002c][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.002d][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.002e][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.002f][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0030][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0031][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0200.0032][0]/104': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[3][0][32][172.16.2.88]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[3][0][32][172.16.2.89]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[3][0][32][172.16.2.90]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.90',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 172.16.2.89:1': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.16.2.89:1',
+                        'prefixes': {
+                            '[5][0][22][10.249.248.0]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'localprf': 0,
+                                        'weight': 100,
+                                        'path': '0',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 172.16.2.89:1000': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.16.2.89:1000',
+                        'prefixes': {
+                            '[2][0][48][0012.0100.0001][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0002][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0003][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0004][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0005][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0006][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0007][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0008][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0009][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000a][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000b][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000c][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000d][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000e][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.000f][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0010][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0011][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0012][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0013][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0014][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0015][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0016][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0017][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0018][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0019][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001a][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001b][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001c][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001d][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001e][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.001f][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0020][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0021][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0022][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0023][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0024][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0025][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0026][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0027][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0028][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0029][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002a][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002b][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002c][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002d][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002e][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.002f][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0030][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0031][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[2][0][48][0012.0100.0032][0]/104': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[3][0][32][172.16.2.89]/80': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.89',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 172.16.2.90:1': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.16.2.90:1',
+                        'prefixes': {
+                            '[5][0][22][10.249.248.0]/80': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.90',
+                                        'localprf': 0,
+                                        'weight': 100,
+                                        'path': '0',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 172.16.2.90:1000': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.16.2.90:1000',
+                        'prefixes': {
+                            '[3][0][32][172.16.2.90]/80': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '172.16.2.90',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 172.18.0.209:162': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.18.0.209:162',
+                        'prefixes': {
+                            '[5][0][24][10.120.1.0]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*',
+                                        'next_hop': '172.18.0.209',
+                                        'localprf': 100,
+                                        'weight': 0,
+                                        'path': '65505',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[5][0][30][10.120.0.4]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*',
+                                        'next_hop': '172.18.0.209',
+                                        'localprf': 0,
+                                        'weight': 100,
+                                        'path': '0',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                            '[5][0][32][10.0.120.1]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*',
+                                        'next_hop': '172.18.0.209',
+                                        'localprf': 100,
+                                        'weight': 0,
+                                        'path': '65505',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 172.19.3.1:161': {
+                        'bgp_table_version': 730,
+                        'local_router_id': '',
+                        'route_distinguisher': '172.19.3.1:161',
+                        'prefixes': {
+                            '[5][0][24][10.120.1.0]/80': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.79',
+                                        'localprf': 100,
+                                        'weight': 0,
+                                        'path': '65505',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[5][0][30][10.120.0.0]/80': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.79',
+                                        'localprf': 0,
+                                        'weight': 100,
+                                        'path': '0',
+                                        'origin_codes': '?',
+                                    },
+                                },
+                            },
+                            '[5][0][32][10.0.120.1]/80': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.79',
+                                        'localprf': 100,
+                                        'weight': 0,
+                                        'path': '65505',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                        'processed_prefix': 163,
+                        'processed_paths': 166,
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output3 = {'execute.return_value': '''
+        +++ tor1-tatooine: executing command 'show bgp l2vpn evpn' +++
+        show bgp l2vpn evpn
+
+        Thu Sep 26 12:40:06.520 EDT
+        BGP router identifier 172.16.2.88, local AS number 64577
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 730
+        BGP NSR Initial initsync version 65 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 172.16.2.88:1000 (default for vrf EVPN-Multicast-BTV)
+        *>i[2][0][48][0012.0100.0001][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0002][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0003][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0004][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0005][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0006][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0007][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0008][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0009][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000a][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000b][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000c][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000d][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000e][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000f][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0010][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0011][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0012][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0013][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0014][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0015][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0016][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0017][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0018][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0019][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001a][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001b][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001c][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001d][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001e][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001f][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0020][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0021][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0022][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0023][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0024][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0025][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0026][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0027][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0028][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0029][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002a][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002b][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002c][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002d][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002e][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002f][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0030][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0031][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0032][0]/104
+                            172.16.2.89                   100      0 i
+        *> [2][0][48][0012.0200.0001][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0002][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0003][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0004][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0005][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0006][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0007][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0008][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0009][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.000a][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.000b][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.000c][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.000d][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.000e][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.000f][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0010][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0011][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0012][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0013][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0014][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0015][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0016][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0017][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0018][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0019][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.001a][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.001b][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.001c][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.001d][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.001e][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.001f][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0020][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0021][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0022][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0023][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0024][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0025][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0026][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0027][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0028][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0029][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.002a][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.002b][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.002c][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.002d][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.002e][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.002f][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0030][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0031][0]/104
+                            0.0.0.0                                0 i
+        *> [2][0][48][0012.0200.0032][0]/104
+                            0.0.0.0                                0 i
+        *> [3][0][32][172.16.2.88]/80
+                            0.0.0.0                                0 i
+        *>i[3][0][32][172.16.2.89]/80
+                            172.16.2.89                   100      0 i
+        *>i[3][0][32][172.16.2.90]/80
+                            172.16.2.90                   100      0 i
+        Route Distinguisher: 172.16.2.89:1
+        *>i[5][0][22][10.249.248.0]/80
+                            172.16.2.89              0    100      0 ?
+        Route Distinguisher: 172.16.2.89:1000
+        *>i[2][0][48][0012.0100.0001][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0002][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0003][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0004][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0005][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0006][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0007][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0008][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0009][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000a][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000b][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000c][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000d][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000e][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.000f][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0010][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0011][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0012][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0013][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0014][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0015][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0016][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0017][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0018][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0019][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001a][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001b][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001c][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001d][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001e][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.001f][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0020][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0021][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0022][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0023][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0024][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0025][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0026][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0027][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0028][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0029][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002a][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002b][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002c][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002d][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002e][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.002f][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0030][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0031][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[2][0][48][0012.0100.0032][0]/104
+                            172.16.2.89                   100      0 i
+        *>i[3][0][32][172.16.2.89]/80
+                            172.16.2.89                   100      0 i
+        Route Distinguisher: 172.16.2.90:1
+        *>i[5][0][22][10.249.248.0]/80
+                            172.16.2.90              0    100      0 ?
+        Route Distinguisher: 172.16.2.90:1000
+        *>i[3][0][32][172.16.2.90]/80
+                            172.16.2.90                   100      0 i
+        Route Distinguisher: 172.18.0.209:162
+        * i[5][0][24][10.120.1.0]/80
+                            172.18.0.209                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
+        * i[5][0][30][10.120.0.4]/80
+                            172.18.0.209             0    100      0 ?
+        *>i                   10.154.219.86             0    100      0 ?
+        * i[5][0][32][10.0.120.1]/80
+                            172.18.0.209                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
+        Route Distinguisher: 172.19.3.1:161
+        *>i[5][0][24][10.120.1.0]/80
+                            10.154.219.79                  100      0 65505 i
+        *>i[5][0][30][10.120.0.0]/80
+                            10.154.219.79             0    100      0 ?
+        *>i[5][0][32][10.0.120.1]/80
+                            10.154.219.79                  100      0 65505 i
+
+        Processed 163 prefixes, 166 paths
+        RP/0/RP0/CPU0:tor1-tatooine#
+
+
+
+    '''}
+    
+    golden_output4 = {'execute.return_value': '''
+        +++ genie-router: executing command 'show bgp l2vpn evpn' +++
+        show bgp l2vpn evpn
+
+        Fri Sep 27 17:01:51.580 EDT
+        BGP router identifier 10.154.219.88, local AS number 64577
+        BGP generic scan interval 60 secs
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0x0   RD version: 0
+        BGP main routing table version 7
+        BGP NSR Initial initsync version 3 (Reached)
+        BGP NSR/ISSU Sync-Group versions 7/0
+        BGP scan interval 60 secs
+
+        Status codes: s suppressed, d damped, h history, * valid, > best
+                    i - internal, r RIB-failure, S stale, N Nexthop-discard
+        Origin codes: i - IGP, e - EGP, ? - incomplete
+        Network            Next Hop            Metric LocPrf Weight Path
+        Route Distinguisher: 10.154.219.82:10100
+        *>i[1][0000.0000.0000.0000.0000][30100]/120
+                            10.154.219.82                  100      0 i
+        Route Distinguisher: 10.154.219.82:10200
+        *>i[1][0000.0000.0000.0000.0000][30200]/120
+                            10.154.219.82                  100      0 i
+        Route Distinguisher: 10.154.219.88:10100 (default for vrf VPWS:10100)
+        *> [1][0000.0000.0000.0000.0000][20100]/120
+                            0.0.0.0                                0 i
+        *>i[1][0000.0000.0000.0000.0000][30100]/120
+                            10.154.219.82                  100      0 i
+        Route Distinguisher: 10.154.219.88:10200 (default for vrf VPWS:10200)
+        *> [1][0000.0000.0000.0000.0000][20200]/120
+                            0.0.0.0                                0 i
+        *>i[1][0000.0000.0000.0000.0000][30200]/120
+                            10.154.219.82                  100      0 i
+
+        Processed 6 prefixes, 6 paths
+        RP/0/RP0/CPU0:genie-router#
+    '''}
+
+    golden_parsed_output4 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'l2vpn evpn': {
+                        'router_identifier': '10.154.219.88',
+                        'local_as': 64577,
+                        'generic_scan_interval': '60',
+                        'non_stop_routing': 'enabled',
+                        'table_state': 'active',
+                        'table_id': '0x0',
+                        'rd_version': 0,
+                        'bgp_table_version': 7,
+                        'nsr_initial_initsync_version': '3',
+                        'nsr_initial_init_ver_status': 'reached',
+                        'nsr_issu_sync_group_versions': '7/0',
+                        'scan_interval': 60,
+                    },
+                    'l2vpn evpn RD 10.154.219.82:10100': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '10.154.219.82:10100',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][30100]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 10.154.219.82:10200': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '10.154.219.82:10200',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][30200]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 10.154.219.88:10100': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '10.154.219.88:10100',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][20100]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[1][0000.0000.0000.0000.0000][30100]/120': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    'l2vpn evpn RD 10.154.219.88:10200': {
+                        'bgp_table_version': 7,
+                        'local_router_id': '',
+                        'route_distinguisher': '10.154.219.88:10200',
+                        'prefixes': {
+                            '[1][0000.0000.0000.0000.0000][20200]/120': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*>',
+                                        'next_hop': '0.0.0.0',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                            '[1][0000.0000.0000.0000.0000][30200]/120': {
+                                'index': {
+                                    2: {
+                                        'status_codes': '*>',
+                                        'next_hop': '10.154.219.82',
+                                        'origin_codes': 'i',
+                                    },
+                                },
+                            },
+                        },
+                        'processed_prefix': 6,
+                        'processed_paths': 6,
                     },
                 },
             },
@@ -8059,7 +10146,20 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-
+    
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+    
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        obj = ShowBgpL2vpnEvpn(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output4)
 
 # =============================================
 # Unit test for 'show bgp l2vpn evpn neighbors'
@@ -8826,6 +10926,402 @@ class test_show_bgp_l2vpn_evpn_all(unittest.TestCase):
         parsed_output = obj.parse(neighbor='192.168.99.11')
         self.assertEqual(parsed_output,self.golden_parsed_output_neighbor)
 
+
+# ========================================
+#  Unit test for 'show bgp vrf-db vrf all'
+# ========================================
+class TestShowBgpVrfDbVrfAll(unittest.TestCase):
+    '''Unit test for 'show bgp vrf-db vrf all' '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'vrf':
+            {'BTV-nPVR-MULTICAST-IAAS':
+                {'afs': ['v4u'],
+                'id': '0x60000004',
+                'rd': '172.16.2.88:1',
+                'ref': 4},
+            'ES:GLOBAL':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:0',
+                'ref': 2},
+            'EVPN-Multicast-BTV':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:1000',
+                'ref': 2},
+            'NOVI-TST':
+                {'afs': ['v4u'],
+                'id': '0x60000001',
+                'rd': '172.16.2.88:0',
+                'ref': 4},
+            'VPWS:10293':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:10293',
+                'ref': 2},
+            'VPWS:2000':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:2000',
+                'ref': 2},
+            'VPWS:2078':
+                {'afs': ['L2evpn'],
+                'id': '-',
+                'rd': '172.16.2.88:2078',
+                'ref': 2},
+            'default':
+                {'afs': ['v4u', 'Vv4u', 'v6u', 'Vv6u', 'L2evpn'],
+                'id': '0x60000000',
+                'rd': '0:0:0',
+                'ref': 8},
+            'test_ipv6_overlay':
+                {'afs': ['v4u', 'v6u'],
+                'id': '0x0',
+                'rd': '0:0:0',
+                'ref': 2}}}
+
+    golden_output1 = {'execute.return_value': '''
+        +++ PE1: executing command 'show bgp vrf-db vrf all' +++
+        show bgp vrf-db vrf all
+
+        Fri Jun 12 16:57:48.790 EDT
+        VRF                              ID          RD              REF AFs
+        default                          0x60000000  0:0:0           8   v4u, Vv4u, v6u, 
+                                                                         Vv6u, L2evpn
+        NOVI-TST                         0x60000001  172.16.2.88:0   4   v4u
+        test_ipv6_overlay                0x0         0:0:0           2   v4u, v6u
+        BTV-nPVR-MULTICAST-IAAS          0x60000004  172.16.2.88:1   4   v4u
+        ES:GLOBAL                        -           172.16.2.88:0   2   L2evpn
+        VPWS:2000                        -           172.16.2.88:2000 2   L2evpn
+        VPWS:2078                        -           172.16.2.88:2078 2   L2evpn
+        VPWS:10293                       -           172.16.2.88:10293 2   L2evpn
+        EVPN-Multicast-BTV               -           172.16.2.88:1000 2   L2evpn
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpVrfDbVrfAll(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpVrfDbVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ===============================================
+#  Unit test for 'show bgp l2vpn evpn advertised'
+# ===============================================
+class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
+    '''Unit test for 'show bgp l2vpn evpn advertised' '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'neighbor': 
+            {'10.100.5.5': 
+                {'address_family': 
+                    {'l2vpn evpn RD 10.196.7.7:3':
+                        {'advertised': 
+                            {'[1][0009.0807.0605.0403.0201][0]/120': 
+                                {'index': 
+                                    {1: 
+                                        {'neighbor': 'Local',
+                                        'neighbor_router_id': '10.196.7.7',
+                                        'flags': ['valid', 'redistributed', 'best', 'import-candidate'],
+                                        'rx_path_id': 0,
+                                        'local_path_id': 0,
+                                        'version': 12,
+                                        'inbound_attributes': 
+                                            {'community_attributes': 'EXTCOMM',
+                                            'nexthop': '0.0.0.0',
+                                            'aspath': "",
+                                            'origin': 'IGP',
+                                            'extended_community': []},
+                                        'outbound_attributes': 
+                                            {'community_attributes': 'ORG AS EXTCOMM',
+                                            'nexthop': '10.196.7.7',
+                                            'aspath': "",
+                                            'origin': 'IGP',
+                                            'extended_community': ['SoO:0.0.0.0:0', 'RT:100:7']}}}}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:leafZ#sh bgp l2vpn evpn advertised
+        Mon Jul 11 19:22:38.235 UTC
+
+        Route Distinguisher: 10.196.7.7:3
+         [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
+         Path info:
+           neighbor: Local           neighbor router id: 10.196.7.7
+           valid  redistributed  best  import-candidate  
+           Received Path ID 0, Local Path ID 0, version 12
+           Attributes after inbound policy was applied:
+            next hop: 0.0.0.0
+            EXTCOMM 
+            origin: IGP  
+            aspath: 
+            extended community: 
+           Attributes after outbound policy was applied:
+            next hop: 10.196.7.7
+            ORG AS EXTCOMM 
+            origin: IGP  
+            aspath: 
+            extended community: SoO:0.0.0.0:0 RT:100:7
+        '''}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowBgpL2vpnEvpnAdvertised(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowBgpL2vpnEvpnAdvertised(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ==================================
+#  Unit test for 'show bgp sessions'
+# ==================================
+class TestShowBgpSessions(unittest.TestCase):
+    dev = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'neighbors': {
+                            '10.4.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '10.36.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                    'VRF1': {
+                        'neighbors': {
+                            '10.4.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '10.36.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                },
+            }
+        }
+    }
+        
+    golden_output = {'execute.return_value': '''\
+        show bgp sessions
+        Fri Sep 13 19:10:54.578 UTC
+
+        Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+        10.4.1.1         default                 0 65000     0     0  Established  None
+        10.36.3.3         default                 0 65000     0     0  Established  None
+        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:3:3:3::3   default                 0 65000     0     0  Established  None
+        10.4.1.1         VRF1                    0 65000     0     0  Established  None
+        10.36.3.3         VRF1                    0 65000     0     0  Established  None
+        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
+        '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpSessions(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+
+# ===============================================
+#  Unit test for 'show bgp instance all sessions'
+# ===============================================
+class TestShowBgpInstanceAllSessions(unittest.TestCase):
+    dev = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'neighbors': {
+                            '10.4.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '10.36.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                    'VRF1': {
+                        'neighbors': {
+                            '10.4.1.1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '10.36.3.3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:1:1:1::1': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                            '2001:3:3:3::3': {
+                                'spk': 0,
+                                'as_number': 65000,
+                                'in_q': 0,
+                                'out_q': 0,
+                                'nbr_state': 'Established',
+                                'nsr_state': 'None',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+        
+    golden_output = {'execute.return_value': '''\
+        show bgp instance all sessions
+        Sat Sep 14 09:39:17.056 UTC
+
+        BGP instance 0: 'default'
+        =========================
+
+        Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
+        10.4.1.1         default                 0 65000     0     0  Established  None
+        10.36.3.3         default                 0 65000     0     0  Established  None
+        2001:1:1:1::1   default                 0 65000     0     0  Established  None
+        2001:3:3:3::3   default                 0 65000     0     0  Established  None
+        10.4.1.1         VRF1                    0 65000     0     0  Established  None
+        10.36.3.3         VRF1                    0 65000     0     0  Established  None
+        2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
+        2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
+        '''}
+
+    def test_empty(self):
+	    self.dev = Mock(**self.empty_output)
+	    obj = ShowBgpInstanceAllSessions(device=self.dev)
+	    with self.assertRaises(SchemaEmptyParserError):
+	        parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.dev = Mock(**self.golden_output)
+        obj = ShowBgpInstanceAllSessions(device=self.dev)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

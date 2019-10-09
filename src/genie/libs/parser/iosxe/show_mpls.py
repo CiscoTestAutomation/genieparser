@@ -1623,6 +1623,7 @@ class ShowMplsForwardingTableSchema(MetaParser):
                                                 'bytes_label_switched': int,
                                                 Optional('next_hop'): str,
                                                 Optional('tsp_tunnel'): bool,
+                                                Optional('merged'): bool,
                                                 Optional('mac'): int,
                                                 Optional('macstr'): str,
                                                 Optional('lstack'): str,
@@ -1689,20 +1690,29 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
 
         p2 = re.compile(r'^(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
 
-        p2_2 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
-            '(?P<outgoing_label>((A|a)ggregate|Untagged|(No|Pop) Label|(No|Pop) (T|t)ag|\d\/\w*|\d|\d\/)+)(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+)'
-            ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+        # 22    [M]  Pop Label  192.168.0.1/32  0        Gi2    192.168.0.2
+        # 22    [T]  Pop Label  1/1[TE-Bind]     0             Tu1        point2point
+        p2_2 = re.compile(r'^(?:(?P<local_label>\w+) +)?(?:\[(?P<t>(?:T|M)+)\] +)?'
+                           '(?P<outgoing_label>(?:(?:A|a)ggregate|Untagged|(?:No|Pop) '
+                           'Label|(?:No|Pop) (?:T|t)ag|\d\/\w*|\d|\d\/)+)(?:\['
+                           '(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\(\)\:\ |\S]+) +'
+                           '(?P<bytes_label_switched>\d+)(?: +(?P<interface>\S+))?(?: +'
+                           '(?P<next_hop>[\w\.]+))?$')
 
         p2_3 = re.compile(r'^((?P<local_label>\w+) +)?(\[(?P<t>(T)+)\] +)?'
             '(?P<outgoing_label>((A|a)ggregate|(No|Pop) Label|(No|Pop) tag|\d|\d\/)+)?(\[(?P<t1>(T)+)\] +)? +(?P<prefix_or_tunnel_id>[\w\.\[\]\-\s]+)'
             ' +(?P<bytes_label_switched>\d+)( +(?P<interface>\S+))?( +(?P<next_hop>[\w\.]+))?$')
+
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}
         #         MAC/Encaps=18/18, MRU=1530, Label Stack{}, via Ls0
-        p3 = re.compile(r'^MAC/Encaps=(?P<mac>\d+)/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), +Label'
-                        ' +Stack(?P<label_stack>[\S]+)(, via +(?P<via>\w+))?$')
+        #         MAC/Encaps=14/26, MRU=1492, Label Stack{16052 16062 16063}, via Gi0/1/7
+        p3 = re.compile(r'^MAC\/Encaps=(?P<mac>\d+)\/(?P<encaps>\d+), +MRU=(?P<mru>[\d]+), '
+                         '+Label +Stack{(?P<label_stack>.*)}(, via +(?P<via>\S+))?$')
+
         #         00002440156384B261CB1480810000330800
         #         AABBCC032800AABBCC0325018847 00010000
-        p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\d+))?$')
+        #         0050568DA282BC16652F3A178847 03EB400003EBE00003EBF000
+        p4 = re.compile(r'^(?P<code>[0-9A-F]+)( +(?P<lstack>\w+))?$')
         #         VPN route: L3VPN-0051
         p5 = re.compile(r'^VPN +route: +(?P<vpn_route>\S+)$')
         #         No output feature configured
@@ -1780,7 +1790,10 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 if group['next_hop']:
                     feature_dict.update({'next_hop': group['next_hop']})
                 if group['t']:
-                    feature_dict.update({'tsp_tunnel': True})
+                    if 'T' in group['t']:
+                        feature_dict.update({'tsp_tunnel': True})
+                    if 'M' in group['t']:
+                        feature_dict.update({'merged': True})
                 if group['t1']:
                     feature_dict.update({'tsp_tunnel': True})
                 feature_dict.update({'bytes_label_switched': int(group['bytes_label_switched'])})
@@ -1829,7 +1842,7 @@ class ShowMplsForwardingTable(ShowMplsForwardingTableSchema):
                 feature_dict.update({'mru': int(group['mru'])})
                 feature_dict.update({'label_stack': group['label_stack']})
                 if group['via']:
-                    feature_dict.update({'via': group['via']})
+                    feature_dict.update({'via': Common.convert_intf_name(group['via'])})
 
                 continue
 
@@ -1879,12 +1892,15 @@ class ShowMplsForwardingTableDetail(ShowMplsForwardingTable):
         show mpls forwarding-table vrf <vrf> detail"""
 
     cli_command = ['show mpls forwarding-table detail',
-                   'show mpls forwarding-table vrf {vrf} detail']
+                   'show mpls forwarding-table vrf {vrf} detail',
+                   'show mpls forwarding-table labels {label} detail']
 
-    def cli(self, vrf='', output=None):
+    def cli(self, vrf='', label='', output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[1].format(vrf=vrf)
+            elif label:
+                cmd = self.cli_command[2].format(label=label)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)
