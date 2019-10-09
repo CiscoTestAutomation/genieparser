@@ -484,6 +484,13 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunningConfigNtp to support different vrfs output
+--------------------------------------------------------------------------------
+                                PROCESSES
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added parser ShowProcesses for:
+        * show processes 
+        * show processes {process}
 
 --------------------------------------------------------------------------------
                                 ISIS
@@ -494,9 +501,6 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
-    * Added parser ShowProcesses for:
-        * show processes 
-        * show processes {process}
 
 --------------------------------------------------------------------------------
                                 Interface
