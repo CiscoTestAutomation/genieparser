@@ -856,17 +856,17 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                                         'code_1': str,
                                         'code_2': str,
                                     }
+                                },
+                                Optional('statistics'): {
+                                    Any(): {
+                                        'adv_cnt': int,
+                                        Optional('adv_last_time'): str,
+                                        'adv_last_arg': str,
+                                        Optional('wdw_cnt'): int,
+                                        Optional('wdw_last_time'): str,
+                                        Optional('wdw_last_arg'): str,
+                                    }
                                 }
-                            }
-                        },
-                        Optional('es_statistics'): {
-                            Any(): {
-                                'adv_cnt': int,
-                                Optional('adv_last_time'): str,
-                                'adv_last_arg': str,
-                                Optional('wdw_cnt'): int,
-                                Optional('wdw_last_time'): str,
-                                Optional('wdw_last_arg'): str,
                             }
                         },
                         Optional('es_ead_update'): {
@@ -874,7 +874,15 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                             Optional('rd'): {
                                 Any(): {
                                     Optional('num_rts'): int,
-                                    Optional('rt_list'): str,
+                                    Optional('rt_list'): list,
+                                }
+                            }
+                        },
+                        Optional('chkpt_objid'): {
+                            Any(): {
+                                Optional('msti_mask'): str,
+                                Optional('nexthop'): {
+                                    Any(): Any()
                                 }
                             }
                         },
@@ -901,6 +909,9 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         ret_dict = {}
         num_of_label = {}
         event_history_index = {}
+        key_dict = {
+            'diagnosticesrt': 'diagnostic_es_rt'
+        }
 
         # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
         # 0210.0300.9e00.0210.0000 BE4                                78.81.321.95<
@@ -1038,18 +1049,30 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # Diagnostic ESI : N/A                     Interface Name : N/A
         # Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
         # Port Key       : 0x000088d4              MAC winner     : 1
-        p39 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+( +\(\w+\))?) +(?P<label_2>[\S ]+): +(?P<val_2>\S+( +\(\w+\))?)$')
+        p39 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+)( +\((?P<per_es_1>\w+)\))? +(?P<label_2>[\S ]+): +(?P<val_2>\S+)( +\((?P<per_es_2>\w+)\))?$')
 
         # Carving Timer  : 0    (global)  
         # Number of EVIs : 1
-        p40 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+( +\(\w+\))?)$')
+        p40 = re.compile(r'^(?P<label_1>[\S ]+): +(?P<val_1>\S+)( +\((?P<per_es_1>\w+)\))?$')
 
         # RD: 67.70.219.84:1, Num RTs: 1      RT List:
         p41 = re.compile(r'^RD: +(?P<rd>\S+), +Num +RTs: +(?P<num_rts>\d+) +RT +List:( +(?P<rt_list>\d+:\d+))?$')
         
         # 4:1000,
-        p42 = re.compile(r'^(?P<rt_list>\d:\d+),$')
+        # 00:1, 100:2, 100:3, 100:4, 100:5, 
+        # 100:6, 100:13, 100:14, 100:15, 100:16, 
+        # 100:17, 100:18, 
+        p42 = re.compile(r'^(?P<rt_list>((\d+:\d+), ?)+)$')
 
+        # Chkpt ObjId    : 0x40002f18
+        p43 = re.compile(r'^Chkpt +ObjId *: +(?P<chkpt_objid>\S+)$')
+
+        # MSTi Mask      : 0x7fff
+        p44 = re.compile(r'^MSTi +Mask *: +(?P<msti_mask>\S+)$')
+
+        # 192.168.0.1 [MOD:P:00][1]
+        p45 = re.compile(r'^(?P<nexthop>\d+\.\d+\.\d+\.\d+) +(?P<nexthopinfo>\[\S+\])$')
+        
         for line in out.splitlines():
             line = line.strip()
             # ES to L2FIB Gates : Ready
@@ -1379,7 +1402,10 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             m = p37.match(line)
             if m:
                 group = m.groupdict()
-                label = group.get('label').strip().lower().replace(' ', '_').replace('-', '_')
+                label = (group.get('label').strip().lower().
+                            replace(' ', '_').
+                            replace('-', '_').
+                            replace('/', '_'))
                 adv_cnt = group.get('adv_cnt', None)
                 adv_last_time = group.get('adv_last_time', None)
                 adv_last_arg = group.get('adv_last_arg', None)
@@ -1387,7 +1413,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 wdw_last_time = group.get('wdw_last_time', None)
                 wdw_last_arg = group.get('wdw_last_arg', None)
 
-                es_statistics_dict = interface_dict.setdefault('es_statistics', {}). \
+                es_statistics_dict = object_dict.setdefault('statistics', {}). \
                     setdefault(label, {})
                 
                 es_statistics_dict.update({'adv_cnt': int(adv_cnt)})
@@ -1427,11 +1453,45 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 continue
             
             # 4:1000,
+            # 00:1, 100:2, 100:3, 100:4, 100:5, 
+            # 100:6, 100:13, 100:14, 100:15, 100:16, 
+            # 100:17, 100:18, 
             m = p42.match(line)
             if m:
                 group = m.groupdict()
-                rt_list = group['rt_list']
+                rt_list = rd_dict.get('rt_list', [])
+                for rt in group['rt_list'].split(','):
+                    rt = rt.strip()
+                    if rt:
+                        rt_list.append(rt)
                 rd_dict.update({'rt_list': rt_list})
+                continue
+            
+            # Chkpt ObjId    : 0x40002f18
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                chkpt_objid = group['chkpt_objid']
+                chkpt_objid_dict = interface_dict.setdefault('chkpt_objid', {}). \
+                    setdefault(chkpt_objid, {})
+                continue
+            
+            # MSTi Mask      : 0x7fff
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                msti_mask = group['msti_mask']
+                chkpt_objid_dict.update({'msti_mask': msti_mask})
+                continue
+
+            # 192.168.0.1 [MOD:P:00][1]
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop = group['nexthop']
+                nexthopinfo = group['nexthopinfo']
+                nexthop_dict = chkpt_objid_dict.setdefault('nexthop', {})
+                nexthop_dict.update({nexthop: nexthopinfo})
                 continue
 
             # Diagnostic ESI : N/A                     Interface Name : N/A
@@ -1443,15 +1503,21 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 label_1 = group['label_1'].strip().lower(). \
                             replace(' ', '_').replace('-', ''). \
                             replace('/', '_')
+                label_1 = key_dict.get(label_1, label_1)
                 val_1 = group['val_1'].strip()
-                if val_1.isdigit():
-                    val_1 = int(val_1)
+                
                 label_2 = group['label_2'].strip().lower().replace(' ', '_').replace('-', '')
+                label_2 = key_dict.get(label_2, label_2)
                 val_2 = group['val_2'].strip()
-                if val_2.isdigit():
-                    val_2 = int(val_2)
                 interface_dict.update({label_1: val_1})
                 interface_dict.update({label_2: val_2})
+
+                per_es_1 = group['per_es_1']
+                if per_es_1:
+                    interface_dict.update({'{}_per_es'.format(label_1): per_es_1})
+                per_es_2 = group['per_es_2']
+                if per_es_2:
+                    interface_dict.update({'{}_per_es'.format(label_2): per_es_2})
                 continue
 
             # Carving Timer  : 0    (global)  
@@ -1462,13 +1528,13 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 label_1 = group['label_1'].strip().lower(). \
                             replace(' ', '_').replace('-', ''). \
                             replace('/', '_')
+                label_1 = key_dict.get(label_1, label_1)
                 val_1 = group['val_1'].strip()
-                if val_1.isdigit():
-                    val_1 = int(val_1)
+                per_es_1 = group['per_es_1']
+                if per_es_1:
+                    interface_dict.update({'{}_per_es'.format(label_1): per_es_1})
                 interface_dict.update({label_1: val_1})
                 continue
-
-            
         return ret_dict
 
 class ShowEvpnEthernetSegmentDetail(ShowEvpnEthernetSegment):
