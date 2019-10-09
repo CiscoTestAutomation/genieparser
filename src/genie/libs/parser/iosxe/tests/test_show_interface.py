@@ -978,6 +978,7 @@ class TestShowInterfaces(unittest.TestCase):
             "arp_timeout": "04:00:00",
             "arp_type": "arpa",
             "bandwidth": 1000000,
+            'auto_negotiate': True,
             "counters": {
                  "in_broadcast_pkts": 0,
                  "in_crc_errors": 0,
@@ -1017,6 +1018,10 @@ class TestShowInterfaces(unittest.TestCase):
                  }
             },
             "delay": 10,
+            'duplex_mode': 'full',
+            'link_type': 'auto',
+            'port_speed': '1000',
+            'media_type': 'unknown',
             "enabled": False,
             "encapsulations": {
                  "encapsulation": "arpa"
@@ -13578,14 +13583,19 @@ Tunnel10 is up, line protocol is up
                     "FortyGigabitEthernet1/0/4"
                 ]
             },
+            'port_speed': '40',
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'auto_negotiate': False,
             "type": "EtherChannel",
             "mac_address": "70b3.1760.0501",
             "phys_address": "70b3.1760.0501",
             "delay": 10,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': 'N/A',
             "mtu": 1500,
             "bandwidth": 80000000,
             "reliability": "255/255",
