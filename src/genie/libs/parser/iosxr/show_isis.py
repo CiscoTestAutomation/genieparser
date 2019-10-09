@@ -606,7 +606,7 @@ class ShowIsis(ShowIsisSchema):
             result = r13.match(line)
             if result:
                 group = result.groupdict()
-                topology = group['topology']                
+                topology = group['topology']
                 if group['topology_vrf']:
                     topology_vrf = group['topology_vrf']
                 address_family_dict = topology_dict\
@@ -696,7 +696,7 @@ class ShowIsis(ShowIsisSchema):
                 if start and end:
                     srlb_dict = vrf_dict.setdefault('srlb', {})
                     srlb_dict['start'] = int(start)
-                    srlb_dict['end'] = int(end)                    
+                    srlb_dict['end'] = int(end)
 
                 continue
             
