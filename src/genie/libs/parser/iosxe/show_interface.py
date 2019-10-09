@@ -93,7 +93,9 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('total_output_drop'): int,
                     Optional('queue_strategy'): str,
                     Optional('output_queue_size'): int,
-                    Optional('output_queue_max'): int
+                    Optional('output_queue_max'): int,
+                    Optional('threshold'): int,
+                    Optional('drops'): int,
                 },
                 Optional('flow_control'):
                     {Optional('receive'): bool,
@@ -259,14 +261,19 @@ class ShowInterfaces(ShowInterfacesSchema):
         p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
                           ' +sec\)$')
 
+
         # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
         # Full-duplex, 1000Mb/s, link type is auto, media type is
         # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
         # Full Duplex, Auto Speed, link type is auto, media type is RJ45
-        p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex, +'
-                          '(?P<port_speed>\d+|Auto-(S|s)peed|Auto (S|s)peed)(?: *(Mbps|Mb/s))?,'
-                          '( *link +type +is +(?P<link_type>\w+),)?'
-                          ' *media +type +is *(?P<media_type>[\w\/]+)?$')
+        # Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+        # full-duplex, 1000 Mb/s
+        # auto-duplex, auto-speed
+        # auto-duplex, 10 Gb/s, media type is 10G
+        p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
+                          '+(?P<port_speed>\d+|[a|A]uto-[S|s]peed|Auto '
+                          '(S|s)peed)(?: *([G|M]bps|[G|M]b/s))?(?:(?:\, +link +type +is '
+                          '+(?P<link_type>\S+))?(?:\, *media +type +is *(?P<media_type>[\w\/]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
@@ -309,11 +316,14 @@ class ShowInterfaces(ShowInterfacesSchema):
                           'Total +output +drops: +(?P<output_drop>\d+)$')
 
         # Queueing strategy: fifo
-        p18 = re.compile(r'^Queueing +strategy: +(?P<queue_strategy>\w+)$')
+        # Queueing strategy: Class-based queueing
+        p18 = re.compile(r'^Queueing +strategy: +(?P<queue_strategy>\S+).*$')
 
         # Output queue: 0/0 (size/max)
+        # Output queue: 0/1000/64/0 (size/max total/threshold/drops)
         p19 = re.compile(r'^Output +queue: +(?P<size>\d+)\/(?P<max>\d+)'
-                            ' +\(size\/max\)$')
+                          '(?:\/(?P<threshold>\d+)\/(?P<drops>\d+))? '
+                          '+\(size\/max(?: +total\/threshold\/drops\))?.*$')
 
         # 5 minute input rate 0 bits/sec, 0 packets/sec
         p20 = re.compile(r'^(?P<load_interval>[0-9\#]+)'
@@ -328,9 +338,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                           ' *(?P<out_rate_pkts>[0-9]+) *packets/sec$')
 
         # 0 packets input, 0 bytes, 0 no buffer
-        p22 = re.compile(r'^(?P<in_pkts>[0-9]+) +packets +input,'
-                          ' +(?P<in_octets>[0-9]+) +bytes,'
-                          ' +(?P<in_no_buffer>[0-9]+) +no +buffer$')
+        # 13350 packets input, 2513375 bytes
+        p22 = re.compile(r'^(?P<in_pkts>[0-9]+) +packets +input, +(?P<in_octets>[0-9]+) '
+                          '+bytes(?:, +(?P<in_no_buffer>[0-9]+) +no +buffer)?$')
 
         # Received 4173 broadcasts (0 IP multicasts)
         # Received 535996 broadcasts (535961 multicasts)
@@ -361,9 +371,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                           'dribble +condition +detected$')
 
         # 23376 packets output, 3642296 bytes, 0 underruns
-        p28 = re.compile(r'^(?P<out_pkts>[0-9]+) +packets +output,'
-                          ' +(?P<out_octets>[0-9]+) +bytes,'
-                          ' +(?P<out_underruns>[0-9]+) +underruns$')
+        # 13781 packets output, 2169851 bytes
+        p28 = re.compile(r'^(?P<out_pkts>[0-9]+) +packets +output, +(?P<out_octets>[0-9]+) '
+                          '+bytes(?:\, +(?P<out_underruns>[0-9]+) +underruns)?$')
 
         # Received 4173 broadcasts (0 IP multicasts)
         # Received 535996 broadcasts (535961 multicasts)
@@ -605,6 +615,10 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Full-duplex, 1000Mb/s, link type is auto, media type is
             # Full Duplex, 1000Mbps, link type is auto, media type is RJ45
             # Full Duplex, Auto Speed, link type is auto, media type is RJ45
+            # Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+            # full-duplex, 1000 Mb/s
+            # auto-duplex, auto-speed
+            # auto-duplex, 10 Gb/s, media type is 10G
             m = p11.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()
@@ -763,6 +777,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Queueing strategy: fifo
+            # Queueing strategy: Class-based queueing
             m = p18.match(line)
             if m:
                 if 'queues' not in interface_dict[interface]:
@@ -772,6 +787,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Output queue: 0/0 (size/max)
+            # Output queue: 0/1000/64/0 (size/max total/threshold/drops)
             m = p19.match(line)
             if m:
                 if 'queues' not in interface_dict[interface]:
@@ -780,6 +796,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['size'])
                 interface_dict[interface]['queues']['output_queue_max'] = \
                     int(m.groupdict()['max'])
+                if m.groupdict()['threshold'] and m.groupdict()['drops']:
+                    interface_dict[interface]['queues']['threshold'] = \
+                        int(m.groupdict()['threshold'])
+                    interface_dict[interface]['queues']['drops'] = \
+                        int(m.groupdict()['drops'])
                 continue
 
             # 5 minute input rate 0 bits/sec, 0 packets/sec
@@ -838,8 +859,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['in_pkts'])
                 interface_dict[interface]['counters']['in_octets'] = \
                     int(m.groupdict()['in_octets'])
-                interface_dict[interface]['counters']['in_no_buffer'] = \
-                    int(m.groupdict()['in_no_buffer'])
+                if m.groupdict()['in_no_buffer']:
+                    interface_dict[interface]['counters']['in_no_buffer'] = \
+                        int(m.groupdict()['in_no_buffer'])
                 continue
 
             # Received 4173 broadcasts (0 IP multicasts)
@@ -907,8 +929,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                     int(m.groupdict()['out_pkts'])
                 interface_dict[interface]['counters']['out_octets'] = \
                     int(m.groupdict()['out_octets'])
-                interface_dict[interface]['counters']['out_underruns'] = \
-                    int(m.groupdict()['out_underruns'])
+                if m.groupdict()['out_underruns']:
+                    interface_dict[interface]['counters']['out_underruns'] = \
+                        int(m.groupdict()['out_underruns'])
                 continue
 
             # Received 4173 broadcasts (0 IP multicasts)

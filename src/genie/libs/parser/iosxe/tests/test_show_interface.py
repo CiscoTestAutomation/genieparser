@@ -2,6 +2,8 @@
 
 import sys
 import unittest
+import genie.gre
+
 from unittest.mock import Mock
 from unittest.mock import patch
 from textwrap import dedent
@@ -10882,6 +10884,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2503842,
+                'in_pkts': 13266,
+                'out_octets': 2168924,
+                'out_pkts': 13769
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10913,6 +10921,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2501935,
+                'in_pkts': 13254,
+                'out_octets': 2170079,
+                'out_pkts': 13784
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10944,6 +10958,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2505791,
+                'in_pkts': 13281,
+                'out_octets': 2169079,
+                'out_pkts': 13764
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10975,6 +10995,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2500301,
+                'in_pkts': 13273,
+                'out_octets': 2168845,
+                'out_pkts': 13766
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11006,6 +11032,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2497502,
+                'in_pkts': 13253,
+                'out_octets': 2167640,
+                'out_pkts': 13750
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11037,6 +11069,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502193,
+                'in_pkts': 13261,
+                'out_octets': 2167636,
+                'out_pkts': 13744
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11068,6 +11106,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2513375,
+                'in_pkts': 13350,
+                'out_octets': 2169851,
+                'out_pkts': 13781
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11099,6 +11143,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2510082,
+                'in_pkts': 13292,
+                'out_octets': 2169702,
+                'out_pkts': 13777
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11130,6 +11180,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2511802,
+                'in_pkts': 13332,
+                'out_octets': 2169056,
+                'out_pkts': 13770
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11161,6 +11217,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502910,
+                'in_pkts': 13282,
+                'out_octets': 2168425,
+                'out_pkts': 13777
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11192,6 +11254,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2501618,
+                'in_pkts': 13281,
+                'out_octets': 2168163,
+                'out_pkts': 13756
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11223,6 +11291,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502717,
+                'in_pkts': 13255,
+                'out_octets': 2168956,
+                'out_pkts': 13765
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11254,6 +11328,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502358,
+                'in_pkts': 13266,
+                'out_octets': 2169451,
+                'out_pkts': 13773
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11285,6 +11365,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2513180,
+                'in_pkts': 13347,
+                'out_octets': 2171050,
+                'out_pkts': 13794
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11316,6 +11402,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2497442,
+                'in_pkts': 13260,
+                'out_octets': 2169487,
+                'out_pkts': 13787
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11347,6 +11439,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2512146,
+                'in_pkts': 13336,
+                'out_octets': 2169512,
+                'out_pkts': 13773
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11378,6 +11476,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2505612,
+                'in_pkts': 13287,
+                'out_octets': 2170930,
+                'out_pkts': 13796
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11409,6 +11513,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502019,
+                'in_pkts': 13263,
+                'out_octets': 2169941,
+                'out_pkts': 13780
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11440,6 +11550,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2509614,
+                'in_pkts': 13353,
+                'out_octets': 2170375,
+                'out_pkts': 13787
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11471,6 +11587,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2504934,
+                'in_pkts': 13280,
+                'out_octets': 2169331,
+                'out_pkts': 13772
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11502,6 +11624,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11533,6 +11661,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598430,
+                'in_pkts': 25477,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11564,6 +11698,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598634,
+                'in_pkts': 25479,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11595,6 +11735,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598634,
+                'in_pkts': 25479,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11626,6 +11772,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598430,
+                'in_pkts': 25477,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11657,6 +11809,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598634,
+                'in_pkts': 25479,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11688,6 +11846,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598344,
+                'in_pkts': 25476,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11719,6 +11883,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11750,6 +11920,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11781,6 +11957,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -12946,6 +13128,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222402380,
+                'in_pkts': 3426695,
+                'out_octets': 112615606,
+                'out_pkts': 1729535
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -12977,6 +13165,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222808882,
+                'in_pkts': 3430077,
+                'out_octets': 113033370,
+                'out_pkts': 1733061
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13008,6 +13202,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222402736,
+                'in_pkts': 3426685,
+                'out_octets': 112614680,
+                'out_pkts': 1729514
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13039,6 +13239,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222417026,
+                'in_pkts': 3426926,
+                'out_octets': 112627684,
+                'out_pkts': 1729722
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13070,6 +13276,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222416748,
+                'in_pkts': 3426916,
+                'out_octets': 112626186,
+                'out_pkts': 1729694
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13101,6 +13313,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222434908,
+                'in_pkts': 3427206,
+                'out_octets': 112633620,
+                'out_pkts': 1729813
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13132,6 +13350,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222419906,
+                'in_pkts': 3426971,
+                'out_octets': 112634178,
+                'out_pkts': 1729823
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13163,6 +13387,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222419256,
+                'in_pkts': 3426971,
+                'out_octets': 112634398,
+                'out_pkts': 1729821
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13194,6 +13424,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222412094,
+                'in_pkts': 3426848,
+                'out_octets': 112626654,
+                'out_pkts': 1729707
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13225,6 +13461,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222430124,
+                'in_pkts': 3427137,
+                'out_octets': 112632450,
+                'out_pkts': 1729798
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -14850,6 +15092,7 @@ Tunnel10 is up, line protocol is up
                 "input_queue_size": 0,
                 "output_queue_max": 40,
                 "output_queue_size": 0,
+                'queue_strategy': 'Class-based',
                 "total_output_drop": 85587314
             },
             "reliability": "255/255",
@@ -14927,10 +15170,13 @@ Tunnel10 is up, line protocol is up
             parsed_output = interface_obj.parse()
 
     def test_golden(self):
+        import re
+        re.reset()
         self.device = Mock(**self.golden_output)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
+        print(re.colour_output()); re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_interfaces(self):
@@ -14938,6 +15184,7 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='GigabitEthernet1')
         self.maxDiff = None
+        import re ; print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
     def test_show_interfaces_2(self):
@@ -14945,6 +15192,7 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='TenGigabitEthernet0/2/0')
         self.maxDiff = None
+        import re ; print(re.colour_output());re.reset() 
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_2)
 
     def test_show_interfaces_3(self):
@@ -14952,6 +15200,7 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='GigabitEthernet3')
         self.maxDiff = None
+        import re ; print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
 
     def test_show_interfaces_4(self):
@@ -14959,6 +15208,7 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='GigabitEthernet0/0/0')
         self.maxDiff = None
+        import re ; print(re.colour_output());re.reset() 
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_4)
 
     golden_interface_output_1 = {'execute.return_value' : '''
@@ -15111,6 +15361,7 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='Port-channel10')
         self.maxDiff = None
+        import re ; print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_1)
 
     def test_golden2(self):
@@ -15118,6 +15369,9 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
+        import re
+        print(re.colour_output())
+        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     golden_output_1 = {'execute.return_value': '''
@@ -15500,8 +15754,12 @@ Tunnel10 is up, line protocol is up
         'Dialer1': {
             'bandwidth': 56,
             'connected': False,
-            'counters': {
+             'counters': {
+                'in_octets': 0,
+                'in_pkts': 0,
                 'last_clear': 'never',
+                'out_octets': 0,
+                'out_pkts': 0,
                 'rate': {
                     'in_rate': 0,
                     'in_rate_pkts': 0,
@@ -15530,7 +15788,12 @@ Tunnel10 is up, line protocol is up
                 'input_queue_flushes': 0,
                 'input_queue_max': 375,
                 'input_queue_size': 0,
-                'total_output_drop': 0
+                'queue_strategy': 'weighted',
+                'total_output_drop': 0,
+                'output_queue_max': 1000,
+                'output_queue_size': 0,
+                'threshold': 64,
+                'drops': 0,
             },
             'reliability': '255/255',
             'rxload': '1/255',
@@ -15702,6 +15965,7 @@ Tunnel10 is up, line protocol is up
             'arp_timeout': '04:00:00',
             'arp_type': 'arpa',
             'bandwidth': 10000000,
+            'auto_negotiate': False,
             'counters': {
                 'in_broadcast_pkts': 0,
                 'in_crc_errors': 0,
@@ -15743,7 +16007,11 @@ Tunnel10 is up, line protocol is up
                 }
             },
             'delay': 10,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': 'unknown',
             'enabled': False,
+            'port_speed': '10000',
             'encapsulations': {
                 'encapsulation': 'arpa'
             },
@@ -15780,6 +16048,7 @@ Tunnel10 is up, line protocol is up
             'arp_timeout': '04:00:00',
             'arp_type': 'arpa',
             'bandwidth': 10000000,
+            'auto_negotiate': False,
             'counters': {
                 'in_broadcast_pkts': 0,
                 'in_crc_errors': 0,
@@ -15821,6 +16090,7 @@ Tunnel10 is up, line protocol is up
                 }
             },
             'delay': 10,
+            'duplex_mode': 'full',
             'enabled': False,
             'encapsulations': {
                 'encapsulation': 'arpa'
@@ -15831,10 +16101,13 @@ Tunnel10 is up, line protocol is up
             'last_input': 'never',
             'last_output': 'never',
             'line_protocol': 'down',
+            'link_type': 'force-up',
+            'media_type': 'unknown',
             'mac_address': '2c33.1188.a897',
             'mtu': 1500,
             'oper_status': 'down',
             'output_hang': 'never',
+            'port_speed': '10000',
             'phys_address': '2c33.1188.a897',
             'port_channel': {
                 'port_channel_member': False
@@ -15858,6 +16131,7 @@ Tunnel10 is up, line protocol is up
             'arp_timeout': '04:00:00',
             'arp_type': 'arpa',
             'bandwidth': 10000000,
+            'auto_negotiate': False,
             'counters': {
                 'in_broadcast_pkts': 0,
                 'in_crc_errors': 0,
@@ -15899,6 +16173,7 @@ Tunnel10 is up, line protocol is up
                 }
             },
             'delay': 10,
+            'duplex_mode': 'full',
             'enabled': False,
             'encapsulations': {
                 'encapsulation': 'arpa'
@@ -15909,6 +16184,9 @@ Tunnel10 is up, line protocol is up
             'last_input': 'never',
             'last_output': 'never',
             'line_protocol': 'down',
+            'link_type': 'force-up',
+            'media_type': 'unknown',
+            'port_speed': '10000',
             'mac_address': '2c33.1188.a896',
             'mtu': 1500,
             'oper_status': 'down',
@@ -16009,6 +16287,9 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
+        import re
+        print(re.colour_output())
+        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 
