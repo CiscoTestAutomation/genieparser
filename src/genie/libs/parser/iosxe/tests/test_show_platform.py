@@ -1975,8 +1975,19 @@ class test_show_inventory(unittest.TestCase):
                         },
                     },
                 },
+            'Fan_Tray': {
+                'other': {
+                    'ACS-4330-FANASSY': {
+                        'descr': 'Cisco ISR4330 Fan Assembly',
+                        'name': 'Fan Tray',
+                        'pid': 'ACS-4330-FANASSY',
+                        'sn': '',
+                        'vid': '',
+                    }
+                }
+            },
             'R0': 
-                {'lc': 
+                {'rp': 
                     {'ISR4331/K9': 
                         {'sn': 'FDO21520TGH',
                         'pid': 'ISR4331/K9',
@@ -2076,6 +2087,14 @@ class test_show_inventory(unittest.TestCase):
                                     'pid': 'ONS-SI-622-I1',
                                     'sn': 'ECL133706C3',
                                     'vid': 'A'}}},
+                        'vid': 'V01'}}},
+            'Fan_Tray': {
+                'other': {
+                    'ASR-920-FAN-M': {
+                        'descr': 'ASR 920 Fan tray',
+                        'name': 'Fan Tray',
+                        'pid': 'ASR-920-FAN-M',
+                        'sn': 'CAT1903V028',
                         'vid': 'V01'}}},
             'P0': 
                 {'other': 
@@ -2216,7 +2235,7 @@ class test_show_inventory(unittest.TestCase):
                 }
             },
             'R0': {
-                'lc': {
+                'rp': {
                     'ASR1002-X': {
                         'descr': 'Cisco ASR1002-X Route Processor',
                         'name': 'module R0',
@@ -2267,6 +2286,221 @@ class test_show_inventory(unittest.TestCase):
         PID: ASR1002-X         , VID:    , SN:         
         '''}
 
+    golden_parsed_output = {
+        'main': {
+            'chassis': {
+                'ASR1002-HX': {
+                    'name': 'Chassis',
+                    'descr': 'Cisco ASR1002-HX Chassis',
+                    'pid': 'ASR1002-HX',
+                    'vid': 'V01',
+                    'sn': 'FXS2049Q1P2',
+                },
+            },
+        },
+        'slot': {
+            'P0': {
+                'other': {
+                    'ASR1000X-AC-750W': {
+                        'name': 'Power Supply Module 0',
+                        'descr': 'Cisco 750 Watt AC power supply',
+                        'pid': 'ASR1000X-AC-750W',
+                        'vid': 'V01',
+                        'sn': 'POG20517XAE',
+                    },
+                },
+            },
+            'P1': {
+                'other': {
+                    'ASR1000X-AC-750W': {
+                        'name': 'Power Supply Module 1',
+                        'descr': 'Cisco 750 Watt AC power supply',
+                        'pid': 'ASR1000X-AC-750W',
+                        'vid': 'V01',
+                        'sn': 'POG20517X06',
+                    },
+                },
+            },
+            'Fan_Tray': {
+                'other': {
+                    'ASR1002HX-FAN': {
+                        'descr': 'Cisco ASR1002-HX Fan Tray',
+                        'name': 'Fan Tray',
+                        'pid': 'ASR1002HX-FAN',
+                        'sn': '',
+                        'vid': ''
+                    }
+                }
+            },
+            '0': {
+                'lc': {
+                    'ASR1002-HX': {
+                        'name': 'module 0',
+                        'descr': 'Cisco ASR1002-HX Modular Interface Processor',
+                        'pid': 'ASR1002-HX',
+                        'vid': '',
+                        'sn': '',
+                        'subslot': {
+                            '0': {
+                                'BUILT-IN-EPA-8x1G': {
+                                    'name': 'SPA subslot 0/0',
+                                    'descr': '8-port Built-in Gigabit Ethernet Port Adapter',
+                                    'pid': 'BUILT-IN-EPA-8x1G',
+                                    'vid': 'N/A',
+                                    'sn': 'JAE12345678',
+                                },
+                            },
+                            '0 transceiver 0': {
+                                'F24-CI-SFP-GE-T': {
+                                    'name': 'subslot 0/0 transceiver 0',
+                                    'descr': 'GE T',
+                                    'pid': 'F24-CI-SFP-GE-T',
+                                    'vid': '1.0',
+                                    'sn': '1165124049',
+                                },
+                            },
+                            '0 transceiver 1': {
+                                'F24-CI-SFP-GE-T': {
+                                    'name': 'subslot 0/0 transceiver 1',
+                                    'descr': 'GE T',
+                                    'pid': 'F24-CI-SFP-GE-T',
+                                    'vid': '1.0',
+                                    'sn': '1165124050',
+                                },
+                            },
+                            '0 transceiver 2': {
+                                '': {
+                                    'descr': 'GE LX',
+                                    'name': 'subslot 0/0 transceiver 2',
+                                    'pid': '',
+                                    'sn': '1162722191',
+                                    'vid': '1.0'
+                                }
+                            },
+                            '0 transceiver 3': {
+                                'F24-CI-SFP-GE-T': {
+                                    'name': 'subslot 0/0 transceiver 3',
+                                    'descr': 'GE T',
+                                    'pid': 'F24-CI-SFP-GE-T',
+                                    'vid': '1.0',
+                                    'sn': '1165124052',
+                                },
+                            },
+                            '1': {
+                                'BUILT-IN-EPA-8x10G': {
+                                    'name': 'SPA subslot 0/1',
+                                    'descr': '8-port Built-in 10-Gigabit Ethernet Port Adapter',
+                                    'pid': 'BUILT-IN-EPA-8x10G',
+                                    'vid': 'N/A',
+                                    'sn': 'JAE87654321',
+                                },
+                            },
+                            '1 transceiver 0': {
+                                'SFP-10G-LR': {
+                                    'name': 'subslot 0/1 transceiver 0',
+                                    'descr': 'SFP+ 10GBASE-LR',
+                                    'pid': 'SFP-10G-LR',
+                                    'vid': 'V02',
+                                    'sn': '3162917828',
+                                },
+                            },
+                            '1 transceiver 1': {
+                                'SFP-10G-LR': {
+                                    'name': 'subslot 0/1 transceiver 1',
+                                    'descr': 'SFP+ 10GBASE-LR',
+                                    'pid': 'SFP-10G-LR',
+                                    'vid': 'V02',
+                                    'sn': '3170330174',
+                                },
+                            },
+                            '1 transceiver 2': {
+                                'SFP-10G-LR': {
+                                    'name': 'subslot 0/1 transceiver 2',
+                                    'descr': 'SFP+ 10GBASE-LR',
+                                    'pid': 'SFP-10G-LR',
+                                    'vid': 'V02',
+                                    'sn': '3170330172',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'R0': {
+                'rp': {
+                    'ASR1002-HX': {
+                        'name': 'module R0',
+                        'descr': 'Cisco ASR1002-HX Route Processor',
+                        'pid': 'ASR1002-HX',
+                        'vid': 'V01',
+                        'sn': 'JAE21050044',
+                    },
+                },
+            },
+            'F0': {
+                'lc': {
+                    'ASR1002-HX': {
+                        'name': 'module F0',
+                        'descr': 'Cisco ASR1002-HX Embedded Services Processor',
+                        'pid': 'ASR1002-HX',
+                        'vid': '',
+                        'sn': '',
+                    },
+                },
+            },
+        },
+    }
+    golden_output = {'execute.return_value': '''
+        show inventory
+        NAME: "Chassis", DESCR: "Cisco ASR1002-HX Chassis"
+        PID: ASR1002-HX        , VID: V01  , SN: FXS2049Q1P2
+
+        NAME: "Power Supply Module 0", DESCR: "Cisco 750 Watt AC power supply"
+        PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517XAE
+
+        NAME: "Power Supply Module 1", DESCR: "Cisco 750 Watt AC power supply"
+        PID: ASR1000X-AC-750W  , VID: V01  , SN: POG20517X06
+
+        NAME: "Fan Tray", DESCR: "Cisco ASR1002-HX Fan Tray"
+        PID: ASR1002HX-FAN     , VID:      , SN:
+
+        NAME: "module 0", DESCR: "Cisco ASR1002-HX Modular Interface Processor"
+        PID: ASR1002-HX        , VID:      , SN:
+
+        NAME: "SPA subslot 0/0", DESCR: "8-port Built-in Gigabit Ethernet Port Adapter"
+        PID: BUILT-IN-EPA-8x1G , VID: N/A  , SN: JAE12345678
+
+        NAME: "subslot 0/0 transceiver 0", DESCR: "GE T"
+        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124049
+
+        NAME: "subslot 0/0 transceiver 1", DESCR: "GE T"
+        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124050
+
+        NAME: "subslot 0/0 transceiver 2", DESCR: "GE LX"
+        PID: , VID: 1.0  , SN: 1162722191
+
+        NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
+        PID: F24-CI-SFP-GE-T   , VID: 1.0  , SN: 1165124052
+
+        NAME: "SPA subslot 0/1", DESCR: "8-port Built-in 10-Gigabit Ethernet Port Adapter"
+        PID: BUILT-IN-EPA-8x10G, VID: N/A  , SN: JAE87654321
+
+        NAME: "subslot 0/1 transceiver 0", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: V02  , SN: 3162917828
+
+        NAME: "subslot 0/1 transceiver 1", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: V02  , SN: 3170330174
+
+        NAME: "subslot 0/1 transceiver 2", DESCR: "SFP+ 10GBASE-LR"
+        PID: SFP-10G-LR          , VID: V02  , SN: 3170330172
+
+        NAME: "module R0", DESCR: "Cisco ASR1002-HX Route Processor"
+        PID: ASR1002-HX        , VID: V01  , SN: JAE21050044
+
+        NAME: "module F0", DESCR: "Cisco ASR1002-HX Embedded Services Processor"
+        PID: ASR1002-HX        , VID:      , SN:
+    '''}
+
     def test_show_inventory_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -2308,6 +2542,13 @@ class test_show_inventory(unittest.TestCase):
         inventory_obj = ShowInventory(device=self.device)
         parsed_output = inventory_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_asr1002)
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        inventory_obj = ShowInventory(device=self.device)
+        parsed_output = inventory_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_platform(unittest.TestCase):

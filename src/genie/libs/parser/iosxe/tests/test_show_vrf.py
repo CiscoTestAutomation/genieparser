@@ -23,7 +23,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 #    * 'show vrf detail <vrf>'
 # ================================
 
-class test_show_vrf(unittest.TestCase):
+class TestShowVrf(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -137,7 +137,7 @@ class test_show_vrf(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_vrf)
 
 
-class test_show_vrf_detail(unittest.TestCase):
+class TestShowVrfDetail(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -435,6 +435,216 @@ class test_show_vrf_detail(unittest.TestCase):
         Address family ipv6 multicast not active
     '''}
 
+    golden_output_3 = {'execute.return_value': '''
+        VRF GENIE-BACKUP (VRF Id = 12); default RD 50998:106; default VPNID <not set>
+        Description: VPN for CHRH (Backup network)
+        New CLI format, supports multiple address-families
+        Flags: 0x180C
+        Interfaces:
+            BD106
+        Address family ipv4 unicast (Table ID = 0xC):
+        Flags: 0x0
+        Export VPN route-target communities
+            RT:50998:1               RT:50998:106
+        Import VPN route-target communities
+            RT:50998:106             RT:50998:4094
+        No import route-map
+        No global export route-map
+        No export route-map
+        VRF label distribution protocol: not configured
+        VRF label allocation mode: per-prefix
+        Address family ipv6 unicast not active
+        Address family ipv4 multicast not active
+        Address family ipv6 multicast not active
+
+        VRF GENIE-LAB (VRF Id = 76); default RD 50998:11; default VPNID <not set>
+        Description: VPN for Internet Direct Link Out (Internal FW)
+        New CLI format, supports multiple address-families
+        Flags: 0x180C
+        Interfaces:
+            Te0/1/1.11               vr92                     vr110
+        Address family ipv4 unicast (Table ID = 0x4C):
+        Flags: 0x0
+        Export VPN route-target communities
+            RT:50998:11
+        Import VPN route-target communities
+            RT:50998:11
+        No import route-map
+        No global export route-map
+        No export route-map
+        VRF label distribution protocol: not configured
+        VRF label allocation mode: per-prefix
+        Address family ipv6 unicast (Table ID = 0x1E000003):
+        Flags: 0x0
+        Export VPN route-target communities
+            RT:50998:11
+        Import VPN route-target communities
+            RT:50998:11
+        No import route-map
+        No global export route-map
+        No export route-map
+        VRF label distribution protocol: not configured
+        VRF label allocation mode: per-prefix
+        Address family ipv4 multicast not active
+        Address family ipv6 multicast not active
+
+        VRF GENIE-PROD (VRF Id = 17); default RD 50998:110; default VPNID <not set>
+        Description: VPN for Dame Blanche
+        New CLI format, supports multiple address-families
+        Flags: 0x180C
+        Interfaces:
+            Gi0/0/0.110              Te0/1/2.1042             vl110
+        Address family ipv4 unicast (Table ID = 0x11):
+        Flags: 0x0
+        Export VPN route-target communities
+            RT:50998:1               RT:50998:110
+        Import VPN route-target communities
+            RT:50998:4094            RT:50998:110
+        No import route-map
+        No global export route-map
+        No export route-map
+        VRF label distribution protocol: not configured
+        VRF label allocation mode: per-prefix
+        Address family ipv6 unicast not active
+        Address family ipv4 multicast not active
+        Address family ipv6 multicast not active
+    '''
+    }
+
+    golden_parsed_output_3 = {
+        'GENIE-BACKUP': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x0',
+                    'route_targets': {
+                        '50998:1': {
+                            'route_target': '50998:1',
+                            'rt_type': 'export'
+                        },
+                        '50998:106': {
+                            'route_target': '50998:106',
+                            'rt_type': 'both'
+                        },
+                        '50998:4094': {
+                            'route_target': '50998:4094',
+                            'rt_type': 'import'
+                        }
+                    },
+                    'table_id': '0xC',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix'
+                    }
+                }
+            },
+            'cli_format': 'New',
+            'description': 'VPN for CHRH (Backup network)',
+            'flags': '0x180C',
+            'interface': {
+                'BDI106': {
+                    'vrf': 'GENIE-BACKUP'
+                }
+            },
+            'interfaces': ['BDI106'],
+            'route_distinguisher': '50998:106',
+            'support_af': 'multiple address-families',
+            'vrf_id': 12
+        },
+        'GENIE-LAB': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x0',
+                    'route_targets': {
+                        '50998:11': {
+                            'route_target': '50998:11',
+                            'rt_type': 'both'
+                        }
+                    },
+                    'table_id': '0x4C',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix'
+                    }
+                },
+                'ipv6 unicast': {
+                    'flags': '0x0',
+                    'route_targets': {
+                        '50998:11': {
+                            'route_target': '50998:11',
+                            'rt_type': 'both'
+                        }
+                    },
+                    'table_id': '0x1E000003',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix'
+                    }
+                }
+            },
+            'cli_format': 'New',
+            'description': 'VPN for Internet Direct Link Out (Internal FW)',
+            'flags': '0x180C',
+            'interface': {
+                'TenGigabitEthernet0/1/1.11': {
+                    'vrf': 'GENIE-LAB'
+                },
+                'vasiright110': {
+                    'vrf': 'GENIE-LAB'
+                },
+                'vasiright92': {
+                    'vrf': 'GENIE-LAB'
+                }
+            },
+            'interfaces': ['TenGigabitEthernet0/1/1.11',
+                            'vasiright92',
+                            'vasiright110'],
+            'route_distinguisher': '50998:11',
+            'support_af': 'multiple address-families',
+            'vrf_id': 76
+        },
+        'GENIE-PROD': {
+            'address_family': {
+                'ipv4 unicast': {
+                    'flags': '0x0',
+                    'route_targets': {
+                        '50998:1': {
+                            'route_target': '50998:1',
+                            'rt_type': 'export'
+                        },
+                        '50998:110': {
+                            'route_target': '50998:110',
+                            'rt_type': 'both'
+                        },
+                        '50998:4094': {
+                            'route_target': '50998:4094',
+                            'rt_type': 'import'
+                        }
+                    },
+                    'table_id': '0x11',
+                    'vrf_label': {
+                        'allocation_mode': 'per-prefix'
+                    }
+                }
+            },
+            'cli_format': 'New',
+            'description': 'VPN for Dame Blanche',
+            'flags': '0x180C',
+            'interface': {
+                'GigabitEthernet0/0/0.110': {
+                    'vrf': 'GENIE-PROD'
+                },
+                'TenGigabitEthernet0/1/2.1042': {
+                    'vrf': 'GENIE-PROD'
+                },
+                'vasileft110': {
+                    'vrf': 'GENIE-PROD'
+                }
+            },
+            'interfaces': ['GigabitEthernet0/0/0.110',
+                            'TenGigabitEthernet0/1/2.1042',
+                            'vasileft110'],
+            'route_distinguisher': '50998:110',
+            'support_af': 'multiple address-families',
+            'vrf_id': 17
+        }
+    }
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -468,6 +678,12 @@ class test_show_vrf_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(vrf='Mgmt-intf')
 
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowVrfDetail(device=self.device)
+        parsed_output = obj.parse(vrf='GENIE')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()
