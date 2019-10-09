@@ -93,6 +93,16 @@
         'show segment-routing mpls lb assigned-sids'
 
 --------------------------------------------------------------------------------
+                              Controllers
+--------------------------------------------------------------------------------
+* IOSXR
+    * Updated ShowControllersFiaDiagshellL2show:
+        - renamed class to ShowControllersFiaDiagshellL2showLocation
+        - modified regex
+        - added schema
+        - added unittest
+
+--------------------------------------------------------------------------------
                                 ISSU
 --------------------------------------------------------------------------------
 * IOS
@@ -100,6 +110,7 @@
         * show issu state detail
     Added ShowIssuRollbackTimer for:
         * show issu rollback-timer
+
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -110,6 +121,14 @@
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowBgpVrfDbVrfAll:
+        - modified regex
+        - added schema
+        - added unittest
+    * Updated ShowBgpL2vpnEvpnAdvertised:
+        - modified regex
+        - added schema
+        - added unittest
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
@@ -370,6 +389,10 @@
                                 X-Connect
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowL2VpnXconnectBrief:
+        - modified regex
+        - added schema
+        - added unittest
     * Added ShowL2vpnXconnectDetail for:
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
@@ -383,11 +406,14 @@
                                 EVPN
 --------------------------------------------------------------------------------
 * IOSXR
+    * Updated ShowEvpnInternalLabelDetail:
+        - modified regex
+        - added schema
+        - added unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
-* IOSXR:
     * Added ShowEvpnEthernetSegment for:
         * show evpn ethernet-segment
     * Added ShowEvpnEthernetSegmentDetail for:
