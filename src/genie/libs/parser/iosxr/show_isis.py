@@ -454,6 +454,7 @@ class ShowIsis(ShowIsisSchema):
         # ISPF status: Disabled
         r17 = re.compile(r'ISPF\s+status\s*:\s*(?P<ispf_status>\w+)')
 
+        # No protocols redistributed
         r18 = re.compile(r'No\s+protocols\s+redistributed')
 
         # Distance: 115
