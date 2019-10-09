@@ -459,5 +459,7 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added ShowIsisSpfLog for:
+        * show isis spf-log
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
