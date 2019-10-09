@@ -569,8 +569,9 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
 
         # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
         # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+        # Aug 15 22:10:12.736  Create                       00000000 00000001 -  -
         p26 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>\d+)'
-                ', +(?P<flag_2>\d+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
+                ',? +(?P<flag_2>\d+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
 
         # Flush Count  : 0
         p27 = re.compile(r'^Flush +Count *: +(?P<flush_count>\d+)$')
@@ -820,6 +821,8 @@ class ShowEvpnEviMac(ShowEvpnEviMacSchema):
             
             # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
             # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+            # Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            # Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6ab70 M  - 
             m = p26.match(line)
             if m:
                 group = m.groupdict()
@@ -893,7 +896,9 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                         },
                         Optional('esi'): {
                             'type': int,
-                            'value': str,
+                            Optional('value'): str,
+                            Optional('system_id'): str,
+                            Optional('port_key'): str,
                         },
                         Optional('value'): str,
                         Optional('es_import_rt'): str,
@@ -976,12 +981,12 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                                 }
                             }
                         },
-                        Optional('chkpt_objid'): {
-                            Any(): {
-                                Optional('msti_mask'): str,
-                                Optional('nexthop'): {
-                                    Any(): Any()
-                                }
+                        Optional('chkpt_objid'): str,
+                        Optional('checkpoint_info'): {
+                            Optional('msti_mask'): str,
+                            Optional('if_type'): int,
+                            Optional('nexthop'): {
+                                Any(): Any()
                             }
                         },
                         Optional(Any()): Any()
@@ -1010,10 +1015,11 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         key_dict = {
             'diagnosticesrt': 'diagnostic_es_rt'
         }
+        detail_type = None
 
         # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
         # 0210.0300.9e00.0210.0000 BE4                                78.81.321.95<
-        p1 = re.compile(r'^(?P<segment_id>\S+) +(?P<interface>\S+) +(?P<next_hop>[\d\.\<]+)$')
+        p1 = re.compile(r'^(?P<segment_id>[\w\.\/]+) +(?P<interface>\S+) +(?P<next_hop>[\d\.\<]+)$')
 
         # 2.100.100.100   
         p1_1 = re.compile(r'^(?P<next_hop>[\d\.]+)$')
@@ -1128,8 +1134,10 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
 
         # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
         # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+        # Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+        # Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6ab70 M  - 
         p35 = re.compile(r'^(?P<time>\w+ +\d+ +\S+) +(?P<event>[\S ]+) +(?P<flag_1>[\d\w]+)'
-                ', +(?P<flag_2>[\d\w]+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
+                ',? +(?P<flag_2>[\d\w]+) +(?P<code_1>\S+) +(?P<code_2>\S+)$')
 
         # EVPN ES Statistics
         p36 = re.compile(r'^EVPN +ES +Statistics$')
@@ -1171,6 +1179,27 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         # 192.168.0.1 [MOD:P:00][1]
         p45 = re.compile(r'^(?P<nexthop>\d+\.\d+\.\d+\.\d+) +(?P<nexthopinfo>\[\S+\])$')
         
+        # IF Type      : 1
+        p46 = re.compile(r'^IF +Type *: +(?P<if_type>\d+)$')
+
+        # Peering Details   :
+        p47 = re.compile(r'^Peering +Details *:$')
+
+        # EVPN-VPWS Service Carving Results:
+        p48 = re.compile(r'^EVPN-VPWS +Service +Carving +Results:$')
+
+        # Primary        : 0
+        p49 = re.compile(r'^Primary +: +(?P<primary>\d+)$')
+
+        # Backup         : 0
+        p50 = re.compile(r'^Backup +: +(?P<backup>\d+)$')
+
+        # Non-DF         : 18
+        p51 = re.compile(r'^Non-DF +: +(?P<non_df>\d+)$')
+
+        # Checkpoint Info:
+        p52 = re.compile(r'^Checkpoint +Info:$')
+
         for line in out.splitlines():
             line = line.strip()
             # ES to L2FIB Gates : Ready
@@ -1429,28 +1458,6 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                     update({'nexthop': next_hop})
                 continue
 
-            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                segment_id = group['segment_id']
-                interface = Common.convert_intf_name(group['interface'])
-                next_hop = group['next_hop']
-                interface_dict = ret_dict.setdefault('segment_id', {}). \
-                    setdefault(segment_id, {}). \
-                    setdefault('interface', {}). \
-                    setdefault(interface, {})
-                next_hop_list = interface_dict.setdefault('next_hops', [next_hop])
-                continue
-            
-            # 2.100.100.100
-            m = p1_1.match(line)
-            if m:
-                group = m.groupdict()
-                next_hop = group['next_hop']
-                next_hop_list.append(next_hop)
-                continue
-
             # Object: EVPN MAC
             m = p32.match(line)
             if m:
@@ -1484,6 +1491,8 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             
             # Jun 14 14:02:12.864 Create                        00000000, 00000000 -  -
             # Jun 14 14:02:12.864 MAC advertise rejected        00000003, 00000000 -  -
+            # Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            # Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6ab70 M  - 
             m = p35.match(line)
             if m:
                 group = m.groupdict()
@@ -1570,8 +1579,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             if m:
                 group = m.groupdict()
                 chkpt_objid = group['chkpt_objid']
-                chkpt_objid_dict = interface_dict.setdefault('chkpt_objid', {}). \
-                    setdefault(chkpt_objid, {})
+                interface_dict.update({'chkpt_objid': chkpt_objid})
                 continue
             
             # MSTi Mask      : 0x7fff
@@ -1579,7 +1587,8 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
             if m:
                 group = m.groupdict()
                 msti_mask = group['msti_mask']
-                chkpt_objid_dict.update({'msti_mask': msti_mask})
+                checkpoint_info_dict = interface_dict.setdefault('checkpoint_info', {})
+                checkpoint_info_dict.update({'msti_mask': msti_mask})
                 continue
 
             # 192.168.0.1 [MOD:P:00][1]
@@ -1588,10 +1597,89 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 group = m.groupdict()
                 nexthop = group['nexthop']
                 nexthopinfo = group['nexthopinfo']
-                nexthop_dict = chkpt_objid_dict.setdefault('nexthop', {})
-                nexthop_dict.update({nexthop: nexthopinfo})
+                if detail_type == 'peering_details':
+                    details_list = interface_dict.get('peering_details', [])
+                    details_list.append(line)
+                    interface_dict.setdefault('peering_details', details_list)
+                else:
+                    details_dict = interface_dict.setdefault('checkpoint_info', {})
+                    nexthop_dict = checkpoint_info_dict.setdefault('nexthop', {})
+                    nexthop_dict.update({nexthop: nexthopinfo})
                 continue
 
+            # IF Type      : 1
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                if_type = int(group['if_type'])
+                checkpoint_info_dict = interface_dict.setdefault('checkpoint_info', {})
+                checkpoint_info_dict.update({'if_type': if_type})
+                continue
+            
+            # Peering Details   :
+            m = p47.match(line)
+            if m:
+                detail_type = 'peering_details'
+                continue
+
+            # Primary        : 0
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                primary = group['primary']
+                evpn_vpws_service_carving_results_dict.update({'primary': primary})
+                continue
+
+            # Backup         : 0
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                backup = group['backup']
+                evpn_vpws_service_carving_results_dict.update({'backup': backup})
+                continue
+
+            # Non-DF         : 18
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                non_df = group['non_df']
+                evpn_vpws_service_carving_results_dict.update({'non_df': non_df})
+                continue
+
+            # Checkpoint Info:
+            m = p52.match(line)
+            if m:
+                detail_type = 'checkpoint_info'
+                continue
+
+            # EVPN-VPWS Service Carving Results:
+            m = p48.match(line)
+            if m:
+                evpn_vpws_service_carving_results_dict = interface_dict.setdefault('evpn_vpws_service_carving_results', {})
+                continue
+
+            # 0210.0300.9e00.0210.0000 Gi0/3/0/0      1.100.100.100
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                segment_id = group['segment_id']
+                interface = Common.convert_intf_name(group['interface'])
+                next_hop = group['next_hop']
+                interface_dict = ret_dict.setdefault('segment_id', {}). \
+                    setdefault(segment_id, {}). \
+                    setdefault('interface', {}). \
+                    setdefault(interface, {})
+                next_hop_list = interface_dict.setdefault('next_hops', [next_hop])
+                continue
+            
+            # 2.100.100.100
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop = group['next_hop']
+                next_hop_list.append(next_hop)
+                continue
+            
             # Diagnostic ESI : N/A                     Interface Name : N/A
             # Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
             # Port Key       : 0x000088d4              MAC winner     : 1

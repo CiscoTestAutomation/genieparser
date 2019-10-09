@@ -2093,10 +2093,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'carving_done': '1',
                         'inval_redundfwd': '0x00000000/0x00000000',
                         'inval_redund_nh': '0x00000000/0x00000000',
-                        'chkpt_objid': {
-                            '0x0': {
-                            },
-                        },
+                        'chkpt_objid': '0x0',
                         'es_ead_update': {
                             'num_rds': 0,
                         },
@@ -2768,10 +2765,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'carving_done': '1',
                         'inval_redundfwd': '0x00000000/0x00000000',
                         'inval_redund_nh': '0x00000000/0x00000000',
-                        'chkpt_objid': {
-                            '0x40002f18': {
-                                'msti_mask': '0x7fff',
-                            },
+                        'chkpt_objid': '0x40002f18',
+                        'checkpoint_info': {
+                            'msti_mask': '0x7fff',
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -3091,10 +3087,9 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'carving_done': '1',
                         'inval_redundfwd': '0x00000000/0x00000000',
                         'inval_redund_nh': '0x00000000/0x00000000',
-                        'chkpt_objid': {
-                            '0x40002f58': {
-                                'msti_mask': '0x7fff',
-                            },
+                        'chkpt_objid': '0x40002f58',
+                        'checkpoint_info': {
+                            'msti_mask': '0x7fff',
                         },
                         'es_ead_update': {
                             'num_rds': 0,
@@ -3104,7 +3099,6 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             },
         },
     }
-
     golden_output1 = {'execute.return_value': '''
         +++ Router: executing command 'show evpn ethernet-segment private' +++
         show evpn ethernet-segment private
@@ -3486,6 +3480,4711 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         Router#
         '''}
 
+    golden_output2 = {'execute.return_value':'''
+     RP/0/0/CPU0:PE1#show evpn ethernet-segment private 
+        Thu Aug 15 22:11:12.864 PDT
+        Legend:
+        B   - No Forwarders EVPN-enabled,
+        C   - Backbone Source MAC missing (PBB-EVPN),
+        RT  - ES-Import Route Target missing,
+        E   - ESI missing,
+        H   - Interface handle missing,
+        I   - Name (Interface or Virtual Access) missing,
+        M   - Interface in Down state,
+        O   - BGP End of Download missing,
+        P   - Interface already Access Protected,
+        Pf  - Interface forced single-homed,
+        R   - BGP RID not received,
+        S   - Interface in redundancy standby state,
+        X   - ESI-extracted MAC Conflict
+        SHG - No local split-horizon-group label allocated
+
+        Ethernet Segment Id      Interface                          Nexthops (*stale)   
+        ------------------------ ---------------------------------- --------------------
+        0001.0001.0007.0001.0007 BE7                                192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether7
+            Interface MAC  : 02ef.af8d.8002
+            IfHandle       : 0x00004110
+            State          : Standby
+            Redundancy     : Active
+        ESI type          : 0
+            Value          : 01.0001.0007.0001.0007
+        ES Import RT      : 0100.0100.0700 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH
+            Configured     : Port-Active
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 24
+            Elected        : 0
+            Not Elected    : 6
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 0
+            Non-DF         : 18
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28534
+        Remote SHG labels : 1
+                    28425 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 28]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992  Action Advertise MAC         00000000 0000c016 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:12.992 API Config ESI complete       00000000 00000003 -  - 
+            Aug 15 22:10:12.992  Action Withdraw MAC          00000000 0000c016 -  - 
+            Aug 15 22:10:12.992  Mgr Withdraw BGP             00000000 c0060003 -  - 
+            Aug 15 22:10:12.992  Action Create RT             00000000 01000100 -  - 
+            Aug 15 22:10:12.992  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:12.992 API Config LB mode            00000005 00000005 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6b7f0 M  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 00030003 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011043 -  - 
+            Aug 15 22:10:26.560 API IM MP | AToM state        00000000 00440004 M  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 0006000f -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f76 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f76 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.528  Modify                       00000000 00010000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    00002001 c0400000 M  - 
+            Aug 15 22:10:46.528 API BGP nexthop update        00000000 00000002 M  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:12.997 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.619 0000000a|   0                    00000000
+            EAD/EVI|   6 15/08 22:10:26.616 0000000f|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|  24 15/08 22:10:26.559 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   0                    00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f76              MAC winner     : 1
+        Number of EVIs : 12
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2001                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 0
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2001
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:6, Num RTs: 12      RT List:
+                100:1, 100:2, 100:3, 100:4, 100:5, 
+                100:6, 100:13, 100:14, 100:15, 100:16, 
+                100:17, 100:18, 
+        0001.0001.000b.0001.000b Gi0/3/0/3                          192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : GigabitEthernet0/3/0/3
+            Interface MAC  : 02d4.6f3b.010a
+            IfHandle       : 0x018040c0
+            State          : Up
+            Redundancy     : Not Defined
+        ESI type          : 0
+            Value          : 01.0001.000b.0001.000b
+        ES Import RT      : 0100.0100.0b00 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, Single-active
+            Configured     : Single-active (AApS) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 18
+            Elected        : 0
+            Not Elected    : 0
+        EVPN-VPWS Service Carving Results:
+            Primary        : 6
+            Backup         : 12
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28238
+        Remote SHG labels : 1
+                    28426 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 22]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:12.992 API Config ESI complete       00000000 00000003 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6e9f8 M  - 
+            Aug 15 22:10:26.432  Action Create RT             00000000 01000100 -  - 
+            Aug 15 22:10:26.432  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.432 API BP Ifname update          00000000 00060033 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011043 -  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 00000000 -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006e4e -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f4e M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.528  Modify                       00000000 00010000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.528 API BGP nexthop update        00000000 00000002 M  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.476 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.619 0000000a|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|  18 15/08 22:10:26.553 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   0                    00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006e4e              MAC winner     : 1
+        Number of EVIs : 6
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 0
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:1, Num RTs: 6      RT List:
+                100:4, 100:5, 100:6, 100:16, 100:17, 
+                100:18, 
+        0001.0001.0015.0001.0015 BE21                               192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether21
+            Interface MAC  : 02ef.af8d.8008
+            IfHandle       : 0x00004190
+            State          : Up
+            Redundancy     : Active
+        ESI type          : 0
+            Value          : 01.0001.0015.0001.0015
+        ES Import RT      : 0100.0100.1500 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, Single-active
+            Configured     : Single-active (AApS)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 18
+            Elected        : 0
+            Not Elected    : 0
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 18
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28537
+        Remote SHG labels : 1
+                    28427 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 27]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992  Action Advertise MAC         00000000 0000c016 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:12.992 API Config ESI complete       00000000 00000003 -  - 
+            Aug 15 22:10:12.992  Action Withdraw MAC          00000000 0000c016 -  - 
+            Aug 15 22:10:12.992  Mgr Withdraw BGP             00000000 c0060003 -  - 
+            Aug 15 22:10:12.992 API Config LB mode            00000003 00000003 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa715c0 M  - 
+            Aug 15 22:10:26.432  Action Create RT             00000000 01000100 -  - 
+            Aug 15 22:10:26.432  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.432 API BP Ifname update          00000000 0006003b M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011043 -  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 00000000 -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f79 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f79 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.528  Modify                       00000000 00010000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.528 API BGP nexthop update        00000000 00000002 M  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.477 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.620 0000000a|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|  18 15/08 22:10:26.553 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   0                    00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000043              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f79              MAC winner     : 1
+        Number of EVIs : 6
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 0
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:7, Num RTs: 6      RT List:
+                100:4, 100:5, 100:6, 100:16, 100:17, 
+                100:18, 
+        0100.0105.acce.5500.0500 BE5                                192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether5
+            Interface MAC  : 02ef.af8d.8004
+            IfHandle       : 0x000040d0
+            State          : Up
+            Redundancy     : Active
+        ESI type          : 1
+            System-id      : 0001.05ac.ce55
+            Port key       : 0005
+        ES Import RT      : 0001.05ac.ce55 (from ESI)
+        Source MAC        : 0201.05ac.ce55 (from ESI)
+        Topology          :
+            Operational    : MH, All-active
+            Configured     : All-active (AApF) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 9
+            Elected        : 5
+            Not Elected    : 4
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28532
+        Remote SHG labels : 0
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 23]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:26.560  Action Create RT             00000000 000105ac -  - 
+            Aug 15 22:10:26.560  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.560  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:26.560 API IM ESI BGP match          00000000 00001441 -  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 000c0126 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011441 -  - 
+            Aug 15 22:10:26.560 API IM ESI match              00000000 00001641 -  - 
+            Aug 15 22:10:26.560  Action Advertise MAC         00000000 00000000 M  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 00000000 -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f74 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.528  Modify                       00000000 00010000 -  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.528 API BGP nexthop update        00000000 00000002 -  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.563 00000000|   0                    00000000
+            LocalBMAC|   9 15/08 22:10:26.616 0000000c|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   0                    00000000|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|   9 15/08 22:10:26.566 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   1 15/08 22:10:26.563 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000641              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f74              MAC winner     : 1
+        Number of EVIs : 3
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 0
+
+        0100.0106.acce.5500.0600 BE6                                192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether6
+            Interface MAC  : 02ef.af8d.8003
+            IfHandle       : 0x000040f0
+            State          : Up
+            Redundancy     : Active
+        ESI type          : 1
+            System-id      : 0001.06ac.ce55
+            Port key       : 0006
+        ES Import RT      : 0001.06ac.ce55 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, All-active
+            Configured     : All-active (AApF) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 99
+            Elected        : 2
+            Not Elected    : 4
+        EVPN-VPWS Service Carving Results:
+            Primary        : 93
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28533
+        Remote SHG labels : 1
+                    28418 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 25]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992  Action Advertise MAC         00000000 0000c016 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa6ab70 M  - 
+            Aug 15 22:10:26.432  Action Create RT             00000000 000106ac -  - 
+            Aug 15 22:10:26.432  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.432  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:26.432 API IM ESI BGP match          00000000 00001441 -  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 00090003 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011441 -  - 
+            Aug 15 22:10:26.560 API IM ESI match              00000000 00001641 -  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 0006000f -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f75 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f75 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.528  Modify                       00000000 00010000 -  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.656 API BGP nexthop update        00000000 00000002 -  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.475 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.615 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.531 0000000a|   0                    00000000
+            EAD/EVI|   6 15/08 22:10:26.615 0000000f|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|  99 15/08 22:10:26.563 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   1 15/08 22:10:26.475 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000641              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f75              MAC winner     : 1
+        Number of EVIs : 15
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:2, Num RTs: 15      RT List:
+                100:1, 100:2, 100:3, 100:4, 100:5, 
+                100:6, 100:7, 100:8, 100:9, 100:13, 
+                100:14, 100:15, 100:16, 100:17, 100:18, 
+                
+        0100.0111.acce.5500.1100 BE17                               192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether17
+            Interface MAC  : 02ef.af8d.800a
+            IfHandle       : 0x00004150
+            State          : Up
+            Redundancy     : Active
+        ESI type          : 1
+            System-id      : 0001.11ac.ce55
+            Port key       : 0011
+        ES Import RT      : 0001.11ac.ce55 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, All-active
+            Configured     : All-active (AApF) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 6
+            Elected        : 2
+            Not Elected    : 4
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28535
+        Remote SHG labels : 1
+                    28428 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 24]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992  Action Advertise MAC         00000000 0000c016 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:26.432  Action Create RT             00000000 000111ac -  - 
+            Aug 15 22:10:26.432  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.560  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:26.560 API IM ESI BGP match          00000000 00001441 -  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 00030003 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011441 -  - 
+            Aug 15 22:10:26.560 API IM ESI match              00000000 00001641 -  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 0006000f -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f77 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f77 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.656  Modify                       00000000 00010000 -  - 
+            Aug 15 22:10:46.656  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.656  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.656 API BGP nexthop update        00000000 00000002 -  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.554 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.555 0000000a|   0                    00000000
+            EAD/EVI|   6 15/08 22:10:26.616 0000000f|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|   6 15/08 22:10:26.559 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   1 15/08 22:10:26.554 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000641              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f77              MAC winner     : 1
+        Number of EVIs : 6
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:4, Num RTs: 6      RT List:
+                100:1, 100:2, 100:3, 100:13, 100:14, 
+                100:15, 
+        0100.0112.acce.5500.1200 BE18                               192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether18
+            Interface MAC  : 02ef.af8d.8009
+            IfHandle       : 0x00004170
+            State          : Up
+            Redundancy     : Active
+        ESI type          : 1
+            System-id      : 0001.12ac.ce55
+            Port key       : 0012
+        ES Import RT      : 0001.12ac.ce55 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, All-active
+            Configured     : All-active (AApF) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 84
+            Elected        : 0
+            Not Elected    : 0
+        EVPN-VPWS Service Carving Results:
+            Primary        : 84
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28536
+        Remote SHG labels : 1
+                    28422 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 25]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992  Action Advertise MAC         00000000 0000c016 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa70f80 M  - 
+            Aug 15 22:10:26.432  Action Create RT             00000000 000112ac -  - 
+            Aug 15 22:10:26.432  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.432  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:26.432 API IM ESI BGP match          00000000 00001441 -  - 
+            Aug 15 22:10:26.432 API BP Ifname update          00000000 0006003a M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011441 -  - 
+            Aug 15 22:10:26.560 API IM ESI match              00000000 00001641 -  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 00000000 -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f78 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f78 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.656  Modify                       00000000 00010000 -  - 
+            Aug 15 22:10:46.656  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.656  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.656 API BGP nexthop update        00000000 00000002 -  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.476 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.531 0000000a|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|  84 15/08 22:10:26.553 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   1 15/08 22:10:26.476 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000641              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f78              MAC winner     : 1
+        Number of EVIs : 6
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:3, Num RTs: 6      RT List:
+                100:4, 100:5, 100:6, 100:16, 100:17, 
+                100:18, 
+        0100.0117.acce.5500.1700 BE23                               192.168.0.1
+                                                                    192.168.0.3
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : O
+        Main port         :
+            Interface name : Bundle-Ether23
+            Interface MAC  : 02ef.af8d.8007
+            IfHandle       : 0x000041b0
+            State          : Up
+            Redundancy     : Active
+        ESI type          : 1
+            System-id      : 0001.17ac.ce55
+            Port key       : 0017
+        ES Import RT      : 0001.17ac.ce55 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, All-active
+            Configured     : All-active (AApF) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+
+        Service Carving Results:
+            Forwarders     : 9
+            Elected        : 0
+            Not Elected    : 0
+        EVPN-VPWS Service Carving Results:
+            Primary        : 9
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : 28538
+        Remote SHG labels : 1
+                    28430 : nexthop 192.168.0.3
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 24]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992  Action Advertise MAC         00000000 0000c016 -  - 
+            Aug 15 22:10:12.992 API L2VPN RG MP Role          00000000 00000101 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:26.560  Action Create RT             00000000 000117ac -  - 
+            Aug 15 22:10:26.560  Action Advertise RT          00000000 00010001 -  - 
+            Aug 15 22:10:26.560  ES DB Bind                   00000000 00010001 M  - 
+            Aug 15 22:10:26.560 API IM ESI BGP match          00000000 00001441 -  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 00090006 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00011441 -  - 
+            Aug 15 22:10:26.560 API IM ESI match              00000000 00001641 -  - 
+            Aug 15 22:10:26.560  Action Advertise ESI         00000000 00010001 -  - 
+            Aug 15 22:10:26.560  Action EAD/EVI               00000add 00000000 -  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00000000 M  - 
+            Aug 15 22:10:26.560 API Recv LSD Local SHGLabel   00000000 00006f7a -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         8513800b 00000000 -  - 
+            Aug 15 22:10:29.504  Action EAD/ES                00000add 000a6f7a M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 M  - 
+            Aug 15 22:10:46.656  Modify                       00000000 00010000 -  - 
+            Aug 15 22:10:46.656  Action L2FIB MP Info Upd     00000000 c0400000 M  - 
+            Aug 15 22:10:46.656  Action L2FIB Instance Upd    00002aab c0400000 M  - 
+            Aug 15 22:10:46.656 API BGP nexthop update        00000000 00000002 -  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   1 15/08 22:10:26.560 00000000|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   1 15/08 22:10:26.616 00000001|   0                    00000000
+            EAD/ES|   1 15/08 22:10:29.561 0000000a|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|   9 15/08 22:10:26.563 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   0                    00000000|
+            Instance|   0                    00000000|   0                    00000000
+            MP Info|   1 15/08 22:10:26.560 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000641              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00006f7a              MAC winner     : 1
+        Number of EVIs : 3
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 1                       ESI Advertised : 1
+        MSTi state mask: 0x2aab                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x2aab
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+            192.168.0.3 [MOD:P:00][2]
+        ES EAD Update  :
+            Num RDs:     : 1
+
+            RD: 192.168.0.1:5, Num RTs: 3      RT List:
+                100:7, 100:8, 100:9, 
+        N/A                      Gi0/3/0/0                          192.168.0.1
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : Ready
+        Main port         :
+            Interface name : GigabitEthernet0/3/0/0
+            Interface MAC  : 023f.e86f.8612
+            IfHandle       : 0x01804060
+            State          : Up
+            Redundancy     : Not Defined
+        ESI type          : Invalid
+        ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
+        Source MAC        : 0001.ed9e.0001 (PBB BSA, no ESI)
+        Topology          :
+            Operational    : SH
+            Configured     : Single-active (AApS) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+
+        Service Carving Results:
+            Forwarders     : 9
+            Elected        : 9
+            Not Elected    : 0
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : None
+        Remote SHG labels : 0
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 14]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  ES DB Bind                   00000000 00000001 -  - 
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 000c0126 M  - 
+            Aug 15 22:10:26.560  Action Advertise RT          a5138016 0000ffff M  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00008001 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00010041 -  - 
+            Aug 15 22:10:29.504 API Peer Timer Expiry         00000000 00000001 -  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    000f7fff 00000000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 00000304 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 -  - 
+            Aug 15 22:10:46.528 API MAC Flush propagation     00000000 00000000 M  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   2 15/08 22:10:26.570 a5138016|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   0                    00000000|   0                    00000000
+            EAD/ES|   0                    00000000|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|   9 15/08 22:10:26.566 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   3 15/08 22:10:46.640 00030000|
+        MacFlushCE|   3 15/08 22:10:46.640 00000001|
+            Instance|   3 15/08 22:10:46.636 00007fff|   0                    00000000
+            MP Info|   4 15/08 22:10:46.636 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000041              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00000001              MAC winner     : 1
+        Number of EVIs : 3
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 0                       ESI Advertised : 0
+        MSTi state mask: 0x7fff                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x7fff
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+        ES EAD Update  :
+            Num RDs:     : 0
+
+        N/A                      Gi0/4/0/0                          192.168.0.1
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : Ready
+        Main port         :
+            Interface name : GigabitEthernet0/4/0/0
+            Interface MAC  : 0259.cd23.62c7
+            IfHandle       : 0x02004060
+            State          : Up
+            Redundancy     : Not Defined
+        ESI type          : Invalid
+        ES Import RT      : 0000.0000.0000 (Incomplete Configuration)
+        Source MAC        : 0001.ed9e.0001 (PBB BSA, no ESI)
+        Topology          :
+            Operational    : SH
+            Configured     : Single-active (AApS) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Peering Details   :
+            192.168.0.1 [MOD:P:00][1]
+
+        Service Carving Results:
+            Forwarders     : 79
+            Elected        : 6
+            Not Elected    : 0
+        EVPN-VPWS Service Carving Results:
+            Primary        : 73
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 3 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        Local SHG label   : None
+        Remote SHG labels : 0
+
+        Object: EVPN ES
+        Base info: version=0xdbdb0007, flags=0x0, type=7, reserved=0
+        EVPN ES event history  [Num events: 15]
+        ----------------------------------------------------------------------------
+            Time                Event                         Flags      Flags      
+            ====                =====                         =====      =====      
+            Aug 15 22:10:12.736  ES DB Bind                   00000000 00000001 -  - 
+            Aug 15 22:10:12.736  Create                       00000000 00000001 -  - 
+            Aug 15 22:10:12.736 API Config Ifname Add         00000000 00000001 -  - 
+            Aug 15 22:10:12.992 API Config Local RT           00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API Provision                 00000000 00000000 -  - 
+            Aug 15 22:10:12.992 API BP Ifname delete          45138200 0aa62e60 M  - 
+            Aug 15 22:10:26.560 API BP Ifname update          00000000 00030003 M  - 
+            Aug 15 22:10:26.560  Action Advertise RT          a5138016 0000ffff M  - 
+            Aug 15 22:10:26.560  Action Peering Sequence      00000000 00008001 M  - 
+            Aug 15 22:10:26.560 API BGP RID update            00000000 00010041 -  - 
+            Aug 15 22:10:29.376 API Peer Timer Expiry         00000000 00000001 -  - 
+            Aug 15 22:10:46.528  Action L2FIB Instance Upd    000f7fff 00000000 M  - 
+            Aug 15 22:10:46.528  Action L2FIB MP Info Upd     00000000 00000104 M  - 
+            Aug 15 22:10:46.528 API L2FIB Replay              00000000 00000000 -  - 
+            Aug 15 22:10:46.528 API MAC Flush propagation     00000000 00000000 M  - 
+        ----------------------------------------------------------------------------
+        EVPN ES Statistics
+                    |Adv                             |Wdw                             
+                    | Cnt Last Time          Last Arg| Cnt Last Time          Last Arg
+                RT|   3 15/08 22:10:26.570 a5138016|   0                    00000000
+            LocalBMAC|   0                    00000000|   0                    00000000
+                ESI|   0                    00000000|   0                    00000000
+            EAD/ES|   0                    00000000|   0                    00000000
+            EAD/EVI|   0                    00000000|   0                    00000000
+        MST-AG VPW|   0                    00000000|   0                    00000000
+        DF ElectFW|  79 15/08 22:10:26.559 00000000|
+            UpdateMAC|   0                    00000000|
+        MacFlushPE|   0                    00000000|
+        MacFlushCE|   4 15/08 22:10:46.641 00000001|
+            Instance|   4 15/08 22:10:46.639 00007fff|   0                    00000000
+            MP Info|   5 15/08 22:10:46.639 00000000|   0                    00000000
+        ----------------------------------------------------------------------------
+        Diagnostic ESI : N/A                     Interface Name : N/A
+        Diagnostic Ifh : 0x00000000
+        Diagnostic Flag: 0x00000041              DiagnosticES-RT: 0000.0000.0000
+        Port Key       : 0x00000001              MAC winner     : 1
+        Number of EVIs : 13
+        Recovery Timer : 30   (global)           Peering Timer  : 3    (global)  
+        Carving Timer  : 0    (global)  
+        RT Advertised  : 0                       ESI Advertised : 0
+        MSTi state mask: 0x7fff                  HRW MSTi Set   : 0x3
+        ES EAD Pulse   : 0                       MP Advertised  : 1
+        NVE AnycastVTEP: 0                       NVE Ingr-Replic: 0
+        Peering Done   : 1                       Carving Done   : 1
+        Inval/RedundFWD: 0x00000000/0x00000000
+        Inval/Redund NH: 0x00000000/0x00000000
+        Checkpoint Info:
+            IF Type      : 1
+            MSTi Mask    : 0x7fff
+            Nexthop Info :
+            192.168.0.1 [MOD:P:00][1]
+        ES EAD Update  :
+            Num RDs:     : 0
+
+        RP/0/0/CPU0:PE1#
+     '''}
+    
+    golden_parsed_output2 = {
+        'segment_id': {
+            '0001.0001.0007.0001.0007': {
+                'interface': {
+                    'Bundle-Ether7': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether7',
+                            'interface_mac': '02ef.af8d.8002',
+                            'if_handle': '0x00004110',
+                            'state': 'Standby',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 0,
+                            'value': '01.0001.0007.0001.0007',
+                        },
+                        'es_import_rt': '0100.0100.0700 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH',
+                            'configured': 'Port-Active',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 24,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 6,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '0',
+                            'non_df': '18',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28534',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28425': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 28,
+                                'event_history': {
+                                    1: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    2: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    3: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    4: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    5: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    6: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    7: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config ESI complete',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000003',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    8: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Withdraw MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    9: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Mgr Withdraw BGP',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0060003',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    10: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '01000100',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    11: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    12: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config LB mode',
+                                        'flag_1': '00000005',
+                                        'flag_2': '00000005',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    13: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    14: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API BP Ifname delete',
+                                        'flag_1': '45138200',
+                                        'flag_2': '0aa6b7f0',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    15: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00030003',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    16: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011043',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    17: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM MP | AToM state',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00440004',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    18: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    19: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '0006000f',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    20: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    21: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f76',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    22: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    23: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f76',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    24: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    25: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    26: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    27: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002001',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    28: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:12.997',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.619',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 6,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '0000000f',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 24,
+                                        'adv_last_time': '15/08 22:10:26.559',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000043',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'port_key': '0x00006f76',
+                        'mac_winner': '1',
+                        'number_of_evis': '12',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2001',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '0',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2001',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:6': {
+                                    'num_rts': 12,
+                                    'rt_list': ['100:1', '100:2', '100:3', '100:4', '100:5', '100:6', '100:13', '100:14', '100:15', '100:16', '100:17', '100:18'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '0001.0001.000b.0001.000b': {
+                'interface': {
+                    'GigabitEthernet0/3/0/3': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'GigabitEthernet0/3/0/3',
+                            'interface_mac': '02d4.6f3b.010a',
+                            'if_handle': '0x018040c0',
+                            'state': 'Up',
+                            'redundancy': 'Not Defined',
+                        },
+                        'esi': {
+                            'type': 0,
+                            'value': '01.0001.000b.0001.000b',
+                        },
+                        'es_import_rt': '0100.0100.0b00 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, Single-active',
+                            'configured': 'Single-active (AApS) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 18,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '6',
+                            'backup': '12',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28238',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28426': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 22,
+                                'event_history': {
+                                    29: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    30: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    31: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    32: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    33: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config ESI complete',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000003',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    34: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    35: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API BP Ifname delete',
+                                        'flag_1': '45138200',
+                                        'flag_2': '0aa6e9f8',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    36: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '01000100',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    37: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    38: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00060033',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    39: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011043',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    40: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    41: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    42: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    43: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006e4e',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    44: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    45: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f4e',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    46: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    47: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    48: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    49: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    50: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.476',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.619',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 18,
+                                        'adv_last_time': '15/08 22:10:26.553',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000043',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'port_key': '0x00006e4e',
+                        'mac_winner': '1',
+                        'number_of_evis': '6',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '0',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:1': {
+                                    'num_rts': 6,
+                                    'rt_list': ['100:4', '100:5', '100:6', '100:16', '100:17', '100:18'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '0001.0001.0015.0001.0015': {
+                'interface': {
+                    'Bundle-Ether21': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether21',
+                            'interface_mac': '02ef.af8d.8008',
+                            'if_handle': '0x00004190',
+                            'state': 'Up',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 0,
+                            'value': '01.0001.0015.0001.0015',
+                        },
+                        'es_import_rt': '0100.0100.1500 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, Single-active',
+                            'configured': 'Single-active (AApS)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 18,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '18',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28537',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28427': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 27,
+                                'event_history': {
+                                    51: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    52: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    53: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    54: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    55: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    56: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    57: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config ESI complete',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000003',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    58: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Withdraw MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    59: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Mgr Withdraw BGP',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0060003',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    60: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config LB mode',
+                                        'flag_1': '00000003',
+                                        'flag_2': '00000003',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    61: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    62: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API BP Ifname delete',
+                                        'flag_1': '45138200',
+                                        'flag_2': '0aa715c0',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    63: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '01000100',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    64: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    65: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0006003b',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    66: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011043',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    67: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    68: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    69: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    70: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f79',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    71: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    72: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f79',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    73: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    74: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    75: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    76: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    77: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.477',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.620',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 18,
+                                        'adv_last_time': '15/08 22:10:26.553',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000043',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'port_key': '0x00006f79',
+                        'mac_winner': '1',
+                        'number_of_evis': '6',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '0',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:7': {
+                                    'num_rts': 6,
+                                    'rt_list': ['100:4', '100:5', '100:6', '100:16', '100:17', '100:18'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '0100.0105.acce.5500.0500': {
+                'interface': {
+                    'Bundle-Ether5': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether5',
+                            'interface_mac': '02ef.af8d.8004',
+                            'if_handle': '0x000040d0',
+                            'state': 'Up',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 1,
+                        },
+                        'systemid': '0001.05ac.ce55',
+                        'port_key': '0x00006f74',
+                        'es_import_rt': '0001.05ac.ce55 (from ESI)',
+                        'source_mac': '0201.05ac.ce55 (from ESI)',
+                        'topology': {
+                            'operational': 'MH, All-active',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 9,
+                            'elected': {
+                                'num_of_total': 5,
+                            },
+                            'not_elected': {
+                                'num_of_total': 4,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28532',
+                        'remote_shg_labels': {
+                            '0': {
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 23,
+                                'event_history': {
+                                    78: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    79: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    80: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    81: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    82: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    83: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000105ac',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    84: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    85: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    86: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI BGP match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    87: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000c0126',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    88: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    89: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001641',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    90: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    91: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    92: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    93: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    94: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f74',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    95: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    96: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    97: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    98: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    99: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    100: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.563',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 9,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '0000000c',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 9,
+                                        'adv_last_time': '15/08 22:10:26.566',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.563',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000641',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'mac_winner': '1',
+                        'number_of_evis': '3',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 0,
+                        },
+                    },
+                },
+            },
+            '0100.0106.acce.5500.0600': {
+                'interface': {
+                    'Bundle-Ether6': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether6',
+                            'interface_mac': '02ef.af8d.8003',
+                            'if_handle': '0x000040f0',
+                            'state': 'Up',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 1,
+                        },
+                        'systemid': '0001.06ac.ce55',
+                        'port_key': '0x00006f75',
+                        'es_import_rt': '0001.06ac.ce55 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, All-active',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 99,
+                            'elected': {
+                                'num_of_total': 2,
+                            },
+                            'not_elected': {
+                                'num_of_total': 4,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '93',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28533',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28418': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 25,
+                                'event_history': {
+                                    101: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    102: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    103: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    104: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    105: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    106: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    107: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API BP Ifname delete',
+                                        'flag_1': '45138200',
+                                        'flag_2': '0aa6ab70',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    108: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000106ac',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    109: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    110: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    111: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'API IM ESI BGP match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    112: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00090003',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    113: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    114: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001641',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    115: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    116: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '0006000f',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    117: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    118: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f75',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    119: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    120: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f75',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    121: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    122: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    123: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    124: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    125: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.475',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.615',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.531',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 6,
+                                        'adv_last_time': '15/08 22:10:26.615',
+                                        'adv_last_arg': '0000000f',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 99,
+                                        'adv_last_time': '15/08 22:10:26.563',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.475',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000641',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'mac_winner': '1',
+                        'number_of_evis': '15',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:2': {
+                                    'num_rts': 15,
+                                    'rt_list': ['100:1', '100:2', '100:3', '100:4', '100:5', '100:6', '100:7', '100:8', '100:9', '100:13', '100:14', '100:15', '100:16', '100:17', '100:18'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '0100.0111.acce.5500.1100': {
+                'interface': {
+                    'Bundle-Ether17': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether17',
+                            'interface_mac': '02ef.af8d.800a',
+                            'if_handle': '0x00004150',
+                            'state': 'Up',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 1,
+                        },
+                        'systemid': '0001.11ac.ce55',
+                        'port_key': '0x00006f77',
+                        'es_import_rt': '0001.11ac.ce55 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, All-active',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 6,
+                            'elected': {
+                                'num_of_total': 2,
+                            },
+                            'not_elected': {
+                                'num_of_total': 4,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28535',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28428': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 24,
+                                'event_history': {
+                                    126: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    127: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    128: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    129: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    130: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    131: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    132: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000111ac',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    133: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    134: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    135: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI BGP match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    136: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00030003',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    137: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    138: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001641',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    139: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    140: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '0006000f',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    141: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    142: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f77',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    143: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    144: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f77',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    145: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    146: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    147: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    148: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    149: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.554',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.555',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 6,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '0000000f',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 6,
+                                        'adv_last_time': '15/08 22:10:26.559',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.554',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000641',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'mac_winner': '1',
+                        'number_of_evis': '6',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:4': {
+                                    'num_rts': 6,
+                                    'rt_list': ['100:1', '100:2', '100:3', '100:13', '100:14', '100:15'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '0100.0112.acce.5500.1200': {
+                'interface': {
+                    'Bundle-Ether18': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether18',
+                            'interface_mac': '02ef.af8d.8009',
+                            'if_handle': '0x00004170',
+                            'state': 'Up',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 1,
+                        },
+                        'systemid': '0001.12ac.ce55',
+                        'port_key': '0x00006f78',
+                        'es_import_rt': '0001.12ac.ce55 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, All-active',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 84,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '84',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28536',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28422': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 25,
+                                'event_history': {
+                                    150: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    151: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    152: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    153: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    154: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    155: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    156: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API BP Ifname delete',
+                                        'flag_1': '45138200',
+                                        'flag_2': '0aa70f80',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    157: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000112ac',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    158: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    159: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    160: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'API IM ESI BGP match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    161: {
+                                        'time': 'Aug 15 22:10:26.432',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0006003a',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    162: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    163: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001641',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    164: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    165: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    166: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    167: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f78',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    168: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    169: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f78',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    170: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    171: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    172: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    173: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    174: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.476',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.531',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 84,
+                                        'adv_last_time': '15/08 22:10:26.553',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.476',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000641',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'mac_winner': '1',
+                        'number_of_evis': '6',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:3': {
+                                    'num_rts': 6,
+                                    'rt_list': ['100:4', '100:5', '100:6', '100:16', '100:17', '100:18'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            '0100.0117.acce.5500.1700': {
+                'interface': {
+                    'Bundle-Ether23': {
+                        'next_hops': ['192.168.0.1', '192.168.0.3'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'O',
+                        'main_port': {
+                            'interface': 'Bundle-Ether23',
+                            'interface_mac': '02ef.af8d.8007',
+                            'if_handle': '0x000041b0',
+                            'state': 'Up',
+                            'redundancy': 'Active',
+                        },
+                        'esi': {
+                            'type': 1,
+                        },
+                        'systemid': '0001.17ac.ce55',
+                        'port_key': '0x00006f7a',
+                        'es_import_rt': '0001.17ac.ce55 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, All-active',
+                            'configured': 'All-active (AApF) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'service_carving_results': {
+                            'forwarders': 9,
+                            'elected': {
+                                'num_of_total': 0,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '9',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': '28538',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28430': {
+                                        'nexthop': '192.168.0.3',
+                                    },
+                                },
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 24,
+                                'event_history': {
+                                    175: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    176: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    177: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'Action Advertise MAC',
+                                        'flag_1': '00000000',
+                                        'flag_2': '0000c016',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    178: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API L2VPN RG MP Role',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000101',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    179: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    180: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    181: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Create RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000117ac',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    182: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    183: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    184: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI BGP match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    185: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00090006',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    186: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00011441',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    187: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API IM ESI match',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00001641',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    188: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise ESI',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    189: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action EAD/EVI',
+                                        'flag_1': '00000add',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    190: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    191: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API Recv LSD Local SHGLabel',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00006f7a',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    192: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '8513800b',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    193: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'Action EAD/ES',
+                                        'flag_1': '00000add',
+                                        'flag_2': '000a6f7a',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    194: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    195: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Modify',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    196: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    197: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '00002aab',
+                                        'flag_2': 'c0400000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    198: {
+                                        'time': 'Aug 15 22:10:46.656',
+                                        'event': 'API BGP nexthop update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000002',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.560',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.616',
+                                        'adv_last_arg': '00000001',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:29.561',
+                                        'adv_last_arg': '0000000a',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 9,
+                                        'adv_last_time': '15/08 22:10:26.563',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 1,
+                                        'adv_last_time': '15/08 22:10:26.560',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000641',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'mac_winner': '1',
+                        'number_of_evis': '3',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '1',
+                        'esi_advertised': '1',
+                        'msti_state_mask': '0x2aab',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x2aab',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                                '192.168.0.3': '[MOD:P:00][2]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 1,
+                            'rd': {
+                                '192.168.0.1:5': {
+                                    'num_rts': 3,
+                                    'rt_list': ['100:7', '100:8', '100:9'],
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            'N/A': {
+                'interface': {
+                    'GigabitEthernet0/3/0/0': {
+                        'next_hops': ['192.168.0.1'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'GigabitEthernet0/3/0/0',
+                            'interface_mac': '023f.e86f.8612',
+                            'if_handle': '0x01804060',
+                            'state': 'Up',
+                            'redundancy': 'Not Defined',
+                        },
+                        'esi_type': 'Invalid',
+                        'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
+                        'source_mac': '0001.ed9e.0001 (PBB BSA, no ESI)',
+                        'topology': {
+                            'operational': 'SH',
+                            'configured': 'Single-active (AApS) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]'],
+                        'service_carving_results': {
+                            'forwarders': 9,
+                            'elected': {
+                                'num_of_total': 9,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': 'None',
+                        'remote_shg_labels': {
+                            '0': {
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 14,
+                                'event_history': {
+                                    199: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    200: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    201: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    202: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    203: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    204: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '000c0126',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    205: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': 'a5138016',
+                                        'flag_2': '0000ffff',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    206: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00008001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    207: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010041',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    208: {
+                                        'time': 'Aug 15 22:10:29.504',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    209: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '000f7fff',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    210: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000304',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    211: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    212: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API MAC Flush propagation',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 2,
+                                        'adv_last_time': '15/08 22:10:26.570',
+                                        'adv_last_arg': 'a5138016',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 9,
+                                        'adv_last_time': '15/08 22:10:26.566',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 3,
+                                        'adv_last_time': '15/08 22:10:46.640',
+                                        'adv_last_arg': '00030000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 3,
+                                        'adv_last_time': '15/08 22:10:46.640',
+                                        'adv_last_arg': '00000001',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 3,
+                                        'adv_last_time': '15/08 22:10:46.636',
+                                        'adv_last_arg': '00007fff',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 4,
+                                        'adv_last_time': '15/08 22:10:46.636',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000041',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'port_key': '0x00000001',
+                        'mac_winner': '1',
+                        'number_of_evis': '3',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '0',
+                        'esi_advertised': '0',
+                        'msti_state_mask': '0x7fff',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x7fff',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 0,
+                        },
+                    },
+                    'GigabitEthernet0/4/0/0': {
+                        'next_hops': ['192.168.0.1'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'GigabitEthernet0/4/0/0',
+                            'interface_mac': '0259.cd23.62c7',
+                            'if_handle': '0x02004060',
+                            'state': 'Up',
+                            'redundancy': 'Not Defined',
+                        },
+                        'esi_type': 'Invalid',
+                        'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
+                        'source_mac': '0001.ed9e.0001 (PBB BSA, no ESI)',
+                        'topology': {
+                            'operational': 'SH',
+                            'configured': 'Single-active (AApS) (default)',
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]'],
+                        'service_carving_results': {
+                            'forwarders': 79,
+                            'elected': {
+                                'num_of_total': 6,
+                            },
+                            'not_elected': {
+                                'num_of_total': 0,
+                            },
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '73',
+                            'backup': '0',
+                            'non_df': '0',
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '3',
+                        'recovery_timer': '30',
+                        'carving_timer': '0',
+                        'local_shg_label': 'None',
+                        'remote_shg_labels': {
+                            '0': {
+                            },
+                        },
+                        'object': {
+                            'EVPN ES': {
+                                'base_info': {
+                                    'version': '0xdbdb0007',
+                                    'flags': '0x0',
+                                    'type': 7,
+                                    'reserved': 0,
+                                },
+                                'num_events': 15,
+                                'event_history': {
+                                    213: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'ES DB Bind',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    214: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'Create',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    215: {
+                                        'time': 'Aug 15 22:10:12.736',
+                                        'event': 'API Config Ifname Add',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    216: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Config Local RT',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    217: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API Provision',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    218: {
+                                        'time': 'Aug 15 22:10:12.992',
+                                        'event': 'API BP Ifname delete',
+                                        'flag_1': '45138200',
+                                        'flag_2': '0aa62e60',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    219: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BP Ifname update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00030003',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    220: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Advertise RT',
+                                        'flag_1': 'a5138016',
+                                        'flag_2': '0000ffff',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    221: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'Action Peering Sequence',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00008001',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    222: {
+                                        'time': 'Aug 15 22:10:26.560',
+                                        'event': 'API BGP RID update',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00010041',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    223: {
+                                        'time': 'Aug 15 22:10:29.376',
+                                        'event': 'API Peer Timer Expiry',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000001',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    224: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB Instance Upd',
+                                        'flag_1': '000f7fff',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    225: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'Action L2FIB MP Info Upd',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000104',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                    226: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API L2FIB Replay',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': '-',
+                                        'code_2': '-',
+                                    },
+                                    227: {
+                                        'time': 'Aug 15 22:10:46.528',
+                                        'event': 'API MAC Flush propagation',
+                                        'flag_1': '00000000',
+                                        'flag_2': '00000000',
+                                        'code_1': 'M',
+                                        'code_2': '-',
+                                    },
+                                },
+                                'statistics': {
+                                    'rt': {
+                                        'adv_cnt': 3,
+                                        'adv_last_time': '15/08 22:10:26.570',
+                                        'adv_last_arg': 'a5138016',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'localbmac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'esi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_es': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'ead_evi': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mst_ag_vpw': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'df_electfw': {
+                                        'adv_cnt': 79,
+                                        'adv_last_time': '15/08 22:10:26.559',
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'updatemac': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushpe': {
+                                        'adv_cnt': 0,
+                                        'adv_last_arg': '00000000',
+                                    },
+                                    'macflushce': {
+                                        'adv_cnt': 4,
+                                        'adv_last_time': '15/08 22:10:46.641',
+                                        'adv_last_arg': '00000001',
+                                    },
+                                    'instance': {
+                                        'adv_cnt': 4,
+                                        'adv_last_time': '15/08 22:10:46.639',
+                                        'adv_last_arg': '00007fff',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                    'mp_info': {
+                                        'adv_cnt': 5,
+                                        'adv_last_time': '15/08 22:10:46.639',
+                                        'adv_last_arg': '00000000',
+                                        'wdw_cnt': 0,
+                                        'wdw_last_arg': '00000000',
+                                    },
+                                },
+                            },
+                        },
+                        'diagnostic_esi': 'N/A',
+                        'interface_name': 'N/A',
+                        'diagnostic_ifh': '0x00000000',
+                        'diagnostic_flag': '0x00000041',
+                        'diagnostic_es_rt': '0000.0000.0000',
+                        'port_key': '0x00000001',
+                        'mac_winner': '1',
+                        'number_of_evis': '13',
+                        'recovery_timer_per_es': 'global',
+                        'peering_timer_per_es': 'global',
+                        'carving_timer_per_es': 'global',
+                        'rt_advertised': '0',
+                        'esi_advertised': '0',
+                        'msti_state_mask': '0x7fff',
+                        'hrw_msti_set': '0x3',
+                        'es_ead_pulse': '0',
+                        'mp_advertised': '1',
+                        'nve_anycastvtep': '0',
+                        'nve_ingrreplic': '0',
+                        'peering_done': '1',
+                        'carving_done': '1',
+                        'inval_redundfwd': '0x00000000/0x00000000',
+                        'inval_redund_nh': '0x00000000/0x00000000',
+                        'checkpoint_info': {
+                            'if_type': 1,
+                            'msti_mask': '0x7fff',
+                            'nexthop': {
+                                '192.168.0.1': '[MOD:P:00][1]',
+                            },
+                        },
+                        'es_ead_update': {
+                            'num_rds': 0,
+                        },
+                    },
+                },
+            },
+        },
+    }
+    
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
@@ -3498,6 +8197,13 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
