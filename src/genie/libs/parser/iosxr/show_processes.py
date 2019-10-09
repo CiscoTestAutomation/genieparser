@@ -145,7 +145,7 @@ class ShowProcesses(ShowProcessesSchema):
         # 1011   22487    0K  20   Sleeping     lspv_lib ISIS    0
         r21 = re.compile(r'(?P<jid>\d+)\s+(?P<tid>\d+)\s+(?P<stack>\S+)\s+'
                           '(?P<pri>\d+)\s+(?P<state>\S+)\s+\s'
-                          '(?P<name>[\sa-zA-Z\_\-]+)\s+(?P<rt_pri>\d+)')
+                          '(?P<name>[\sa-zA-Z\_\-\.]+)\s+(?P<rt_pri>\d+)')
 
         for line in output.splitlines():
             line = line.strip()

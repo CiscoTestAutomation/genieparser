@@ -305,6 +305,39 @@ class TestShowProcesses(unittest.TestCase):
                     }
                 }
             },
+            "67110": {
+                "tid": {
+                    1574: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "oom.sh",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67134": {
+                "tid": {
+                    1598: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "cgroup_oom.sh",
+                        "rt_pri": 0,
+                    }
+                }
+            },
+            "67135": {
+                "tid": {
+                    1599: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "oom.sh",
+                        "rt_pri": 0,
+                    }
+                }
+            },
             "67168": {
                 "tid": {
                     1632: {
@@ -437,6 +470,17 @@ class TestShowProcesses(unittest.TestCase):
                     }
                 }
             },
+            "69064": {
+                "tid": {
+                    3528: {
+                        "stack": "0K",
+                        "pri": 20,
+                        "state": "Sleeping",
+                        "name": "ds_startup.sh",
+                        "rt_pri": 0,
+                    }
+                }
+            },
             "53": {
                 "tid": {
                     3529: {
@@ -457,6 +501,7 @@ class TestShowProcesses(unittest.TestCase):
             },
         }
     }
+
 
 
     golden_output_2 = {'execute.return_value': '''
