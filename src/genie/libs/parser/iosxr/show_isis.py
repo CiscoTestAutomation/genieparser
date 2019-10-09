@@ -679,3 +679,108 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
         return parsed_output
+
+class ShowIsisLspLogSchema(MetaParser):
+    ''' Schema for commands:
+        * show isis lsp-log     
+    '''
+
+    schema = {
+        'instance': {
+            Any(): {
+                'level': {
+                    Any(): {
+                        'log_date': {
+                            Any(): {
+                                'timestamp': {
+                                    Any(): {
+                                        'count': int,
+                                        Optional('interface'): str,
+                                        'triggers': str,
+                                    }   
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIsisLspLog(ShowIsisLspLogSchema):
+    ''' Parser for commands:
+        * show isis lsp-log
+    '''
+
+    cli_command = 'show isis lsp-log'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # IS-IS TEST Level 2 LSP log
+        r1 = re.compile(r'IS\-IS\s+(?P<instance>.+)\s+Level\s+(?P<level>\d+)'
+                         '\s+LSP\s+log')
+        
+        # --- Thu Sep 26 2019 ---
+        # --- Mon Sep 30 2019 ---
+        r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\w\s]+)\s+\-\-\-')
+
+        # 09:39:16.648      1                     IPEXT
+        # 16:15:03.822      2  BE2                DELADJ
+        r3 = re.compile(r'(?P<timestamp>\S+)\s+(?P<count>\d+)\s*'
+                         '(?P<interface>\S*)\s+(?P<triggers>\S+)')
+
+        parsed_output = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS TEST Level 2 LSP log
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                level = int(group['level'])
+                instance_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})\
+                    .setdefault('level', {})\
+                    .setdefault(level, {})
+
+                continue
+            
+            # --- Thu Sep 26 2019 ---
+            # --- Mon Sep 30 2019 ---
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                log_date = group['log_date']
+                log_date_dict = instance_dict\
+                    .setdefault('log_date', {})\
+                    .setdefault(log_date, {})
+
+                continue
+
+            # 09:39:16.648      1                     IPEXT
+            # 16:15:03.822      2  BE2                DELADJ
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp = group['timestamp']
+                count = int(group['count'])
+                interface = group['interface']
+                triggers = group['triggers']
+                timestamp_dict = log_date_dict\
+                    .setdefault('timestamp', {})\
+                    .setdefault(timestamp, {})
+
+                timestamp_dict['count'] = count
+                if interface:
+                    timestamp_dict['interface'] = interface
+                timestamp_dict['triggers'] = triggers
+
+                continue
+
+        return parsed_output
