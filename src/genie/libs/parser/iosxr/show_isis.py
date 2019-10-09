@@ -5,6 +5,8 @@ IOSXR parsers for the following show commands:
     * show isis adjacency
     * show isis neighbors
     * show isis
+    * show isis hostname
+    * show isis instance {instance} hostname
 
 """
 
@@ -675,6 +677,107 @@ class ShowIsis(ShowIsisSchema):
                     .setdefault(interface, {})
                 interfaces_dict['running_state'] = running_state
                 interfaces_dict['configuration_state'] = configuration_state
+
+                continue
+
+        return parsed_output
+
+class ShowIsisHostnameSchema(MetaParser):
+    ''' Schema for commands:
+        * 'show isis hostname'
+        * 'show isis instance {instance} hostname'
+    '''
+
+    schema = {
+        'isis': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'level': {
+                            Any(): {
+                                'system_id': {
+                                    Any(): {
+                                        'dynamic_hostname': str,
+                                        Optional('local_router'): bool
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+class ShowIsisHostname(ShowIsisHostnameSchema):
+    ''' Parser for commands:
+        * 'show isis hostname'
+        * 'show isis instance {instance} hostname'
+    '''
+
+    cli_command = ['show isis instance {instance} hostname',
+                   'show isis hostname']
+
+    def cli(self, instance=None, output=None):
+
+        if output is None:
+            if instance:
+                command = self.cli_command[0].format(instance=instance)
+            else:
+                command = self.cli_command[1]
+            output = self.device.execute(command)
+
+        # IS-IS TEST1 hostnames
+        r1 = re.compile(r'IS\-IS\s(?P<isis>.+)\s+hostnames')
+
+        # 2     1720.1800.0254 tor-28.tenlab-cloud
+        # 2     1720.1800.0213 leaf-2.qa-site1
+        # 2     1720.1800.0250 tor-23.tenlab-cloud
+        r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+'
+                         '(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
+
+        parsed_output = {}
+        vrf = 'default'
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IS-IS TEST1 hostnames            
+            result = r1.match(line)
+            if result:                
+                group = result.groupdict()
+                isis = group['isis']
+
+                isis_dict = parsed_output\
+                    .setdefault('isis', {})\
+                    .setdefault(isis, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})                    
+
+                continue
+
+            # 2     1720.1800.0254 tor-28.tenlab-cloud
+            # 2     1720.1800.0213 leaf-2.qa-site1
+            # 2     1720.1800.0250 tor-23.tenlab-cloud            
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+
+                levels = group['level']
+                system_id = group['system_id']
+                local_router = group.get('local_router', None)
+                dynamic_hostname = group['dynamic_hostname']
+
+                for level in levels.split(','):
+                    hostname_dict = isis_dict\
+                        .setdefault('level', {})\
+                        .setdefault(int(level), {})\
+                        .setdefault('system_id', {})\
+                        .setdefault(system_id, {})
+
+                    hostname_dict['dynamic_hostname'] = dynamic_hostname
+                    if local_router:
+                        hostname_dict['local_router'] = True
 
                 continue
 

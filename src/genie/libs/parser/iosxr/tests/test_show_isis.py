@@ -11,8 +11,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 
 # iosxr show_mrib
 from genie.libs.parser.iosxr.show_isis import (ShowIsis,
+                                               ShowIsisHostname,
                                                ShowIsisAdjacency, 
-                                               ShowIsisNeighbors, 
+                                               ShowIsisNeighbors,
                                                ShowIsisSegmentRoutingLabelTable)
 
 
@@ -515,6 +516,129 @@ class TestShowIsis(unittest.TestCase):
         obj = ShowIsis(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+class TestIsisHostname(unittest.TestCase):
+    ''' Unit tests for commands:
+        * show isis hostname / ShowIsisHostname
+        * show isis instance {instance} hostname / ShowIsisHostname
+    '''         
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        'isis': {
+            'TEST1': {
+                'vrf': {
+                    'default': {
+                        'level': {
+                            2: {
+                                'system_id': {
+                                    '5286.4470.2149': {
+                                        'dynamic_hostname': 'host-1.bla-site3'}, 
+                                    '9839.2319.8337': {
+                                        'dynamic_hostname': 'host3-bla'}, 
+                                    '3549.6375.2540': {
+                                        'dynamic_hostname': 'abc-3.bla-site4'}, 
+                                    '0670.7021.9090': {
+                                            'dynamic_hostname': 'host2-abc'},
+                                    '9853.9997.6489': {
+                                        'dynamic_hostname': 'abc2-xyz', 
+                                        'local_router': True}}}}}}}}}
+
+    golden_output_1 = {'execute.return_value': '''
+        show isis hostname
+
+        Thu Oct  3 10:53:16.534 EDT
+
+        IS-IS TEST1 hostnames
+        Level  System ID      Dynamic Hostname
+         2     5286.4470.2149 host-1.bla-site3
+         2     9839.2319.8337 host3-bla
+         2     3549.6375.2540 abc-3.bla-site4
+         2     0670.7021.9090 host2-abc
+         2   * 9853.9997.6489 abc2-xyz
+    '''}
+
+    golden_parsed_output_2 = {
+        "isis": {
+            "test": {
+                "vrf": {
+                    "default": {
+                        "level": {
+                            2: {
+                                "system_id": {
+                                    "2222.2222.2222": {
+                                        "dynamic_hostname": "R2"},
+                                    "8888.8888.8888": {
+                                        "dynamic_hostname": "R8"},
+                                    "7777.7777.7777": {
+                                        "dynamic_hostname": "R7"},
+                                    "3333.3333.3333": {
+                                        "dynamic_hostname": "R3",
+                                        "local_router": True,
+                                    },
+                                    "5555.5555.5555": {
+                                        "dynamic_hostname": "R5"},
+                                    "9999.9999.9999": {
+                                        "dynamic_hostname": "R9"},
+                                }
+                            },
+                            1: {
+                                "system_id": {
+                                    "4444.4444.4444": {
+                                        "dynamic_hostname": "R4"},
+                                    "6666.6666.6666": {
+                                        "dynamic_hostname": "R6"},
+                                    "7777.7777.7777": {
+                                        "dynamic_hostname": "R7"},
+                                    "3333.3333.3333": {
+                                        "dynamic_hostname": "R3",
+                                        "local_router": True,
+                                    },
+                                    "5555.5555.5555": {
+                                        "dynamic_hostname": "R5"},
+                                }
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    golden_output_2 = {'execute.return_value': '''
+        show isis hostname
+        IS-IS test hostnames
+        Level  System ID      Dynamic Hostname
+         2     2222.2222.2222 R2
+         1     4444.4444.4444 R4
+         1     6666.6666.6666 R6
+         2     8888.8888.8888 R8
+         1,2   7777.7777.7777 R7
+         1,2 * 3333.3333.3333 R3
+         1,2   5555.5555.5555 R5
+         2     9999.9999.9999 R9
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisHostname(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
