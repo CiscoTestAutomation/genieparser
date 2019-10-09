@@ -4,6 +4,8 @@ from unittest.mock import Mock
 
 from ats.topology import Device
 
+import genie.gre
+
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                        SchemaMissingKeyError
 
@@ -257,7 +259,11 @@ class TestShowInterface(unittest.TestCase):
             'admin_state': 'up',
             'bandwidth': 1000000,
             'counters': 
-                {'rate': 
+                { 'in_multicast_pkts': 2,
+                  'in_unicast_pkts': 0,
+                  'in_broadcast_pkts': 4,
+                  'in_octets': 4726,
+                  'rate': 
                     {'in_rate': 0,
                     'in_rate_pkts': 0,
                     'load_interval': 1,
@@ -710,7 +716,7 @@ class TestShowInterface(unittest.TestCase):
                  'txload': '1/255',
                  'types': '100/1000/10000 Ethernet'}}
     golden_output_custom = {'execute.return_value': '''
- Ethernet2/1 is up
+      Ethernet2/1 is up
             admin state is up, Dedicated Interface
               Hardware: 10/100/1000 Ethernet, address: aaaa.bbbb.cccc (bia 5254.003b.4aca)
               Description: desc-1
@@ -1120,7 +1126,13 @@ class TestShowInterface(unittest.TestCase):
                   'auto_mdix': 'off',
                   'auto_negotiate': True,
                   'bandwidth': 1000000,
-                  'counters': {'rate': {'in_rate': 13408,
+                  'counters': {
+                    'in_multicast_pkts': 132485585,
+                    'in_unicast_pkts': 445986207,
+                    'in_broadcast_pkts': 10,
+                    'in_octets': 141467913935,
+                    'in_unicast_pkts': 445986207,
+                    'rate': {'in_rate': 13408,
                                         'in_rate_pkts': 16,
                                         'load_interval': 1,
                                         'out_rate': 51208,
