@@ -401,6 +401,8 @@
         * show l2vpn xconnect summary
     * Added ShowL2vpnXconnectMp2mpDetail for:
         * show l2vpn xconnect mp2mp detail
+    * Updated ShowL2vpnXconnectDetail for:
+        * To support more varied output
 
 --------------------------------------------------------------------------------
                                 EVPN
