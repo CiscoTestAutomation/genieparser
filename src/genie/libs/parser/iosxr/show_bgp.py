@@ -5200,7 +5200,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         ret_dict = {}
         instance = 'default'
 
-        # 3.3.3.3         default                 0 65000     0     0  Established  None
+        # 10.36.3.3         default                 0 65000     0     0  Established  None
         # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
 
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
@@ -5213,7 +5213,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 3.3.3.3         default                 0 65000     0     0  Established  None
+            # 10.36.3.3         default                 0 65000     0     0  Established  None
             # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
 
             m = p1.match(line)
@@ -6200,11 +6200,11 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         parsed_dict = {}
         index = 1
 
-        # Route Distinguisher: 7.7.7.7:3
+        # Route Distinguisher: 10.196.7.7:3
         p1 = re.compile(r'^Route +Distinguisher: +(?P<rd>(\S+))$')
 
         # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-        # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+        # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
         p2 = re.compile(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>(\d+)) +is'
                          ' +advertised +to +(?P<neighbor>(\S+))$')
 
@@ -6212,7 +6212,7 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         p3 = re.compile(r'^Path info:$')
 
         #    neighbor: Local           neighbor router id: 10.1.8.8
-        #    neighbor: Local           neighbor router id: 7.7.7.7
+        #    neighbor: Local           neighbor router id: 10.196.7.7
         p4 = re.compile(r'^neighbor: +(?P<neighbor>(\S+)) +neighbor +router'
                          ' +id: +(?P<neighbor_router_id>(\S+))$')
 
@@ -6251,14 +6251,14 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Route Distinguisher: 7.7.7.7:3
+            # Route Distinguisher: 10.196.7.7:3
             m = p1.match(line)
             if m:
                 af = 'l2vpn evpn RD ' + m.groupdict()['rd']
                 continue
 
             # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-            # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+            # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -6280,7 +6280,7 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
                 continue
 
             #    neighbor: Local           neighbor router id: 10.1.8.8
-            #    neighbor: Local           neighbor router id: 7.7.7.7
+            #    neighbor: Local           neighbor router id: 10.196.7.7
             m = p4.match(line)
             if m:
                 group = m.groupdict()

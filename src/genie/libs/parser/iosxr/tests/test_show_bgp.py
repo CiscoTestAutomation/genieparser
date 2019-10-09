@@ -9576,7 +9576,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.79',
+                                        'next_hop': '10.154.219.79',
                                         'localprf': 100,
                                         'weight': 0,
                                         'path': '65505',
@@ -9588,7 +9588,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.79',
+                                        'next_hop': '10.154.219.79',
                                         'localprf': 0,
                                         'weight': 100,
                                         'path': '0',
@@ -9600,7 +9600,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.79',
+                                        'next_hop': '10.154.219.79',
                                         'localprf': 100,
                                         'weight': 0,
                                         'path': '65505',
@@ -9958,20 +9958,20 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         Route Distinguisher: 172.18.0.209:162
         * i[5][0][24][10.120.1.0]/80
                             172.18.0.209                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
         * i[5][0][30][10.120.0.4]/80
                             172.18.0.209             0    100      0 ?
-        *>i                   67.70.219.86             0    100      0 ?
+        *>i                   10.154.219.86             0    100      0 ?
         * i[5][0][32][10.0.120.1]/80
                             172.18.0.209                  100      0 65505 i
-        *>i                   67.70.219.86                  100      0 65505 i
+        *>i                   10.154.219.86                  100      0 65505 i
         Route Distinguisher: 172.19.3.1:161
         *>i[5][0][24][10.120.1.0]/80
-                            67.70.219.79                  100      0 65505 i
+                            10.154.219.79                  100      0 65505 i
         *>i[5][0][30][10.120.0.0]/80
-                            67.70.219.79             0    100      0 ?
+                            10.154.219.79             0    100      0 ?
         *>i[5][0][32][10.0.120.1]/80
-                            67.70.219.79                  100      0 65505 i
+                            10.154.219.79                  100      0 65505 i
 
         Processed 163 prefixes, 166 paths
         RP/0/RP0/CPU0:tor1-tatooine#
@@ -9985,7 +9985,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
         show bgp l2vpn evpn
 
         Fri Sep 27 17:01:51.580 EDT
-        BGP router identifier 67.70.219.88, local AS number 64577
+        BGP router identifier 10.154.219.88, local AS number 64577
         BGP generic scan interval 60 secs
         Non-stop routing is enabled
         BGP table state: Active
@@ -9999,22 +9999,22 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                     i - internal, r RIB-failure, S stale, N Nexthop-discard
         Origin codes: i - IGP, e - EGP, ? - incomplete
         Network            Next Hop            Metric LocPrf Weight Path
-        Route Distinguisher: 67.70.219.82:10100
+        Route Distinguisher: 10.154.219.82:10100
         *>i[1][0000.0000.0000.0000.0000][30100]/120
-                            67.70.219.82                  100      0 i
-        Route Distinguisher: 67.70.219.82:10200
+                            10.154.219.82                  100      0 i
+        Route Distinguisher: 10.154.219.82:10200
         *>i[1][0000.0000.0000.0000.0000][30200]/120
-                            67.70.219.82                  100      0 i
-        Route Distinguisher: 67.70.219.88:10100 (default for vrf VPWS:10100)
+                            10.154.219.82                  100      0 i
+        Route Distinguisher: 10.154.219.88:10100 (default for vrf VPWS:10100)
         *> [1][0000.0000.0000.0000.0000][20100]/120
                             0.0.0.0                                0 i
         *>i[1][0000.0000.0000.0000.0000][30100]/120
-                            67.70.219.82                  100      0 i
-        Route Distinguisher: 67.70.219.88:10200 (default for vrf VPWS:10200)
+                            10.154.219.82                  100      0 i
+        Route Distinguisher: 10.154.219.88:10200 (default for vrf VPWS:10200)
         *> [1][0000.0000.0000.0000.0000][20200]/120
                             0.0.0.0                                0 i
         *>i[1][0000.0000.0000.0000.0000][30200]/120
-                            67.70.219.82                  100      0 i
+                            10.154.219.82                  100      0 i
 
         Processed 6 prefixes, 6 paths
         RP/0/RP0/CPU0:genie-router#
@@ -10025,7 +10025,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
             'default': {
                 'address_family': {
                     'l2vpn evpn': {
-                        'router_identifier': '67.70.219.88',
+                        'router_identifier': '10.154.219.88',
                         'local_as': 64577,
                         'generic_scan_interval': '60',
                         'non_stop_routing': 'enabled',
@@ -10038,42 +10038,42 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                         'nsr_issu_sync_group_versions': '7/0',
                         'scan_interval': 60,
                     },
-                    'l2vpn evpn RD 67.70.219.82:10100': {
+                    'l2vpn evpn RD 10.154.219.82:10100': {
                         'bgp_table_version': 7,
                         'local_router_id': '',
-                        'route_distinguisher': '67.70.219.82:10100',
+                        'route_distinguisher': '10.154.219.82:10100',
                         'prefixes': {
                             '[1][0000.0000.0000.0000.0000][30100]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.82',
+                                        'next_hop': '10.154.219.82',
                                         'origin_codes': 'i',
                                     },
                                 },
                             },
                         },
                     },
-                    'l2vpn evpn RD 67.70.219.82:10200': {
+                    'l2vpn evpn RD 10.154.219.82:10200': {
                         'bgp_table_version': 7,
                         'local_router_id': '',
-                        'route_distinguisher': '67.70.219.82:10200',
+                        'route_distinguisher': '10.154.219.82:10200',
                         'prefixes': {
                             '[1][0000.0000.0000.0000.0000][30200]/120': {
                                 'index': {
                                     1: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.82',
+                                        'next_hop': '10.154.219.82',
                                         'origin_codes': 'i',
                                     },
                                 },
                             },
                         },
                     },
-                    'l2vpn evpn RD 67.70.219.88:10100': {
+                    'l2vpn evpn RD 10.154.219.88:10100': {
                         'bgp_table_version': 7,
                         'local_router_id': '',
-                        'route_distinguisher': '67.70.219.88:10100',
+                        'route_distinguisher': '10.154.219.88:10100',
                         'prefixes': {
                             '[1][0000.0000.0000.0000.0000][20100]/120': {
                                 'index': {
@@ -10088,17 +10088,17 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.82',
+                                        'next_hop': '10.154.219.82',
                                         'origin_codes': 'i',
                                     },
                                 },
                             },
                         },
                     },
-                    'l2vpn evpn RD 67.70.219.88:10200': {
+                    'l2vpn evpn RD 10.154.219.88:10200': {
                         'bgp_table_version': 7,
                         'local_router_id': '',
-                        'route_distinguisher': '67.70.219.88:10200',
+                        'route_distinguisher': '10.154.219.88:10200',
                         'prefixes': {
                             '[1][0000.0000.0000.0000.0000][20200]/120': {
                                 'index': {
@@ -10113,7 +10113,7 @@ class test_show_bgp_l2vpn_evpn(unittest.TestCase):
                                 'index': {
                                     2: {
                                         'status_codes': '*>',
-                                        'next_hop': '67.70.219.82',
+                                        'next_hop': '10.154.219.82',
                                         'origin_codes': 'i',
                                     },
                                 },
@@ -11026,15 +11026,15 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
 
     golden_parsed_output1 = {
         'neighbor': 
-            {'5.5.5.5': 
+            {'10.100.5.5': 
                 {'address_family': 
-                    {'l2vpn evpn RD 7.7.7.7:3':
+                    {'l2vpn evpn RD 10.196.7.7:3':
                         {'advertised': 
                             {'[1][0009.0807.0605.0403.0201][0]/120': 
                                 {'index': 
                                     {1: 
                                         {'neighbor': 'Local',
-                                        'neighbor_router_id': '7.7.7.7',
+                                        'neighbor_router_id': '10.196.7.7',
                                         'flags': ['valid', 'redistributed', 'best', 'import-candidate'],
                                         'rx_path_id': 0,
                                         'local_path_id': 0,
@@ -11047,7 +11047,7 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
                                             'extended_community': []},
                                         'outbound_attributes': 
                                             {'community_attributes': 'ORG AS EXTCOMM',
-                                            'nexthop': '7.7.7.7',
+                                            'nexthop': '10.196.7.7',
                                             'aspath': "",
                                             'origin': 'IGP',
                                             'extended_community': ['SoO:0.0.0.0:0', 'RT:100:7']}}}}}}}}}}
@@ -11056,10 +11056,10 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
         RP/0/RP0/CPU0:leafZ#sh bgp l2vpn evpn advertised
         Mon Jul 11 19:22:38.235 UTC
 
-        Route Distinguisher: 7.7.7.7:3
-         [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+        Route Distinguisher: 10.196.7.7:3
+         [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
          Path info:
-           neighbor: Local           neighbor router id: 7.7.7.7
+           neighbor: Local           neighbor router id: 10.196.7.7
            valid  redistributed  best  import-candidate  
            Received Path ID 0, Local Path ID 0, version 12
            Attributes after inbound policy was applied:
@@ -11069,7 +11069,7 @@ class TestShowBgpL2vpnEvpnAdvertised(unittest.TestCase):
             aspath: 
             extended community: 
            Attributes after outbound policy was applied:
-            next hop: 7.7.7.7
+            next hop: 10.196.7.7
             ORG AS EXTCOMM 
             origin: IGP  
             aspath: 
@@ -11110,7 +11110,7 @@ class TestShowBgpSessions(unittest.TestCase):
                                 'nbr_state': 'Established',
                                 'nsr_state': 'None',
                             },
-                            '3.3.3.3': {
+                            '10.36.3.3': {
                                 'spk': 0,
                                 'as_number': 65000,
                                 'in_q': 0,
@@ -11146,7 +11146,7 @@ class TestShowBgpSessions(unittest.TestCase):
                                 'nbr_state': 'Established',
                                 'nsr_state': 'None',
                             },
-                            '3.3.3.3': {
+                            '10.36.3.3': {
                                 'spk': 0,
                                 'as_number': 65000,
                                 'in_q': 0,
@@ -11183,11 +11183,11 @@ class TestShowBgpSessions(unittest.TestCase):
 
         Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
         10.4.1.1         default                 0 65000     0     0  Established  None
-        3.3.3.3         default                 0 65000     0     0  Established  None
+        10.36.3.3         default                 0 65000     0     0  Established  None
         2001:1:1:1::1   default                 0 65000     0     0  Established  None
         2001:3:3:3::3   default                 0 65000     0     0  Established  None
         10.4.1.1         VRF1                    0 65000     0     0  Established  None
-        3.3.3.3         VRF1                    0 65000     0     0  Established  None
+        10.36.3.3         VRF1                    0 65000     0     0  Established  None
         2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
         2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
         '''}
@@ -11226,7 +11226,7 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
                                 'nbr_state': 'Established',
                                 'nsr_state': 'None',
                             },
-                            '3.3.3.3': {
+                            '10.36.3.3': {
                                 'spk': 0,
                                 'as_number': 65000,
                                 'in_q': 0,
@@ -11262,7 +11262,7 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
                                 'nbr_state': 'Established',
                                 'nsr_state': 'None',
                             },
-                            '3.3.3.3': {
+                            '10.36.3.3': {
                                 'spk': 0,
                                 'as_number': 65000,
                                 'in_q': 0,
@@ -11302,11 +11302,11 @@ class TestShowBgpInstanceAllSessions(unittest.TestCase):
 
         Neighbor        VRF                   Spk    AS   InQ  OutQ  NBRState     NSRState
         10.4.1.1         default                 0 65000     0     0  Established  None
-        3.3.3.3         default                 0 65000     0     0  Established  None
+        10.36.3.3         default                 0 65000     0     0  Established  None
         2001:1:1:1::1   default                 0 65000     0     0  Established  None
         2001:3:3:3::3   default                 0 65000     0     0  Established  None
         10.4.1.1         VRF1                    0 65000     0     0  Established  None
-        3.3.3.3         VRF1                    0 65000     0     0  Established  None
+        10.36.3.3         VRF1                    0 65000     0     0  Established  None
         2001:1:1:1::1   VRF1                    0 65000     0     0  Established  None
         2001:3:3:3::3   VRF1                    0 65000     0     0  Established  None
         '''}
