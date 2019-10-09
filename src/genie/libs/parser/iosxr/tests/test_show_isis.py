@@ -13,7 +13,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.iosxr.show_isis import (ShowIsis,
                                                ShowIsisAdjacency, 
                                                ShowIsisNeighbors, 
-                                               ShowIsisSegmentRoutingLabelTable)
+                                               ShowIsisSegmentRoutingLabelTable,
+                                               ShowIsisLspLog)
 
 
 # ==================================================
@@ -513,6 +514,165 @@ class TestShowIsis(unittest.TestCase):
     def test_show_isis_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+class TestShowIsisLspLog(unittest.TestCase):
+    ''' UT for commands/parsers:
+        * show isis lsp-log / ShowIsisLspLog
+    '''
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "instance": {
+            "TEST": {
+                "level": {
+                    2: {
+                        "log_date": {
+                            "Thu Sep 26 2019": {
+                                "timestamp": {
+                                    "09:39:16.648": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "10:29:02.303": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "10:37:48.060": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "11:02:22.678": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                }
+                            },
+                            "Mon Sep 30 2019": {
+                                "timestamp": {
+                                    "00:00:17.274": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "00:02:25.263": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "21:27:58.261": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                }
+                            },
+                            "Fri Oct  4 2019": {
+                                "timestamp": {
+                                    "16:10:11.734": {
+                                        "count": 2,
+                                        "interface": "BE2",
+                                        "triggers": "DELADJ",
+                                    },
+                                    "16:14:02.948": {
+                                        "count": 2,
+                                        "interface": "BE2",
+                                        "triggers": "ADJSIDADD",
+                                    },
+                                    "16:15:03.822": {
+                                        "count": 2,
+                                        "interface": "BE2",
+                                        "triggers": "DELADJ",
+                                    },
+                                    "16:17:45.821": {
+                                        "count": 2,
+                                        "interface": "BE2",
+                                        "triggers": "ADJSIDADD",
+                                    },
+                                }
+                            },
+                            "Sun Oct  6 2019": {
+                                "timestamp": {
+                                    "22:15:27.573": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "22:20:42.774": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "22:20:45.737": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "22:20:47.894": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "22:20:48.298": {
+                                        "count": 2, 
+                                        "triggers": "IPEXT"},
+                                }
+                            },
+                            "Mon Oct  7 2019": {
+                                "timestamp": {
+                                    "13:13:19.821": {
+                                        "count": 7, 
+                                        "triggers": "IPEXT"},
+                                    "13:13:23.821": {
+                                        "count": 7, 
+                                        "triggers": "IPEXT"},
+                                }
+                            },
+                            "Tue Oct  8 2019": {
+                                "timestamp": {
+                                    "00:00:17.461": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                    "00:02:24.479": {
+                                        "count": 1, 
+                                        "triggers": "IPEXT"},
+                                }
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        #show isis lsp-log
+        Tue Oct  8 17:38:16.254 EDT
+
+           IS-IS TEST Level 2 LSP log
+        When          Count  Interface          Triggers
+        --- Thu Sep 26 2019 ---
+        09:39:16.648      1                     IPEXT
+        10:29:02.303      1                     IPEXT
+        10:37:48.060      1                     IPEXT
+        11:02:22.678      1                     IPEXT
+        --- Mon Sep 30 2019 ---
+        00:00:17.274      1                     IPEXT
+        00:02:25.263      1                     IPEXT
+        21:27:58.261      1                     IPEXT
+        --- Fri Oct  4 2019 ---
+        16:10:11.734      2  BE2                DELADJ
+        16:14:02.948      2  BE2                ADJSIDADD
+        16:15:03.822      2  BE2                DELADJ
+        16:17:45.821      2  BE2                ADJSIDADD
+        --- Sun Oct  6 2019 ---
+        22:15:27.573      1                     IPEXT
+        22:20:42.774      1                     IPEXT
+        22:20:45.737      1                     IPEXT
+        22:20:47.894      1                     IPEXT
+        22:20:48.298      2                     IPEXT
+        --- Mon Oct  7 2019 ---
+        13:13:19.821      7                     IPEXT
+        13:13:23.821      7                     IPEXT
+        --- Tue Oct  8 2019 ---
+        00:00:17.461      1                     IPEXT
+        00:02:24.479      1                     IPEXT
+    '''}
+
+    def test_empty_output(self):
+        device = Mock(**self.empty_output)
+        obj = ShowIsisLspLog(device=device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        device = Mock(**self.golden_output_1)
+        obj = ShowIsisLspLog(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
