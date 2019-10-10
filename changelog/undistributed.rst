@@ -433,6 +433,7 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
         
 --------------------------------------------------------------------------------
                                 Route
