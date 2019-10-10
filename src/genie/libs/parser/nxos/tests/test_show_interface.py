@@ -358,6 +358,7 @@ class TestShowInterface(unittest.TestCase):
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'down',
+            'media_type': '10G',
             'phys_address': '002a.6ab4.9068',
             'port_channel': {'port_channel_member': False},
             'port_speed': '10',

@@ -284,7 +284,7 @@ class ShowInterface(ShowInterfaceSchema):
         # full-duplex, 1000 Mb/s, media type is 1G
         # auto-duplex, auto-speed, media type is 10G
         p10 = re.compile(r'^(?P<duplex_mode>[a-z]+)-duplex, *(?P<port_speed>[a-z0-9\-]+)(?: '
-                            '*Mb/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
+                            '*[G|M]b/s)?(?:, +media +type +is (?P<media_type>\w+))?$')
 
         #Beacon is turned off
         p11 = re.compile(r'^Beacon *is *turned *(?P<beacon>[a-z]+)$')
