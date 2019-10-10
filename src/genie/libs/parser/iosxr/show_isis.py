@@ -368,7 +368,7 @@ class ShowIsisSchema(MetaParser):
                                     Any(): {
                                         'distance': int,
                                         'adv_passive_only': bool,
-                                        'protocols_redistributed': bool,
+                                        Optional('protocols_redistributed'): bool,
                                         'level': {
                                             Any(): {
                                                 Optional('generate_style'): str,
@@ -376,6 +376,9 @@ class ShowIsisSchema(MetaParser):
                                                 'metric': int,
                                                 'ispf_status': str,
                                             }
+                                        },
+                                        Optional('redistributing'): {
+                                            Any(): list
                                         }
                                     }
                                 }
@@ -484,6 +487,9 @@ class ShowIsis(ShowIsisSchema):
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
         r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
                           '\s+\((?P<configuration_state>[\w\s]+)\)')
+        
+        # OSPF process 75688
+        r24 = re.compile(r'^(?P<protocol>\S+) process +(?P<process>\d+)$')
 
         parsed_output = {}
         vrf = 'default'
@@ -735,6 +741,18 @@ class ShowIsis(ShowIsisSchema):
                 interfaces_dict['running_state'] = running_state
                 interfaces_dict['configuration_state'] = configuration_state
 
+                continue
+            
+            # OSPF process 75688
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                protocol = group['protocol']
+                process = int(group['process'])
+                redistributing_dict = address_family_dict.setdefault('redistributing', {})
+                process_list = redistributing_dict.get(protocol, [])
+                process_list.append(process)
+                redistributing_dict.update({protocol: process_list})
                 continue
 
         return parsed_output
