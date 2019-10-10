@@ -155,6 +155,11 @@
     * Added ShowBgpSummary for:
         * show bgp summary
         * show bgp all summary
+    * Added ShowIpBgp for:
+        * show ip bgp
+
+* IOSXE
+    * Updated ShowBgpSuperParser for parsing of more varied output
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
@@ -433,6 +438,7 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
         
 --------------------------------------------------------------------------------
                                 Route
@@ -523,6 +529,8 @@
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
+* NXOS
+    * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
 <<<<<<< HEAD
