@@ -481,13 +481,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
-                                "forwarding_address": "0.0.0.0",
-                                "global_prefix": "3.3.3.0/24",
+                                "forwarding_address": ["0.0.0.0"],
+                                "global_prefix": ["3.3.3.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": "::",
-                                "global_prefix": "2001:db8:3:3:3::3/128",
+                                "forwarding_address": ["::"],
+                                "global_prefix": ["2001:db8:3:3:3::3/128"],
                             },
                         },
                         "lsp": {
@@ -609,13 +609,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
-                                "forwarding_address": "10.2.3.3",
-                                "global_prefix": "10.2.3.0/24",
+                                "forwarding_address": ["10.2.3.3"],
+                                "global_prefix": ["10.2.3.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": "fe80::f816:3eff:fee6:6bd7",
-                                "global_prefix": "2001:db8:10:2::/64",
+                                "forwarding_address": ["fe80::f816:3eff:fee6:6bd7"],
+                                "global_prefix": ["2001:db8:10:2::/64"],
                             },
                         },
                         "lsp": {
@@ -737,13 +737,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
-                                "forwarding_address": "10.3.6.3",
-                                "global_prefix": "10.3.6.0/24",
+                                "forwarding_address": ["10.3.6.3"],
+                                "global_prefix": ["10.3.6.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": "fe80::f816:3eff:feb0:d50f",
-                                "global_prefix": "2001:db8:10:3::/64",
+                                "forwarding_address": ["fe80::f816:3eff:feb0:d50f"],
+                                "global_prefix": ["2001:db8:10:3::/64"],
                             },
                         },
                         "lsp": {
@@ -865,13 +865,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
-                                "forwarding_address": "10.3.4.3",
-                                "global_prefix": "10.3.4.0/24",
+                                "forwarding_address": ["10.3.4.3"],
+                                "global_prefix": ["10.3.4.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": "fe80::f816:3eff:fead:2906",
-                                "global_prefix": "None",
+                                "forwarding_address": ["fe80::f816:3eff:fead:2906"],
+                                "global_prefix": ["None (No global addresses are configured)"],
                             },
                         },
                         "lsp": {
@@ -993,13 +993,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
-                                "forwarding_address": "10.3.5.3",
-                                "global_prefix": "10.3.5.0/24",
+                                "forwarding_address": ["10.3.5.3"],
+                                "global_prefix": ["10.3.5.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
-                                "forwarding_address": "fe80::f816:3eff:fe1c:d826",
-                                "global_prefix": "None",
+                                "forwarding_address": ["fe80::f816:3eff:fe1c:d826"],
+                                "global_prefix": ["None (No global addresses are configured)"],
                             },
                         },
                         "lsp": {

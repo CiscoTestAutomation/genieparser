@@ -412,8 +412,8 @@ class ShowIsisInterfaceSchema(MetaParser):
                         'address_family': {
                             Any(): {
                                 'state': str,
-                                'forwarding_address': str,
-                                'global_prefix': str,
+                                'forwarding_address': list,
+                                'global_prefix': list,
                             },
                         }
                     }
@@ -552,7 +552,8 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # Global Prefix(es):      3.3.3.0/24
         # Global Prefix(es):      2001:db8:3:3:3::3/128
-        r30 = re.compile(r'Global\s+Prefix\(es\)\s*:\s*(?P<global_prefix>\S+).*')
+        # Global Prefix(es):      None (No global addresses are configured)
+        r30 = re.compile(r'Global\s+Prefix\(es\)\s*:\s*(?P<global_prefix>.+)')
 
         # LSP transmit timer expires in 0 ms
         r31 = re.compile(r'LSP\s+transmit\s+timer\s+expires\s+in\s+'
@@ -929,9 +930,12 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             # Forwarding Address(es): ::
             result = r29.match(line)
             if result:
-                group = result.groupdict()
+                group = result.groupdict()                
                 forwarding_address = group['forwarding_address']
-                address_family_dict['forwarding_address'] = forwarding_address
+                forwarding_address_list = address_family_dict\
+                    .get('forwarding_address', [])
+                forwarding_address_list.append(forwarding_address)
+                address_family_dict['forwarding_address'] = forwarding_address_list
                 continue
 
             # Global Prefix(es):      3.3.3.0/24
@@ -940,7 +944,10 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
             if result:
                 group = result.groupdict()
                 global_prefix = group['global_prefix']
-                address_family_dict['global_prefix'] = global_prefix
+                global_prefix_list = address_family_dict\
+                    .get('global_prefix', [])
+                global_prefix_list.append(global_prefix)
+                address_family_dict['global_prefix'] = global_prefix_list
                 continue
 
             # LSP transmit timer expires in 0 ms
