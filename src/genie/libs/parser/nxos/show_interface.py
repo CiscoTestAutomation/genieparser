@@ -2703,7 +2703,7 @@ class ShowInterfaceBriefSchema(MetaParser):
                          Optional('status'): str,
                          Optional('ip_address'): str,
                          Optional('speed'): str,
-                         Optional('mtu'): str}
+                         Optional('mtu'): int}
                     },
                 Optional('port_channel'):
                     {Any():
@@ -2746,143 +2746,134 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             else:
                 cmd = self.cli_command[0]
             # Execute command
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            output = self.device.execute(cmd)
 
-        interface_dict = {}
-        for line in out.splitlines():
+        # Init
+        parsed_dict = {}
+
+        # Port   VRF          Status IP Address                              Speed    MTU
+        p1 = re.compile(r'^Port +VRF +Status +IP Address +Speed +MTU$')
+
+        # mgmt0  --           up     172.25.143.76                           1000     1500
+        p2 = re.compile(r'^(?P<port>[a-zA-Z0-9]+) +(?P<vrf>[a-zA-Z0-9\-]+)'
+                         ' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
+                         ' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
+
+        # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
+        p3 = re.compile(r'^Ethernet +VLAN +Type +Mode +Status +Reason +Speed'
+                         ' +Port$')
+
+        # Eth1/6        1       eth  access down    Link not connected         auto(D) --
+        p4 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
+                         ' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
+                         ' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
+                         ' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
+                         ' +(?P<port>[0-9\-]+)$')
+
+        # Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
+        p5 = re.compile(r'^Port-channel +VLAN +Type +Mode +Status +Reason'
+                         ' +Speed +Protocol$')
+
+        # Po8          1       eth  access down    No operational members      auto(I)  none
+        p6 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
+                         ' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
+                         ' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
+                         ' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
+                         ' +(?P<protocol>[a-zA-Z0-9\-]+)$')
+
+        # Interface     Status     Description
+        p7 = re.compile(r'^Interface +Status +Description$')
+
+        # Lo0           up         --
+        p8 = re.compile(r'^(?P<interface>[a-zA-Z0-9\/]+) +(?P<status>[a-z]+)'
+                         ' +(?P<description>[a-zA-Z\s\-]+)$')
+
+
+        for line in output.splitlines():
             line = line.strip()
 
-            p1 = re.compile(r'^\s*Port +VRF +Status +IP Address +Speed +MTU$')
+            # Port   VRF          Status IP Address                              Speed    MTU
             m = p1.match(line)
             if m:
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-                if 'port' not in interface_dict['interface']:
-                    interface_dict['interface']['port'] = {}
+                port_dict = parsed_dict.setdefault('interface', {}).\
+                                        setdefault('port', {})
                 continue
 
-            p2 = re.compile(r'^\s*(?P<port>[a-zA-Z0-9]+)'
-                             ' +(?P<vrf>[a-zA-Z0-9\-]+)'
-                             ' +(?P<status>[a-zA-Z]+) +(?P<ip_address>[0-9\.]+)'
-                             ' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
+            # mgmt0  --           up     172.25.143.76                           1000     1500
             m = p2.match(line)
             if m:
-                port = m.groupdict()['port']
-                if port not in interface_dict['interface']['port']:
-                    interface_dict['interface']['port'][port] = {}
-                interface_dict['interface']['port'][port]['vrf'] = \
-                    m.groupdict()['vrf']
-                interface_dict['interface']['port'][port]['status'] = \
-                    m.groupdict()['status']
-                interface_dict['interface']['port'][port]['ip_address'] = \
-                    m.groupdict()['ip_address']
-                interface_dict['interface']['port'][port]['speed'] = \
-                    m.groupdict()['speed']
-                interface_dict['interface']['port'][port]['mtu'] = \
-                    m.groupdict()['mtu']
+                group = m.groupdict()
+                intf_dict = port_dict.\
+                        setdefault(Common.convert_intf_name(group['port']), {})
+                intf_dict['vrf'] = group['vrf']
+                intf_dict['status'] = group['status']
+                intf_dict['ip_address'] = group['ip_address']
+                intf_dict['speed'] = group['speed']
+                intf_dict['mtu'] = int(group['mtu'])
                 continue
 
-            p3 = re.compile(r'^\s*Ethernet +VLAN +Type +Mode +Status'
-                             ' +Reason +Speed +Port$')
+            # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
             m = p3.match(line)
             if m:
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-                if 'ethernet' not in interface_dict['interface']:
-                    interface_dict['interface']['ethernet'] = {}
+                eth_dict = parsed_dict.setdefault('interface', {}).\
+                                       setdefault('ethernet', {})
                 continue
 
-            p4 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/]+)'
-                             ' +(?P<vlan>[a-zA-Z0-9\-]+)'
-                             ' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                             ' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                             ' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
-                             ' +(?P<port>[0-9\-]+)$')
+            # Eth1/6        1       eth  access down    Link not connected         auto(D) --
             m = p4.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                if interface not in interface_dict['interface']['ethernet']:
-                    interface_dict['interface']['ethernet'][interface] = {}
-                interface_dict['interface']['ethernet'][interface]['vlan'] =\
-                    m.groupdict()['vlan']
-                interface_dict['interface']['ethernet'][interface]['type'] =\
-                    m.groupdict()['type']
-                interface_dict['interface']['ethernet'][interface]['mode'] =\
-                    m.groupdict()['mode']
-                interface_dict['interface']['ethernet'][interface]['status'] =\
-                    m.groupdict()['status']
-                interface_dict['interface']['ethernet'][interface]['reason'] =\
-                    m.groupdict()['reason'].strip()
-                interface_dict['interface']['ethernet'][interface]['speed'] =\
-                    m.groupdict()['speed']
-                interface_dict['interface']['ethernet'][interface]['port_ch'] =\
-                    m.groupdict()['port']
+                group = m.groupdict()
+                intf_dict = eth_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
+                intf_dict['vlan'] = group['vlan']
+                intf_dict['type'] = group['type']
+                intf_dict['mode'] = group['mode']
+                intf_dict['status'] = group['status']
+                intf_dict['reason'] = group['reason'].strip()
+                intf_dict['speed'] = group['speed']
+                intf_dict['port_ch'] = group['port']
                 continue
 
-            p5 = re.compile(r'^\s*Port-channel +VLAN +Type +Mode +Status'
-                             ' +Reason +Speed +Protocol$')
+            # Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
             m = p5.match(line)
             if m:
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-                if 'port_channel' not in interface_dict['interface']:
-                    interface_dict['interface']['port_channel'] = {}
+                pch_dict = parsed_dict.setdefault('interface', {}).\
+                                       setdefault('port_channel', {})
                 continue
 
-            p6 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/]+)'
-                             ' +(?P<vlan>[a-zA-Z0-9\-]+)'
-                             ' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                             ' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                             ' +(?P<speed>[0-9a-zA-Z\(\)\s]+)'
-                             ' +(?P<protocol>[a-zA-Z0-9\-]+)$')
+            # Po8          1       eth  access down    No operational members      auto(I)  none
             m = p6.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                if interface not in interface_dict['interface']['port_channel']:
-                    interface_dict['interface']['port_channel'][interface] = {}
-                interface_dict['interface']['port_channel'][interface]['vlan'] = \
-                    m.groupdict()['vlan']
-                interface_dict['interface']['port_channel'][interface]['type'] = \
-                    m.groupdict()['type']
-                interface_dict['interface']['port_channel'][interface]['mode'] = \
-                    m.groupdict()['mode']
-                interface_dict['interface']['port_channel'][interface]['status'] = \
-                    m.groupdict()['status']
-                interface_dict['interface']['port_channel'][interface]['reason'] = \
-                    m.groupdict()['reason'].strip()
-                interface_dict['interface']['port_channel'][interface]['speed'] = \
-                    m.groupdict()['speed']
-                interface_dict['interface']['port_channel'][interface]['protocol'] = \
-                    m.groupdict()['protocol']
+                group = m.groupdict()
+                intf_dict = pch_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
+                intf_dict['vlan'] = group['vlan']
+                intf_dict['type'] = group['type']
+                intf_dict['mode'] = group['mode']
+                intf_dict['status'] = group['status']
+                intf_dict['reason'] = group['reason'].strip()
+                intf_dict['speed'] = group['speed']
+                intf_dict['protocol'] = group['protocol']
                 continue
 
-
-            p7 = re.compile(r'^\s*Interface +Status +Description$')
+            # Interface     Status     Description
             m = p7.match(line)
             if m:
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-                if 'loopback' not in interface_dict['interface']:
-                    interface_dict['interface']['loopback'] = {}
+                loopback_dict = parsed_dict.setdefault('interface', {}).\
+                                            setdefault('loopback', {})
                 continue
 
-            p8 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/]+)'
-                             ' +(?P<status>[a-z]+)'
-                             ' +(?P<description>[a-zA-Z\s\-]+)$')
+            # Lo0           up         --
             m = p8.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                if interface not in interface_dict['interface']['loopback']:
-                    interface_dict['interface']['loopback'][interface] = {}
-                interface_dict['interface']['loopback'][interface]['status'] = \
-                    m.groupdict()['status']
-                interface_dict['interface']['loopback'][interface]['description'] = \
-                    m.groupdict()['description']
+                group = m.groupdict()
+                intf_dict = loopback_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
+                intf_dict['status'] = group['status']
+                intf_dict['description'] = group['description']
                 continue
 
-        return interface_dict
+        return parsed_dict
 
 # =================================================
 # Schema for 'show running-config interface <WORD>'
