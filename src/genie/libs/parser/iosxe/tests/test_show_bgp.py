@@ -21813,6 +21813,8 @@ class test_show_ip_bgp(unittest.TestCase):
          * i  192.168.0.2/21     10.0.0.5                   1000      0 20450 65500 3549 i
          * i  192.168.0.3/21     10.0.0.5               0             0 20450 65500 3549 i
          * i  192.168.0.4/21     10.0.0.5                             0 20450 65500 3549 i
+         *m 10.1.2.0/24      10.4.1.1               2219    100      0 20450 65500 3549 {27016} e
+         *rm 10.1.3.0/24      10.4.1.1               2219    100      0 20450 65500 3549 {27016} e
     '''}
 
     golden_parsed_output = {
@@ -21868,6 +21870,32 @@ class test_show_ip_bgp(unittest.TestCase):
                                         'origin_codes': 'i'
                                     }
                                 }
+                            },
+                            '10.1.2.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*m',
+                                        'path': '20450 65500 3549 {27016}',
+                                        'next_hop': '10.4.1.1',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 2219,
+                                        'origin_codes': 'e'
+                                    }
+                                }
+                            },
+                            '10.1.3.0/24': {
+                                'index': {
+                                    1: {
+                                        'status_codes': '*rm',
+                                        'path': '20450 65500 3549 {27016}',
+                                        'next_hop': '10.4.1.1',
+                                        'localpref': 100,
+                                        'weight': 0,
+                                        'metric': 2219,
+                                        'origin_codes': 'e'
+                                    }
+                                }
                             }
                         }
                     }
@@ -21875,6 +21903,7 @@ class test_show_ip_bgp(unittest.TestCase):
             }
         }
     }
+
 
     def test_golden(self):
         self.maxDiff = None
