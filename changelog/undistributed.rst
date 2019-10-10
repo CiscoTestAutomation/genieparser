@@ -25,6 +25,8 @@
 * NXOS
     * Update ShowInterfaceBrief
         * Add command 'show interface {interface} brief'
+        * Rewrite parser for speed optimization
+        * Change parsed interface name to be complete/whole interface name
     * Update ShowRunningConfigInterface
         * Update regex to support more interface names
         * Updated schema to support more outputs
@@ -499,9 +501,15 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisProtocol for:
+        * show isis protocol
+    * Added ShowIsisStatistics for:
+        * show isis statistics
+    * Added parser ShowIsis for:
+        * show isis
     * Added parser ShowIsisHostname for:
-        * 'show isis hostname'
-        * 'show isis instance {instance} hostname'
+        * show isis hostname
+        * show isis instance {instance} hostname
 
 --------------------------------------------------------------------------------
                                 Interface
