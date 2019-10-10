@@ -985,9 +985,7 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                         Optional('checkpoint_info'): {
                             Optional('msti_mask'): str,
                             Optional('if_type'): int,
-                            Optional('nexthop'): {
-                                Any(): Any()
-                            }
+                            Optional('nexthop'): list,
                         },
                         Optional(Any()): Any()
                     }
@@ -1597,14 +1595,12 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 group = m.groupdict()
                 nexthop = group['nexthop']
                 nexthopinfo = group['nexthopinfo']
+                details_list = interface_dict.get('peering_details', [])
+                details_list.append(line)
                 if detail_type == 'peering_details':
-                    details_list = interface_dict.get('peering_details', [])
-                    details_list.append(line)
                     interface_dict.setdefault('peering_details', details_list)
                 else:
-                    details_dict = interface_dict.setdefault('checkpoint_info', {})
-                    nexthop_dict = checkpoint_info_dict.setdefault('nexthop', {})
-                    nexthop_dict.update({nexthop: nexthopinfo})
+                    checkpoint_info_dict.update({'nexthop': details_list})
                 continue
 
             # IF Type      : 1
