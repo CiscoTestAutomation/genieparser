@@ -496,6 +496,8 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+    * Added ShowIsisStatistics for:
+        * show isis statistics
     * Added parser ShowIsis for:
         * show isis
     * Added parser ShowIsisHostname for:
