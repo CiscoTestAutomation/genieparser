@@ -513,6 +513,8 @@
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
+* NXOS
+    * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
     
