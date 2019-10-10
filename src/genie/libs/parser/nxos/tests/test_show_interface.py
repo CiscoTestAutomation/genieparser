@@ -1,21 +1,25 @@
-import re
+
+# Python
 import unittest
 from unittest.mock import Mock
 
 from ats.topology import Device
 
+# Genie
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+                                             SchemaMissingKeyError
 
-from genie.libs.parser.nxos.show_interface import ShowInterface, ShowVrfAllInterface, \
-                                       ShowInterfaceSwitchport, ShowIpv6InterfaceVrfAll, \
-                                       ShowIpInterfaceVrfAll, \
-                                       ShowIpInterfaceBrief, \
-                                       ShowIpInterfaceBriefPipeVlan, \
-                                       ShowInterfaceBrief, \
-                                       ShowRunningConfigInterface, \
-                                       ShowNveInterface, \
-                                       ShowIpInterfaceBriefVrfAll
+from genie.libs.parser.nxos.show_interface import (ShowInterface,
+                                                   ShowVrfAllInterface,
+                                                   ShowInterfaceSwitchport,
+                                                   ShowIpv6InterfaceVrfAll,
+                                                   ShowIpInterfaceVrfAll,
+                                                   ShowIpInterfaceBrief,
+                                                   ShowIpInterfaceBriefPipeVlan,
+                                                   ShowInterfaceBrief,
+                                                   ShowRunningConfigInterface,
+                                                   ShowNveInterface,
+                                                   ShowIpInterfaceBriefVrfAll)
 
 #############################################################################
 # unitest For Show Interface
@@ -3238,14 +3242,14 @@ class test_show_interface_brief(unittest.TestCase):
 
     golden_parsed_output = {'interface': 
                               {'ethernet': 
-                                {'Eth1/1': {'mode': 'routed',
+                                {'Ethernet1/1': {'mode': 'routed',
                                             'port_ch': '--',
                                             'reason': 'none',
                                             'speed': '1000(D)',
                                             'status': 'up',
                                             'type': 'eth',
                                             'vlan': '--'},
-                                 'Eth1/3': {'mode': 'access',
+                                 'Ethernet1/3': {'mode': 'access',
                                             'port_ch': '--',
                                             'reason': 'Administratively '
                                                       'down',
@@ -3253,7 +3257,7 @@ class test_show_interface_brief(unittest.TestCase):
                                             'status': 'down',
                                             'type': 'eth',
                                             'vlan': '1'},
-                                 'Eth1/6': {'mode': 'access',
+                                 'Ethernet1/6': {'mode': 'access',
                                             'port_ch': '--',
                                             'reason': 'Link not '
                                                       'connected',
@@ -3262,7 +3266,7 @@ class test_show_interface_brief(unittest.TestCase):
                                             'type': 'eth',
                                             'vlan': '1'}},
                               'loopback': 
-                                {'Lo0': 
+                                {'Loopback0':
                                   {'description': '--',
                                    'status': 'up'}},
                               'port': 
@@ -3273,7 +3277,7 @@ class test_show_interface_brief(unittest.TestCase):
                                    'status': 'up',
                                    'vrf': '--'}},
                               'port_channel': 
-                                {'Po8': 
+                                {'Port-channel8':
                                   {'mode': 'access',
                                    'protocol': 'none',
                                    'reason': 'No operational '
@@ -3326,7 +3330,7 @@ class test_show_interface_brief(unittest.TestCase):
     golden_parsed_output2 = {
         'interface': 
             {'ethernet': 
-                {'Eth1/1': 
+                {'Ethernet1/1':
                     {'mode': 'routed',
                     'port_ch': '--',
                     'reason': 'none',

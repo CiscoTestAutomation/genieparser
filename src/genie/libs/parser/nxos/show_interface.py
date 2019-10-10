@@ -2653,7 +2653,8 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = port_dict.setdefault(group['port'], {})
+                intf_dict = port_dict.\
+                        setdefault(Common.convert_intf_name(group['port']), {})
                 intf_dict['vrf'] = group['vrf']
                 intf_dict['status'] = group['status']
                 intf_dict['ip_address'] = group['ip_address']
@@ -2672,7 +2673,8 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = eth_dict.setdefault(group['interface'], {})
+                intf_dict = eth_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
                 intf_dict['vlan'] = group['vlan']
                 intf_dict['type'] = group['type']
                 intf_dict['mode'] = group['mode']
@@ -2693,7 +2695,8 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = pch_dict.setdefault(group['interface'], {})
+                intf_dict = pch_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
                 intf_dict['vlan'] = group['vlan']
                 intf_dict['type'] = group['type']
                 intf_dict['mode'] = group['mode']
@@ -2714,7 +2717,8 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                intf_dict = loopback_dict.setdefault(group['interface'], {})
+                intf_dict = loopback_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
                 intf_dict['status'] = group['status']
                 intf_dict['description'] = group['description']
                 continue
