@@ -2606,7 +2606,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # mgmt0  --           up     172.25.143.76                           1000     1500
         p2 = re.compile(r'^(?P<port>[a-zA-Z0-9]+) +(?P<vrf>[a-zA-Z0-9\-]+)'
-                         ' +(?P<status>[a-zA-Z]+) +(?P<ip_address>[0-9\.\:]+)'
+                         ' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
                          ' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
 
         # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
