@@ -3546,20 +3546,14 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-<<<<<<< HEAD
-class TestShowInterfaceBrief(unittest.TestCase):
-    device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
-=======
-
 # ====================================
 # Unit test for 'show interface brief'
 # ====================================
-class test_show_interface_brief(unittest.TestCase):
-
+class TestShowInterfaceBrief(unittest.TestCase):
+    device = Device(name='aDevice')
+    device1 = Device(name='bDevice')
     maxDiff = None
 
->>>>>>> dev
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {'interface': 
@@ -3679,13 +3673,7 @@ class test_show_interface_brief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-<<<<<<< HEAD
 class TestShowRunInterface(unittest.TestCase):
-=======
-
-class test_show_run_interface(unittest.TestCase):
->>>>>>> dev
-
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
 
