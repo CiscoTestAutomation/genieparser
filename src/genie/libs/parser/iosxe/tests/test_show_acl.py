@@ -3,8 +3,6 @@ import unittest
 from unittest.mock import Mock
 from ats.topology import Device
 
-import genie.gre
-
 from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                        SchemaMissingKeyError
 from genie.libs.parser.iosxe.show_acl import ShowAccessLists, \
@@ -1869,57 +1867,38 @@ IPv6 access list OutFilter_IPv6
             parsed_output = obj.parse()
 
     def test_golden(self):
-        import re
-        re.reset()
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output)
         obj = ShowAccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
-        print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_ip_access_list_golden(self):
-        import re
-        re.reset()
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_ip_access_list_output)
         obj = ShowIpAccessLists(device=self.dev_c3850)
         parsed_output = obj.parse(acl="ACL_TEST")
-        print(re.colour_output())
-        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_ip_access_list_output)
 
     def test_ipv6_access_list_golden(self):
-        import re
-        re.reset()
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_ipv6_access_list_output)
         obj = ShowIpv6AccessLists(device=self.dev_c3850)
         parsed_output = obj.parse(acl="OutFilter_IPv6")
-        print(re.colour_output())
-        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_ipv6_access_list_output)
 
     def test_ipv6_access_list_all_golden(self):
-        import re
-        re.reset()
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_ipv6_access_list_all_output)
         obj = ShowIpv6AccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
-        print(re.colour_output())
-        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_ipv6_access_list_all_output)
 
     def test_golden_1(self):
-        import re
-        re.reset()
         self.maxDiff = None
         self.dev_c3850 = Mock(**self.golden_output_1)
         obj = ShowIpv6AccessLists(device=self.dev_c3850)
         parsed_output = obj.parse()
-        print(re.colour_output())
-        re.reset()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':
