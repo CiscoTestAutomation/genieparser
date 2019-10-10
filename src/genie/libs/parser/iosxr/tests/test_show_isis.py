@@ -1101,6 +1101,7 @@ class TestShowIsisStatistics(unittest.TestCase):
     def test_golden_output_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsisStatistics(device=self.device)
+        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
 
 if __name__ == '__main__':
