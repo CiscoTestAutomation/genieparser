@@ -1086,7 +1086,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
-                            'type': 0,
+                            'type': '0',
                             'value': '01.0000.aaab.0000.0003',
                         },
                         'es_import_rt': 'aaab.0000.0003 (Local)',
@@ -1133,7 +1133,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
-                            'type': 0,
+                            'type': '0',
                             'value': '01.0000.aaab.0000.0004',
                         },
                         'es_import_rt': 'aaab.0000.0004 (Local)',
@@ -1178,6 +1178,9 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'if_handle': '0x000005c0',
                             'state': 'Up',
                             'redundancy': 'Not Defined',
+                        },
+                        'esi': {
+                            'type': 'Invalid',
                         },
                         'es_import_rt': '0000.0000.0000 (Incomplete Configuration)',
                         'source_mac': '00c1.6428.7ce8 (PBB BSA, no ESI)',
@@ -1372,7 +1375,7 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
                             'redundancy': 'Not Defined',
                         },
                         'esi': {
-                            'type': 0,
+                            'type': '0',
                             'value': '47.4811.1111.1111.2211',
                         },
                         'es_import_rt': '4748.1111.1111 (from ESI)',
