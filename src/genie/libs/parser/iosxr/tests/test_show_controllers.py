@@ -1,26 +1,25 @@
+
 # Python
 import unittest
 from unittest.mock import Mock
 
-# ATS
-from ats.topology import Device
-from ats.topology import loader
-
-# Metaparser
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+# Genie
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # iosxr show_controllers
-from genie.libs.parser.iosxr.show_controllers import ShowControllersCoherentDSP, ShowControllersOptics
+from genie.libs.parser.iosxr.show_controllers import (ShowControllersCoherentDSP,
+                                                     ShowControllersOptics,
+                                                     ShowControllersFiaDiagshellL2showLocation,
+                                                     )
 
 
 # =====================================================
 #  Unit test for 'show controllers coherentDSP {port}'
 # =====================================================
-
 class test_show_controllers_coherentDSP(unittest.TestCase):
     '''Unit test for show controllers coherentDSP {port}'''
 
-    device = Device(name='aDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
@@ -97,7 +96,6 @@ class test_show_controllers_coherentDSP(unittest.TestCase):
             parsed_output = obj.parse(port='0/0/1/2')
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowControllersCoherentDSP(device=self.device)
         parsed_output = obj.parse(port='0/0/1/2')
@@ -107,11 +105,10 @@ class test_show_controllers_coherentDSP(unittest.TestCase):
 # ==================================================
 #  Unit test for 'show controllers optics {port}'
 # ==================================================
-
 class test_show_controllers_optics(unittest.TestCase):
     '''Unit test for show controllers optics {port}'''
 
-    device = Device(name='aDevice')
+    maxDiff = None
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -572,32 +569,96 @@ class test_show_controllers_optics(unittest.TestCase):
             parsed_output = obj.parse(port='0/0/0/0')
 
     def test_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowControllersOptics(device=self.device)
         parsed_output = obj.parse(port='0/0/0/0')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowControllersOptics(device=self.device)
         parsed_output = obj.parse(port='0/0/1/2')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
     def test_golden3(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowControllersOptics(device=self.device)
         parsed_output = obj.parse(port='0/0/0/20')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
     def test_golden4(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowControllersOptics(device=self.device)
         parsed_output = obj.parse(port='0/0/0/18')
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+
+# ==============================================================================================
+#  Unit test for 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
+# ==============================================================================================
+class test_show_controllers_fia_diagshell_location(unittest.TestCase):
+    '''Unit test for:
+        * 'show controllers fia diagshell {diagshell_unit} "l2 show" location {location}'
+    '''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'nodes': 
+            {'0/0/CPU0': 
+                {'vlan': 
+                    {4: 
+                        {'mac': 
+                            {'00:00:03:00:01:0c': 
+                                {'encap_id': '0x301d',
+                                'gport': '0xc000001',
+                                'trunk': 1}}},
+                    2522: 
+                        {'mac': 
+                            {'fc:00:00:01:00:02': 
+                                {'encap_id': '0xffffffff',
+                                'gport': '0x9800401d',
+                                'static': True}}},
+                    2524: 
+                        {'mac': 
+                            {'fc:00:00:01:00:0b': 
+                                {'encap_id': '0x3001',
+                                'gport': '0xc000000',
+                                'static': True,
+                                'trunk': 0}}},
+                    2544: 
+                        {'mac': 
+                            {'fc:00:00:01:00:8b': 
+                                {'encap_id': '0x2007',
+                                'gport': '0x8000048'},
+                            'fc:00:00:01:00:9b': 
+                                {'encap_id': '0x2007',
+                                'gport': '0x8000048',
+                                'trunk': 0}}}}}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:UUT4#show controller fia diagshell 0 'l2 show' location all
+
+        Node ID: 0/0/CPU0
+        mac=fc:00:00:01:00:8b vlan=2544 GPORT=0x8000048 encap_id=0x2007
+        mac=fc:00:00:01:00:02 vlan=2522 GPORT=0x9800401d Static encap_id=0xffffffff
+        mac=fc:00:00:01:00:9b vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
+        mac=fc:00:00:01:00:0b vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001
+        mac=00:00:03:00:01:0c vlan=4 GPORT=0xc000001 Trunk=1 encap_id=0x301d
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowControllersFiaDiagshellL2showLocation(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowControllersFiaDiagshellL2showLocation(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 if __name__ == '__main__':

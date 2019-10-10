@@ -56,7 +56,7 @@ class ShowAccessListsSchema(MetaParser):
                                 'protocol': str,
                                 Optional('precedence'): str,
                                 Optional('precedence_code'): int,
-                                'destination_network': {
+                                Optional('destination_network'): {
                                     Any(): {
                                         'destination_network': str,
                                     }
@@ -245,26 +245,65 @@ class ShowAccessLists(ShowAccessListsSchema):
         # initial regexp pattern
         p_ip = re.compile(r'^(Extended|Standard) +IP +access +list[s]? +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
-        p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
+        p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?.*$')
         p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.]+)( *\((?P<per_user>.*)\))?$')
+
+        # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
+        # 20 permit 10.2.0.0
+        # 20 deny   any
+        # 10 permit 7.7.7.7
+        # 30 deny   any
+        # permit 172.20.10.10
+        # permit 10.66.12.12
+
+        p_ip_acl_standard = re.compile(r'^(?P<seq>\d+)? ?(?P<actions_forwarding>permit|deny) +(?P<src>[\w\.]+|any)(?:, +wildcard +bits +(?P<wildcard_bits>any|[\w\.]+))?$')
+
+        # 10 permit ip host 10.3.3.3 host 10.5.5.34
+        # 20 permit icmp any any
+        # 30 permit ip host 10.34.2.2 host 10.2.54.2
+        # 40 permit ip host 10.3.4.31 host 10.3.32.3 log
+        # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www               (matches on l4, but missing l3)
+        # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
+        # 40 permit tcp any range ftp-data bgp any
+        # 10 permit ip host 0.0.0.0 any
+        # 20 permit ip 192.0.2.0 0.0.0.255 192.168.10.0 0.0.0.255
+        # 30 deny tcp any any
+        # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+        # 10 permit ip any any(10031 matches)
+        # 10 permit tcp any any eq 443
+        # 30 deny ip any any
+        # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+        # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
+        # 30 deny ip any any
+        # 10 permit tcp any any eq www
+        # 20 permit tcp any any eq 22
         p_ip_acl = re.compile(
-            r'^(?P<seq>\d+)? +(?P<actions_forwarding>(deny|permit)) +'
-            '(?P<protocol>\w+) +(((?P<src1>host +(\d+.){3}\d+|any))|'
-            '(?P<src>(((\d+.){3}\d+ +(\d+.){3}\d+)|any)))'
-            '( *(?P<src_operator>(eq|gt|lt|neq|range)) +'
-            '(?P<src_port>[\w\-\s]+))?'
-            '(?P<dst>( *host)? +(any|((\d+.){3}\d+ +(\d+.){3}\d+)|'
-            '(\d+.){3}\d+))( *(?P<left>.*))?$')
-        p_ip_acl_standard = re.compile(r'^(?P<actions_forwarding>(deny|permit)) +(?P<src>([\d.]+))$')
+            r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
+             '+(?P<src>(?:any|host|\d+\.\d+\.\d+\.\d+)(?: '
+             '+\d+\.\d+\.\d+\.\d+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) +(?P<src_port>[\S ]+\S))? '
+             '+(?P<dst>(?:any|host|\d+\.\d+\.\d+\.\d+)(?: +\d+\.\d+\.\d+\.\d+)?)(?: '
+             '+(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\S ?)+\S))?(?P<left>.+)?$')
+
+        # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
+        # permit tcp host 2001: DB8: 1: : 32 eq telnet host 2001: DB8: 2: : 32 eq 11001 sequence 2
+        # permit ipv6 host 2001:: 1 host 2001: 1: : 2 sequence 20
+        # permit tcp any eq www 8443 host 2001: 2:: 2 sequence 30
+        # permit ipv6 3: 3: : 3 4: 4: : 4 1: 1: : 1 6: 6: : 6 log sequence 80
+        # permit udp any any eq domain sequence 10
+        # permit esp any any dscp cs7 log sequence 20
+        # deny ipv6 any any sequence 30
+        # permit ipv6 2001: DB8: : / 64 any sequence 10
+        # permit esp host 2001: DB8: 5: : 1 any sequence 20
+        # permit tcp host 2001: DB8: 1: : 1 eq www any eq bgp sequence 30
+        # permit udp any host 2001: DB8: 1: : 1 sequence 40
         p_ipv6_acl = re.compile(
-            r'^(?P<actions_forwarding>(deny|permit)) +'
-            '(?P<protocol>(ahp|esp|hbh|icmp|ipv6|pcp|sctp|tcp|udp))'
-            ' +(((?P<src1>host +[\w\:]+|any))|'
-            '(?P<src>(any|([\w\:]+ +[\w\:]+))))'
-            '( *(?P<src_operator>(eq|gt|lt|neq|range)) +(?P<src_port>[\w\-\s]+))?'
-            '( +(((?P<dst1>host +[\w\:]+|any))|'
-            '(?P<dst>any|([\w\:]+ +[\w\:]+))))( *(?P<left>.*))?'
-            ' +sequence +(?P<seq>\d+)$')
+            r'^(?P<actions_forwarding>permit|deny) +(?P<protocol>ahp|esp|hbh|icmp|ipv6|pcp|sctp|tcp|udp) +(?P<src>(?:any|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)'
+             '|(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))(?: +(?P<src_operator>eq|gt|lt|neq|range)'
+             ' +(?P<src_port>[\S ]+\S))? +(?P<dst>(?:any|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)|'
+             '(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))(?: '
+             '+(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\w+ ?)+\w+))?(?P<left>.+)? '
+             '+sequence +(?P<seq>\d+)$')
+
         p_mac_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +'
             '(?P<src>(host *)?[\w\.]+) +(?P<dst>(host *)?[\w\.]+)( *(?P<left>.*))?$')
@@ -298,6 +337,7 @@ class ShowAccessLists(ShowAccessListsSchema):
 
             if m:
                 group = m.groupdict()
+
                 acl_dict = ret_dict.setdefault(group['name'], {})
                 acl_dict['name'] = group['name']
                 acl_dict['type'] = acl_type
@@ -305,9 +345,14 @@ class ShowAccessLists(ShowAccessListsSchema):
                 continue
 
             # permit 172.20.10.10
+            # 10 permit 10.2.0.0, wildcard bits 0.0.255.255
+            # 20 permit 10.2.0.0
+            # 30 deny   any
             m = p_ip_acl_standard.match(line)
+
             if m:
                 group = m.groupdict()
+
                 seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(str(seq), {})
                 seq_dict['name'] = str(seq)
@@ -321,10 +366,19 @@ class ShowAccessLists(ShowAccessListsSchema):
                 seq_dict.setdefault('actions', {}).setdefault('forwarding', actions_forwarding)
 
                 # l3 dict
+                if group['wildcard_bits'] and 'wildcard_bits' in group:  
+                    source_ipv4_network = group['src'] + ' ' + group['wildcard_bits']
+                else:
+                    if group['src'] == 'any':
+                        source_ipv4_network = group['src']
+                    else:
+                        source_ipv4_network = group['src'] + ' ' + '0.0.0.0'
+    
                 l3_dict = seq_dict.setdefault('matches', {}).setdefault('l3', {}).setdefault(protocol, {})
                 l3_dict['protocol'] = protocol
-                l3_dict.setdefault('source_network', {}).setdefault(src, {}).setdefault('source_network', src)
-                l3_dict.setdefault('destination_network', {}).setdefault(src, {}).setdefault('destination_network', src)
+                l3_dict.setdefault('source_network', {}).setdefault(
+                    source_ipv4_network, {}).setdefault('source_network', source_ipv4_network)
+
                 continue
 
             # 10 permit ip any any (10031 matches)
@@ -332,6 +386,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             # 30 deny ip any any
             # 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
             # 20 permit tcp host 10.16.2.2 eq www telnet 443 any precedence network ttl eq 255
+            # 30 deny tcp 100.0.0.0 0.0.0.255 200.0.0.0 0.0.0.255 eq www
+            # 40 permit tcp any range ftp-data bgp any
             m_v4 = p_ip_acl.match(line)
 
             # permit ipv6 host 2001::1 host 2001:1::2 sequence 20
@@ -350,9 +406,9 @@ class ShowAccessLists(ShowAccessListsSchema):
                 src = group['src'] if group['src'] else group['src1']
                 dst = group['dst']
                 src = src.strip()
-                if 'dst1' in group:
-                    dst = dst if dst else group['dst1']
-                dst = dst.strip()
+
+                if dst:
+                    dst = dst.strip()
                 # optional keys
                 src_operator = group['src_operator']
                 src_port = group['src_port']
@@ -364,7 +420,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 seq_dict['actions']['logging'] = 'log-syslog' if 'log' in left else 'log-none'
 
                 # statistics
-                if 'matches' in left:
+                if ' matches' in left:
                     seq_dict.setdefault('statistics', {})\
                         .setdefault('matched_packets',
                             int(re.search('\((\d+) +matches\)', left).groups()[0]))
@@ -444,39 +500,48 @@ class ShowAccessLists(ShowAccessListsSchema):
                             .setdefault('upper_port', upper_port)
 
                 # destination_port operator
-                dst_oper = re.search('^(eq|gt|lt|neq|range) +([\w\-]+)( +([\w\-]+))?', left)
-                if dst_oper:
-                    operator = dst_oper.groups()[0]
-                    val1 = dst_oper.groups()[1]
-                    if val1.isdigit():
-                        val1 = int(val1)
-                    else:
-                        try:
-                            val1 = self.OPER_MAP[val1]
-                        except Exception:
-                            pass
-                    val2 = dst_oper.groups()[-1]
-                    if val2 and val2.isdigit():
-                        val2 = int(val2)
-                    elif val2:
-                        try:
-                            val2 = self.OPER_MAP[val2]
-                        except Exception:
-                            pass
-                    if 'range' not in operator:
-                        l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
-                            .setdefault('operator', operator)
-                        l4_dict.setdefault('destination_port', {}).setdefault('operator', {})\
-                            .setdefault('port', val1)
-                    else:
-                        l4_dict.setdefault('destination_port', {}).setdefault('range', {})\
-                            .setdefault('lower_port', val1)
-                        l4_dict.setdefault('destination_port', {}).setdefault('range', {})\
-                            .setdefault('upper_port', val2)
+                if group['dst_operator']:
+                    dst_port = group['dst_port'].split()
+                    if len(dst_port) == 1 and 'range' not in group:
+                        val1 = group['dst_port']
+                        if val1.isdigit():
+                            val1 = int(val1)
+                        else:
+                            try:
+                                val1 = self.OPER_MAP[val1]
+                            except Exception:
+                                pass
+                        l4_dict_operator = l4_dict.setdefault('destination_port', {}).setdefault('operator', {})
+                        l4_dst_dict = l4_dict_operator.setdefault('operator', group['dst_operator'])
+                        l4_dict_port = l4_dict.setdefault('destination_port', {}).setdefault('operator', {})
+                        l4_dict_port_val1 = l4_dict_port.setdefault('port', val1)
+
+                    else:  
+                        val1 = group['dst_port'].split()[0]
+                        val2 = group['dst_port'].split()[1]
+                        if val1.isdigit():
+                            val1 = int(val1)
+                        else:
+                            try:
+                                val1 = self.OPER_MAP[val1]
+                            except Exception:
+                                pass
+                        if val2 and val2.isdigit():
+                            val2 = int(val2)
+                        elif val2:
+                            try:
+                                val2 = self.OPER_MAP[val2]
+                            except Exception:
+                                pass
+                        
+                        l4_dict_operator_lower = l4_dict.setdefault('destination_port', {}).setdefault('range', {})
+                        l4_dst_dict_lower = l4_dict_operator_lower.setdefault('lower_port', val1)
+                        l4_dict_port_upper = l4_dict.setdefault('destination_port', {}).setdefault('range', {})
+                        l4_dst_dict_upper = l4_dict_port_upper.setdefault('upper_port', val2)
 
                 # icmp type and code
                 if protocol == 'icmp':
-                    code_group = re.search('^(\d+) +(\d+)', left)
+                    code_group = re.search(r'^(\d+) +(\d+)', left.strip())
                     if code_group:
                         l4_dict['type'] = int(code_group.groups()[0])
                         l4_dict['code'] = int(code_group.groups()[1])

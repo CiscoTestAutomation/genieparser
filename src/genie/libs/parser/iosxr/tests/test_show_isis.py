@@ -9,18 +9,19 @@ from ats.topology import loader
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
-# iosxr show_mrib
-from genie.libs.parser.iosxr.show_isis import ShowIsisAdjacency, \
-                                              ShowIsisNeighbors, \
-                                              ShowIsisSegmentRoutingLabelTable,\
-                                              ShowIsisStatistics
-
+# iosxr show_isis
+from genie.libs.parser.iosxr.show_isis import (ShowIsis,
+                                               ShowIsisHostname,
+                                               ShowIsisAdjacency, 
+                                               ShowIsisNeighbors,
+                                               ShowIsisStatistics, 
+                                               ShowIsisSegmentRoutingLabelTable)
 
 # ==================================================
 #  Unit test for 'show isis adjacency'
 # ==================================================
 
-class test_show_isis_adjacency(unittest.TestCase):
+class TestShowIsisAdjacency(unittest.TestCase):
     '''Unit test for 'show isis adjacency'''
 
     device = Device(name='aDevice')
@@ -215,7 +216,7 @@ class test_show_isis_adjacency(unittest.TestCase):
 #  Unit test for 'show isis neighbors'
 # ====================================
 
-class test_show_isis_neighbors(unittest.TestCase):
+class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
     device = Device(name='aDevice')
@@ -325,7 +326,7 @@ class test_show_isis_neighbors(unittest.TestCase):
 #  Unit test for 'show isis segment-routing label table'
 # ======================================================
 
-class test_show_isis_segment_routing_label_table(unittest.TestCase):
+class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
     '''Unit test for "show isis segment-routing label table"'''
 
     device = Device(name='aDevice')
@@ -371,8 +372,279 @@ class test_show_isis_segment_routing_label_table(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
+class TestShowIsis(unittest.TestCase):
+    ''' Unitest for commands:
+        * show isis -> ShowIsis
+    '''
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "instance": {
+            "test": {
+                "process_id": "test",
+                "instance": "0",
+                "vrf": {
+                    "default": {
+                        "system_id": "3333.3333.3333",
+                        "is_levels": "level-1-2",
+                        "manual_area_address": ["49.0002"],
+                        "routing_area_address": ["49.0002", "49.0001"],
+                        "non_stop_forwarding": "Disabled",
+                        "most_recent_startup_mode": "Cold Restart",
+                        "te_connection_status": "Down",
+                        "topology": {
+                            "IPv4 Unicast": {
+                                "level": {
+                                    1: {
+                                        "generate_style": "Wide",
+                                        "accept_style": "Wide",
+                                        "metric": 10,
+                                        "ispf_status": "Disabled",
+                                    },
+                                    2: {
+                                        "generate_style": "Wide",
+                                        "accept_style": "Wide",
+                                        "metric": 10,
+                                        "ispf_status": "Disabled",
+                                    },
+                                },
+                                "protocols_redistributed": False,
+                                "distance": 115,
+                                "adv_passive_only": False,
+                            },
+                            "IPv6 Unicast": {
+                                "level": {
+                                    1: {
+                                        "metric": 10, 
+                                        "ispf_status": "Disabled"},
+                                    2: {
+                                        "metric": 10, 
+                                        "ispf_status": "Disabled"},
+                                },
+                                "protocols_redistributed": False,
+                                "distance": 115,
+                                "adv_passive_only": False,
+                            },
+                        },
+                        "srlb": "not allocated",
+                        "srgb": "not allocated",
+                        "interfaces": {
+                            "Loopback0": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/0": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/1": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/2": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                            "GigabitEthernet0/0/0/3": {
+                                "running_state": "running actively",
+                                "configuration_state": "active in configuration",
+                            },
+                        },
+                    }
+                },
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        IS-IS Router: test
+          System Id: 3333.3333.3333
+          Instance Id: 0
+          IS Levels: level-1-2
+          Manual area address(es):
+            49.0002
+          Routing for area address(es):
+            49.0002
+            49.0001
+          Non-stop forwarding: Disabled
+          Most recent startup mode: Cold Restart
+          TE connection status: Down
+          Topologies supported by IS-IS:
+            IPv4 Unicast
+              Level-1
+                Metric style (generate/accept): Wide/Wide
+                Metric: 10
+                ISPF status: Disabled
+              Level-2
+                Metric style (generate/accept): Wide/Wide
+                Metric: 10
+                ISPF status: Disabled
+              No protocols redistributed
+              Distance: 115
+              Advertise Passive Interface Prefixes Only: No
+            IPv6 Unicast
+              Level-1
+                Metric: 10
+                ISPF status: Disabled
+              Level-2
+                Metric: 10
+                ISPF status: Disabled
+              No protocols redistributed
+              Distance: 115
+              Advertise Passive Interface Prefixes Only: No
+          SRLB not allocated
+          SRGB not allocated
+          Interfaces supported by IS-IS:
+            Loopback0 is running actively (active in configuration)
+            GigabitEthernet0/0/0/0 is running actively (active in configuration)
+            GigabitEthernet0/0/0/1 is running actively (active in configuration)
+            GigabitEthernet0/0/0/2 is running actively (active in configuration)
+            GigabitEthernet0/0/0/3 is running actively (active in configuration)
+    '''}
+
+    def test_show_isis_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsis(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_isis_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIsis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+class TestIsisHostname(unittest.TestCase):
+    ''' Unit tests for commands:
+        * show isis hostname / ShowIsisHostname
+        * show isis instance {instance} hostname / ShowIsisHostname
+    '''         
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        'isis': {
+            'TEST1': {
+                'vrf': {
+                    'default': {
+                        'level': {
+                            2: {
+                                'system_id': {
+                                    '5286.4470.2149': {
+                                        'dynamic_hostname': 'host-1.bla-site3'}, 
+                                    '9839.2319.8337': {
+                                        'dynamic_hostname': 'host3-bla'}, 
+                                    '3549.6375.2540': {
+                                        'dynamic_hostname': 'abc-3.bla-site4'}, 
+                                    '0670.7021.9090': {
+                                            'dynamic_hostname': 'host2-abc'},
+                                    '9853.9997.6489': {
+                                        'dynamic_hostname': 'abc2-xyz', 
+                                        'local_router': True}}}}}}}}}
+
+    golden_output_1 = {'execute.return_value': '''
+        show isis hostname
+
+        Thu Oct  3 10:53:16.534 EDT
+
+        IS-IS TEST1 hostnames
+        Level  System ID      Dynamic Hostname
+         2     5286.4470.2149 host-1.bla-site3
+         2     9839.2319.8337 host3-bla
+         2     3549.6375.2540 abc-3.bla-site4
+         2     0670.7021.9090 host2-abc
+         2   * 9853.9997.6489 abc2-xyz
+    '''}
+
+    golden_parsed_output_2 = {
+        "isis": {
+            "test": {
+                "vrf": {
+                    "default": {
+                        "level": {
+                            2: {
+                                "system_id": {
+                                    "2222.2222.2222": {
+                                        "dynamic_hostname": "R2"},
+                                    "8888.8888.8888": {
+                                        "dynamic_hostname": "R8"},
+                                    "7777.7777.7777": {
+                                        "dynamic_hostname": "R7"},
+                                    "3333.3333.3333": {
+                                        "dynamic_hostname": "R3",
+                                        "local_router": True,
+                                    },
+                                    "5555.5555.5555": {
+                                        "dynamic_hostname": "R5"},
+                                    "9999.9999.9999": {
+                                        "dynamic_hostname": "R9"},
+                                }
+                            },
+                            1: {
+                                "system_id": {
+                                    "4444.4444.4444": {
+                                        "dynamic_hostname": "R4"},
+                                    "6666.6666.6666": {
+                                        "dynamic_hostname": "R6"},
+                                    "7777.7777.7777": {
+                                        "dynamic_hostname": "R7"},
+                                    "3333.3333.3333": {
+                                        "dynamic_hostname": "R3",
+                                        "local_router": True,
+                                    },
+                                    "5555.5555.5555": {
+                                        "dynamic_hostname": "R5"},
+                                }
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    golden_output_2 = {'execute.return_value': '''
+        show isis hostname
+        IS-IS test hostnames
+        Level  System ID      Dynamic Hostname
+         2     2222.2222.2222 R2
+         1     4444.4444.4444 R4
+         1     6666.6666.6666 R6
+         2     8888.8888.8888 R8
+         1,2   7777.7777.7777 R7
+         1,2 * 3333.3333.3333 R3
+         1,2   5555.5555.5555 R5
+         2     9999.9999.9999 R9
+    '''}
+
+    def test_empty_output(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIsisHostname(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIsisHostname(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
 
 class TestShowIsisStatistics(unittest.TestCase):
+    ''' Unit tests for commands/parsers
+        * show isis statistics/ShowIsisStatistics
+    '''
     maxDiff = None
 
     empty_output = {'execute.return_value': ''}
@@ -829,7 +1101,6 @@ class TestShowIsisStatistics(unittest.TestCase):
     def test_golden_output_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowIsisStatistics(device=self.device)
-        parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
 
 if __name__ == '__main__':
