@@ -3226,10 +3226,16 @@ class test_show_ip_interface_brief_Pipe_Vlan(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
+
+# ====================================
+# Unit test for 'show interface brief'
+# ====================================
 class test_show_interface_brief(unittest.TestCase):
-    device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
+
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
+
     golden_parsed_output = {'interface': 
                               {'ethernet': 
                                 {'Eth1/1': {'mode': 'routed',
@@ -3262,7 +3268,7 @@ class test_show_interface_brief(unittest.TestCase):
                               'port': 
                                 {'mgmt0': 
                                   {'ip_address': '172.25.143.76',
-                                   'mtu': '1500',
+                                   'mtu': 1500,
                                    'speed': '1000',
                                    'status': 'up',
                                    'vrf': '--'}},
@@ -3277,36 +3283,35 @@ class test_show_interface_brief(unittest.TestCase):
                                    'type': 'eth',
                                    'vlan': '1'}}}}
 
-
     golden_output = {'execute.return_value': '''
-pinxdt-n9kv-3# show interface brief 
+        pinxdt-n9kv-3# show interface brief 
 
---------------------------------------------------------------------------------
-Port   VRF          Status IP Address                              Speed    MTU
---------------------------------------------------------------------------------
-mgmt0  --           up     172.25.143.76                           1000     1500
+        --------------------------------------------------------------------------------
+        Port   VRF          Status IP Address                              Speed    MTU
+        --------------------------------------------------------------------------------
+        mgmt0  --           up     172.25.143.76                           1000     1500
 
---------------------------------------------------------------------------------
-Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
-Interface                                                                    Ch #
---------------------------------------------------------------------------------
-Eth1/1        --      eth  routed up      none                       1000(D) --
-Eth1/3        1       eth  access down    Administratively down      auto(D) --
-Eth1/6        1       eth  access down    Link not connected         auto(D) --
+        --------------------------------------------------------------------------------
+        Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
+        Interface                                                                    Ch #
+        --------------------------------------------------------------------------------
+        Eth1/1        --      eth  routed up      none                       1000(D) --
+        Eth1/3        1       eth  access down    Administratively down      auto(D) --
+        Eth1/6        1       eth  access down    Link not connected         auto(D) --
 
 
---------------------------------------------------------------------------------
-Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
-Interface                                                                  
---------------------------------------------------------------------------------
-Po8          1       eth  access down    No operational members      auto(I)  none
+        --------------------------------------------------------------------------------
+        Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
+        Interface                                                                  
+        --------------------------------------------------------------------------------
+        Po8          1       eth  access down    No operational members      auto(I)  none
 
---------------------------------------------------------------------------------
-Interface     Status     Description
---------------------------------------------------------------------------------
-Lo0           up         --
+        --------------------------------------------------------------------------------
+        Interface     Status     Description
+        --------------------------------------------------------------------------------
+        Lo0           up         --
 
-'''}
+        '''}
 
     golden_output2 = {'execute.return_value': '''
         show interface Ethernet1/1 brief
@@ -3347,6 +3352,7 @@ Lo0           up         --
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
 
 class test_show_run_interface(unittest.TestCase):
 
