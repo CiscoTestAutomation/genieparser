@@ -155,6 +155,11 @@
     * Added ShowBgpSummary for:
         * show bgp summary
         * show bgp all summary
+    * Added ShowIpBgp for:
+        * show ip bgp
+
+* IOSXE
+    * Updated ShowBgpSuperParser for parsing of more varied output
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
