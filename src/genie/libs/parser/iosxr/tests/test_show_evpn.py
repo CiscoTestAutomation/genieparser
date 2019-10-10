@@ -4625,7 +4625,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 24,
                             'elected': {
@@ -4988,7 +4988,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2001',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -5027,7 +5027,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 18,
                             'elected': {
@@ -5341,7 +5341,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -5380,7 +5380,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 18,
                             'elected': {
@@ -5734,7 +5734,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -5774,7 +5774,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 9,
                             'elected': {
@@ -6091,7 +6091,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 0,
@@ -6125,7 +6125,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 99,
                             'elected': {
@@ -6464,7 +6464,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -6504,7 +6504,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 6,
                             'elected': {
@@ -6835,7 +6835,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -6875,7 +6875,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 84,
                             'elected': {
@@ -7213,7 +7213,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -7253,7 +7253,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         'service_carving_results': {
                             'forwarders': 9,
                             'elected': {
@@ -7583,7 +7583,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x2aab',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]', '192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.3 [MOD:P:00][2]'],
                         },
                         'es_ead_update': {
                             'num_rds': 1,
@@ -7619,7 +7619,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.1 [MOD:P:00][1]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]'],
                         'service_carving_results': {
                             'forwarders': 9,
                             'elected': {
@@ -7866,7 +7866,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x7fff',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.1 [MOD:P:00][1]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]'],
                         },
                         'es_ead_update': {
                             'num_rds': 0,
@@ -7892,7 +7892,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         },
                         'service_carving': 'Auto-selection',
                         'multicast': 'Disabled',
-                        'peering_details': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.1 [MOD:P:00][1]'],
+                        'peering_details': ['192.168.0.1 [MOD:P:00][1]'],
                         'service_carving_results': {
                             'forwarders': 79,
                             'elected': {
@@ -8146,7 +8146,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
                         'checkpoint_info': {
                             'if_type': 1,
                             'msti_mask': '0x7fff',
-                            'nexthop': ['192.168.0.1 [MOD:P:00][1]', '192.168.0.1 [MOD:P:00][1]'],
+                            'nexthop': ['192.168.0.1 [MOD:P:00][1]'],
                         },
                         'es_ead_update': {
                             'num_rds': 0,
@@ -8175,6 +8175,11 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
         parsed_output = obj.parse()
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(parsed_output))
+        f = open("dict.txt","w")
+        f.write( str(format_output(parsed_output)) )
+        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':

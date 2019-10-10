@@ -1595,11 +1595,13 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 group = m.groupdict()
                 nexthop = group['nexthop']
                 nexthopinfo = group['nexthopinfo']
-                details_list = interface_dict.get('peering_details', [])
-                details_list.append(line)
                 if detail_type == 'peering_details':
+                    details_list = interface_dict.get('peering_details', [])
+                    details_list.append(line)
                     interface_dict.setdefault('peering_details', details_list)
                 else:
+                    details_list = checkpoint_info_dict.get('nexthop', [])
+                    details_list.append(line)
                     checkpoint_info_dict.update({'nexthop': details_list})
                 continue
 
