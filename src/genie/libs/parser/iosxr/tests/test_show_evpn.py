@@ -1,4 +1,5 @@
 
+import genie.gre
 # Python
 import unittest
 from unittest.mock import Mock
@@ -15,6 +16,7 @@ from genie.libs.parser.iosxr.show_evpn import (ShowEvpnEvi,
                                                ShowEvpnEviDetail,
                                                ShowEvpnEviMac,
                                                ShowEvpnEviMacPrivate,
+                                               ShowEvpnInternalLabelDetail,
                                                ShowEvpnEthernetSegment,
                                                ShowEvpnEthernetSegmentDetail,
                                                ShowEvpnEthernetSegmentEsiDetail,
@@ -611,6 +613,203 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         obj = ShowEvpnEviMacPrivate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+# ================================================
+#  Unit test for 'show evpn internal-label detail'
+# ================================================
+class TestShowEvpnInternalLabelDetail(unittest.TestCase):
+    '''Unit test for 'show evpn internal-label detail'''
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'evi':
+            {5:
+                {'esi': '0012.1200.0000.0000.0002',
+                'eth_tag': 0,
+                'evi': 5,
+                'label': 24114,
+                'mp_resolved': True,
+                'mp_info': 'Remote single-active',
+                'pathlists':
+                    {'ead_es':
+                        {'nexthop':
+                            {'10.10.10.10':
+                                {'label': 0}}},
+                    'ead_evi':
+                        {'nexthop':
+                            {'10.10.10.10':
+                                {'label': 24012}}},
+                    'mac':
+                        {'nexthop':
+                            {'10.70.20.20':
+                                {'label': 24212},
+                            '10.70.21.21':
+                                {'label': 0}}},
+                    'summary':
+                        {'nexthop':
+                            {'10.10.10.10':
+                                {'df_role': 'B',
+                                'label': 24012},
+                            '10.70.20.20':
+                                {'label': 24212}}}}},
+            100:
+                {'esi': '0100.0000.acce.5500.0100',
+                'eth_tag': 0,
+                'evi': 100,
+                'label': 24005}}}
+
+    golden_output1 = {'execute.return_value': '''
+        RP/0/0/CPU0:PE1#show evpn internal-label detail
+        Wed Jul 13 13:55:17.592 EDT
+
+        EVI   Ethernet Segment Id                     EtherTag Label   
+        ----- --------------------------------------- -------- --------
+        100   0100.0000.acce.5500.0100                0        24005
+        5     0012.1200.0000.0000.0002                0        24114
+
+              Multi-paths resolved: TRUE (Remote single-active)
+              MAC     10.70.20.20                              24212
+                      10.70.21.21                              0
+              EAD/ES  10.10.10.10                              0
+              EAD/EVI 10.10.10.10                              24012
+              Summary 10.70.20.20                              24212
+                      10.10.10.10 (B)                          24012
+        '''}
+
+    golden_parsed_output2 = {
+        'evi': 
+            {145: 
+                {'esi': 'ff00.0002.be23.ce01.0000',
+                'eth_tag': 0,
+                'evi': 145,
+                'label': 24005,
+                'pathlists':
+                    {'summary':
+                        {'nexthop':
+                            {'192.168.0.3':
+                                {'label': 524288}}}}}}}
+
+    golden_output2 = {'execute.return_value': '''
+        RP/0/0/CPU0:PE1#show evpn internal-label detail
+        Thu May  5 10:16:51.447 EDT
+
+        EVI   Ethernet Segment Id                     EtherTag Label   
+        ----- --------------------------------------- -------- --------
+        145   ff00.0002.be23.ce01.0000                0        24005
+              Summary 192.168.0.3                              524288
+
+        '''}
+
+    golden_parsed_output3 = {
+        'vpn_id':
+            {16001:
+                {'encap': 'VXLAN',
+                'esi': '0001.0407.0405.0607.0811',
+                'eth_tag': 0,
+                'label': 24002,
+                'mp_internal_label': 24002,
+                'mp_resolved': True,
+                'mp_info': 'Remote all-active',
+                'pathlists': 
+                    {'ead_es': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 0}}},
+                    'summary': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16001,
+                                'value': '0x03000001'}}},
+                    'ead_evi': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16001}}}},
+                'vpn_id': 16001},
+            16002:
+                {'encap': 'VXLAN',
+                'esi': '0001.0407.0405.0607.0811',
+                'eth_tag': 0,
+                'label': 24003,
+                'mp_internal_label': 24003,
+                'mp_resolved': True,
+                'mp_info': 'Remote all-active',
+                'pathlists': 
+                    {'ead_es': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 0}}},
+                    'summary': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16002,
+                                    'value': '0x03000001'}}},
+                    'ead_evi': 
+                        {'nexthop': 
+                            {'123.1.1.2': 
+                                {'label': 16002}}}},
+                'vpn_id': 16002},
+            16003: 
+                {'encap': 'VXLAN',
+                'esi': '0001.0407.0405.0607.0811',
+                'eth_tag': 0,
+                'label': 24004,
+                'mp_resolved': True,
+                'mp_info': 'Remote all-active',
+                'vpn_id': 16003}}}
+
+    golden_output3 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:RGT-HVS-1#show evpn internal-label detail location 0/RP0/CPU0 
+        Sat Jun  9 10:20:21.939 UTC
+
+        VPN-ID     Encap  Ethernet Segment Id         EtherTag   Label   
+        ---------- ------ --------------------------- --------   --------
+        16001      VXLAN  0001.0407.0405.0607.0811    0          24002   
+           Multi-paths resolved: TRUE (Remote all-active) 
+           Multi-paths Internal label: 24002
+           Pathlists:
+             EAD/ES     123.1.1.2                                0              
+             EAD/EVI    123.1.1.2                                16001          
+           Summary pathlist:
+             0x03000001 123.1.1.2                                16001          
+
+        16002      VXLAN  0001.0407.0405.0607.0811    0          24003   
+           Multi-paths resolved: TRUE (Remote all-active) 
+           Multi-paths Internal label: 24003
+           Pathlists:
+             EAD/ES     123.1.1.2                                0              
+             EAD/EVI    123.1.1.2                                16002          
+           Summary pathlist:
+             0x03000001 123.1.1.2                                16002          
+
+        16003      VXLAN  0001.0407.0405.0607.0811    0          24004   
+           Multi-paths resolved: TRUE (Remote all-active) 
+        '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowEvpnInternalLabelDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 # ===================================================
 #  Unit test for 'show evpn ethernet-segment'
