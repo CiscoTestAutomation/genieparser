@@ -2,12 +2,13 @@
 show_isis.py
 
 IOSXR parsers for the following show commands:
-    * show isis adjacency
-    * show isis neighbors
     * show isis
+    * show isis adjacency
+    * show isis neighbors    
     * show isis hostname
     * show isis instance {instance} hostname
     * show isis statistics
+    * show isis protocol
 
 """
 
@@ -331,6 +332,7 @@ class ShowIsisSegmentRoutingLabelTable(ShowIsisSegmentRoutingLabelTableSchema):
 class ShowIsisSchema(MetaParser):
     ''' Schema for commands:
         * show isis
+        * show isis protocol
     '''
     schema = {
         'instance': {
@@ -341,30 +343,40 @@ class ShowIsisSchema(MetaParser):
                     Any(): {
                         'system_id': str,
                         'is_levels': str,
-                        'manual_area_address': list,
-                        'routing_area_address': list,
+                        Optional('manual_area_address'): list,
+                        Optional('routing_area_address'): list,
                         'non_stop_forwarding': str,
                         'most_recent_startup_mode': str,
                         'te_connection_status': str,
-                        'srlb': str,
-                        'srgb': str,
-                        'interfaces': {
+                        Optional('srlb'): {
+                            'start': int,
+                            'end': int,
+                        },
+                        Optional('srgb'): {
+                            'start': int,
+                            'end': int,
+                        },
+                        Optional('interfaces'): {
                             Any(): {
                                 'running_state': str,
                                 'configuration_state': str,
                             }
                         },
-                        'topology': {
+                        Optional('topology'): {
                             Any(): {
-                                'distance': int,
-                                'adv_passive_only': bool,
-                                'protocols_redistributed': bool,
-                                'level': {
+                                'vrf': {
                                     Any(): {
-                                        Optional('generate_style'): str,
-                                        Optional('accept_style'): str,
-                                        'metric': int,
-                                        'ispf_status': str,
+                                        'distance': int,
+                                        'adv_passive_only': bool,
+                                        'protocols_redistributed': bool,
+                                        'level': {
+                                            Any(): {
+                                                Optional('generate_style'): str,
+                                                Optional('accept_style'): str,
+                                                'metric': int,
+                                                'ispf_status': str,
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -374,13 +386,12 @@ class ShowIsisSchema(MetaParser):
             }
         }
     }
-
-    
     
 
 class ShowIsis(ShowIsisSchema):
     ''' Parser for commands:
         * show isis
+        * show isis protocol
     '''
 
     cli_command = 'show isis'
@@ -393,76 +404,90 @@ class ShowIsis(ShowIsisSchema):
         # IS-IS Router: test
         r1 = re.compile(r'IS\-IS\s+Router\s*:\s*(?P<isis_router>\S+)')
 
+        # VRF context: VRF1
+        r2 = re.compile(r'VRF\s+context\s*:\s*(?P<vrf>.+)')
+
         # System Id: 3333.3333.3333
-        r2 = re.compile(r'System\s+Id\s*:\s*(?P<system_id>\S+)')
+        r3 = re.compile(r'System\s+Id\s*:\s*(?P<system_id>\S+)')
 
         # Instance Id: 0
-        r3 = re.compile(r'Instance\s+Id\s*:\s*(?P<instance_id>\S+)')
+        r4 = re.compile(r'Instance\s+Id\s*:\s*(?P<instance_id>\S+)')
 
         # IS Levels: level-1-2
-        r4 = re.compile(r'IS\s+Levels\s*:\s*(?P<is_levels>level-1-2)')
+        # IS Levels: level-2-only
+        # IS Levels: level-1-only
+        r5 = re.compile(r'IS\s+Levels\s*:\s*'
+                         '(?P<is_levels>level-1-2|level-(1|2)-only)')
 
         # Manual area address(es):
-        r5 = re.compile(r'Manual\s+area\s+address\(es\):')
+        r6 = re.compile(r'Manual\s+area\s+address\(es\):')
 
         # Routing for area address(es):
-        r6 = re.compile(r'Routing\s+for\s+area\s+address\(es\):')
+        r7 = re.compile(r'Routing\s+for\s+area\s+address\(es\):')
 
         # 49.0002
-        r7 = re.compile(r'(?P<area_address>\d+\.\d+)')
+        r8 = re.compile(r'(?P<area_address>\d+\.\d+)')
 
         # Non-stop forwarding: Disabled
-        r8 = re.compile(r'Non\-stop\s+forwarding\s*:\s*(?P<non_stop_forwarding>\w+)')
+        r9 = re.compile(r'Non\-stop\s+forwarding\s*:\s*(?P<non_stop_forwarding>\w+)')
 
         # Most recent startup mode: Cold Restart
-        r9 = re.compile(r'Most\s+recent\s+startup\s+mode\s*:\s*(?P<most_recent_startup_mode>.+)')
+        r10 = re.compile(r'Most\s+recent\s+startup\s+mode\s*:\s*(?P<most_recent_startup_mode>.+)')
 
         # TE connection status: Down
-        r10 = re.compile(r'TE\s+connection\s+status\s*:\s*(?P<te_connection_status>.+)')
+        r11 = re.compile(r'TE\s+connection\s+status\s*:\s*(?P<te_connection_status>.+)')
 
         # Topologies supported by IS-IS:
-        r11 = re.compile(r'Topologies\s+supported\s+by\s+IS\-IS:')
+        r12 = re.compile(r'Topologies\s+supported\s+by\s+IS\-IS:')
 
         # IPv4 Unicast
         # IPv6 Unicast
-        r12 = re.compile(r'(?P<topology>(IPv6|IPv4)\s+Unicast)')
+        # IPv4 Unicast VRF VRF1
+        r13 = re.compile(r'(?P<topology>(IPv6|IPv4)\s+Unicast)'
+                          '(\s*VRF\s*(?P<topology_vrf>\S+))?')
 
         # Level-1
         # Level-2
-        r13 = re.compile(r'Level\-(?P<level>\d+)')
+        r14 = re.compile(r'Level\-(?P<level>\d+)')
 
         # Metric style (generate/accept): Wide/Wide
-        r14 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*'
+        r15 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*'
                           '(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
 
         # Metric: 10
-        r15 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)')
+        r16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)')
 
         # ISPF status: Disabled
-        r16 = re.compile(r'ISPF\s+status\s*:\s*(?P<ispf_status>\w+)')
-        r17 = re.compile(r'No\s+protocols\s+redistributed')
+        r17 = re.compile(r'ISPF\s+status\s*:\s*(?P<ispf_status>\w+)')
+
+        # No protocols redistributed
+        r18 = re.compile(r'No\s+protocols\s+redistributed')
 
         # Distance: 115
-        r18 = re.compile(r'Distance\s*:\s*(?P<distance>\d+)')
+        r19 = re.compile(r'Distance\s*:\s*(?P<distance>\d+)')
 
         # Advertise Passive Interface Prefixes Only: No
-        r19 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
+        r20 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
                           '\s*:\s*(?P<adv_passive_only>\S+)')
 
         # SRLB not allocated
-        r20 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)')
+        # SRLB allocated: 15000 - 15999
+        r21 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)'
+                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
-
+        # SRGB allocated: 16000 - 81534
         # SRGB not allocated
-        r21 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)')
+        r22 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)'
+                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
         # Loopback0 is running actively (active in configuration)
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
-        r22 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
+        r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
                           '\s+\((?P<configuration_state>[\w\s]+)\)')
 
         parsed_output = {}
         vrf = 'default'
+        topology_vrf = 'default'
 
         for line in output.splitlines():
             line = line.strip()
@@ -478,9 +503,17 @@ class ShowIsis(ShowIsisSchema):
                 instance_dict['process_id'] = isis_router
                     
                 continue
+            
+            # VRF context: VRF1     
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                vrf = group['vrf']
+
+                continue
 
             # System Id: 3333.3333.3333
-            result = r2.match(line)
+            result = r3.match(line)
             if result:
                 group = result.groupdict()
                 system_id = group['system_id']
@@ -488,7 +521,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Instance Id: 0
-            result = r3.match(line)
+            result = r4.match(line)
             if result:
                 group = result.groupdict()
                 instance_id = group['instance_id']
@@ -497,11 +530,12 @@ class ShowIsis(ShowIsisSchema):
                     .setdefault('vrf', {})\
                     .setdefault(vrf, {})
                 vrf_dict['system_id'] = system_id
+                vrf = 'default'
 
                 continue
 
             # IS Levels: level-1-2
-            result = r4.match(line)
+            result = r5.match(line)
             if result:
                 group = result.groupdict()
                 is_levels = group['is_levels']
@@ -510,21 +544,21 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Manual area address(es):
-            result = r5.match(line)
+            result = r6.match(line)
             if result:
                 area_address_field = 'manual_area_address'
 
                 continue
 
             # Routing for area address(es):
-            result = r6.match(line)
+            result = r7.match(line)
             if result:
                 area_address_field = 'routing_area_address'
 
                 continue
 
             # 49.0002
-            result = r7.match(line)
+            result = r8.match(line)
             if result:
                 group = result.groupdict()
                 area_address = group['area_address']
@@ -535,7 +569,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Non-stop forwarding: Disabled
-            result = r8.match(line)
+            result = r9.match(line)
             if result:
                 group = result.groupdict()
                 non_stop_forwarding = group['non_stop_forwarding']
@@ -544,7 +578,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Most recent startup mode: Cold Restart
-            result = r9.match(line)
+            result = r10.match(line)
             if result:
                 group = result.groupdict()
                 most_recent_startup_mode = group['most_recent_startup_mode']
@@ -553,7 +587,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # TE connection status: Down
-            result = r10.match(line)
+            result = r11.match(line)
             if result:
                 group = result.groupdict()
                 te_connection_status = group['te_connection_status']
@@ -562,25 +596,37 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Topologies supported by IS-IS:
-            result = r11.match(line)
+            result = r12.match(line)
             if result:
                 topology_dict = vrf_dict.setdefault('topology', {})
 
                 continue
 
+            if line == 'none':
+                del(vrf_dict['topology'])
+
+                continue
+
             # IPv4 Unicast
             # IPv6 Unicast
-            result = r12.match(line)
+            # IPv4 Unicast VRF VRF1
+            result = r13.match(line)
             if result:
                 group = result.groupdict()
                 topology = group['topology']
-                address_family_dict = topology_dict.setdefault(topology, {})
+                if group['topology_vrf']:
+                    topology_vrf = group['topology_vrf']
+                address_family_dict = topology_dict\
+                    .setdefault(topology, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(topology_vrf, {})
+                topology_vrf = 'default'
 
                 continue
 
             # Level-1
             # Level-2
-            result = r13.match(line)
+            result = r14.match(line)
             if result:
                 group = result.groupdict()
                 level = int(group['level'])
@@ -591,7 +637,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Metric style (generate/accept): Wide/Wide
-            result = r14.match(line)
+            result = r15.match(line)
             if result:
                 group = result.groupdict()
                 generate_style = group['generate_style']
@@ -602,7 +648,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Metric: 10
-            result = r15.match(line)
+            result = r16.match(line)
             if result:
                 group = result.groupdict()
                 metric = int(group['metric'])
@@ -611,7 +657,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # ISPF status: Disabled
-            result = r16.match(line)
+            result = r17.match(line)
             if result:
                 group = result.groupdict()
                 ispf_status = group['ispf_status']
@@ -620,14 +666,14 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # No protocols redistributed
-            result = r17.match(line)
+            result = r18.match(line)
             if result:
                 address_family_dict['protocols_redistributed'] = False
 
                 continue
 
             # Distance: 115
-            result = r18.match(line)
+            result = r19.match(line)
             if result:
                 group = result.groupdict()
                 distance = int(group['distance'])
@@ -636,7 +682,7 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # Advertise Passive Interface Prefixes Only: No
-            result = r19.match(line)
+            result = r20.match(line)
             if result:
                 group = result.groupdict()
                 if group['adv_passive_only'] == 'No':
@@ -648,26 +694,36 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
             # SRLB not allocated
-            result = r20.match(line)
-            if result:
-                group = result.groupdict()
-                srlb = group['srlb']
-                vrf_dict['srlb'] = srlb   
-
-                continue
-
-            # SRGB not allocated
+            # SRLB allocated: 15000 - 15999
             result = r21.match(line)
             if result:
                 group = result.groupdict()
-                srgb = group['srgb']
-                vrf_dict['srgb'] = srgb
+                start = group['start']
+                end = group['end']
+                if start and end:
+                    srlb_dict = vrf_dict.setdefault('srlb', {})
+                    srlb_dict['start'] = int(start)
+                    srlb_dict['end'] = int(end)
+
+                continue
+            
+            # SRGB allocated: 16000 - 81534
+            # SRGB not allocated
+            result = r22.match(line)
+            if result:
+                group = result.groupdict()
+                start = group['start']
+                end = group['end']
+                if start and end:
+                    srlb_dict = vrf_dict.setdefault('srgb', {})
+                    srlb_dict['start'] = int(start)
+                    srlb_dict['end'] = int(end) 
 
                 continue
 
             # Loopback0 is running actively (active in configuration)
             # GigabitEthernet0/0/0/0 is running actively (active in configuration)
-            result = r22.match(line)
+            result = r23.match(line)
             if result:
                 group = result.groupdict()
                 interface = group['interface']
@@ -682,6 +738,18 @@ class ShowIsis(ShowIsisSchema):
                 continue
 
         return parsed_output
+
+class ShowIsisProtocol(ShowIsis):
+    ''' Parser for commands:
+        * show isis protocol
+    '''
+    cli_command = 'show isis protocol'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        return super().cli(output=output)
 
 class ShowIsisHostnameSchema(MetaParser):
     ''' Schema for commands:
