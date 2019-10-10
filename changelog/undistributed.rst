@@ -31,6 +31,8 @@
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
+    * Removed ShowInterfaceSwitchport for:
+        * show interface switchport
 * IOSXE
     * Update ShowInterfaceAccounting
         * Change {intf} and argument 'intf' into {interface} and 'interface'
@@ -91,6 +93,8 @@
         'show segment-routing mpls mapping-server ipv6'
     * Added ShowSegmentRoutingMplsLbAssignedSids for:
         'show segment-routing mpls lb assigned-sids'
+    * Update ShowPceIPV4PeerPrefix
+        * Removed typo from 'pcs' to 'pce' in show command
 
 --------------------------------------------------------------------------------
                               Controllers
