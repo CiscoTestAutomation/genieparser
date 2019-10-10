@@ -25,8 +25,8 @@
 * NXOS
     * Update ShowInterfaceBrief
         * Add command 'show interface {interface} brief'
-        # Rewrite parser for speed optimization
-        * Change returned interface name to be complete/whole interface name
+        * Rewrite parser for speed optimization
+        * Change parsed interface name to be complete/whole interface name
     * Update ShowRunningConfigInterface
         * Update regex to support more interface names
         * Updated schema to support more outputs
