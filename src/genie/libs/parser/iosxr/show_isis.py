@@ -687,31 +687,26 @@ class ShowIsisSpfLogSchema(MetaParser):
     schema = {
         'instance': {
             Any():{
-                'level': {
+                'address_family': {
                     Any(): {
-                        'address_family': {
+                        'spf_log': {
                             Any(): {
-                                'log_date': {
-                                    Any(): {
-                                        'timestamp': {
-                                            Any(): {
-                                                'log_type': str,
-                                                'time_ms': int,
-                                                'total_nodes': int,
-                                                'trigger_count': int,
-                                                Optional('first_trigger_lsp'): str,
-                                                'triggers': str,
-                                            }
-                                        }
-                                    }
-                                }
+                                'type': str,
+                                'start_timestamp': str,
+                                'time_ms': int,
+                                'level': int,
+                                'total_nodes': int,
+                                'trigger_count': int,
+                                Optional('first_trigger_lsp'): str,
+                                'triggers': str,
                             }
                         }
                     }
                 }
             }
-        },
+        }
     }
+  
 
 class ShowIsisSpfLog(ShowIsisSpfLogSchema):
     ''' Parser for commands:
@@ -736,11 +731,12 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
         # ------------ ----- ----- ----- ----- -------------------- -----------------------
         # 00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD
         # 23:42:51.522 PPFRR     0    64     1                      PERPREFIXFRR
-        r3 = re.compile(r'(?P<timestamp>\S+)\s+(?P<log_type>\S+)\s+(?P<time_ms>\d+)'
+        r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<log_type>\S+)\s+(?P<time_ms>\d+)'
                          '\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
                          '(?P<first_trigger_lsp>\S*)\s+(?P<triggers>\S+)')
 
         parsed_output = {}
+        log_index = 1
 
         for line in output.splitlines():
             line = line.strip()
@@ -755,8 +751,6 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
                 instance_dict = parsed_output\
                     .setdefault('instance', {})\
                     .setdefault(instance, {})\
-                    .setdefault('level', {})\
-                    .setdefault(level, {})\
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
 
@@ -767,9 +761,6 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
             if result:
                 group = result.groupdict()
                 log_date = group['log_date']
-                log_date_dict = instance_dict\
-                    .setdefault('log_date', {})\
-                    .setdefault(log_date, {})
 
                 continue
 
@@ -788,16 +779,19 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
                 trigger_count = int(group['trigger_count'])
                 first_trigger_lsp = group['first_trigger_lsp']
                 triggers = group['triggers']
-                timestamp_dict = log_date_dict\
-                    .setdefault('timestamp', {})\
-                    .setdefault(timestamp, {})
-                timestamp_dict['log_type'] = log_type
-                timestamp_dict['time_ms'] = time_ms
-                timestamp_dict['total_nodes'] = total_nodes
-                timestamp_dict['trigger_count'] = trigger_count
+                index_dict = instance_dict\
+                    .setdefault('spf_log', {})\
+                    .setdefault(log_index, {})  
+                index_dict['start_timestamp'] = "{} {}".format(log_date, timestamp)
+                index_dict['level'] = level
+                index_dict['type'] = log_type
+                index_dict['time_ms'] = time_ms
+                index_dict['total_nodes'] = total_nodes
+                index_dict['trigger_count'] = trigger_count
                 if first_trigger_lsp:
-                    timestamp_dict['first_trigger_lsp'] = first_trigger_lsp
-                timestamp_dict['triggers'] = triggers
+                    index_dict['first_trigger_lsp'] = first_trigger_lsp
+                index_dict['triggers'] = triggers
+                log_index += 1
 
                 continue
 
