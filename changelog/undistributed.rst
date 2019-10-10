@@ -25,12 +25,16 @@
 * NXOS
     * Update ShowInterfaceBrief
         * Add command 'show interface {interface} brief'
+        * Rewrite parser for speed optimization
+        * Change parsed interface name to be complete/whole interface name
     * Update ShowRunningConfigInterface
         * Update regex to support more interface names
         * Updated schema to support more outputs
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
+    * Removed ShowInterfaceSwitchport for:
+        * show interface switchport
 * IOSXE
     * Update ShowInterfaceAccounting
         * Change {intf} and argument 'intf' into {interface} and 'interface'
@@ -91,6 +95,8 @@
         'show segment-routing mpls mapping-server ipv6'
     * Added ShowSegmentRoutingMplsLbAssignedSids for:
         'show segment-routing mpls lb assigned-sids'
+    * Update ShowPceIPV4PeerPrefix
+        * Removed typo from 'pcs' to 'pce' in show command
 
 --------------------------------------------------------------------------------
                               Controllers
@@ -501,11 +507,27 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+<<<<<<< HEAD
+=======
+    * Added parser ShowIsisProtocol for:
+        * show isis protocol
+    * Added ShowIsisStatistics for:
+        * show isis statistics
+    * Added parser ShowIsis for:
+        * show isis
+    * Added parser ShowIsisHostname for:
+        * show isis hostname
+        * show isis instance {instance} hostname
+>>>>>>> dev
 
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
 * IOSXE
     * Fixed regex to accommodate more outputs
+<<<<<<< HEAD
+=======
+    
+>>>>>>> dev
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs

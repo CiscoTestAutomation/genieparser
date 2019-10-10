@@ -15180,13 +15180,10 @@ Tunnel10 is up, line protocol is up
             parsed_output = interface_obj.parse()
 
     def test_golden(self):
-        import re
-        re.reset()
         self.device = Mock(**self.golden_output)
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
-        print(re.colour_output()); re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_show_interfaces(self):
@@ -15194,7 +15191,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='GigabitEthernet1')
         self.maxDiff = None
-        import re ; print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
     def test_show_interfaces_2(self):
@@ -15202,7 +15198,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='TenGigabitEthernet0/2/0')
         self.maxDiff = None
-        import re ; print(re.colour_output());re.reset() 
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_2)
 
     def test_show_interfaces_3(self):
@@ -15210,7 +15205,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='GigabitEthernet3')
         self.maxDiff = None
-        import re ; print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_3)
 
     def test_show_interfaces_4(self):
@@ -15218,7 +15212,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='GigabitEthernet0/0/0')
         self.maxDiff = None
-        import re ; print(re.colour_output());re.reset() 
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_4)
 
     golden_interface_output_1 = {'execute.return_value' : '''
@@ -15371,7 +15364,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse(interface='Port-channel10')
         self.maxDiff = None
-        import re ; print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output_1)
 
     def test_golden2(self):
@@ -15379,9 +15371,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
-        import re
-        print(re.colour_output())
-        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     golden_output_1 = {'execute.return_value': '''
@@ -16297,9 +16286,6 @@ Tunnel10 is up, line protocol is up
         interface_obj = ShowInterfaces(device=self.device)
         parsed_output = interface_obj.parse()
         self.maxDiff = None
-        import re
-        print(re.colour_output())
-        re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
 
