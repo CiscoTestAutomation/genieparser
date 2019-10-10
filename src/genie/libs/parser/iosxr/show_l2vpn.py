@@ -608,11 +608,9 @@ class ShowL2vpnBridgeDomainBrief(ShowL2vpnBridgeDomain):
             out = output
         return super().cli(output=out)
 
-
 # =============================================
 # Schema for 'show l2vpn bridge-domain summary'
 # =============================================
-
 class ShowL2vpnBridgeDomainSummarySchema(MetaParser):
     """Schema for show l2vpn bridge-domain summary
     """
@@ -857,7 +855,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
-        p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\w+), +bridge\-domain: +'
+        p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
             '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
             'ShgId: +(?P<shg_id>\d+)(, +MSTi: +(?P<mst_i>\d+))?$')
         
@@ -1472,26 +1470,29 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
             m = p33.match(line)
             if m:
-                group = m.groupdict()
-                mpls = group['mpls'].strip().lower().replace(' ','_')
-                local = group['local'].strip()
-                remote = group['remote']
-                if mpls == 'interface':
-                    if interface_found:
-                        interface_dict = pw_id_dict.setdefault('mpls', {}). \
-                            setdefault('monitor_interface', {})
-                        interface_dict.update({'local': local})
-                        interface_dict.update({'remote': remote})
+                try:
+                    group = m.groupdict()
+                    mpls = group['mpls'].strip().lower().replace(' ','_')
+                    local = group['local'].strip()
+                    remote = group['remote']
+                    if mpls == 'interface':
+                        if interface_found:
+                            interface_dict = pw_id_dict.setdefault('mpls', {}). \
+                                setdefault('monitor_interface', {})
+                            interface_dict.update({'local': local})
+                            interface_dict.update({'remote': remote})
+                        else:
+                            interface_found = True
+                            mpls_dict = pw_id_dict.setdefault('mpls', {}). \
+                                setdefault(mpls, {})
+                            mpls_dict.update({'local': local})
+                            mpls_dict.update({'remote': remote})
                     else:
-                        interface_found = True
                         mpls_dict = pw_id_dict.setdefault('mpls', {}). \
                             setdefault(mpls, {})
                         mpls_dict.update({'local': local})
                         mpls_dict.update({'remote': remote})
-                else:
-                    mpls_dict = pw_id_dict.setdefault('mpls', {}). \
-                        setdefault(mpls, {})
-                    mpls_dict.update({'local': local})
-                    mpls_dict.update({'remote': remote})
+                except Exception:
+                    print(line)
                 continue
         return ret_dict
