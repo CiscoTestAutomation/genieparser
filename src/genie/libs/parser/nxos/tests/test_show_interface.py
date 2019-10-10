@@ -264,6 +264,7 @@ class TestShowInterface(unittest.TestCase):
                 { 'in_multicast_pkts': 2,
                   'in_unicast_pkts': 0,
                   'in_broadcast_pkts': 4,
+                'in_pkts': 2,
                   'in_octets': 4726,
                   'rate': 
                     {'in_rate': 0,
@@ -1135,6 +1136,7 @@ class TestShowInterface(unittest.TestCase):
                     'in_multicast_pkts': 132485585,
                     'in_unicast_pkts': 445986207,
                     'in_broadcast_pkts': 10,
+                    'in_pkts': 607382344,
                     'in_octets': 141467913935,
                     'in_unicast_pkts': 445986207,
                     'rate': {'in_rate': 13408,
