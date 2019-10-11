@@ -4,7 +4,6 @@
 
     * show ip interface brief
     * show ip interface brief | include Vlan
-    * show interface switchport
     * show interface brief
     * show interface detail
     * show vlan interface
@@ -115,121 +114,6 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.cmd = 'show ip interface brief | include Vlan'.format()
-
-
-# switchport administrative mode is what's configured on the switch port
-# while operational mode is what is actually functioning at the moment.
-class ShowInterfaceSwitchportSchema(MetaParser):
-    """Schema for show interface switchport"""
-    schema = {'interface':
-                {Any():
-                    {Optional('switchport_mode'): 
-                        {Optional(Any()):
-                            {Optional('vlan_id'):
-                                {Optional(Any()):
-                                    {Optional('admin_trunking_encapsulation'): str}
-                                },
-                            }
-                        },
-                     Optional('operational_trunking_encapsulation'): str}
-                },
-            }
-
-
-class ShowInterfaceSwitchport(ShowInterfaceSwitchportSchema):
-    """Parser for show interface switchport"""
-    # parser class - implements detail parsing mechanisms for cli output.
-
-    #*************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
-
-    cli_command = 'show interface switchport'
-
-    def cli(self,output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        intf_dict = {}
-        trunk_section = False
-        access_section = False
-        private_vlan_section = False
-        trunk_encapsulation = ''
-        for line in out.splitlines():
-            line = line.rstrip()
-            p1 = re.compile(r'^\s*Name:\s*(?P<interface_name>[a-zA-Z0-9\/\-]+)$')
-            m = p1.match(line)
-            if m:
-                interface_name = m.groupdict()['interface_name']
-                if 'interface' not in intf_dict:
-                    intf_dict['interface'] = {}
-                if interface_name not in intf_dict['interface']:
-                    intf_dict['interface'][interface_name] = {}
-                continue
-
-            p2 = re.compile(r'^\s*Operational Mode:\s*(?P<operational_mode>[a-z\s*]+)$')
-            m = p2.match(line)
-            if m:
-                operational_mode = m.groupdict()['operational_mode']
-                if any(word in operational_mode for word in ['trunk', 'access']):
-                    if 'switchport_mode' not in intf_dict['interface']:
-                        intf_dict['interface'][interface_name]['switchport_mode'] = {}
-                    if operational_mode not in intf_dict['interface'][interface_name]['switchport_mode']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode] = {}
-
-                if 'trunk' in operational_mode:
-                    trunk_section = True
-                    access_section = False
-                elif 'access' in operational_mode:
-                    access_section = True
-                    trunk_section = False
-                continue
-
-            p3 = re.compile(r'^\s*Trunking Native Mode VLAN:\s*(?P<trunking_native_vlan>[0-9]+)( \([a-zA-Z]+\))*$')
-            m = p3.match(line)
-            if m:
-                vlan_id = m.groupdict()['trunking_native_vlan']
-                if any(word in operational_mode for word in ['trunk', 'access']):
-                    if 'vlan_id' not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'] = {}
-                    if vlan_id not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]['vlan_id']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'][vlan_id] = {}
-                continue
-
-            p4 = re.compile(r'^\s*Access Mode VLAN:\s*(?P<access_mode_vlan_id>[a-z0-9]+)( \([a-zA-Z]+\))*$')
-            m = p4.match(line)
-            if m:
-                vlan_id = m.groupdict()['access_mode_vlan_id']
-                if any(word in operational_mode for word in ['trunk', 'access']):
-                    if 'vlan_id' not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'] = {}
-                    if vlan_id not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]['vlan_id']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'][vlan_id] = {}
-                continue
-
-            p5 = re.compile(r'^\s*Administrative private-vlan trunk native VLAN:\s*(?P<admin_private_native_vlan>[0-9]+)$')
-            m = p5.match(line)
-            if m:
-                if any(word in operational_mode for word in ['trunk', 'access']):
-                    vlan_id = m.groupdict()['admin_private_native_vlan']
-                    if 'vlan_id' not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'] = {}
-                    if vlan_id not in intf_dict['interface']\
-                        [interface_name]['switchport_mode'][operational_mode]['vlan_id']:
-                        intf_dict['interface'][interface_name]['switchport_mode'][operational_mode]['vlan_id'][vlan_id] = {}
-                    continue
-
-        return intf_dict
 
 class ShowInterfaceBriefSchema(MetaParser):
     """Schema for show interface brief"""

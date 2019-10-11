@@ -5200,7 +5200,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         ret_dict = {}
         instance = 'default'
 
-        # 3.3.3.3         default                 0 65000     0     0  Established  None
+        # 10.36.3.3         default                 0 65000     0     0  Established  None
         # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
 
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<vrf>\S+) +(?P<spk>\d+) +'
@@ -5213,7 +5213,7 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 3.3.3.3         default                 0 65000     0     0  Established  None
+            # 10.36.3.3         default                 0 65000     0     0  Established  None
             # 2001:1:1:1::1   default                 0 65000     0     0  Established  None
 
             m = p1.match(line)
@@ -5463,6 +5463,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         prefix_index_dict = {}
         vrf_name = 'default'
         address_family = 'l2vpn evpn'
+        original_address_family = address_family
         # Init vars
         index = 1
         data_on_nextline = False
@@ -5514,14 +5515,15 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         p3_3_2 = re.compile(r'^\s*(?P<numbers>[0-9\s\(\)\{\}]+)? +'
                             '(?P<origin_codes>(i|e|\?|\|))$')
         p3_4 = re.compile(r'^\s*(?P<next_hop>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
-        p4 = re.compile(r'^\s*Route +Distinguisher *:'
-                            ' +(?P<route_distinguisher>(\S+))'
+        p4 = re.compile(r'^\s*Route +Distinguisher *: +(?P<route_distinguisher>(\S+))'
                             '(?: +\(((VRF +(?P<default_vrf>\S+))|'
-                            '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)))\))?$')
+                            '((?P<default_vrf1>\S+)VNI +(?P<vni>\d+)'
+                            '|(default +for +vrf +(?P<default_vrf2>\S+))))\))?$')
         
         p5 = re.compile(r'^\s*BGP *router *identifier *(?P<router_identifier>[0-9\.]+)'
                          ', *local *AS *number *(?P<local_as>[0-9]+)$')
-        p6 =  re.compile(r'^\s*BGP *generic *scan *interval *(?P<generic_scan_interval>[0-9]+) *secs$')
+        p6 =  re.compile(r'^\s*BGP *generic *scan *interval *'
+                            '(?P<generic_scan_interval>[0-9]+) *secs$')
         p7 = re.compile(r'^\s*Non-stop *routing *is'
                         ' *(?P<non_stop_routing>[A-Za-z]+)$')
         p8 = re.compile(r'^\s*BGP *table *state: *(?P<table_state>[a-zA-Z]+)$')
@@ -5529,13 +5531,18 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                          ' *RD *version: (?P<rd_version>[0-9]+)$')
         p10 = re.compile(r'^\s*BGP *main *routing *table *version'
                          ' *(?P<bgp_table_version>[0-9]+)$')
-        p11 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *(?P<nsr_initial_initsync_version>[0-9]+)'
+        p11 = re.compile(r'^\s*BGP *NSR *Initial *initsync *version *'
+                            '(?P<nsr_initial_initsync_version>[0-9]+)'
                           ' *\((?P<nsr_initial_init_ver_status>[a-zA-Z]+)\)$')
-        p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
+        p12 = re.compile(r'^\s*BGP *NSR/ISSU *Sync-Group *versions *'
+                            '(?P<nsr_issu_sync_group_versions>[0-9\/\s]+)$')
         p13 = re.compile(r'^\s*BGP *scan *interval *(?P<scan_interval>[0-9\s]+) *secs$')
-        p14 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+) *(?P<prefix>[\w\.\/\[\]\,]+)$')
-        p15 = re.compile(r'^\s*(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?(?: *(?P<origin_codes>(i|e|\?)))?$')
-        p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +(?P<processed_paths>[0-9]+) +paths$')
+        p14 = re.compile(r'^(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)'
+                            '(?P<path_type>(i|e|c|l|a|r|I))? *(?P<prefix>[\w\.\/\[\]\,]+)$')
+        p15 = re.compile(r'^(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\s\{\}]+)?'
+                            '(?: *(?P<origin_codes>(i|e|\?)))$')
+        p16 = re.compile(r'^\s*Processed +(?P<processed_prefix>[0-9]+) +prefixes, +'
+                            '(?P<processed_paths>[0-9]+) +paths$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5696,7 +5703,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             # *>e                   10.70.1.2                                      0 100 300 ?
             m1 = p3_3_1.match(line)
             m = m if m else m1
-            if m:
+            if m and not prefix_dict:
                 # Get keys
                 if m.groupdict()['status_codes']:
                     status_codes = m.groupdict()['status_codes']
@@ -5751,7 +5758,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     index_dict.update({'localprf': int(m1.groupdict()['localprf'])})
                     index_dict.update({'weight': int(m1.groupdict()['weight'])})
                     # Set path
-                    if m1.groupdict()['path']:
+                    if 'path' in m1.groupdict():
                         index_dict.update({'path': m1.groupdict()['path'].strip()})
                 elif m2:
                     index_dict.update({'weight': int(m2.groupdict()['weight'])})
@@ -5762,7 +5769,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                         index_dict.update({'localprf': int(m2.groupdict()['value'])})
                     # Set path
                     if m2.groupdict()['path']:
-                        index_dict.update({'path': m.groupdict()['path'].strip()})
+                        index_dict.update({'path': m2.groupdict()['path'].strip()})
                 elif m3:
                     index_dict.update({'weight': int(m3.groupdict()['weight'])})
                     index_dict.update({'path': m3.groupdict()['path'].strip()})
@@ -5818,11 +5825,11 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                     index_dict.update({'path': m3.groupdict()['path'].strip()})
                 continue
 
-
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # Route Distinguisher: 100:100     (VRF VRF1)
             # Route Distinguisher: 2:100    (VRF vpn2)
             # Route Distinguisher: 10.49.1.0:3    (L3VNI 9100)
+            # Route Distinguisher: 172.16.2.88:1000 (default for vrf EVPN-Multicast-BTV)
             m = p4.match(line)
             if m:
                 route_distinguisher = m.groupdict()['route_distinguisher']
@@ -5845,6 +5852,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
                   .setdefault('address_family', {}).setdefault(address_family, {})
                 continue
+
 
             # Network            Next Hop            Metric     LocPrf     Weight Path
             # *>a10.121.0.0/8       0.0.0.0                  100      32768 i
@@ -6050,6 +6058,7 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
             m = p15.match(line)
             if m:
                 group = m.groupdict()
+                
                 if prefix_dict:
                     
                     next_hop = group['next_hop']
@@ -6085,23 +6094,23 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
         
                         if m1:
                             prefix_dict['metric'] = m1.groupdict()['metric']
-                            prefix_dict['locprf'] =  m1.groupdict()['locprf']
-                            prefix_dict['weight'] = m1.groupdict()['weight']
+                            prefix_dict['localprf'] =  int(m1.groupdict()['locprf'])
+                            prefix_dict['weight'] = int(m1.groupdict()['weight'])
                             prefix_dict['path'] = m1.groupdict()['path'].strip()
                         elif m2:
                             if len(m2.groupdict()['space']) > 8:
                                 prefix_dict['metric'] = m2.groupdict()['value']
                             else:
-                                prefix_dict['locprf'] = \
-                                    m2.groupdict()['value']
+                                prefix_dict['localprf'] = \
+                                   int(m2.groupdict()['value'])
         
                             prefix_dict['weight'] = \
-                                m2.groupdict()['weight']
+                                int(m2.groupdict()['weight'])
                             prefix_dict['path'] = \
                                 m2.groupdict()['path'].strip()
                         elif m3:
                             prefix_dict['weight'] = \
-                                m3.groupdict()['weight']
+                                int(m3.groupdict()['weight'])
                             prefix_dict['path'] = \
                                 m3.groupdict()['path'].strip()
 
@@ -6118,29 +6127,6 @@ class ShowBgpL2vpnEvpn(ShowBgpL2vpnEvpnSchema):
                 af_dict['processed_prefix'] = processed_prefix
                 af_dict['processed_paths'] = processed_paths
                 continue
-        # order the af prefixes index
-        # return dict when parsed dictionary is empty
-        if 'vrf' not in parsed_dict:
-            return parsed_dict
-
-        for vrf_name in parsed_dict['vrf']:
-            if 'address_family' not in parsed_dict['vrf'][vrf_name]:
-                continue
-            for af in parsed_dict['vrf'][vrf_name]['address_family']:
-                af_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf_name, {})\
-                  .setdefault('address_family', {}).setdefault(af, {})
-                if 'prefixes' in af_dict:
-                    for prefixes in af_dict['prefixes']:
-                        if len(af_dict['prefixes'][prefixes]['index'].keys()) > 1:
-                            ind = 1
-                            nexthop_dict = {}
-                            sorted_list = sorted(af_dict['prefixes'][prefixes]['index'].items(),
-                                               key = lambda x:x[1]['next_hop'])
-                            for i, j in enumerate(sorted_list):
-                                nexthop_dict[ind] = af_dict['prefixes'][prefixes]['index'][j[0]]
-                                ind += 1
-                            del(af_dict['prefixes'][prefixes]['index'])
-                            af_dict['prefixes'][prefixes]['index'] = nexthop_dict
 
         return parsed_dict
 
@@ -6214,11 +6200,11 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         parsed_dict = {}
         index = 1
 
-        # Route Distinguisher: 7.7.7.7:3
+        # Route Distinguisher: 10.196.7.7:3
         p1 = re.compile(r'^Route +Distinguisher: +(?P<rd>(\S+))$')
 
         # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-        # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+        # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
         p2 = re.compile(r'^(?P<prefix>\[[^/]+\])/(?P<prefix_length>(\d+)) +is'
                          ' +advertised +to +(?P<neighbor>(\S+))$')
 
@@ -6226,7 +6212,7 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         p3 = re.compile(r'^Path info:$')
 
         #    neighbor: Local           neighbor router id: 10.1.8.8
-        #    neighbor: Local           neighbor router id: 7.7.7.7
+        #    neighbor: Local           neighbor router id: 10.196.7.7
         p4 = re.compile(r'^neighbor: +(?P<neighbor>(\S+)) +neighbor +router'
                          ' +id: +(?P<neighbor_router_id>(\S+))$')
 
@@ -6265,14 +6251,14 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Route Distinguisher: 7.7.7.7:3
+            # Route Distinguisher: 10.196.7.7:3
             m = p1.match(line)
             if m:
                 af = 'l2vpn evpn RD ' + m.groupdict()['rd']
                 continue
 
             # [2][0][48][7777.7777.0002][0]/104 is advertised to 10.55.0.10
-            # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 5.5.5.5
+            # [1][0009.0807.0605.0403.0201][0]/120 is advertised to 10.100.5.5
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -6294,7 +6280,7 @@ class ShowBgpL2vpnEvpnAdvertised(ShowBgpL2vpnEvpnAdvertisedSchema):
                 continue
 
             #    neighbor: Local           neighbor router id: 10.1.8.8
-            #    neighbor: Local           neighbor router id: 7.7.7.7
+            #    neighbor: Local           neighbor router id: 10.196.7.7
             m = p4.match(line)
             if m:
                 group = m.groupdict()
