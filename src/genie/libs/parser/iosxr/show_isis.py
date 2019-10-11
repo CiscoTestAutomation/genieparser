@@ -733,7 +733,7 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
         # 23:42:51.522 PPFRR     0    64     1                      PERPREFIXFRR
         r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<log_type>\S+)\s+(?P<time_ms>\d+)'
                          '\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
-                         '(?P<first_trigger_lsp>\S*)\s+(?P<triggers>\S+)')
+                         '(?P<first_trigger_lsp>\S*)\s+(?P<triggers>[\w\s]+)')
 
         parsed_output = {}
         log_index = 1
