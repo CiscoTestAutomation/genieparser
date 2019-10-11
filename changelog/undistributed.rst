@@ -25,16 +25,12 @@
 * NXOS
     * Update ShowInterfaceBrief
         * Add command 'show interface {interface} brief'
-        * Rewrite parser for speed optimization
-        * Change parsed interface name to be complete/whole interface name
     * Update ShowRunningConfigInterface
         * Update regex to support more interface names
         * Updated schema to support more outputs
 * IOSXR
     * Update ShowIpv6VrfAllInterface
         * Update regex to avoid empty lines and command itself
-    * Removed ShowInterfaceSwitchport for:
-        * show interface switchport
 * IOSXE
     * Update ShowInterfaceAccounting
         * Change {intf} and argument 'intf' into {interface} and 'interface'
@@ -43,8 +39,7 @@
         * Change {intf} and argument 'intf' into {interface} and 'interface'
     * Update ShowNveInterface:
         * Change {intf} and argument 'intf' into {interface} and 'interface'
-    * Update ShowInterface
-        * Fixed parser ShowInterface to match duplex and speed line
+
 --------------------------------------------------------------------------------
                                 EIGRP
 --------------------------------------------------------------------------------
@@ -95,20 +90,6 @@
         'show segment-routing mpls mapping-server ipv6'
     * Added ShowSegmentRoutingMplsLbAssignedSids for:
         'show segment-routing mpls lb assigned-sids'
-    * Update ShowPceIPV4PeerPrefix
-        * Removed typo from 'pcs' to 'pce' in show command
-* IOSXR
-    * Updated ShowPceIpv4TopologySummary:
-        * Updated schema and add regex
---------------------------------------------------------------------------------
-                              Controllers
---------------------------------------------------------------------------------
-* IOSXR
-    * Updated ShowControllersFiaDiagshellL2show:
-        - renamed class to ShowControllersFiaDiagshellL2showLocation
-        - modified regex
-        - added schema
-        - added unittest
 
 --------------------------------------------------------------------------------
                                 ISSU
@@ -118,7 +99,6 @@
         * show issu state detail
     Added ShowIssuRollbackTimer for:
         * show issu rollback-timer
-
 --------------------------------------------------------------------------------
                               Virtual-Service
 --------------------------------------------------------------------------------
@@ -129,14 +109,6 @@
                                 BGP
 --------------------------------------------------------------------------------
 * IOSXR
-    * Updated ShowBgpVrfDbVrfAll:
-        - modified regex
-        - added schema
-        - added unittest
-    * Updated ShowBgpL2vpnEvpnAdvertised:
-        - modified regex
-        - added schema
-        - added unittest
     * Updated ShowBgpL2vpnEvpn for:
         added a schema and unittest, and updated based on the schema
     * Updated ShowBgpInstanceAllAll for address family regex issue
@@ -151,17 +123,11 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
-    * Update ShowBgpL2vpnEvpn to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
         * show bgp summary
         * show bgp all summary
-    * Added ShowIpBgp for:
-        * show ip bgp
-
-* IOSXE
-    * Updated ShowBgpSuperParser for parsing of more varied output
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
@@ -180,13 +146,9 @@
         * show ip ospf {process_id} segment-routing adjacency-sid
     * Updated ShowIpOspfInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
-    * Updated ShowIpOspfInterface:
-        * added 'teapp' section to parse more varied output
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
-    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
-        * update schema and add regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -269,13 +231,7 @@
 --------------------------------------------------------------------------------
                                 INVENTORY
 --------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowInventory:
-        * Matching more slots
 * IOS
-    * Updated ShowInventory:
-        * Matching more slots
-* NXOS
     * Updated ShowInventory:
         * Matching more slots
 
@@ -405,10 +361,6 @@
                                 X-Connect
 --------------------------------------------------------------------------------
 * IOSXR
-    * Updated ShowL2VpnXconnectBrief:
-        - modified regex
-        - added schema
-        - added unittest
     * Added ShowL2vpnXconnectDetail for:
         * show l2vpn xconnect detail
     * Added ShowL2vpnXconnect for:
@@ -417,33 +369,16 @@
         * show l2vpn xconnect summary
     * Added ShowL2vpnXconnectMp2mpDetail for:
         * show l2vpn xconnect mp2mp detail
-    * Updated ShowL2vpnXconnectDetail for:
-        * To support more varied output
 
 --------------------------------------------------------------------------------
                                 EVPN
 --------------------------------------------------------------------------------
 * IOSXR
-    * Updated ShowEvpnInternalLabelDetail:
-        - modified regex
-        - added schema
-        - added unittest
     * Added ShowEvpnEvi for:
         * show evpn evi
     * Added ShowEvpnEviDetail for:
         * show evpn evi detail
-    * Added ShowEvpnEthernetSegment for:
-        * show evpn ethernet-segment
-    * Added ShowEvpnEthernetSegmentDetail for:
-        * show evpn ethernet-segment detail
-    * Added ShowEvpnEthernetSegmentPrivate for:
-        * show evpn ethernet-segment private
-    * Added ShowEvpnEthernetSegmentEsiDetail for:
-        * show evpn ethernet-segment esi {esi} detail
-    * Added ShowEvpnInternalLabel for:
-        * show evpn internal-label
-    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
-        
+
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -463,12 +398,6 @@
 * IOSXR
     * Added ShowL2vpnBridgeDomain for:
         * show l2vpn bridge-domain
-    * Added ShowL2vpnBridgeDomainSummary for:
-        * show l2vpn bridge-domain summary
-    * Added ShowL2vpnBridgeDomainBrief for:
-        * show l2vpn bridge-domain brief
-    * Added ShowL2vpnBridgeDomainDetail for:
-        * show l2vpn bridge-domain detail
     * Added ShowL2vpnMacLearning for:
         * show l2vpn mac-learning {mac_type} all location {location}
     * Added ShowL2vpnForwardingBridgeDomainMacAddress for:  
@@ -484,12 +413,6 @@
     * Changed schema for ShowModule for Cat6k platform to reflect ops
 
 --------------------------------------------------------------------------------
-                                ACL
---------------------------------------------------------------------------------
-* IOSXE
-    * ShowAccessLists:
-        * modified regex for both ipv4 and ipv6 to accommodate more outputs
-        * added to handle standard ACL
                                 LLDP
 --------------------------------------------------------------------------------
 * IOSXR
@@ -500,13 +423,6 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunningConfigNtp to support different vrfs output
---------------------------------------------------------------------------------
-                                PROCESSES
---------------------------------------------------------------------------------
-* IOSXR
-    * Added parser ShowProcesses for:
-        * show processes 
-        * show processes {process}
 
 --------------------------------------------------------------------------------
                                 ISIS
@@ -515,24 +431,3 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
-    * Added parser ShowIsis for:
-        * show isis
-    * Added parser ShowIsisProtocol for:
-        * show isis protocol
-    * Added ShowIsisStatistics for:
-        * show isis statistics
-    * Added parser ShowIsis for:
-        * show isis
-    * Added parser ShowIsisHostname for:
-        * show isis hostname
-        * show isis instance {instance} hostname
-* IOSXE
-    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
-
---------------------------------------------------------------------------------
-                                Interface
---------------------------------------------------------------------------------
-* NXOS
-    * Fixed regex to accommodate various outputs
-* IOSXE
-    * Fixed regex to accommodate more outputs
