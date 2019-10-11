@@ -1360,11 +1360,12 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                         'igmp_snooping': 'disabled',
                         'igmp_snooping_profile': 'none',
                         'mld_snooping_profile': 'none',
-                        'storm_control': 'disabled',
+                        'storm_control': 'bridge-domain policer',
                         'bridge_mtu': '1500',
                         'mid_cvpls_config_index': '1',
                         'p2mp_pw': 'disabled',
                         'create_time': '27/08/2019 09:44:44 (5w6d ago)',
+                        'status_changed_since_creation': 'No',
                         'ac': {
                             'num_ac': 3,
                             'num_ac_up': 2,
@@ -1381,6 +1382,8 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'state': 'down (Segment-down)',
                                     'type': 'VLAN',
                                     'num_ranges': '1',
+                                    'rewrite_tags': '',
+                                    'vlan_ranges': ['100', '100'],
                                     'mtu': 9202,
                                     'xc_id': '0xc0000002',
                                     'interworking': 'none',
@@ -1407,6 +1410,8 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'state': 'up',
                                     'type': 'VLAN',
                                     'num_ranges': '1',
+                                    'rewrite_tags': '',
+                                    'vlan_ranges': ['100', '100'],
                                     'mtu': 9202,
                                     'xc_id': '0xc0000004',
                                     'interworking': 'none',
@@ -1428,6 +1433,37 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                                     'igmp_snooping': 'disabled',
                                     'igmp_snooping_profile': 'none',
                                     'mld_snooping_profile': 'none',
+                                    'statistics': {
+                                        'packet_totals': {
+                                            'receive': 1017635,
+                                            'send': 798,
+                                        },
+                                        'byte_totals': {
+                                            'receive': 73168116,
+                                            'send': 36708,
+                                        },
+                                        'mac_move': '0',
+                                    },
+                                    'storm_control_drop_counters': {
+                                        'packets': {
+                                            'broadcast': '0',
+                                            'multicast': '0',
+                                            'unknown_unicast': '0',
+                                        },
+                                        'bytes': {
+                                            'broadcast': '0',
+                                            'multicast': '0',
+                                            'unknown_unicast': '0',
+                                        },
+                                    },
+                                    'dynamic_arp_inspection_drop_counters': {
+                                        'packets': '0',
+                                        'bytes': '0',
+                                    },
+                                    'ip_source_guard_drop_counters': {
+                                        'packets': '0',
+                                        'bytes': '0',
+                                    },
                                 },
                             },
                         },
@@ -1446,6 +1482,24 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                             'num_vni': 0,
                             'num_vni_up': 0,
                         },
+                        'evpn': {
+                            'EVPN': {
+                                'state': 'up',
+                                'evi': '1000',
+                                'xc_id': '0x80000009',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 0,
+                                    },
+                                    'mac_move': '0',
+                                },
+                            },
+                        },
                     },
                 },
             },
@@ -1453,7 +1507,6 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
     }
 
     golden_output3 = {'execute.return_value': '''
-        +++ genie-Router: executing command 'show l2vpn bridge-domain detail' +++
         show l2vpn bridge-domain detail
 
         Mon Oct  7 16:18:59.168 EDT

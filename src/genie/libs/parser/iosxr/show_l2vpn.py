@@ -761,6 +761,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         Optional('create_time'): str,
                         Optional('split_horizon_group'): str,
                         Optional('vine_state'): str,
+                        Optional('status_changed_since_creation'): str,
                         'ac': {
                             'num_ac': int,
                             'num_ac_up': int,
@@ -802,6 +803,29 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                             'receive': int,
                                             'send': int,
                                         },
+                                        Optional('mac_move'): str,
+                                    },
+                                    Optional('vlan_ranges'): list,
+                                    Optional('rewrite_tags'): str,
+                                    Optional('storm_control_drop_counters'): {
+                                        'packets': {
+                                            'broadcast': str,
+                                            'multicast': str,
+                                            'unknown_unicast': str,
+                                        },
+                                        'bytes': {
+                                            'broadcast': str,
+                                            'multicast': str,
+                                            'unknown_unicast': str,
+                                        },
+                                    },
+                                    Optional('dynamic_arp_inspection_drop_counters'): {
+                                        'packets': str,
+                                        'bytes': str,
+                                    },
+                                    Optional('ip_source_guard_drop_counters'): {
+                                        'packets': str,
+                                        'bytes': str,
                                     }
                                 }
                             }
@@ -847,6 +871,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                                         'receive': int,
                                                         'send': int,
                                                     },
+                                                    Optional('mac_move'): str,
                                                 },
                                             }
                                         }
@@ -872,6 +897,24 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                             'num_vni': int,
                             'num_vni_up': int,
                         },
+                        Optional('evpn'): {
+                            Any(): {
+                                'state': str,
+                                'evi': str,
+                                'xc_id': str,
+                                Optional('statistics'): {
+                                    'packet_totals': {
+                                        'receive': int,
+                                        'send': int,
+                                    },
+                                    'byte_totals': {
+                                        'receive': int,
+                                        'send': int,
+                                    },
+                                    Optional('mac_move'): str,
+                                },
+                            }
+                        }
                     },
                 }
             }
@@ -978,10 +1021,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p20 = re.compile(r'Statistics:')
 
         # packet totals: receive 3919680,send 9328
-        p21 = re.compile(r'packet +totals: +receive +(?P<receive>\d+), *send +(?P<send>\d+)$')
+        # packets: received 0 (unicast 0), sent 0
+        p21 = re.compile(r'packet(s)?( +totals)?: +receive(d)? +(?P<receive>\d+)( +\(( *multicast +(?P<multicast>\d+),?)?( *broadcast +(?P<broadcast>\d+),?)?( *unknown +unicast +(?P<unknown_unicast>\d+),?)? *unicast +(?P<unicast>\d+)\))?, *sen(d|t) +(?P<send>\d+)$')
 
         # byte totals: receive 305735040,send 15022146
-        p22 = re.compile(r'byte +totals: +receive +(?P<receive>\d+), *send +(?P<send>\d+)$')
+        # bytes: received 0 (unicast 0), sent 0
+        p22 = re.compile(r'byte(s)?( +totals)?: +receive(d)? +(?P<receive>\d+)( +\(( *multicast +(?P<multicast>\d+),?)?( *broadcast +(?P<broadcast>\d+),?)?( *unknown +unicast +(?P<unknown_unicast>\d+),?)? *unicast +(?P<unicast>\d+)\))?, *sen(d|t) +(?P<send>\d+)$')
 
         # List of Access PWs:
         p23 = re.compile(r'List +of +Access +PWs:$')
@@ -1087,7 +1132,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p54 = re.compile(r'^IP +Source +Guard: +(?P<ip_source_guard>\w+), +Logging: +(?P<ip_source_logging>\w+)$')
 
         # Storm Control: disabled
-        p56 = re.compile(r'^Storm +Control: +(?P<storm_control>\w+)$')
+        # Storm Control: bridge-domain policer
+        p56 = re.compile(r'^Storm +Control: +(?P<storm_control>[\S ]+)$')
 
         # Bridge MTU: 1500
         p57 = re.compile(r'^Bridge +MTU: +(?P<bridge_mtu>\S+)$')
@@ -1098,6 +1144,56 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # P2MP PW: disabled
         p59 = re.compile(r'^P2MP +PW: +(?P<p2mp_pw>\S+)$')
 
+        # No status change since creation
+        p60 = re.compile(r'^No +status +change +since +creation$')
+
+        # List of EVPNs:
+        p61 = re.compile(r'^List +of +EVPNs:$')
+
+        # EVPN, state: up
+        p62 = re.compile(r'^(?P<evpn>\S+), +state: +(?P<state>\S+)$')
+
+        # evi: 1000
+        p63 = re.compile(r'^evi: +(?P<evi>\d+)$')
+
+        # XC ID 0x80000009
+        p64 = re.compile(r'^XC +ID (?P<xc_id>\S+)$')
+
+        # MAC move: 0
+        p65 = re.compile(r'^MAC +move: +(?P<mac_move>\d+)$')
+
+        # BVI MAC address:
+        p66 = re.compile(r'^BVI +MAC +address:$')
+
+        # 1000.1000.1000
+        p67 = re.compile(r'^(?P<bvi_mac_address>\w+\.\w+\.\w+)$')
+
+        # Rewrite Tags: []
+        p68 = re.compile(r'^Rewrite +Tags: +\[(?P<rewrite_tags>\S+)?\]$')
+
+        # VLAN ranges: [100, 100]
+        p69 = re.compile(r'^VLAN +ranges: +\[(?P<vlan_ranges>[\S ]+)?\]$')
+
+        # Storm control drop counters:
+        p70 = re.compile(r'^Storm +control +drop +counters:$')
+
+        # packets: broadcast 0, multicast 0, unknown unicast 0
+        p71 = re.compile(r'^packets: +broadcast +(?P<broadcast>\d+), +multicast +(?P<multicast>\d+), +unknown +unicast +(?P<unknown_unicast>\d+)$')
+
+        # bytes: broadcast 0, multicast 0, unknown unicast 0
+        p72 = re.compile(r'^bytes: +broadcast +(?P<broadcast>\d+), +multicast +(?P<multicast>\d+), +unknown +unicast +(?P<unknown_unicast>\d+)$')
+
+        # Dynamic ARP inspection drop counters:
+        p73 = re.compile(r'^Dynamic +ARP +inspection +drop +counters:$')
+
+        # packets: 0, bytes: 0
+        p74 = re.compile(r'^packets: +(?P<packets>\d+), +bytes: +(?P<bytes>\d+)$')
+
+        # IP source guard drop counters:
+        p75 = re.compile(r'^IP +source +guard +drop +counters:$')
+
+        # List of Access VFIs:
+        p76 = re.compile(r'^List +of +Access +VFIs:$')
 
         for line in out.splitlines():
             original_line = line
@@ -1357,6 +1453,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # List of ACs:
             m = p15.match(line)
             if m:
+                dict_type = 'ac'
                 continue
 
             # AC: GigabitEthernet0/1/0/0, state is up
@@ -1441,8 +1538,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 receive = int(group['receive'])
                 send = int(group['send'])
 
-                if dict_type != 'ac':
+                if dict_type == 'pw':
                     statistics_dict = pw_id_dict.setdefault('statistics', {})
+                elif dict_type == 'evpn':
+                    statistics_dict = evpn_dict.setdefault('statistics', {})
+                elif dict_type == 'vfi':
+                    statistics_dict = vfi_dict.setdefault('statistics', {})
                 else:
                     statistics_dict = interface_dict.setdefault('statistics', {})
                 packet_totals_dict = statistics_dict.setdefault('packet_totals', {})
@@ -1457,8 +1558,10 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 receive = int(group['receive'])
                 send = int(group['send'])
 
-                if dict_type != 'ac':
+                if dict_type == 'pw':
                     statistics_dict = pw_id_dict.setdefault('statistics', {})
+                elif dict_type == 'evpn':
+                    statistics_dict = evpn_dict.setdefault('statistics', {})
                 else:
                     statistics_dict = interface_dict.setdefault('statistics', {})
                 packet_totals_dict = statistics_dict.setdefault('byte_totals', {})
@@ -1469,16 +1572,19 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # List of Access PWs:
             m = p23.match(line)
             if m:
+                dict_type = 'pw'
                 continue
 
             # List of VFIs:
             m = p24.match(line)
             if m:
+                dict_type = 'vfi'
                 continue
 
             # PW: neighbor 1.1.1.1, PW ID 1, state is up ( established )
             m = p26.match(line)
             if m:
+                dict_type = 'pw'
                 group = m.groupdict()
                 neighbor = group['neighbor']
                 pw_id = group['pw_id']
@@ -1749,6 +1855,145 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 group = m.groupdict()
                 p2mp_pw = group['p2mp_pw']
                 bridge_domain_dict.update({'p2mp_pw': p2mp_pw})
+                continue
+
+            # No status change since creation
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                bridge_domain_dict.update({'status_changed_since_creation': 'No'})
+                continue
+
+            # List of EVPNs:
+            m = p61.match(line)
+            if m:
+                dict_type = 'evpn'
+                continue
+
+            # EVPN, state: up
+            m = p62.match(line)
+            if m:
+                group = m.groupdict()
+                evpn = group['evpn']
+                evpn_state = group['state']
+                evpn_dict = bridge_domain_dict.setdefault('evpn', {}) .\
+                    setdefault(evpn, {})
+                evpn_dict.update({'state': evpn_state})
+                continue
+
+            # evi: 1000
+            m = p63.match(line)
+            if m:
+                group = m.groupdict()
+                evi = group['evi']
+                evpn_dict.update({'evi': evi})
+                continue
+
+            # XC ID 0x80000009
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                xc_id = group['xc_id']
+                evpn_dict.update({'xc_id': xc_id})
+                continue
+
+            # MAC move: 0
+            m = p65.match(line)
+            if m:
+                group = m.groupdict()
+                mac_move = group['mac_move']
+                statistics_dict.update({'mac_move': mac_move})
+                continue
+
+            # BVI MAC address:
+            m = p66.match(line)
+            if m:
+                continue
+
+            # 1000.1000.1000
+            m = p67.match(line)
+            if m:
+                group = m.groupdict()
+                bvi_mac_address = group['bvi_mac_address']
+                bvi_mac_address_list = interface_dict.get('bvi_mac_address', [])
+                bvi_mac_address_list.append(bvi_mac_address)
+                interface_dict.update({'bvi_mac_address': bvi_mac_address_list})
+                continue
+
+            # Rewrite Tags: []
+            m = p68.match(line)
+            if m:
+                group = m.groupdict()
+                rewrite_tags = group.get('rewrite_tags', '')
+                interface_dict.update({'rewrite_tags': rewrite_tags if rewrite_tags else ''})
+                continue
+
+            # VLAN ranges: [100, 100]
+            m = p69.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_ranges = group['vlan_ranges'].replace(' ', '')
+                interface_dict.update({'vlan_ranges': vlan_ranges.split(',')})
+                continue
+
+            # Storm control drop counters:
+            m = p70.match(line)
+            if m:
+                continue
+
+            # packets: broadcast 0, multicast 0, unknown unicast 0
+            m = p71.match(line)
+            if m:
+                group = m.groupdict()
+                broadcast = group['broadcast']
+                multicast = group['multicast']
+                unknown_unicast = group['unknown_unicast']
+                packet_dict = interface_dict.setdefault('storm_control_drop_counters', {}). \
+                    setdefault('packets', {})
+                packet_dict.update({'broadcast': broadcast})
+                packet_dict.update({'multicast': multicast})
+                packet_dict.update({'unknown_unicast': unknown_unicast})
+                continue
+
+            # bytes: broadcast 0, multicast 0, unknown unicast 0
+            m = p72.match(line)
+            if m:
+                group = m.groupdict()
+                broadcast = group['broadcast']
+                multicast = group['multicast']
+                unknown_unicast = group['unknown_unicast']
+                byte_dict = interface_dict.setdefault('storm_control_drop_counters', {}). \
+                    setdefault('bytes', {})
+                byte_dict.update({'broadcast': broadcast})
+                byte_dict.update({'multicast': multicast})
+                byte_dict.update({'unknown_unicast': unknown_unicast})
+                continue
+
+            # Dynamic ARP inspection drop counters:
+            m = p73.match(line)
+            if m:
+                byte_send_dict = interface_dict.setdefault('dynamic_arp_inspection_drop_counters', {})
+                continue
+
+            # packets: 0, bytes: 0
+            m = p74.match(line)
+            if m:
+                group = m.groupdict()
+                packets = group['packets']
+                bytes = group['bytes']
+                byte_send_dict.update({'packets': packets})
+                byte_send_dict.update({'bytes': bytes})
+                continue
+
+            # IP source guard drop counters:
+            m = p75.match(line)
+            if m:
+                byte_send_dict = interface_dict.setdefault('ip_source_guard_drop_counters', {})
+                continue
+            
+            # List of Access VFIs:
+            m = p76.match(line)
+            if m:
                 continue
 
             #     (LSP ping verification)               
