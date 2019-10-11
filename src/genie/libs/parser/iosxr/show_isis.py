@@ -688,20 +688,14 @@ class ShowIsisLspLogSchema(MetaParser):
     schema = {
         'instance': {
             Any(): {
-                'level': {
+                'lsp_log': {
                     Any(): {
-                        'log_date': {
-                            Any(): {
-                                'timestamp': {
-                                    Any(): {
-                                        'count': int,
-                                        Optional('interface'): str,
-                                        'triggers': str,
-                                    }   
-                                }
-                            }
-                        }
-                    }
+                        'level': int,
+                        'received_timestamp': str,
+                        'count': int,
+                        Optional('interface'): str,
+                        Optional('triggers'): str,
+                    }   
                 }
             }
         }
@@ -720,34 +714,43 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
             output = self.device.execute(self.cli_command)
 
         # IS-IS TEST Level 2 LSP log
-        r1 = re.compile(r'IS\-IS\s+(?P<instance>.+)\s+Level\s+(?P<level>\d+)'
-                         '\s+LSP\s+log')
+        # ISIS isp Level 1 LSP log
+        # Level 1 LSP log
+        r1 = re.compile(r'(IS\-*IS\s+(?P<instance>.+)\s+)?Level\s+'
+                         '(?P<level>\d+)\s+LSP\s+log')
         
         # --- Thu Sep 26 2019 ---
         # --- Mon Sep 30 2019 ---
         r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\w\s]+)\s+\-\-\-')
 
-        # 09:39:16.648      1                     IPEXT
-        # 16:15:03.822      2  BE2                DELADJ
-        r3 = re.compile(r'(?P<timestamp>\S+)\s+(?P<count>\d+)\s*'
-                         '(?P<interface>\S*)\s+(?P<triggers>\S+)')
+        # 09:39:16.648     1                   IPEXT
+        # 07:05:24         2                   CONFIG NEWADJ
+        # 16:15:03.822     2  BE2              DELADJ
+        # 00:02:36         1    
+        r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<count>\d+)\s*'
+                         '(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
+                         '(?P<triggers>[\w*\s]*)')
 
         parsed_output = {}
+        log_date = ''
+        log_index = 1
 
         for line in output.splitlines():
             line = line.strip()
 
             # IS-IS TEST Level 2 LSP log
+            # ISIS isp Level 1 LSP log
+            # Level 1 LSP log
             result = r1.match(line)
             if result:
                 group = result.groupdict()
                 instance = group['instance']
+                if instance is None:
+                    instance = ""
                 level = int(group['level'])
                 instance_dict = parsed_output\
                     .setdefault('instance', {})\
-                    .setdefault(instance, {})\
-                    .setdefault('level', {})\
-                    .setdefault(level, {})
+                    .setdefault(instance, {})
 
                 continue
             
@@ -757,14 +760,13 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
             if result:
                 group = result.groupdict()
                 log_date = group['log_date']
-                log_date_dict = instance_dict\
-                    .setdefault('log_date', {})\
-                    .setdefault(log_date, {})
 
                 continue
 
-            # 09:39:16.648      1                     IPEXT
-            # 16:15:03.822      2  BE2                DELADJ
+            # 09:39:16.648    1                   IPEXT
+            # 07:05:24        2                   CONFIG NEWADJ
+            # 16:15:03.822    2  BE2              DELADJ
+            # 00:02:36        1    
             result = r3.match(line)
             if result:
                 group = result.groupdict()
@@ -772,14 +774,19 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
                 count = int(group['count'])
                 interface = group['interface']
                 triggers = group['triggers']
-                timestamp_dict = log_date_dict\
-                    .setdefault('timestamp', {})\
-                    .setdefault(timestamp, {})
-
-                timestamp_dict['count'] = count
+                lsp_log_dict = instance_dict\
+                    .setdefault('lsp_log', {})\
+                    .setdefault(log_index, {})
+                lsp_log_dict['count'] = count
+                lsp_log_dict['level'] = level
                 if interface:
-                    timestamp_dict['interface'] = interface
-                timestamp_dict['triggers'] = triggers
+                    lsp_log_dict['interface'] = Common\
+                        .convert_intf_name(interface)
+                if triggers:
+                    lsp_log_dict['triggers'] = triggers
+                lsp_log_dict['received_timestamp'] = ('{} {}'\
+                    .format(log_date, timestamp)).strip()
+                log_index += 1
 
                 continue
 
