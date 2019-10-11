@@ -244,34 +244,29 @@ class ShowBgpSuperParser(ShowBgpSchema):
         # * i                  10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
         #                      0.0.0.0                  0         32768 ?
         # *>                    0.0.0.0                 0         32768 ?
+        # r>                    0.0.0.0                 0         32768 ?
+        # *m                    0.0.0.0                 0         32768 ?
         # * i                  ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
-        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|\s)+)?'
+        p3_2 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|\*|\>|m|r|\s)+)?'
                           '(?P<path_type>(i|e|c|l|a|r|I))?\s{10,20}'
                           '(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                          ' +(?P<metric>[0-9]+)?'
-                            '(?P<space>\s{1,4})'
-                          ' +(?P<local_prf>[0-9]+)?'
-                            '(?P<space1>\s{1,6})'
-                          ' +(?P<weight>[0-9]+)'
+                          ' +(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +(?P<weight>\d+)'
                           '(?P<termination>[\s\S]+)$')
 
         # Network            Next Hop            Metric     LocPrf     Weight Path
         # *    10.36.3.0/24       10.36.3.254                0             0 65530 ?
         # *>   10.1.1.0/24     0.0.0.0                  0         32768 ?
         # *>i 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
+        # *m 10.1.2.0/24      10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
         # *>i 615:11:11::/64   ::FFFF:10.4.1.1        2219    100      0 200 33299 51178 47751 {27016} e
         # *>  100:2051:VEID-2:Blk-1/136
-        p4 = re.compile(r'^\s*(?P<status_codes>(s|x|S|d|h|r|\*|\>|\s)+)?'
-                        '(?P<path_type>(i|e|c|l|a|r|I))?'
-                        ' +(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+)'
-                        ' +(?P<next_hop>[a-zA-Z0-9\.\:]+)'
-                        '(?P<space1>\s{5,18})'
-                        '(?P<metric>[0-9]+)?'
-                        '(?P<space2>\s{4,8}?)'
-                        '(?P<local_prf>[0-9]+)?'
-                        '(?P<space3>\s{1,12})'
-                        '(?P<weight>[0-9]+)'
-                        '(?P<path>[0-9\s\S\{\}]+)$')
+        p4 = re.compile(r'^\s*(?P<status_codes>(?:s|x|S|d|h|m|r|\*|\>|\s)+)?'
+                         '(?P<path_type>(?:i|e|c|l|a|r|I))? +'
+                         '(?P<prefix>[a-zA-Z0-9\.\:\/\-\[\]]+) +'
+                         '(?P<next_hop>[a-zA-Z0-9\.\:]+) +'
+                         '(?P<metric>(?:\d+(?=[ \d]{13}\d ))?) +'
+                         '(?P<local_prf>(?:\d+(?=[ \d]{6}\d ))?) +'
+                         '(?P<weight>\d+)(?P<path>[0-9 \S\{\}]+)$')
 
         # AF-Private Import to Address-Family: L2VPN E-VPN, Pfx Count/Limit: 2/1000
         p5 = re.compile(r'^\s*AF-Private +Import +to +Address-Family:'
@@ -322,6 +317,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
                 if m.groupdict()['prefix']:
                     prefix = str(m.groupdict()['prefix'])
                 index = 0
+                continue
 
             #     Network          Next Hop            Metric LocPrf Weight Path
             # * i                  10.4.1.1               2219    100      0 200 33299 51178 47751 {27016} e
@@ -435,7 +431,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
 
                 if m.groupdict()['path']:
                     path_1 = m.groupdict()['path']
-                    m3 = re.compile(r'(?: *(?P<path_inner>[0-9\{\}\s]+))?'
+                    m3 = re.compile(r'(?: *(?P<path_inner>[0-9\{\}\s\,]+))?'
                                     ' +(?P<origin_codes_inner>(i|e|\?|\|))$').match(path_1)
                     if m3:
                         path_data = m3.groupdict()['path_inner']
@@ -564,7 +560,8 @@ class ShowBgpSuperParser(ShowBgpSchema):
                 # Init routes dict
                 if 'routes' not in af_dict:
                     del af_dict
-                    continue
+
+                continue
 
         return route_dict
 
