@@ -2,6 +2,8 @@
 import unittest
 from unittest.mock import Mock
 
+import genie.gre
+
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
@@ -9,6 +11,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.iosxr.show_isis import (
     ShowIsis,
     ShowIsisSpfLog,
+    ShowIsisSpfLogDetail,
     ShowIsisHostname,
     ShowIsisProtocol,
     ShowIsisNeighbors,
@@ -765,6 +768,144 @@ class TestShowIsisSpfLog(unittest.TestCase):
         obj = ShowIsisSpfLog(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_2)
+
+class TestShowIsisSpfLogDetail(unittest.TestCase):
+    ''' Unit tests for commands/parsers
+        * show isis spf-log detail/ShowIsisSpfLogDetail
+    '''
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output_1 = {
+        "instance": {
+            "isp": {
+                "address_family": {
+                    "IPv4 Unicast": {
+                        "spf_log": {
+                            1: {
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "level": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "12a5.00-00",
+                                "triggers": "NEWLSP0",
+                                "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
+                                "delay": "51ms (since first trigger)",
+                                "spt": {"cpu_time": 0, "real_time": 0},
+                                "prefix_update": {"cpu_time": 1, "real_time": 1},
+                                "new_lsp_arrivals": 0,
+                                "next_wait_interval_ms": 200,
+                                "results": {
+                                    "nodes": {
+                                        "reach": 1, 
+                                        "unreach": 0, 
+                                        "total": 1},
+                                    "prefixes": {
+                                        "items": {
+                                            "priority": {
+                                                "critical": {
+                                                    "reach": 0,
+                                                    "unreach": 0,
+                                                    "total": 0,
+                                                },
+                                                "high": {
+                                                    "reach": 0,
+                                                    "unreach": 0,
+                                                    "total": 0,
+                                                },
+                                                "medium": {
+                                                    "reach": 0,
+                                                    "unreach": 0,
+                                                    "total": 0,
+                                                },
+                                                "low": {
+                                                    "reach": 0,
+                                                    "unreach": 0,
+                                                    "total": 0,
+                                                },
+                                                "all": {
+                                                    "reach": 0,
+                                                    "unreach": 0,
+                                                    "total": 0,
+                                                },
+                                            }
+                                        },
+                                        "routes": {
+                                            "priority": {
+                                                "critical": {
+                                                    "reach": 0, 
+                                                    "total": 0},
+                                                "high": {
+                                                    "reach": 0, 
+                                                    "total": 0},
+                                                "medium": {
+                                                    "reach": 0, 
+                                                    "total": 0},
+                                                "low": {
+                                                    "reach": 0, "total": 0},
+                                                "all": {"reach": 0, 
+                                                "total": 0},
+                                            }
+                                        },
+                                    },
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        # show isis spf-log detail
+          
+              ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+                           Time  Total Trig
+          Timestamp   Type (ms)  Nodes Count First Trigger LSP   Triggers
+            Mon Aug 16 2004
+          19:25:35.140  FSPF  1    1     1             12a5.00-00 NEWLSP0
+            Delay:              51ms (since first trigger)
+            SPT Calculation
+              CPU Time:         0ms
+              Real Time:        0ms
+            Prefix Updates
+              CPU Time:         1ms
+              Real Time:        1ms
+            New LSP Arrivals:    0
+            Next Wait Interval: 200ms
+                                        Results
+                                  Reach Unreach Total
+             Nodes:                   1       0     1
+             Prefixes (Items)
+               Critical Priority:     0       0     0
+               High Priority:         0       0     0 
+               Medium Priority        0       0     0 
+               Low Priority           0       0     0 
+          
+               All Priorities         0       0     0
+             Prefixes (Routes)
+               Critical Priority:     0       -     0
+               High Priority:         0       -     0
+               Medium Priority        0        -    0
+               Low Priority:          0        -    0
+          
+               All Priorities         0        -    0
+    '''}
+
+    def test_empty_output(self):
+        device = Mock(**self.empty_output)
+        obj = ShowIsisSpfLogDetail(device=device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()        
+
+    def test_golden_output_1(self):
+        device = Mock(**self.golden_output_1)
+        obj = ShowIsisSpfLogDetail(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_1)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
