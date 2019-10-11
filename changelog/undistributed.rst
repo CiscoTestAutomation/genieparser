@@ -97,9 +97,13 @@
         'show segment-routing mpls lb assigned-sids'
     * Update ShowPceIPV4PeerPrefix
         * Removed typo from 'pcs' to 'pce' in show command
+
 * IOSXR
     * Updated ShowPceIpv4TopologySummary:
         * Updated schema and add regex
+
+
+
 --------------------------------------------------------------------------------
                               Controllers
 --------------------------------------------------------------------------------
@@ -442,7 +446,11 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+
         
 --------------------------------------------------------------------------------
                                 Route
@@ -476,6 +484,7 @@
         * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
+    * Updated ShowL2vpnBridgeDomain to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
@@ -517,6 +526,10 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+
+    * Added ShowIsisSpfLog for:
+        * show isis spf-log
+
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:

@@ -518,9 +518,11 @@ class ShowPceIPV4PeerPrefix(ShowPceIPV4PeerprefixSchema):
         * show pce ipv4 prefix
     '''
 
+
     cli_command = 'show pcs ipv4 prefix'
 
     def cli(self, output=None):
+
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
