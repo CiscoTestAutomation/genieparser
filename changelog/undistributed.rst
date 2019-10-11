@@ -510,6 +510,7 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+    * Updated ShowIsis to support different outputs
 
 --------------------------------------------------------------------------------
                                 Interface
