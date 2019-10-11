@@ -158,6 +158,86 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
               Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
     '''}
 
+    golden_parsed_output2 = {
+        'bridge_group': {
+            'EVPN-Mulicast': {
+                'bridge_domain': {
+                    'EVPN-Multicast-BTV': {
+                        'id': 0,
+                        'state': 'up',
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'mac_aging_time': 300,
+                        'mac_limit': 4000,
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
+                        'filter_mac_address': 0,
+                        'ac': {
+                            'num_ac': 3,
+                            'num_ac_up': 2,
+                            'interfaces': {
+                                'BV100': {
+                                    'state': 'up',
+                                    'bvi_mac_address': 1,
+                                },
+                                'Bundle-Ether3.100': {
+                                    'state': 'down',
+                                    'static_mac_address': 0,
+                                    'mst_i': 5,
+                                },
+                                'Bundle-Ether4.100': {
+                                    'state': 'up',
+                                    'static_mac_address': 0,
+                                    'mst_i': 5,
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 0,
+                        },
+                        'pw': {
+                            'num_pw': 0,
+                            'num_pw_up': 0,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                        'evpn': {
+                            'EVPN': {
+                                'state': 'up',
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output2 = {'execute.return_value': '''
+        show l2vpn bridge-domain
+
+        Mon Oct  7 16:18:58.402 EDT
+        Legend: pp = Partially Programmed.
+        Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+        Filter MAC addresses: 0
+        ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of EVPNs:
+            EVPN, state: up
+        List of ACs:
+            BV100, state: up, BVI MAC addresses: 1
+            BE3.100, state: down, Static MAC addresses: 0, MSTi: 5
+            BE4.100, state: up, Static MAC addresses: 0, MSTi: 5
+        List of Access PWs:
+        List of VFIs:
+        List of Access VFIs:
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomain(device=self.device)
@@ -170,6 +250,13 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         obj = ShowL2vpnBridgeDomain(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+    
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowL2vpnBridgeDomain(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
 
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding bridge-domain mac-address location {location}'
