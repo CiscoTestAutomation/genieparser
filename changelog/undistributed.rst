@@ -261,6 +261,8 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
+    * Updated ShowStaticTopologyDetail:
+        * Support more varied output
 
 --------------------------------------------------------------------------------
                                 INVENTORY
