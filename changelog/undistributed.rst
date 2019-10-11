@@ -517,6 +517,8 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added ShowIsisSpfLog for:
+        * show isis spf-log
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:

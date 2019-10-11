@@ -9,6 +9,7 @@ IOSXR parsers for the following show commands:
     * show isis instance {instance} hostname
     * show isis statistics
     * show isis protocol
+    * show isis spf-log
 
 """
 
@@ -1499,3 +1500,119 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 continue
 
         return parsed_dict
+
+class ShowIsisSpfLogSchema(MetaParser):
+    ''' Schema for command
+        * show isis spf-log
+    '''
+    schema = {
+        'instance': {
+            Any():{
+                'address_family': {
+                    Any(): {
+                        'spf_log': {
+                            Any(): {
+                                'type': str,
+                                'start_timestamp': str,
+                                'time_ms': int,
+                                'level': int,
+                                'total_nodes': int,
+                                'trigger_count': int,
+                                Optional('first_trigger_lsp'): str,
+                                'triggers': str,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIsisSpfLog(ShowIsisSpfLogSchema):
+    ''' Parser for commands:
+        * show isis spf-log
+    '''
+
+    cli_command = 'show isis spf-log'
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # IS-IS TEST Level 2 IPv4 Unicast Route Calculation Log
+        r1 = re.compile(r'IS\-IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)'
+                         '\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
+
+        # --- Mon Oct  7 2019 ---
+        r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\s\w]+)\s+\-\-\-')
+
+        #                     Time Total Trig.
+        # Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+        # ------------ ----- ----- ----- ----- -------------------- -----------------------
+        # 00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD
+        # 23:42:51.522 PPFRR     0    64     1                      PERPREFIXFRR
+        r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<log_type>\S+)\s+(?P<time_ms>\d+)'
+                         '\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
+                         '(?P<first_trigger_lsp>\S*)\s+(?P<triggers>[\w\s]+)')
+
+        parsed_output = {}
+        log_index = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS TEST Level 2 IPv4 Unicast Route Calculation Log
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                level = int(group['level'])
+                address_family = group['address_family']
+                instance_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})
+
+                continue
+
+            # --- Mon Oct  7 2019 ---
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                log_date = group['log_date']
+
+                continue
+
+            #                     Time Total Trig.
+            # Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+            # ------------ ----- ----- ----- ----- -------------------- -----------------------
+            # 00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD
+            # 23:42:51.522 PPFRR     0    64     1                      PERPREFIXFRR
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp = group['timestamp']
+                log_type = group['log_type']
+                time_ms = int(group['time_ms'])
+                total_nodes = int(group['total_nodes'])
+                trigger_count = int(group['trigger_count'])
+                first_trigger_lsp = group['first_trigger_lsp']
+                triggers = group['triggers']
+                index_dict = instance_dict\
+                    .setdefault('spf_log', {})\
+                    .setdefault(log_index, {})  
+                index_dict['start_timestamp'] = "{} {}".format(log_date, timestamp)
+                index_dict['level'] = level
+                index_dict['type'] = log_type
+                index_dict['time_ms'] = time_ms
+                index_dict['total_nodes'] = total_nodes
+                index_dict['trigger_count'] = trigger_count
+                if first_trigger_lsp:
+                    index_dict['first_trigger_lsp'] = first_trigger_lsp
+                index_dict['triggers'] = triggers
+                log_index += 1
+
+                continue
+
+        return parsed_output
