@@ -204,6 +204,9 @@
 * NXOS
     * Updated ShowRunningConfigPim:
         changed logic to support calling from device.parse
+* IOSXR
+    * Updated ShowPimVrfInterfaceDetail:
+        For handling more varied output
 
 --------------------------------------------------------------------------------
                                 VRF

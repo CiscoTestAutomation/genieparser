@@ -206,10 +206,10 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             #                                 Count Intvl  Prior
 
             # Loopback0                   on   1     30     1
-            p3 = re.compile(r'^\s*(?P<interface>(\S+)) +(?P<oper_status>(\S+))'
-                             ' +(?P<nbr_count>[0-9]+)'
-                             ' +(?P<hello_interval>[0-9]+)'
-                             ' +(?P<dr_priority>[0-9]+)$')
+            # Loopback0off                  1     30     1
+            p3 = re.compile(r'^\s*(?P<interface>(\S+)) *(?P<oper_status>(on|off)) +'
+                             '(?P<nbr_count>[0-9]+) +(?P<hello_interval>[0-9]+) +'
+                             '(?P<dr_priority>[0-9]+)$')
             m = p3.match(line)
             if m:
                 # Get values
