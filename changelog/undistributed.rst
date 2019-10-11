@@ -473,6 +473,7 @@
         * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
+    * Updated ShowL2vpnBridgeDomain to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
