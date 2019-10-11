@@ -438,6 +438,7 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
         
 --------------------------------------------------------------------------------
@@ -472,6 +473,7 @@
         * show l2vpn forwarding bridge-domain {bridge_domain} mac-address location {location}
     * Added ShowL2vpnForwardingProtectionMainInterface for:  
         * show l2vpn forwarding protection main-interface location {location}
+    * Updated ShowL2vpnBridgeDomain to support more outputs
 
 --------------------------------------------------------------------------------
                                 MODULE
@@ -496,6 +498,13 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunningConfigNtp to support different vrfs output
+--------------------------------------------------------------------------------
+                                PROCESSES
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added parser ShowProcesses for:
+        * show processes 
+        * show processes {process}
 
 --------------------------------------------------------------------------------
                                 ISIS
@@ -506,6 +515,8 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added ShowIsisSpfLog for:
+        * show isis spf-log
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:
@@ -515,6 +526,8 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
 --------------------------------------------------------------------------------
                                 Interface
