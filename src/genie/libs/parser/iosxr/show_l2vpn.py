@@ -712,6 +712,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
     """Schema for show l2vpn bridge-domain detail
     """
     schema = {
+        Optional('legend'): str,
         'bridge_group': {
             Any(): {
                 'bridge_domain': {
@@ -733,10 +734,33 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         Optional('mac_limit_action'): str,
                         Optional('mac_limit_notification'): str,
                         Optional('mac_limit_reached'): str,
+                        Optional('mac_port_down_flush'): str,
+                        Optional('mac_withdraw_sent_on'): str,
+                        Optional('mac_secure'): str,
+                        Optional('mac_withdraw_relaying'): str,
+                        Optional('mac_withdraw_for_access_pw'): str,
+                        Optional('mac_logging'): str,
+                        Optional('dynamic_arp_inspection'): str,
+                        Optional('dynamic_arp_logging'): str,
+                        Optional('ip_source_logging'): str,
+                        Optional('coupled_state'): str,
                         Optional('security'): str,
                         Optional('dhcp_v4_snooping'): str,
-                        'mtu': int,
+                        Optional('dhcp_v4_snooping_profile'): str,
+                        Optional('igmp_snooping'): str,
+                        Optional('igmp_snooping_profile'): str,
+                        Optional('mld_snooping_profile'): str,
+                        Optional('threshold'): str,
+                        Optional('mid_cvpls_config_index'): str,
+                        Optional('p2mp_pw'): str,
+                        Optional('mtu'): int,
+                        Optional('bridge_mtu'): str,
                         Optional('filter_mac_address'): int,
+                        Optional('storm_control'): str,
+                        Optional('ip_source_guard'): str,
+                        Optional('create_time'): str,
+                        Optional('split_horizon_group'): str,
+                        Optional('vine_state'): str,
                         'ac': {
                             'num_ac': int,
                             'num_ac_up': int,
@@ -744,10 +768,11 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                 Any(): {
                                     'state': str,
                                     'type': str,
+                                    Optional('num_ranges'): str,
                                     Optional('mac_aging_type'): str,
                                     Optional('mtu'): int,
                                     'xc_id': str,
-                                    'interworking': str,
+                                    Optional('interworking'): str,
                                     Optional('mst_i'): int,
                                     Optional('mst_i_state'): str,
                                     Optional('mac_learning'): str,
@@ -762,8 +787,13 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Optional('mac_limit_reached'): str,
                                     Optional('security'): str,
                                     Optional('dhcp_v4_snooping'): str,
+                                    Optional('dhcp_v4_snooping_profile'): str,
+                                    Optional('igmp_snooping'): str,
+                                    Optional('igmp_snooping_profile'): str,
+                                    Optional('mld_snooping_profile'): str,
+                                    Optional('threshold'): str,
                                     Optional('static_mac_address'): list,
-                                    'statistics': {
+                                    Optional('statistics'): {
                                         'packet_totals': {
                                             'receive': int,
                                             'send': int,
@@ -834,6 +864,14 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                             'num_pw': int,
                             'num_pw_up': int,
                         },
+                        Optional('pbb'): {
+                            'num_pbb': int,
+                            'num_pbb_up': int,
+                        },
+                        Optional('vni'): {
+                            'num_vni': int,
+                            'num_vni_up': int,
+                        },
                     },
                 }
             }
@@ -884,35 +922,51 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p8 = re.compile(r'^MAC +limit: +(?P<mac_limit>\d+), +Action: +(?P<action>\S+), +Notification: +(?P<notification>\S+)$')
 
         # MAC limit reached: yes
-        p9 = re.compile(r'^MAC +limit +reached: +(?P<mac_limit_reached>\S+)$')
+        p9 = re.compile(r'^MAC +limit +reached: +(?P<mac_limit_reached>\S+)(, +threshold: +(?P<threshold>\S+))?$')
 
         # Security: disabled
         p10 = re.compile(r'^Security: +(?P<security>\S+)$')
 
         # DHCPv4 snooping: disabled
-        p11 = re.compile(r'DHCPv4 +snooping: +(?P<dhcp_v4_snooping>\S+)$')
+        # DHCPv4 Snooping: disabled
+        p11 = re.compile(r'^DHCPv4 +(s|S)nooping: +(?P<dhcp_v4_snooping>\S+)$')
 
+        # DHCPv4 Snooping profile: none
+        p11_1 = re.compile(r'^DHCPv4 +(s|S)nooping profile: +(?P<dhcp_v4_snooping_profile>\S+)$')
+
+        # IGMP Snooping: disabled
+        p11_2 = re.compile(r'IGMP +(s|S)nooping: +(?P<igmp_snooping>\S+)$')
+
+        # IGMP Snooping profile: none
+        p11_3 = re.compile(r'^IGMP +(s|S)nooping profile: +(?P<igmp_snooping_profile>\S+)$')
+
+        # MLD Snooping profile: none
+        p11_4 = re.compile(r'^MLD +(s|S)nooping profile: +(?P<mld_snooping_profile>\S+)$')
+        
         # MTU: 1500
-        p12 = re.compile(r'MTU: +(?P<mtu>\d+)$')
+        p12 = re.compile(r'^MTU: +(?P<mtu>\d+)$')
 
         # Filter MAC addresses:
         p13 = re.compile(r'^Filter +MAC +addresses:( +(?P<filter_mac_addresses>\d+))?$')
 
         # ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
-        p14 = re.compile(r'ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +(?P<vfi>\d+), +PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +up\)$')
+        # ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        p14 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +(?P<vfi>\d+), +PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +up\)(, +PBBs: +(?P<pbb>\d+) +\((?P<pbb_up>\d+) +up\))?(, +VNIs: +(?P<vni>\d+) +\((?P<vni_up>\d+) +up\))?$')
 
         # List of ACs:
-        p15 = re.compile(r'List +of +ACs:$')
+        p15 = re.compile(r'^List +of +ACs:$')
 
         # AC: GigabitEthernet0/1/0/0, state is up
         # AC: GigabitEthernet0/5/1/4, state is admin down
-        p16 = re.compile(r'AC: +(?P<interface>\S+), +state +is +(?P<state>[\S ]+)$')
+        p16 = re.compile(r'^AC: +(?P<interface>\S+), +state +is +(?P<state>[\S ]+)$')
 
         # Type Ethernet
-        p17 = re.compile(r'Type +(?P<type>\S+)$')
+        p17 = re.compile(r'^Type +(?P<type>\S+)(; +Num +Ranges: +(?P<num_ranges>\d+))?$')
 
         # MTU 1500; XC ID 0x2000001; interworking none; MSTi 0 (unprotected)
-        p18 = re.compile(r'MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); +interworking +(?P<interworking>\S+); +MSTi +(?P<mst_i>\d+) +\((?P<mst_i_state>\w+)\)$')
+        # MTU 1514; XC ID 0x8000000b; interworking none
+        # MTU 9202; XC ID 0xc0000002; interworking none; MSTi 5
+        p18 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); +interworking +(?P<interworking>\S+)(; +MSTi +(?P<mst_i>\d+))?( +\((?P<mst_i_state>\w+)\))?$')
 
         # Type Ethernet      MTU 1500; XC ID 1; interworking none
         p18_1 = re.compile(r'Type +(?P<pw_type>\S+) +MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\d+); +interworking +(?P<interworking>\S+)$')
@@ -993,6 +1047,57 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
 
         # (control word)                 (control word)  
         p42 = re.compile(r'^\([\S ]+\)$')
+
+        # Mon Oct  7 16:18:59.168 EDT
+        p43 = re.compile(r'^[Wed|Thu|Fri|Sat|Sun|Mon|Tue]+ +'
+                        '[Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec]+ +'
+                        '\d{1,2} +\d{1,2}:\d{1,2}:\d{1,2}[\.]\d{1,3} +[A-Z]{3}')
+
+        # Legend: pp = Partially Programmed.
+        p44 = re.compile(r'^Legend: +(?P<legend>[\S ]+)$')
+
+        # Coupled state: disabled
+        p45 = re.compile(r'^Coupled +state: +(?P<coupled_state>\S+)$')
+
+        # VINE state: EVPN-IRB
+        p46 = re.compile(r'^VINE +state: +(?P<vine_state>\S+)')
+
+        # MAC withdraw for Access PW: enabled
+        p47 = re.compile(r'^MAC +withdraw +for +Access +PW: +(?P<mac_withdraw_for_access_pw>\S+)$')
+
+        # MAC withdraw sent on: bridge port up
+        p48 = re.compile(r'^MAC +withdraw +sent +on: +(?P<mac_withdraw_sent_on>[\S ]+)$')
+
+        # MAC withdraw relaying (access to access): disabled
+        p49 = re.compile(r'^MAC +withdraw +relaying \(access +to +access\): +(?P<mac_withdraw_relaying>[\S ]+)$')
+
+        # MAC port down flush: enabled
+        p50 = re.compile(r'^MAC +port +down +flush: +(?P<mac_port_down_flush>\S+)$')
+
+        #  MAC Secure: disabled, Logging: disabled
+        p51 = re.compile(r'^MAC +Secure: +(?P<mac_secure>\w+), +Logging: +(?P<mac_logging>\w+)$')
+
+        # Split Horizon Group: none
+        p52 = re.compile(r'^Split +Horizon +Group: +(?P<split_horizon_group>\S+)$')
+
+        # Dynamic ARP Inspection: disabled, Logging: disabled
+        p53 = re.compile(r'^Dynamic +ARP +Inspection: +(?P<dynamic_arp_inspection>\w+), +Logging: +(?P<dynamic_arp_logging>\w+)$')
+
+        # IP Source Guard: disabled, Logging: disabled
+        p54 = re.compile(r'^IP +Source +Guard: +(?P<ip_source_guard>\w+), +Logging: +(?P<ip_source_logging>\w+)$')
+
+        # Storm Control: disabled
+        p56 = re.compile(r'^Storm +Control: +(?P<storm_control>\w+)$')
+
+        # Bridge MTU: 1500
+        p57 = re.compile(r'^Bridge +MTU: +(?P<bridge_mtu>\S+)$')
+
+        # MIB cvplsConfigIndex: 1
+        p58 = re.compile(r'^MIB +cvplsConfigIndex: (?P<mid_cvpls_config_index>\d+)$')
+
+        # P2MP PW: disabled
+        p59 = re.compile(r'^P2MP +PW: +(?P<p2mp_pw>\S+)$')
+
 
         for line in out.splitlines():
             original_line = line
@@ -1112,16 +1217,21 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 continue
 
             # MAC limit reached: yes
+            # MAC limit reached: no, threshold: 75%
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 mac_limit_reached = group['mac_limit_reached']
                 bridge_domain_dict.update({'mac_limit_reached': mac_limit_reached})
-
+                threshold = group['threshold']
                 if dict_type == 'bridge_domain':
                     bridge_domain_dict.update({'mac_limit_reached': mac_limit_reached})
+                    if threshold:
+                        bridge_domain_dict.update({'threshold': threshold})
                 else:
                     interface_dict.update({'mac_limit_reached': mac_limit_reached})
+                    if threshold:
+                        interface_dict.update({'threshold': threshold})
                 continue
 
             # Security: disabled
@@ -1144,6 +1254,50 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                     bridge_domain_dict.update({'dhcp_v4_snooping': dhcp_v4_snooping})
                 else:
                     interface_dict.update({'dhcp_v4_snooping': dhcp_v4_snooping})
+                continue
+
+            # DHCPv4 Snooping profile: none
+            m = p11_1.match(line)
+            if m:
+                group = m.groupdict()
+                dhcp_v4_snooping_profile = group['dhcp_v4_snooping_profile']
+                if dict_type == 'bridge_domain':
+                    bridge_domain_dict.update({'dhcp_v4_snooping_profile': dhcp_v4_snooping_profile})
+                else:
+                    interface_dict.update({'dhcp_v4_snooping_profile': dhcp_v4_snooping_profile})
+                continue
+
+            # IGMP Snooping: disabled
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_snooping = group['igmp_snooping']
+                if dict_type == 'bridge_domain':
+                    bridge_domain_dict.update({'igmp_snooping': igmp_snooping})
+                else:
+                    interface_dict.update({'igmp_snooping': igmp_snooping})
+                continue
+
+            # IGMP Snooping profile: none
+            m = p11_3.match(line)
+            if m:
+                group = m.groupdict()
+                igmp_snooping_profile = group['igmp_snooping_profile']
+                if dict_type == 'bridge_domain':
+                    bridge_domain_dict.update({'igmp_snooping_profile': igmp_snooping_profile})
+                else:
+                    interface_dict.update({'igmp_snooping_profile': igmp_snooping_profile})
+                continue
+
+            # MLD Snooping profile: none
+            m = p11_4.match(line)
+            if m:
+                group = m.groupdict()
+                mld_snooping_profile = group['mld_snooping_profile']
+                if dict_type == 'bridge_domain':
+                    bridge_domain_dict.update({'mld_snooping_profile': mld_snooping_profile})
+                else:
+                    interface_dict.update({'mld_snooping_profile': mld_snooping_profile})
                 continue
 
             # MTU: 1500
@@ -1183,6 +1337,21 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 pw_dict = bridge_domain_dict.setdefault('pw', {})
                 pw_dict.update({'num_pw': pw})
                 pw_dict.update({'num_pw_up': pw_up})
+
+                pbb = group['pbb']
+                pbb_up = group['pbb_up']
+                if pbb:
+                    pbb_dict = bridge_domain_dict.setdefault('pbb', {})
+                    pbb_dict.update({'num_pbb': int(pbb)})
+                    pbb_dict.update({'num_pbb_up': int(pbb_up)})
+
+                vni = group['vni']
+                vni_up = group['vni_up']
+                if vni:
+                    vni_dict = bridge_domain_dict.setdefault('vni', {})
+                    vni_dict.update({'num_vni': int(vni)})
+                    vni_dict.update({'num_vni_up': int(vni_up)})
+
                 continue
 
             # List of ACs:
@@ -1207,23 +1376,30 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 group = m.groupdict()
                 ac_type = group['type']
+                num_ranges = group['num_ranges']
                 interface_dict.update({'type': ac_type})
+                if num_ranges:
+                    interface_dict.update({'num_ranges': num_ranges})
                 continue
             
             # MTU 1500; XC ID 0x2000001; interworking none; MSTi 0 (unprotected)
+            # MTU 1514; XC ID 0x8000000b; interworking none
+            # MTU 9202; XC ID 0xc0000002; interworking none; MSTi 5
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 mtu = int(group['mtu'])
                 xc_id = group['xc_id']
                 interworking = group['interworking']
-                mst_i = int(group['mst_i'])
-                mst_i_state = group['mst_i_state']
                 interface_dict.update({'mtu': mtu})
                 interface_dict.update({'xc_id': xc_id})
                 interface_dict.update({'interworking': interworking})
-                interface_dict.update({'mst_i': mst_i})
-                interface_dict.update({'mst_i_state': mst_i_state})
+                mst_i = group['mst_i']
+                if mst_i:
+                    interface_dict.update({'mst_i': int(mst_i)})
+                mst_i_state = group['mst_i_state']
+                if mst_i_state:
+                    interface_dict.update({'mst_i_state': mst_i_state})
                 continue
 
             # Type Ethernet      MTU 1500; XC ID 1; interworking none
@@ -1387,7 +1563,10 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             if m:
                 group = m.groupdict()
                 create_time = group['create_time']
-                pw_id_dict.update({'create_time': create_time})
+                if dict_type == 'bridge_domain':
+                    bridge_domain_dict.update({'create_time': create_time})
+                else:
+                    pw_id_dict.update({'create_time': create_time})
                 continue
 
             # Last time status changed: 13/03/2008 05:57:58 (01:22:31 ago)
@@ -1418,6 +1597,11 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p40.match(line)
             if m:
                 continue
+            
+            # Mon Oct  7 16:18:59.168 EDT
+            m = p43.match(line)
+            if m:
+                continue
 
             # VFI 1
             m = p25.match(line)
@@ -1441,6 +1625,131 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 drop_dict.update({'illegal_length': illegal_length})
                 continue
             
+            # Legend: pp = Partially Programmed.
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                legend = group['legend']
+                ret_dict.update({'legend': legend})
+                continue
+
+            # Coupled state: disabled
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                coupled_state = group['coupled_state']
+                bridge_domain_dict.update({'coupled_state': coupled_state})
+                continue
+
+            # VINE state: EVPN-IRB
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                vine_state = group['vine_state']
+                bridge_domain_dict.update({'vine_state': vine_state})
+                continue
+
+            # MAC withdraw for Access PW: enabled
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                mac_withdraw_for_access_pw = group['mac_withdraw_for_access_pw']
+                bridge_domain_dict.update({'mac_withdraw_for_access_pw': mac_withdraw_for_access_pw})
+                continue
+
+            # MAC withdraw sent on: bridge port up
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                mac_withdraw_sent_on = group['mac_withdraw_sent_on']
+                bridge_domain_dict.update({'mac_withdraw_sent_on': mac_withdraw_sent_on})
+                continue
+
+            # MAC withdraw relaying (access to access): disabled
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                mac_withdraw_relaying = group['mac_withdraw_relaying']
+                bridge_domain_dict.update({'mac_withdraw_relaying': mac_withdraw_relaying})
+                continue
+
+            # MAC port down flush: enabled
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                mac_port_down_flush = group['mac_port_down_flush']
+                bridge_domain_dict.update({'mac_port_down_flush': mac_port_down_flush})
+                continue
+
+            #  MAC Secure: disabled, Logging: disabled
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                mac_secure = group['mac_secure']
+                mac_logging = group['mac_logging']
+                bridge_domain_dict.update({'mac_secure': mac_secure})
+                bridge_domain_dict.update({'mac_logging': mac_logging})
+                continue
+
+            # Split Horizon Group: none
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                split_horizon_group = group['split_horizon_group']
+                bridge_domain_dict.update({'split_horizon_group': split_horizon_group})
+                continue
+
+            # Dynamic ARP Inspection: disabled, Logging: disabled
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                dynamic_arp_inspection = group['dynamic_arp_inspection']
+                dynamic_arp_logging = group['dynamic_arp_logging']
+                bridge_domain_dict.update({'dynamic_arp_inspection': dynamic_arp_inspection})
+                bridge_domain_dict.update({'dynamic_arp_logging': dynamic_arp_logging})
+                continue
+
+            # IP Source Guard: disabled, Logging: disabled
+            m = p54.match(line)
+            if m:
+                group = m.groupdict()
+                ip_source_guard = group['ip_source_guard']
+                ip_source_logging = group['ip_source_logging']
+                bridge_domain_dict.update({'ip_source_guard': ip_source_guard})
+                bridge_domain_dict.update({'ip_source_logging': ip_source_logging})
+                continue
+
+            # Storm Control: disabled
+            m = p56.match(line)
+            if m:
+                group = m.groupdict()
+                storm_control = group['storm_control']
+                bridge_domain_dict.update({'storm_control': storm_control})
+                continue
+
+            # Bridge MTU: 1500
+            m = p57.match(line)
+            if m:
+                group = m.groupdict()
+                bridge_mtu = group['bridge_mtu']
+                bridge_domain_dict.update({'bridge_mtu': bridge_mtu})
+                continue
+
+            # MIB cvplsConfigIndex: 1
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                mid_cvpls_config_index = group['mid_cvpls_config_index']
+                bridge_domain_dict.update({'mid_cvpls_config_index': mid_cvpls_config_index})
+                continue
+
+            # P2MP PW: disabled
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                p2mp_pw = group['p2mp_pw']
+                bridge_domain_dict.update({'p2mp_pw': p2mp_pw})
+                continue
 
             #     (LSP ping verification)               
             #                                    (none)
@@ -1470,29 +1779,26 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
             m = p33.match(line)
             if m:
-                try:
-                    group = m.groupdict()
-                    mpls = group['mpls'].strip().lower().replace(' ','_')
-                    local = group['local'].strip()
-                    remote = group['remote']
-                    if mpls == 'interface':
-                        if interface_found:
-                            interface_dict = pw_id_dict.setdefault('mpls', {}). \
-                                setdefault('monitor_interface', {})
-                            interface_dict.update({'local': local})
-                            interface_dict.update({'remote': remote})
-                        else:
-                            interface_found = True
-                            mpls_dict = pw_id_dict.setdefault('mpls', {}). \
-                                setdefault(mpls, {})
-                            mpls_dict.update({'local': local})
-                            mpls_dict.update({'remote': remote})
+                group = m.groupdict()
+                mpls = group['mpls'].strip().lower().replace(' ','_')
+                local = group['local'].strip()
+                remote = group['remote']
+                if mpls == 'interface':
+                    if interface_found:
+                        interface_dict = pw_id_dict.setdefault('mpls', {}). \
+                            setdefault('monitor_interface', {})
+                        interface_dict.update({'local': local})
+                        interface_dict.update({'remote': remote})
                     else:
+                        interface_found = True
                         mpls_dict = pw_id_dict.setdefault('mpls', {}). \
                             setdefault(mpls, {})
                         mpls_dict.update({'local': local})
                         mpls_dict.update({'remote': remote})
-                except Exception:
-                    print(line)
+                else:
+                    mpls_dict = pw_id_dict.setdefault('mpls', {}). \
+                        setdefault(mpls, {})
+                    mpls_dict.update({'local': local})
+                    mpls_dict.update({'remote': remote})
                 continue
         return ret_dict

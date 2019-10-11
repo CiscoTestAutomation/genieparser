@@ -761,6 +761,108 @@ class TestShowL2vpnBridgeDomainBrief(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+        
+# ==================================================
+#  Unit test for 'show l2vpn bridge-domain summary'
+# ==================================================
+
+class TestShowL2vpnBridgeDomainSummary(unittest.TestCase):
+    '''Unit test for "show l2vpn bridge-domain summary"'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'number_of_groups': 1,
+        'bridge_domains': {
+            'total': 1,
+            'up': 1,
+            'shutdown': 0,
+        },
+        'ac': {
+            'total': 1,
+            'up': 1,
+            'down': 0,
+        },
+        'pw': {
+            'total': 1,
+            'up': 1,
+            'down': 0,
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        Device1# show l2vpn bridge-domain summary
+
+        Number of groups: 1, bridge-domains: 1, Up: 1, Shutdown: 0
+        Number of ACs: 1 Up: 1, Down: 0
+        Number of PWs: 1 Up: 1, Down: 0
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2vpnBridgeDomainSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowL2vpnBridgeDomainSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+# ==================================================
+#  Unit test for 'show l2vpn bridge-domain summary'
+# ==================================================
+
+class TestShowL2vpnBridgeDomainBrief(unittest.TestCase):
+    '''Unit test for "show l2vpn bridge-domain summary"'''
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output1 = {
+        'bridge_group': {
+            'g1': {
+                'bridge_domain': {
+                    'bd1': {
+                        'id': 0,
+                        'state': 'up',
+                        'ac': {
+                            'num_ac': 1,
+                            'num_ac_up': 1,
+                        },
+                        'pw': {
+                            'num_pw': 1,
+                            'num_pw_up': 1,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+    golden_output1 = {'execute.return_value': '''
+        Device1# show l2vpn bridge-domain brief
+
+        Bridge Group/Bridge-Domain Name  ID    State      Num ACs/up     Num PWs/up
+        -------------------------------- ----- ---------- -------------- --------------
+        g1/bd1                           0     up         1/1            1/1 
+    '''}
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowL2vpnBridgeDomainBrief(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        obj = ShowL2vpnBridgeDomainBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 # =================================================
 #  Unit test for 'show l2vpn bridge-domain detail'
@@ -1217,7 +1319,138 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                 drops: illegal VLAN 0, illegal length 0
     '''}
 
-    golden_parsed_output3 = {}
+    golden_parsed_output3 = {
+        'legend': 'pp = Partially Programmed.',
+        'bridge_group': {
+            'EVPN-Mulicast': {
+                'bridge_domain': {
+                    'EVPN-Multicast-BTV': {
+                        'state': 'up',
+                        'id': 0,
+                        'shg_id': 0,
+                        'mst_i': 0,
+                        'coupled_state': 'disabled',
+                        'vine_state': 'EVPN-IRB',
+                        'mac_learning': 'enabled',
+                        'mac_withdraw': 'enabled',
+                        'mac_withdraw_for_access_pw': 'enabled',
+                        'mac_withdraw_sent_on': 'bridge port up',
+                        'mac_withdraw_relaying': 'disabled',
+                        'flooding': {
+                            'broadcast_multicast': 'enabled',
+                            'unknown_unicast': 'enabled',
+                        },
+                        'mac_aging_time': 300,
+                        'mac_aging_type': 'inactivity',
+                        'mac_limit': 4000,
+                        'mac_limit_action': 'none',
+                        'mac_limit_notification': 'syslog',
+                        'mac_limit_reached': 'no',
+                        'threshold': '75%',
+                        'mac_port_down_flush': 'enabled',
+                        'mac_secure': 'disabled',
+                        'mac_logging': 'disabled',
+                        'split_horizon_group': 'none',
+                        'dynamic_arp_inspection': 'disabled',
+                        'dynamic_arp_logging': 'disabled',
+                        'ip_source_guard': 'disabled',
+                        'ip_source_logging': 'disabled',
+                        'dhcp_v4_snooping': 'disabled',
+                        'dhcp_v4_snooping_profile': 'none',
+                        'igmp_snooping': 'disabled',
+                        'igmp_snooping_profile': 'none',
+                        'mld_snooping_profile': 'none',
+                        'storm_control': 'disabled',
+                        'bridge_mtu': '1500',
+                        'mid_cvpls_config_index': '1',
+                        'p2mp_pw': 'disabled',
+                        'create_time': '27/08/2019 09:44:44 (5w6d ago)',
+                        'ac': {
+                            'num_ac': 3,
+                            'num_ac_up': 2,
+                            'interfaces': {
+                                'BVI100': {
+                                    'state': 'up',
+                                    'type': 'Routed-Interface',
+                                    'mtu': 1514,
+                                    'xc_id': '0x8000000b',
+                                    'interworking': 'none',
+                                    'static_mac_address': ['1000.1000.1000'],
+                                },
+                                'Bundle-Ether3.100': {
+                                    'state': 'down (Segment-down)',
+                                    'type': 'VLAN',
+                                    'num_ranges': '1',
+                                    'mtu': 9202,
+                                    'xc_id': '0xc0000002',
+                                    'interworking': 'none',
+                                    'mst_i': 5,
+                                    'mac_learning': 'enabled',
+                                    'flooding': {
+                                        'broadcast_multicast': 'enabled',
+                                        'unknown_unicast': 'enabled',
+                                    },
+                                    'mac_aging_time': 300,
+                                    'mac_aging_type': 'inactivity',
+                                    'mac_limit': 4000,
+                                    'mac_limit_action': 'none',
+                                    'mac_limit_notification': 'syslog',
+                                    'mac_limit_reached': 'no',
+                                    'threshold': '75%',
+                                    'dhcp_v4_snooping': 'disabled',
+                                    'dhcp_v4_snooping_profile': 'none',
+                                    'igmp_snooping': 'disabled',
+                                    'igmp_snooping_profile': 'none',
+                                    'mld_snooping_profile': 'none',
+                                },
+                                'Bundle-Ether4.100': {
+                                    'state': 'up',
+                                    'type': 'VLAN',
+                                    'num_ranges': '1',
+                                    'mtu': 9202,
+                                    'xc_id': '0xc0000004',
+                                    'interworking': 'none',
+                                    'mst_i': 5,
+                                    'mac_learning': 'enabled',
+                                    'flooding': {
+                                        'broadcast_multicast': 'enabled',
+                                        'unknown_unicast': 'enabled',
+                                    },
+                                    'mac_aging_time': 300,
+                                    'mac_aging_type': 'inactivity',
+                                    'mac_limit': 4000,
+                                    'mac_limit_action': 'none',
+                                    'mac_limit_notification': 'syslog',
+                                    'mac_limit_reached': 'no',
+                                    'threshold': '75%',
+                                    'dhcp_v4_snooping': 'disabled',
+                                    'dhcp_v4_snooping_profile': 'none',
+                                    'igmp_snooping': 'disabled',
+                                    'igmp_snooping_profile': 'none',
+                                    'mld_snooping_profile': 'none',
+                                },
+                            },
+                        },
+                        'vfi': {
+                            'num_vfi': 0,
+                        },
+                        'pw': {
+                            'num_pw': 0,
+                            'num_pw_up': 0,
+                        },
+                        'pbb': {
+                            'num_pbb': 0,
+                            'num_pbb_up': 0,
+                        },
+                        'vni': {
+                            'num_vni': 0,
+                            'num_vni_up': 0,
+                        },
+                    },
+                },
+            },
+        },
+    }
 
     golden_output3 = {'execute.return_value': '''
         +++ genie-Router: executing command 'show l2vpn bridge-domain detail' +++
@@ -1364,104 +1597,5 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
         
-# ==================================================
-#  Unit test for 'show l2vpn bridge-domain summary'
-# ==================================================
-
-class TestShowL2vpnBridgeDomainSummary(unittest.TestCase):
-    '''Unit test for "show l2vpn bridge-domain summary"'''
-
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output1 = {
-        'number_of_groups': 1,
-        'bridge_domains': {
-            'total': 1,
-            'up': 1,
-            'shutdown': 0,
-        },
-        'ac': {
-            'total': 1,
-            'up': 1,
-            'down': 0,
-        },
-        'pw': {
-            'total': 1,
-            'up': 1,
-            'down': 0,
-        },
-    }
-
-    golden_output1 = {'execute.return_value': '''
-        Device1# show l2vpn bridge-domain summary
-
-        Number of groups: 1, bridge-domains: 1, Up: 1, Shutdown: 0
-        Number of ACs: 1 Up: 1, Down: 0
-        Number of PWs: 1 Up: 1, Down: 0
-    '''}
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowL2vpnBridgeDomainSummary(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowL2vpnBridgeDomainSummary(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-# ==================================================
-#  Unit test for 'show l2vpn bridge-domain summary'
-# ==================================================
-
-class TestShowL2vpnBridgeDomainBrief(unittest.TestCase):
-    '''Unit test for "show l2vpn bridge-domain summary"'''
-
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output1 = {
-        'bridge_group': {
-            'g1': {
-                'bridge_domain': {
-                    'bd1': {
-                        'id': 0,
-                        'state': 'up',
-                        'ac': {
-                            'num_ac': 1,
-                            'num_ac_up': 1,
-                        },
-                        'pw': {
-                            'num_pw': 1,
-                            'num_pw_up': 1,
-                        },
-                    },
-                },
-            },
-        },
-    }
-
-    golden_output1 = {'execute.return_value': '''
-        Device1# show l2vpn bridge-domain brief
-
-        Bridge Group/Bridge-Domain Name  ID    State      Num ACs/up     Num PWs/up
-        -------------------------------- ----- ---------- -------------- --------------
-        g1/bd1                           0     up         1/1            1/1 
-    '''}
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowL2vpnBridgeDomainBrief(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-    def test_golden1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output1)
-        obj = ShowL2vpnBridgeDomainBrief(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output1)
+if __name__ == '__main__':
+    unittest.main()
