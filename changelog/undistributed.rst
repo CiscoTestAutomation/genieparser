@@ -522,6 +522,8 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -530,5 +532,3 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
-* IOSXE
-    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
