@@ -47,8 +47,7 @@ class test_show_static_topology_detail(unittest.TestCase):
       Path version: 0, Path status: 0x80
       Path contains both next-hop and outbound interface.
 
-    '''
-}
+    '''}
     golden_parsed_output_1 = {
         'vrf':{
             'default':{
@@ -184,8 +183,7 @@ class test_show_static_topology_detail(unittest.TestCase):
       Path version: 1, Path status: 0x21
       Path has best tag: 0
 
-    '''
-    }
+    '''}
     golden_parsed_output_vrf_af = {
         'vrf': {
             'VRF1': {
@@ -317,6 +315,48 @@ class test_show_static_topology_detail(unittest.TestCase):
         },
     }
 
+    golden_parsed_output2 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4': {
+                        'safi': 'unicast',
+                        'table_id': '0xe0000000',
+                        'routes': {
+                            '172.16.0.89/32': {
+                                'route': '172.16.0.89/32',
+                                'next_hop': {
+                                    'outgoing_interface': {
+                                        'TenGigE0/0/1/2': {
+                                            'outgoing_interface': 'TenGigE0/0/1/2',
+                                            'metrics': 1,
+                                            'preference': 1,
+                                            'local_label': 'No label',
+                                            'configure_date': 'Sep 11 08:29:25.605',
+                                            'path_version': 0,
+                                            'path_status': '0x0',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output2 = {'execute.return_value': '''
+        show static topology detail
+
+        Wed Oct  9 14:34:58.699 EDT
+
+        VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
+        Last path event occured at Sep 11 08:29:25.605
+        Prefix/Len        Interface          Nexthop  Object    Explicit-path       Metrics         Local-Label   
+        172.16.0.89/32    TenGigE0_0_1_2     None     None      None                [0/4096/1/0/1]	No label    Path is configured at Sep 11 08:29:25.605
+        Path version: 0, Path status: 0x0
+    '''}
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowStaticTopologyDetail(device=self.device)
@@ -336,6 +376,13 @@ class test_show_static_topology_detail(unittest.TestCase):
         obj = ShowStaticTopologyDetail(device=self.device)
         parsed_output = obj.parse(vrf='all',af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output_vrf_af)
+
+    def test_show_ip_static_route_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowStaticTopologyDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 
 if __name__ == '__main__':

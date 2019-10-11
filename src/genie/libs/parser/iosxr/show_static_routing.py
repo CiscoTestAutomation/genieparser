@@ -4,6 +4,7 @@ show_static_route.py
 """
 import re
 from genie.metaparser import MetaParser
+from genie.libs.parser.utils.common import Common
 from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional
@@ -44,6 +45,7 @@ class ShowStaticTopologyDetailSchema(MetaParser):
                                            Optional('track'): int,
                                            Optional('explicit_path'): str,
                                            Optional('preference'): int,
+                                           Optional('local_label'): str,
                                        },
                                    },
                                    Optional('next_hop_list'): {
@@ -61,6 +63,7 @@ class ShowStaticTopologyDetailSchema(MetaParser):
                                            Optional('track'): int,
                                            Optional('explicit_path'): str,
                                            Optional('preference'): int,
+                                           Optional('local_label'): str,
                                        },
                                    },
                                },
@@ -132,31 +135,23 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 table_id = m.groupdict()['table_id']
                 safi = m.groupdict()['safi'].lower()
 
-                if 'vrf' not in result_dict:
-                    result_dict['vrf'] = {}
+                af_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                            setdefault('address_family', {}).setdefault(af, {})
 
-                if vrf not in result_dict['vrf']:
-                    result_dict['vrf'][vrf] = {}
-
-                if 'address_family' not in result_dict['vrf'][vrf]:
-                    result_dict['vrf'][vrf]['address_family'] = {}
-
-                if af and af not in result_dict['vrf'][vrf]['address_family']:
-                    result_dict['vrf'][vrf]['address_family'][af] = {}
-
-                result_dict['vrf'][vrf]['address_family'][af]['safi'] = safi.lower()
-                result_dict['vrf'][vrf]['address_family'][af]['table_id'] = table_id
+                af_dict['safi'] = safi.lower()
+                af_dict['table_id'] = table_id
                 continue
 
             # Prefix/Len          Interface                Nexthop             Object              Explicit-path       Metrics
             # 2001:1:1:1::1/128   GigabitEthernet0_0_0_3   2001:10:1:2::1      None                None                [0/0/1/0/1]
             #             GigabitEthernet0_0_0_0   None                None                None                [0/4096/1/0/1]
-            p2 = re.compile(r'^\s*(?P<route>[\d\s\/\.\:]+)?'
-                             '(?P<interface>[a-zA-Z][\w\/\.]+)'
-                             ' +(?P<nexthop>[\w\/\.\:]+)'
-                             ' +(?P<object>[\w]+)'
-                             ' +(?P<explicit_path>[\w]+)'
-                             ' +(?P<metrics>[\w\/\[\]]+)$')
+            # Prefix/Len          Interface                Nexthop             Object         Explicit-path       Metrics          Local-Label  
+            # 172.16.0.89/32      TenGigE0_0_1_2           None                None          None                [0/4096/1/0/1]    No label    Path is configured at Sep 11 08:29:25.605
+            p2 = re.compile(r'^\s*(?P<route>[\d\s\/\.\:]+)?(?P<interface>[a-zA-Z][\w\/\.]+) '
+                             '+(?P<nexthop>[\w\/\.\:]+) +(?P<object>[\w]+) '
+                             '+(?P<explicit_path>[\w]+) +(?P<metrics>[\w\/\[\]]+)'
+                             '(\s+(?P<local_label>[\w\s]+?))?(\s+Path +is '
+                             '+configured +at +(?P<configure_date>[\w\s\:\.]+))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""
@@ -167,8 +162,8 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 else:
                     index += 1
 
-                if m.groupdict()['interface'] and 'none' not in m.groupdict()['interface'].lower() :
-                    interface = m.groupdict()['interface'].replace('_','/')
+                if m.groupdict()['interface'] and 'none' not in m.groupdict()['interface'].lower():
+                    interface = Common.convert_intf_name(m.groupdict()['interface'].replace('_','/'))
                 if m.groupdict()['nexthop'] and 'none' not in m.groupdict()['nexthop'].lower():
                     next_hop = m.groupdict()['nexthop']
 
@@ -180,73 +175,53 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower() :
                     object = m.groupdict()['object']
 
-                if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower() :
+                if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower():
                     explicit_path = m.groupdict()['explicit_path']
+                
+                local_label = m.groupdict()['local_label']
+                configure_date = m.groupdict()['configure_date']
 
-                if 'routes' not in result_dict['vrf'][vrf]['address_family'][af]:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'] = {}
-                if route not in result_dict['vrf'][vrf]['address_family'][af]['routes']:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] = {}
-                result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['route'] = route
-
-                if 'next_hop' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] = {}
+                route_dict = af_dict.setdefault('routes', {}).setdefault(route, {})
+                route_dict['route'] = route
+                hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop:
-                    if 'outgoing_interface' not in result_dict['vrf'][vrf]['address_family'][af] \
-                            ['routes'][route]['next_hop']:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface'] = {}
+                    intf_dict = hop_dict.setdefault('outgoing_interface', {}).\
+                                         setdefault(interface, {})
+                    intf_dict['outgoing_interface'] = interface
 
-                    if m.groupdict()['interface'] and interface not in \
-                            result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface']:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface'][interface] = {}
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['outgoing_interface'] = interface
-
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['metrics'] = metrics
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['preference'] = prefernce
+                    intf_dict['metrics'] = metrics
+                    intf_dict['preference'] = prefernce
 
                     if m.groupdict()['explicit_path']and 'none' not in m.groupdict()['explicit_path'].lower():
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface'][interface]['explicit_path'] = explicit_path
+                        intf_dict['explicit_path'] = explicit_path
                     if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower():
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                            ['next_hop']['outgoing_interface'][interface]['track'] = int(object)
-
+                        intf_dict['track'] = int(object)
+                    if local_label:
+                        intf_dict['local_label'] = local_label
+                    if configure_date:
+                        intf_dict['configure_date'] = configure_date
 
                 else:
-                    if 'next_hop_list' not in result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']:
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop']['next_hop_list'] = {}
+                    idx_dict = hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
 
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                        ['next_hop_list'][index] = {}
-
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                        ['next_hop_list'][index]['index'] = index
-
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                        ['next_hop_list'][index]['next_hop'] = next_hop.strip()
+                    idx_dict['index'] = index
+                    idx_dict['next_hop'] = next_hop.strip()
 
                     if m.groupdict()['interface'] and 'none' not in m.groupdict()['interface'].lower():
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['outgoing_interface'] = interface
+                        idx_dict['outgoing_interface'] = interface
 
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                        ['next_hop_list'][index]['metrics'] = metrics
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                        ['next_hop_list'][index]['preference'] = prefernce
+                    idx_dict['metrics'] = metrics
+                    idx_dict['preference'] = prefernce
 
                     if m.groupdict()['explicit_path'] and 'none' not in m.groupdict()['explicit_path'].lower():
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['explicit_path'] = explicit_path
+                        idx_dict['explicit_path'] = explicit_path
                     if m.groupdict()['object'] and 'none' not in m.groupdict()['object'].lower():
-                        result_dict['vrf'][vrf]['address_family'][af]['routes'][route]['next_hop'] \
-                            ['next_hop_list'][index]['track'] = int(object)
+                        idx_dict['track'] = int(object)
+                    if local_label:
+                        idx_dict['local_label'] = local_label
+                    if configure_date:
+                        idx_dict['configure_date'] = configure_date
                 continue
 
             # Path is installed into RIB at Dec  7 21:52:00.853
@@ -256,15 +231,11 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 active = True
                 install_date = m.groupdict()['install_date']
                 if not next_hop:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['active'] = active
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['install_date'] = install_date
+                    intf_dict['active'] = active
+                    intf_dict['install_date'] = install_date
                 else:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['active'] = active
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['install_date'] = install_date
+                    idx_dict['active'] = active
+                    idx_dict['install_date'] = install_date
                 continue
 
             # Path is configured at Dec  7 21:47:43.624
@@ -274,15 +245,11 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 active = False
                 configure_date = m.groupdict()['configure_date']
                 if not next_hop:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['active'] = active
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['configure_date'] = configure_date
+                    intf_dict['active'] = active
+                    intf_dict['configure_date'] = configure_date
                 else:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['active'] = active
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['configure_date'] = configure_date
+                    idx_dict['active'] = active
+                    idx_dict['configure_date'] = configure_date
                 continue
 
             # Path version: 1, Path status: 0x21
@@ -292,15 +259,11 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                 path_version = int(m.groupdict()['path_version'])
                 path_status = m.groupdict()['path_status']
                 if not next_hop:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['path_version'] = path_version
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['path_status'] = path_status
+                    intf_dict['path_version'] = path_version
+                    intf_dict['path_status'] = path_status
                 else:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['path_version'] = path_version
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['path_status'] = path_status
+                    idx_dict['path_version'] = path_version
+                    idx_dict['path_status'] = path_status
                 continue
 
             # Path has best tag: 0
@@ -309,11 +272,9 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
             if m:
                 tag = m.groupdict()['tag']
                 if not next_hop:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['outgoing_interface'][interface]['tag'] = int(tag)
+                    intf_dict['tag'] = int(tag)
                 else:
-                    result_dict['vrf'][vrf]['address_family'][af]['routes'][route] \
-                        ['next_hop']['next_hop_list'][index]['tag'] = int(tag)
+                    idx_dict['tag'] = int(tag)
                 continue
 
         return result_dict
