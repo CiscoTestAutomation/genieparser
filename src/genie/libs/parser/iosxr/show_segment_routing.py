@@ -1178,7 +1178,7 @@ class ShowPceLspDetail(ShowPceLspDetailSchema):
         return ret_dict
 
 
-class ShowSegment_RoutingLocal_BlockInconsistenciesSchema(MetaParser):
+class ShowSegmentRoutingLocalBlockInconsistenciesSchema(MetaParser):
     ''' Schema for:
         * show segment-routing local-block inconsistencies
     '''
@@ -1191,7 +1191,7 @@ class ShowSegment_RoutingLocal_BlockInconsistenciesSchema(MetaParser):
     }
 
 
-class ShowSegment_RoutingLocal_BlockInconsistencies(ShowSegment_RoutingLocal_BlockInconsistenciesSchema):
+class ShowSegmentRoutingLocalBlockInconsistencies(ShowSegmentRoutingLocalBlockInconsistenciesSchema):
     ''' Parser for: 
         * show segment-routing local-block inconsistencies
     '''
@@ -1223,7 +1223,7 @@ class ShowSegment_RoutingLocal_BlockInconsistencies(ShowSegment_RoutingLocal_Blo
         return ret_dict
 
 
-class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Schema(MetaParser):
+class ShowSegmentRoutingMappingServerPrefixSidMapIPV4Schema(MetaParser):
     ''' Schema for:
         * show segment-routing mapping-server prefix-sid-map ipv4
     '''
@@ -1242,7 +1242,7 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Schema(MetaParser):
     }
 
 
-class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Schema):
+class ShowSegmentRoutingMappingServerPrefixSidMapIPV4(ShowSegmentRoutingMappingServerPrefixSidMapIPV4Schema):
     ''' Parser for:
         * show segment-routing mapping-server prefix-sid-map ipv4
     '''
@@ -1288,7 +1288,7 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(ShowSegment_RoutingMap
         return ret_dict
 
 
-class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4DetailSchema(MetaParser):
+class ShowSegmentRoutingMappingServerPrefixSidMapIPV4DetailSchema(MetaParser):
     ''' Schema for:
         * show segment-routing mapping-server prefix-sid-map ipv4 detail
     '''
@@ -1308,8 +1308,8 @@ class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4DetailSchema(MetaParser
     }
 
 
-class ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(
-    ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4DetailSchema):
+class ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail(
+    ShowSegmentRoutingMappingServerPrefixSidMapIPV4DetailSchema):
     ''' Parser for:
         * show segment-routing mapping-server prefix-sid-map ipv4 detail
     '''
