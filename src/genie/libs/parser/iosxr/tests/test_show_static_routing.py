@@ -343,7 +343,7 @@ class test_show_static_topology_detail(unittest.TestCase):
     golden_output2 = {'execute.return_value': '''
         show static topology detail
 
-        Wed Oct  9 14:34:58.699 EDT
+        Wed Oct  9 14:34:58.699 EDT 
 
         VRF: default Table Id: 0xe0000000 AFI: IPv4 SAFI: Unicast
         Last path event occured at Sep 11 08:29:25.605
