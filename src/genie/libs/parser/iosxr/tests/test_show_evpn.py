@@ -1,5 +1,4 @@
 
-import genie.gre
 # Python
 import unittest
 from unittest.mock import Mock
@@ -8175,11 +8174,6 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
         parsed_output = obj.parse()
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
-        f = open("dict.txt","w")
-        f.write( str(format_output(parsed_output)) )
-        f.close()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
 if __name__ == '__main__':

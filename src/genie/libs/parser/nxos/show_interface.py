@@ -926,23 +926,16 @@ class ShowInterface(ShowInterfaceSchema):
             # 607382344 input packets 445986207 unicast packets 132485585 multicast packets
             m = p25.match(line)
             if m:
-                in_pkts = int(m.groupdict()['in_pkts'])
-                if m.groupdict()['in_octets']:
-                    in_octets = int(m.groupdict()['in_octets'])
-                    interface_dict[interface]['counters']['in_pkts'] = in_pkts
-                    interface_dict[interface]['counters']['in_octets'] = in_octets
-
+                group = m.groupdict()
                 if 'counters' not in interface_dict[interface]:
                     interface_dict[interface]['counters'] = {}
-
-
-                
-                if m.groupdict()['in_unicast_pkts'] and m.groupdict()['in_multicast_pkts']:
-                    in_unicast_pkts = int(m.groupdict()['in_unicast_pkts'])
-                    in_multicast_pkts = int(m.groupdict()['in_multicast_pkts'])
-                    interface_dict[interface]['counters']['in_unicast_pkts'] = in_unicast_pkts
-                    interface_dict[interface]['counters']['in_multicast_pkts'] = in_multicast_pkts
-                
+                interface_dict[interface]['counters']['in_pkts'] = int(group['in_pkts'])
+                if group['in_octets']:
+                    interface_dict[interface]['counters']['in_octets'] = int(group['in_octets'])
+                if group['in_unicast_pkts']:
+                    interface_dict[interface]['counters']['in_unicast_pkts'] = int(group['in_unicast_pkts'])
+                if group['in_multicast_pkts']:
+                    interface_dict[interface]['counters']['in_multicast_pkts'] = int(group['in_multicast_pkts'])
                 continue
 
             # 28910552 broadcast packets 63295517997 bytes

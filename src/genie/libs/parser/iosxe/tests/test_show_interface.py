@@ -2,7 +2,6 @@
 
 import sys
 import unittest
-import genie.gre
 
 from unittest.mock import Mock
 from unittest.mock import patch
