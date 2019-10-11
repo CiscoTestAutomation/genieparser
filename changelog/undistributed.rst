@@ -513,8 +513,6 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
-<<<<<<< HEAD
-=======
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:
@@ -524,7 +522,6 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
->>>>>>> dev
 
 --------------------------------------------------------------------------------
                                 Interface
@@ -533,9 +530,5 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
-<<<<<<< HEAD
-=======
-    
->>>>>>> dev
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
