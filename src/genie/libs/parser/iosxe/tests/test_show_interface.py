@@ -16770,7 +16770,6 @@ Tunnel10 is up, line protocol is up
         obj = ShowInterfaces(device = self.device)
         parsed_output = obj.parse()
         self.maxDiff = None
-        print(re.colour_output());re.reset()
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 #############################################################################
