@@ -409,15 +409,11 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
         Adjacency SIDs:             24
     '''}
 
-    golden_parsed_output = {
-        'pce_topology_database_summary': {
-            'topology_nodes': 4,
-            'prefixes': 4,
-            'prefix_sids': 4,
-            'links': 12,
-            'adjancency_sids': 24
-        }
-    }
+    golden_parsed_output = {'pce_topology_database_summary': {'adjancency_sids': {'total': 24},
+                                                              'links': {'total': 12},
+                                                              'prefix_sids': {'total': 4},
+                                                              'prefixes': 4,
+                                                              'topology_nodes': 4}}
     expected_output_2 = {'pce_topology_database_summary': {'adjancency_sids': {'epe': 0,
                                                                                'protected': 0,
                                                                                'total': 0,
