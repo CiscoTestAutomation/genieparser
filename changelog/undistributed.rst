@@ -526,3 +526,10 @@
     
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowInterfaces
+        * Fixed regex to accommodate more outputs formats

@@ -270,10 +270,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # full-duplex, 1000 Mb/s
         # auto-duplex, auto-speed
         # auto-duplex, 10 Gb/s, media type is 10G
+        # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
+        # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
-                          '+(?P<port_speed>\d+|[a|A]uto-[S|s]peed|Auto '
-                          '(S|s)peed)(?: *([G|M]bps|[G|M]b/s))?(?:(?:\, +link +type +is '
-                          '+(?P<link_type>\S+))?(?:\, *media +type +is *(?P<media_type>[\w\/]+)?)(?: +media +type)?)?$')
+                          '+(?P<port_speed>\d+|[a|A]uto-[S|s]peed|Auto (S|s)peed)(?: '
+                          '*([G|M]bps|[G|M]b/s))?(?:(?:\, +link +type +is +(?P<link_type>\S+))?(?:\, '
+                          '*media +type +is *(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
@@ -619,6 +621,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             # full-duplex, 1000 Mb/s
             # auto-duplex, auto-speed
             # auto-duplex, 10 Gb/s, media type is 10G
+            # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
+            # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
             m = p11.match(line)
             if m:
                 duplex_mode = m.groupdict()['duplex_mode'].lower()
@@ -626,7 +630,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 link_type = m.groupdict()['link_type']
                 media_type = m.groupdict()['media_type']
                 interface_dict[interface]['duplex_mode'] = duplex_mode
-                interface_dict[interface]['port_speed'] = port_speed
+                if port_speed == '100':
+                    interface_dict[interface]['port_speed'] = '100000'
+                else:
+                    interface_dict[interface]['port_speed'] = port_speed
+
                 if link_type:
                     interface_dict[interface]['link_type'] = link_type
                     if 'auto' in link_type:
@@ -634,7 +642,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                     else:
                         interface_dict[interface]['auto_negotiate'] = False
                 if media_type:
-                    interface_dict[interface]['media_type'] = media_type
+                    unknown = re.search(r'[U|u]nknown',media_type)
+                    if unknown:
+                        interface_dict[interface]['media_type'] = 'unknown'
+                    else:
+                        interface_dict[interface]['media_type'] = media_type
                 continue
 
             # input flow-control is off, output flow-control is unsupported

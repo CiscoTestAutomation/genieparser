@@ -2,7 +2,6 @@
 
 import sys
 import unittest
-import genie.gre
 
 from unittest.mock import Mock
 from unittest.mock import patch
@@ -7943,6 +7942,11 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'auto_negotiate': False,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'port_speed': '40',
+            'media_type': 'QSFP 40G SR4 SFP',
             "type": "Forty Gigabit Ethernet",
             "mac_address": "70b3.1760.0501",
             "phys_address": "70b3.1760.0501",
@@ -8113,6 +8117,11 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'auto_negotiate': False,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'port_speed': '40',
+            'media_type': 'QSFP 40G SR BD SFP',
             "type": "Forty Gigabit Ethernet",
             "mac_address": "70b3.1760.0503",
             "phys_address": "70b3.1760.0503",
@@ -10803,9 +10812,14 @@ Tunnel10 is up, line protocol is up
             },
             "enabled": True,
             "line_protocol": "up",
+            'auto_negotiate': False,
             "oper_status": "up",
             "connected": True,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': 'QSFP 100G SR4',
             "type": "Hundred Gigabit Ethernet",
+            'port_speed': '100000',
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
             "description": "connected to Ixia 1/6",
@@ -12434,7 +12448,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'duplex_mode': 'full',
+            'auto_negotiate': False,
+            'link_type': 'force-up',
             "type": "Hundred Gigabit Ethernet",
+            'media_type': 'QSFP 100G SR4',
+            'port_speed': '100000',
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
             "ipv4": {
@@ -13043,7 +13062,14 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
+            'auto_negotiate': False,
             "connected": True,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': 'QSFP',
+            'port_speed': '100',
+            'media_type': 'QSFP 100G SR4',
+            'port_speed': '100000',
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -14745,6 +14771,11 @@ Tunnel10 is up, line protocol is up
             "carrier_delay_up": 2,
             "carrier_delay_down": 10,
             "arp_type": "arpa",
+            'auto_negotiate': False,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': '10GBase-SR/SW',
+            'port_speed': '10000',
             "arp_timeout": "04:00:00",
             "last_input": "00:07:19",
             "last_output": "03:51:33",
@@ -16281,6 +16312,452 @@ Tunnel10 is up, line protocol is up
             'type': 'Tunnel'
         }
     }
+
+    golden_output_2 = {'execute.return_value': '''
+        TenGigabitEthernet0/1/0 is up, line protocol is up
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7290 (bia 2c33.1188.7290)
+        Internet address is 10.209.98.103/31
+        MTU 4000 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive not supported
+        Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
+        output flow-control is on, input flow-control is on
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input 02:29:25, output 02:29:25, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 49998000 bits/sec, 6546 packets/sec
+        5 minute output rate 8598000 bits/sec, 1638 packets/sec
+            173550579294 packets input, 146338033143374 bytes, 0 no buffer
+            Received 7 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            0 watchdog, 5592817 multicast, 0 pause input
+            39328190625 packets output, 16525140785118 bytes, 0 underruns
+            0 output errors, 0 collisions, 2 interface resets
+            0 unknown protocol drops
+            0 babbles, 0 late collision, 0 deferred
+            0 lost carrier, 0 no carrier, 0 pause output
+            0 output buffer failures, 0 output buffers swapped out
+            TenGigabitEthernet0/1/5 is administratively down, line protocol is down
+            Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7295 (bia 2c33.1188.7295)
+            MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+                reliability 255/255, txload 1/255, rxload 1/255
+            Encapsulation ARPA, loopback not set
+            Keepalive not supported
+            Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+            output flow-control is unsupported, input flow-control is unsupported
+            ARP type: ARPA, ARP Timeout 04:00:00
+            Last input never, output never, output hang never
+            Last clearing of "show interface" counters never
+            Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+            Queueing strategy: fifo
+            Output queue: 0/40 (size/max)
+            5 minute input rate 0 bits/sec, 0 packets/sec
+            5 minute output rate 0 bits/sec, 0 packets/sec
+                0 packets input, 0 bytes, 0 no buffer
+                Received 0 broadcasts (0 IP multicasts)
+                0 runts, 0 giants, 0 throttles
+                0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+                0 watchdog, 0 multicast, 0 pause input
+                0 packets output, 0 bytes, 0 underruns
+                0 output errors, 0 collisions, 1 interface resets
+                0 unknown protocol drops
+                0 babbles, 0 late collision, 0 deferred
+                0 lost carrier, 0 no carrier, 0 pause output
+                0 output buffer failures, 0 output buffers swapped out
+            TenGigabitEthernet0/1/6 is administratively down, line protocol is down
+            Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7296 (bia 2c33.1188.7296)
+            MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+                reliability 255/255, txload 1/255, rxload 1/255
+            Encapsulation ARPA, loopback not set
+            Keepalive not supported
+            Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+            output flow-control is unsupported, input flow-control is unsupported
+            ARP type: ARPA, ARP Timeout 04:00:00
+            Last input never, output never, output hang never
+            Last clearing of "show interface" counters never
+            Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+            Queueing strategy: fifo
+            Output queue: 0/40 (size/max)
+            5 minute input rate 0 bits/sec, 0 packets/sec
+            5 minute output rate 0 bits/sec, 0 packets/sec
+                0 packets input, 0 bytes, 0 no buffer
+                Received 0 broadcasts (0 IP multicasts)
+                0 runts, 0 giants, 0 throttles
+                0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+                0 watchdog, 0 multicast, 0 pause input
+                0 packets output, 0 bytes, 0 underruns
+                0 output errors, 0 collisions, 1 interface resets
+                0 unknown protocol drops
+                0 babbles, 0 late collision, 0 deferred
+                0 lost carrier, 0 no carrier, 0 pause output
+                0 output buffer failures, 0 output buffers swapped out
+        TenGigabitEthernet0/1/1 is up, line protocol is up
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.7291 (bia 2c33.1188.7291)
+        Description: Internet OUT Link (Through ASA or Direct)
+        MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+        Keepalive not supported
+        Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
+        output flow-control is on, input flow-control is on
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input 00:00:00, output 00:00:00, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/1873/1370 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: Class-based queueing
+        Output queue: 0/40 (size/max)
+        5 minute input rate 24128000 bits/sec, 2898 packets/sec
+        5 minute output rate 104000 bits/sec, 122 packets/sec
+            112310736139 packets input, 107581463084138 bytes, 0 no buffer
+            Received 98185589 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            0 watchdog, 96415788 multicast, 0 pause input
+            1539949004 packets output, 174533887805 bytes, 0 underruns
+            0 output errors, 0 collisions, 2 interface resets
+            81113 unknown protocol drops
+            0 babbles, 0 late collision, 0 deferred
+            0 lost carrier, 0 no carrier, 0 pause output
+            0 output buffer failures, 0 output buffers swapped out 
+    '''
+    }
+
+    golden_parsed_output_2 = {
+        'TenGigabitEthernet0/1/0': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'auto_negotiate': False,
+            'bandwidth': 10000000,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 5592817,
+                'in_no_buffer': 0,
+                'in_octets': 146338033143374,
+                'in_overrun': 0,
+                'in_pkts': 173550579294,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_watchdog': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_errors': 0,
+                'out_interface_resets': 2,
+                'out_late_collision': 0,
+                'out_lost_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_no_carrier': 0,
+                'out_octets': 16525140785118,
+                'out_pkts': 39328190625,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 49998000,
+                    'in_rate_pkts': 6546,
+                    'load_interval': 300,
+                    'out_rate': 8598000,
+                    'out_rate_pkts': 1638
+                }
+            },
+            'delay': 10,
+            'duplex_mode': 'full',
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': 'arpa'
+            },
+            'flow_control': {
+                'receive': True, 
+                'send': True
+            },
+            'ipv4': {
+                '10.209.98.103/31': {
+                    'ip': '10.209.98.103',
+                    'prefix_length': '31'
+                }
+            },
+            'last_input': '02:29:25',
+            'last_output': '02:29:25',
+            'line_protocol': 'up',
+            'link_type': 'force-up',
+            'mac_address': '2c33.1188.7290',
+            'media_type': 'SFP-LR',
+            'mtu': 4000,
+            'oper_status': 'up',
+            'output_hang': 'never',
+            'phys_address': '2c33.1188.7290',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'port_speed': '10000',
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BUILT-IN-EPA-8x10G'
+        },
+        'TenGigabitEthernet0/1/1': {
+            'arp_timeout': '04:00:00',
+                'arp_type': 'arpa',
+                'auto_negotiate': False,
+                'bandwidth': 10000000,
+                'counters': {
+                    'in_broadcast_pkts': 0,
+                    'in_crc_errors': 0,
+                    'in_errors': 0,
+                    'in_frame': 0,
+                    'in_giants': 0,
+                    'in_ignored': 0,
+                    'in_mac_pause_frames': 0,
+                    'in_multicast_pkts': 96415788,
+                    'in_no_buffer': 0,
+                    'in_octets': 107581463084138,
+                    'in_overrun': 0,
+                    'in_pkts': 112310736139,
+                    'in_runts': 0,
+                    'in_throttles': 0,
+                    'in_watchdog': 0,
+                    'last_clear': 'never',
+                    'out_babble': 0,
+                    'out_buffer_failure': 0,
+                    'out_buffers_swapped': 0,
+                    'out_collision': 0,
+                    'out_deferred': 0,
+                    'out_errors': 0,
+                    'out_interface_resets': 2,
+                    'out_late_collision': 0,
+                    'out_lost_carrier': 0,
+                    'out_mac_pause_frames': 0,
+                    'out_no_carrier': 0,
+                    'out_octets': 174533887805,
+                    'out_pkts': 1539949004,
+                    'out_underruns': 0,
+                    'out_unknown_protocl_drops': 81113,
+                    'rate': {
+                        'in_rate': 24128000,
+                        'in_rate_pkts': 2898,
+                        'load_interval': 300,
+                        'out_rate': 104000,
+                        'out_rate_pkts': 122
+                    }
+                },
+                'delay': 10,
+                'description': 'Internet OUT Link (Through ASA or '
+                            'Direct)',
+                'duplex_mode': 'full',
+                'enabled': True,
+                'encapsulations': {
+                    'encapsulation': 'dot1q',
+                    'first_dot1q': '1'
+                },
+                'flow_control': {
+                    'receive': True, 'send': True
+                },
+                'last_input': '00:00:00',
+                'last_output': '00:00:00',
+                'line_protocol': 'up',
+                'link_type': 'force-up',
+                'mac_address': '2c33.1188.7291',
+                'media_type': 'SFP-LR',
+                'mtu': 1500,
+                'oper_status': 'up',
+                'output_hang': 'never',
+                'phys_address': '2c33.1188.7291',
+                'port_channel': {
+                    'port_channel_member': False
+                },
+                'port_speed': '10000',
+                'queues': {
+                    'input_queue_drops': 1873,
+                    'input_queue_flushes': 1370,
+                    'input_queue_max': 375,
+                    'input_queue_size': 0,
+                    'output_queue_max': 40,
+                    'output_queue_size': 0,
+                    'queue_strategy': 'Class-based',
+                    'total_output_drop': 0
+                },
+                'reliability': '255/255',
+                'rxload': '1/255',
+                'txload': '1/255',
+                'type': 'BUILT-IN-EPA-8x10G'
+            },
+            'TenGigabitEthernet0/1/5': {'arp_timeout': '04:00:00',
+                             'arp_type': 'arpa',
+                             'auto_negotiate': False,
+                             'bandwidth': 10000000,
+                             'counters': {'in_broadcast_pkts': 0,
+                                          'in_crc_errors': 0,
+                                          'in_errors': 0,
+                                          'in_frame': 0,
+                                          'in_giants': 0,
+                                          'in_ignored': 0,
+                                          'in_mac_pause_frames': 0,
+                                          'in_multicast_pkts': 0,
+                                          'in_no_buffer': 0,
+                                          'in_octets': 0,
+                                          'in_overrun': 0,
+                                          'in_pkts': 0,
+                                          'in_runts': 0,
+                                          'in_throttles': 0,
+                                          'in_watchdog': 0,
+                                          'last_clear': 'never',
+                                          'out_babble': 0,
+                                          'out_buffer_failure': 0,
+                                          'out_buffers_swapped': 0,
+                                          'out_collision': 0,
+                                          'out_deferred': 0,
+                                          'out_errors': 0,
+                                          'out_interface_resets': 1,
+                                          'out_late_collision': 0,
+                                          'out_lost_carrier': 0,
+                                          'out_mac_pause_frames': 0,
+                                          'out_no_carrier': 0,
+                                          'out_octets': 0,
+                                          'out_pkts': 0,
+                                          'out_underruns': 0,
+                                          'out_unknown_protocl_drops': 0,
+                                          'rate': {'in_rate': 0,
+                                                   'in_rate_pkts': 0,
+                                                   'load_interval': 300,
+                                                   'out_rate': 0,
+                                                   'out_rate_pkts': 0}},
+                             'delay': 10,
+                             'duplex_mode': 'full',
+                             'enabled': False,
+                             'encapsulations': {'encapsulation': 'arpa'},
+                             'flow_control': {'receive': False, 'send': False},
+                             'last_input': 'never',
+                             'last_output': 'never',
+                             'line_protocol': 'down',
+                             'link_type': 'force-up',
+                             'mac_address': '2c33.1188.7295',
+                             'media_type': 'unknown',
+                             'mtu': 1500,
+                             'oper_status': 'down',
+                             'output_hang': 'never',
+                             'phys_address': '2c33.1188.7295',
+                             'port_channel': {'port_channel_member': False},
+                             'port_speed': '10000',
+                             'queues': {'input_queue_drops': 0,
+                                        'input_queue_flushes': 0,
+                                        'input_queue_max': 375,
+                                        'input_queue_size': 0,
+                                        'output_queue_max': 40,
+                                        'output_queue_size': 0,
+                                        'queue_strategy': 'fifo',
+                                        'total_output_drop': 0},
+                             'reliability': '255/255',
+                             'rxload': '1/255',
+                             'txload': '1/255',
+                             'type': 'BUILT-IN-EPA-8x10G'},
+        'TenGigabitEthernet0/1/6': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'auto_negotiate': False,
+            'bandwidth': 10000000,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 0,
+                'in_overrun': 0,
+                'in_pkts': 0,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_watchdog': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_errors': 0,
+                'out_interface_resets': 1,
+                'out_late_collision': 0,
+                'out_lost_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_no_carrier': 0,
+                'out_octets': 0,
+                'out_pkts': 0,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 10,
+            'duplex_mode': 'full',
+            'enabled': False,
+            'encapsulations': {
+                'encapsulation': 'arpa'
+            },
+            'flow_control': {
+                'receive': False, 
+                'send': False
+            },
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'down',
+            'link_type': 'force-up',
+            'mac_address': '2c33.1188.7296',
+            'media_type': 'unknown',
+            'mtu': 1500,
+            'oper_status': 'down',
+            'output_hang': 'never',
+            'phys_address': '2c33.1188.7296',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'port_speed': '10000',
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BUILT-IN-EPA-8x10G'
+        }   
+    }
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         interface_obj = ShowInterfaces(device=self.device)
@@ -16288,6 +16765,13 @@ Tunnel10 is up, line protocol is up
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
 
+    def test_golden_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowInterfaces(device = self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        print(re.colour_output());re.reset()
+        self.assertEqual(parsed_output,self.golden_parsed_output_2)
 
 #############################################################################
 # unitest For Show ip interface
