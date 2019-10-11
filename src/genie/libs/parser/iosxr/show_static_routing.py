@@ -36,8 +36,7 @@ class ShowStaticTopologyDetailSchema(MetaParser):
                                        Any(): {    # interface  if there is no next_hop
                                            Optional('outgoing_interface'): str,
                                            Optional('active'): bool,
-                                           Optional('install_date'): str,
-                                           Optional('configure_date'): str,
+                                           Optional('path_event'): str,
                                            Optional('tag'): int,
                                            Optional('path_version'): int,
                                            Optional('path_status'): str,
@@ -54,8 +53,7 @@ class ShowStaticTopologyDetailSchema(MetaParser):
                                            Optional('active'): bool,
                                            Optional('next_hop'): str,
                                            Optional('outgoing_interface'): str,
-                                           Optional('install_date'): str,
-                                           Optional('configure_date'): str,
+                                           Optional('path_event'): str,
                                            Optional('tag'): int,
                                            Optional('path_version'): int,
                                            Optional('path_status'): str,
@@ -150,8 +148,8 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
             p2 = re.compile(r'^\s*(?P<route>[\d\s\/\.\:]+)?(?P<interface>[a-zA-Z][\w\/\.]+) '
                              '+(?P<nexthop>[\w\/\.\:]+) +(?P<object>[\w]+) '
                              '+(?P<explicit_path>[\w]+) +(?P<metrics>[\w\/\[\]]+)'
-                             '(\s+(?P<local_label>[\w\s]+?))?(\s+Path +is '
-                             '+configured +at +(?P<configure_date>[\w\s\:\.]+))?$')
+                             '(\s+(?P<local_label>[\w\s]+?))?'
+                             '(\s+(?P<path_event>(Path|Last).*))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""
@@ -179,7 +177,7 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                     explicit_path = m.groupdict()['explicit_path']
                 
                 local_label = m.groupdict()['local_label']
-                configure_date = m.groupdict()['configure_date']
+                path_event = m.groupdict()['path_event']
 
                 route_dict = af_dict.setdefault('routes', {}).setdefault(route, {})
                 route_dict['route'] = route
@@ -199,8 +197,8 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                         intf_dict['track'] = int(object)
                     if local_label:
                         intf_dict['local_label'] = local_label
-                    if configure_date:
-                        intf_dict['configure_date'] = configure_date
+                    if path_event:
+                        intf_dict['path_event'] = path_event
 
                 else:
                     idx_dict = hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
@@ -220,36 +218,61 @@ class ShowStaticTopologyDetail(ShowStaticTopologyDetailSchema):
                         idx_dict['track'] = int(object)
                     if local_label:
                         idx_dict['local_label'] = local_label
-                    if configure_date:
-                        idx_dict['configure_date'] = configure_date
+                    if path_event:
+                        idx_dict['path_event'] = path_event
                 continue
 
             # Path is installed into RIB at Dec  7 21:52:00.853
-            p3 = re.compile(r'^\s*Path +is +installed +into +RIB +at +(?P<install_date>[\w\s\:\.]+)$')
+            p3 = re.compile(r'^\s*(?P<path_event>Path +is +installed +into +RIB +at +(?P<date>[\S\s]+))$')
             m = p3.match(line)
             if m:
                 active = True
-                install_date = m.groupdict()['install_date']
+                path_event = m.groupdict()['path_event']
                 if not next_hop:
                     intf_dict['active'] = active
-                    intf_dict['install_date'] = install_date
+                    intf_dict['path_event'] = path_event
                 else:
                     idx_dict['active'] = active
-                    idx_dict['install_date'] = install_date
+                    idx_dict['path_event'] = path_event
                 continue
 
             # Path is configured at Dec  7 21:47:43.624
-            p3_1 = re.compile(r'^\s*Path +is +configured +at +(?P<configure_date>[\w\s\:\.]+)$')
+            p3_1 = re.compile(r'^\s*(?P<path_event>Path +is +configured +at +(?P<date>[\S\s]+))$')
             m = p3_1.match(line)
             if m:
                 active = False
-                configure_date = m.groupdict()['configure_date']
+                path_event = m.groupdict()['path_event']
                 if not next_hop:
                     intf_dict['active'] = active
-                    intf_dict['configure_date'] = configure_date
+                    intf_dict['path_event'] = path_event
                 else:
                     idx_dict['active'] = active
-                    idx_dict['configure_date'] = configure_date
+                    idx_dict['path_event'] = path_event
+                continue
+
+            # Path is removed from RIB at Dec  7 21:47:43.624
+            p3_2 = re.compile(r'^\s*(?P<path_event>Path +is +removed +from +RIB +at +(?P<date>[\S\s]+))$')
+            m = p3_2.match(line)
+            if m:
+                active = False
+                path_event = m.groupdict()['path_event']
+                if not next_hop:
+                    intf_dict['active'] = active
+                    intf_dict['path_event'] = path_event
+                else:
+                    idx_dict['active'] = active
+                    idx_dict['path_event'] = path_event
+                continue
+
+            # Last RIB event is at Dec  7 21:47:43.624
+            p3_3 = re.compile(r'^\s*(?P<path_event>Last +RIB +event +is +at +(?P<date>[\S\s]+))$')
+            m = p3_3.match(line)
+            if m:
+                path_event = m.groupdict()['path_event']
+                if not next_hop:
+                    intf_dict['path_event'] = path_event
+                else:
+                    idx_dict['path_event'] = path_event
                 continue
 
             # Path version: 1, Path status: 0x21
