@@ -369,7 +369,7 @@ class ShowIsisSchema(MetaParser):
                                     Any(): {
                                         'distance': int,
                                         'adv_passive_only': bool,
-                                        Optional('protocols_redistributed'): bool,
+                                        'protocols_redistributed': bool,
                                         'level': {
                                             Any(): {
                                                 Optional('generate_style'): str,
@@ -681,7 +681,6 @@ class ShowIsis(ShowIsisSchema):
             result = r18.match(line)
             if result:
                 address_family_dict['protocols_redistributed'] = False
-
                 continue
 
             # Distance: 115
@@ -756,6 +755,7 @@ class ShowIsis(ShowIsisSchema):
                 redistributing_list = address_family_dict.get('redistributing', [])
                 redistributing_list.append(line)
                 address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
                 continue
 
             # Connected
@@ -765,6 +765,7 @@ class ShowIsis(ShowIsisSchema):
                 redistributing_list = address_family_dict.get('redistributing', [])
                 redistributing_list.append(line)
                 address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
                 continue
 
             # Static
@@ -774,6 +775,7 @@ class ShowIsis(ShowIsisSchema):
                 redistributing_list = address_family_dict.get('redistributing', [])
                 redistributing_list.append(line)
                 address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
                 continue
 
         return parsed_output

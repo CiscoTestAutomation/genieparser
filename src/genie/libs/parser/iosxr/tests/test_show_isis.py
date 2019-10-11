@@ -536,6 +536,7 @@ class TestShowIsis(unittest.TestCase):
                                                 'ispf_status': 'Disabled',
                                             },
                                         },
+                                        'protocols_redistributed': True,
                                         'redistributing': ['Connected', 'Static', 'OSPF process 65001', 'OSPF process 65002', 'OSPF process 65003'],
                                         'distance': 115,
                                         'adv_passive_only': True,
