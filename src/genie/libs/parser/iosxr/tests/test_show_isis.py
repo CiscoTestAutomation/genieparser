@@ -2,8 +2,6 @@
 import unittest
 from unittest.mock import Mock
 
-import genie.gre
-
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
