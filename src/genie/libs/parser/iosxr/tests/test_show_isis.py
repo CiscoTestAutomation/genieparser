@@ -2,10 +2,6 @@
 import unittest
 from unittest.mock import Mock
 
-# ATS
-from ats.topology import Device
-from ats.topology import loader
-
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
@@ -24,9 +20,10 @@ from genie.libs.parser.iosxr.show_isis import (ShowIsis,
 
 class TestShowIsisAdjacency(unittest.TestCase):
     '''Unit test for 'show isis adjacency'''
-
-    device = Device(name='aDevice')
+    
     empty_output = {'execute.return_value': ''}
+
+    maxDiff = None
 
     golden_parsed_output1 = {
         'isis': {
@@ -199,14 +196,12 @@ class TestShowIsisAdjacency(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_adjacency_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisAdjacency(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_isis_adjacency_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIsisAdjacency(device=self.device)
         parsed_output = obj.parse()
@@ -220,7 +215,8 @@ class TestShowIsisAdjacency(unittest.TestCase):
 class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
-    device = Device(name='aDevice')
+    maxDiff = None
+    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -309,14 +305,12 @@ class TestShowIsisNeighbors(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_neighbors_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_isis_neighbors_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIsisNeighbors(device=self.device)
         parsed_output = obj.parse()
@@ -330,7 +324,8 @@ class TestShowIsisNeighbors(unittest.TestCase):
 class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
     '''Unit test for "show isis segment-routing label table"'''
 
-    device = Device(name='aDevice')
+    maxDiff = None
+    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -367,7 +362,6 @@ class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_segment_routing_label_table_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisSegmentRoutingLabelTable(device=self.device)
         parsed_output = obj.parse()
