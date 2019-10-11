@@ -441,12 +441,9 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
-<<<<<<< HEAD
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
-=======
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
->>>>>>> dev
-        
+
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -521,6 +518,8 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisLspLog for:
+        * show isis lsp-log
     * Added ShowIsisSpfLog for:
         * show isis spf-log
     * Added parser ShowIsisProtocol for:
@@ -532,6 +531,7 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
