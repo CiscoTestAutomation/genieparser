@@ -155,6 +155,11 @@
     * Added ShowBgpSummary for:
         * show bgp summary
         * show bgp all summary
+    * Added ShowIpBgp for:
+        * show ip bgp
+
+* IOSXE
+    * Updated ShowBgpSuperParser for parsing of more varied output
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
@@ -433,7 +438,11 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+<<<<<<< HEAD
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+=======
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+>>>>>>> dev
         
 --------------------------------------------------------------------------------
                                 Route
@@ -491,6 +500,13 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Fixed parser ShowRunningConfigNtp to support different vrfs output
+--------------------------------------------------------------------------------
+                                PROCESSES
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added parser ShowProcesses for:
+        * show processes 
+        * show processes {process}
 
 --------------------------------------------------------------------------------
                                 ISIS
@@ -510,12 +526,13 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
+* NXOS
+    * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
-    
-* IOSXE
-    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
