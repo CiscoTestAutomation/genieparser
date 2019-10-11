@@ -255,6 +255,7 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
+        * update regex to support more varied output
     * ShowIpRouteWord
         * update regex to support more varied output
 * IOSXR
@@ -442,7 +443,7 @@
         * show evpn internal-label
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
-        
+
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -517,6 +518,8 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisLspLog for:
+        * show isis lsp-log
     * Added ShowIsisSpfLog for:
         * show isis spf-log
     * Added parser ShowIsisProtocol for:
@@ -528,6 +531,7 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
