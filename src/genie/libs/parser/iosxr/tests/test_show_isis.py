@@ -2,21 +2,21 @@
 import unittest
 from unittest.mock import Mock
 
-# ATS
-from ats.topology import Device
-from ats.topology import loader
-
 # Metaparser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_isis
-from genie.libs.parser.iosxr.show_isis import (ShowIsis,
-                                               ShowIsisProtocol,
-                                               ShowIsisHostname,
-                                               ShowIsisAdjacency, 
-                                               ShowIsisNeighbors,
-                                               ShowIsisStatistics, 
-                                               ShowIsisSegmentRoutingLabelTable)
+from genie.libs.parser.iosxr.show_isis import (
+    ShowIsis,
+    ShowIsisSpfLog,
+    ShowIsisHostname,
+    ShowIsisProtocol,
+    ShowIsisNeighbors,
+    ShowIsisAdjacency, 
+    ShowIsisStatistics,
+    ShowIsisSegmentRoutingLabelTable,
+)
+
 
 # ==================================================
 #  Unit test for 'show isis adjacency'
@@ -24,9 +24,10 @@ from genie.libs.parser.iosxr.show_isis import (ShowIsis,
 
 class TestShowIsisAdjacency(unittest.TestCase):
     '''Unit test for 'show isis adjacency'''
-
-    device = Device(name='aDevice')
+    
     empty_output = {'execute.return_value': ''}
+
+    maxDiff = None
 
     golden_parsed_output1 = {
         'isis': {
@@ -199,14 +200,12 @@ class TestShowIsisAdjacency(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_adjacency_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisAdjacency(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_isis_adjacency_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIsisAdjacency(device=self.device)
         parsed_output = obj.parse()
@@ -220,7 +219,8 @@ class TestShowIsisAdjacency(unittest.TestCase):
 class TestShowIsisNeighbors(unittest.TestCase):
     '''Unit test for "show isis neighbors"'''
 
-    device = Device(name='aDevice')
+    maxDiff = None
+    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -309,14 +309,12 @@ class TestShowIsisNeighbors(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_neighbors_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisNeighbors(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_isis_neighbors_golden2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowIsisNeighbors(device=self.device)
         parsed_output = obj.parse()
@@ -330,7 +328,8 @@ class TestShowIsisNeighbors(unittest.TestCase):
 class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
     '''Unit test for "show isis segment-routing label table"'''
 
-    device = Device(name='aDevice')
+    maxDiff = None
+    
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
@@ -367,7 +366,6 @@ class TestShowIsisSegmentRoutingLabelTable(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_show_isis_segment_routing_label_table_golden1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowIsisSegmentRoutingLabelTable(device=self.device)
         parsed_output = obj.parse()
@@ -524,6 +522,249 @@ class TestShowIsis(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
+class TestShowIsisSpfLog(unittest.TestCase):
+    ''' Unit Tests for command/parser
+        * show isis spf-log/ShowIsisSpfLog
+    '''
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    parsed_output_1 = {
+        "instance": {
+            "TEST": {
+                "address_family": {
+                    "IPv4 Unicast": {
+                        "spf_log": {
+                            1: {
+                                "start_timestamp": "Mon Oct  7 2019 23:12:51.401",
+                                "level": 2,
+                                "type": "PPFRR",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 1,
+                                "triggers": "PERPREFIXFRR",
+                            },
+                            2: {
+                                "start_timestamp": "Mon Oct  7 2019 23:27:50.960",
+                                "level": 2,
+                                "type": "FSPF",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 1,
+                                "triggers": "PERIODIC",
+                            },
+                            3: {
+                                "start_timestamp": "Tue Oct  8 2019 00:00:17.514",
+                                "level": 2,
+                                "type": "PRC",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 6,
+                                "first_trigger_lsp": "bla-host1.12-34",
+                                "triggers": "PREFIXBAD",
+                            },
+                            4: {
+                                "start_timestamp": "Tue Oct  8 2019 00:02:24.523",
+                                "level": 2,
+                                "type": "PRC",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 6,
+                                "first_trigger_lsp": "bla-host2.13-34",
+                                "triggers": "PREFIXGOOD",
+                            },
+                            5: {
+                                "start_timestamp": "Tue Oct  8 2019 00:02:25.025",
+                                "level": 2,
+                                "type": "PPFRR",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 1,
+                                "triggers": "PERPREFIXFRR",
+                            },
+                            6: {
+                                "start_timestamp": "Tue Oct  8 2019 08:15:04.265",
+                                "level": 2,
+                                "type": "PRC",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "bla-9.blahlab-cld.12-34",
+                                "triggers": "PREFIXBAD",
+                            },
+                            7: {
+                                "start_timestamp": "Tue Oct  8 2019 08:15:04.418",
+                                "level": 2,
+                                "type": "PRC",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "bla-9.blahlab-cld.12-34",
+                                "triggers": "PREFIXGOOD",
+                            },
+                            8: {
+                                "start_timestamp": "Tue Oct  8 2019 08:17:55.366",
+                                "level": 2,
+                                "type": "PRC",
+                                "time_ms": 0,
+                                "total_nodes": 64,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "bla-9.blahlab-cld.12-34",
+                                "triggers": "PREFIXBAD",
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    golden_output_1 = {'execute.return_value': '''
+        #show isis spf-log
+        Tue Oct  8 17:37:35.029 EDT
+
+           IS-IS TEST Level 2 IPv4 Unicast Route Calculation Log
+                            Time Total Trig.
+        Timestamp    Type   (ms) Nodes Count First Trigger LSP    Triggers
+        ------------ ----- ----- ----- ----- -------------------- -----------------------
+        --- Mon Oct  7 2019 ---
+        23:12:51.401 PPFRR     0    64     1                      PERPREFIXFRR
+        23:27:50.960  FSPF     0    64     1                      PERIODIC
+        --- Tue Oct  8 2019 ---
+        00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD        
+        00:02:24.523   PRC     0    64     6      bla-host2.13-34 PREFIXGOOD
+        00:02:25.025 PPFRR     0    64     1                      PERPREFIXFRR
+        08:15:04.265   PRC     0    64     1 bla-9.blahlab-cld.12-34 PREFIXBAD
+        08:15:04.418   PRC     0    64     1 bla-9.blahlab-cld.12-34 PREFIXGOOD
+        08:17:55.366   PRC     0    64     1 bla-9.blahlab-cld.12-34 PREFIXBAD
+    '''}
+
+    parsed_output_2 = {
+        "instance": {
+            "1": {
+                "address_family": {
+                    "IPv4 Unicast": {
+                        "spf_log": {
+                            1: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:00:50.787",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 3,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "LSPHEADER TLVCODE",
+                            },
+                            2: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:00:52.846",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "LSPHEADER",
+                            },
+                            3: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:00:56.049",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "TLVCODE",
+                            },
+                            4: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:01:02.620",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 2,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "NEWADJ LINKTLV",
+                            },
+                            5: {
+                                "start_timestamp": "Mon Aug 19 2004 12:00:50.790",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 0,
+                                "total_nodes": 1,
+                                "trigger_count": 4,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "LSPHEADER TLVCODE",
+                            },
+                            6: {
+                                "start_timestamp": "Mon Aug 19 2004 12:00:54.043",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 2,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "NEWADJ LSPHEADER",
+                            },
+                            7: {
+                                "start_timestamp": "Mon Aug 19 2004 12:00:55.922",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 2,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "NEWLSPO",
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # From ncs5k/ncs6k/asr9k documentation
+    golden_output_2 = {'execute.return_value': '''
+        # show isis spf-log 
+          
+               IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
+                           Time  Total Trig
+          Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
+          ----------- ---- ----  ----- ----- ----- ------- --- --------
+          --- Thurs Aug 19 2004 ---
+          12:00:50.787  FSPF  1    1     3   ensoft-grs7.00-00 LSPHEADER TLVCODE
+          12:00:52.846  FSPF  1    1     1   ensoft-grs7.00-00 LSPHEADER 
+          12:00:56.049  FSPF  1    1     1   ensoft-grs7.00-00 TLVCODE
+          12:01:02.620  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LINKTLV
+              
+               IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
+                           Time  Total Trig
+          Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
+          ----------- ---- ----  ----- ----- ----- ------- --- --------
+          --- Mon Aug 19 2004 ---
+          12:00:50.790  FSPF  0    1     4   ensoft-grs7.00-00 LSPHEADER TLVCODE
+          12:00:54.043  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LSPHEADER
+          12:00:55.922  FSPF  1    2     1   ensoft-grs7.00-00 NEWLSPO
+    '''}
+
+    def test_empty_output(self):
+        device = Mock(**self.empty_output)
+        obj = ShowIsisSpfLog(device=device)        
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        device = Mock(**self.golden_output_1)
+        obj = ShowIsisSpfLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_1)
+
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisSpfLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestIsisHostname(unittest.TestCase):
     ''' Unit tests for commands:
@@ -1516,7 +1757,6 @@ class TestShowIsisProtocol(unittest.TestCase):
         obj = ShowIsisProtocol(device=device)        
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
 
 if __name__ == '__main__':
     unittest.main()
