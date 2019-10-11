@@ -79,7 +79,6 @@ class ShowRouteIpv4Schema(MetaParser):
         'bgp' : ['B'],
         'rip' : ['R'], 
         'per-user static route' : ['U'],
-        'rip' : ['R'],
         'access/subscriber' : ['A'],
         'traffic engineering' : ['t'],
     }
@@ -126,8 +125,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # O E1 2001:db8::/39
         # R    10.145.110.10/4 [10/10] via 192.168.10.12, 12:03:42, GigabitEthernet0/0/1/1.1
         # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h
-        p2 = re.compile(r'^\s*(?P<code1>[\w\*\(\>\)\!]+) +(?P<code2>'
-                         '[\w\*\(\>\)\!]+)? +(?P<network>\S+\.\S+\.\S+\.\S+)'
+        p2 = re.compile(r'^\s*(?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+\.\S+\.\S+\.\S+)'
                          '( +is +directly +connected)?( +\[(?P<route_preference>[\d\/]+)\]?'
                          '( +via )?(?P<next_hop>[\w\/\:\.]+)?)?\s*'
                          '(:?\(nexthop +in +vrf +default\))?,'
@@ -283,8 +281,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 continue
 
+
             #    [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
             m = p3.match(line)
+
             if m:
                 updated = ""
                 routepreference = m.groupdict()['route_preference']
@@ -293,6 +293,9 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                     metrics = routepreference.split('/')[1]
 
                 next_hop = m.groupdict()['next_hop']
+
+
+
                 index += 1
                 if m.groupdict()['interface']:
                     interface = m.groupdict()['interface']
