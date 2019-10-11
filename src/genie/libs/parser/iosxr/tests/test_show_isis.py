@@ -2,8 +2,6 @@
 import unittest
 from unittest.mock import Mock
 
-import genie.gre
-
 # ATS
 from ats.topology import Device
 from ats.topology import loader
@@ -619,7 +617,7 @@ class TestShowIsisSpfLog(unittest.TestCase):
 
 
     golden_output_1 = {'execute.return_value': '''
-        RP/0/RSP0/CPU0:bl1-tatooine#show isis spf-log
+        #show isis spf-log
         Tue Oct  8 17:37:35.029 EDT
 
            IS-IS TEST Level 2 IPv4 Unicast Route Calculation Log
@@ -638,6 +636,113 @@ class TestShowIsisSpfLog(unittest.TestCase):
         08:17:55.366   PRC     0    64     1 bla-9.blahlab-cld.12-34 PREFIXBAD
     '''}
 
+    parsed_output_2 = {
+        "instance": {
+            "1": {
+                "address_family": {
+                    "IPv4 Unicast": {
+                        "spf_log": {
+                            1: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:00:50.787",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 3,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "LSPHEADER TLVCODE",
+                            },
+                            2: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:00:52.846",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "LSPHEADER",
+                            },
+                            3: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:00:56.049",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "TLVCODE",
+                            },
+                            4: {
+                                "start_timestamp": "Thurs Aug 19 2004 12:01:02.620",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 2,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "NEWADJ LINKTLV",
+                            },
+                            5: {
+                                "start_timestamp": "Mon Aug 19 2004 12:00:50.790",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 0,
+                                "total_nodes": 1,
+                                "trigger_count": 4,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "LSPHEADER TLVCODE",
+                            },
+                            6: {
+                                "start_timestamp": "Mon Aug 19 2004 12:00:54.043",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 1,
+                                "trigger_count": 2,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "NEWADJ LSPHEADER",
+                            },
+                            7: {
+                                "start_timestamp": "Mon Aug 19 2004 12:00:55.922",
+                                "level": 1,
+                                "type": "FSPF",
+                                "time_ms": 1,
+                                "total_nodes": 2,
+                                "trigger_count": 1,
+                                "first_trigger_lsp": "ensoft-grs7.00-00",
+                                "triggers": "NEWLSPO",
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # From ncs5k/ncs6k/asr9k documentation
+    golden_output_2 = {'execute.return_value': '''
+        # show isis spf-log 
+          
+               IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
+                           Time  Total Trig
+          Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
+          ----------- ---- ----  ----- ----- ----- ------- --- --------
+          --- Thurs Aug 19 2004 ---
+          12:00:50.787  FSPF  1    1     3   ensoft-grs7.00-00 LSPHEADER TLVCODE
+          12:00:52.846  FSPF  1    1     1   ensoft-grs7.00-00 LSPHEADER 
+          12:00:56.049  FSPF  1    1     1   ensoft-grs7.00-00 TLVCODE
+          12:01:02.620  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LINKTLV
+              
+               IS-IS 1 Level 1 IPv4 Unicast Route Calculation Log
+                           Time  Total Trig
+          Timestamp   Type (ms)  Nodes Count First Trigger LSP Triggers
+          ----------- ---- ----  ----- ----- ----- ------- --- --------
+          --- Mon Aug 19 2004 ---
+          12:00:50.790  FSPF  0    1     4   ensoft-grs7.00-00 LSPHEADER TLVCODE
+          12:00:54.043  FSPF  1    1     2   ensoft-grs7.00-00 NEWADJ LSPHEADER
+          12:00:55.922  FSPF  1    2     1   ensoft-grs7.00-00 NEWLSPO
+    '''}
+
     def test_empty_output(self):
         device = Mock(**self.empty_output)
         obj = ShowIsisSpfLog(device=device)        
@@ -649,6 +754,12 @@ class TestShowIsisSpfLog(unittest.TestCase):
         obj = ShowIsisSpfLog(device=device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.parsed_output_1)
+
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisSpfLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
