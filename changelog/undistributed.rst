@@ -98,6 +98,12 @@
     * Update ShowPceIPV4PeerPrefix
         * Removed typo from 'pcs' to 'pce' in show command
 
+* IOSXR
+    * Updated ShowPceIpv4TopologySummary:
+        * Updated schema and add regex
+
+
+
 --------------------------------------------------------------------------------
                               Controllers
 --------------------------------------------------------------------------------
@@ -183,6 +189,8 @@
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+        * update schema and add regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -261,6 +269,7 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -438,11 +447,11 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
-<<<<<<< HEAD
-    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
-=======
+
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
->>>>>>> dev
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+
         
 --------------------------------------------------------------------------------
                                 Route
@@ -518,8 +527,10 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
+
     * Added ShowIsisSpfLog for:
         * show isis spf-log
+
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:
