@@ -286,6 +286,191 @@ class TestShowIpNatStatistics(unittest.TestCase):
     '''
     }
 
+    golden_parsed_output = {
+        'active_translations': {
+            3: {
+                'dynamic': 3, 
+                'extended': 3, 
+                'static': 0
+            },
+            'cef_punted_pkts': 0,
+            'cef_translated_pkts': 0,
+            'dynamic_mappings': {
+                'inside_source': {
+                    'access_list': '102',
+                    'id': 1,
+                    'pool': {
+                        'mypool': {
+                            'allocated': '1 (20%)',
+                            'end': '10.5.5.5',
+                            'misses': '0',
+                            'netmask': '255.255.255.0',
+                            'start': '10.5.5.1',
+                            'total': '5',
+                            'type': 'generic'
+                        }
+                    },
+                    'refcount': 3
+                }
+            },
+            'expired_translations': 0,
+            'hits': 59230465,
+            'inside_interfaces': ['TenGigabitEthernet1/0/0,',
+                                    'TenGigabitEthernet1/1/0,',
+                                    'TenGigabitEthernet1/2/0',
+                                    'TenGigabitEthernet1/3/0'],
+            'ip_alias_add_fail': 0,
+            'limit_entry_add_fail': 0,
+            'mapping_stats_drop': 0,
+            'misses': 3,
+            'nat_limit_statistics': {
+                'max_allowed': 2147483647,
+                'missed': 0,
+                'used': 3
+            },
+            'outside_interfaces': ['TenGigabitEthernet2/0/0,',
+                                    'TenGigabitEthernet2/1/0,',
+                                    'TenGigabitEthernet2/2/0',
+                                    'TenGigabitEthernet2/3/0'],
+            'pool_stats_drop': 0,
+            'port_block_alloc_fail': 0
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        asr1000#sh ip nat statistics 
+        Total active translations: 0 (0 static, 0 dynamic; 0 extended)
+        Outside interfaces:
+        TenGigabitEthernet0/2/0
+        Inside interfaces: 
+        TenGigabitEthernet0/1/0
+        Hits: 3358708  Misses: 11050
+        CEF Translated packets: 0, CEF Punted packets: 0
+        Expired translations: 11013
+        Dynamic mappings:
+        -- Inside Source
+        [Id: 1] access-list test-robot pool test-robot refcount 0
+        pool test-robot: netmask 255.255.255.252
+            start 10.1.1.1 end 10.1.1.1
+            type generic, total addresses 1, allocated 0 (0%), misses 0
+        Pool stats drop: 0  Mapping stats drop: 0
+        Port block alloc fail: 0
+        IP alias add fail: 0
+        Limit entry add fail: 0
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        'active_translations': {
+            0: {
+                'dynamic': 0, 
+                'extended': 0, 
+                'static': 0
+            },
+            'cef_punted_pkts': 0,
+            'cef_translated_pkts': 0,
+            'dynamic_mappings': {
+                'inside_source': {
+                    'access_list': 
+                    'test-robot',
+                    'id': 1,
+                    'pool': {
+                        'test-robot': {
+                            'allocated': '0 (0%)',
+                            'end': '10.1.1.1',
+                            'misses': '0',
+                            'netmask': '255.255.255.252',
+                            'start': '10.1.1.1',
+                            'total': '1',
+                            'type': 'generic'
+                        }
+                    },
+                    'refcount': 0
+                }
+            },
+            'expired_translations': 11013,
+            'hits': 3358708,
+            'inside_interfaces': ['TenGigabitEthernet0/1/0'],
+            'ip_alias_add_fail': 0,
+            'limit_entry_add_fail': 0,
+            'mapping_stats_drop': 0,
+            'misses': 11050,
+            'outside_interfaces': ['TenGigabitEthernet0/2/0'],
+            'pool_stats_drop': 0,
+            'port_block_alloc_fail': 0
+        }
+    }
+
+    golden_output_2 = {'execute.return_value': '''
+        C1841#sh ip nat statistics 
+        Total active translations: 3339 (0 static, 3339 dynamic; 3339 extended)
+        Peak translations: 8114, occurred 18:35:17 ago
+        Outside interfaces:
+        FastEthernet0/0
+        Inside interfaces: 
+        FastEthernet0/1
+        Hits: 28658670  Misses: 0
+    '''
+    }
+
+    golden_parsed_output_2 = {
+        'active_translations': {
+            3339: {
+                'dynamic': 3339, 
+                'extended': 3339, 
+                'static': 0
+            },
+            'hits': 28658670,
+            'inside_interfaces': ['FastEthernet0/1'],
+            'misses': 0,
+            'occurred': '18:35:17',
+            'outside_interfaces': ['FastEthernet0/0'],
+            'peak_translations': 8114
+        }
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        r1#sh ip nat stat
+        Total active translations: 1 (0 static, 1 dynamic; 1 extended)
+        Outside interfaces:
+          Serial0/0
+        Inside interfaces:
+          FastEthernet0/0
+        Hits: 3  Misses: 1
+        CEF Translated packets: 4, CEF Punted packets: 0
+        Expired translations: 0
+        Dynamic mappings:
+        -- Inside Source
+        [Id: 3] access-list 99 interface Serial0/0 refcount 1
+        Queued Packets: 0
+    '''
+    }
+
+    golden_parsed_output_3 = {
+        'active_translations': {
+            1: {
+                'dynamic': 1, 
+                'extended': 1, 
+                'static': 0
+            },
+            'cef_punted_pkts': 0,
+            'cef_translated_pkts': 4,
+            'dynamic_mappings': {
+                'inside_source': {
+                    'access_list': '99',
+                    'id': 3,
+                    'interface': 'Serial0/0',
+                    'refcount': 1
+                }
+            },
+            'expired_translations': 0,
+            'hits': 3,
+            'inside_interfaces': ['FastEthernet0/0'],
+            'misses': 1,
+            'outside_interfaces': ['Serial0/0'],
+            'queued_pkts': 0
+        }
+    }
     def test_empty(self):
         self.dev_empty = Mock(**self.empty_output)
         obj = ShowIpNatStatistics(device=self.dev_empty)
@@ -297,9 +482,28 @@ class TestShowIpNatStatistics(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowIpNatStatistics(device=self.device)
         parsed_output = obj.parse()
-        import pprint
-        pprint.pprint(parsed_output)
-        #self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIpNatStatistics(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()
