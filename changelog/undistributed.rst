@@ -447,12 +447,10 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
-
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
 
-        
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -527,7 +525,6 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
-
     * Added ShowIsisSpfLog for:
         * show isis spf-log
 
@@ -550,3 +547,15 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
+
+--------------------------------------------------------------------------------
+                                   VDC 
+--------------------------------------------------------------------------------
+* NXOS 
+    * Updated ShowVdcDetailSchema to accomodate different outputs 
+
+--------------------------------------------------------------------------------
+                                Traceroute
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added Traceroute class
