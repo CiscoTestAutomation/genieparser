@@ -451,6 +451,9 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+        
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
@@ -551,6 +554,16 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
+    
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowInterfaces
+        * Fixed regex to accommodate more outputs formats
 
 --------------------------------------------------------------------------------
                                    VDC 
