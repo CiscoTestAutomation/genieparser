@@ -817,7 +817,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                         Optional('igmp_snooping'): str,
                         Optional('igmp_snooping_profile'): str,
                         Optional('mld_snooping_profile'): str,
-                        Optional('threshold'): str,
+                        Optional('mac_limit_threshold'): str,
                         Optional('mid_cvpls_config_index'): str,
                         Optional('p2mp_pw'): str,
                         Optional('mtu'): int,
@@ -836,7 +836,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                 Any(): {
                                     'state': str,
                                     'type': str,
-                                    Optional('num_ranges'): str,
+                                    Optional('vlan_num_ranges'): str,
                                     Optional('mac_aging_type'): str,
                                     Optional('mtu'): int,
                                     'xc_id': str,
@@ -859,7 +859,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                                     Optional('igmp_snooping'): str,
                                     Optional('igmp_snooping_profile'): str,
                                     Optional('mld_snooping_profile'): str,
-                                    Optional('threshold'): str,
+                                    Optional('mac_limit_threshold'): str,
                                     Optional('static_mac_address'): list,
                                     Optional('statistics'): {
                                         'packet_totals': {
@@ -1410,11 +1410,11 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 if dict_type == 'bridge_domain':
                     bridge_domain_dict.update({'mac_limit_reached': mac_limit_reached})
                     if threshold:
-                        bridge_domain_dict.update({'threshold': threshold})
+                        bridge_domain_dict.update({'mac_limit_threshold': threshold})
                 else:
                     interface_dict.update({'mac_limit_reached': mac_limit_reached})
                     if threshold:
-                        interface_dict.update({'threshold': threshold})
+                        interface_dict.update({'mac_limit_threshold': threshold})
                 continue
 
             # Security: disabled
@@ -1564,7 +1564,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 num_ranges = group['num_ranges']
                 interface_dict.update({'type': ac_type})
                 if num_ranges:
-                    interface_dict.update({'num_ranges': num_ranges})
+                    interface_dict.update({'vlan_num_ranges': num_ranges})
                 continue
             
             # MTU 1500; XC ID 0x2000001; interworking none; MSTi 0 (unprotected)

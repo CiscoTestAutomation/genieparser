@@ -427,6 +427,8 @@
         * show l2vpn xconnect mp2mp detail
     * Updated ShowL2vpnXconnectDetail for:
         * To support more varied output
+    * Updated ShowL2vpnXconnect for:
+        * To support more varied output
 
 --------------------------------------------------------------------------------
                                 EVPN
