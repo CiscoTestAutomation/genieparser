@@ -9,6 +9,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 from genie.libs.parser.iosxr.show_isis import (
     ShowIsis,
     ShowIsisSpfLog,
+    ShowIsisLspLog,
     ShowIsisHostname,
     ShowIsisProtocol,
     ShowIsisNeighbors,
@@ -1881,6 +1882,324 @@ class TestShowIsisProtocol(unittest.TestCase):
         obj = ShowIsisProtocol(device=device)        
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+class TestShowIsisLspLog(unittest.TestCase):
+    ''' UT for commands/parsers:
+        * show isis lsp-log / ShowIsisLspLog
+    '''
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_parsed_output_1 = {
+        "instance": {
+            "TEST": {
+                "lsp_log": {
+                    1: {
+                        "count": 1,
+                        "level": 2,
+                        "triggers": "IPEXT",
+                        "received_timestamp": "Thu Sep 26 2019 09:39:16.648",
+                    },
+                    2: {
+                        "count": 1,
+                        "level": 2,
+                        "triggers": "IPEXT",
+                        "received_timestamp": "Thu Sep 26 2019 10:29:02.303",
+                    },
+                    3: {
+                        "count": 1,
+                        "level": 2,
+                        "triggers": "IPEXT",
+                        "received_timestamp": "Mon Sep 30 2019 00:00:17.274",
+                    },
+                    4: {
+                        "count": 1,
+                        "level": 2,
+                        "triggers": "IPEXT",
+                        "received_timestamp": "Mon Sep 30 2019 00:02:25.263",
+                    },
+                    5: {
+                        "count": 2,
+                        "level": 2,
+                        "interface": "Bundle-Ether2",
+                        "triggers": "DELADJ",
+                        "received_timestamp": "Fri Oct  4 2019 16:10:11.734",
+                    },
+                    6: {
+                        "count": 2,
+                        "level": 2,
+                        "interface": "Bundle-Ether2",
+                        "triggers": "ADJSIDADD",
+                        "received_timestamp": "Fri Oct  4 2019 16:17:45.821",
+                    },
+                }
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        #show isis lsp-log
+        Tue Oct  8 17:38:16.254 EDT
+
+           IS-IS TEST Level 2 LSP log
+        When          Count  Interface          Triggers
+        --- Thu Sep 26 2019 ---
+        09:39:16.648      1                     IPEXT
+        10:29:02.303      1                     IPEXT
+        --- Mon Sep 30 2019 ---
+        00:00:17.274      1                     IPEXT
+        00:02:25.263      1                     IPEXT
+        --- Fri Oct  4 2019 ---
+        16:10:11.734      2  BE2                DELADJ        
+        16:17:45.821      2  BE2                ADJSIDADD
+    '''}
+
+    golden_parsed_output_2 = {
+        "instance": {
+            "isp": {
+                "lsp_log": {
+                    1: {
+                        "count": 1, 
+                        "level": 1, 
+                        "received_timestamp": "00:02:36"},
+                    2: {
+                        "count": 1,
+                        "level": 1,
+                        "triggers": "LSPREGEN",
+                        "received_timestamp": "00:02:31",
+                    },
+                    3: {
+                        "count": 1,
+                        "level": 1,
+                        "interface": "Port-channel4/1",
+                        "triggers": "NEWADJ",
+                        "received_timestamp": "00:02:24",
+                    },
+                    4: {
+                        "count": 1,
+                        "level": 1,
+                        "interface": "GigabitEthernet5/0",
+                        "triggers": "DIS",
+                        "received_timestamp": "00:02:23",
+                    },
+                    5: {
+                        "count": 1,
+                        "level": 1,
+                        "interface": "Loopback0",
+                        "triggers": "IPUP",
+                        "received_timestamp": "00:01:12",
+                    },
+                    6: {
+                        "count": 1, 
+                        "level": 2, 
+                        "received_timestamp": "00:02:36"},
+                    7: {
+                        "count": 1,
+                        "level": 2,
+                        "triggers": "LSPREGEN",
+                        "received_timestamp": "00:02:30",
+                    },
+                    8: {
+                        "count": 1,
+                        "level": 2,
+                        "interface": "GigabitEthernet5/0",
+                        "triggers": "DIS",
+                        "received_timestamp": "00:02:23",
+                    },
+                    9: {
+                        "count": 1,
+                        "level": 2,
+                        "interface": "Loopback0",
+                        "triggers": "IPUP",
+                        "received_timestamp": "00:01:12",
+                    },
+                }
+            }
+        }
+    }
+
+
+    # From asr9k docs
+    golden_output_2 = {'execute.return_value': '''
+        # show isis lsp-log
+        ISIS isp Level 1 LSP log
+          When       Count      Interface       Triggers
+        00:02:36         1                      
+        00:02:31         1                      LSPREGEN
+        00:02:24         1      PO4/1           NEWADJ
+        00:02:23         1      Gi5/0           DIS
+        00:01:12         1      Lo0             IPUP
+
+        ISIS isp Level 2 LSP log
+          When       Count      Interface       Triggers
+        00:02:36         1 
+        00:02:30         1                      LSPREGEN        
+        00:02:23         1      Gi5/0           DIS
+        00:01:12         1      Lo0             IPUP
+    '''}
+
+    golden_parsed_output_3 = {
+        "instance": {
+            "": {
+                "lsp_log": {
+                    1: {
+                        "count": 3,
+                        "level": 1,
+                        "triggers": "CONFIG NEWADJ DIS",
+                        "received_timestamp": "07:05:18",
+                    },
+                    2: {
+                        "count": 2,
+                        "level": 1,
+                        "interface": "Ethernet0",
+                        "triggers": "NEWADJ DIS",
+                        "received_timestamp": "07:05:13",
+                    },
+                    3: {
+                        "count": 2,
+                        "level": 2,
+                        "triggers": "CONFIG NEWADJ",
+                        "received_timestamp": "07:05:24",
+                    },
+                    4: {
+                        "count": 1,
+                        "level": 2,
+                        "interface": "Ethernet0",
+                        "triggers": "NEWADJ",
+                        "received_timestamp": "07:05:23",
+                    },
+                    5: {
+                        "count": 3,
+                        "level": 2,
+                        "interface": "Loopback0",
+                        "triggers": "CONFIG DELADJ",
+                        "received_timestamp": "07:01:39",
+                    },
+                }
+            }
+        }
+    }
+
+    # From ncs6k docs
+    golden_output_3 = {'execute.return_value': '''
+        Router# show isis lsp-log
+            Level 1 LSP log
+          When       Count      Interface   Triggers
+        07:05:18        3                   CONFIG NEWADJ DIS
+        07:05:13        2       Ethernet0   NEWADJ DIS
+            Level 2 LSP log
+          When       Count      Interface   Triggers
+        07:05:24        2                   CONFIG NEWADJ
+        07:05:23        1       Ethernet0   NEWADJ
+        07:01:39        3       Loopback0   CONFIG DELADJ
+    '''}
+
+    golden_parsed_output_4 = {
+        "instance": {
+            "isp": {
+                "lsp_log": {
+                    1: {
+                        "count": 1, 
+                        "level": 1, 
+                        "received_timestamp": "00:02:36"},
+                    2: {
+                        "count": 1,
+                        "level": 1,
+                        "triggers": "LSPREGEN",
+                        "received_timestamp": "00:02:31",
+                    },
+                    3: {
+                        "count": 1,
+                        "level": 1,
+                        "interface": "Port-channel4/1",
+                        "triggers": "DELADJ",
+                        "received_timestamp": "00:02:26",
+                    },
+                    4: {
+                        "count": 1,
+                        "level": 1,
+                        "interface": "Port-channel4/1",
+                        "triggers": "NEWADJ",
+                        "received_timestamp": "00:02:24",
+                    },
+                    5: {
+                        "count": 1, 
+                        "level": 2, 
+                        "received_timestamp": "00:02:36"},
+                    6: {
+                        "count": 1,
+                        "level": 2,
+                        "triggers": "LSPREGEN",
+                        "received_timestamp": "00:02:30",
+                    },
+                    7: {
+                        "count": 1,
+                        "level": 2,
+                        "interface": "Port-channel4/1",
+                        "triggers": "DELADJ",
+                        "received_timestamp": "00:02:26",
+                    },
+                    8: {
+                        "count": 1,
+                        "level": 2,
+                        "interface": "Loopback0",
+                        "triggers": "IPUP",
+                        "received_timestamp": "00:01:12",
+                    },
+                }
+            }
+        }
+    }
+
+    # from ncs5k docs
+    golden_output_4 = {'execute.return_value': '''
+        #show isis lsp-log
+        ISIS isp Level 1 LSP log
+          When       Count      Interface       Triggers
+        00:02:36         1                      
+        00:02:31         1                      LSPREGEN
+        00:02:26         1      PO4/1           DELADJ
+        00:02:24         1      PO4/1           NEWADJ
+
+        ISIS isp Level 2 LSP log
+          When       Count      Interface       Triggers
+        00:02:36         1 
+        00:02:30         1                      LSPREGEN
+        00:02:26         1      PO4/1           DELADJ
+        00:01:12         1      Lo0             IPUP
+    '''}
+
+    def test_empty_output(self):
+        device = Mock(**self.empty_output)
+        obj = ShowIsisLspLog(device=device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden_output_1(self):
+        device = Mock(**self.golden_output_1)
+        obj = ShowIsisLspLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden_output_2(self):
+        device = Mock(**self.golden_output_2)
+        obj = ShowIsisLspLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_output_3(self):
+        device = Mock(**self.golden_output_3)
+        obj = ShowIsisLspLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_output_4(self):
+        device = Mock(**self.golden_output_4)
+        obj = ShowIsisLspLog(device=device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
 
 if __name__ == '__main__':
     unittest.main()

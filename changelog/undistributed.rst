@@ -98,6 +98,12 @@
     * Update ShowPceIPV4PeerPrefix
         * Removed typo from 'pcs' to 'pce' in show command
 
+* IOSXR
+    * Updated ShowPceIpv4TopologySummary:
+        * Updated schema and add regex
+
+
+
 --------------------------------------------------------------------------------
                               Controllers
 --------------------------------------------------------------------------------
@@ -183,6 +189,8 @@
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+        * update schema and add regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -255,6 +263,7 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
+        * update regex to support more varied output
     * ShowIpRouteWord
         * update regex to support more varied output
 * IOSXR
@@ -440,12 +449,9 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
-<<<<<<< HEAD
-    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
-=======
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
->>>>>>> dev
-        
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -532,6 +538,7 @@
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
+
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
@@ -542,3 +549,15 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
+
+--------------------------------------------------------------------------------
+                                   VDC 
+--------------------------------------------------------------------------------
+* NXOS 
+    * Updated ShowVdcDetailSchema to accomodate different outputs 
+
+--------------------------------------------------------------------------------
+                                Traceroute
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added Traceroute class
