@@ -528,7 +528,6 @@
         * show isis
     * Added ShowIsisSpfLog for:
         * show isis spf-log
-
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:
@@ -538,6 +537,7 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+    * Updated ShowIsis to support different outputs
 
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
