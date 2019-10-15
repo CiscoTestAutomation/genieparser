@@ -1140,7 +1140,7 @@ class ShowVdcDetailSchema(MetaParser):
                   Optional('cpu_share'): str,
                   Optional('cpu_share_percentage'): str,
                   'create_time': str,
-                  'reload_count': str,
+                  Optional('reload_count'): str,
                   Optional('uptime'): str,
                   'restart_count': str,
                   Optional('restart_time'): str,
