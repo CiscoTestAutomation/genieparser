@@ -396,42 +396,47 @@ class ShowInventory(ShowInventorySchema):
         inventory_dict = {}
 
         # NAME: "Chassis", DESCR: "NX-OSv Chassis"
-        p1 = re.compile(r'^\s*NAME: +\"(?P<name>[a-zA-Z\s]+)(?P<slot>[0-9]+)?\"\, +DESCR: +\"(?P<description>[\w\+\-\/\s\(\)]+)\"$')
+        # NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
+        # NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
+        p1 = re.compile(r'^NAME: +\"(?P<name>[\S\s]+)\", +DESCR: +\"(?P<description>[\S\s]+)\"$')
+
+        p1_1 = re.compile(r'^Slot +(?P<slot>\d+)$')
         
         # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
         # PID: N9K-C9300-FAN2 , VID: V01 , SN: N/A
-        p2 = re.compile(r'^\s*PID: +(?P<pid>[a-zA-z0-9\-\.]+)? +\, +VID: +(?P<vid>[A-Z0-9\/]+)? +\, +SN: *(?P<serial_number>[A-Z0-9\/]+)?$')
+        # PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
+        p2 = re.compile(r'^PID: +(?P<pid>[\S]*) +, +VID: +(?P<vid>[\S]*) *, +SN: *(?P<serial_number>[\S]*)?$')
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
-                slot_number = m.groupdict()['slot']
-                if slot_number:
-                    name += slot_number
-                else:
-                    slot_number = 'None'
                 description = m.groupdict()['description']
-                if 'name' not in inventory_dict:
-                    inventory_dict['name'] = {}
-                if name not in inventory_dict['name']:
-                    inventory_dict['name'][name] = {}
-                inventory_dict['name'][name]['description'] = description
-                inventory_dict['name'][name]['slot'] = slot_number
+                item_dict = inventory_dict.setdefault('name', {}).setdefault(name, {})
+                item_dict.update({'description': description})
+
+                m1 = p1_1.match(name)
+                if m1:
+                    slot = m1.groupdict()['slot']
+                else:
+                    slot = 'None'
+
+                item_dict.update({'slot': slot})
                 continue
 
             m = p2.match(line)
             if m:
                 if m.groupdict()['pid']:
-                    inventory_dict['name'][name]['pid'] = m.groupdict()['pid']
+                    item_dict['pid'] = m.groupdict()['pid']
                 if m.groupdict()['vid']:
-                    inventory_dict['name'][name]['vid'] = m.groupdict()['vid']
+                    item_dict['vid'] = m.groupdict()['vid']
                 if m.groupdict()['serial_number']:
-                    inventory_dict['name'][name]['serial_number'] = m.groupdict()['serial_number']
+                    item_dict['serial_number'] = m.groupdict()['serial_number']
                 continue
 
         return inventory_dict
+
 
 class ShowInstallActiveSchema(MetaParser):
     """Schema for show install active"""
@@ -1135,7 +1140,7 @@ class ShowVdcDetailSchema(MetaParser):
                   Optional('cpu_share'): str,
                   Optional('cpu_share_percentage'): str,
                   'create_time': str,
-                  'reload_count': str,
+                  Optional('reload_count'): str,
                   Optional('uptime'): str,
                   'restart_count': str,
                   Optional('restart_time'): str,

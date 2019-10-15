@@ -8,8 +8,6 @@ import sys
 import warnings
 import logging
 import importlib
-
-
 from genie.libs import parser
 from genie.abstract import Lookup
 
@@ -76,7 +74,7 @@ def get_parser(command, device):
     kwargs = {}
     if command in parser_data:
         # Then just return it
-        lookup = Lookup.from_device(device, packages={'parser':parser})
+        lookup = Lookup.from_device(device, packages={'parser': parser})
         # Check if all the tokens exists; take the farthest one
         data = parser_data[command]
         for token in lookup._tokens:
@@ -151,8 +149,10 @@ def _find_command(command, data, device):
 
 
 def _find_parser_cls(device, data):
-    lookup = Lookup.from_device(device, packages={'parser':parser})
+    lookup = Lookup.from_device(device, packages={'parser':importlib.import_module(data['package'])})
+
     return getattr(getattr(lookup.parser, data['module_name']), data['class'])
+
 
 class Common():
     '''Common functions to be used in parsers.'''
@@ -204,12 +204,12 @@ class Common():
                    'Hs': 'HSSI',
                    'AT': 'ATM',
                    'Et': 'Ethernet',
-                   'BD': 'BridgeDomain',
+                   'BD': 'BDI',
                    'Se': 'Serial',
                    'Fo': 'FortyGigabitEthernet',
                    'Hu': 'HundredGigE',
                    'vl': 'vasileft',
-                   'rl': 'vasiright',
+                   'vr': 'vasiright',
                    'BE': 'Bundle-Ether'
                    }
         m = re.search('([a-zA-Z]+)', intf) 

@@ -2,6 +2,7 @@
 
 import sys
 import unittest
+
 from unittest.mock import Mock
 from unittest.mock import patch
 from textwrap import dedent
@@ -31,7 +32,7 @@ from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
                                         ShowInterfacesStats
 
 
-class test_show_interface_parsergen(unittest.TestCase):
+class TestShowInterfaceParsergen(unittest.TestCase):
 
     def test_tabular_parser(self):
         self.showCommandOutput='''
@@ -94,7 +95,7 @@ class test_show_interface_parsergen(unittest.TestCase):
 #############################################################################
 # unitest For show ip interfaces brief pipe ip
 #############################################################################
-class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
+class TestShowIpInterfacesBriefPipeIp(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'interface':
@@ -204,7 +205,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #############################################################################
 # unitest For Show Interfaces switchport
 #############################################################################
-class test_show_interfaces_switchport(unittest.TestCase):
+class TestShowInterfacesSwitchport(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -464,7 +465,7 @@ class test_show_interfaces_switchport(unittest.TestCase):
 #############################################################################
 # unitest For Show Interfaces
 #############################################################################
-class test_show_interfaces(unittest.TestCase):
+class TestShowInterfaces(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -976,6 +977,7 @@ class test_show_interfaces(unittest.TestCase):
             "arp_timeout": "04:00:00",
             "arp_type": "arpa",
             "bandwidth": 1000000,
+            'auto_negotiate': True,
             "counters": {
                  "in_broadcast_pkts": 0,
                  "in_crc_errors": 0,
@@ -1015,6 +1017,10 @@ class test_show_interfaces(unittest.TestCase):
                  }
             },
             "delay": 10,
+            'duplex_mode': 'full',
+            'link_type': 'auto',
+            'port_speed': '1000',
+            'media_type': 'unknown',
             "enabled": False,
             "encapsulations": {
                  "encapsulation": "arpa"
@@ -4702,7 +4708,7 @@ Tunnel10 is up, line protocol is up
             "enabled": False,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -4769,7 +4775,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -4836,7 +4842,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -4909,7 +4915,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -4982,7 +4988,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5055,7 +5061,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5128,7 +5134,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5201,7 +5207,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5274,7 +5280,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5347,7 +5353,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5420,7 +5426,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5493,7 +5499,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5566,7 +5572,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5639,7 +5645,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5712,7 +5718,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5785,7 +5791,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5858,7 +5864,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -5931,7 +5937,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6004,7 +6010,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6077,7 +6083,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6150,7 +6156,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6223,7 +6229,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6296,7 +6302,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6369,7 +6375,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6442,7 +6448,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6515,7 +6521,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6588,7 +6594,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6661,7 +6667,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6734,7 +6740,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6807,7 +6813,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6880,7 +6886,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -6953,7 +6959,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7026,7 +7032,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7099,7 +7105,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7172,7 +7178,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7245,7 +7251,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7318,7 +7324,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7391,7 +7397,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7464,7 +7470,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7537,7 +7543,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7610,7 +7616,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -7683,7 +7689,7 @@ Tunnel10 is up, line protocol is up
             "enabled": True,
             "line_protocol": "down",
             "oper_status": "down",
-            "connected": False,
+            "autostate": True,
             "type": "Ethernet SVI",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10882,6 +10888,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2503842,
+                'in_pkts': 13266,
+                'out_octets': 2168924,
+                'out_pkts': 13769
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10913,6 +10925,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2501935,
+                'in_pkts': 13254,
+                'out_octets': 2170079,
+                'out_pkts': 13784
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10944,6 +10962,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2505791,
+                'in_pkts': 13281,
+                'out_octets': 2169079,
+                'out_pkts': 13764
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -10975,6 +10999,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2500301,
+                'in_pkts': 13273,
+                'out_octets': 2168845,
+                'out_pkts': 13766
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11006,6 +11036,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2497502,
+                'in_pkts': 13253,
+                'out_octets': 2167640,
+                'out_pkts': 13750
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11037,6 +11073,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502193,
+                'in_pkts': 13261,
+                'out_octets': 2167636,
+                'out_pkts': 13744
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11068,6 +11110,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2513375,
+                'in_pkts': 13350,
+                'out_octets': 2169851,
+                'out_pkts': 13781
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11099,6 +11147,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2510082,
+                'in_pkts': 13292,
+                'out_octets': 2169702,
+                'out_pkts': 13777
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11130,6 +11184,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2511802,
+                'in_pkts': 13332,
+                'out_octets': 2169056,
+                'out_pkts': 13770
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11161,6 +11221,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502910,
+                'in_pkts': 13282,
+                'out_octets': 2168425,
+                'out_pkts': 13777
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11192,6 +11258,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2501618,
+                'in_pkts': 13281,
+                'out_octets': 2168163,
+                'out_pkts': 13756
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11223,6 +11295,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502717,
+                'in_pkts': 13255,
+                'out_octets': 2168956,
+                'out_pkts': 13765
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11254,6 +11332,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502358,
+                'in_pkts': 13266,
+                'out_octets': 2169451,
+                'out_pkts': 13773
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11285,6 +11369,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2513180,
+                'in_pkts': 13347,
+                'out_octets': 2171050,
+                'out_pkts': 13794
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11316,6 +11406,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2497442,
+                'in_pkts': 13260,
+                'out_octets': 2169487,
+                'out_pkts': 13787
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11347,6 +11443,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2512146,
+                'in_pkts': 13336,
+                'out_octets': 2169512,
+                'out_pkts': 13773
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11378,6 +11480,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2505612,
+                'in_pkts': 13287,
+                'out_octets': 2170930,
+                'out_pkts': 13796
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11409,6 +11517,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2502019,
+                'in_pkts': 13263,
+                'out_octets': 2169941,
+                'out_pkts': 13780
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11440,6 +11554,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2509614,
+                'in_pkts': 13353,
+                'out_octets': 2170375,
+                'out_pkts': 13787
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11471,6 +11591,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2504934,
+                'in_pkts': 13280,
+                'out_octets': 2169331,
+                'out_pkts': 13772
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11502,6 +11628,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11533,6 +11665,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598430,
+                'in_pkts': 25477,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11564,6 +11702,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598634,
+                'in_pkts': 25479,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11595,6 +11739,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598634,
+                'in_pkts': 25479,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11626,6 +11776,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598430,
+                'in_pkts': 25477,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11657,6 +11813,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598634,
+                'in_pkts': 25479,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11688,6 +11850,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598344,
+                'in_pkts': 25476,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11719,6 +11887,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11750,6 +11924,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -11781,6 +11961,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 2598532,
+                'in_pkts': 25478,
+                'out_octets': 0,
+                'out_pkts': 0
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -12946,6 +13132,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222402380,
+                'in_pkts': 3426695,
+                'out_octets': 112615606,
+                'out_pkts': 1729535
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -12977,6 +13169,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222808882,
+                'in_pkts': 3430077,
+                'out_octets': 113033370,
+                'out_pkts': 1733061
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13008,6 +13206,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222402736,
+                'in_pkts': 3426685,
+                'out_octets': 112614680,
+                'out_pkts': 1729514
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13039,6 +13243,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222417026,
+                'in_pkts': 3426926,
+                'out_octets': 112627684,
+                'out_pkts': 1729722
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13070,6 +13280,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222416748,
+                'in_pkts': 3426916,
+                'out_octets': 112626186,
+                'out_pkts': 1729694
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13101,6 +13317,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222434908,
+                'in_pkts': 3427206,
+                'out_octets': 112633620,
+                'out_pkts': 1729813
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13132,6 +13354,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222419906,
+                'in_pkts': 3426971,
+                'out_octets': 112634178,
+                'out_pkts': 1729823
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13163,6 +13391,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222419256,
+                'in_pkts': 3426971,
+                'out_octets': 112634398,
+                'out_pkts': 1729821
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13194,6 +13428,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222412094,
+                'in_pkts': 3426848,
+                'out_octets': 112626654,
+                'out_pkts': 1729707
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13225,6 +13465,12 @@ Tunnel10 is up, line protocol is up
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'counters': {
+                'in_octets': 222430124,
+                'in_pkts': 3427137,
+                'out_octets': 112632450,
+                'out_pkts': 1729798
+            },
             "type": "Hundred Gigabit Ethernet",
             "mac_address": "70b3.1760.059f",
             "phys_address": "70b3.1760.059f",
@@ -13336,14 +13582,19 @@ Tunnel10 is up, line protocol is up
                     "FortyGigabitEthernet1/0/4"
                 ]
             },
+            'port_speed': '40',
             "enabled": True,
             "line_protocol": "up",
             "oper_status": "up",
             "connected": True,
+            'auto_negotiate': False,
             "type": "EtherChannel",
             "mac_address": "70b3.1760.0501",
             "phys_address": "70b3.1760.0501",
             "delay": 10,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': 'N/A',
             "mtu": 1500,
             "bandwidth": 80000000,
             "reliability": "255/255",
@@ -14850,6 +15101,7 @@ Tunnel10 is up, line protocol is up
                 "input_queue_size": 0,
                 "output_queue_max": 40,
                 "output_queue_size": 0,
+                'queue_strategy': 'Class-based',
                 "total_output_drop": 85587314
             },
             "reliability": "255/255",
@@ -15120,10 +15372,926 @@ Tunnel10 is up, line protocol is up
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
+    golden_output_1 = {'execute.return_value': '''
+        BDI105 is up, line protocol is up
+        Hardware is BDI, address is 2c33.1188.733f(bia 2c33.1188.733f)
+        Description: PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH
+        Internet address is 10.95.2.253/24
+        MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+        reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation 802.1Q VLAN, Vlan ID  105, loopback not set
+        Keepalive not supported
+        ARP type: ARPA, ARP Timeout 04: 00: 00
+        Last input never, output 01: 20: 01, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes)
+        Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 2000 bits/sec, 2 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+        35283845 packets input, 3929639714 bytes, 0 no buffer
+        Received 0 broadcasts(0 IP multicasts)
+        0 runts, 0 giants, 0 throttles
+        0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+        1933865 packets output, 287424110 bytes, 0 underruns
+        0 output errors, 0 interface resets
+        0 unknown protocol drops
+        0 output buffer failures, 0 output buffers swapped out
+
+      TenGigabitEthernet0/1/86 is administratively down, line protocol is down
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.a896 (bia 2c33.1188.a896)
+        MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive not supported
+        Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+        output flow-control is unsupported, input flow-control is unsupported
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input never, output never, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            0 packets input, 0 bytes, 0 no buffer
+            Received 0 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            0 watchdog, 0 multicast, 0 pause input
+            0 packets output, 0 bytes, 0 underruns
+            0 output errors, 0 collisions, 1 interface resets
+            0 unknown protocol drops
+            0 babbles, 0 late collision, 0 deferred
+            0 lost carrier, 0 no carrier, 0 pause output
+            0 output buffer failures, 0 output buffers swapped out
+      TenGigabitEthernet0/1/6 is administratively down, line protocol is down
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.a896 (bia 2c33.1188.a896)
+        MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive not supported
+        Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+        output flow-control is unsupported, input flow-control is unsupported
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input never, output never, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            0 packets input, 0 bytes, 0 no buffer
+            Received 0 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            0 watchdog, 0 multicast, 0 pause input
+            0 packets output, 0 bytes, 0 underruns
+            0 output errors, 0 collisions, 1 interface resets
+            0 unknown protocol drops
+            0 babbles, 0 late collision, 0 deferred
+            0 lost carrier, 0 no carrier, 0 pause output
+            0 output buffer failures, 0 output buffers swapped out
+        TenGigabitEthernet0/1/7 is administratively down, line protocol is down
+        Hardware is BUILT-IN-EPA-8x10G, address is 2c33.1188.a897 (bia 2c33.1188.a897)
+        MTU 1500 bytes, BW 10000000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive not supported
+        Full Duplex, 10000Mbps, link type is force-up, media type is unknown media type
+        output flow-control is unsupported, input flow-control is unsupported
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input never, output never, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            0 packets input, 0 bytes, 0 no buffer
+            Received 0 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            0 watchdog, 0 multicast, 0 pause input
+            0 packets output, 0 bytes, 0 underruns
+            0 output errors, 0 collisions, 1 interface resets
+            0 unknown protocol drops
+            0 babbles, 0 late collision, 0 deferred
+            0 lost carrier, 0 no carrier, 0 pause output
+            0 output buffer failures, 0 output buffers swapped out
+        GigabitEthernet0 is up, line protocol is up
+        Hardware is RP management port, address is 2c33.1188.a8c0 (bia 2c33.1188.a8c0)
+        Internet address is 172.31.0.24/16
+        MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, loopback not set
+        Keepalive set (10 sec)
+        Full Duplex, 1000Mbps, link type is auto, media type is RJ45
+        output flow-control is unsupported, input flow-control is unsupported
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input 00:00:00, output 00:00:00, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/75/0/2586 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 5000 bits/sec, 6 packets/sec
+        5 minute output rate 3000 bits/sec, 4 packets/sec
+            246659819 packets input, 31345442345 bytes, 0 no buffer
+            Received 21865326 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            0 watchdog, 0 multicast, 0 pause input
+            191782907 packets output, 24622021354 bytes, 0 underruns
+            0 output errors, 0 collisions, 0 interface resets
+            0 unknown protocol drops
+            0 babbles, 0 late collision, 0 deferred
+            1 lost carrier, 0 no carrier, 0 pause output
+            0 output buffer failures, 0 output buffers swapped out
+        BDI106 is up, line protocol is up
+        Hardware is BDI, address is 2c33.1188.a93f (bia 2c33.1188.a93f)
+        Description: PXMS connexion Explore CWS L2 / Backup VLAN for CHRH
+        Internet address is 100.1.2.43/24
+        MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation 802.1Q VLAN, Vlan ID  106, loopback not set
+        Keepalive not supported
+        ARP type: ARPA, ARP Timeout 04:00:00
+        Last input never, output 25w2d, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/40 (size/max)
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            24 packets input, 1729 bytes, 0 no buffer
+            Received 0 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+            4930792 packets output, 442723849 bytes, 0 underruns
+            0 output errors, 0 interface resets
+            0 unknown protocol drops
+            0 output buffer failures, 0 output buffers swapped out
+        Dialer1 is up (spoofing), line protocol is up (spoofing)
+        Hardware is Unknown
+        MTU 1492 bytes, BW 56 Kbit/sec, DLY 20000 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation HDLC, loopback not set
+        Keepalive set (10 sec)
+        DTR is pulsed for 1 seconds on reset
+        Last input never, output never, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: weighted fair
+        Output queue: 0/1000/64/0 (size/max total/threshold/drops)
+            Conversations  0/0/16 (active/max active/max total)
+            Reserved Conversations 0/0 (allocated/max allocated)
+            Available Bandwidth 42 kilobits/sec
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            0 packets input, 0 bytes
+            0 packets output, 0 bytes
+        Loopback50998 is up, line protocol is up
+        Hardware is Loopback
+        Internet address is 10.1.2.32/32
+        MTU 1514 bytes, BW 8000000 Kbit/sec, DLY 5000 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation LOOPBACK, loopback not set
+        Keepalive set (10 sec)
+        Last input never, output never, output hang never
+        Last clearing of "show interface" counters never
+        Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/0 (size/max)
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            0 packets input, 0 bytes, 0 no buffer
+            Received 0 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+            0 packets output, 0 bytes, 0 underruns
+            0 output errors, 0 collisions, 0 interface resets
+            0 unknown protocol drops
+            0 output buffer failures, 0 output buffers swapped out
+        Tunnel1754 is up, line protocol is up
+        Hardware is Tunnel
+        Description: *** PXMS TUNNEL FGTB-Hornu - CID 102338277687
+        Internet address is 10.210.226.13/30
+        MTU 9976 bytes, BW 20000 Kbit/sec, DLY 20000 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation TUNNEL, loopback not set
+        Keepalive not set
+        Tunnel linestate evaluation up
+        Tunnel source 178.248.163.201 (GigabitEthernet0/0/1.91), destination 178.248.161.36
+        Tunnel Subblocks:
+            src-track:
+                Tunnel1754 source tracking subblock associated with GigabitEthernet0/0/1.91
+                Set of tunnels with source GigabitEthernet0/0/1.91, 314 members (includes iterators), on interface <OK>
+        Tunnel protocol/transport GRE/IP
+            Key disabled, sequencing disabled
+            Checksumming of packets disabled
+        Tunnel TTL 255, Fast tunneling enabled
+        Tunnel transport MTU 1468 bytes
+        Tunnel transmit bandwidth 8000 (kbps)
+        Tunnel receive bandwidth 8000 (kbps)
+        Last input never, output never, output hang never
+        Last clearing of "show interface" counters 25w2d
+        Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+        Queueing strategy: fifo
+        Output queue: 0/0 (size/max)
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+            7105513 packets input, 2633533316 bytes, 0 no buffer
+            Received 0 broadcasts (0 IP multicasts)
+            0 runts, 0 giants, 0 throttles
+            0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+            3442669 packets output, 409215038 bytes, 0 underruns
+            0 output errors, 0 collisions, 0 interface resets
+            0 unknown protocol drops
+            0 output buffer failures, 0 output buffers swapped out
+    '''
+    }
+
+    golden_parsed_output_1 = {
+        'BDI105': {
+            'bandwidth': 100000,
+            'counters': {
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_no_buffer': 0,
+                'in_octets': 3929639714,
+                'in_overrun': 0,
+                'in_pkts': 35283845,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'last_clear': 'never',
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_errors': 0,
+                'out_interface_resets': 0,
+                'out_octets': 287424110,
+                'out_pkts': 1933865,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 2000,
+                    'in_rate_pkts': 2,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 10,
+            'description': 'PXMS Connexion Explore CWS L2 / Primary VLAN for CHRH',
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': '802.1q vlan',
+                'first_dot1q': '105'
+            },
+            'ipv4': {
+                '10.95.2.253/24': {
+                    'ip': '10.95.2.253',
+                    'prefix_length': '24'
+                }
+            },
+            'line_protocol': 'up',
+            'mac_address': '2c33.1188.733f',
+            'mtu': 1500,
+            'oper_status': 'up',
+            'phys_address': '2c33.1188.733f',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo'
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BDI'
+        },
+        'BDI106': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'bandwidth': 100000,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 1729,
+                'in_overrun': 0,
+                'in_pkts': 24,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'last_clear': 'never',
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_errors': 0,
+                'out_interface_resets': 0,
+                'out_octets': 442723849,
+                'out_pkts': 4930792,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 10,
+            'description': 'PXMS connexion Explore CWS L2 / Backup VLAN for CHRH',
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': '802.1q vlan',
+                'first_dot1q': '106'
+            },
+            'ipv4': {
+                '100.1.2.43/24': {
+                    'ip': '100.1.2.43',
+                    'prefix_length': '24'
+                }
+            },
+            'last_input': 'never',
+            'last_output': '25w2d',
+            'line_protocol': 'up',
+            'mac_address': '2c33.1188.a93f',
+            'mtu': 1500,
+            'oper_status': 'up',
+            'output_hang': 'never',
+            'phys_address': '2c33.1188.a93f',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BDI'
+        },
+        'Dialer1': {
+            'bandwidth': 56,
+            'connected': False,
+             'counters': {
+                'in_octets': 0,
+                'in_pkts': 0,
+                'last_clear': 'never',
+                'out_octets': 0,
+                'out_pkts': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 20000,
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': 'hdlc'
+            },
+            'keepalive': 10,
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'up',
+            'mtu': 1492,
+            'oper_status': 'up',
+            'output_hang': 'never',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'queue_strategy': 'weighted',
+                'total_output_drop': 0,
+                'output_queue_max': 1000,
+                'output_queue_size': 0,
+                'threshold': 64,
+                'drops': 0,
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'Unknown'
+        },
+        'GigabitEthernet0': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'auto_negotiate': True,
+            'bandwidth': 1000000,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 31345442345,
+                'in_overrun': 0,
+                'in_pkts': 246659819,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_watchdog': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_errors': 0,
+                'out_interface_resets': 0,
+                'out_late_collision': 0,
+                'out_lost_carrier': 1,
+                'out_mac_pause_frames': 0,
+                'out_no_carrier': 0,
+                'out_octets': 24622021354,
+                'out_pkts': 191782907,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 5000,
+                    'in_rate_pkts': 6,
+                    'load_interval': 300,
+                    'out_rate': 3000,
+                    'out_rate_pkts': 4
+                }
+            },
+            'delay': 10,
+            'duplex_mode': 'full',
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': 'arpa'
+            },
+            'flow_control': {
+                'receive': False, 'send': False
+            },
+            'ipv4': {
+                '172.31.0.24/16': {
+                    'ip': '172.31.0.24',
+                    'prefix_length': '16'
+                }
+            },
+            'keepalive': 10,
+            'last_input': '00:00:00',
+            'last_output': '00:00:00',
+            'line_protocol': 'up',
+            'link_type': 'auto',
+            'mac_address': '2c33.1188.a8c0',
+            'media_type': 'RJ45',
+            'mtu': 1500,
+            'oper_status': 'up',
+            'output_hang': 'never',
+            'phys_address': '2c33.1188.a8c0',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'port_speed': '1000',
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 2586,
+                'input_queue_max': 75,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'RP management port'
+        },
+        'Loopback50998': {
+            'bandwidth': 8000000,
+            'counters': {
+                'in_abort': 0,
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 0,
+                'in_overrun': 0,
+                'in_pkts': 0,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'last_clear': 'never',
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_errors': 0,
+                'out_interface_resets': 0,
+                'out_octets': 0,
+                'out_pkts': 0,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 5000,
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': 'loopback'
+            },
+            'ipv4': {
+                '10.1.2.32/32': {
+                    'ip': '10.1.2.32',
+                    'prefix_length': '32'
+                }
+            },
+            'keepalive': 10,
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'up',
+            'mtu': 1514,
+            'oper_status': 'up',
+            'output_hang': 'never',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 75,
+                'input_queue_size': 0,
+                'output_queue_max': 0,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'Loopback'
+        },
+        'TenGigabitEthernet0/1/6': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'bandwidth': 10000000,
+            'auto_negotiate': False,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 0,
+                'in_overrun': 0,
+                'in_pkts': 0,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_watchdog': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_errors': 0,
+                'out_interface_resets': 1,
+                'out_late_collision': 0,
+                'out_lost_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_no_carrier': 0,
+                'out_octets': 0,
+                'out_pkts': 0,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 10,
+            'duplex_mode': 'full',
+            'link_type': 'force-up',
+            'media_type': 'unknown',
+            'enabled': False,
+            'port_speed': '10000',
+            'encapsulations': {
+                'encapsulation': 'arpa'
+            },
+            'flow_control': {
+                'receive': False, 'send': False
+            },
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'down',
+            'mac_address': '2c33.1188.a896',
+            'mtu': 1500,
+            'oper_status': 'down',
+            'output_hang': 'never',
+            'phys_address': '2c33.1188.a896',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BUILT-IN-EPA-8x10G'
+        },
+        'TenGigabitEthernet0/1/7': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'bandwidth': 10000000,
+            'auto_negotiate': False,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 0,
+                'in_overrun': 0,
+                'in_pkts': 0,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_watchdog': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_errors': 0,
+                'out_interface_resets': 1,
+                'out_late_collision': 0,
+                'out_lost_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_no_carrier': 0,
+                'out_octets': 0,
+                'out_pkts': 0,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 10,
+            'duplex_mode': 'full',
+            'enabled': False,
+            'encapsulations': {
+                'encapsulation': 'arpa'
+            },
+            'flow_control': {
+                'receive': False, 'send': False
+            },
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'down',
+            'link_type': 'force-up',
+            'media_type': 'unknown',
+            'mac_address': '2c33.1188.a897',
+            'mtu': 1500,
+            'oper_status': 'down',
+            'output_hang': 'never',
+            'port_speed': '10000',
+            'phys_address': '2c33.1188.a897',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BUILT-IN-EPA-8x10G'
+        },
+        'TenGigabitEthernet0/1/86': {
+            'arp_timeout': '04:00:00',
+            'arp_type': 'arpa',
+            'bandwidth': 10000000,
+            'auto_negotiate': False,
+            'counters': {
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 0,
+                'in_overrun': 0,
+                'in_pkts': 0,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'in_watchdog': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_errors': 0,
+                'out_interface_resets': 1,
+                'out_late_collision': 0,
+                'out_lost_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_no_carrier': 0,
+                'out_octets': 0,
+                'out_pkts': 0,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 10,
+            'duplex_mode': 'full',
+            'enabled': False,
+            'encapsulations': {
+                'encapsulation': 'arpa'
+            },
+            'flow_control': {
+                'receive': False, 'send': False
+            },
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'down',
+            'link_type': 'force-up',
+            'media_type': 'unknown',
+            'port_speed': '10000',
+            'mac_address': '2c33.1188.a896',
+            'mtu': 1500,
+            'oper_status': 'down',
+            'output_hang': 'never',
+            'phys_address': '2c33.1188.a896',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 40,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'BUILT-IN-EPA-8x10G'
+        },
+        'Tunnel1754': {
+            'bandwidth': 20000,
+            'counters': {
+                'in_abort': 0,
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_errors': 0,
+                'in_frame': 0,
+                'in_giants': 0,
+                'in_ignored': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 2633533316,
+                'in_overrun': 0,
+                'in_pkts': 7105513,
+                'in_runts': 0,
+                'in_throttles': 0,
+                'last_clear': '25w2d',
+                'out_buffer_failure': 0,
+                'out_buffers_swapped': 0,
+                'out_collision': 0,
+                'out_errors': 0,
+                'out_interface_resets': 0,
+                'out_octets': 409215038,
+                'out_pkts': 3442669,
+                'out_underruns': 0,
+                'out_unknown_protocl_drops': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_pkts': 0,
+                    'load_interval': 300,
+                    'out_rate': 0,
+                    'out_rate_pkts': 0
+                }
+            },
+            'delay': 20000,
+            'description': '*** PXMS TUNNEL FGTB-Hornu - CID 102338277687',
+            'enabled': True,
+            'encapsulations': {
+                'encapsulation': 'tunnel'
+            },
+            'ipv4': {
+                '10.210.226.13/30': {
+                    'ip': '10.210.226.13',
+                    'prefix_length': '30'
+                }
+            },
+            'last_input': 'never',
+            'last_output': 'never',
+            'line_protocol': 'up',
+            'mtu': 9976,
+            'oper_status': 'up',
+            'output_hang': 'never',
+            'port_channel': {
+                'port_channel_member': False
+            },
+            'queues': {
+                'input_queue_drops': 0,
+                'input_queue_flushes': 0,
+                'input_queue_max': 375,
+                'input_queue_size': 0,
+                'output_queue_max': 0,
+                'output_queue_size': 0,
+                'queue_strategy': 'fifo',
+                'total_output_drop': 0
+            },
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'txload': '1/255',
+            'type': 'Tunnel'
+        }
+    }
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        interface_obj = ShowInterfaces(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+
 #############################################################################
 # unitest For Show ip interface
 #############################################################################
-class test_show_ip_interface(unittest.TestCase):
+class TestShowIpInterface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -15652,7 +16820,7 @@ GigabitEthernet1 is administratively down, line protocol is down
 #############################################################################
 # unitest For show ipv6 interface
 #############################################################################
-class test_show_ipv6_interface(unittest.TestCase):
+class TestShowIpv6Interface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -16256,7 +17424,7 @@ class test_show_ipv6_interface(unittest.TestCase):
 #############################################################################
 # unitest For show interfaces trunk
 #############################################################################
-class test_show_interfaces_trunk(unittest.TestCase):
+class TestShowInterfacesTrunk(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -16455,7 +17623,7 @@ class test_show_interfaces_trunk(unittest.TestCase):
 #############################################################################
 # unitest For show interfaces <WORD> counters
 #############################################################################
-class test_show_interfaces_counters(unittest.TestCase):
+class TestShowInterfacesCounters(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -16503,7 +17671,7 @@ class test_show_interfaces_counters(unittest.TestCase):
 # unitest For show interfaces <interface> accounting
 #############################################################################
 
-class test_show_interfaces_accounting(unittest.TestCase):
+class TestShowInterfacesAccounting(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -16735,7 +17903,7 @@ No traffic sent or received on this interface.
 ###################################################
 # unit test for show interfaces stats
 ####################################################
-class test_show_interfaces_stats(unittest.TestCase):
+class TestShowInterfacesStats(unittest.TestCase):
     """unit test for show interfaces stats """
 
     device = Device(name='aDevice')
