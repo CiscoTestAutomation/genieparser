@@ -425,22 +425,60 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
-        'pce_topology_database_summary': {
-            'adjancency_sids': {
-                'total': 24}, 'links': {
-                'total': 12}, 'prefix_sids': {
-                    'total': 4}, 'prefixes': 4, 'topology_nodes': 4}}
+    'pce_topology_database_summary': {
+        'adjancency_sids': {
+            'total': 24,
+        },
+        'links': {
+            'total': 12,
+        },
+        'prefix_sids': {
+            'total': 4,
+        },
+        'prefixes': 4,
+        'topology_nodes': 4,
+    },
+}
+
     expected_output_2 = {
         'pce_topology_database_summary': {
             'adjancency_sids': {
-                'epe': 0, 'protected': 0, 'total': 0, 'unprotected': 0}, 'links': {
-                'epe': 0, 'total': 0}, 'prefix_sids': {
-                    'regular': 0, 'strict': 0, 'total': 0}, 'prefixes': 0, 'private_information': {
-                        'consistent': 'yes', 'lookup_nodes': 0, 'update_stats': {
-                            'links': {
-                                'added': 0, 'deleted': 0}, 'noded': {
-                                    'added': 0, 'deleted': 0}, 'prefix': {
-                                        'added': 0, 'deleted': 0}}}, 'topology_nodes': 0}}
+                'epe': 0,
+                'protected': 0,
+                'total': 0,
+                'unprotected': 0,
+            },
+            'links': {
+                'epe': 0,
+                'total': 0,
+            },
+            'prefix_sids': {
+                'regular': 0,
+                'strict': 0,
+                'total': 0,
+            },
+            'prefixes': 0,
+            'private_information': {
+                'consistent': 'yes',
+                'lookup_nodes': 0,
+                'update_stats': {
+                    'links': {
+                        'added': 0,
+                        'deleted': 0,
+                    },
+                    'noded': {
+                        'added': 0,
+                        'deleted': 0,
+                    },
+                    'prefix': {
+                        'added': 0,
+                        'deleted': 0,
+                    },
+                },
+            },
+            'topology_nodes': 0,
+        },
+    }
     device_output_2 = {'execute.return_value': '''
 
         PCE's topology database summary:
