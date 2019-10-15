@@ -937,8 +937,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
-            '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
-            'ShgId: +(?P<shg_id>\d+)(, +MSTi: +(?P<mst_i>\d+))?$')
+            r'(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
+            r'ShgId: +(?P<shg_id>\d+)(, +MSTi: +(?P<mst_i>\d+))?$')
         
         # VPWS Mode
         p1_1 = re.compile(r'^(?P<mode>\S+) +Mode$')
@@ -962,10 +962,13 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p7 = re.compile(r'^MAC +aging +time: +(?P<mac_aging_time>\d+) +s, +Type: +(?P<mac_aging_type>\S+)$')
 
         # MAC limit: 4000, Action: none, Notification: syslog
-        p8 = re.compile(r'^MAC +limit: +(?P<mac_limit>\d+), +Action: +(?P<action>\S+), +Notification: +(?P<notification>\S+)$')
+        p8 = re.compile(r'^MAC +limit: +(?P<mac_limit>\d+), +Action: +(?P<action>\S+),'
+                        r' +Notification: +(?P<notification>\S+)$')
 
         # MAC limit reached: yes
-        p9 = re.compile(r'^MAC +limit +reached: +(?P<mac_limit_reached>\S+)(, +threshold: +(?P<threshold>\S+))?$')
+        # MAC limit reached: no, threshold: 75%
+        p9 = re.compile(r'^MAC +limit +reached: +(?P<mac_limit_reached>\S+)'
+                        r'(, +threshold: +(?P<threshold>\S+))?$')
 
         # Security: disabled
         p10 = re.compile(r'^Security: +(?P<security>\S+)$')
@@ -994,7 +997,9 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
 
         # ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
         # ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
-        p14 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +(?P<vfi>\d+), +PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +up\)(, +PBBs: +(?P<pbb>\d+) +\((?P<pbb_up>\d+) +up\))?(, +VNIs: +(?P<vni>\d+) +\((?P<vni_up>\d+) +up\))?$')
+        p14 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +(?P<vfi>\d+), +'
+                         r'PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +up\)(, +PBBs: +(?P<pbb>\d+) +\('
+                         r'(?P<pbb_up>\d+) +up\))?(, +VNIs: +(?P<vni>\d+) +\((?P<vni_up>\d+) +up\))?$')
 
         # List of ACs:
         p15 = re.compile(r'^List +of +ACs:$')
@@ -1004,15 +1009,18 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p16 = re.compile(r'^AC: +(?P<interface>\S+), +state +is +(?P<state>[\S ]+)$')
 
         # Type Ethernet
+        # Type VLAN; Num Ranges: 1
         p17 = re.compile(r'^Type +(?P<type>\S+)(; +Num +Ranges: +(?P<num_ranges>\d+))?$')
 
         # MTU 1500; XC ID 0x2000001; interworking none; MSTi 0 (unprotected)
         # MTU 1514; XC ID 0x8000000b; interworking none
         # MTU 9202; XC ID 0xc0000002; interworking none; MSTi 5
-        p18 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); +interworking +(?P<interworking>\S+)(; +MSTi +(?P<mst_i>\d+))?( +\((?P<mst_i_state>\w+)\))?$')
+        p18 = re.compile(r'^MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\S+); +interworking +'
+                        r'(?P<interworking>\S+)(; +MSTi +(?P<mst_i>\d+))?( +\((?P<mst_i_state>\w+)\))?$')
 
         # Type Ethernet      MTU 1500; XC ID 1; interworking none
-        p18_1 = re.compile(r'Type +(?P<pw_type>\S+) +MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\d+); +interworking +(?P<interworking>\S+)$')
+        p18_1 = re.compile(r'Type +(?P<pw_type>\S+) +MTU +(?P<mtu>\d+); +XC +ID +(?P<xc_id>\d+);'
+                            r' +interworking +(?P<interworking>\S+)$')
         
         # 0000.0000.0000
         p19 = re.compile(r'(?P<static_mac_address>[\d\.]+)$')
@@ -1022,11 +1030,17 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
 
         # packet totals: receive 3919680,send 9328
         # packets: received 0 (unicast 0), sent 0
-        p21 = re.compile(r'packet(s)?( +totals)?: +receive(d)? +(?P<receive>\d+)( +\(( *multicast +(?P<multicast>\d+),?)?( *broadcast +(?P<broadcast>\d+),?)?( *unknown +unicast +(?P<unknown_unicast>\d+),?)? *unicast +(?P<unicast>\d+)\))?, *sen(d|t) +(?P<send>\d+)$')
+        p21 = re.compile(r'packet(s)?( +totals)?: +receive(d)? +(?P<receive>\d+)( +\(( *multicast +'
+                        r'(?P<multicast>\d+),?)?( *broadcast +(?P<broadcast>\d+),?)?( *unknown +'
+                        r'unicast +(?P<unknown_unicast>\d+),?)? *unicast +(?P<unicast>\d+)\))?, '
+                        r'*sen(d|t) +(?P<send>\d+)$')
 
         # byte totals: receive 305735040,send 15022146
         # bytes: received 0 (unicast 0), sent 0
-        p22 = re.compile(r'byte(s)?( +totals)?: +receive(d)? +(?P<receive>\d+)( +\(( *multicast +(?P<multicast>\d+),?)?( *broadcast +(?P<broadcast>\d+),?)?( *unknown +unicast +(?P<unknown_unicast>\d+),?)? *unicast +(?P<unicast>\d+)\))?, *sen(d|t) +(?P<send>\d+)$')
+        p22 = re.compile(r'byte(s)?( +totals)?: +receive(d)? +(?P<receive>\d+)( +\(( *multicast +'
+                        r'(?P<multicast>\d+),?)?( *broadcast +(?P<broadcast>\d+),?)?( *unknown +'
+                        r'unicast +(?P<unknown_unicast>\d+),?)? *unicast +(?P<unicast>\d+)\))?, '
+                        r'*sen(d|t) +(?P<send>\d+)$')
 
         # List of Access PWs:
         p23 = re.compile(r'List +of +Access +PWs:$')
@@ -1038,7 +1052,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p25 = re.compile(r'VFI +(?P<vfi>\S+)$')
 
         # PW: neighbor 1.1.1.1, PW ID 1, state is up ( established )
-        p26 = re.compile(r'PW: +neighbor +(?P<neighbor>\S+), +PW +ID +(?P<pw_id>\d+), +state +is +(?P<state>[\S ]+)$')
+        p26 = re.compile(r'PW: +neighbor +(?P<neighbor>\S+), +PW +ID +(?P<pw_id>\d+), +state +'
+                        r'is +(?P<state>[\S ]+)$')
 
         # PW class mpls, XC ID 0xff000001
         p27 = re.compile(r'PW +class +(?P<pw_class>\w+), +XC +ID +(?P<xc_id>\S+)$')
@@ -1050,7 +1065,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p28 = re.compile(r'Encapsulation +(?P<encapsulation>\S+), +protocol +(?P<protocol>\S+)$')
 
         # PW type Ethernet, control word disabled, interworking none
-        p29 = re.compile(r'PW +type +(?P<pw_type>\S+), +control +word +(?P<control_word>\S+), +interworking +(?P<interworking>\S+)$')
+        p29 = re.compile(r'PW +type +(?P<pw_type>\S+), +control +word +(?P<control_word>\S+),'
+                        r' +interworking +(?P<interworking>\S+)$')
 
         # PW backup disable delay 0 sec
         p30 = re.compile(r'PW +backup +disable +delay +(?P<delay>\d+) +sec$')
@@ -1088,15 +1104,16 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p40 = re.compile(r'VFI +Statistics:$')
 
         # drops: illegal VLAN 0, illegal length 0
-        p41 = re.compile(r'drops: +(?P<drops>\S+) VLAN +(?P<vlan>\d+), +illegal +length +(?P<illegal_length>\d+)$')
+        p41 = re.compile(r'drops: +(?P<drops>\S+) VLAN +(?P<vlan>\d+), +illegal +length '
+                        r'+(?P<illegal_length>\d+)$')
 
         # (control word)                 (control word)  
         p42 = re.compile(r'^\([\S ]+\)$')
 
         # Mon Oct  7 16:18:59.168 EDT
         p43 = re.compile(r'^[Wed|Thu|Fri|Sat|Sun|Mon|Tue]+ +'
-                        '[Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec]+ +'
-                        '\d{1,2} +\d{1,2}:\d{1,2}:\d{1,2}[\.]\d{1,3} +[A-Z]{3}')
+                        r'[Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec]+ +'
+                        r'\d{1,2} +\d{1,2}:\d{1,2}:\d{1,2}[\.]\d{1,3} +[A-Z]{3}')
 
         # Legend: pp = Partially Programmed.
         p44 = re.compile(r'^Legend: +(?P<legend>[\S ]+)$')
@@ -1126,7 +1143,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p52 = re.compile(r'^Split +Horizon +Group: +(?P<split_horizon_group>\S+)$')
 
         # Dynamic ARP Inspection: disabled, Logging: disabled
-        p53 = re.compile(r'^Dynamic +ARP +Inspection: +(?P<dynamic_arp_inspection>\w+), +Logging: +(?P<dynamic_arp_logging>\w+)$')
+        p53 = re.compile(r'^Dynamic +ARP +Inspection: +(?P<dynamic_arp_inspection>\w+), +Logging'
+                        r': +(?P<dynamic_arp_logging>\w+)$')
 
         # IP Source Guard: disabled, Logging: disabled
         p54 = re.compile(r'^IP +Source +Guard: +(?P<ip_source_guard>\w+), +Logging: +(?P<ip_source_logging>\w+)$')
@@ -1178,10 +1196,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p70 = re.compile(r'^Storm +control +drop +counters:$')
 
         # packets: broadcast 0, multicast 0, unknown unicast 0
-        p71 = re.compile(r'^packets: +broadcast +(?P<broadcast>\d+), +multicast +(?P<multicast>\d+), +unknown +unicast +(?P<unknown_unicast>\d+)$')
+        p71 = re.compile(r'^packets: +broadcast +(?P<broadcast>\d+), +multicast +(?P<multicast>\d+)'
+                        r', +unknown +unicast +(?P<unknown_unicast>\d+)$')
 
         # bytes: broadcast 0, multicast 0, unknown unicast 0
-        p72 = re.compile(r'^bytes: +broadcast +(?P<broadcast>\d+), +multicast +(?P<multicast>\d+), +unknown +unicast +(?P<unknown_unicast>\d+)$')
+        p72 = re.compile(r'^bytes: +broadcast +(?P<broadcast>\d+), +multicast +(?P<multicast>\d+),'
+                        r' +unknown +unicast +(?P<unknown_unicast>\d+)$')
 
         # Dynamic ARP inspection drop counters:
         p73 = re.compile(r'^Dynamic +ARP +inspection +drop +counters:$')
@@ -1469,6 +1489,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                 continue
 
             # Type Ethernet
+            # Type VLAN; Num Ranges: 1
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -1860,7 +1881,6 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             # No status change since creation
             m = p60.match(line)
             if m:
-                group = m.groupdict()
                 bridge_domain_dict.update({'status_changed_since_creation': 'No'})
                 continue
 
