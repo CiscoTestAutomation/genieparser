@@ -735,18 +735,22 @@ class ShowIpRoute(ShowIpRouteSchema):
 # ====================================================
 class ShowIpv6Route(ShowIpRoute):
     """Parser for :
-        show ipv6 route {protocol} {route} interface {interface} vrf {vrf}
-        show ipv6 route {protocol} {route} interface {interface}
-        show ipv6 route {route} interface {interface} vrf {vrf}
-        show ipv6 route {protocol} {route}
-        show ipv6 route {route} interface {interface}
-        show ipv6 route interface {interface} vrf {vrf}
-        show ipv6 route {protocol}
-        show ipv6 route {route}
-        show ipv6 route interface {interface}
-        show ipv6 route vrf {vrf}
-        show ipv6 route vrf all
-        show ipv6 route
+        'show ipv6 route {route} {protocol} interface {interface} vrf {vrf}',
+        'show ipv6 route {route} {protocol} interface {interface}',
+        'show ipv6 route {protocol} interface {interface} vrf {vrf}',
+        'show ipv6 route {route} interface {interface} vrf {vrf}',
+        'show ipv6 route {route} {protocol}',
+        'show ipv6 route {protocol} interface {interface}',
+        'show ipv6 route {protocol} vrf {vrf}',
+        'show ipv6 route {route} interface {interface}',
+        'show ipv6 route {route} vrf {vrf}',
+        'show ipv6 route interface {interface} vrf {vrf}',
+        'show ipv6 route {protocol}',
+        'show ipv6 route {route}',
+        'show ipv6 route interface {interface}',
+        'show ipv6 route vrf {vrf}',
+        'show ipv6 route vrf all',
+        'show ipv6 route'
        """
     
     cli_command = [ 'show ipv6 route {route} {protocol} interface {interface} vrf {vrf}',

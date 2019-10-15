@@ -274,11 +274,15 @@
         * Support more varied output
 * NXOS:
     * Updated ShowIpRoute for:
-        * show ip route {protocol} {route} interface {interface} vrf {vrf}
-        * show ip route {protocol} {route} interface {interface}
+        * show ip route {route} {protocol} interface {interface} vrf {vrf}
+        * show ip route {route} {protocol} interface {interface}
+        * show ip route {protocol} interface {interface} vrf {vrf}
         * show ip route {route} interface {interface} vrf {vrf}
-        * show ip route {protocol} {route}
+        * show ip route {route} {protocol}
+        * show ip route {protocol} interface {interface}
+        * show ip route {protocol} vrf {vrf}
         * show ip route {route} interface {interface}
+        * show ip route {route} vrf {vrf}
         * show ip route interface {interface} vrf {vrf}
         * show ip route {protocol}
         * show ip route {route}
@@ -287,11 +291,15 @@
         * show ip route vrf all
         * show ip route
     * Updated ShowIpv6Route for:
-        * show ipv6 route {protocol} {route} interface {interface} vrf {vrf}
-        * show ipv6 route {protocol} {route} interface {interface}
+        * show ipv6 route {route} {protocol} interface {interface} vrf {vrf}
+        * show ipv6 route {route} {protocol} interface {interface}
+        * show ipv6 route {protocol} interface {interface} vrf {vrf}
         * show ipv6 route {route} interface {interface} vrf {vrf}
-        * show ipv6 route {protocol} {route}
+        * show ipv6 route {route} {protocol}
+        * show ipv6 route {protocol} interface {interface}
+        * show ipv6 route {protocol} vrf {vrf}
         * show ipv6 route {route} interface {interface}
+        * show ipv6 route {route} vrf {vrf}
         * show ipv6 route interface {interface} vrf {vrf}
         * show ipv6 route {protocol}
         * show ipv6 route {route}
