@@ -1254,9 +1254,9 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
             if m:
                 group = m.groupdict()
                 group_dict = ret_dict.setdefault('groups', {}). \
-                    setdefault(str(group['group']), {})
+                    setdefault(group['group'], {})
                 name_dict = group_dict.setdefault('name', {}) \
-                        .setdefault(str(group['name']), {})
+                        .setdefault(group['name'], {})
                 continue
 
             m2 = p2.match(line)
