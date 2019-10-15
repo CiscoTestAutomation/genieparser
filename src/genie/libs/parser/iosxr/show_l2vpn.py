@@ -378,9 +378,10 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             Optional('interfaces'): {
                                 Any(): {
                                     'state': str,
-                                    'static_mac_address': int,
-                                    'mst_i': int,
-                                    'mst_i_state': str
+                                    Optional('static_mac_address'): int,
+                                    Optional('bvi_mac_address'): int,
+                                    Optional('mst_i'): int,
+                                    Optional('mst_i_state'): str
                                 }
                             }
                         },
@@ -403,6 +404,19 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             'num_pw': int,
                             'num_pw_up': int,
                         },
+                        Optional('pbb'): {
+                            'num_pbb': int,
+                            'num_pbb_up': int,
+                        },
+                        Optional('vni'): {
+                            'num_vni': int,
+                            'num_vni_up': int,
+                        },
+                        Optional('evpn'): {
+                            Any(): {
+                                'state': str,
+                            }
+                        }
                     },
                 }
             }
@@ -423,7 +437,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
-        p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\w+), +bridge\-domain: +'
+        p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
             '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
             'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
 
@@ -435,13 +449,19 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         p3 = re.compile(r'^Filter +MAC +addresses: +(?P<filter_mac_address>\d+)$')
 
         # ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
-        p4 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +'
-            '(?P<vfi>\d+), +PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +\w+\)$')
+        p4 = re.compile(r'^ACs: +(?P<ac>\d+) +\((?P<ac_up>\d+) +up\), +VFIs: +(?P<vfi>\d+), +'
+            'PWs: +(?P<pw>\d+) +\((?P<pw_up>\d+) +\w+\)(, +PBBs: +(?P<pbb>\d+)'
+            ' +\((?P<pbb_up>\d+) +up\))?(, +VNIs: +(?P<vni>\d+) +\((?P<vni_up>\d+) +up\))?$')
 
         # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
-        p5 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +Static +MAC +addresses: +'
-            '(?P<static_mac_address>\d+), +MSTi: +(?P<mst_i>\d+) +\((?P<mst_i_state>\w+)\)$')
+        p5 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +Static +'
+            'MAC +addresses: +(?P<static_mac_address>\d+), +MSTi: +(?P<mst_i>\d+)'
+            '( +\((?P<mst_i_state>\w+)\))?$')
         
+        # BV100, state: up, BVI MAC addresses: 1
+        p5_1 = re.compile(r'^(?P<interface>\S+), +state: +(?P<state>\w+), +BVI +'
+            'MAC +addresses: +(?P<bvi_mac_address>\d+)$')
+
         # VFI 1
         p6 = re.compile(r'^VFI +(?P<vfi>\d+)$')
 
@@ -453,9 +473,14 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         p8 = re.compile(r'^(?P<bridge_group>\S+)\/(?P<bridge_domain_name>\S+) +(?P<id>\d+) +'
             '(?P<state>\w+) +(?P<ac>\d+)\/(?P<ac_up>\d+) +(?P<pw>\d+)\/(?P<pw_up>\d+)$')
         
+        # EVPN, state: up
+        p9 = re.compile(r'^(?P<evpn>\S+), +state: +(?P<state>\w+)$')
+        
         for line in out.splitlines():
             line = line.strip()
             
+            # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
+            # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -513,6 +538,21 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 pw_dict = bridge_domain_dict.setdefault('pw', {})
                 pw_dict.update({'num_pw': pw})
                 pw_dict.update({'num_pw_up': pw_up})
+
+                pbb = group['pbb']
+                pbb_up = group['pbb_up']
+                if pbb:
+                    pbb_dict = bridge_domain_dict.setdefault('pbb', {})
+                    pbb_dict.update({'num_pbb': int(pbb)})
+                    pbb_dict.update({'num_pbb_up': int(pbb_up)})
+
+                vni = group['vni']
+                vni_up = group['vni_up']
+                if vni:
+                    vni_dict = bridge_domain_dict.setdefault('vni', {})
+                    vni_dict.update({'num_vni': int(vni)})
+                    vni_dict.update({'num_vni_up': int(vni_up)})
+
                 continue
             
             # Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
@@ -530,7 +570,22 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 interface_dict.update({'state': state})
                 interface_dict.update({'static_mac_address': static_mac_address})
                 interface_dict.update({'mst_i': mst_i})
-                interface_dict.update({'mst_i_state': mst_i_state})
+                if mst_i_state:
+                    interface_dict.update({'mst_i_state': mst_i_state})
+                continue
+
+            # BV100, state: up, BVI MAC addresses: 1
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                state = group['state']
+                bvi_mac_address = int(group['bvi_mac_address'])
+
+                interface_dict = ac_dict.setdefault('interfaces', {}). \
+                    setdefault(interface, {})
+                interface_dict.update({'state': state})
+                interface_dict.update({'bvi_mac_address': bvi_mac_address})
                 continue
 
             # VFI 1
@@ -590,6 +645,18 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 pw_dict.update({'num_pw_up': pw_up})
 
                 continue
+            
+            # EVPN, state: up
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                evpn = group['evpn']
+                evpn_state = group['state']
+                evpn_dict = bridge_domain_dict.setdefault('evpn', {}). \
+                                setdefault(evpn, {})
+                evpn_dict.update({'state': state})
+                continue
+
         return ret_dict
 
 # =====================================================
