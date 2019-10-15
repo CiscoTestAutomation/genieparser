@@ -317,6 +317,7 @@ class ShowIpRouteSchema(MetaParser):
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('tag'): int,
+                                Optional('hidden'): bool,
                                 Optional('source_protocol'): str,
                                 Optional('source_protocol_status'): str,
                                 Optional('attached'): bool,
@@ -516,10 +517,13 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
         # *via ::ffff:10.229.11.11%default:IPv4, [200/0], 01:01:43, bgp-100, internal,
         # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
-        p3 = re.compile(r'^\s*(?P<star>[*]+)via +(?P<next_hop>[\w\:\.\%]+),'
+        # via 1.1.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
+        # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
+        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\w\:\.\%]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
-                        r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?$')
+                        r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
+                        r'( +\((?P<hidden>hidden)\))?$')
 
         #    tag 100
         p4 = re.compile(r'^tag +(?P<tag>\d+)$')
@@ -569,23 +573,23 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['attached']:
                     attached = True if 'attached' in groups['attached'] else False
 
-                if vrf:
-                    if 'vrf' not in result_dict:
-                        routes_dict = result_dict.setdefault('vrf', {}).setdefault('default', {}). \
-                            setdefault('address_family', {}).setdefault(af, {}). \
-                            setdefault('routes', {})
-                    route_dict = routes_dict.setdefault(route, {})
-                    route_dict.update({'route': route})
-                    route_dict.update({'active': active})
+                # if vrf:
+                if 'vrf' not in result_dict:
+                    routes_dict = result_dict.setdefault('vrf', {}).setdefault('default', {}). \
+                        setdefault('address_family', {}).setdefault(af, {}). \
+                        setdefault('routes', {})
+                route_dict = routes_dict.setdefault(route, {})
+                route_dict.update({'route': route})
+                route_dict.update({'active': active})
 
-                    if ubest:
-                        route_dict.update({'ubest': int(ubest)})
+                if ubest:
+                    route_dict.update({'ubest': int(ubest)})
 
-                    if mbest:
-                        route_dict.update({'mbest': int(mbest)})
+                if mbest:
+                    route_dict.update({'mbest': int(mbest)})
 
-                    if groups['attached']:
-                        route_dict.update({'attached': attached})
+                if groups['attached']:
+                    route_dict.update({'attached': attached})
 
                 continue
 
@@ -594,16 +598,20 @@ class ShowIpRoute(ShowIpRouteSchema):
             # *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             # *via 2700:1::1, Eth1/27, [0/0], 05:56:03, local
             # *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
+            # via 1.1.1.1, [200/0], 1w4d, bgp-65000, internal, tag 65000 (hidden)
+            # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
 
                 tag = process_id = source_protocol_status = interface = next_hop_vrf = next_hop_af = ""
                 star = m.groupdict()['star']
-                if len(star) == 1:
-                    cast = 'best_ucast_nexthop'
-                if len(star) == 2:
-                    cast = 'best_mcast_nexthop'
+                cast = None
+                if star:
+                    if len(star) == 1:
+                        cast = 'best_ucast_nexthop'
+                    if len(star) == 2:
+                        cast = 'best_mcast_nexthop'
 
                 if groups['next_hop']:
                     next_hop = groups['next_hop']
@@ -639,56 +647,63 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['tag']:
                     tag = groups['tag']
 
-                if vrf:
-                    if metrics:
-                        route_dict.update({'metric': int(metrics)})
+                hidden = True if groups.get('hidden') else False
 
-                    if route_preference:
-                        route_dict.update({'route_preference': int(route_preference)})
+                if hidden:
+                    route_dict.update({'hidden': hidden})
 
-                    if process_id:
-                        route_dict.update({'process_id': process_id})
+                # if vrf:
+                if metrics:
+                    route_dict.update({'metric': int(metrics)})
 
-                    if tag:
-                        route_dict.update({'tag': int(tag)})
+                if route_preference:
+                    route_dict.update({'route_preference': int(route_preference)})
 
-                    next_hop_dict = route_dict.setdefault('next_hop', {})
+                if process_id:
+                    route_dict.update({'process_id': process_id})
 
-                    if not next_hop:
-                        interface_dict = next_hop_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
+                if tag:
+                    route_dict.update({'tag': int(tag)})
+                
+                
 
-                        if interface:
-                            interface_dict.update({'outgoing_interface': interface})
+                next_hop_dict = route_dict.setdefault('next_hop', {})
 
-                        if updated:
-                            interface_dict.update({'updated': updated})
+                if not next_hop:
+                    interface_dict = next_hop_dict.setdefault('outgoing_interface', {}).setdefault(interface, {})
 
-                    else:
-                        index_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
-                        index_dict.update({'index': index})
-                        index_dict.update({'next_hop': next_hop})
-                        if source_protocol:
-                            route_dict.update({'source_protocol': source_protocol})
-                            index_dict.update({'source_protocol': source_protocol})
+                    if interface:
+                        interface_dict.update({'outgoing_interface': interface})
 
-                        if source_protocol_status:
-                            route_dict.update({'source_protocol_status': source_protocol_status})
-                            index_dict.update({'source_protocol_status': source_protocol_status})
+                    if updated:
+                        interface_dict.update({'updated': updated})
 
-                        if cast:
-                            index_dict.update({cast: True})
+                else:
+                    index_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
+                    index_dict.update({'index': index})
+                    index_dict.update({'next_hop': next_hop})
+                    if source_protocol:
+                        route_dict.update({'source_protocol': source_protocol})
+                        index_dict.update({'source_protocol': source_protocol})
 
-                        if updated:
-                            index_dict.update({'updated': updated})
+                    if source_protocol_status:
+                        route_dict.update({'source_protocol_status': source_protocol_status})
+                        index_dict.update({'source_protocol_status': source_protocol_status})
 
-                        if interface:
-                            index_dict.update({'outgoing_interface': interface})
+                    if cast:
+                        index_dict.update({cast: True})
 
-                        if next_hop_vrf:
-                            index_dict.update({'next_hop_vrf': next_hop_vrf})
+                    if updated:
+                        index_dict.update({'updated': updated})
 
-                        if next_hop_af:
-                            index_dict.update({'next_hop_af': next_hop_af})
+                    if interface:
+                        index_dict.update({'outgoing_interface': interface})
+
+                    if next_hop_vrf:
+                        index_dict.update({'next_hop_vrf': next_hop_vrf})
+
+                    if next_hop_af:
+                        index_dict.update({'next_hop_af': next_hop_af})
 
                 index += 1
                 continue
@@ -758,7 +773,7 @@ class ShowIpv6Route(ShowIpRoute):
         'outgoing_interface',
         'incoming_interface']
 
-    def cli(self, protocol=None, route=None, vrf='default', interface=None, output=None):
+    def cli(self, protocol=None, route=None, vrf=None, interface=None, output=None):
         
         if protocol and route and interface and vrf:
             cmd = self.cli_command[0].format(
