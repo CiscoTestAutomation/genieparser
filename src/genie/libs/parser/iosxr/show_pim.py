@@ -178,10 +178,10 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
         parsed_dict = {}
 
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # PIM interfaces in VRF default
-            p1 = re.compile(r'^\s*PIM +interfaces +in +VRF'
+            p1 = re.compile(r'^PIM +interfaces +in +VRF'
                              ' +(?P<vrf_name>[a-zA-Z0-9\-]+)$')
             m = p1.match(line)
             if m:
@@ -193,7 +193,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # IP PIM Multicast Interface State
-            p2 = re.compile(r'^\s*IP +PIM +Multicast +Interface +State$')
+            p2 = re.compile(r'^IP +PIM +Multicast +Interface +State$')
             m = p2.match(line)
             if m:
                 continue
@@ -207,7 +207,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
 
             # Loopback0                   on   1     30     1
             # Loopback0off                  1     30     1
-            p3 = re.compile(r'^\s*(?P<interface>(\S+)) *(?P<oper_status>(on|off)) +'
+            p3 = re.compile(r'^(?P<interface>(\S+)) *(?P<oper_status>(on|off)) +'
                              '(?P<nbr_count>[0-9]+) +(?P<hello_interval>[0-9]+) +'
                              '(?P<dr_priority>[0-9]+)$')
             m = p3.match(line)
@@ -241,7 +241,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # Primary Address : fe80::85c6:bdff:fe62:61e
-            p4 = re.compile(r'^\s*Primary +Address *:'
+            p4 = re.compile(r'^Primary +Address *:'
                              ' +(?P<primary_address>(\S+))$')
             m = p4.match(line)
             if m:
@@ -252,7 +252,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
             
             # Address : 2001:db8:2:2::2
-            p5 = re.compile(r'^\s*Address *: +(?P<address>(\S+))$')
+            p5 = re.compile(r'^Address *: +(?P<address>(\S+))$')
             m = p5.match(line)
             if m:
                 if m.groupdict()['address']:
@@ -261,14 +261,14 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # Flags : B P NA V
-            p6 = re.compile(r'^\s*Flags *: +(?P<flags>[a-zA-Z\s]+)$')
+            p6 = re.compile(r'^Flags *: +(?P<flags>[a-zA-Z\s]+)$')
             m = p6.match(line)
             if m:
                 sub_dict['flags'] = m.groupdict()['flags']
                 continue
 
             # BFD : Off/150 ms/3
-            p7 = re.compile(r'^\s*BFD *: (?P<enable>(Off|On))'
+            p7 = re.compile(r'^BFD *: (?P<enable>(Off|On))'
                              '\/(?P<interval>[0-9]+)'
                              ' *ms\/(?P<dmultiplier>[0-9]+)$')
             m = p7.match(line)
@@ -289,14 +289,14 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                     continue
 
             # DR : this system
-            p8 = re.compile(r'^\s*DR *: (?P<dr>[a-zA-Z\s]+)$')
+            p8 = re.compile(r'^DR *: (?P<dr>[a-zA-Z\s]+)$')
             m = p8.match(line)
             if m:
                 sub_dict['dr'] = m.groupdict()['dr']
                 continue
 
             # Propagation delay : 500
-            p9 = re.compile(r'^\s*Propagation +delay *:'
+            p9 = re.compile(r'^Propagation +delay *:'
                              ' +(?P<propagation_delay>[0-9]+)$')
             m = p9.match(line)
             if m:
@@ -305,7 +305,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # Override Interval : 2500
-            p10 = re.compile(r'^\s*Override +Interval *:'
+            p10 = re.compile(r'^Override +Interval *:'
                               ' +(?P<override_interval>[0-9]+)$')
             m = p10.match(line)
             if m:
@@ -314,14 +314,14 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 continue
 
             # Hello Timer : 00:00:19
-            p11 = re.compile(r'^\s*Hello +Timer *: +(?P<hello_expiration>(\S+))$')
+            p11 = re.compile(r'^Hello +Timer *: +(?P<hello_expiration>(\S+))$')
             m = p11.match(line)
             if m:
                 sub_dict['hello_expiration'] = m.groupdict()['hello_expiration']
                 continue
 
             # Neighbor Filter : -
-            p12 = re.compile(r'^\s*Neighbor +Filter *:'
+            p12 = re.compile(r'^Neighbor +Filter *:'
                               ' +(?P<neighbor_filter>(\S+))$')
             m = p12.match(line)
             if m:
