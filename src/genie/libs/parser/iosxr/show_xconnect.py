@@ -1197,6 +1197,9 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
         # SB = Standby, SR = Standby Ready, (PP) = Partially Programmed
         p1_1 = re.compile(r'^SB = Standby, SR = Standby Ready, \(PP\) = Partially Programmed$')
 
+        # BL-PE-BG   G1-1-1-23-311
+        p1_2 = re.compile(r'^(?P<group>\S+) +(?P<name>\S+)$')
+
         #               1000     DN   Gi0/0/0/5.1000    UP   10.4.1.206       1000   DN
         p2 = re.compile(r'^(?P<name>[a-zA-Z0-9]+) '
                         '+(?P<status_group>(UP|DN|AD|UR|SB|SR|\(PP\))) '
@@ -1241,9 +1244,18 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         .setdefault(str(group['group']), {})
                     flag_group = True
                     continue
-
             m = p1_1.match(line)
             if m:
+                continue
+            
+            # BL-PE-BG   G1-1-1-23-311
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                group_dict = ret_dict.setdefault('groups', {}). \
+                    setdefault(group['group'], {})
+                name_dict = group_dict.setdefault('name', {}) \
+                        .setdefault(group['name'], {})
                 continue
 
             m2 = p2.match(line)

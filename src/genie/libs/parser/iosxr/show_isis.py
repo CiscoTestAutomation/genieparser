@@ -378,7 +378,8 @@ class ShowIsisSchema(MetaParser):
                                                 'metric': int,
                                                 'ispf_status': str,
                                             }
-                                        }
+                                        },
+                                        Optional('redistributing'): list,
                                     }
                                 }
                             }
@@ -486,6 +487,16 @@ class ShowIsis(ShowIsisSchema):
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
         r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
                           '\s+\((?P<configuration_state>[\w\s]+)\)')
+        
+        # OSPF process 75688
+        r24 = re.compile(r'^(?P<protocol>\S+) process +(?P<process>\d+)$')
+
+        # Connected
+        r25 = re.compile(r'^Connected$')
+
+        # Static
+        r26 = re.compile(r'^Static$')
+
 
         parsed_output = {}
         vrf = 'default'
@@ -671,7 +682,6 @@ class ShowIsis(ShowIsisSchema):
             result = r18.match(line)
             if result:
                 address_family_dict['protocols_redistributed'] = False
-
                 continue
 
             # Distance: 115
@@ -737,6 +747,36 @@ class ShowIsis(ShowIsisSchema):
                 interfaces_dict['running_state'] = running_state
                 interfaces_dict['configuration_state'] = configuration_state
 
+                continue
+            
+            # OSPF process 75688
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                redistributing_list = address_family_dict.get('redistributing', [])
+                redistributing_list.append(line)
+                address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
+                continue
+
+            # Connected
+            result = r25.match(line)
+            if result:
+                group = result.groupdict()
+                redistributing_list = address_family_dict.get('redistributing', [])
+                redistributing_list.append(line)
+                address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
+                continue
+
+            # Static
+            result = r26.match(line)
+            if result:
+                group = result.groupdict()
+                redistributing_list = address_family_dict.get('redistributing', [])
+                redistributing_list.append(line)
+                address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
                 continue
 
         return parsed_output
