@@ -1944,7 +1944,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
             m = p68.match(line)
             if m:
                 group = m.groupdict()
-                rewrite_tags = group.get('rewrite_tags', '')
+                rewrite_tags = group.get('rewrite_tags')
                 interface_dict.update({'rewrite_tags': rewrite_tags if rewrite_tags else ''})
                 continue
 
