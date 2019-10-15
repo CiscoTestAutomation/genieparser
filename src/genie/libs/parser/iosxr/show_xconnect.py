@@ -1244,7 +1244,6 @@ class ShowL2vpnXconnect(ShowL2vpnXconnectSchema):
                         .setdefault(str(group['group']), {})
                     flag_group = True
                     continue
-            
             m = p1_1.match(line)
             if m:
                 continue
