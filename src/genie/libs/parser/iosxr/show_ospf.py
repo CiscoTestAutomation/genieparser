@@ -4212,99 +4212,190 @@ class ShowOspfVrfAllInclusiveDatabaseSummary(ShowOspfVrfAllInclusiveDatabaseSumm
 # =============================================================
 class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
     """Schema for show ospf vrf all-inclusive database opaque-area"""
+
     schema = {
-        Any(): {
-           Any():Any(),
+        'vrf': 
+            {Any(): 
+                {'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {Optional('areas'): 
+                                    {Any(): 
+                                        {'database': 
+                                            {'lsa_types': 
+                                                {Any(): 
+                                                    {'lsa_type': int,
+                                                    'lsas': 
+                                                        {Any(): 
+                                                            {'lsa_id': str,
+                                                            'adv_router': str,
+                                                            'ospfv2': 
+                                                                {'header': 
+                                                                    {'option': str,
+                                                                    'option_desc': str,
+                                                                    'lsa_id': str,
+                                                                    'age': int,
+                                                                    'type': int,
+                                                                    'adv_router': str,
+                                                                    'seq_num': str,
+                                                                    'checksum': str,
+                                                                    'length': int,
+                                                                    'opaque_type': int,
+                                                                    'opaque_id': int,
+                                                                    Optional('fragment_number'): int,
+                                                                    Optional('mpls_te_router_id'): str,
+                                                                    Optional('num_links'): int},
+                                                                'body': 
+                                                                    {'opaque': {
+                                                                        Optional('num_of_links'): int,
+                                                                        Optional('link_tlvs'): 
+                                                                            {Any(): 
+                                                                                {'link_type': int,
+                                                                                'link_name': str,
+                                                                                'link_id': str,
+                                                                                'te_metric': int,
+                                                                                'max_bandwidth': int,
+                                                                                Optional('max_reservable_bandwidth'): int,
+                                                                                Optional('admin_group'): str,
+                                                                                Optional('igp_metric'): int,
+                                                                                Optional('total_priority'): int,
+                                                                                Optional('neighbor_address'): str,
+                                                                                Optional('local_if_ipv4_addrs'): 
+                                                                                    {Any(): {}},
+                                                                                Optional('remote_if_ipv4_addrs'): 
+                                                                                    {
+                                                                                        Optional('remote_if_ipv4_addr'): Or(str, {})
+                                                                                    },
+                                                                                Optional('unreserved_bandwidths'): 
+                                                                                    {Any(): 
+                                                                                        {'priority': int,
+                                                                                        'unreserved_bandwidth': int},
+                                                                                    },
+                                                                                Optional('unknown_tlvs'): 
+                                                                                    {Any(): 
+                                                                                        {'type': int,
+                                                                                        'length': int,
+                                                                                        'value': str},
+                                                                                    },
+                                                                                Optional('extended_admin_group'):
+                                                                                    {'length': int,
+                                                                                    Optional('groups'): 
+                                                                                        {Any(): 
+                                                                                            {'value': int,},
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        Optional('extended_link_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                'link_type': int,
+                                                                                'link_id': str,
+                                                                                'link_data': str,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('flags'): str,
+                                                                                        Optional('mt_id'): str,
+                                                                                        Optional('weight'): int,
+                                                                                        Optional('label'): int,
+                                                                                        Optional('local_interface_id'): int,
+                                                                                        Optional('remote_interface_id'): int,
+                                                                                        Optional('neighbor_address'): str,
+                                                                                        Optional('node_type'): int,
+                                                                                        Optional('value'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('extended_prefix_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('af'): int,
+                                                                                Optional('prefix'): str,
+                                                                                Optional('range_size'): int,
+                                                                                Optional('flags'): str,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('flags'): str,
+                                                                                        Optional('mt_id'): str,
+                                                                                        Optional('algo'): int,
+                                                                                        Optional('sid'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('router_capabilities_tlv'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('information_capabilities'): {
+                                                                                    Optional('graceful_restart_helper'): bool,
+                                                                                    Optional('stub_router'): bool,
+                                                                                    Optional('capability_bits'): str,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('sr_algorithm_tlv'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('algorithm'): list,
+                                                                            },
+                                                                        },
+                                                                        Optional('sid_range_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                'tlv_type': str,
+                                                                                'range_size': int,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('label'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                        Optional('node_msd_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('node_type'): int,
+                                                                                Optional('value'): int,
+                                                                            },
+                                                                        },
+                                                                        Optional('local_block_tlvs'): {
+                                                                            Any(): {
+                                                                                'length': int,
+                                                                                Optional('range_size'): int,
+                                                                                Optional('sub_tlvs'): {
+                                                                                    Any(): {
+                                                                                        'length': int,
+                                                                                        'type': str,
+                                                                                        Optional('label'): int,
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     }
-    # schema = {
-    #     'vrf': 
-    #         {Any(): 
-    #             {'address_family': 
-    #                 {Any(): 
-    #                     {'instance': 
-    #                         {Any(): 
-    #                             {Optional('areas'): 
-    #                                 {Any(): 
-    #                                     {'database': 
-    #                                         {'lsa_types': 
-    #                                             {Any(): 
-    #                                                 {'lsa_type': int,
-    #                                                 'lsas': 
-    #                                                     {Any(): 
-    #                                                         {'lsa_id': str,
-    #                                                         'adv_router': str,
-    #                                                         'ospfv2': 
-    #                                                             {'header': 
-    #                                                                 {'option': str,
-    #                                                                 'option_desc': str,
-    #                                                                 'lsa_id': str,
-    #                                                                 'age': int,
-    #                                                                 'type': int,
-    #                                                                 'adv_router': str,
-    #                                                                 'seq_num': str,
-    #                                                                 'checksum': str,
-    #                                                                 'length': int,
-    #                                                                 'opaque_type': int,
-    #                                                                 'opaque_id': int,
-    #                                                                 Optional('fragment_number'): int,
-    #                                                                 Optional('mpls_te_router_id'): str,
-    #                                                                 Optional('num_links'): int},
-    #                                                             'body': 
-    #                                                                 {'opaque': 
-    #                                                                     {Optional('num_of_links'): int,
-    #                                                                     Optional('link_tlvs'): 
-    #                                                                         {Any(): 
-    #                                                                             {'link_type': int,
-    #                                                                             'link_name': str,
-    #                                                                             'link_id': str,
-    #                                                                             'te_metric': int,
-    #                                                                             'max_bandwidth': int,
-    #                                                                             Optional('max_reservable_bandwidth'): int,
-    #                                                                             Optional('admin_group'): str,
-    #                                                                             Optional('igp_metric'): int,
-    #                                                                             Optional('total_priority'): int,
-    #                                                                             Optional('local_if_ipv4_addrs'): 
-    #                                                                                 {Any(): {}},
-    #                                                                             Optional('remote_if_ipv4_addrs'): 
-    #                                                                                 {Any(): {}},
-    #                                                                             Optional('unreserved_bandwidths'): 
-    #                                                                                 {Any(): 
-    #                                                                                     {'priority': int,
-    #                                                                                     'unreserved_bandwidth': int},
-    #                                                                                 },
-    #                                                                             Optional('unknown_tlvs'): 
-    #                                                                                 {Any(): 
-    #                                                                                     {'type': int,
-    #                                                                                     'length': int,
-    #                                                                                     'value': str},
-    #                                                                                 },
-    #                                                                             Optional('extended_admin_group'):
-    #                                                                                 {'length': int,
-    #                                                                                 Optional('groups'): 
-    #                                                                                     {Any(): 
-    #                                                                                         {'value': int,},
-    #                                                                                     },
-    #                                                                                 },
-    #                                                                             },
-    #                                                                         },
-    #                                                                     },
-    #                                                                 },
-    #                                                             },
-    #                                                         },
-    #                                                     },
-    #                                                 },
-    #                                             },
-    #                                         },
-    #                                     },
-    #                                 },
-    #                             },
-    #                         },
-    #                     },
-    #                 },
-    #             },
-    #         },
-    #     }
 
 
 # =============================================================
