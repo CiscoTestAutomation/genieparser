@@ -1495,9 +1495,10 @@ class ShowIpCef(ShowIpCefSchema):
 
         # nexthop 10.0.0.5 GigabitEthernet2 label [16002|16002]-(local:16002)
         # nexthop 10.0.0.9 GigabitEthernet3 label [16022|implicit-null]-(local:16022)
-        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
-                           ' +label +\[(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)\]'
-                           '\-\(local\:(?P<local_label>(\d+))\)$')
+        # nexthop 10.0.0.10 GigabitEthernet3 label [16022|16002](elc)-(local:16022)
+        p2_1 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+) +label +\['
+                           '(?P<outgoing_label>[\S]+)\|(?P<outgoing_label_backup>[\S]+)'
+                           '\](?:\((?P<outgoing_label_info>\w+)\))?\-\(local\:(?P<local_label>(\d+))\)$')
 
         #     attached to GigabitEthernet3.100
         p3 = re.compile(r'^(?P<nexthop>\w+) +(to|for) +(?P<interface>\S+)$')
@@ -1577,6 +1578,9 @@ class ShowIpCef(ShowIpCefSchema):
                 nexthop_dict.update({'local_label': int(group['local_label'])})
                 nexthop_dict.update({'outgoing_label': group['outgoing_label'].split()})
                 nexthop_dict.update({'outgoing_label_backup': group['outgoing_label_backup']})
+
+                if group['outgoing_label_info']:
+                    nexthop_dict.update({'outgoing_label_info': group['outgoing_label_info']})
                 continue
 
             # attached to GigabitEthernet3.100
