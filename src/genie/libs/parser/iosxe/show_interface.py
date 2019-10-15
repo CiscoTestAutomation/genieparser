@@ -209,21 +209,22 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Vlan1 is administratively down, line protocol is down , Autostate Enabled
         # Dialer1 is up (spoofing), line protocol is up (spoofing)
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
-                         '+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
-                         '*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
+                        r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
+                        r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
         p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                            ' +(?P<enabled>[\w\s]+),'
-                            ' +line +protocol +is +(?P<line_protocol>\w+)'
-                            '( *, *(?P<attribute>[\w\s]+))?$')
+                           r' +(?P<enabled>[\w\s]+),'
+                           r' +line +protocol +is +(?P<line_protocol>\w+)'
+                           r'( *, *(?P<attribute>[\w\s]+))?$')
 
         # Hardware is Gigabit Ethernet, address is 0057.d228.1a64 (bia 0057.d228.1a64)
         # Hardware is Loopback
         p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
-                         '(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
-                         ' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
+                        r'(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
+                        r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
 
         # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS 
-        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)(?P<mac_address>.*)(?P<phys_address>.*)')
+        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\+ ]+)'
+                          r'(?P<mac_address>.*)(?P<phys_address>.*)')
 
         # Description: desc
         # Description: Pim Register Tunnel (Encap) for RP 10.186.1.1
@@ -231,22 +232,22 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Secondary address 10.2.2.2/24
         p4 = re.compile(r'^Secondary +Address +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                         '\/(?P<prefix_length>[0-9]+))$')
+                        r'\/(?P<prefix_length>[0-9]+))$')
 
         # Internet address is 10.4.4.4/24
         p5 = re.compile(r'^Internet +[A|a]ddress +is +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                         '\/(?P<prefix_length>[0-9]+))$')
+                        r'\/(?P<prefix_length>[0-9]+))$')
 
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
         # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
         p6 = re.compile(r'^MTU +(?P<mtu>[0-9]+) +bytes, +BW'
-                         ' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
-                         ' +(?P<delay>[0-9]+) +usec,$')
+                        r' +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +DLY'
+                        r' +(?P<delay>[0-9]+) +usec,$')
 
         # reliability 255/255, txload 1/255, rxload 1/255
         p7 = re.compile(r'^reliability +(?P<reliability>[\d\/]+),'
-                         ' +txload +(?P<txload>[\d\/]+), +rxload'
-                         ' +(?P<rxload>[\d\/]+)$')
+                        r' +txload +(?P<txload>[\d\/]+), +rxload'
+                        r' +(?P<rxload>[\d\/]+)$')
 
         # Encapsulation LOOPBACK, loopback not set
         # Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
@@ -255,11 +256,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
         p8 = re.compile(r'^Encapsulation +(?P<encapsulation>[\w\s\.]+),'
-                         ' +(?P<rest>.*)$')
+                        r' +(?P<rest>.*)$')
             
         # Keepalive set (10 sec)
         p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
-                          ' +sec\)$')
+                        r' +sec\)$')
 
 
         # Auto-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
@@ -273,9 +274,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
         # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
-                          '+(?P<port_speed>\d+|[a|A]uto-[S|s]peed|Auto (S|s)peed)(?: '
-                          '*([G|M]bps|[G|M]b/s))?(?:(?:\, +link +type +is +(?P<link_type>\S+))?(?:\, '
-                          '*media +type +is *(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
+                         r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
+                         r'(S|s)peed)(?:(?:\, +link +type +is '
+                         r'+(?P<link_type>\S+))?(?:\, *media +type +is '
+                         r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
@@ -604,8 +606,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Keepalive set (10 sec)
-            p10 = re.compile(r'^Keepalive +set +\((?P<keepalive>[0-9]+)'
-                             ' +sec\)$')
             m = p10.match(line)
             if m:
                 keepalive = m.groupdict()['keepalive']
@@ -630,10 +630,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 link_type = m.groupdict()['link_type']
                 media_type = m.groupdict()['media_type']
                 interface_dict[interface]['duplex_mode'] = duplex_mode
-                if port_speed == '100':
-                    interface_dict[interface]['port_speed'] = '100000'
-                else:
-                    interface_dict[interface]['port_speed'] = port_speed
+                interface_dict[interface]['port_speed'] = port_speed
 
                 if link_type:
                     interface_dict[interface]['link_type'] = link_type
