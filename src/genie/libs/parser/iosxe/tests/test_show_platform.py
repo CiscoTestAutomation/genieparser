@@ -15503,6 +15503,76 @@ class test_show_platform_hardware(unittest.TestCase):
                           (bytes): 0                   ,          (packets): 0     
     '''}
 
+    golden_parsed_output = {
+        'TenGigabitEthernet0/0/0': {
+            'if_h': 7,
+            'index': {
+                '0': {
+                    'queue_id': '0xcc8',
+                    'name': 'TenGigabitEthernet0/0/0',
+                    'software_control_info': {
+                        'cache_queue_id': '0x00000cc8',
+                        'wred': '0x5218622c',
+                        'qlimit_bytes': 65625002,
+                        'parent_sid': '0x28194',
+                        'debug_name': 'TenGigabitEthernet0/0/0',
+                        'sw_flags': '0x08000011',
+                        'sw_state': '0x00000801',
+                        'port_uidb': 262137,
+                        'orig_min': 0,
+                        'min': 1050000000,
+                        'min_qos': 0,
+                        'min_dflt': 0,
+                        'orig_max': 0,
+                        'max': 0,
+                        'max_qos': 0,
+                        'max_dflt': 0,
+                        'share': 1,
+                        'plevel': 0,
+                        'priority': 65535,
+                        'defer_obj_refcnt': 0,
+                        'cp_ppe_addr': '0x00000000',
+                    },
+                    'statistics': {
+                        'tail_drops_bytes': 0,
+                        'tail_drops_packets': 0,
+                        'total_enqs_bytes': 19215977960,
+                        'total_enqs_packets': 82176494,
+                        'queue_depth_bytes': 0,
+                        'lic_throughput_oversub_drops_bytes': 0,
+                        'lic_throughput_oversub_drops_packets': 0,
+                    },
+                },
+            },
+        },
+    }
+    golden_output = {'execute.return_value': '''
+        show platform hardware qfp active infrastructure bqs queue output default interface TenGigabitEthernet0/0/0
+        Load for five secs: 91%/1%; one minute: 83%; five minutes: 65%
+        Time source is NTP, 18:30:46.284 JST Wed Oct 16 2019
+        
+        Interface: TenGigabitEthernet0/0/0 QFP: 0.0 if_h: 7 Num Queues/Schedules: 1
+        Queue specifics:
+            Index 0 (Queue ID:0xcc8, Name: TenGigabitEthernet0/0/0)
+            Software Control Info:
+            (cache) queue id: 0x00000cc8, wred: 0x5218622c, qlimit (bytes): 65625002
+            parent_sid: 0x28194, debug_name: TenGigabitEthernet0/0/0
+            sw_flags: 0x08000011, sw_state: 0x00000801, port_uidb: 262137
+            orig_min  : 0                   ,      min: 1050000000         
+            min_qos   : 0                   , min_dflt: 0                  
+            orig_max  : 0                   ,      max: 0                  
+            max_qos   : 0                   , max_dflt: 0                  
+            share     : 1
+            plevel    : 0, priority: 65535
+            defer_obj_refcnt: 0, cp_ppe_addr: 0x00000000
+            Statistics:
+            tail drops  (bytes): 0                   ,          (packets): 0                  
+            total enqs  (bytes): 19215977960         ,          (packets): 82176494           
+            queue_depth (bytes): 0                  
+            licensed throughput oversubscription drops:
+                        (bytes): 0                   ,          (packets): 0    
+    '''}
+
     def test_golden_active(self):
         self.device = Mock(**self.golden_output_active)
         obj = ShowPlatformHardware(device=self.device)
@@ -15522,6 +15592,13 @@ class test_show_platform_hardware(unittest.TestCase):
         obj = ShowPlatformHardware(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowPlatformHardware(device=self.device)
+        parsed_output = obj.parse(interface='TenGigabitEthernet0/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 class test_show_platform_hardware_plim(unittest.TestCase):
