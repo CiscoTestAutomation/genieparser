@@ -98,6 +98,12 @@
     * Update ShowPceIPV4PeerPrefix
         * Removed typo from 'pcs' to 'pce' in show command
 
+* IOSXR
+    * Updated ShowPceIpv4TopologySummary:
+        * Updated schema and add regex
+
+
+
 --------------------------------------------------------------------------------
                               Controllers
 --------------------------------------------------------------------------------
@@ -206,6 +212,9 @@
 * NXOS
     * Updated ShowRunningConfigPim:
         changed logic to support calling from device.parse
+* IOSXR
+    * Updated ShowPimVrfInterfaceDetail:
+        For handling more varied output
 
 --------------------------------------------------------------------------------
                                 VRF
@@ -263,8 +272,7 @@
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
-    * Updated ShowStaticTopologyDetail:
-        * Support more varied output
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -419,6 +427,8 @@
         * show l2vpn xconnect mp2mp detail
     * Updated ShowL2vpnXconnectDetail for:
         * To support more varied output
+    * Updated ShowL2vpnXconnect for:
+        * To support more varied output
 
 --------------------------------------------------------------------------------
                                 EVPN
@@ -442,12 +452,13 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
-<<<<<<< HEAD
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
-=======
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
->>>>>>> dev
         
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -533,6 +544,8 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+    * Updated ShowIsis to support different outputs
+
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
@@ -543,3 +556,25 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
+    
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowInterfaces
+        * Fixed regex to accommodate more outputs formats
+
+--------------------------------------------------------------------------------
+                                   VDC 
+--------------------------------------------------------------------------------
+* NXOS 
+    * Updated ShowVdcDetailSchema to accomodate different outputs 
+
+--------------------------------------------------------------------------------
+                                Traceroute
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added Traceroute class

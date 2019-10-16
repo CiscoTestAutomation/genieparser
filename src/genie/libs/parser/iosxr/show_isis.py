@@ -10,6 +10,7 @@ IOSXR parsers for the following show commands:
     * show isis statistics
     * show isis protocol
     * show isis spf-log
+    * show isis lsp-log
 
 """
 
@@ -377,7 +378,8 @@ class ShowIsisSchema(MetaParser):
                                                 'metric': int,
                                                 'ispf_status': str,
                                             }
-                                        }
+                                        },
+                                        Optional('redistributing'): list,
                                     }
                                 }
                             }
@@ -485,6 +487,16 @@ class ShowIsis(ShowIsisSchema):
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
         r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
                           '\s+\((?P<configuration_state>[\w\s]+)\)')
+        
+        # OSPF process 75688
+        r24 = re.compile(r'^(?P<protocol>\S+) process +(?P<process>\d+)$')
+
+        # Connected
+        r25 = re.compile(r'^Connected$')
+
+        # Static
+        r26 = re.compile(r'^Static$')
+
 
         parsed_output = {}
         vrf = 'default'
@@ -670,7 +682,6 @@ class ShowIsis(ShowIsisSchema):
             result = r18.match(line)
             if result:
                 address_family_dict['protocols_redistributed'] = False
-
                 continue
 
             # Distance: 115
@@ -736,6 +747,36 @@ class ShowIsis(ShowIsisSchema):
                 interfaces_dict['running_state'] = running_state
                 interfaces_dict['configuration_state'] = configuration_state
 
+                continue
+            
+            # OSPF process 75688
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                redistributing_list = address_family_dict.get('redistributing', [])
+                redistributing_list.append(line)
+                address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
+                continue
+
+            # Connected
+            result = r25.match(line)
+            if result:
+                group = result.groupdict()
+                redistributing_list = address_family_dict.get('redistributing', [])
+                redistributing_list.append(line)
+                address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
+                continue
+
+            # Static
+            result = r26.match(line)
+            if result:
+                group = result.groupdict()
+                redistributing_list = address_family_dict.get('redistributing', [])
+                redistributing_list.append(line)
+                address_family_dict.update({'redistributing': redistributing_list})
+                address_family_dict['protocols_redistributed'] = True
                 continue
 
         return parsed_output
@@ -1611,6 +1652,118 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
                 if first_trigger_lsp:
                     index_dict['first_trigger_lsp'] = first_trigger_lsp
                 index_dict['triggers'] = triggers
+                log_index += 1
+
+                continue
+
+        return parsed_output
+
+class ShowIsisLspLogSchema(MetaParser):
+    ''' Schema for commands:
+        * show isis lsp-log     
+    '''
+
+    schema = {
+        'instance': {
+            Any(): {
+                'lsp_log': {
+                    Any(): {
+                        'level': int,
+                        'received_timestamp': str,
+                        'count': int,
+                        Optional('interface'): str,
+                        Optional('triggers'): str,
+                    }   
+                }
+            }
+        }
+    }
+
+class ShowIsisLspLog(ShowIsisLspLogSchema):
+    ''' Parser for commands:
+        * show isis lsp-log
+    '''
+
+    cli_command = 'show isis lsp-log'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # IS-IS TEST Level 2 LSP log
+        # ISIS isp Level 1 LSP log
+        # Level 1 LSP log
+        r1 = re.compile(r'(IS\-*IS\s+(?P<instance>.+)\s+)?Level\s+'
+                         '(?P<level>\d+)\s+LSP\s+log')
+        
+        # --- Thu Sep 26 2019 ---
+        # --- Mon Sep 30 2019 ---
+        r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\w\s]+)\s+\-\-\-')
+
+        # 09:39:16.648     1                   IPEXT
+        # 07:05:24         2                   CONFIG NEWADJ
+        # 16:15:03.822     2  BE2              DELADJ
+        # 00:02:36         1    
+        r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<count>\d+)\s*'
+                         '(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
+                         '(?P<triggers>[\w*\s]*)')
+
+        parsed_output = {}
+        log_date = ''
+        log_index = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS TEST Level 2 LSP log
+            # ISIS isp Level 1 LSP log
+            # Level 1 LSP log
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                if instance is None:
+                    instance = ""
+                level = int(group['level'])
+                instance_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})
+
+                continue
+            
+            # --- Thu Sep 26 2019 ---
+            # --- Mon Sep 30 2019 ---
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                log_date = group['log_date']
+
+                continue
+
+            # 09:39:16.648    1                   IPEXT
+            # 07:05:24        2                   CONFIG NEWADJ
+            # 16:15:03.822    2  BE2              DELADJ
+            # 00:02:36        1    
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp = group['timestamp']
+                count = int(group['count'])
+                interface = group['interface']
+                triggers = group['triggers']
+                lsp_log_dict = instance_dict\
+                    .setdefault('lsp_log', {})\
+                    .setdefault(log_index, {})
+                lsp_log_dict['count'] = count
+                lsp_log_dict['level'] = level
+                if interface:
+                    lsp_log_dict['interface'] = Common\
+                        .convert_intf_name(interface)
+                if triggers:
+                    lsp_log_dict['triggers'] = triggers
+                lsp_log_dict['received_timestamp'] = ('{} {}'\
+                    .format(log_date, timestamp)).strip()
                 log_index += 1
 
                 continue
