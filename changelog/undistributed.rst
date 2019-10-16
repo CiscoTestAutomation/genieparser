@@ -263,15 +263,13 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
-        * update regex to support more varied output
     * ShowIpRouteWord
         * update regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
-    * Updated ShowStaticTopologyDetail:
-        * Support more varied output
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -457,6 +455,7 @@
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
