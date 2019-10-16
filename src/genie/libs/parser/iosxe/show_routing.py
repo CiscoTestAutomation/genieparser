@@ -1016,6 +1016,7 @@ class ShowIpRouteWordSchema(MetaParser):
                 Optional('sr_incoming_label'): str,
                 Optional('tag_name'): str,
                 Optional('tag_type'): str,
+                Optional('advertised_by'): str,
                 Optional('update'): {
                     'from': str,
                     Optional('interface'): str,
@@ -1155,7 +1156,10 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         # Route tag 65161
         p17 = re.compile(r'^Route +tag (?P<route_tag>\S+)$')
-        
+
+        # Advertised by eigrp 10 route-map GENIE_STATIC_INTO_EIGRP
+        p18 = re.compile(r'^Advertised +by +(?P<advertised_by>[\S ]+)$')
+
         # initial variables
         ret_dict = {}
         index = 0
@@ -1189,7 +1193,6 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
             # Tag 65161, type external
             m = p15.match(line)
             if m:
-                #import pdb;pdb.set_trace()
                 group = m.groupdict()
                 tag_dict = ret_dict.setdefault('entry', {}).setdefault(entry, {})
                 tag_dict.update({'tag_name' : group['tag_name']})
@@ -1331,7 +1334,13 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
                 path_dict = entry_dict.setdefault('paths', {}).setdefault(index, {}).setdefault('repair_path', {})
                 path_dict.update({'repair_path': m.groupdict()['path']})
                 path_dict.update({'via': m.groupdict()['via']})
+                continue
 
+            # Advertised by eigrp 10 route-map GENIE_STATIC_INTO_EIGRP
+            m18 = p18.match(line)
+            if m18:
+                entry_dict.update({'advertised_by' : m18.groupdict()['advertised_by']})
+                continue
 
         ret_dict.update({'total_prefixes': index}) if ret_dict else None
         return ret_dict

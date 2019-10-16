@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import Mock
-
 # ATS
 from ats.topology import Device
 
@@ -1482,6 +1481,7 @@ class TestShowIpRouteWord(unittest.TestCase):
         'entry': {
             '192.25.70.0/25': {
                 'distance': '1',
+                'advertised_by': 'eigrp 10 route-map GENIE_INTO_EIGRP',
                 'ip': '192.25.70.0',
                 'known_via': 'static',
                 'mask': '25',
