@@ -532,6 +532,8 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+    * Added ShowIsisInterface for:
+        * show isis interface
     * Added parser ShowIsis for:
         * show isis
     * Added ShowIsisSpfLog for:
