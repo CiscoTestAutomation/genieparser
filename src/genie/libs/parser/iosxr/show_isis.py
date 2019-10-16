@@ -709,13 +709,11 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                 Optional('ip_address'): str,
                                 Optional('ipv6_address'): str,
                                 Optional('hostname'): str,
-                                Optional('ip_extended'): {
+                                Optional('extended_ipv4_reachability'): {
                                     Any(): {
-                                        'address_family': {
-                                            Any(): {
-                                                'metric': int,
-                                            }
-                                        }
+                                        'ip_prefix': str,
+                                        'prefix_length': str,
+                                        'metric': int,
                                     }
                                 },
                                 Optional('ip_interarea'): {
@@ -727,33 +725,52 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                         }
                                     }
                                 },
-                                'is_extended': {
+                                Optional('mt_is_neighbor'): {
                                     Any(): {
-                                        'address_family': {
-                                            Any(): {
-                                                'metric': int,
-                                            }
-                                        }
+                                        'mt_id': str,
+                                        'metric': int,
                                     }
                                 },
-                                Optional('mt'): {
-                                    'address_family': {
-                                        Any(): {
-                                            'ip_address': {
-                                                Any(): {
-                                                    'metric': int,
-                                                }
-                                            }
-                                        }
+                                'extended_is_neighbor': {
+                                    Any(): {
+                                        'metric': int,
                                     }
                                 },
-                                Optional('topology'): {
+                                Optional('mt_ipv4_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': str,
+                                    }
+                                },
+                                Optional('ipv4_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': str,
+                                    }
+                                },
+                                Optional('mt_ipv6_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': int,
+                                    }
+                                },
+                                Optional('ipv6_reachability'): {
+                                    Any(): {
+                                        'ip_prefix': str,
+                                        Optional('prefix_length'): str,
+                                        'metric': str,
+                                    }
+                                },
+                                Optional('mt_entries'): {
                                     Any(): {
                                         Optional('attach_bit'): int,
                                         Optional('p_bit'): int,
                                         Optional('overload_bit'): int,
                                     }
-                                },
+                                }
                             }
                         },
                         'total_lsp_count': int,
@@ -803,7 +820,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
         # Metric: 10         IP-Extended 3.3.3.0/24
         # Metric: 10         IP-Extended 10.2.3.0/24
         r6 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\s+'
-                         '(?P<ip_extended>\S+)')
+                        r'(?P<ip_address>[\d\.\/]+)')
 
         # Hostname:       R3
         r7 = re.compile(r'Hostname\s*:\s+(?P<hostname>\S+)')
@@ -813,31 +830,34 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
         # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
-        r9 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s*'
-                         '\((?P<address_family>.+)\)\s*IPv6\s+'
-                         '(?P<ipv6_address>\S+)')
+        r9 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\(IPv(4|6)\s+'
+                        r'\w+\)\s*(?P<ip_version>IPv(4|6))\s+(?P<ip_address>\S+)')
+
+        r9_2 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+'
+                          r'(?P<ip_version>IPv(4|6))\s+(?P<ip_address>\S+)')
 
         # MT:             Standard (IPv4 Unicast)
-        r10 = re.compile(r'MT\s*:\s*Standard\s*\((?P<address_family>.+)\)\s*'
-                          '(:?(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
-                          '(?P<overload_bit>\d+))?')
+        # MT:             Standard (IPv6 Unicast)
+        r10 = re.compile(r'MT\s*:\s*(?P<mt>\w+\s+\(IPv(4|6)\s*\w+\))\s*'
+                         r'(:?(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/'
+                         r'(?P<overload_bit>\d+))?')
 
         # MT:             IPv6 Unicast                                 1/0/0
-        # MT:             IPv6 Unicast                                 0/0/0
-        r11 = re.compile(r'MT\s*:\s*(?P<address_family>.+)\s+'
-                          '(?P<attach_bit>\d+)/(?P<p_bit>\d+)/'
-                          '(?P<overload_bit>\d+)')
+        # MT:             IPv4 Unicast                                 0/0/0
+        r11 = re.compile(r'MT\s*:\s*(?P<mt>IPv(4|6)\s+\w+)\s+'
+                         r'(?P<attach_bit>\d+)/(?P<p_bit>\d+)/'
+                         r'(?P<overload_bit>\d+)')
 
         # Metric: 10         IS-Extended R3.03
         # Metric: 10         IS-Extended R5.01
         r12 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IS\-Extended\s+'
-                          '(?P<is_extended>\S+)')
+                         r'(?P<is_extended>\S+)')
 
         # Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
         # Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
-        r13 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s*\('
-                          '(?P<address_family>.+)\)\s+IS-Extended\s+'
-                          '(?P<is_extended>\S+)')
+        r13 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+'
+                         r'(?P<mt_id>[\w\(\)\s]+)\s+IS-Extended\s+'
+                         r'(?P<is_extended>\S+)')
 
         # Router ID:      6.6.6.6
         # Router ID:      7.7.7.7
@@ -947,12 +967,14 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             if result:
                 group = result.groupdict()
                 metric = int(group['metric'])
-                ip_extended = group['ip_extended']
+                ip_address = group['ip_address']
                 ip_extended_dict = lspid_dict\
-                    .setdefault('ip_extended', {})\
-                    .setdefault(ip_extended, {})\
-                    .setdefault('address_family', {})\
-                    .setdefault('ipv4 unicast', {})
+                    .setdefault('extended_ipv4_reachability', {})\
+                    .setdefault(ip_address, {})
+                ip_len_list = ip_address.split('/')
+                ip_extended_dict['ip_prefix'] = ip_len_list[0]
+                if len(ip_len_list) > 1:
+                    ip_extended_dict['prefix_length'] = ip_len_list[1]
                 ip_extended_dict['metric'] = metric
 
                 continue
@@ -976,19 +998,40 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 continue
 
             # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:3:3:3::3/128
-            # Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:10:2::/64
+            # Metric: 10         MT (IPv4 Unicast) IPv4 192.168.1.1/12
             result = r9.match(line)
             if result:
                 group = result.groupdict()
                 metric = int(group['metric'])
-                address_family = group['address_family'].lower()
-                ipv6_address = group['ipv6_address']
+                ip_address = group['ip_address']
+                ip_version = group['ip_version'].lower()
                 mt_dict = lspid_dict\
-                    .setdefault('mt', {})\
-                    .setdefault('address_family', {})\
-                    .setdefault(address_family, {})\
-                    .setdefault('ip_address', {})\
-                    .setdefault(ipv6_address, {})
+                    .setdefault('mt_{ip_version}_reachability'\
+                        .format(ip_version=ip_version), {})\
+                    .setdefault(ip_address, {})
+                ip_prefix_list = ip_address.split('/')
+                mt_dict['ip_prefix'] = ip_prefix_list[0]
+                if len(ip_prefix_list) > 1:
+                    mt_dict['prefix_length'] = ip_prefix_list[1]
+                mt_dict['metric'] = metric
+
+                continue
+
+            # Metric: 10         IPv6 2001:2:2:2::2/128
+            result = r9_2.match(line)
+            if result:
+                group = result.groupdict()
+                metric = group['metric']
+                ip_address = group['ip_address']
+                ip_version = group['ip_version'].lower()
+                mt_dict = lspid_dict\
+                    .setdefault('{ip_version}_reachability'\
+                        .format(ip_version=ip_version), {})\
+                    .setdefault(ip_address, {})
+                ip_prefix_list = ip_address.split('/')
+                mt_dict['ip_prefix'] = ip_prefix_list[0]
+                if len(ip_prefix_list) > 1:
+                    mt_dict['prefix_length'] = ip_prefix_list[1]
                 mt_dict['metric'] = metric
 
                 continue
@@ -997,13 +1040,13 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             result = r10.match(line)
             if result:
                 group = result.groupdict()
-                address_family = group['address_family'].lower()
+                mt_entry = group['mt']
                 attach_bit = group['attach_bit']
                 p_bit = group['p_bit']
                 overload_bit = group['overload_bit']
                 topology_dict = lspid_dict\
-                    .setdefault('topology', {})\
-                    .setdefault(address_family, {})
+                    .setdefault('mt_entries', {})\
+                    .setdefault(mt_entry, {})
                 if attach_bit:
                     topology_dict['attach_bit'] = int(attach_bit)
                 if p_bit:
@@ -1018,16 +1061,19 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             result = r11.match(line)
             if result:
                 group = result.groupdict()
-                address_family = group['address_family'].lower().strip()
-                attach_bit = int(group['attach_bit'])
-                p_bit = int(group['p_bit'])
-                overload_bit = int(group['overload_bit'])
+                mt_entry = group['mt']
+                attach_bit = group['attach_bit']
+                p_bit = group['p_bit']
+                overload_bit = group['overload_bit']
                 topology_dict = lspid_dict\
-                    .setdefault('topology', {})\
-                    .setdefault(address_family, {})
-                topology_dict['attach_bit'] = int(attach_bit) if attach_bit else attach_bit
-                topology_dict['p_bit'] = int(p_bit) if p_bit else p_bit
-                topology_dict['overload_bit'] = int(overload_bit) if overload_bit else overload_bit
+                    .setdefault('mt_entries', {})\
+                    .setdefault(mt_entry, {})                
+                if attach_bit:
+                    topology_dict['attach_bit'] = int(attach_bit)
+                if p_bit:
+                    topology_dict['p_bit'] = int(p_bit)
+                if overload_bit:
+                    topology_dict['overload_bit'] = int(overload_bit)
 
                 continue
 
@@ -1039,10 +1085,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 metric = int(group['metric'])
                 is_extended = group['is_extended']
                 is_extended_dict =  lspid_dict\
-                    .setdefault('is_extended', {})\
-                    .setdefault(is_extended, {})\
-                    .setdefault('address_family', {})\
-                    .setdefault('ipv4 unicast', {})
+                    .setdefault('extended_is_neighbor', {})\
+                    .setdefault(is_extended, {})
                 is_extended_dict['metric'] = metric
 
                 continue
@@ -1053,14 +1097,13 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
             if result:
                 group = result.groupdict()
                 metric = int(group['metric'])
-                address_family = group['address_family'].lower()
+                mt_id = group['mt_id']
                 is_extended = group['is_extended']
                 is_extended_dict =  lspid_dict\
-                    .setdefault('is_extended', {})\
-                    .setdefault(is_extended, {})\
-                    .setdefault('address_family', {})\
-                    .setdefault(address_family, {})
+                    .setdefault('mt_is_neighbor', {})\
+                    .setdefault(is_extended, {})
                 is_extended_dict['metric'] = metric
+                is_extended_dict['mt_id'] = mt_id
 
                 continue
 
