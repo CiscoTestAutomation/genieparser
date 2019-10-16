@@ -2252,17 +2252,17 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Adjacency Formation:    Running
         # Adjacency Formation:      Enabled
         r3 = re.compile(r'Adjacency\s+Formation\s*:\s*'
-                         '(?P<adjacency_formation_state>\w+)')
+                        r'(?P<adjacency_formation_state>\w+)')
 
         # Prefix Advertisement:     Enabled
         # Prefix Advertisement:   Running
         r4 = re.compile(r'Prefix\s+Advertisement\s*:\s*'
-                         '(?P<prefix_advertisement_state>.+)')
+                        r'(?P<prefix_advertisement_state>.+)')
 
         # IPv4 BFD:                 Disabled
         # IPv6 BFD:                 Disabled
         r5 = re.compile(r'(?P<address_family>IPv4|IPv6)\s+BFD\s*:\s*'
-                         '(?P<ip_bfd_state>\w+)')
+                        r'(?P<ip_bfd_state>\w+)')
 
         # BFD Min Interval:         150
         r6 = re.compile(r'BFD\s+Min\s+Interval\s*:\s*(?P<bfd_min_interval>\d+)')
@@ -2293,11 +2293,11 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # LSP Pacing Interval:    33 ms
         r14 = re.compile(r'LSP\s+Pacing\s+Interval\s*:\s*'
-                          '(?P<lsp_pacing_interval>\d+)\s+ms')
+                         r'(?P<lsp_pacing_interval>\d+)\s+ms')
 
         # PSNP Entry Queue Size:  0
         r15 = re.compile(r'PSNP\s+Entry\s+Queue\s+Size\s*:\s*'
-                          '(?P<psnp_entry_queue_size>\d+)')
+                         r'(?P<psnp_entry_queue_size>\d+)')
 
         # Hello Interval:         10 s
         r16 = re.compile(r'Hello\s+Interval\s*:\s*(?P<hello_interval>\d+)\s*s')
@@ -2317,40 +2317,40 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # IPv4 Unicast Topology:    Enabled
         # IPv6 Unicast Topology:    Enabled
         r21 = re.compile(r'(?P<topology>(IPv4|IPv6)[\s\w]+)\s+Topology\s*:'
-                           '\s*(?P<topology_state>\w+)')
+                         r'\s*(?P<topology_state>\w+)')
 
         # Metric (L1/L2):         10/10
         r22 = re.compile(r'Metric\s+\(L(?P<level_1>\d+)/L(?P<level_2>\d+)\)\s*'
-                          ':\s*(?P<metric_level_1>\d+)\/(?P<metric_level_2>\d+)')
+                         r':\s*(?P<metric_level_1>\d+)\/(?P<metric_level_2>\d+)')
 
         # Weight (L1/L2):         0/0
         r23 = re.compile(r'Weight\s+\(L(?P<level_1>\d+)/L(?P<level_2>\d+)\)\s*:'
-                          '\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
+                         r'\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
 
         # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
         r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
 
         # MPLS LDP Sync (L1/L2):  Disabled/Disabled
         r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
-                          '(?P<level_2>\d+)\)\s*:\s*(?P<state_level_1>\w+)\/(?P<state_level_2>\w+)')
+                         r'(?P<level_2>\d+)\)\s*:\s*(?P<state_level_1>\w+)\/(?P<state_level_2>\w+)')
 
         # FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
         r26 = re.compile(r'FRR\s+\(L\d+\/L\d+\)\s*:\s*L(?P<level_1>\d+)\s+'
-                         '(?P<level_1_state>[\w\s]+)\s+L(?P<level_2>\d+)\s+(?P<level_2_state>[\w\s]+)')
+                         r'(?P<level_1_state>[\w\s]+)\s+L(?P<level_2>\d+)\s+(?P<level_2_state>[\w\s]+)')
 
         # FRR Type:             None               None
         r27 = re.compile(r'FRR\s+Type\s*:\s*(?P<frr_type_level_1>\S+)\s*'
-                          '(?P<frr_type_level_2>\S+)')
+                         r'(?P<frr_type_level_2>\S+)')
 
         # IPv4 Address Family:      Enabled
         # IPv6 Address Family:      Enabled
         r28 = re.compile(r'(?P<address_family>IPv4|IPv6)\s+Address\s+Family\s*:'
-                          '\s*(?P<address_family_state>\w+)')
+                         r'\s*(?P<address_family_state>\w+)')
 
         # Forwarding Address(es): 0.0.0.0
         # Forwarding Address(es): ::
         r29 = re.compile(r'Forwarding\s+Address\(es\)\s*:\s*'
-                          '(?P<forwarding_address>\S+)')
+                         r'(?P<forwarding_address>\S+)')
 
         # Global Prefix(es):      3.3.3.0/24
         # Global Prefix(es):      2001:db8:3:3:3::3/128
@@ -2359,16 +2359,16 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         # LSP transmit timer expires in 0 ms
         r31 = re.compile(r'LSP\s+transmit\s+timer\s+expires\s+in\s+'
-                          '(?P<lsp_timer>\d+)\s+ms')
+                         r'(?P<lsp_timer>\d+)\s+ms')
 
         # LSP transmission is idle
         r32 = re.compile(r'LSP\s+transmission\s+is\s+'
-                          '(?P<lsp_transmission_state>\w+)')
+                         r'(?P<lsp_transmission_state>\w+)')
 
         # Can send up to 10 back-to-back LSPs in the next 0 ms
         r33 = re.compile(r'Can\s+send\s+up\s+to\s+(?P<number_lsp_send>\d+)'
-                          '\s+back\-to\-back\s+LSPs\s+in\s+the\s+next\s+'
-                          '(?P<time_to_sent>\d+)\s+ms')       
+                         r'\s+back\-to\-back\s+LSPs\s+in\s+the\s+next\s+'
+                         r'(?P<time_to_sent>\d+)\s+ms')       
 
         # LAN ID:                 R3.07
         r34 = re.compile(r'LAN\s+ID\s*:\s*(?P<lan_id>\S+)')
@@ -2376,12 +2376,12 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Priority (Local/DIS):   64/none (no DIS elected)
         # Priority (Local/DIS):   64/64
         r35 = re.compile(r'Priority\s*\(Local/DIS\)\s*:\s*'
-                          '(?P<priority_local>\S+)/(?P<priority_dis>.+)')
+                         r'(?P<priority_local>\S+)/(?P<priority_dis>.+)')
 
         # Next LAN IIH in:        5 s
         # Next LAN IIH in:        3 s 
         r36 = re.compile(r'Next\s+LAN\s+IIH\s+in\s*:\s*'
-                          '(?P<next_lan_iih>\d+)\s*s')
+                         r'(?P<next_lan_iih>\d+)\s*s')
 
         # SNPA:                   fa16.3eb0.d50f
         r37 = re.compile(r'SNPA\s*:\s*(?P<snpa>\S+)')
@@ -2392,7 +2392,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # All Level-1 ISs:      Yes
         # All Level-2 ISs:      Yes
         r39 = re.compile(r'All\s+Level\-(?P<level>\d+)\s+ISs\s*:\s*'
-                          '(?P<iss_state>\S+)')
+                         r'(?P<iss_state>\S+)')
 
         # All ISs:              Yes
         r40 = re.compile(r'All\s+ISs\s*:\s*(?P<all_iss>(Yes|No))')

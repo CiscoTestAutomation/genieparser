@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import Mock
 
 # Metaparser
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError                                              
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_isis
 from genie.libs.parser.iosxr.show_isis import (
