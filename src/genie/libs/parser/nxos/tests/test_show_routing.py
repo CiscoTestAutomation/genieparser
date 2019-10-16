@@ -223,7 +223,6 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                         {'uptime': '18:47:42',
                                                         'preference': '1',
                                                         'metric': '0'}}}}}}}}}}}}}
-
     golden_output = {'execute.return_value': '''
         IP Route Table for VRF "default"
         '*' denotes best ucast next-hop
@@ -265,7 +264,8 @@ class test_show_routing_vrf_all(unittest.TestCase):
             *via 10.3.4.3, Eth2/1, [110/81], 00:18:35, ospf-1, intra (mpls)
         10.16.2.2/32, ubest/mbest: 1/0
             *via 10.2.4.2, Eth2/4, [110/41], 00:18:35, ospf-1, intra (mpls)
-        '''}
+    '''}
+
     golden_parsed_output_custom={
         'vrf':
             {'VRF1':
@@ -428,9 +428,7 @@ class test_show_routing_vrf_all(unittest.TestCase):
                                                                     'preference': '0',
                                                                     'metric': '0',
                                                                     'interface':
-                                                                        'Loopback1'}}}}}}}}}}},
-    }
-    }
+                                                                        'Loopback1'}}}}}}}}}}}}}
     golden_output_custom = {'execute.return_value': '''
         IP Route Table for VRF "VRF1"
         '*' denotes best ucast next-hop
@@ -456,6 +454,58 @@ class test_show_routing_vrf_all(unittest.TestCase):
             *via 10.2.4.2, Eth2/4, [110/41], 00:18:35, ospf-1, intra (mpls)
            '''}
 
+    golden_parsed_output1 = {
+        'vrf': {
+            'default': {
+                'address_family': {
+                    'ipv4 unicast': {
+                        'ip': {
+                            '3.3.3.3/32': {
+                                'ubest_num': '2',
+                                'mbest_num': '0',
+                                'attach': 'attached',
+                                'best_route': {
+                                    'unicast': {
+                                        'nexthop': {
+                                            '3.3.3.3': {
+                                                'protocol': {
+                                                    'local': {
+                                                        'interface': 'Loopback0',
+                                                        'preference': '0',
+                                                        'metric': '0',
+                                                        'uptime': '1w4d',
+                                                    },
+                                                    'direct': {
+                                                        'interface': 'Loopback0',
+                                                        'preference': '0',
+                                                        'metric': '0',
+                                                        'uptime': '1w4d',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+    golden_output1 = {'execute.return_value': '''
+        show routing 3.3.3.3
+        IP Route Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        3.3.3.3/32, ubest/mbest: 2/0, attached
+            *via 3.3.3.3, Lo0, [0/0], 1w4d, local
+            *via 3.3.3.3, Lo0, [0/0], 1w4d, direct
+    '''}
+
     def test_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -475,6 +525,13 @@ class test_show_routing_vrf_all(unittest.TestCase):
         bgp_obj = ShowRoutingVrfAll(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = bgp_obj.parse()
+
+    def test_golden1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output1)
+        bgp_obj = ShowRoutingVrfAll(device=self.device)
+        parsed_output = bgp_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 # ===========================================
 #  Unit test for 'show routing ipv6  vrf all'

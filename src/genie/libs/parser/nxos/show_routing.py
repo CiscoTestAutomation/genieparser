@@ -62,6 +62,31 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                         },
                                     },
                                 },
+                                Optional('routes'): {
+                                    Optional('nexthop'): {
+                                        Optional(Any()): {
+                                            'index': {}
+                                            Optional('protocol'): {
+                                                Optional(Any()): {
+                                                    Optional('route_table'): str,
+                                                    Optional('uptime'): str,
+                                                    Optional('interface'): str,
+                                                    Optional('preference'): str,
+                                                    Optional('metric'): str,
+                                                    Optional('protocol_id'): str,
+                                                    Optional('attribute'): str,
+                                                    Optional('tag'): str, 
+                                                    Optional('mpls'): bool,
+                                                    Optional('mpls_vpn'): bool,
+                                                    Optional('evpn'): bool,
+                                                    Optional('segid'): int,
+                                                    Optional('tunnelid'): str,
+                                                    Optional('encap'): str,
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -95,6 +120,10 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         bgp_dict = {}
         sub_dict = {}
         address_family = None
+        is_ipv6 = False
+
+        if ip and (':' in ip or ip == 'ipv6'):
+            is_ipv6 = True
 
         for line in out.splitlines():
             line = line.strip()
@@ -106,21 +135,21 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
             m = p1.match(line)
             if m:
                 vrf = str(m.groupdict()['vrf'])
-                if vrf == 'default' and not ip:
+                if vrf == 'default' and not is_ipv6:
                     address_family = 'ipv4 unicast'
-                elif vrf != 'default' and not ip:
+                elif vrf != 'default' and not is_ipv6:
                     address_family = 'vpnv4 unicast'
-                elif vrf == 'default' and ip:
+                elif vrf == 'default' and is_ipv6:
                     address_family = 'ipv6 unicast'
-                elif vrf != 'default' and ip:
+                elif vrf != 'default' and is_ipv6:
                     address_family = 'vpnv6 unicast'
                 continue
 
             # 10.144.0.1/32, ubest/mbest: 1/0 time, attached
             # 10.220.9.0/24, ubest/mbest: 1/0 time
             p2 = re.compile(r'(?P<ip_mask>[\w\:\.\/]+), +ubest/mbest: +'
-                             '(?P<ubest>\d+)/(?P<mbest>\d+)( +time)?'
-                             '(, +(?P<attach>\w+))?$')
+                            r'(?P<ubest>\d+)/(?P<mbest>\d+)( +time)?'
+                            r'(, +(?P<attach>\w+))?$')
             m = p2.match(line)
             if m:
                 # Init vrf dict
@@ -158,23 +187,23 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
             # *via 10.55.130.2%default, [200/0], 3d07h, bgp-1, internal, tag 1 (evpn), segid: 50009 tunnelid: 0x64008202 encap: VXLAN
             p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)'
-                             '(%(?P<table>[\w\:]+))?, *'
-                             '((?P<int>[a-zA-Z0-9\./_]+),)? *'
-                             '\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
-                             '(?P<up_time>[\w\:\.]+), *'
-                             '(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
-                             '(?P<attribute>\w+)?,? *'
-                             '(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?'
-                             ',?( +segid: +(?P<segid>\d+))?,?( +tunnelid: +'
-                             '(?P<tunnelid>[0-9x]+))?,?( +encap: +'
-                             '(?P<encap>[a-zA-Z0-9]+))?$')
+                            r'(%(?P<table>[\w\:]+))?, *'
+                            r'((?P<int>[a-zA-Z0-9\./_]+),)? *'
+                            r'\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
+                            r'(?P<up_time>[\w\:\.]+), *'
+                            r'(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
+                            r'(?P<attribute>\w+)?,? *'
+                            r'(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?'
+                            r',?( +segid: +(?P<segid>\d+))?,?( +tunnelid: +'
+                            r'(?P<tunnelid>[0-9x]+))?,?( +encap: +'
+                            r'(?P<encap>[a-zA-Z0-9]+))?$')
             m = p3.match(line)
             if m:
                 cast = m.groupdict()['cast']
                 cast = {'1': 'unicast',
                         '2': 'multicast'}['{}'.format(cast.count('*'))]
 
-                 # Init 'best_route' dict
+                # Init 'best_route' dict
                 if 'best_route' not in sub_dict['ip'][ip_mask]:
                     sub_dict['ip'][ip_mask]['best_route'] = {}
                 if cast not in sub_dict['ip'][ip_mask]['best_route']:
