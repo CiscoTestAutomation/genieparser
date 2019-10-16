@@ -1636,14 +1636,15 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 Optional('first_trigger_lsp'): str,
                                 'triggers': str,
                                 'trigger_count': int,
-                                'delay': str,
+                                'delay_ms': int,
+                                'delay_info': str,
                                 'spt': {
-                                    'cpu_time': int,
-                                    'real_time': int,
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
                                 },
                                 'prefix_update': {
-                                    'cpu_time': int,
-                                    'real_time': int,
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
                                 },
                                 'new_lsp_arrivals': int,
                                 'next_wait_interval_ms': int,
@@ -1654,66 +1655,61 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                         'total': int,
                                     },
                                     'prefixes': {
-                                        'items': {
-                                            'priority': {
-                                                'critical': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'high': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'medium': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'low': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'all': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                            }
-
+                                        'items': {                                            
+                                            'critical_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'high_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'medium_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'low_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'all_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
                                         },
                                         'routes': {
-                                            'priority': {
-                                                'critical': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'high': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'medium': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'low': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                                'all': {
-                                                    'reach': int,
-                                                    Optional('unreach'): int,
-                                                    'total': int,
-                                                },
-                                            }
-                                        },
-                                    }
+                                            'critical_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'high_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'medium_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'low_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'all_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                        }
+                                    },
                                 }
                             }
                         }
@@ -1722,7 +1718,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
             }
         }
     }
-
+    
 
 class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
     ''' Parser for command
@@ -1736,15 +1732,19 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             output = self.device.execute(self.cli_command)
 
         # ISIS isp Level 1 IPv4 Unicast Route Calculation Log
-        r1 = re.compile(r'IS\-*IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
+        r1 = re.compile(r'IS\-*IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)'
+                        r'\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
 
         #                    Time  Total Trig
         # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
         # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
-        r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+        r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
+                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
 
         # Delay:              51ms (since first trigger)
-        r3 = re.compile(r'Delay\s*:\s*(?P<delay>.+)')
+        r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
+                        r'\((?P<delay_info>[\w\s]+)\)')
 
         # SPT Calculation
         r4 = re.compile(r'SPT\s+Calculation')
@@ -1842,8 +1842,10 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             result = r3.match(line)
             if result:
                 group = result.groupdict()
-                delay = group['delay']
-                spf_log_dict['delay'] = delay
+                delay = int(group['delay'])
+                delay_info = group['delay_info']
+                spf_log_dict['delay_ms'] = delay
+                spf_log_dict['delay_info'] = delay_info
 
                 continue
 
@@ -1869,7 +1871,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if result:
                 group = result.groupdict()
                 cpu_time = int(group['cpu_time'])
-                spt_prefix_dict['cpu_time'] = cpu_time
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
                 continue
 
             # Real Time:        0ms
@@ -1877,7 +1879,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             if result:
                 group = result.groupdict()
                 real_time = int(group['real_time'])
-                spt_prefix_dict['real_time'] = real_time
+                spt_prefix_dict['real_time_ms'] = real_time
                 continue
 
             # New LSP Arrivals:    0
@@ -1927,8 +1929,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 prefixes = group['prefixes'].lower()
                 prefixes_priority_dict = results_dict\
                     .setdefault('prefixes', {})\
-                    .setdefault(prefixes, {})\
-                    .setdefault('priority', {})
+                    .setdefault(prefixes, {})                    
 
                 continue
 
@@ -1951,7 +1952,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
                 total = group['total']
 
                 priority_dict = prefixes_priority_dict\
-                    .setdefault(priority_level, {})
+                    .setdefault('{priority_level}_priority'\
+                        .format(priority_level=priority_level), {})
 
                 if reach.isdigit():
                     priority_dict['reach'] = int(reach)

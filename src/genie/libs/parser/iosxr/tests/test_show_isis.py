@@ -790,9 +790,14 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                                 "first_trigger_lsp": "12a5.00-00",
                                 "triggers": "NEWLSP0",
                                 "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
-                                "delay": "51ms (since first trigger)",
-                                "spt": {"cpu_time": 0, "real_time": 0},
-                                "prefix_update": {"cpu_time": 1, "real_time": 1},
+                                "delay_ms": 51, 
+                                "delay_info": "since first trigger",
+                                "spt": {
+                                    "cpu_time_ms": 0, 
+                                    "real_time_ms": 0},
+                                "prefix_update": {
+                                    "cpu_time_ms": 1, 
+                                    "real_time_ms": 1},
                                 "new_lsp_arrivals": 0,
                                 "next_wait_interval_ms": 200,
                                 "results": {
@@ -802,60 +807,60 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                                         "total": 1},
                                     "prefixes": {
                                         "items": {
-                                            "priority": {
-                                                "critical": {
-                                                    "reach": 0,
-                                                    "unreach": 0,
-                                                    "total": 0,
-                                                },
-                                                "high": {
-                                                    "reach": 0,
-                                                    "unreach": 0,
-                                                    "total": 0,
-                                                },
-                                                "medium": {
-                                                    "reach": 0,
-                                                    "unreach": 0,
-                                                    "total": 0,
-                                                },
-                                                "low": {
-                                                    "reach": 0,
-                                                    "unreach": 0,
-                                                    "total": 0,
-                                                },
-                                                "all": {
-                                                    "reach": 0,
-                                                    "unreach": 0,
-                                                    "total": 0,
-                                                },
-                                            }
-                                        },
+                                            "critical_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "high_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "medium_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "low_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                            "all_priority": {
+                                                "reach": 0,
+                                                "unreach": 0,
+                                                "total": 0,
+                                            },
+                                        },                                        
                                         "routes": {
-                                            "priority": {
-                                                "critical": {
-                                                    "reach": 0, 
-                                                    "total": 0},
-                                                "high": {
-                                                    "reach": 0, 
-                                                    "total": 0},
-                                                "medium": {
-                                                    "reach": 0, 
-                                                    "total": 0},
-                                                "low": {
-                                                    "reach": 0, "total": 0},
-                                                "all": {"reach": 0, 
+                                            "critical_priority": {
+                                                "reach": 0, 
                                                 "total": 0},
-                                            }
-                                        },
+                                            "high_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "medium_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "low_priority": {
+                                                "reach": 0, 
+                                                "total": 0},
+                                            "all_priority": {
+                                                "reach": 0, 
+                                                "total": 0
+                                            },
+                                        }
                                     },
                                 },
-                            }
+                            },
                         }
                     }
                 }
             }
         }
     }
+    
 
     golden_output_1 = {'execute.return_value': '''
         # show isis spf-log detail
