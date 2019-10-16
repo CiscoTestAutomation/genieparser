@@ -17,8 +17,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Changed "type" type from string to integer on the following commands
-        * 'show clns neighbors detail'
         * 'show clns is-neighbors detail'
+    * Saving type as string in schema on:
+        * ShowClnsIsNeighborsDetail
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
