@@ -190,7 +190,7 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
-        * update schema and add regex
+        * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
