@@ -335,7 +335,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'nbr_count': 1,
                                 'neighbor_filter': '-',
                                 'override_interval': 2500,
-                                'oper_status': 'on',
+                                'oper_status': 'off',
                                 'primary_address': 'fe80::5054:ff:feac:64b3',
                                 'propagation_delay': 500}}},
                     'Loopback0': 
@@ -397,7 +397,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                 Hello Timer : 00:00:22
             Neighbor Filter : -
 
-        GigabitEthernet0/0/0/1      on   1     30     1     
+        GigabitEthernet0/0/0/1off         1     30     1     
             Primary Address : fe80::5054:ff:feac:64b3
                     Address : 2001:db8:1:2::2
                       Flags : B P NA 
