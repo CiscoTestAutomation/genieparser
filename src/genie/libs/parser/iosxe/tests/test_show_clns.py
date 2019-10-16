@@ -20,7 +20,7 @@ from genie.libs.parser.iosxe.show_clns import ShowClnsInterface,\
 # Unit test for 'show clns interface'
 #               'show show clns interface <inteface>'
 # =========================================================
-class test_show_ip_interface(unittest.TestCase):
+class TestShowIpInterface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -140,7 +140,7 @@ class test_show_ip_interface(unittest.TestCase):
 # =========================================================
 # Unit test for 'show clns protocol'
 # =========================================================
-class test_show_clns_protocol(unittest.TestCase):
+class TestShowClnsProtocol(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -221,7 +221,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                 'system_id':{
                     'R7':{
                         'type':{
-                            2: {
+                            'L2': {
                                 'interface': 'GigabitEthernet4',
                                 'state': 'up',
                                 'snpa': '5e00.c006.0007',
@@ -278,7 +278,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                 "system_id": {
                     "R2_xr": {
                         "type": {
-                            1: {
+                            "L1L2": {
                                 "holdtime": 26,
                                 "state": "up",
                                 "snpa": "fa16.3e21.73f6",
@@ -290,25 +290,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
-                            },
-                            2: {
-                                "holdtime": 26,
-                                "state": "up",
-                                "snpa": "fa16.3e21.73f6",
-                                "protocol": "M-ISIS",
-                                "interface": "GigabitEthernet2.115",
-                                "area_address": ["49.0001"],
-                                "ip_address": ["10.12.115.2*"],
-                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
-                                "uptime": "3d21h",
-                                "nsf": "capable",
-                                "topology": ["ipv4", "ipv6"],
-                            },
+                            }
                         }
                     },
                     "R3_nx": {
                         "type": {
-                            1: {
+                            "L1L2": {
                                 "holdtime": 29,
                                 "state": "up",
                                 "snpa": "5e00.8002.0007",
@@ -320,20 +307,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
-                            },
-                            2: {
-                                "holdtime": 29,
-                                "state": "up",
-                                "snpa": "5e00.8002.0007",
-                                "protocol": "M-ISIS",
-                                "interface": "GigabitEthernet3.115",
-                                "area_address": ["49.0001"],
-                                "ip_address": ["10.13.115.3*"],
-                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
-                                "uptime": "3d21h",
-                                "nsf": "capable",
-                                "topology": ["ipv4", "ipv6"],
-                            },
+                            }
                         }
                     },
                 }
@@ -342,7 +316,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                 "system_id": {
                     "2222.2222.2222": {
                         "type": {
-                            1: {
+                            "L1L2": {
                                 "holdtime": 29,
                                 "state": "init",
                                 "snpa": "fa16.3e21.73f6",
@@ -354,25 +328,12 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
-                            },
-                            2: {
-                                "holdtime": 29,
-                                "state": "init",
-                                "snpa": "fa16.3e21.73f6",
-                                "protocol": "M-ISIS",
-                                "interface": "GigabitEthernet2.415",
-                                "area_address": ["49.0001"],
-                                "ip_address": ["10.12.115.2*"],
-                                "ipv6_address": ["FE80::F816:3EFF:FE21:73F6"],
-                                "uptime": "3d21h",
-                                "nsf": "capable",
-                                "topology": ["ipv4", "ipv6"],
-                            },
+                            }
                         }
                     },
                     "R3_nx": {
                         "type": {
-                            1: {
+                            "L1L2": {
                                 "holdtime": 29,
                                 "state": "up",
                                 "snpa": "5e00.8002.0007",
@@ -384,20 +345,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
                                 "uptime": "3d21h",
                                 "nsf": "capable",
                                 "topology": ["ipv4", "ipv6"],
-                            },
-                            2: {
-                                "holdtime": 29,
-                                "state": "up",
-                                "snpa": "5e00.8002.0007",
-                                "protocol": "M-ISIS",
-                                "interface": "GigabitEthernet3.415",
-                                "area_address": ["49.0001"],
-                                "ip_address": ["10.13.115.3*"],
-                                "ipv6_address": ["FE80::5C00:80FF:FE02:7"],
-                                "uptime": "3d21h",
-                                "nsf": "capable",
-                                "topology": ["ipv4", "ipv6"],
-                            },
+                            }
                         }
                     },
                 }
@@ -474,7 +422,7 @@ class TestShowClnsNeighborsDetail(unittest.TestCase):
 # =========================================================
 # Unit test for 'show clns is-neighbor detail'
 # =========================================================
-class test_show_clns_is_neighbor_detail(unittest.TestCase):
+class TestShowClnsIsNeighborDetail(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -560,7 +508,7 @@ class test_show_clns_is_neighbor_detail(unittest.TestCase):
 # =========================================================
 # Unit test for 'show clns traffic'
 # =========================================================
-class test_show_clns_traffic(unittest.TestCase):
+class TestShowClnsTraffic(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
