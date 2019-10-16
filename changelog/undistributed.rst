@@ -536,6 +536,8 @@
         * show isis
     * Added ShowIsisSpfLog for:
         * show isis spf-log
+    * Added ShowIsisSpfLogDetail for:
+        * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:

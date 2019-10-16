@@ -10,6 +10,7 @@ IOSXR parsers for the following show commands:
     * show isis statistics
     * show isis protocol
     * show isis spf-log
+    * show isis spf-log detail
     * show isis lsp-log
 
 """
@@ -1657,6 +1658,362 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
                 continue
 
         return parsed_output
+
+class ShowIsisSpfLogDetailSchema(MetaParser):
+    ''' Schema for command
+        * show isis spf-log detail
+    '''
+    schema = {
+        'instance': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'spf_log': {
+                            Any(): {
+                                'type': str,
+                                'start_timestamp': str,
+                                'total_nodes': int,
+                                'time_ms': int,
+                                'level': int,
+                                Optional('first_trigger_lsp'): str,
+                                'triggers': str,
+                                'trigger_count': int,
+                                'delay_ms': int,
+                                'delay_info': str,
+                                'spt_calculation': {
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
+                                'new_lsp_arrivals': int,
+                                'next_wait_interval_ms': int,
+                                'results': {
+                                    'nodes': {
+                                        'reach': int,
+                                        'unreach': int,
+                                        'total': int,
+                                    },
+                                    'prefixes': {
+                                        'items': {                                            
+                                            'critical_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'high_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'medium_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'low_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'all_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                        },
+                                        'routes': {
+                                            'critical_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'high_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'medium_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'low_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'all_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                        }
+                                    },
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
+    ''' Parser for command
+        * show isis spf-log detail
+    '''
+
+    cli_command = 'show isis spf-log detail'
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+        r1 = re.compile(r'IS\-*IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)'
+                        r'\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
+
+        #                    Time  Total Trig
+        # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
+        # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
+        r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
+                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+
+        # Delay:              51ms (since first trigger)
+        r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
+                        r'\((?P<delay_info>[\w\s]+)\)')
+
+        # SPT Calculation
+        r4 = re.compile(r'SPT\s+Calculation')
+
+        # Prefix Updates
+        r5 = re.compile(r'Prefix\s+Updates')
+
+        # CPU Time:         1ms
+        # CPU Time:         0ms
+        r6 = re.compile(r'CPU\s+Time\s*:\s*(?P<cpu_time>\d+)\w+')
+
+        # Real Time:        0ms
+        r7 = re.compile(r'Real\s+Time\s*:\s*(?P<real_time>\d+)\w+')
+
+        # New LSP Arrivals:    0
+        r8 = re.compile(r'New\s+LSP\s+Arrivals\s*:\s*(?P<new_lsp_arrival>\d+)')
+
+        # Next Wait Interval: 200ms
+        r9 = re.compile(r'Next\s+Wait\s+Interval\s*:\s*(?P<next_wait_interval>\d+)\w+')
+
+        # Nodes:                   1       0     1
+        r10 = re.compile(r'Nodes\s*:\s*(?P<reach>\d+)\s+(?P<unreach>\d+)\s+(?P<total>\d+)')
+
+        # Prefixes (Items)
+        # Prefixes (Routes)
+        r11 = re.compile(r'Prefixes\s*\((?P<prefixes>\w+)\)')
+
+        # Critical Priority:     0       0     0
+        # Critical Priority:     0       -     0
+        # High Priority:         0       0     0 
+        # High Priority:         0       -     0
+        # Medium Priority        0       0     0 
+        # Medium Priority        0        -    0
+        # Low Priority           0       0     0 
+        # Low Priority:          0        -    0
+        # All Priorities         0        -    0
+        # All Priorities         0       0     0
+        r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
+                          '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
+                          '(?P<total>\d+)')
+
+        # Mon Aug 16 2004
+        r13 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+
+        parsed_dict = {}
+        log_index = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                level = int(group['level'])
+                address_family = group['address_family']
+                instance_dict = parsed_dict\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})                    
+
+                continue
+
+            #                    Time  Total Trig
+            # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
+            # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp = group['timestamp']
+                type_ = group['type']
+                time_ms = int(group['time_ms'])
+                nodes = int(group['nodes'])
+                trigger_count = int(group['count'])
+                first_trigger_lsp = group['first_trigger_lsp']
+                triggers = group['triggers']
+                spf_log_dict = instance_dict\
+                    .setdefault('spf_log', {})\
+                    .setdefault(log_index, {})
+                spf_log_dict['type'] = type_
+                spf_log_dict['time_ms'] = time_ms
+                spf_log_dict['level'] = level
+                spf_log_dict['total_nodes'] = nodes
+                spf_log_dict['trigger_count'] = trigger_count
+                spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
+                spf_log_dict['triggers'] = triggers
+                spf_log_dict['start_timestamp'] = "{} {}"\
+                    .format(timestamp_date, timestamp).strip()
+
+                continue
+
+            # Delay:              51ms (since first trigger)
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                delay = int(group['delay'])
+                delay_info = group['delay_info']
+                spf_log_dict['delay_ms'] = delay
+                spf_log_dict['delay_info'] = delay_info
+
+                continue
+
+            # SPT Calculation
+            result = r4.match(line)
+            if result:
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('spt_calculation', {})
+
+                continue
+
+            # Prefix Updates
+            result = r5.match(line)
+            if result:
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('prefix_update', {})
+
+                continue
+
+            # CPU Time:         1ms
+            # CPU Time:         0ms
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                continue
+
+            # Real Time:        0ms
+            result = r7.match(line)
+            if result:
+                group = result.groupdict()
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
+            # New LSP Arrivals:    0
+            result = r8.match(line)
+            if result:
+                group = result.groupdict()
+                new_lsp_arrival = int(group['new_lsp_arrival'])
+                spf_log_dict['new_lsp_arrivals'] = new_lsp_arrival
+                continue
+
+            # Next Wait Interval: 200ms
+            result = r9.match(line)
+            if result:
+                group = result.groupdict()
+                next_wait_interval = int(group['next_wait_interval'])
+                spf_log_dict['next_wait_interval_ms'] = next_wait_interval
+                continue
+
+            # Results
+            if line == "Results":
+                results_dict = spf_log_dict.setdefault('results', {})
+
+                continue
+
+            #                      Reach Unreach Total
+            # Nodes:                   1       0     1
+            result = r10.match(line)
+            if result:
+                group = result.groupdict()
+                reach = group['reach']
+                unreach = group['unreach']
+                total = group['total']
+                node_dict = results_dict.setdefault('nodes', {})
+                if reach.isdigit():
+                    node_dict['reach'] = int(reach)
+                if unreach.isdigit():
+                    node_dict['unreach'] = int(unreach)
+                if total.isdigit():
+                    node_dict['total'] = int(total)
+                continue
+
+            # Prefixes (Items)
+            # Prefixes (Routes)
+            result = r11.match(line)
+            if result:
+                group = result.groupdict()
+                prefixes = group['prefixes'].lower()
+                prefixes_priority_dict = results_dict\
+                    .setdefault('prefixes', {})\
+                    .setdefault(prefixes, {})                    
+
+                continue
+
+            # Critical Priority:     0       0     0
+            # Critical Priority:     0       -     0
+            # High Priority:         0       0     0 
+            # High Priority:         0       -     0
+            # Medium Priority        0       0     0 
+            # Medium Priority        0       -     0
+            # Low Priority           0       0     0 
+            # Low Priority:          0       -     0
+            # All Priorities         0       -     0
+            # All Priorities         0       0     0
+            result = r12.match(line)
+            if result:
+                group = result.groupdict()
+                priority_level = group['priority_level'].lower()
+                reach = group['reach']
+                unreach = group['unreach']
+                total = group['total']
+
+                priority_dict = prefixes_priority_dict\
+                    .setdefault('{priority_level}_priority'\
+                        .format(priority_level=priority_level), {})
+
+                if reach.isdigit():
+                    priority_dict['reach'] = int(reach)
+                if unreach.isdigit():
+                    priority_dict['unreach'] = int(unreach)
+                if total.isdigit():
+                    priority_dict['total'] = int(total)
+
+                continue            
+
+            # Mon Aug 16 2004
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp_date = group['timestamp_date']
+                
+                continue
+        
+        return parsed_dict
 
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
