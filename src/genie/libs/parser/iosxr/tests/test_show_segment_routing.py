@@ -7,27 +7,27 @@ from ats.topology import Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 from genie.libs.parser.iosxr.show_segment_routing import ShowPceLsp,\
-                                                            ShowPceIPV4Peer,\
-                                                            ShowPceLspDetail,\
-                                                            ShowPceIPV4PeerDetail,\
-                                                            ShowPceIPV4PeerPrefix,\
-                                                            ShowPceIpv4TopologySummary,\
-                                                            ShowIsisSegmentRoutingPrefixSidMap,\
-                                                            ShowOspfSegmentRoutingPrefixSidMap,\
-                                                            ShowSegment_RoutingLocal_BlockInconsistencies,\
-                                                            ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4,\
-                                                            ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail
+    ShowPceIPV4Peer,\
+    ShowPceLspDetail,\
+    ShowPceIPV4PeerDetail,\
+    ShowPceIPV4PeerPrefix,\
+    ShowPceIpv4TopologySummary,\
+    ShowIsisSegmentRoutingPrefixSidMap,\
+    ShowOspfSegmentRoutingPrefixSidMap,\
+    ShowSegmentRoutingLocalBlockInconsistencies,\
+    ShowSegmentRoutingMappingServerPrefixSidMapIPV4,\
+    ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail
 
 # =============================================================
 # Unittest for:
 #   * 'Show Isis Segment Routing Prefix Sid Map'
 # =============================================================
+
+
 class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
-    
+
     device = Device(name='DeviceA')
     dev2 = Device(name='DeviceB')
-
-
 
     empty_output = {'execute.return_value': ''}
 
@@ -36,8 +36,8 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
 
         IS-IS 1 active policy
         Prefix               SID Index    Range        Flags
-        10.4.1.100/32         100          20          
-        10.4.1.150/32         150          10          
+        10.4.1.100/32         100          20
+        10.4.1.150/32         150          10
 
         Number of mapping entries: 2
 
@@ -45,8 +45,8 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
 
         IS-IS 1 backup policy
         Prefix               SID Index    Range        Flags
-        10.4.1.100/32         100          20          
-        10.4.1.150/32         150          10          
+        10.4.1.100/32         100          20
+        10.4.1.150/32         150          10
 
         Number of mapping entries: 2
     '''}
@@ -85,7 +85,6 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
             }
         }
     }
-        
 
     def test_empty_output(self):
         self.device1 = Mock(**self.empty_output)
@@ -96,21 +95,19 @@ class test_show_isis_routing_prefix_sid_map(unittest.TestCase):
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowIsisSegmentRoutingPrefixSidMap(device = self.dev2)
+        obj = ShowIsisSegmentRoutingPrefixSidMap(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
-        
+
 
 # =============================================================
 # Unittest for:
 #   * 'Show Ospf Segment Routing Prefix Sid Map'
 # =============================================================
 class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
-    
+
     device = Device(name='DeviceA')
     dev2 = Device(name='DeviceB')
-
-
 
     empty_output = {'execute.return_value': ''}
 
@@ -120,8 +117,8 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
                 SRMS active policy for Process ID 1
 
         Prefix               SID Index    Range        Flags
-        10.4.1.100/32         100          20          
-        10.4.1.150/32         150          10           
+        10.4.1.100/32         100          20
+        10.4.1.150/32         150          10
 
         Number of mapping entries: 2
 
@@ -130,8 +127,8 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
                 SRMS backup policy for Process ID 1
 
         Prefix               SID Index    Range        Flags
-        10.4.1.100/32         100          20          
-        10.4.1.150/32         150          10          
+        10.4.1.100/32         100          20
+        10.4.1.150/32         150          10
 
         Number of mapping entries: 2
     '''}
@@ -170,7 +167,6 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
             }
         }
     }
-        
 
     def test_empty_output(self):
         self.device1 = Mock(**self.empty_output)
@@ -181,7 +177,7 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowOspfSegmentRoutingPrefixSidMap(device = self.dev2)
+        obj = ShowOspfSegmentRoutingPrefixSidMap(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -189,10 +185,12 @@ class test_show_ospf_routing_prefix_sid_map(unittest.TestCase):
 # Unittest for:
 #   * 'Show pce ipv4 peer'
 # =============================================================
+
+
 class test_show_pce_ivp4_peer(unittest.TestCase):
-    
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
     empty_output = {'execute.return_value': ''}
 
@@ -221,14 +219,14 @@ class test_show_pce_ivp4_peer(unittest.TestCase):
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowPceIPV4Peer(device = self.dev1)
+        obj = ShowPceIPV4Peer(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowPceIPV4Peer(device = self.dev2)
+        obj = ShowPceIPV4Peer(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -238,9 +236,9 @@ class test_show_pce_ivp4_peer(unittest.TestCase):
 #   * 'show pce ipv4 peer detail'
 # =============================================================
 class test_show_pce_ipv4_peer_detail(unittest.TestCase):
-    
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
     empty_output = {'execute.return_value': ''}
 
@@ -314,14 +312,14 @@ class test_show_pce_ipv4_peer_detail(unittest.TestCase):
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowPceIPV4PeerDetail(device = self.dev1)
+        obj = ShowPceIPV4PeerDetail(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowPceIPV4PeerDetail(device = self.dev2)
+        obj = ShowPceIPV4PeerDetail(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -331,8 +329,8 @@ class test_show_pce_ipv4_peer_detail(unittest.TestCase):
 #   * 'show pce ipv4 prefix'
 # =============================================================
 class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
     empty_output = {'execute.return_value': ''}
 
@@ -366,30 +364,39 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
             1: {
                 'te_router_id': '192.168.0.4',
                 'host_name': 'rtrD',
-                'isis_system_id': ['1921.6800.1004 level-1', '1921.6800.1004 level-2', '1921.6800.1004 level-2'],
-                'asn': [65001, 65001, 65001],
-                'domain_id': [1111, 1111, 9999],
-                'advertised_prefixes': ['192.168.0.4', '192.168.0.4', '192.168.0.4', '192.168.0.6']
-            },
+                'isis_system_id': [
+                    '1921.6800.1004 level-1',
+                    '1921.6800.1004 level-2',
+                    '1921.6800.1004 level-2'],
+                'asn': [
+                    65001,
+                    65001,
+                    65001],
+                'domain_id': [
+                    1111,
+                    1111,
+                    9999],
+                'advertised_prefixes': [
+                    '192.168.0.4',
+                    '192.168.0.4',
+                    '192.168.0.4',
+                    '192.168.0.6']},
             2: {
                 'te_router_id': '192.168.0.1',
                 'host_name': 'rtrA',
-                'isis_system_id': ['1921.6800.1001 level-2'],
-                'advertised_prefixes': ['192.168.0.1']
-            }
-        }
-    }
+                                'isis_system_id': ['1921.6800.1001 level-2'],
+                'advertised_prefixes': ['192.168.0.1']}}}
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowPceIPV4PeerPrefix(device = self.dev1)
+        obj = ShowPceIPV4PeerPrefix(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowPceIPV4PeerPrefix(device = self.dev2)
+        obj = ShowPceIPV4PeerPrefix(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -399,12 +406,12 @@ class test_Show_Pce_IPV4_Peer_prefix(unittest.TestCase):
 #   * 'show pce ipv4 topology summary'
 # =============================================================
 class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
-    empty_output = {'execute.return_value' : ''}
+    empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value' : '''
+    golden_output = {'execute.return_value': '''
         RP/0/RSP0/CPU0:router# show pce ipv4 topology summary
 
         PCE's topology database summary:
@@ -418,27 +425,111 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
     '''}
 
     golden_parsed_output = {
+    'pce_topology_database_summary': {
+        'adjancency_sids': {
+            'total': 24,
+        },
+        'links': {
+            'total': 12,
+        },
+        'prefix_sids': {
+            'total': 4,
+        },
+        'prefixes': 4,
+        'topology_nodes': 4,
+    },
+}
+
+    expected_output_2 = {
         'pce_topology_database_summary': {
-            'topology_nodes': 4,
-            'prefixes': 4,
-            'prefix_sids': 4,
-            'links': 12,
-            'adjancency_sids': 24
-        }
+            'adjancency_sids': {
+                'epe': 0,
+                'protected': 0,
+                'total': 0,
+                'unprotected': 0,
+            },
+            'links': {
+                'epe': 0,
+                'total': 0,
+            },
+            'prefix_sids': {
+                'regular': 0,
+                'strict': 0,
+                'total': 0,
+            },
+            'prefixes': 0,
+            'private_information': {
+                'consistent': 'yes',
+                'lookup_nodes': 0,
+                'update_stats': {
+                    'links': {
+                        'added': 0,
+                        'deleted': 0,
+                    },
+                    'noded': {
+                        'added': 0,
+                        'deleted': 0,
+                    },
+                    'prefix': {
+                        'added': 0,
+                        'deleted': 0,
+                    },
+                },
+            },
+            'topology_nodes': 0,
+        },
     }
+    device_output_2 = {'execute.return_value': '''
+
+        PCE's topology database summary:
+        --------------------------------
+
+        Topology nodes:                0
+        Prefixes:                      0
+        Prefix SIDs:
+          Total:                       0
+          Regular:                     0
+          Strict:                      0
+        Links:
+          Total:                       0
+          EPE:                         0
+        Adjacency SIDs:
+          Total:                       0
+          Unprotected:                 0
+          Protected:                   0
+          EPE:                         0
+
+        Private Information:
+        Lookup Nodes                   0
+        Consistent                   yes
+        Update Stats (from IGP and/or BGP):
+          Noded added:                 0
+          Noded deleted:               0
+          Links added:                 0
+          Links deleted:               0
+          Prefix added:                0
+          Prefix deleted:              0
+    '''}
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowPceIpv4TopologySummary(device = self.dev1)
+        obj = ShowPceIpv4TopologySummary(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowPceIpv4TopologySummary(device = self.dev2)
+        obj = ShowPceIpv4TopologySummary(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
+
+    def test_golden_output_2(self):
+        self.maxDiff = None
+        self.dev3 = Mock(**self.device_output_2)
+        obj = ShowPceIpv4TopologySummary(device=self.dev3)
+        parsed = obj.parse()
+        self.assertEqual(parsed, self.expected_output_2)
 
 
 # =============================================================
@@ -446,11 +537,10 @@ class test_Show_Pce_Ipv4_Topology_Summary(unittest.TestCase):
 #   * 'show pce lsp'
 # =============================================================
 class test_show_Pce_Lsp(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
-    empty_output = {'execute.return_value' : ''}
-
+    empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': '''
         RP/0/RSP0/CPU0:router# show pce lsp
@@ -491,17 +581,16 @@ class test_show_Pce_Lsp(unittest.TestCase):
         }
     }
 
-
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowPceLsp(device = self.dev1)
+        obj = ShowPceLsp(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowPceLsp(device = self.dev2)
+        obj = ShowPceLsp(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -509,13 +598,15 @@ class test_show_Pce_Lsp(unittest.TestCase):
 # Unittest for:
 #   * 'show pce lsp detail'
 # =============================================================
+
+
 class test_Show_Pce_Lsp_Detail(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value' : '''
+    golden_output = {'execute.return_value': '''
         RP/0/RSP0/CPU0:router# show pce lsp detail
 
         PCE's tunnel database:
@@ -599,11 +690,11 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                         'pcep_information': {
                             'plsp_id': 2,
                             'flags': {
-                                'd' : 1,
-                                's' : 0,
-                                'r' : 0, 
-                                'a' : 1,
-                                'o' : 1,
+                                'd': 1,
+                                's': 0,
+                                'r': 0,
+                                'a': 1,
+                                'o': 1,
                             }
                         },
                         'paths': {
@@ -612,13 +703,13 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                 'accumulated_metric': 42,
                                 'sids': {
                                     0: {
-                                        'type' : 'Adj',
+                                        'type': 'Adj',
                                         'label': 24000,
                                         'local_address': '10.10.10.1',
                                         'remote_address': '10.10.10.2'
                                     },
                                     1: {
-                                        'type' : 'Adj',
+                                        'type': 'Adj',
                                         'label': 24000,
                                         'local_address': '10.19.14.2',
                                         'remote_address': '10.19.14.4'
@@ -630,13 +721,13 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
                                 'accumulated_metric': 42,
                                 'sids': {
                                     0: {
-                                        'type' : 'Adj',
+                                        'type': 'Adj',
                                         'label': 24000,
                                         'local_address': '10.10.10.1',
                                         'remote_address': '10.10.10.2'
                                     },
                                     1: {
-                                        'type' : 'Adj',
+                                        'type': 'Adj',
                                         'label': 24000,
                                         'local_address': '10.19.14.2',
                                         'remote_address': '10.19.14.4'
@@ -692,14 +783,14 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowPceLspDetail(device = self.dev1)
+        obj = ShowPceLspDetail(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowPceLspDetail(device = self.dev2)
+        obj = ShowPceLspDetail(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -707,35 +798,37 @@ class test_Show_Pce_Lsp_Detail(unittest.TestCase):
 # Unittest for:
 #   * 'show segment-routing local-block inconsistencies'
 # =============================================================
+
+
 class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
-    empty_output = {'execute.return_value' : ''}
+    empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value' : '''
+    golden_output = {'execute.return_value': '''
     RP/0/RSP0/CPU0:router(config)# show segment-routing local-block inconsistencies
     Tue Aug 15 13:53:30.555 EDT
     SRLB inconsistencies range: Start/End: 30000/30009
     '''}
 
     golden_parsed_output = {
-        'srlb_inconsistencies_range' : {
-            'start' : 30000,
-            'end' : 30009,
-            }
+        'srlb_inconsistencies_range': {
+            'start': 30000,
+            'end': 30009,
+        }
     }
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowSegment_RoutingLocal_BlockInconsistencies(device = self.dev1)
+        obj = ShowSegmentRoutingLocalBlockInconsistencies(device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowSegment_RoutingLocal_BlockInconsistencies (device = self.dev2)
+        obj = ShowSegmentRoutingLocalBlockInconsistencies(device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -744,24 +837,25 @@ class Test_Show_Segment_Routing_Local_Block_Inconsistencies(unittest.TestCase):
 # Unittest for:
 #   * 'show segment-routing mapping-server prefix-sid-map ipv4'
 # ====================================================================
-class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(
+        unittest.TestCase):
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
-    empty_output = {'execute.return_value' : ''}
+    empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value' : '''
+    golden_output = {'execute.return_value': '''
     show segment-routing mapping-server prefix-sid-map ipv4
     Prefix               SID Index    Range        Flags
-    10.186.1.0/24          400          300          
-    10.1.1.1/32          10           200          
+    10.186.1.0/24          400          300
+    10.1.1.1/32          10           200
     Number of mapping entries: 2
     '''}
 
     golden_parsed_output = {
         'ipv4': {
             'number_of_mapping_entries': 2,
-            'prefix' : {
+            'prefix': {
                 '10.186.1.0/24': {
                     'sid_index': 400,
                     'range': 300
@@ -776,14 +870,16 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(device = self.dev1)
+        obj = ShowSegmentRoutingMappingServerPrefixSidMapIPV4(
+            device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4(device = self.dev2)
+        obj = ShowSegmentRoutingMappingServerPrefixSidMapIPV4(
+            device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
 
@@ -791,13 +887,16 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV4(unittest.Test
 # Unittest for:
 #   * 'show segment-routing mapping-server prefix-sid-map ipv4 detail'
 # ====================================================================
-class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unittest.TestCase):
-    dev1 = Device(name = 'DeviceA')
-    dev2 = Device(name = 'DeviceB')
+
+
+class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(
+        unittest.TestCase):
+    dev1 = Device(name='DeviceA')
+    dev2 = Device(name='DeviceB')
 
     empty_output = {'execute.return_value': ''}
 
-    golden_output = {'execute.return_value' : '''
+    golden_output = {'execute.return_value': '''
         RP/0/0/CPU0:router# show segment-routing mapping-server prefix-sid-map ipv4 detail
         Prefix
         10.186.1.0/24
@@ -805,7 +904,7 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
             Range:          300
             Last Prefix:    10.229.44.0/24
             Last SID Index: 699
-            Flags:          
+            Flags:
         10.1.1.1/32
             SID Index:      10
             Range:          200
@@ -813,12 +912,12 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
 
     golden_parsed_output = {
         'ipv4': {
-            'prefix' : {
+            'prefix': {
                 '10.186.1.0/24': {
                     'sid_index': 400,
                     'range': 300,
                     'last_prefix': '10.229.44.0/24',
-                    'last_sid_index' : 699
+                    'last_sid_index': 699
                 },
                 '10.1.1.1/32': {
                     'sid_index': 10,
@@ -830,16 +929,19 @@ class Test_Show_Segment_Routing_Mapping_Server_Prefix_Sid_Map_IPV_4Detail(unitte
 
     def test_empty_output(self):
         self.dev1 = Mock(**self.empty_output)
-        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(device = self.dev1)
+        obj = ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail(
+            device=self.dev1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed = obj.parse()
 
     def test_golden_output(self):
         self.maxDiff = None
         self.dev2 = Mock(**self.golden_output)
-        obj = ShowSegment_RoutingMapping_ServerPrefix_Sid_MapIPV4Detail(device = self.dev2)
+        obj = ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail(
+            device=self.dev2)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()

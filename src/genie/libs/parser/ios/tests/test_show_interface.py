@@ -100,7 +100,7 @@ class TestShowInterfaceParsergen(unittest.TestCase):
 #############################################################################
 # unitest For Show ip interface | include <word>
 #############################################################################
-class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
+class TestShowIpInterfacesBriefPipeIp(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {'interface':
@@ -131,7 +131,7 @@ class test_show_ip_interfaces_brief_pipe_ip(unittest.TestCase):
 #############################################################################
 # unitest For Show Interfaces
 #############################################################################
-class test_show_interfaces(unittest.TestCase):
+class TestShowInterfaces(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -511,7 +511,7 @@ class test_show_interfaces(unittest.TestCase):
 #############################################################################
 # unitest For Show ip interface
 #############################################################################
-class test_show_ip_interface(unittest.TestCase):
+class TestShowIpInterface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -725,7 +725,7 @@ class test_show_ip_interface(unittest.TestCase):
 #############################################################################
 # unitest For show ipv6 interface
 #############################################################################
-class test_show_ipv6_interface(unittest.TestCase):
+class TestShowIpv6Interface(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     golden_parsed_output = {
@@ -895,7 +895,7 @@ class test_show_ipv6_interface(unittest.TestCase):
 # unitest For show interfaces <interface> accounting
 #############################################################################
 
-class test_show_interfaces_accounting(unittest.TestCase):
+class TestShowInterfacesAccounting(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
