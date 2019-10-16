@@ -2956,6 +2956,9 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         p14 = re.compile(r'^Forward +Address: +(?P<addr>(\S+))$')
         p15 = re.compile(r'^External +Route +Tag: +(?P<tag>(\d+))$')
         p16 = re.compile(r'^Attached +Router: +(?P<att_router>(\S+))$')
+
+        # Number of Links : 1
+        # Number of Links: 3
         p17 = re.compile(r'^Number +of +(l|L)inks *: +(?P<num>(\d+))$')
         p18 = re.compile(r'^Link +connected +to: +a +(?P<type>(.*))$')
         p18_1 = re.compile(r'^Link +connected +to: +(?P<type>(.*))$')
@@ -3329,7 +3332,6 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                     db_dict['attached_routers'][attached_router] = {}
                     continue
 
-            # Number of links: 3
             # Number of Links: 3
             m = p17.match(line)
             if m:
@@ -3653,8 +3655,8 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
             #   Algorithm: 1
             m = p43.match(line)
             if m:
-                algo = tlv_dict.setdefault('algorithm', [])
-                algo.append(int(m.groupdict()['algo']))
+                algo = tlv_dict.setdefault('algorithm', {})
+                algo.update({m.groupdict()['algo']: True})
                 continue
 
             # Segment Routing Range TLV: Length: 12
@@ -4342,7 +4344,9 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                                                                         Optional('sr_algorithm_tlv'): {
                                                                             Any(): {
                                                                                 'length': int,
-                                                                                Optional('algorithm'): list,
+                                                                                Optional('algorithm'): {
+                                                                                    Any(): bool,
+                                                                                }
                                                                             },
                                                                         },
                                                                         Optional('sid_range_tlvs'): {

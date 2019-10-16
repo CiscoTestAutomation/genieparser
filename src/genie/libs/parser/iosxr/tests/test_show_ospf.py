@@ -5428,7 +5428,10 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                         'sr_algorithm_tlv': {
                                                                             1: {
                                                                                 'length': 2,
-                                                                                'algorithm': [0, 1],
+                                                                                'algorithm': {
+                                                                                    '0': True,
+                                                                                    '1': True,
+                                                                                },
                                                                             },
                                                                         },
                                                                         'sid_range_tlvs': {
