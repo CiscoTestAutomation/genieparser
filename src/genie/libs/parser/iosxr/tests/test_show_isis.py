@@ -2,8 +2,6 @@
 import unittest
 from unittest.mock import Mock
 
-import genie.gre
-
 # ATS
 from ats.topology import Device
 from ats.topology import loader
@@ -2042,10 +2040,6 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 5    IS-Extended cisco.03
           Metric: 10   IS-Extended cisco1.03
           Metric: 10    IS (MT-IPv6) cisco.03
-    '''}
-
-    # ncs6k
-    golden_output_4 = {'execute.return_value': '''
     '''}
 
     def test_empty_output(self):
