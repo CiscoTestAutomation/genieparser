@@ -582,3 +582,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Verified customer outputs
+    * Added field to schema advertised_by
