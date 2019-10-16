@@ -1,27 +1,31 @@
-import re
+
+# Python
 import unittest
 from unittest.mock import Mock
 
 from ats.topology import Device
 
+# Genie
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+                                             SchemaMissingKeyError
 
-from genie.libs.parser.nxos.show_interface import ShowInterface, ShowVrfAllInterface, \
-                                       ShowInterfaceSwitchport, ShowIpv6InterfaceVrfAll, \
-                                       ShowIpInterfaceVrfAll, \
-                                       ShowIpInterfaceBrief, \
-                                       ShowIpInterfaceBriefPipeVlan, \
-                                       ShowInterfaceBrief, \
-                                       ShowRunningConfigInterface, \
-                                       ShowNveInterface, \
-                                       ShowIpInterfaceBriefVrfAll
+from genie.libs.parser.nxos.show_interface import (ShowInterface,
+                                                   ShowVrfAllInterface,
+                                                   ShowInterfaceSwitchport,
+                                                   ShowIpv6InterfaceVrfAll,
+                                                   ShowIpInterfaceVrfAll,
+                                                   ShowIpInterfaceBrief,
+                                                   ShowIpInterfaceBriefPipeVlan,
+                                                   ShowInterfaceBrief,
+                                                   ShowRunningConfigInterface,
+                                                   ShowNveInterface,
+                                                   ShowIpInterfaceBriefVrfAll)
 
 #############################################################################
 # unitest For Show Interface
 #############################################################################
 
-class test_show_interface(unittest.TestCase):
+class TestShowInterface(unittest.TestCase):
     device = Device(name='aDevice')
     
     empty_output = {'execute.return_value': ''}
@@ -257,7 +261,12 @@ class test_show_interface(unittest.TestCase):
             'admin_state': 'up',
             'bandwidth': 1000000,
             'counters': 
-                {'rate': 
+                { 'in_multicast_pkts': 2,
+                  'in_unicast_pkts': 0,
+                  'in_broadcast_pkts': 4,
+                'in_pkts': 2,
+                  'in_octets': 4726,
+                  'rate': 
                     {'in_rate': 0,
                     'in_rate_pkts': 0,
                     'load_interval': 1,
@@ -338,6 +347,7 @@ class test_show_interface(unittest.TestCase):
             'delay': 10,
             'dedicated_intface': True,
             'description': 'Connection to pe1',
+            'duplex_mode': 'auto',
             'enabled': False,
             'encapsulations': {'encapsulation': 'arpa'},
             'ethertype': '0x8100',
@@ -351,8 +361,10 @@ class test_show_interface(unittest.TestCase):
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'down',
+            'media_type': '10G',
             'phys_address': '002a.6ab4.9068',
             'port_channel': {'port_channel_member': False},
+            'port_speed': '10',
             'reliability': '255/255',
             'rxload': '1/255',
             'switchport_monitor': 'off',
@@ -710,7 +722,7 @@ class test_show_interface(unittest.TestCase):
                  'txload': '1/255',
                  'types': '100/1000/10000 Ethernet'}}
     golden_output_custom = {'execute.return_value': '''
- Ethernet2/1 is up
+      Ethernet2/1 is up
             admin state is up, Dedicated Interface
               Hardware: 10/100/1000 Ethernet, address: aaaa.bbbb.cccc (bia 5254.003b.4aca)
               Description: desc-1
@@ -849,6 +861,309 @@ class test_show_interface(unittest.TestCase):
              'types': '10/100/1000 Ethernet'},
     }
 
+    golden_output_4 = {'execute.return_value': '''\
+      show interface
+
+      mgmt0 is up
+      admin state is up,
+        Hardware: GigabitEthernet, address: 80e0.1dbf.abee (bia 80e0.1dbf.abee)
+        Internet Address is 10.154.64.17/23
+        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
+        reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, medium is broadcast
+        full-duplex, 1000 Mb/s
+        Auto-Negotiation is turned on
+        Auto-mdix is turned off
+        EtherType is 0x0000 
+        1 minute input rate 13408 bits/sec, 16 packets/sec
+        1 minute output rate 51208 bits/sec, 17 packets/sec
+        Rx
+          607382344 input packets 445986207 unicast packets 132485585 multicast packets
+          28910552 broadcast packets 63295517997 bytes
+        Tx
+          449637617 output packets 447789202 unicast packets 1848405 multicast packets
+          10 broadcast packets 141467913935 bytes
+
+      Ethernet1/1 is up
+      admin state is up, Dedicated Interface
+        Belongs to Po302
+        Hardware: 1000/10000 Ethernet, address: 80e0.1dbf.abf6 (bia 80e0.1dbf.abf6)
+        Description: << GENIE GIG 0/0/1 >>
+        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
+        reliability 255/255, txload 1/255, rxload 4/255
+        Encapsulation ARPA, medium is broadcast
+        Port mode is access
+        full-duplex, 1000 Mb/s, media type is 1G
+        Beacon is turned off
+        Auto-Negotiation is turned on
+        Input flow-control is off, output flow-control is off
+        Auto-mdix is turned off
+        Rate mode is dedicated
+        Switchport monitor is off 
+        EtherType is 0x8100 
+        EEE (efficient-ethernet) : n/a
+        Last link flapped 3d22h
+        Last clearing of "show interface" counters never
+        9 interface resets
+        30 seconds input rate 17542088 bits/sec, 1904 packets/sec
+        30 seconds output rate 1575520 bits/sec, 477 packets/sec
+        Load-Interval #2: 5 minute (300 seconds)
+          input rate 17.40 Mbps, 1.86 Kpps; output rate 1.95 Mbps, 469 pps
+        RX
+          525266408025 unicast packets  128283847 multicast packets  14 broadcast packets
+          525394691886 input packets  157262428316065 bytes
+          0 jumbo packets  0 storm suppression packets
+          0 runts  0 giants  0 CRC  0 no buffer
+          0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+          0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+          0 input with dribble  0 input discard
+          0 Rx pause
+        TX
+          568365811507 unicast packets  103573671 multicast packets  10009 broadcast packets
+          568469395187 output packets  604413238507323 bytes
+          0 jumbo packets
+          0 output error  0 collision  0 deferred  0 late collision
+          0 lost carrier  0 no carrier  0 babble  1535 output discard
+          0 Tx pause
+
+      Ethernet1/15 is down (Administratively down)
+      admin state is down, Dedicated Interface
+        Hardware: 1000/10000 Ethernet, address: 80e0.1dbf.ac04 (bia 80e0.1dbf.ac04)
+        Description: << LINK TO GENIE PACKET CAPTURE >>
+        MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
+        reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, medium is broadcast
+        Port mode is access
+        auto-duplex, auto-speed, media type is 10G
+        Beacon is turned off
+        Auto-Negotiation is turned on
+        Input flow-control is off, output flow-control is off
+        Auto-mdix is turned off
+        Rate mode is dedicated
+        Switchport monitor is off 
+        EtherType is 0x8100 
+        EEE (efficient-ethernet) : n/a
+        Last link flapped 82week(s) 6day(s)
+        Last clearing of "show interface" counters never
+        16 interface resets
+        30 seconds input rate 0 bits/sec, 0 packets/sec
+        30 seconds output rate 0 bits/sec, 0 packets/sec
+        Load-Interval #2: 5 minute (300 seconds)
+          input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+        RX
+          30893435 unicast packets  33488177 multicast packets  139092473555 broadcast packets
+          139156855167 input packets  8908513989496 bytes
+          38749 jumbo packets  0 storm suppression packets
+          0 runts  0 giants  0 CRC  0 no buffer
+          0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+          0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+          0 input with dribble  0 input discard
+          0 Rx pause
+        TX
+          757262383558 unicast packets  1012356 multicast packets  16 broadcast packets
+          757263395930 output packets  634405170787968 bytes
+          24175356863 jumbo packets
+          0 output error  0 collision  0 deferred  0 late collision
+          0 lost carrier  0 no carrier  0 babble  169893674 output discard
+          0 Tx pause
+
+      '''
+    }
+
+    golden_parsed_output_4 = {
+        'Ethernet1/1': {'admin_state': 'up',
+                        'auto_mdix': 'off',
+                        'auto_negotiate': True,
+                        'bandwidth': 1000000,
+                        'beacon': 'off',
+                        'counters': {'in_bad_etype_drop': 0,
+                                     'in_broadcast_pkts': 14,
+                                     'in_crc_errors': 0,
+                                     'in_discard': 0,
+                                     'in_errors': 0,
+                                     'in_if_down_drop': 0,
+                                     'in_ignored': 0,
+                                     'in_jumbo_packets': 0,
+                                     'in_mac_pause_frames': 0,
+                                     'in_multicast_pkts': 128283847,
+                                     'in_no_buffer': 0,
+                                     'in_octets': 157262428316065,
+                                     'in_overrun': 0,
+                                     'in_oversize_frame': 0,
+                                     'in_pkts': 525394691886,
+                                     'in_runts': 0,
+                                     'in_short_frame': 0,
+                                     'in_storm_suppression_packets': 0,
+                                     'in_underrun': 0,
+                                     'in_unicast_pkts': 525266408025,
+                                     'in_unknown_protos': 0,
+                                     'in_watchdog': 0,
+                                     'in_with_dribble': 0,
+                                     'last_clear': 'never',
+                                     'out_babble': 0,
+                                     'out_broadcast_pkts': 10009,
+                                     'out_collision': 0,
+                                     'out_deferred': 0,
+                                     'out_discard': 1535,
+                                     'out_errors': 0,
+                                     'out_jumbo_packets': 0,
+                                     'out_late_collision': 0,
+                                     'out_lost_carrier': 0,
+                                     'out_mac_pause_frames': 0,
+                                     'out_multicast_pkts': 103573671,
+                                     'out_no_carrier': 0,
+                                     'out_octets': 604413238507323,
+                                     'out_pkts': 568469395187,
+                                     'out_unicast_pkts': 568365811507,
+                                     'rate': {'in_rate': 17542088,
+                                              'in_rate_pkts': 1904,
+                                              'load_interval': 30,
+                                              'out_rate': 1575520,
+                                              'out_rate_pkts': 477},
+                                     'rx': True,
+                                     'tx': True},
+                        'dedicated_intface': True,
+                        'delay': 10,
+                        'description': '<< GENIE GIG 0/0/1 >>',
+                        'duplex_mode': 'full',
+                        'efficient_ethernet': 'n/a',
+                        'enabled': True,
+                        'encapsulations': {'encapsulation': 'arpa'},
+                        'ethertype': '0x8100',
+                        'flow_control': {'receive': False, 'send': False},
+                        'interface_reset': 9,
+                        'last_link_flapped': '3d22h',
+                        'mac_address': '80e0.1dbf.abf6',
+                        'media_type': '1G',
+                        'medium': 'broadcast',
+                        'mtu': 1500,
+                        'oper_status': 'up',
+                        'phys_address': '80e0.1dbf.abf6',
+                        'port_channel': {'port_channel_int': 'Port-channel302',
+                                         'port_channel_member': True},
+                        'port_mode': 'access',
+                        'port_speed': '1000',
+                        'reliability': '255/255',
+                        'rxload': '4/255',
+                        'switchport_monitor': 'off',
+                        'txload': '1/255',
+                        'types': '1000/10000 Ethernet'},
+        'Ethernet1/15': {'admin_state': 'down',
+                         'auto_mdix': 'off',
+                         'auto_negotiate': True,
+                         'bandwidth': 10000000,
+                         'beacon': 'off',
+                         'counters': {'in_bad_etype_drop': 0,
+                                      'in_broadcast_pkts': 139092473555,
+                                      'in_crc_errors': 0,
+                                      'in_discard': 0,
+                                      'in_errors': 0,
+                                      'in_if_down_drop': 0,
+                                      'in_ignored': 0,
+                                      'in_jumbo_packets': 38749,
+                                      'in_mac_pause_frames': 0,
+                                      'in_multicast_pkts': 33488177,
+                                      'in_no_buffer': 0,
+                                      'in_octets': 8908513989496,
+                                      'in_overrun': 0,
+                                      'in_oversize_frame': 0,
+                                      'in_pkts': 139156855167,
+                                      'in_runts': 0,
+                                      'in_short_frame': 0,
+                                      'in_storm_suppression_packets': 0,
+                                      'in_underrun': 0,
+                                      'in_unicast_pkts': 30893435,
+                                      'in_unknown_protos': 0,
+                                      'in_watchdog': 0,
+                                      'in_with_dribble': 0,
+                                      'last_clear': 'never',
+                                      'out_babble': 0,
+                                      'out_broadcast_pkts': 16,
+                                      'out_collision': 0,
+                                      'out_deferred': 0,
+                                      'out_discard': 169893674,
+                                      'out_errors': 0,
+                                      'out_jumbo_packets': 24175356863,
+                                      'out_late_collision': 0,
+                                      'out_lost_carrier': 0,
+                                      'out_mac_pause_frames': 0,
+                                      'out_multicast_pkts': 1012356,
+                                      'out_no_carrier': 0,
+                                      'out_octets': 634405170787968,
+                                      'out_pkts': 757263395930,
+                                      'out_unicast_pkts': 757262383558,
+                                      'rate': {'in_rate': 0,
+                                               'in_rate_bps': 0,
+                                               'in_rate_pkts': 0,
+                                               'in_rate_pps': 0,
+                                               'load_interval': 30,
+                                               'out_rate': 0,
+                                               'out_rate_bps': 0,
+                                               'out_rate_pkts': 0,
+                                               'out_rate_pps': 0},
+                                      'rx': True,
+                                      'tx': True},
+                         'dedicated_intface': True,
+                         'delay': 10,
+                         'description': '<< LINK TO GENIE PACKET CAPTURE >>',
+                         'duplex_mode': 'auto',
+                         'efficient_ethernet': 'n/a',
+                         'enabled': False,
+                         'encapsulations': {'encapsulation': 'arpa'},
+                         'ethertype': '0x8100',
+                         'flow_control': {'receive': False, 'send': False},
+                         'interface_reset': 16,
+                         'link_state': 'Administratively down',
+                         'mac_address': '80e0.1dbf.ac04',
+                         'media_type': '10G',
+                         'medium': 'broadcast',
+                         'mtu': 1500,
+                         'oper_status': 'down',
+                         'phys_address': '80e0.1dbf.ac04',
+                         'port_channel': {'port_channel_member': False},
+                         'port_mode': 'access',
+                         'port_speed': 'auto-speed',
+                         'reliability': '255/255',
+                         'rxload': '1/255',
+                         'switchport_monitor': 'off',
+                         'txload': '1/255',
+                         'types': '1000/10000 Ethernet'},
+        'mgmt0': {'admin_state': 'up',
+                  'auto_mdix': 'off',
+                  'auto_negotiate': True,
+                  'bandwidth': 1000000,
+                  'counters': {
+                    'in_multicast_pkts': 132485585,
+                    'in_unicast_pkts': 445986207,
+                    'in_broadcast_pkts': 10,
+                    'in_pkts': 607382344,
+                    'in_octets': 141467913935,
+                    'in_unicast_pkts': 445986207,
+                    'rate': {'in_rate': 13408,
+                                        'in_rate_pkts': 16,
+                                        'load_interval': 1,
+                                        'out_rate': 51208,
+                                        'out_rate_pkts': 17}},
+                  'delay': 10,
+                  'duplex_mode': 'full',
+                  'enabled': True,
+                  'encapsulations': {'encapsulation': 'arpa'},
+                  'ethertype': '0x0000',
+                  'ipv4': {'10.154.64.17/23': {'ip': '10.154.64.17',
+                                               'prefix_length': '23'}},
+                  'mac_address': '80e0.1dbf.abee',
+                  'medium': 'broadcast',
+                  'mtu': 1500,
+                  'oper_status': 'up',
+                  'phys_address': '80e0.1dbf.abee',
+                  'port_channel': {'port_channel_member': False},
+                  'port_speed': '1000',
+                  'reliability': '255/255',
+                  'rxload': '1/255',
+                  'txload': '1/255',
+                  'types': 'GigabitEthernet'
+                }
+    }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -884,11 +1199,18 @@ class test_show_interface(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
 # #############################################################################
 # # Unitest For Show Ip Interface Vrf All
 # #############################################################################
 
-class test_show_ip_interface_vrf_all(unittest.TestCase):
+class TestShowIpInterfaceVrfAll(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -2344,7 +2666,7 @@ class test_show_ip_interface_vrf_all(unittest.TestCase):
 # # Unitest For Show Vrf All Interface
 # #############################################################################
 
-class test_show_vrf_all_interface(unittest.TestCase):
+class TestShowVrfAllInterface(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -2681,7 +3003,7 @@ class test_show_vrf_all_interface(unittest.TestCase):
 # #############################################################################
 
 
-class test_show_interface_switchport(unittest.TestCase):
+class TestShowInterfaceSwitchport(unittest.TestCase):
 
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -2890,7 +3212,7 @@ class test_show_interface_switchport(unittest.TestCase):
 # #############################################################################
 
 
-class test_show_ipv6_interface_vrf_all(unittest.TestCase):
+class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
     
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
@@ -3086,7 +3408,7 @@ class test_show_ipv6_interface_vrf_all(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_custom)
 
-class test_show_ip_interface_brief(unittest.TestCase):
+class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -3194,7 +3516,7 @@ class test_show_ip_interface_brief(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-class test_show_ip_interface_brief_Pipe_Vlan(unittest.TestCase):
+class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -3224,20 +3546,26 @@ class test_show_ip_interface_brief_Pipe_Vlan(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-class test_show_interface_brief(unittest.TestCase):
+# ====================================
+# Unit test for 'show interface brief'
+# ====================================
+class TestShowInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
+
     golden_parsed_output = {'interface': 
                               {'ethernet': 
-                                {'Eth1/1': {'mode': 'routed',
+                                {'Ethernet1/1': {'mode': 'routed',
                                             'port_ch': '--',
                                             'reason': 'none',
                                             'speed': '1000(D)',
                                             'status': 'up',
                                             'type': 'eth',
                                             'vlan': '--'},
-                                 'Eth1/3': {'mode': 'access',
+                                 'Ethernet1/3': {'mode': 'access',
                                             'port_ch': '--',
                                             'reason': 'Administratively '
                                                       'down',
@@ -3245,7 +3573,7 @@ class test_show_interface_brief(unittest.TestCase):
                                             'status': 'down',
                                             'type': 'eth',
                                             'vlan': '1'},
-                                 'Eth1/6': {'mode': 'access',
+                                 'Ethernet1/6': {'mode': 'access',
                                             'port_ch': '--',
                                             'reason': 'Link not '
                                                       'connected',
@@ -3254,18 +3582,18 @@ class test_show_interface_brief(unittest.TestCase):
                                             'type': 'eth',
                                             'vlan': '1'}},
                               'loopback': 
-                                {'Lo0': 
+                                {'Loopback0':
                                   {'description': '--',
                                    'status': 'up'}},
                               'port': 
                                 {'mgmt0': 
                                   {'ip_address': '172.25.143.76',
-                                   'mtu': '1500',
+                                   'mtu': 1500,
                                    'speed': '1000',
                                    'status': 'up',
                                    'vrf': '--'}},
                               'port_channel': 
-                                {'Po8': 
+                                {'Port-channel8':
                                   {'mode': 'access',
                                    'protocol': 'none',
                                    'reason': 'No operational '
@@ -3275,36 +3603,35 @@ class test_show_interface_brief(unittest.TestCase):
                                    'type': 'eth',
                                    'vlan': '1'}}}}
 
-
     golden_output = {'execute.return_value': '''
-pinxdt-n9kv-3# show interface brief 
+        pinxdt-n9kv-3# show interface brief 
 
---------------------------------------------------------------------------------
-Port   VRF          Status IP Address                              Speed    MTU
---------------------------------------------------------------------------------
-mgmt0  --           up     172.25.143.76                           1000     1500
+        --------------------------------------------------------------------------------
+        Port   VRF          Status IP Address                              Speed    MTU
+        --------------------------------------------------------------------------------
+        mgmt0  --           up     172.25.143.76                           1000     1500
 
---------------------------------------------------------------------------------
-Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
-Interface                                                                    Ch #
---------------------------------------------------------------------------------
-Eth1/1        --      eth  routed up      none                       1000(D) --
-Eth1/3        1       eth  access down    Administratively down      auto(D) --
-Eth1/6        1       eth  access down    Link not connected         auto(D) --
+        --------------------------------------------------------------------------------
+        Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
+        Interface                                                                    Ch #
+        --------------------------------------------------------------------------------
+        Eth1/1        --      eth  routed up      none                       1000(D) --
+        Eth1/3        1       eth  access down    Administratively down      auto(D) --
+        Eth1/6        1       eth  access down    Link not connected         auto(D) --
 
 
---------------------------------------------------------------------------------
-Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
-Interface                                                                  
---------------------------------------------------------------------------------
-Po8          1       eth  access down    No operational members      auto(I)  none
+        --------------------------------------------------------------------------------
+        Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
+        Interface                                                                  
+        --------------------------------------------------------------------------------
+        Po8          1       eth  access down    No operational members      auto(I)  none
 
---------------------------------------------------------------------------------
-Interface     Status     Description
---------------------------------------------------------------------------------
-Lo0           up         --
+        --------------------------------------------------------------------------------
+        Interface     Status     Description
+        --------------------------------------------------------------------------------
+        Lo0           up         --
 
-'''}
+        '''}
 
     golden_output2 = {'execute.return_value': '''
         show interface Ethernet1/1 brief
@@ -3319,7 +3646,7 @@ Lo0           up         --
     golden_parsed_output2 = {
         'interface': 
             {'ethernet': 
-                {'Eth1/1': 
+                {'Ethernet1/1':
                     {'mode': 'routed',
                     'port_ch': '--',
                     'reason': 'none',
@@ -3346,8 +3673,7 @@ Lo0           up         --
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
 
-class test_show_run_interface(unittest.TestCase):
-
+class TestShowRunInterface(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
 
@@ -3537,7 +3863,7 @@ class test_show_run_interface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse(interface='nve1')
 
-class test_show_nve_interface(unittest.TestCase):
+class TestShowNveInterface(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -3596,7 +3922,7 @@ class test_show_nve_interface(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(interface='nve1')
 
-class test_show_ip_interface_brief_vrf_all(unittest.TestCase):
+class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
