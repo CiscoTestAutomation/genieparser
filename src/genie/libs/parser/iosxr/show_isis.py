@@ -3,15 +3,16 @@ show_isis.py
 
 IOSXR parsers for the following show commands:
     * show isis
+    * show isis lsp-log
+    * show isis spf-log
+    * show isis protocol
+    * show isis hostname
     * show isis adjacency
     * show isis neighbors    
-    * show isis hostname
-    * show isis instance {instance} hostname
+    * show isis interface
     * show isis statistics
-    * show isis protocol
-    * show isis spf-log
-    * show isis lsp-log
-
+    * show isis spf-log detail
+    * show isis instance {instance} hostname
 """
 
 # Python
@@ -1658,6 +1659,362 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
 
         return parsed_output
 
+class ShowIsisSpfLogDetailSchema(MetaParser):
+    ''' Schema for command
+        * show isis spf-log detail
+    '''
+    schema = {
+        'instance': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'spf_log': {
+                            Any(): {
+                                'type': str,
+                                'start_timestamp': str,
+                                'total_nodes': int,
+                                'time_ms': int,
+                                'level': int,
+                                Optional('first_trigger_lsp'): str,
+                                'triggers': str,
+                                'trigger_count': int,
+                                'delay_ms': int,
+                                'delay_info': str,
+                                'spt_calculation': {
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
+                                'prefix_update': {
+                                    'cpu_time_ms': int,
+                                    'real_time_ms': int,
+                                },
+                                'new_lsp_arrivals': int,
+                                'next_wait_interval_ms': int,
+                                'results': {
+                                    'nodes': {
+                                        'reach': int,
+                                        'unreach': int,
+                                        'total': int,
+                                    },
+                                    'prefixes': {
+                                        'items': {                                            
+                                            'critical_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'high_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'medium_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'low_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'all_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                        },
+                                        'routes': {
+                                            'critical_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'high_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'medium_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'low_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                            'all_priority': {
+                                                'reach': int,
+                                                Optional('unreach'): int,
+                                                'total': int,
+                                            },
+                                        }
+                                    },
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
+    ''' Parser for command
+        * show isis spf-log detail
+    '''
+
+    cli_command = 'show isis spf-log detail'
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        # ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+        r1 = re.compile(r'IS\-*IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)'
+                        r'\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
+
+        #                    Time  Total Trig
+        # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
+        # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
+        r2 = re.compile(r'^(?P<timestamp>[\d\:\.]+)\s+(?P<type>\w+)\s+'
+                        r'(?P<time_ms>\d+)\s+(?P<nodes>\d+)\s+(?P<count>\d+)'
+                        r'\s+(?P<first_trigger_lsp>[\w\-\.]+)\s+(?P<triggers>\w+)')
+
+        # Delay:              51ms (since first trigger)
+        r3 = re.compile(r'Delay\s*:\s*(?P<delay>\d+)ms\s+'
+                        r'\((?P<delay_info>[\w\s]+)\)')
+
+        # SPT Calculation
+        r4 = re.compile(r'SPT\s+Calculation')
+
+        # Prefix Updates
+        r5 = re.compile(r'Prefix\s+Updates')
+
+        # CPU Time:         1ms
+        # CPU Time:         0ms
+        r6 = re.compile(r'CPU\s+Time\s*:\s*(?P<cpu_time>\d+)\w+')
+
+        # Real Time:        0ms
+        r7 = re.compile(r'Real\s+Time\s*:\s*(?P<real_time>\d+)\w+')
+
+        # New LSP Arrivals:    0
+        r8 = re.compile(r'New\s+LSP\s+Arrivals\s*:\s*(?P<new_lsp_arrival>\d+)')
+
+        # Next Wait Interval: 200ms
+        r9 = re.compile(r'Next\s+Wait\s+Interval\s*:\s*(?P<next_wait_interval>\d+)\w+')
+
+        # Nodes:                   1       0     1
+        r10 = re.compile(r'Nodes\s*:\s*(?P<reach>\d+)\s+(?P<unreach>\d+)\s+(?P<total>\d+)')
+
+        # Prefixes (Items)
+        # Prefixes (Routes)
+        r11 = re.compile(r'Prefixes\s*\((?P<prefixes>\w+)\)')
+
+        # Critical Priority:     0       0     0
+        # Critical Priority:     0       -     0
+        # High Priority:         0       0     0 
+        # High Priority:         0       -     0
+        # Medium Priority        0       0     0 
+        # Medium Priority        0        -    0
+        # Low Priority           0       0     0 
+        # Low Priority:          0        -    0
+        # All Priorities         0        -    0
+        # All Priorities         0       0     0
+        r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
+                          '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
+                          '(?P<total>\d+)')
+
+        # Mon Aug 16 2004
+        r13 = re.compile(r'(?P<timestamp_date>[\w\d\s]+)')
+
+        parsed_dict = {}
+        log_index = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ISIS isp Level 1 IPv4 Unicast Route Calculation Log
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                level = int(group['level'])
+                address_family = group['address_family']
+                instance_dict = parsed_dict\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})                    
+
+                continue
+
+            #                    Time  Total Trig
+            # Timestamp     Type (ms)  Nodes Count  First Trigger LSP   Triggers
+            # 19:25:35.140  FSPF  1    1     1             12a5.00-00   NEWLSP0
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp = group['timestamp']
+                type_ = group['type']
+                time_ms = int(group['time_ms'])
+                nodes = int(group['nodes'])
+                trigger_count = int(group['count'])
+                first_trigger_lsp = group['first_trigger_lsp']
+                triggers = group['triggers']
+                spf_log_dict = instance_dict\
+                    .setdefault('spf_log', {})\
+                    .setdefault(log_index, {})
+                spf_log_dict['type'] = type_
+                spf_log_dict['time_ms'] = time_ms
+                spf_log_dict['level'] = level
+                spf_log_dict['total_nodes'] = nodes
+                spf_log_dict['trigger_count'] = trigger_count
+                spf_log_dict['first_trigger_lsp'] = first_trigger_lsp
+                spf_log_dict['triggers'] = triggers
+                spf_log_dict['start_timestamp'] = "{} {}"\
+                    .format(timestamp_date, timestamp).strip()
+
+                continue
+
+            # Delay:              51ms (since first trigger)
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                delay = int(group['delay'])
+                delay_info = group['delay_info']
+                spf_log_dict['delay_ms'] = delay
+                spf_log_dict['delay_info'] = delay_info
+
+                continue
+
+            # SPT Calculation
+            result = r4.match(line)
+            if result:
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('spt_calculation', {})
+
+                continue
+
+            # Prefix Updates
+            result = r5.match(line)
+            if result:
+                spt_prefix_dict = spf_log_dict\
+                    .setdefault('prefix_update', {})
+
+                continue
+
+            # CPU Time:         1ms
+            # CPU Time:         0ms
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                cpu_time = int(group['cpu_time'])
+                spt_prefix_dict['cpu_time_ms'] = cpu_time
+                continue
+
+            # Real Time:        0ms
+            result = r7.match(line)
+            if result:
+                group = result.groupdict()
+                real_time = int(group['real_time'])
+                spt_prefix_dict['real_time_ms'] = real_time
+                continue
+
+            # New LSP Arrivals:    0
+            result = r8.match(line)
+            if result:
+                group = result.groupdict()
+                new_lsp_arrival = int(group['new_lsp_arrival'])
+                spf_log_dict['new_lsp_arrivals'] = new_lsp_arrival
+                continue
+
+            # Next Wait Interval: 200ms
+            result = r9.match(line)
+            if result:
+                group = result.groupdict()
+                next_wait_interval = int(group['next_wait_interval'])
+                spf_log_dict['next_wait_interval_ms'] = next_wait_interval
+                continue
+
+            # Results
+            if line == "Results":
+                results_dict = spf_log_dict.setdefault('results', {})
+
+                continue
+
+            #                      Reach Unreach Total
+            # Nodes:                   1       0     1
+            result = r10.match(line)
+            if result:
+                group = result.groupdict()
+                reach = group['reach']
+                unreach = group['unreach']
+                total = group['total']
+                node_dict = results_dict.setdefault('nodes', {})
+                if reach.isdigit():
+                    node_dict['reach'] = int(reach)
+                if unreach.isdigit():
+                    node_dict['unreach'] = int(unreach)
+                if total.isdigit():
+                    node_dict['total'] = int(total)
+                continue
+
+            # Prefixes (Items)
+            # Prefixes (Routes)
+            result = r11.match(line)
+            if result:
+                group = result.groupdict()
+                prefixes = group['prefixes'].lower()
+                prefixes_priority_dict = results_dict\
+                    .setdefault('prefixes', {})\
+                    .setdefault(prefixes, {})                    
+
+                continue
+
+            # Critical Priority:     0       0     0
+            # Critical Priority:     0       -     0
+            # High Priority:         0       0     0 
+            # High Priority:         0       -     0
+            # Medium Priority        0       0     0 
+            # Medium Priority        0       -     0
+            # Low Priority           0       0     0 
+            # Low Priority:          0       -     0
+            # All Priorities         0       -     0
+            # All Priorities         0       0     0
+            result = r12.match(line)
+            if result:
+                group = result.groupdict()
+                priority_level = group['priority_level'].lower()
+                reach = group['reach']
+                unreach = group['unreach']
+                total = group['total']
+
+                priority_dict = prefixes_priority_dict\
+                    .setdefault('{priority_level}_priority'\
+                        .format(priority_level=priority_level), {})
+
+                if reach.isdigit():
+                    priority_dict['reach'] = int(reach)
+                if unreach.isdigit():
+                    priority_dict['unreach'] = int(unreach)
+                if total.isdigit():
+                    priority_dict['total'] = int(total)
+
+                continue            
+
+            # Mon Aug 16 2004
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                timestamp_date = group['timestamp_date']
+                
+                continue
+        
+        return parsed_dict
+
 class ShowIsisLspLogSchema(MetaParser):
     ''' Schema for commands:
         * show isis lsp-log     
@@ -1765,6 +2122,736 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
                 lsp_log_dict['received_timestamp'] = ('{} {}'\
                     .format(log_date, timestamp)).strip()
                 log_index += 1
+
+                continue
+
+        return parsed_output
+class ShowIsisInterfaceSchema(MetaParser):
+    ''' Schema for commands:
+        * show isis interface
+    '''
+
+    schema = {
+        'instance': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        'state': str,
+                        'adjacency_formation': str,
+                        'prefix_advertisement': str,
+                        'ipv6_bfd': bool,
+                        'ipv4_bfd': bool,
+                        'bfd_min_interval': int,
+                        'bfd_multiplier': int,
+                        'bandwidth': int,
+                        'circuit_type': str,
+                        'media_type': str,
+                        'circuit_number': int,
+                        'lsp': {
+                            'transmit_timer_expires_ms': int,
+                            'transmission_state': str,
+                            'lsp_transmit_back_to_back_limit': int,
+                            'lsp_transmit_back_to_back_limit_window_msec': int,
+                        },
+                        'level': {
+                            Any(): {
+                                'adjacency_count':int,
+                                Optional('lsp_pacing_interval_ms'): int,
+                                'psnp_entry_queue_size': int,
+                                Optional('next_lan_iih_sec'): int,
+                                Optional('lan_id'): str,
+                                Optional('hello_interval_sec'): int,
+                                'hello_multiplier': int,
+                                Optional('priority'): {
+                                    'local': str,
+                                    'dis': str
+                                }
+                            },
+                        },
+                        'clns_io': {
+                            'protocol_state': str,
+                            'mtu': int,
+                            Optional('snpa'): str,
+                            Optional('layer2_mcast_groups_membership'): {
+                                'all_level_1_iss': str,
+                                'all_level_2_iss': str,
+                            },
+                        },
+                        'topology': {
+                            Any(): {
+                                'adjacency_formation': str,
+                                'state': str,
+                                'prefix_advertisement': str,
+                                'metric': {
+                                    'level': {
+                                        Any(): int
+                                    }
+                                },
+                                'weight': {
+                                    'level': {
+                                        Any(): int
+                                    }
+                                },
+                                'mpls': {
+                                    'mpls_max_label_stack': str,
+                                    'ldp_sync': {
+                                        'level': {
+                                            Any(): str,
+                                        }
+                                    },
+                                },
+                                'frr': {
+                                    'level': {
+                                        Any(): {
+                                            'state': str,
+                                            'type': str,
+                                        },
+                                    },
+                                },
+
+                            },
+                        },
+                        'address_family': {
+                            Any(): {
+                                'state': str,
+                                'forwarding_address': list,
+                                'global_prefix': list,
+                            },
+                        }
+                    }
+                },
+            }
+        }
+    }
+
+
+class ShowIsisInterface(ShowIsisInterfaceSchema):
+    ''' Parser for commands:
+        * show isis interface
+    '''
+
+    cli_command = ['show isis interface {interface}',
+                   'show isis interface']
+
+    def cli(self, interface=None, output=None):
+
+        if output is None:
+            if interface:
+                command = self.cli_command[0].format(interface=interface)
+            else:
+                command = self.cli_command[1]
+            output = self.device.execute(command)
+
+        # IS-IS test Interfaces
+        r1 = re.compile(r'IS\-IS\s+(?P<instance>.+)\s+Interfaces')
+
+        # Loopback0                   Enabled
+        # GigabitEthernet0/0/0/0      Enabled
+        r2 = re.compile(r'^(?P<interface>\w+[\d+\/]+)\s+(?P<interface_state>\w+)$')
+
+        # Adjacency Formation:    Running
+        # Adjacency Formation:      Enabled
+        r3 = re.compile(r'Adjacency\s+Formation\s*:\s*'
+                        r'(?P<adjacency_formation_state>\w+)')
+
+        # Prefix Advertisement:     Enabled
+        # Prefix Advertisement:   Running
+        r4 = re.compile(r'Prefix\s+Advertisement\s*:\s*'
+                        r'(?P<prefix_advertisement_state>.+)')
+
+        # IPv4 BFD:                 Disabled
+        # IPv6 BFD:                 Disabled
+        r5 = re.compile(r'(?P<address_family>IPv4|IPv6)\s+BFD\s*:\s*'
+                        r'(?P<ip_bfd_state>\w+)')
+
+        # BFD Min Interval:         150
+        r6 = re.compile(r'BFD\s+Min\s+Interval\s*:\s*(?P<bfd_min_interval>\d+)')
+
+        # BFD Multiplier:           3
+        r7 = re.compile(r'BFD\s+Multiplier\s*:\s*(?P<bfd_multiplier>\d+)')
+
+        # Bandwidth:                0
+        # Bandwidth:                1000000
+        r8 = re.compile(r'Bandwidth\s*:\s*(?P<bandwidth>\d+)')
+
+        # Circuit Type:             level-1-2
+        r9 = re.compile(r'Circuit\s+Type\s*:\s*(?P<circuit_type>\S+)')
+
+        # Media Type:               LAN
+        # Media Type:               Loop
+        r10 = re.compile(r'Media\s+Type\s*:\s*(?P<media_type>\S+)')
+
+        # Circuit Number:           0
+        r11 = re.compile(r'Circuit\s+Number\s*:\s*(?P<circuit_number>\d+)')
+
+        # Level-1
+        # Level-2
+        r12 = re.compile(r'^Level\-(?P<level>\d+)')
+
+        # Adjacency Count:        0
+        r13 = re.compile(r'Adjacency\s+Count\s*:\s*(?P<adjacency_count>\d+)')
+
+        # LSP Pacing Interval:    33 ms
+        r14 = re.compile(r'LSP\s+Pacing\s+Interval\s*:\s*'
+                         r'(?P<lsp_pacing_interval>\d+)\s+ms')
+
+        # PSNP Entry Queue Size:  0
+        r15 = re.compile(r'PSNP\s+Entry\s+Queue\s+Size\s*:\s*'
+                         r'(?P<psnp_entry_queue_size>\d+)')
+
+        # Hello Interval:         10 s
+        r16 = re.compile(r'Hello\s+Interval\s*:\s*(?P<hello_interval>\d+)\s*s')
+
+        # Hello Multiplier:       3
+        r17 = re.compile(r'Hello\s+Multiplier\a*:\s*(?P<hello_multiplier>\d+)')
+
+        # CLNS I/O
+        r18 = re.compile(r'CLNS\s+I\/O')
+
+        # Protocol State:         Up
+        r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>\w+)')
+
+        # MTU:                    1500
+        r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\d+)')
+
+        # IPv4 Unicast Topology:    Enabled
+        # IPv6 Unicast Topology:    Enabled
+        r21 = re.compile(r'(?P<topology>(IPv4|IPv6)[\s\w]+)\s+Topology\s*:'
+                         r'\s*(?P<topology_state>\w+)')
+
+        # Metric (L1/L2):         10/10
+        r22 = re.compile(r'Metric\s+\(L(?P<level_1>\d+)/L(?P<level_2>\d+)\)\s*'
+                         r':\s*(?P<metric_level_1>\d+)\/(?P<metric_level_2>\d+)')
+
+        # Weight (L1/L2):         0/0
+        r23 = re.compile(r'Weight\s+\(L(?P<level_1>\d+)/L(?P<level_2>\d+)\)\s*:'
+                         r'\s*(?P<weight_level_1>\d+)\/(?P<weight_level_2>\d+)')
+
+        # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+        r24 = re.compile(r'MPLS\s+Max\s+Label\s+Stack\s*:\s*(?P<mpls_max_label_stack>.+)')
+
+        # MPLS LDP Sync (L1/L2):  Disabled/Disabled
+        r25 = re.compile(r'MPLS\s+LDP\s+Sync\s+\(L(?P<level_1>\d+)/L'
+                         r'(?P<level_2>\d+)\)\s*:\s*(?P<state_level_1>\w+)\/(?P<state_level_2>\w+)')
+
+        # FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+        r26 = re.compile(r'FRR\s+\(L\d+\/L\d+\)\s*:\s*L(?P<level_1>\d+)\s+'
+                         r'(?P<level_1_state>[\w\s]+)\s+L(?P<level_2>\d+)\s+(?P<level_2_state>[\w\s]+)')
+
+        # FRR Type:             None               None
+        r27 = re.compile(r'FRR\s+Type\s*:\s*(?P<frr_type_level_1>\S+)\s*'
+                         r'(?P<frr_type_level_2>\S+)')
+
+        # IPv4 Address Family:      Enabled
+        # IPv6 Address Family:      Enabled
+        r28 = re.compile(r'(?P<address_family>IPv4|IPv6)\s+Address\s+Family\s*:'
+                         r'\s*(?P<address_family_state>\w+)')
+
+        # Forwarding Address(es): 0.0.0.0
+        # Forwarding Address(es): ::
+        r29 = re.compile(r'Forwarding\s+Address\(es\)\s*:\s*'
+                         r'(?P<forwarding_address>\S+)')
+
+        # Global Prefix(es):      3.3.3.0/24
+        # Global Prefix(es):      2001:db8:3:3:3::3/128
+        # Global Prefix(es):      None (No global addresses are configured)
+        r30 = re.compile(r'Global\s+Prefix\(es\)\s*:\s*(?P<global_prefix>.+)')
+
+        # LSP transmit timer expires in 0 ms
+        r31 = re.compile(r'LSP\s+transmit\s+timer\s+expires\s+in\s+'
+                         r'(?P<lsp_timer>\d+)\s+ms')
+
+        # LSP transmission is idle
+        r32 = re.compile(r'LSP\s+transmission\s+is\s+'
+                         r'(?P<lsp_transmission_state>\w+)')
+
+        # Can send up to 10 back-to-back LSPs in the next 0 ms
+        r33 = re.compile(r'Can\s+send\s+up\s+to\s+(?P<number_lsp_send>\d+)'
+                         r'\s+back\-to\-back\s+LSPs\s+in\s+the\s+next\s+'
+                         r'(?P<time_to_sent>\d+)\s+ms')       
+
+        # LAN ID:                 R3.07
+        r34 = re.compile(r'LAN\s+ID\s*:\s*(?P<lan_id>\S+)')
+
+        # Priority (Local/DIS):   64/none (no DIS elected)
+        # Priority (Local/DIS):   64/64
+        r35 = re.compile(r'Priority\s*\(Local/DIS\)\s*:\s*'
+                         r'(?P<priority_local>\S+)/(?P<priority_dis>.+)')
+
+        # Next LAN IIH in:        5 s
+        # Next LAN IIH in:        3 s 
+        r36 = re.compile(r'Next\s+LAN\s+IIH\s+in\s*:\s*'
+                         r'(?P<next_lan_iih>\d+)\s*s')
+
+        # SNPA:                   fa16.3eb0.d50f
+        r37 = re.compile(r'SNPA\s*:\s*(?P<snpa>\S+)')
+
+        # Layer-2 MCast Groups Membership:
+        r38 = re.compile(r'Layer\-(?P<layer>\d+)\s*MCast\s+Groups\s+Membership:')
+
+        # All Level-1 ISs:      Yes
+        # All Level-2 ISs:      Yes
+        r39 = re.compile(r'All\s+Level\-(?P<level>\d+)\s+ISs\s*:\s*'
+                         r'(?P<iss_state>\S+)')
+
+        # All ISs:              Yes
+        r40 = re.compile(r'All\s+ISs\s*:\s*(?P<all_iss>(Yes|No))')
+
+        parsed_output = {}
+        interface_flag = False
+        clns_flag = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IS-IS test Interfaces
+            result = r1.match(line)
+            if result:
+                group = result.groupdict()
+                instance = group['instance']
+                instance_dict = parsed_output\
+                    .setdefault('instance', {})\
+                    .setdefault(instance, {})
+
+                continue
+
+            # Loopback0                   Enabled
+            # GigabitEthernet0/0/0/0      Enabled            
+            result = r2.match(line)
+            if result:
+                group = result.groupdict()
+                interface = group['interface']
+                interface_state = group['interface_state']
+                interface_dict = instance_dict\
+                    .setdefault('interface', {})\
+                    .setdefault(interface, {})
+                interface_dict['state'] = interface_state
+
+                interface_flag = True
+                    
+                continue
+
+            # Adjacency Formation:    Running
+            # Adjacency Formation:      Enabled
+            result = r3.match(line)
+            if result:
+                group = result.groupdict()
+                adjacency_formation_state = group['adjacency_formation_state']
+
+                if interface_flag:
+                    interface_dict['adjacency_formation'] = adjacency_formation_state
+                else:
+                    topology_dict['adjacency_formation'] = adjacency_formation_state
+
+                continue
+
+            # Prefix Advertisement:     Enabled
+            # Prefix Advertisement:   Running
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                prefix_advertisement_state = group['prefix_advertisement_state'].strip()
+                if interface_flag:
+                    interface_dict['prefix_advertisement'] = prefix_advertisement_state
+                else:
+                    topology_dict['prefix_advertisement'] = prefix_advertisement_state
+
+                continue
+
+            # IPv4 BFD:                 Disabled
+            # IPv6 BFD:                 Disabled
+            result = r5.match(line)
+            if result:
+                group = result.groupdict()
+                address_family = group['address_family'].lower()
+                ip_bfd_state = False
+                if group['ip_bfd_state'].lower() == 'enabled':
+                    ip_bfd_state = True
+                interface_dict['{address_family}_bfd'\
+                    .format(address_family=address_family)] = ip_bfd_state
+
+                continue
+
+            # BFD Min Interval:         150
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                bfd_min_interval = int(group['bfd_min_interval'])
+                interface_dict['bfd_min_interval'] = bfd_min_interval
+
+                continue
+
+            # BFD Multiplier:           3            
+            result = r7.match(line)
+            if result:
+                group = result.groupdict()
+                bfd_multiplier = int(group['bfd_multiplier'])
+                interface_dict['bfd_multiplier'] = bfd_multiplier
+
+                continue
+
+            # Bandwidth:                0
+            # Bandwidth:                1000000
+            result = r8.match(line)
+            if result:
+                group = result.groupdict()
+                bandwidth = int(group['bandwidth'])
+                interface_dict['bandwidth'] = bandwidth
+
+                continue
+
+            # Circuit Type:             level-1-2
+            result = r9.match(line)
+            if result:
+                group = result.groupdict()
+                circuit_type = group['circuit_type']
+                interface_dict['circuit_type'] = circuit_type
+
+                continue
+
+            # Media Type:               LAN
+            # Media Type:               Loop
+            result = r10.match(line)
+            if result:
+                group = result.groupdict()
+                media_type = group['media_type']
+                interface_dict['media_type'] = media_type
+                continue
+
+            # Circuit Number:           0
+            result = r11.match(line)
+            if result:
+                group = result.groupdict()
+                circuit_number = int(group['circuit_number'])
+                interface_dict['circuit_number'] = circuit_number
+                continue
+
+            # Level-1
+            # Level-2
+            result = r12.match(line)
+            if result:
+                group = result.groupdict()
+                level = int(group['level'])
+                level_dict = interface_dict\
+                    .setdefault('level', {})\
+                    .setdefault(level, {})
+
+                continue
+
+            # Adjacency Count:        0
+            result = r13.match(line)
+            if result:
+                group = result.groupdict()
+                adjacency_count = int(group['adjacency_count'])
+                level_dict['adjacency_count'] = adjacency_count
+                continue
+
+            # LSP Pacing Interval:    33 ms
+            result = r14.match(line)
+            if result:                
+                group = result.groupdict()
+                lsp_pacing_interval = int(group['lsp_pacing_interval'])
+                level_dict['lsp_pacing_interval_ms'] = lsp_pacing_interval
+
+                continue
+
+            # PSNP Entry Queue Size:  0
+            result = r15.match(line)
+            if result:                
+                group = result.groupdict()
+                psnp_entry_queue_size = int(group['psnp_entry_queue_size'])
+                level_dict['psnp_entry_queue_size'] = psnp_entry_queue_size
+
+                continue
+
+            # Hello Interval:         10 s
+            result = r16.match(line)
+            if result:
+                group = result.groupdict()
+                hello_interval = int(group['hello_interval'])
+                level_dict['hello_interval_sec'] = hello_interval
+
+                continue
+
+            # Hello Multiplier:       3
+            result = r17.match(line)
+            if result:
+                group = result.groupdict()
+                hello_multiplier = int(group['hello_multiplier'])
+                level_dict['hello_multiplier'] = hello_multiplier
+                continue
+
+            # CLNS I/O
+            r18 = re.compile(r'CLNS\s+I\/O')
+            result = r18.match(line)
+            if result:
+                clns_dict = interface_dict.setdefault('clns_io', {})
+                clns_flag = True
+                continue
+
+            # Protocol State:         Up
+            result = r19.match(line)
+            if result:                
+                group = result.groupdict()
+                protocol_state = group['protocol_state']
+                if clns_flag:
+                    clns_dict['protocol_state'] = protocol_state
+                else:
+                    address_family_dict['protocol_state'] = protocol_state
+
+                continue
+
+            # MTU:                    1500
+            result = r20.match(line)
+            if result:
+                group = result.groupdict()
+                mtu = int(group['mtu'])
+                clns_dict['mtu'] = mtu
+
+                continue
+
+            # IPv4 Unicast Topology:    Enabled
+            # IPv6 Unicast Topology:    Enabled
+            result = r21.match(line)
+            if result:
+                group = result.groupdict()
+                topology = group['topology'].lower()
+                topology_state = group['topology_state']
+                topology_dict = interface_dict\
+                    .setdefault('topology', {})\
+                    .setdefault(topology, {})
+                topology_dict['state'] = topology_state
+                interface_flag = False
+
+                continue
+
+            # Metric (L1/L2):         10/10
+            result = r22.match(line)
+            if result:
+                group = result.groupdict()
+                level_1 = int(group['level_1'])
+                level_2 = int(group['level_2'])
+                metric_level_1 = int(group['metric_level_1'])
+                metric_level_2 = int(group['metric_level_2'])
+                metric_dict = topology_dict\
+                    .setdefault('metric', {})\
+                    .setdefault('level', {})
+                metric_dict[level_1] = metric_level_1
+                metric_dict[level_2] = metric_level_2
+
+                continue
+
+            # Weight (L1/L2):         0/0
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                level_1 = int(group['level_1'])
+                level_2 = int(group['level_2'])
+                weight_level_1 = int(group['weight_level_1'])
+                weight_level_2 = int(group['weight_level_2'])
+                weight_dict = topology_dict\
+                    .setdefault('weight', {})\
+                    .setdefault('level', {})
+                weight_dict[level_1] = weight_level_1
+                weight_dict[level_2] = weight_level_2
+
+                continue
+
+            # MPLS Max Label Stack:   1/3/10 (PRI/BKP/SRTE)
+            result = r24.match(line)            
+            if result:
+                group = result.groupdict()
+                mpls_stack = group['mpls_max_label_stack'].strip()
+                mpls_dict = topology_dict.setdefault('mpls', {})                
+                mpls_dict['mpls_max_label_stack'] = mpls_stack
+
+                continue
+
+            # MPLS LDP Sync (L1/L2):  Disabled/Disabled
+            result = r25.match(line)
+            if result:
+                group = result.groupdict()
+                level_1 = int(group['level_1'])
+                level_2 = int(group['level_2'])
+                state_level_1 = group['state_level_1']
+                state_level_2 = group['state_level_2']
+                sync_level_dict = mpls_dict\
+                    .setdefault('ldp_sync', {})\
+                    .setdefault('level', {})
+
+                sync_level_dict[level_1] = state_level_1
+                sync_level_dict[level_2] = state_level_2
+
+                continue
+
+            # FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled
+            result = r26.match(line)
+            if result:
+                group = result.groupdict()
+                level_1 = int(group['level_1'])
+                level_1_state = group['level_1_state'].strip()
+                level_2 = int(group['level_2'])
+                level_2_state = group['level_2_state'].strip()
+                frr_dict = topology_dict\
+                    .setdefault('frr', {})\
+                    .setdefault('level', {})
+                frr_dict.setdefault(level_1, {})\
+                    .setdefault('state', level_1_state)
+                frr_dict.setdefault(level_2, {})\
+                    .setdefault('state', level_2_state)
+
+                continue
+
+            # FRR Type:             None               None
+            result = r27.match(line)
+            if result:
+                group = result.groupdict()
+                frr_type_level_1 = group['frr_type_level_1']
+                frr_type_level_2 = group['frr_type_level_2']
+                frr_dict.setdefault(level_1, {})\
+                    .setdefault('type', frr_type_level_1)
+                frr_dict.setdefault(level_2, {})\
+                    .setdefault('type', frr_type_level_2)                
+
+                continue
+
+            # IPv4 Address Family:      Enabled
+            # IPv6 Address Family:      Enabled
+            result = r28.match(line)
+            if result:
+                group = result.groupdict()
+                address_family = group['address_family']
+                address_family_state = group['address_family_state']
+                address_family_dict = interface_dict\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})
+                address_family_dict['state'] = address_family_state
+                continue
+
+            # Forwarding Address(es): 0.0.0.0
+            # Forwarding Address(es): ::
+            result = r29.match(line)
+            if result:
+                group = result.groupdict()                
+                forwarding_address = group['forwarding_address']
+                forwarding_address_list = address_family_dict\
+                    .get('forwarding_address', [])
+                forwarding_address_list.append(forwarding_address)
+                address_family_dict['forwarding_address'] = forwarding_address_list
+                continue
+
+            # Global Prefix(es):      3.3.3.0/24
+            # Global Prefix(es):      2001:db8:3:3:3::3/128
+            result = r30.match(line)
+            if result:
+                group = result.groupdict()
+                global_prefix = group['global_prefix']
+                global_prefix_list = address_family_dict\
+                    .get('global_prefix', [])
+                global_prefix_list.append(global_prefix)
+                address_family_dict['global_prefix'] = global_prefix_list
+                continue
+
+            # LSP transmit timer expires in 0 ms
+            result = r31.match(line)
+            if result:
+                group = result.groupdict()
+                lsp_timer = int(group['lsp_timer'])
+                lsp_dict = interface_dict\
+                    .setdefault('lsp', {})
+                lsp_dict['transmit_timer_expires_ms'] = lsp_timer
+
+                continue
+
+            # LSP transmission is idle
+            result = r32.match(line)
+            if result:
+                group = result.groupdict()
+                lsp_transmission_state = group['lsp_transmission_state']
+                lsp_dict['transmission_state'] = lsp_transmission_state
+
+                continue
+
+            # Can send up to 10 back-to-back LSPs in the next 0 ms
+            result = r33.match(line)
+            if result:
+                group = result.groupdict()
+                number_lsp_send = int(group['number_lsp_send'])
+                time_to_sent = int(group['time_to_sent'])
+                lsp_dict['lsp_transmit_back_to_back_limit_window_msec'] = time_to_sent
+                lsp_dict['lsp_transmit_back_to_back_limit'] = number_lsp_send
+                continue
+
+            # LAN ID:                 R3.07
+            result = r34.match(line)
+            if result:
+                group = result.groupdict()
+                lan_id = group['lan_id']
+                level_dict['lan_id'] = lan_id
+                continue
+
+            # Priority (Local/DIS):   64/none (no DIS elected)
+            # Priority (Local/DIS):   64/64
+            result = r35.match(line)
+            if result:
+                group = result.groupdict()
+                priority_local = group['priority_local']
+                priority_dis = group['priority_dis']
+                level_dict['priority'] = {
+                    'local': priority_local,
+                    'dis': priority_dis,
+                }
+
+                continue
+
+            # Next LAN IIH in:        5 s
+            # Next LAN IIH in:        3 s
+            result = r36.match(line)
+            if result:
+                group = result.groupdict()
+                next_lan_iih = int(group['next_lan_iih'])
+                level_dict['next_lan_iih_sec'] = next_lan_iih
+
+                continue
+
+            # SNPA:                   fa16.3eb0.d50f
+            result = r37.match(line)
+            if result:
+                group = result.groupdict()
+                snpa = group['snpa']
+                clns_dict['snpa'] = snpa
+
+                continue
+
+            # Layer-2 MCast Groups Membership:
+            result = r38.match(line)
+            if result:
+                group = result.groupdict()
+                layer = int(group['layer'])
+                layer_dict = clns_dict\
+                    .setdefault('layer2_mcast_groups_membership', {})         
+
+                continue
+
+            # All Level-1 ISs:      Yes
+            # All Level-2 ISs:      Yes
+            result = r39.match(line)
+            if result:
+                group = result.groupdict()
+                level = int(group['level'])
+                iss_state = group['iss_state']
+                layer_dict['all_level_{level}_iss'\
+                    .format(level=level)] = iss_state
+                    
+                continue
+
+            # All ISs:              Yes
+            result = r40.match(line)
+            if result:
+                group = result.groupdict()
+                all_iss = group['all_iss']
+                layer_dict['all_level_1_iss'] = all_iss
+                layer_dict['all_level_2_iss'] = all_iss
 
                 continue
 

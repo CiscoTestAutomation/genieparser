@@ -17,8 +17,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Changed "type" type from string to integer on the following commands
-        * 'show clns neighbors detail'
         * 'show clns is-neighbors detail'
+    * Saving type as string in schema on:
+        * ShowClnsIsNeighborsDetail
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -191,7 +192,7 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
-        * update schema and add regex
+        * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -213,6 +214,9 @@
 * NXOS
     * Updated ShowRunningConfigPim:
         changed logic to support calling from device.parse
+* IOSXR
+    * Updated ShowPimVrfInterfaceDetail:
+        For handling more varied output
 
 --------------------------------------------------------------------------------
                                 VRF
@@ -264,15 +268,13 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
-        * update regex to support more varied output
     * ShowIpRouteWord
         * update regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
-    * Updated ShowStaticTopologyDetail:
-        * Support more varied output
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -452,9 +454,13 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+        
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+
 --------------------------------------------------------------------------------
                                 Route
 --------------------------------------------------------------------------------
@@ -527,10 +533,14 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+    * Added ShowIsisInterface for:
+        * show isis interface
     * Added parser ShowIsis for:
         * show isis
     * Added ShowIsisSpfLog for:
         * show isis spf-log
+    * Added ShowIsisSpfLogDetail for:
+        * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:
@@ -552,6 +562,16 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
+    
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowInterfaces
+        * Fixed regex to accommodate more outputs formats
 
 --------------------------------------------------------------------------------
                                    VDC 
