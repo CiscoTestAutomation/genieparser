@@ -168,6 +168,8 @@
 
 * IOSXE
     * Updated ShowBgpSuperParser for parsing of more varied output
+    * Updated ShowIpBgp for parsing of more varied output
+
 --------------------------------------------------------------------------------
                                 OSPF
 --------------------------------------------------------------------------------
