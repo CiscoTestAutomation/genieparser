@@ -273,6 +273,9 @@
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
         * Updated regex
+* NXOS
+    * Updated ShowRoutingVrfAll:
+        * To match non-best routes
 
 --------------------------------------------------------------------------------
                                 INVENTORY

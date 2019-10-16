@@ -24,25 +24,25 @@ class ShowRoutingVrfAllSchema(MetaParser):
     """Schema for show routing vrf all"""
 
     schema = {
-        'vrf':
-            {Any():
-                {Optional('address_family'):
-                    {Any():
-                        {Optional('bgp_distance_extern_as'): int,
+        'vrf': {
+            Any(): {
+                Optional('address_family'): {
+                    Any():{
+                        Optional('bgp_distance_extern_as'): int,
                         Optional('bgp_distance_internal_as'): int,
                         Optional('bgp_distance_local'): int,
-                        'ip':
-                            {Any():
-                                {'ubest_num': str,
+                        'ip': {
+                            Any(): {
+                                'ubest_num': str,
                                 'mbest_num': str,
                                 Optional('attach'): str,
-                                Optional('best_route'):
-                                    {Optional(Any()):
-                                        {Optional('nexthop'):
-                                            {Optional(Any()):
-                                                {Optional('protocol'):
-                                                    {Optional(Any()):
-                                                        {Optional('route_table'): str,
+                                Optional('best_route'): {
+                                    Any(): {
+                                        Optional('nexthop'): {
+                                            Any(): {
+                                                Optional('protocol'): {
+                                                    Any(): {
+                                                        Optional('route_table'): str,
                                                         Optional('uptime'): str,
                                                         Optional('interface'): str,
                                                         Optional('preference'): str,
@@ -64,10 +64,9 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                 },
                                 Optional('routes'): {
                                     Optional('nexthop'): {
-                                        Optional(Any()): {
-                                            'index': {}
+                                        Any(): {
                                             Optional('protocol'): {
-                                                Optional(Any()): {
+                                                Any(): {
                                                     Optional('route_table'): str,
                                                     Optional('uptime'): str,
                                                     Optional('interface'): str,
@@ -112,13 +111,14 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
         else:
             cmd = self.cli_command[1]
         # excute command to get output
+
         if output is None:
             out = self.device.execute(cmd)
         else:
             out = output
+
         # Init dict
-        bgp_dict = {}
-        sub_dict = {}
+        result_dict = {}
         address_family = None
         is_ipv6 = False
 
@@ -152,46 +152,35 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                             r'(, +(?P<attach>\w+))?$')
             m = p2.match(line)
             if m:
-                # Init vrf dict
-                if 'vrf' not in bgp_dict:
-                    bgp_dict['vrf'] = {}
-                if vrf and vrf not in bgp_dict['vrf']:
-                    bgp_dict['vrf'][vrf] = {}
-                
-                # Init address_family dict
-                if 'address_family' not in bgp_dict['vrf'][vrf]:
-                    bgp_dict['vrf'][vrf]['address_family'] = {}
-                if address_family is not None and \
-                   address_family not in bgp_dict['vrf'][vrf]['address_family']:
-                   bgp_dict['vrf'][vrf]['address_family'][address_family] = {}
-
-                # Create sub_dict
-                sub_dict = bgp_dict['vrf'][vrf]['address_family'][address_family]
+                # Init af dict
+                af_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).\
+                                      setdefault('address_family', {}).\
+                                      setdefault(address_family, {})
 
                 # Init ip dict
                 ip_mask = m.groupdict()['ip_mask']
-                if 'ip' not in sub_dict:
-                    sub_dict['ip'] = {}
-                if ip_mask not in sub_dict['ip']:
-                    sub_dict['ip'][ip_mask] = {}
+                ip_dict = af_dict.setdefault('ip', {}).setdefault(ip_mask, {})
                 
-                sub_dict['ip'][ip_mask]['ubest_num'] = m.groupdict()['ubest']
-                sub_dict['ip'][ip_mask]['mbest_num'] = m.groupdict()['mbest']
+                ip_dict['ubest_num'] = m.groupdict()['ubest']
+                ip_dict['mbest_num'] = m.groupdict()['mbest']
                 if m.groupdict()['attach']:
-                    sub_dict['ip'][ip_mask]['attach'] = m.groupdict()['attach']
-                    continue
+                    ip_dict['attach'] = m.groupdict()['attach']
+                continue
 
             # *via fec1::1002%default, Eth1/1, [200/4444], 15:57:39, bgp-333, internal, tag 333
             # *via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
             # *via 2001:db8:2:2::2, Eth1/1, [0/0], 00:15:46, direct, , tag 222
             # *via 10.55.130.2%default, [200/0], 3d07h, bgp-1, internal, tag 1 (evpn), segid: 50009 tunnelid: 0x64008202 encap: VXLAN
+            # via 10.13.110.1, Eth1/2.110, [110/41], 5d03h, ospf-1, intra
+            # via 1.1.1.1, [200/0], 5d03h, bgp-65000, internal, tag 65000 (hidden)
+            # *via 10.13.90.1, Eth1/2.90, [90/3072], 1w5d, eigrp-test, internal
             p3 = re.compile(r'^(?P<cast>.*)via +(?P<nexthop>[\w\.\:\s]+)'
                             r'(%(?P<table>[\w\:]+))?, *'
                             r'((?P<int>[a-zA-Z0-9\./_]+),)? *'
                             r'\[(?P<preference>\d+)/(?P<metric>\d+)\], *'
                             r'(?P<up_time>[\w\:\.]+), *'
-                            r'(?P<protocol>\w+)(\-(?P<process>\d+))?,? *'
+                            r'(?P<protocol>\w+)(\-(?P<process>\w+))?,? *'
                             r'(?P<attribute>\w+)?,? *'
                             r'(tag *(?P<tag>\w+))?,? *(?P<vpn>[a-zA-Z\(\)\-]+)?'
                             r',?( +segid: +(?P<segid>\d+))?,?( +tunnelid: +'
@@ -200,92 +189,84 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
             m = p3.match(line)
             if m:
                 cast = m.groupdict()['cast']
-                cast = {'1': 'unicast',
-                        '2': 'multicast'}['{}'.format(cast.count('*'))]
-
-                # Init 'best_route' dict
-                if 'best_route' not in sub_dict['ip'][ip_mask]:
-                    sub_dict['ip'][ip_mask]['best_route'] = {}
-                if cast not in sub_dict['ip'][ip_mask]['best_route']:
-                    sub_dict['ip'][ip_mask]['best_route'][cast] = {}
-                    sub_dict['ip'][ip_mask]['best_route'][cast]\
-                        ['nexthop'] = {}
+                if cast:
+                    cast = {'1': 'unicast',
+                            '2': 'multicast'}['{}'.format(cast.count('*'))]
+                    # Init 'best_route' dict
+                    hop_dict = ip_dict.setdefault('best_route', {}).setdefault(cast, {}).\
+                                        setdefault('nexthop', {})
+                else:
+                    hop_dict = ip_dict.setdefault('routes', {}).setdefault('nexthop', {})
 
                 nexthop = m.groupdict()['nexthop']
-                if nexthop not in sub_dict\
-                   ['ip'][ip_mask]['best_route'][cast]['nexthop']:
-                    sub_dict['ip'][ip_mask]\
-                      ['best_route'][cast]['nexthop'][nexthop] = {}
-                    prot_dict = sub_dict['ip'][ip_mask]\
-                      ['best_route'][cast]['nexthop'][nexthop]['protocol'] = {}
+                protocol = m.groupdict()['protocol']
 
-                protocol = m.groupdict()['protocol'] if \
-                    m.groupdict()['protocol'] else m.groupdict()['prot']
-                if protocol not in prot_dict:
-                    prot_dict[protocol] = {}
+                prot_dict = hop_dict.setdefault(nexthop, {}).setdefault('protocol', {}).\
+                                        setdefault(protocol, {})
 
                 table = m.groupdict()['table']
                 if table:
-                    prot_dict[protocol]['route_table'] = table
+                    prot_dict['route_table'] = table
 
                 intf = m.groupdict()['int']
                 if intf:
-                    prot_dict[protocol]['interface'] = Common.convert_intf_name(intf)
+                    prot_dict['interface'] = Common.convert_intf_name(intf)
 
                 preference = m.groupdict()['preference']
                 if preference:
-                    prot_dict[protocol]['preference'] = preference
+                    prot_dict['preference'] = preference
 
                 metric = m.groupdict()['metric']
                 if metric:
-                    prot_dict[protocol]['metric'] = metric
+                    prot_dict['metric'] = metric
 
                 up_time = m.groupdict()['up_time']
                 if up_time:
-                    prot_dict[protocol]['uptime'] = up_time
+                    prot_dict['uptime'] = up_time
 
                 process = m.groupdict()['process']
                 if process:
-                    prot_dict[protocol]['protocol_id'] = process
+                    prot_dict['protocol_id'] = process
 
                 attribute = m.groupdict()['attribute']
                 if attribute:
-                    prot_dict[protocol]['attribute'] = attribute
+                    prot_dict['attribute'] = attribute
                 
                 tag = m.groupdict()['tag']
                 if tag:
-                    prot_dict[protocol]['tag'] = tag.strip()
+                    prot_dict['tag'] = tag.strip()
                 
                 segid = m.groupdict()['segid']
                 if segid:
-                    prot_dict[protocol]['segid'] = int(segid)
+                    prot_dict['segid'] = int(segid)
 
                 tunnelid = m.groupdict()['tunnelid']
                 if tunnelid:
-                    prot_dict[protocol]['tunnelid'] = tunnelid
+                    prot_dict['tunnelid'] = tunnelid
 
                 encap = m.groupdict()['encap']
                 if encap:
-                    prot_dict[protocol]['encap'] = encap.lower()
+                    prot_dict['encap'] = encap.lower()
 
                 vpn = m.groupdict()['vpn']
                 if vpn and 'mpls-vpn' in vpn:
-                    prot_dict[protocol]['mpls_vpn'] = True
+                    prot_dict['mpls_vpn'] = True
                 elif vpn and 'mpls' in vpn:
-                    prot_dict[protocol]['mpls'] = True
+                    prot_dict['mpls'] = True
                 elif vpn and 'evpn' in vpn:
-                    prot_dict[protocol]['evpn'] = True
+                    prot_dict['evpn'] = True
 
                 # Set extra values for BGP Ops
                 if attribute == 'external' and protocol == 'bgp':
-                    sub_dict['bgp_distance_extern_as'] = int(preference)
+                    af_dict['bgp_distance_extern_as'] = int(preference)
                 elif attribute == 'internal' and protocol == 'bgp':
-                    sub_dict['bgp_distance_internal_as'] = int(preference)
+                    af_dict['bgp_distance_internal_as'] = int(preference)
                 elif attribute == 'discard' and protocol == 'bgp':
-                    sub_dict['bgp_distance_local'] = int(preference)
-                    continue
+                    af_dict['bgp_distance_local'] = int(preference)
+                continue
 
-        return bgp_dict
+        return result_dict
+
 
 class ShowRouting(ShowRoutingVrfAll):
     """Parser for show routing
@@ -301,7 +282,6 @@ class ShowRouting(ShowRoutingVrfAll):
         else:
             out = output
         return super().cli(ip=ip, output=out)
-
 
 
 class ShowRoutingIpv6VrfAll(ShowRoutingVrfAll):
