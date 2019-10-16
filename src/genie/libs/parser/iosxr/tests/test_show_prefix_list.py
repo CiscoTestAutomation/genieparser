@@ -136,6 +136,83 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         end-set
     '''}
 
+    device_output = {'execute.return_value': '''
++++ bl1-tatooine: executing command 'show rpl prefix-set' +++
+show rpl prefix-set
+
+Mon Oct  7 16:22:51.776 EDT
+Listing for all Prefix Set objects
+
+prefix-set PFX-AS577-MGMT
+  1.1.1.0/24,
+  1.1.2.0/24,
+  1.1.3.0/24
+end-set
+!
+prefix-set VPNe-Loopbacks
+  12.12.12.12/20 eq 32,
+  6.6.6.6/24 eq 32,
+  8.8.8.8/24 eq 32,
+  9.9.9.0/24 eq 32,
+  6.3.5.0/24 eq 32,
+  6.8.6.0/24 eq 32
+end-set
+!
+RP/0/RSP0/CPU0:bl1-tatooine#
+
+    '''}
+    parsed_output = {
+        'prefix_set_name': {
+            'PFX-AS577-MGMT': {
+                'prefix_set_name': 'PFX-AS577-MGMT',
+                'prefixes': {
+                    '1.1.1.0/24 24..24': {
+                        'masklength_range': '24..24',
+                        'prefix': '1.1.1.0/24',
+                    },
+                    '1.1.2.0/24 24..24': {
+                        'masklength_range': '24..24',
+                        'prefix': '1.1.2.0/24',
+                    },
+                    '1.1.3.0/24 24..24': {
+                        'masklength_range': '24..24',
+                        'prefix': '1.1.3.0/24',
+                    },
+                },
+                'protocol': 'ipv4',
+            },
+            'VPNe-Loopbacks': {
+                'prefix_set_name': 'VPNe-Loopbacks',
+                'prefixes': {
+                    '12.12.12.12/20 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '12.12.12.12/20',
+                    },
+                    '6.3.5.0/24 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '6.3.5.0/24',
+                    },
+                    '6.6.6.6/24 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '6.6.6.6/24',
+                    },
+                    '6.8.6.0/24 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '6.8.6.0/24',
+                    },
+                    '8.8.8.8/24 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '8.8.8.8/24',
+                    },
+                    '9.9.9.0/24 32..32': {
+                        'masklength_range': '32..32',
+                        'prefix': '9.9.9.0/24',
+                    },
+                },
+                'protocol': 'ipv4',
+            },
+        },
+    }
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRplPrefixSet(device=self.device)
@@ -153,6 +230,12 @@ class test_show_rpl_prefix_set(unittest.TestCase):
         obj = ShowRplPrefixSet(device=self.device)
         parsed_output = obj.parse(name='test')
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
+
+    def test_2(self):
+        self.device = Mock(**self.device_output)
+        obj = ShowRplPrefixSet(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

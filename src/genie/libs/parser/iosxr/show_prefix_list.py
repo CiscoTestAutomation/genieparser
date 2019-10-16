@@ -65,8 +65,9 @@ class ShowRplPrefixSet(ShowRplPrefixSetSchema):
         # 2001:db8:2::/64 ge 65,
         # 2001:db8:3::/64 le 128,
         # 2001:db8:4::/64 ge 65 le 98
-        p2 = re.compile(r'^(?P<prefix>[\w\.:]+\/'
-                             '(?P<mask>\d+))\s*(?P<range>[lge\d\s]+)?,?$')
+        p2 = re.compile(r'^(?P<prefix>[db\d\.:]+)'
+                        r'(?:(\/(?P<mask>\d+)))?'
+                        r'(?:(\s*(?P<range>[lgeq\d\s]+)))?,?$')
 
         ret_dict = {}
 
@@ -83,12 +84,13 @@ class ShowRplPrefixSet(ShowRplPrefixSetSchema):
                 continue
         
             m = p2.match(line)
+
             if m:
                 group = m.groupdict()
-                prefix = group['prefix']
                 mask = group['mask']
+                prefix = '{}/{}'.format(group['prefix'],mask)
                 ranges = group['range']
-               
+
                 if not ranges:
                     masklength_range = '{}..{}'.format(mask, mask)
                 else:

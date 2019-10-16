@@ -98,6 +98,12 @@
     * Update ShowPceIPV4PeerPrefix
         * Removed typo from 'pcs' to 'pce' in show command
 
+* IOSXR
+    * Updated ShowPceIpv4TopologySummary:
+        * Updated schema and add regex
+
+
+
 --------------------------------------------------------------------------------
                               Controllers
 --------------------------------------------------------------------------------
@@ -183,6 +189,8 @@
 * IOSXR
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
+    * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
+        * update schema and add regex
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -255,15 +263,13 @@
 * IOSXE
     * Update ShowIpCef
         * update regex to support outgoing_label_backup and outgoing_label_info
-        * update regex to support more varied output
     * ShowIpRouteWord
         * update regex to support more varied output
 * IOSXR
     * Updated ShowRouteIpv4:
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
-    * Updated ShowStaticTopologyDetail:
-        * Support more varied output
+        * Updated regex
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -399,6 +405,9 @@
         * show l2route evpn mac all
     * Updated ShowL2routeEvpnMacIpAll for:
         * show l2route evpn mac-ip all
+    * Updated ShowRplPrefixSet regex for:
+        * show rpl prefix-set
+        * show rpl prefix-set <name>
 
 --------------------------------------------------------------------------------
                                 X-Connect
@@ -417,6 +426,8 @@
     * Added ShowL2vpnXconnectMp2mpDetail for:
         * show l2vpn xconnect mp2mp detail
     * Updated ShowL2vpnXconnectDetail for:
+        * To support more varied output
+    * Updated ShowL2vpnXconnect for:
         * To support more varied output
 
 --------------------------------------------------------------------------------
@@ -441,6 +452,10 @@
         * show evpn ethernet-segment esi {esi} detail
     * Added ShowEvpnInternalLabel for:
         * show evpn internal-label
+    * Updated ShowEvpnEthernetSegmentDetail to support optional label key
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+        
+    * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
 
@@ -518,8 +533,6 @@
         * show isis segment-routing label table
     * Added parser ShowIsis for:
         * show isis
-    * Added parser ShowIsisLspLog for:
-        * show isis lsp-log
     * Added ShowIsisSpfLog for:
         * show isis spf-log
     * Added parser ShowIsisProtocol for:
@@ -531,6 +544,7 @@
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
+    * Updated ShowIsis to support different outputs
 
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
@@ -542,3 +556,25 @@
     * Fixed regex to accommodate various outputs
 * IOSXE
     * Fixed regex to accommodate more outputs
+    
+* IOSXE
+    * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
+
+--------------------------------------------------------------------------------
+                                Interface
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowInterfaces
+        * Fixed regex to accommodate more outputs formats
+
+--------------------------------------------------------------------------------
+                                   VDC 
+--------------------------------------------------------------------------------
+* NXOS 
+    * Updated ShowVdcDetailSchema to accomodate different outputs 
+
+--------------------------------------------------------------------------------
+                                Traceroute
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added Traceroute class
