@@ -357,11 +357,16 @@ class ShowIpRouteSchema(MetaParser):
 
 # ====================================================
 # Parser for:
-# show ip route {protocol} {route} interface {interface} vrf {vrf}
-# show ip route {protocol} {route} interface {interface}
+# show ip route {route} {protocol} interface {interface} vrf {vrf}
+# show ip route {route} {protocol} interface {interface}
+# show ip route {route} {protocol} vrf {vrf}
+# show ip route {protocol} interface {interface} vrf {vrf}
 # show ip route {route} interface {interface} vrf {vrf}
-# show ip route {protocol} {route}
+# show ip route {route} {protocol}
+# show ip route {protocol} interface {interface}
+# show ip route {protocol} vrf {vrf}
 # show ip route {route} interface {interface}
+# show ip route {route} vrf {vrf}
 # show ip route interface {interface} vrf {vrf}
 # show ip route {protocol}
 # show ip route {route}
@@ -374,16 +379,17 @@ class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
         'show ip route {route} {protocol} interface {interface} vrf {vrf}',
         'show ip route {route} {protocol} interface {interface}',
-        'show ip route {route} {protocol}',
+        'show ip route {route} {protocol} vrf {vrf}',
         'show ip route {protocol} interface {interface} vrf {vrf}',
+        'show ip route {route} interface {interface} vrf {vrf}',
+        'show ip route {route} {protocol}',
         'show ip route {protocol} interface {interface}',
         'show ip route {protocol} vrf {vrf}',
-        'show ip route {protocol}',
-        'show ip route {route} interface {interface} vrf {vrf}',
         'show ip route {route} interface {interface}',
         'show ip route {route} vrf {vrf}',
-        'show ip route {route}',
         'show ip route interface {interface} vrf {vrf}',
+        'show ip route {protocol}',
+        'show ip route {route}',
         'show ip route interface {interface}',
         'show ip route vrf {vrf}',
         'show ip route vrf all',
@@ -392,6 +398,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
     cli_command = [ 'show ip route {route} {protocol} interface {interface} vrf {vrf}',
                     'show ip route {route} {protocol} interface {interface}',
+                    'show ip route {route} {protocol} vrf {vrf}',
                     'show ip route {protocol} interface {interface} vrf {vrf}',
                     'show ip route {route} interface {interface} vrf {vrf}',
                     'show ip route {route} {protocol}',
@@ -424,66 +431,72 @@ class ShowIpRoute(ShowIpRouteSchema):
                     route=route,
                     interface=interface,
                     )
-        elif protocol and interface and vrf:
+        elif protocol and route and vrf:
             cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    route=route,
+                    vrf=vrf,
+                    )                 
+        elif protocol and interface and vrf:
+            cmd = self.cli_command[3].format(
                     protocol=protocol,
                     vrf=vrf,
                     interface=interface,
                     )
         elif route and interface and vrf:
-            cmd = self.cli_command[3].format(
+            cmd = self.cli_command[4].format(
                     vrf=vrf,
                     route=route,
                     interface=interface,
                     )
         elif protocol and route:
-            cmd = self.cli_command[4].format(
+            cmd = self.cli_command[5].format(
                     protocol=protocol,
                     route=route,
                     )
         elif protocol and interface:
-            cmd = self.cli_command[5].format(
+            cmd = self.cli_command[6].format(
                     protocol=protocol,
                     interface=interface,
                     )
         elif protocol and vrf:
-            cmd = self.cli_command[6].format(
+            cmd = self.cli_command[7].format(
                     protocol=protocol,
                     vrf=vrf,
                     )
         elif route and interface:
-            cmd = self.cli_command[7].format(
+            cmd = self.cli_command[8].format(
                     route=route,
                     interface=interface,
                     )
         elif route and vrf:
-            cmd = self.cli_command[8].format(
+            cmd = self.cli_command[9].format(
                     route=route,
                     vrf=vrf,
                     )
         elif interface and vrf:
-            cmd = self.cli_command[9].format(
+            cmd = self.cli_command[10].format(
                     interface=interface,
                     vrf=vrf,
                     )
         elif protocol:
-            cmd = self.cli_command[10].format(
+            cmd = self.cli_command[11].format(
                     protocol=protocol,
                     )
         elif route:
-            cmd = self.cli_command[11].format(
+            cmd = self.cli_command[12].format(
                     route=route,
                     )
         elif interface:
-            cmd = self.cli_command[12].format(
+            cmd = self.cli_command[13].format(
                     interface=interface,
                     )
         elif vrf:
-            cmd = self.cli_command[13].format(
+            cmd = self.cli_command[14].format(
                     vrf=vrf,
                     )
         else:
-            cmd = self.cli_command[14]
+            cmd = self.cli_command[15]
 
         # excute command to get output
         if output is None:
@@ -720,11 +733,16 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 # ====================================================
 #  parser for:
-# show ipv6 route {protocol} {route} interface {interface} vrf {vrf}
-# show ipv6 route {protocol} {route} interface {interface}
+# show ipv6 route {route} {protocol} interface {interface} vrf {vrf}
+# show ipv6 route {route} {protocol} interface {interface}
+# show ipv6 route {route} {protocol} vrf {vrf}
+# show ipv6 route {protocol} interface {interface} vrf {vrf}
 # show ipv6 route {route} interface {interface} vrf {vrf}
-# show ipv6 route {protocol} {route}
+# show ipv6 route {route} {protocol}
+# show ipv6 route {protocol} interface {interface}
+# show ipv6 route {protocol} vrf {vrf}
 # show ipv6 route {route} interface {interface}
+# show ipv6 route {route} vrf {vrf}
 # show ipv6 route interface {interface} vrf {vrf}
 # show ipv6 route {protocol}
 # show ipv6 route {route}
@@ -737,6 +755,7 @@ class ShowIpv6Route(ShowIpRoute):
     """Parser for :
         'show ipv6 route {route} {protocol} interface {interface} vrf {vrf}',
         'show ipv6 route {route} {protocol} interface {interface}',
+        'show ipv6 route {route} {protocol} vrf {vrf}',
         'show ipv6 route {protocol} interface {interface} vrf {vrf}',
         'show ipv6 route {route} interface {interface} vrf {vrf}',
         'show ipv6 route {route} {protocol}',
@@ -755,6 +774,7 @@ class ShowIpv6Route(ShowIpRoute):
     
     cli_command = [ 'show ipv6 route {route} {protocol} interface {interface} vrf {vrf}',
                     'show ipv6 route {route} {protocol} interface {interface}',
+                    'show ipv6 route {route} {protocol} vrf {vrf}',
                     'show ipv6 route {protocol} interface {interface} vrf {vrf}',
                     'show ipv6 route {route} interface {interface} vrf {vrf}',
                     'show ipv6 route {route} {protocol}',
@@ -792,66 +812,72 @@ class ShowIpv6Route(ShowIpRoute):
                     route=route,
                     interface=interface,
                     )
-        elif protocol and interface and vrf:
+        elif protocol and route and vrf:
             cmd = self.cli_command[2].format(
+                    protocol=protocol,
+                    route=route,
+                    vrf=vrf,
+                    )                 
+        elif protocol and interface and vrf:
+            cmd = self.cli_command[3].format(
                     protocol=protocol,
                     vrf=vrf,
                     interface=interface,
                     )
         elif route and interface and vrf:
-            cmd = self.cli_command[3].format(
+            cmd = self.cli_command[4].format(
                     vrf=vrf,
                     route=route,
                     interface=interface,
                     )
         elif protocol and route:
-            cmd = self.cli_command[4].format(
+            cmd = self.cli_command[5].format(
                     protocol=protocol,
                     route=route,
                     )
         elif protocol and interface:
-            cmd = self.cli_command[5].format(
+            cmd = self.cli_command[6].format(
                     protocol=protocol,
                     interface=interface,
                     )
         elif protocol and vrf:
-            cmd = self.cli_command[6].format(
+            cmd = self.cli_command[7].format(
                     protocol=protocol,
                     vrf=vrf,
                     )
         elif route and interface:
-            cmd = self.cli_command[7].format(
+            cmd = self.cli_command[8].format(
                     route=route,
                     interface=interface,
                     )
         elif route and vrf:
-            cmd = self.cli_command[8].format(
+            cmd = self.cli_command[9].format(
                     route=route,
                     vrf=vrf,
                     )
         elif interface and vrf:
-            cmd = self.cli_command[9].format(
+            cmd = self.cli_command[10].format(
                     interface=interface,
                     vrf=vrf,
                     )
         elif protocol:
-            cmd = self.cli_command[10].format(
+            cmd = self.cli_command[11].format(
                     protocol=protocol,
                     )
         elif route:
-            cmd = self.cli_command[11].format(
+            cmd = self.cli_command[12].format(
                     route=route,
                     )
         elif interface:
-            cmd = self.cli_command[12].format(
+            cmd = self.cli_command[13].format(
                     interface=interface,
                     )
         elif vrf:
-            cmd = self.cli_command[13].format(
+            cmd = self.cli_command[14].format(
                     vrf=vrf,
                     )
         else:
-            cmd = self.cli_command[14]
+            cmd = self.cli_command[15]
 
         if output is None:
             out = self.device.execute(cmd)
