@@ -1638,7 +1638,7 @@ class ShowIsisSpfLogDetailSchema(MetaParser):
                                 'trigger_count': int,
                                 'delay_ms': int,
                                 'delay_info': str,
-                                'spt': {
+                                'spt_calculation': {
                                     'cpu_time_ms': int,
                                     'real_time_ms': int,
                                 },
@@ -1853,7 +1853,7 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
             result = r4.match(line)
             if result:
                 spt_prefix_dict = spf_log_dict\
-                    .setdefault('spt', {})
+                    .setdefault('spt_calculation', {})
 
                 continue
 

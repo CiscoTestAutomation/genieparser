@@ -792,7 +792,7 @@ class TestShowIsisSpfLogDetail(unittest.TestCase):
                                 "start_timestamp": "Mon Aug 16 2004 19:25:35.140",
                                 "delay_ms": 51, 
                                 "delay_info": "since first trigger",
-                                "spt": {
+                                "spt_calculation": {
                                     "cpu_time_ms": 0, 
                                     "real_time_ms": 0},
                                 "prefix_update": {
