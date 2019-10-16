@@ -895,7 +895,7 @@ class ShowEvpnEthernetSegmentSchema(MetaParser):
                             'redundancy': str,
                         },
                         Optional('esi'): {
-                            'type': int,
+                            'type': str,
                             Optional('value'): str,
                             Optional('system_id'): str,
                             Optional('port_key'): str,
@@ -1087,7 +1087,7 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
         p20 = re.compile(r'^Flushagain +timer +: +(?P<flush_again_timer>[\S ]+)$')
 
         # ESI type          : 0
-        p21 = re.compile(r'^ESI +type *: +(?P<esi_type>\d+)$')
+        p21 = re.compile(r'^ESI +type *: +(?P<esi_type>\S+)$')
 
         # Value          : 36.3700.0000.0000.1100
         p22 = re.compile(r'^Value *: +(?P<value>[\S ]+)$')
@@ -1366,12 +1366,13 @@ class ShowEvpnEthernetSegment(ShowEvpnEthernetSegmentSchema):
                 continue
 
             # ESI type          : 0
+            # ESI type          : Invalid
             m = p21.match(line)
             if m:
                 group = m.groupdict()
                 esi_type = group['esi_type']
                 esi_dict = interface_dict.setdefault('esi', {})
-                esi_dict.update({'type': int(esi_type)})
+                esi_dict.update({'type': esi_type})
                 continue
 
             # Value          : 36.3700.0000.0000.1100
