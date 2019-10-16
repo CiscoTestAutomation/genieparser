@@ -498,69 +498,71 @@ class ShowIsisInterfaceSchema(MetaParser):
     """Schema for show isis interface"""
 
     schema = {
-        Any(): {
-            Any(): Any(),
+        Any(): { # process_id
+            'vrf': {
+                Any(): {
+                    'interfaces': {
+                        Any(): {
+                            'name': str,
+                            'status': str,
+                            'ipv4': str,
+                            'ipv4_subnet': str,
+                            'ipv6': str,
+                            'ipv6_state': str,
+                            'ipv6_subnet': str,
+                            'ipv6_link_address': str,
+                            'authentication': {
+                                Any(): { # level_1 level_2
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': str,
+                                },
+                            },
+                            'index': str,
+                            'local_circuit_id': str,
+                            'circuit_type': str,
+                            'bfd_ipv4': str,
+                            'bfd_ipv6': str,
+                            'mtr': str,
+                            Optional('mtu'): int,
+                            Optional('lsp_interval'): str,
+                            'levels': {
+                                Any(): { # level_1 level_2
+                                    Optional('metric'): str,
+                                    Optional('designated_is'): str,
+                                    Optional('metric_0'): str,
+                                    Optional('metric_2'): str,
+                                    Optional('csnp'): str,
+                                    Optional('next_csnp'): str,
+                                    Optional('hello'): str,
+                                    Optional('multi'): str,
+                                    Optional('next_iih'): str,
+                                    Optional('adjs'): str,
+                                    Optional('adjs_up'): str,
+                                    Optional('pri'): str,
+                                    Optional('circuit_id'): str,
+                                    Optional('since'): str,
+                                },
+                            },
+                            'topologies': {
+                                Any(): { # index
+                                    'level': str,
+                                    'mt': str,
+                                    'metric': str,
+                                    'metric_cfg': str,
+                                    'fwdng': str,
+                                    'ipv4_mt': str,
+                                    'ipv4_cfg': str,
+                                    'ipv6_mt': str,
+                                    'ipv6_cfg': str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     }
-    # schema = {
-    #     Any(): {
-    #         'process_id': str,
-    #         'instance_number': int,
-    #         'uuid': str,
-    #         'pid': int,
-    #         'vrf': {
-    #             Any(): {
-    #                 'vrf': str,
-    #                 'system_id': str,
-    #                 'is_type': str,
-    #                 'sap': int,
-    #                 'queue_handle': int,
-    #                 'lsp_mtu': int,
-    #                 'stateful_ha': str,
-    #                 'graceful_restart': {
-    #                     'enable': bool,
-    #                     'state': str,
-    #                     'last_gr_status': str,
-    #                 },
-    #                 'start_mode': str,
-    #                 'bfd_ipv4': str,
-    #                 'bfd_ipv6': str,
-    #                 'topology_mode': str,
-    #                 'metric_type': str,
-    #                 'area_address': list,
-    #                 'enable': bool,
-    #                 'vrf_id': int,
-    #                 'sr_ipv4': str,
-    #                 'sr_ipv6': str,
-    #                 'supported_interfaces': list,
-    #                 'topology': {
-    #                     Any(): {
-    #                         Optional('ipv4_unicast'): {
-    #                             'number_of_interface': int,
-    #                             'distance': int,
-    #                         },
-    #                         Optional('ipv6_unicast'): {
-    #                             'number_of_interface': int,
-    #                             'distance': int,
-    #                         },
-    #                     },
-    #                 },
-    #                 'authentication': {
-    #                     'level_1': {
-    #                         'authentication_type': dict,
-    #                         'auth_check': str,
-    #                     },
-    #                     'level_2': {
-    #                         'authentication_type': dict,
-    #                         'auth_check': str,
-    #                     },
-    #                 },
-    #                 'l1_next_spf': str,
-    #                 'l2_next_spf': str,
-    #             },
-    #         },
-    #     },
-    # }
 
 
 class ShowIsisInterface(ShowIsisInterfaceSchema):
@@ -612,7 +614,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
 
         #   Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L1-2
         p10 = re.compile(r'^Index: +(?P<index>\w+), +Local +Circuit +ID: '
-                          '+(?P<circuit_id>\w+), +Circuit +Type: +(?P<circuit_type>\S+)$')
+                         r'+(?P<circuit_id>\w+), +Circuit +Type: +(?P<circuit_type>\S+)$')
 
         #   BFD IPv4 is locally disabled for Interface loopback0
         p11 = re.compile(r'^BFD +IPv4 +is +locally +(?P<bfd_ipv4>\w+) +for +Interface +(?P<intf>.*)$')
@@ -638,21 +640,21 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         #   1              40     40     10 00:00:06      10   3       00:00:04
         #   2              40     40     10 00:00:03      10   3       00:00:09
         p17 = re.compile(r'^(?P<level>\d+) +(?P<metric_0>\d+) +(?P<metric_2>\d+) '
-                          '+(?P<csnp>\d+) +(?P<next_csnp>[\d\:]+) +(?P<hello>\d+) '
-                          '+(?P<multi>\d+) +(?P<next_iih>[\d\:]+)$')
+                         r'+(?P<csnp>\d+) +(?P<next_csnp>[\d\:]+) +(?P<hello>\d+) '
+                         r'+(?P<multi>\d+) +(?P<next_iih>[\d\:]+)$')
 
         #   Level  Adjs   AdjsUp Pri  Circuit ID         Since
         #   1         1        1  64  R2_xr.03           5d01h
         #   2         1        1  64  R2_xr.03           5d01h
         p18 = re.compile(r'^(?P<level>\d+) +(?P<adjs>\d+) +(?P<adjs_up>\d+) '
-                          '+(?P<pri>\d+) +(?P<circuit_id>\S+) +(?P<since>\w+)$')
+                         r'+(?P<pri>\d+) +(?P<circuit_id>\S+) +(?P<since>\w+)$')
 
         #   Topologies enabled:
         #     L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
         #     1  0        1       no   UP    UP       yes      DN       yes
         p19 = re.compile(r'^(?P<level>\d+) +(?P<mt>\d+) +(?P<metric>\d+) '
-                          '+(?P<metric_cfg>\w+) +(?P<fwdng>\w+) +(?P<ipv4_mt>\w+) '
-                          '+(?P<ipv4_cfg>\w+) +(?P<ipv6_mt>\w+) +(?P<ipv6_cfg>\w+)$')
+                         r'+(?P<metric_cfg>\w+) +(?P<fwdng>\w+) +(?P<ipv4_mt>\w+) '
+                         r'+(?P<ipv4_cfg>\w+) +(?P<ipv6_mt>\w+) +(?P<ipv6_cfg>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -832,6 +834,161 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 topo_dict = intf_dict.setdefault('topologies', {})
                 idx_dict = topo_dict.setdefault(len(topo_dict)+1, {})
                 idx_dict.update({k: v for k, v in group.items()})
+                continue
+
+        return result_dict
+
+
+class ShowIsisSpfLogDetailSchema(MetaParser):
+    """Schema for show isis spf-log detail"""
+
+    schema = {
+        Any(): { # process_id
+            'vrf': {
+                Any(): {
+                    'topology': {
+                        Any(): {
+                            'total_num': int,
+                            'current_log_entry': int,
+                            'max_log_entry': int,
+                            'log_entrys': {
+                                Any(): {
+                                    Optional('metric'): str,
+                                    Optional('designated_is'): str,
+                                    Optional('metric_0'): str,
+                                    Optional('metric_2'): str,
+                                    Optional('csnp'): str,
+                                    Optional('next_csnp'): str,
+                                    Optional('hello'): str,
+                                    Optional('multi'): str,
+                                    Optional('next_iih'): str,
+                                    Optional('adjs'): str,
+                                    Optional('adjs_up'): str,
+                                    Optional('pri'): str,
+                                    Optional('circuit_id'): str,
+                                    Optional('since'): str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
+    """Parser for show isis spf-log detail"""
+
+    cli_command = ['show isis spf-log detail', 'show isis spf-log detail vrf {vrf}']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+
+        # IS-IS Process: test SPF information VRF: default
+        p1 = re.compile(r'^IS-IS +[Pp]rocess: +(?P<process_id>\S+) '
+                        r'+SPF +information +VRF: +(?P<vrf>\S+)$')
+
+        # SPF log for Topology 0
+        p2 = re.compile(r'^SPF +log +for +Topology +(?P<topology>\d+)$')
+
+        # Total number of SPF calculations: 225313
+        p3 = re.compile(r'^Total +number +of +SPF +calculations: +(?P<total_num>\d+)$')
+
+        # Log entry (current/max): 20/20
+        p4 = re.compile(r'^Log +entry +\(current\/max\): +(?P<curr>\d+)\/(?P<max>\d+)$')
+
+        # Log entry: 01, Ago: 00:01:26, Date: Tue Oct 15 21:53:39 2019
+        p5 = re.compile(r'^Log +entry: +(?P<entry>\d+), +Ago: +(?P<ago>[\d\:]+), '
+                        r'+Date: +(?P<date>[\S\s]+)$')
+
+        #   Level  Instance    Init      SPF       IS Update  URIB Update  Total
+        #   2      0x0001B80B  0.000919  0.000896  0.000157   0.000439     0.002559
+        p6 = re.compile(r'^(?P<level>\d+) +(?P<instance>\S+) +(?P<init>[\d\.]) '
+                        r'+(?P<spf>\S+) +(?P<is_update>\S+) '
+                        r'+(?P<urib_update>\S+) +(?P<total>\S+)$')
+
+        #   Level  Node Count   Changed  Reason
+        #   2         4     7         0  New adj R2_xr on Ethernet1/1.115
+        p7 = re.compile(r'^(?P<level>\d+) +(?P<node>\d+) +(?P<count>\d+) '
+                        r'+(?P<changed>\d+) +(?P<reason>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # IS-IS process: test VRF: default
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                process_id = group['process_id']
+                vrf = group['vrf']
+
+                vrf_dict = result_dict.setdefault(process_id, {}).\
+                                       setdefault('vrf', {}).\
+                                       setdefault(vrf, {})
+                continue
+
+            # Ethernet1/2.115, Interface status: protocol-up/link-up/admin-up
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                status = group['status']
+                intf_dict = vrf_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                intf_dict.update({'name': interface, 'status': status})
+                continue
+
+            #  IP address: 3.3.3.3, IP subnet: 3.3.3.3/32
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ip = group['ip']
+                subnet = group['subnet']
+                intf_dict.update({'ipv4': ip, 'ipv4_subnet': subnet})
+                continue
+
+            #  2001:3:3:3::3/128 [VALID]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ipv6 = group['ipv6']
+                state = group['state']
+                intf_dict.update({'ipv6': ipv6, 'ipv6_state': state})
+                continue
+
+            #  IPv6 subnet:  2001:3:3:3::3/128
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                subnet = group['subnet']
+                intf_dict.update({'ipv6_subnet': subnet})
+                continue
+
+            #  IPv6 link-local address: fe80::5c00:80ff:fe02:0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                link_address = group['link_address']
+                intf_dict.update({'ipv6_link_address': link_address})
+                continue
+
+            #   Level1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                level = 'level_{}'.format(group['level'])
+                level_dict = intf_dict.setdefault('authentication', {}).setdefault(level, {})
                 continue
 
         return result_dict

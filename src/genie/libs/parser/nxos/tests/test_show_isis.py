@@ -265,9 +265,315 @@ class TestShowIsisInterface(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output = {
+        'test': {
+            'vrf': {
+                'default': {
+                    'interfaces': {
+                        'loopback0': {
+                            'name': 'loopback0',
+                            'status': 'protocol-up/link-up/admin-up',
+                            'ipv4': '3.3.3.3',
+                            'ipv4_subnet': '3.3.3.3/32',
+                            'ipv6': '2001:3:3:3::3/128',
+                            'ipv6_state': 'VALID',
+                            'ipv6_subnet': '2001:3:3:3::3/128',
+                            'ipv6_link_address': 'fe80::5c00:80ff:fe02:0',
+                            'authentication': {
+                                'level_1': {
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': 'set',
+                                },
+                                'level_2': {
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': 'set',
+                                },
+                            },
+                            'index': '0x0001',
+                            'local_circuit_id': '0x01',
+                            'circuit_type': 'L1-2',
+                            'bfd_ipv4': 'disabled',
+                            'bfd_ipv6': 'disabled',
+                            'mtr': 'enabled',
+                            'levels': {
+                                'level_1': {
+                                    'metric': '1',
+                                },
+                                'level_2': {
+                                    'metric': '1',
+                                },
+                            },
+                            'topologies': {
+                                1: {
+                                    'level': '1',
+                                    'mt': '0',
+                                    'metric': '1',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'UP',
+                                    'ipv4_cfg': 'yes',
+                                    'ipv6_mt': 'DN',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                2: {
+                                    'level': '1',
+                                    'mt': '2',
+                                    'metric': '1',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'DN',
+                                    'ipv4_cfg': 'no',
+                                    'ipv6_mt': 'UP',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                3: {
+                                    'level': '2',
+                                    'mt': '0',
+                                    'metric': '1',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'UP',
+                                    'ipv4_cfg': 'yes',
+                                    'ipv6_mt': 'DN',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                4: {
+                                    'level': '2',
+                                    'mt': '2',
+                                    'metric': '1',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'DN',
+                                    'ipv4_cfg': 'no',
+                                    'ipv6_mt': 'UP',
+                                    'ipv6_cfg': 'yes',
+                                },
+                            },
+                        },
+                        'Ethernet1/1.115': {
+                            'name': 'Ethernet1/1.115',
+                            'status': 'protocol-up/link-up/admin-up',
+                            'ipv4': '10.23.115.3',
+                            'ipv4_subnet': '10.23.115.0/24',
+                            'ipv6': '2001:10:23:115::3/64',
+                            'ipv6_state': 'VALID',
+                            'ipv6_subnet': '2001:10:23:115::/64',
+                            'ipv6_link_address': 'fe80::5c00:80ff:fe02:7',
+                            'authentication': {
+                                'level_1': {
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': 'set',
+                                },
+                                'level_2': {
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': 'set',
+                                },
+                            },
+                            'index': '0x0002',
+                            'local_circuit_id': '0x01',
+                            'circuit_type': 'L1-2',
+                            'bfd_ipv4': 'disabled',
+                            'bfd_ipv6': 'disabled',
+                            'mtr': 'enabled',
+                            'mtu': 1500,
+                            'lsp_interval': '33 ms',
+                            'levels': {
+                                'level_1': {
+                                    'designated_is': 'R2_xr',
+                                    'metric_0': '40',
+                                    'metric_2': '40',
+                                    'csnp': '10',
+                                    'next_csnp': '00:00:06',
+                                    'hello': '10',
+                                    'multi': '3',
+                                    'next_iih': '00:00:04',
+                                    'adjs': '1',
+                                    'adjs_up': '1',
+                                    'pri': '64',
+                                    'circuit_id': 'R2_xr.03',
+                                    'since': '5d01h',
+                                },
+                                'level_2': {
+                                    'designated_is': 'R2_xr',
+                                    'metric_0': '40',
+                                    'metric_2': '40',
+                                    'csnp': '10',
+                                    'next_csnp': '00:00:03',
+                                    'hello': '10',
+                                    'multi': '3',
+                                    'next_iih': '00:00:09',
+                                    'adjs': '1',
+                                    'adjs_up': '1',
+                                    'pri': '64',
+                                    'circuit_id': 'R2_xr.03',
+                                    'since': '5d01h',
+                                },
+                            },
+                            'topologies': {
+                                1: {
+                                    'level': '1',
+                                    'mt': '0',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'UP',
+                                    'ipv4_cfg': 'yes',
+                                    'ipv6_mt': 'DN',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                2: {
+                                    'level': '1',
+                                    'mt': '2',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'DN',
+                                    'ipv4_cfg': 'no',
+                                    'ipv6_mt': 'UP',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                3: {
+                                    'level': '2',
+                                    'mt': '0',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'UP',
+                                    'ipv4_cfg': 'yes',
+                                    'ipv6_mt': 'DN',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                4: {
+                                    'level': '2',
+                                    'mt': '2',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'DN',
+                                    'ipv4_cfg': 'no',
+                                    'ipv6_mt': 'UP',
+                                    'ipv6_cfg': 'yes',
+                                },
+                            },
+                        },
+                        'Ethernet1/2.115': {
+                            'name': 'Ethernet1/2.115',
+                            'status': 'protocol-up/link-up/admin-up',
+                            'ipv4': '10.13.115.3',
+                            'ipv4_subnet': '10.13.115.0/24',
+                            'ipv6': '2001:10:13:115::3/64',
+                            'ipv6_state': 'VALID',
+                            'ipv6_subnet': '2001:10:13:115::/64',
+                            'ipv6_link_address': 'fe80::5c00:80ff:fe02:7',
+                            'authentication': {
+                                'level_1': {
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': 'set',
+                                },
+                                'level_2': {
+                                    'authentication_type': {
+                                    },
+                                    'auth_check': 'set',
+                                },
+                            },
+                            'index': '0x0003',
+                            'local_circuit_id': '0x02',
+                            'circuit_type': 'L1-2',
+                            'bfd_ipv4': 'disabled',
+                            'bfd_ipv6': 'disabled',
+                            'mtr': 'enabled',
+                            'mtu': 1500,
+                            'lsp_interval': '33 ms',
+                            'levels': {
+                                'level_1': {
+                                    'designated_is': 'R1_xe',
+                                    'metric_0': '40',
+                                    'metric_2': '40',
+                                    'csnp': '10',
+                                    'next_csnp': '00:00:10',
+                                    'hello': '10',
+                                    'multi': '3',
+                                    'next_iih': '00:00:03',
+                                    'adjs': '1',
+                                    'adjs_up': '1',
+                                    'pri': '64',
+                                    'circuit_id': 'R1_xe.02',
+                                    'since': '5d01h',
+                                },
+                                'level_2': {
+                                    'designated_is': 'R1_xe',
+                                    'metric_0': '40',
+                                    'metric_2': '40',
+                                    'csnp': '10',
+                                    'next_csnp': '00:00:02',
+                                    'hello': '10',
+                                    'multi': '3',
+                                    'next_iih': '00:00:02',
+                                    'adjs': '1',
+                                    'adjs_up': '1',
+                                    'pri': '64',
+                                    'circuit_id': 'R1_xe.02',
+                                    'since': '5d01h',
+                                },
+                            },
+                            'topologies': {
+                                1: {
+                                    'level': '1',
+                                    'mt': '0',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'UP',
+                                    'ipv4_cfg': 'yes',
+                                    'ipv6_mt': 'DN',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                2: {
+                                    'level': '1',
+                                    'mt': '2',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'DN',
+                                    'ipv4_cfg': 'no',
+                                    'ipv6_mt': 'UP',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                3: {
+                                    'level': '2',
+                                    'mt': '0',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'UP',
+                                    'ipv4_cfg': 'yes',
+                                    'ipv6_mt': 'DN',
+                                    'ipv6_cfg': 'yes',
+                                },
+                                4: {
+                                    'level': '2',
+                                    'mt': '2',
+                                    'metric': '40',
+                                    'metric_cfg': 'no',
+                                    'fwdng': 'UP',
+                                    'ipv4_mt': 'DN',
+                                    'ipv4_cfg': 'no',
+                                    'ipv6_mt': 'UP',
+                                    'ipv6_cfg': 'yes',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     }
     golden_output = {'execute.return_value': '''\
-        R3_nx# show isis interface
+        R3_nx# show isis interface vrf default
         IS-IS process: test VRF: default
         loopback0, Interface status: protocol-up/link-up/admin-up
         IP address: 3.3.3.3, IP subnet: 3.3.3.3/32
@@ -370,9 +676,7 @@ class TestShowIsisInterface(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowIsisInterface(device=self.device)
-        parsed_output = obj.parse(vrf='all')
-        from genie.libs.parser.utils.common import format_output
-        print(format_output(parsed_output))
+        parsed_output = obj.parse(vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
