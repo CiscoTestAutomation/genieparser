@@ -17,8 +17,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Changed "type" type from string to integer on the following commands
-        * 'show clns neighbors detail'
         * 'show clns is-neighbors detail'
+    * Saving type as string in schema on:
+        * ShowClnsIsNeighborsDetail
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -191,6 +192,7 @@
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
         * update schema and add regex
+        * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument
@@ -212,6 +214,9 @@
 * NXOS
     * Updated ShowRunningConfigPim:
         changed logic to support calling from device.parse
+* IOSXR
+    * Updated ShowPimVrfInterfaceDetail:
+        For handling more varied output
 
 --------------------------------------------------------------------------------
                                 VRF
@@ -531,10 +536,14 @@
     * Fixed parser ShowRunRouterIsis to support different outputs
     * Added ShowIsisSegmentRoutingLabelTable for:
         * show isis segment-routing label table
+    * Added ShowIsisInterface for:
+        * show isis interface
     * Added parser ShowIsis for:
         * show isis
     * Added ShowIsisSpfLog for:
         * show isis spf-log
+    * Added ShowIsisSpfLogDetail for:
+        * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
     * Added ShowIsisStatistics for:
