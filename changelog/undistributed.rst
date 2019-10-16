@@ -543,8 +543,10 @@
         * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
+        * Updated schema with ispf_status optional key
     * Added ShowIsisStatistics for:
         * show isis statistics
+        * Updated schema with level optional key
     * Added parser ShowIsis for:
         * show isis
     * Added parser ShowIsisHostname for:
