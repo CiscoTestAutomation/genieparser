@@ -5396,17 +5396,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                 10: {
                                                     'lsa_type': 10,
                                                     'lsas': {
-                                                        '4.0.0.0 67.70.219.84': {
-                                                            'adv_router': '67.70.219.84',
-                                                            'lsa_id': '4.0.0.0',
+                                                        '10.16.0.0 10.154.219.84': {
+                                                            'adv_router': '10.154.219.84',
+                                                            'lsa_id': '10.16.0.0',
                                                             'ospfv2': {
                                                                 'header': {
                                                                     'age': 65,
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'type': 10,
-                                                                    'lsa_id': '4.0.0.0',
-                                                                    'adv_router': '67.70.219.84',
+                                                                    'lsa_id': '10.16.0.0',
+                                                                    'adv_router': '10.154.219.84',
                                                                     'opaque_type': 4,
                                                                     'opaque_id': 0,
                                                                     'seq_num': '80004c15',
@@ -5472,17 +5472,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        '7.0.0.1 67.70.219.84': {
-                                                            'adv_router': '67.70.219.84',
-                                                            'lsa_id': '7.0.0.1',
+                                                        '10.49.0.1 10.154.219.84': {
+                                                            'adv_router': '10.154.219.84',
+                                                            'lsa_id': '10.49.0.1',
                                                             'ospfv2': {
                                                                 'header': {
                                                                     'age': 65,
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'type': 10,
-                                                                    'lsa_id': '7.0.0.1',
-                                                                    'adv_router': '67.70.219.84',
+                                                                    'lsa_id': '10.49.0.1',
+                                                                    'adv_router': '10.154.219.84',
                                                                     'opaque_type': 7,
                                                                     'opaque_id': 1,
                                                                     'seq_num': '800009be',
@@ -5495,7 +5495,7 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 'length': 24,
                                                                                 'af': 0,
-                                                                                'prefix': '64.230.254.0/32',
+                                                                                'prefix': '10.246.254.0/32',
                                                                                 'range_size': 256,
                                                                                 'flags': '0x0',
                                                                                 'sub_tlvs': {
@@ -5514,17 +5514,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        '8.0.0.78 67.70.219.85': {
-                                                            'adv_router': '67.70.219.85',
-                                                            'lsa_id': '8.0.0.78',
+                                                        '10.64.0.78 10.154.219.85': {
+                                                            'adv_router': '10.154.219.85',
+                                                            'lsa_id': '10.64.0.78',
                                                             'ospfv2': {
                                                                 'header': {
                                                                     'age': 1057,
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'type': 10,
-                                                                    'lsa_id': '8.0.0.78',
-                                                                    'adv_router': '67.70.219.85',
+                                                                    'lsa_id': '10.64.0.78',
+                                                                    'adv_router': '10.154.219.85',
                                                                     'opaque_type': 8,
                                                                     'opaque_id': 78,
                                                                     'seq_num': '800004bf',
@@ -5537,7 +5537,7 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 'length': 76,
                                                                                 'link_type': 1,
-                                                                                'link_id': '67.70.219.57',
+                                                                                'link_id': '10.154.219.57',
                                                                                 'link_data': '172.16.0.91',
                                                                                 'sub_tlvs': {
                                                                                     1: {
@@ -5572,17 +5572,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        '1.0.0.3 67.70.219.51': {
-                                                            'adv_router': '67.70.219.51',
-                                                            'lsa_id': '1.0.0.3',
+                                                        '10.1.0.3 10.154.219.51': {
+                                                            'adv_router': '10.154.219.51',
+                                                            'lsa_id': '10.1.0.3',
                                                             'ospfv2': {
                                                                 'header': {
                                                                     'age': 586,
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'type': 10,
-                                                                    'lsa_id': '1.0.0.3',
-                                                                    'adv_router': '67.70.219.51',
+                                                                    'lsa_id': '10.1.0.3',
+                                                                    'adv_router': '10.154.219.51',
                                                                     'opaque_type': 1,
                                                                     'opaque_id': 3,
                                                                     'seq_num': '80004036',
@@ -5595,7 +5595,7 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 'link_type': 1,
                                                                                 'link_name': 'point-to-point network',
-                                                                                'link_id': '67.70.219.106',
+                                                                                'link_id': '10.154.219.106',
                                                                                 'local_if_ipv4_addrs': {
                                                                                     '172.16.1.153': {
                                                                                     },
@@ -5647,17 +5647,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                 },
                                                             },
                                                         },
-                                                        '1.0.17.240 67.70.219.85': {
-                                                            'adv_router': '67.70.219.85',
-                                                            'lsa_id': '1.0.17.240',
+                                                        '10.1.17.240 10.154.219.85': {
+                                                            'adv_router': '10.154.219.85',
+                                                            'lsa_id': '10.1.17.240',
                                                             'ospfv2': {
                                                                 'header': {
                                                                     'age': 1057,
                                                                     'option': 'None',
                                                                     'option_desc': 'No TOS-capability, DC',
                                                                     'type': 10,
-                                                                    'lsa_id': '1.0.17.240',
-                                                                    'adv_router': '67.70.219.85',
+                                                                    'lsa_id': '10.1.17.240',
+                                                                    'adv_router': '10.154.219.85',
                                                                     'opaque_type': 1,
                                                                     'opaque_id': 4592,
                                                                     'seq_num': '800004c1',
@@ -5670,7 +5670,7 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
                                                                             1: {
                                                                                 'link_type': 1,
                                                                                 'link_name': 'point-to-point network',
-                                                                                'link_id': '67.70.219.58',
+                                                                                'link_id': '10.154.219.58',
                                                                                 'local_if_ipv4_addrs': {
                                                                                     '172.16.0.99': {
                                                                                     },
@@ -5704,17 +5704,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
 
         Wed Oct  9 14:37:02.679 EDT
 
-                OSPF Router with ID (67.70.219.84) (Process ID 64577)
+                OSPF Router with ID (10.154.219.84) (Process ID 64577)
 
         Type-10 Opaque Link Area Link States (Area 0)
 
         LS age: 65
         Options: (No TOS-capability, DC)
         LS Type: Opaque Area Link
-        Link State ID: 4.0.0.0
+        Link State ID: 10.16.0.0
         Opaque Type: 4
         Opaque ID: 0
-        Advertising Router: 67.70.219.84
+        Advertising Router: 10.154.219.84
         LS Seq Number: 80004c15
         Checksum: 0xadfd
         Length: 76
@@ -5747,17 +5747,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         LS age: 65
         Options: (No TOS-capability, DC)
         LS Type: Opaque Area Link
-        Link State ID: 7.0.0.1
+        Link State ID: 10.49.0.1
         Opaque Type: 7
         Opaque ID: 1
-        Advertising Router: 67.70.219.84
+        Advertising Router: 10.154.219.84
         LS Seq Number: 800009be
         Checksum: 0xf6d0
         Length: 48
 
             Extended Prefix Range TLV: Length: 24
             AF        : 0
-            Prefix    : 64.230.254.0/32
+            Prefix    : 10.246.254.0/32
             Range Size: 256
             Flags     : 0x0
 
@@ -5770,17 +5770,17 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         LS age: 1057
         Options: (No TOS-capability, DC)
         LS Type: Opaque Area Link
-        Link State ID: 8.0.0.78
+        Link State ID: 10.64.0.78
         Opaque Type: 8
         Opaque ID: 78
-        Advertising Router: 67.70.219.85
+        Advertising Router: 10.154.219.85
         LS Seq Number: 800004bf
         Checksum: 0x9a5b
         Length: 100
 
           Extended Link TLV: Length: 76
             Link-type : 1
-            Link ID   : 67.70.219.57
+            Link ID   : 10.154.219.57
             Link Data : 172.16.0.91
 
             Adj sub-TLV: Length: 7
@@ -5802,16 +5802,16 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         LS age: 586
         Options: (No TOS-capability, DC)
         LS Type: Opaque Area Link
-        Link State ID: 1.0.0.3
+        Link State ID: 10.1.0.3
         Opaque Type: 1
         Opaque ID: 3
-        Advertising Router: 67.70.219.51
+        Advertising Router: 10.154.219.51
         LS Seq Number: 80004036
         Checksum: 0xe06c
         Length: 136
 
             Link connected to Point-to-Point network
-            Link ID : 67.70.219.106
+            Link ID : 10.154.219.106
             (all bandwidths in bytes/sec)
             Interface Address : 172.16.1.153
             Neighbor Address : 172.16.1.152
@@ -5832,16 +5832,16 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         LS age: 1057
         Options: (No TOS-capability, DC)
         LS Type: Opaque Area Link
-        Link State ID: 1.0.17.240
+        Link State ID: 10.1.17.240
         Opaque Type: 1
         Opaque ID: 4592
-        Advertising Router: 67.70.219.85
+        Advertising Router: 10.154.219.85
         LS Seq Number: 800004c1
         Checksum: 0x827c
         Length: 80
 
             Link connected to Point-to-Point network
-            Link ID : 67.70.219.58
+            Link ID : 10.154.219.58
             (all bandwidths in bytes/sec)
             Interface Address : 172.16.0.99
             Neighbor Address : 172.16.0.98
