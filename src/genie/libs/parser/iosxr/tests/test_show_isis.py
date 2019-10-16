@@ -2,6 +2,8 @@
 import unittest
 from unittest.mock import Mock
 
+import genie.gre
+
 # ATS
 from ats.topology import Device
 from ats.topology import loader
@@ -518,8 +520,8 @@ class TestShowIsis(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 class TestShowIsisDatabaseDetail(unittest.TestCase):
-    ''' Unit tests for commands:
-        * show isis database detail -> ShowIsisDatabaseDetail
+    ''' Unit tests for commands/parser:
+        * show isis database detail / ShowIsisDatabaseDetail
     ''' 
     maxDiff = None
 
@@ -1671,6 +1673,381 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
          Total Level-2 LSP count: 11     Local Level-2 LSP count: 1
     '''}
 
+    golden_parsed_output_2 = {
+        "instance": {
+            "isp": {
+                "level": {
+                    1: {
+                        "lspid": {
+                            "router-5.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000003",
+                                    "checksum": "0x8074460",
+                                    "local_router": False,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-5",
+                                "ip_address": "172.1.1.5",
+                                "ip_neighbor": {
+                                    "172.3.55.0/24": {
+                                        "ip_prefix": "172.3.55.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.6.1.0/24": {
+                                        "ip_prefix": "172.6.1.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.7.0.0/24": {
+                                        "ip_prefix": "172.7.0.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 10},
+                                    "router-11.01": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-11.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000b",
+                                    "checksum": "0x8074460",
+                                    "local_router": True,
+                                    "holdtime": 1161,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-11",
+                                "ip_address": "172.1.11.11",
+                                "ip_neighbor": {
+                                    "172.1.111.0/24": {
+                                        "ip_prefix": "172.1.111.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.6.1.0/24": {
+                                        "ip_prefix": "172.6.1.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.7.0.0/24": {
+                                        "ip_prefix": "172.7.0.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.01": {
+                                        "metric": 10},
+                                    "router-5.00": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-11.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000001",
+                                    "checksum": "0x80770ec",
+                                    "local_router": True,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 0},
+                                    "router-5.00": {
+                                        "metric": 0},
+                                },
+                            },
+                        },
+                        "total_lsp_count": 3,
+                        "local_lsp_count": 2,
+                    },
+                    2: {
+                        "lspid": {
+                            "router-5.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000005",
+                                    "checksum": "0x807997c",
+                                    "local_router": False,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-5",
+                                "ip_address": "172.6.1.5",
+                                "ip_neighbor": {
+                                    "172.3.55.0/24": {
+                                        "ip_prefix": "172.3.55.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.6.1.0/24": {
+                                        "ip_prefix": "172.6.1.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.1.0.0/24": {
+                                        "ip_prefix": "172.1.0.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.8.111.0/24": {
+                                        "ip_prefix": "172.8.111.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 10},
+                                    "router-11.01": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-11.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000d",
+                                    "checksum": "0x807997c",
+                                    "local_router": True,
+                                    "holdtime": 1184,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "49",
+                                "nlpid": ["0xcc"],
+                                "hostname": "router-11",
+                                "ip_address": "172.28.111.111",
+                                "ip_neighbor": {
+                                    "172.8.111.0/24": {
+                                        "ip_prefix": "172.8.111.0",
+                                        "prefix_length": "24",
+                                        "metric": 0,
+                                    },
+                                    "172.6.1.0/24": {
+                                        "ip_prefix": "172.6.1.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.7.0.0/24": {
+                                        "ip_prefix": "172.7.0.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                    "172.3.55.0/24": {
+                                        "ip_prefix": "172.3.55.0",
+                                        "prefix_length": "24",
+                                        "metric": 10,
+                                    },
+                                },
+                                "is_neighbor": {
+                                    "router-11.01": {
+                                        "metric": 10},
+                                    "router-5.00": {
+                                        "metric": 10},
+                                },
+                            },
+                            "router-gsr11.01-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000001",
+                                    "checksum": "0x80770ec",
+                                    "local_router": True,
+                                    "holdtime": 457,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "is_neighbor": {
+                                    "router-11.00": {
+                                        "metric": 0},
+                                    "router-5.00": {
+                                        "metric": 0},
+                                },
+                            },
+                        },
+                        "total_lsp_count": 3,
+                        "local_lsp_count": 2,
+                    },
+                }
+            }
+        }
+    }
+
+    # asr9k
+    golden_output_2 = {'execute.return_value': '''
+        router# show isis database detail
+        IS-IS isp (Level-1) Link State Database
+            LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+            router-5.00-00     0x00000003   0x8074460        457             0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-5
+              IP Address:  172.1.1.5
+              Metric: 0          IP 172.3.55.0/24
+              Metric: 10         IP 172.6.1.0/24
+              Metric: 10         IP 172.7.0.0/24
+              Metric: 10         IS router-11.00
+              Metric: 10         IS router-11.01
+            router-11.00-00  * 0x0000000b   0x8074460        1161            0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-11
+              IP Address:  172.1.11.11
+              Metric: 0          IP 172.1.111.0/24
+              Metric: 10         IP 172.6.1.0/24
+              Metric: 10         IP 172.7.0.0/24
+              Metric: 10         IS router-11.01
+              Metric: 10         IS router-5.00
+            router-11.01-00  * 0x00000001   0x80770ec        457             0/0/0
+              Metric: 0          IS router-11.00
+              Metric: 0          IS router-5.00
+             Total LSP count: 3 (L1: 3, L2 0, local L1: 2, local L2 0)
+            IS-IS isp (Level-2) Link State Database
+            LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+            router-5.00-00     0x00000005   0x807997c        457             0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-5
+              IP Address:  172.6.1.5
+              Metric: 0          IP 172.3.55.0/24
+              Metric: 10         IP 172.6.1.0/24
+              Metric: 10         IP 172.1.0.0/24
+              Metric: 10         IS router-11.00
+              Metric: 10         IS router-11.01
+              Metric: 10         IP 172.8.111.0/24
+            router-11.00-00  * 0x0000000d   0x807997c        1184            0/0/0
+              Area Address: 49
+              NLPID:       0xcc
+              Hostname:    router-11
+              IP Address:  172.28.111.111
+              Metric: 0          IP 172.8.111.0/24
+              Metric: 10         IP 172.6.1.0/24
+              Metric: 10         IP 172.7.0.0/24
+              Metric: 10         IS router-11.01
+              Metric: 10         IS router-5.00
+              Metric: 10         IP 172.3.55.0/24
+            router-gsr11.01-00  * 0x00000001   0x80770ec        457             0/0/0
+              Metric: 0          IS router-11.00
+              Metric: 0          IS router-5.00
+             Total LSP count: 3 (L1: 0, L2 3, local L1: 0, local L2 2)
+    '''}
+
+    golden_parsed_output_3 = {
+        "instance": {
+            None: {
+                "level": {
+                    1: {
+                        "lspid": {
+                            "0000.0C00.0C35.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x0000000C",
+                                    "checksum": "0x5696",
+                                    "local_router": False,
+                                    "holdtime": 325,
+                                    "attach_bit": 0,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "39.0001",
+                                "is_neighbor": {
+                                    "0000.0C00.62E6.03": {
+                                        "metric": 10}},
+                                "es_neighbor": {
+                                    "0000.0C00.0C35": {
+                                        "metric": 0}},
+                            },
+                            "0000.0C00.40AF.00-00": {
+                                "lsp": {
+                                    "seq_num": "0x00000009",
+                                    "checksum": "0x8452",
+                                    "local_router": True,
+                                    "holdtime": 608,
+                                    "attach_bit": 1,
+                                    "p_bit": 0,
+                                    "overload_bit": 0,
+                                },
+                                "area_address": "47.0004.004D.0001",
+                                "topology": ["IPv4 (0x0)", "IPv6 (0x2)"],
+                                "nlpid": ["0x8E"],
+                                "ip_address": "172.16.21.49",
+                                "is_neighbor": {
+                                    "0800.2B16.24EA.01": {
+                                        "metric": 10},
+                                    "0000.0C00.62E6.03": {
+                                        "metric": 10},
+                                    "cisco.03": {
+                                        "metric": 10},
+                                },
+                                "es_neighbor": {
+                                    "0000.0C00.40AF": {
+                                        "metric": 0}},
+                                "ipv6_address": "2001:0DB8::/32",
+                                "ipv6_reachability": {
+                                    "2001:0DB8::/64": {
+                                        "ip_prefix": "2001:0DB8::",
+                                        "prefix_length": "64",
+                                        "metric": "10",
+                                    }
+                                },
+                                "extended_is_neighbor": {
+                                    "cisco.03": {
+                                        "metric": 5},
+                                    "cisco1.03": {
+                                        "metric": 10},
+                                },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    # ncs5k
+    golden_output_3 = {'execute.return_value': '''
+        IS-IS Level-1 Link State Database
+        LSPID                 LSP Seq Num  LSP Checksum  LSP Holdtime  ATT/P/OL
+        0000.0C00.0C35.00-00  0x0000000C   0x5696        325           0/0/0
+          Area Address: 47.0004.004D.0001
+          Area Address: 39.0001
+          Metric: 10   IS 0000.0C00.62E6.03
+          Metric: 0    ES 0000.0C00.0C35
+        0000.0C00.40AF.00-00* 0x00000009   0x8452        608           1/0/0
+          Area Address: 47.0004.004D.0001
+          Topology: IPv4 (0x0) IPv6 (0x2)
+          NLPID: 0xCC 0x8E
+          IP Address: 172.16.21.49
+          Metric: 10   IS 0800.2B16.24EA.01
+          Metric: 10   IS 0000.0C00.62E6.03
+          Metric: 0    ES 0000.0C00.40AF
+          IPv6 Address: 2001:0DB8::/32
+          Metric: 10   IPv6 (MT-IPv6) 2001:0DB8::/64
+          Metric: 5    IS-Extended cisco.03
+          Metric: 10   IS-Extended cisco1.03
+          Metric: 10    IS (MT-IPv6) cisco.03
+    '''}
+
+    # ncs6k
+    golden_output_4 = {'execute.return_value': '''
+    '''}
+
     def test_empty_output(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIsisDatabaseDetail(device=self.device)
@@ -1682,6 +2059,18 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
         obj = ShowIsisDatabaseDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_output_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_output_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowIsisDatabaseDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 if __name__ == '__main__':
     unittest.main()
