@@ -17,8 +17,9 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Changed "type" type from string to integer on the following commands
-        * 'show clns neighbors detail'
         * 'show clns is-neighbors detail'
+    * Saving type as string in schema on:
+        * ShowClnsIsNeighborsDetail
 --------------------------------------------------------------------------------
                                 Interface
 --------------------------------------------------------------------------------
@@ -190,7 +191,7 @@
     * Updated ShowOspfVrfAllInclusiveInterface:
         * change {intf} and argument 'intf' into {interface} and 'interface'
     * Updated ShowOspfVrfAllInclusiveDatabaseOpaqueArea:
-        * update schema and add regex
+        * to support more varied tlv blocks
 * NXOS
     * Updated ShowIpOspfMplsLdpInterface
         * add custom interface argument

@@ -550,8 +550,11 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
         p1 = re.compile(r'^Tag +(?P<tag>\S+):$')
         # System Id       Interface     SNPA                State  Holdtime  Type Protocol
         # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
-        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) +(?P<snpa>[\w\.]+)'
-                        ' +(?P<state>\w+) +(?P<holdtime>\d+) +L(?P<type>\d+) +(?P<protocol>[\w\-]+)$')
+        # R2_xr           Gi2.115       fa16.3e21.73f6      Up     26        L1L2 M-ISIS
+        p2 = re.compile(r'^(?P<system_id>[\w\.]+) +(?P<interface>\S+) '
+                        r'+(?P<snpa>[\w\.]+) +(?P<state>\w+) +'
+                        r'(?P<holdtime>\d+) +(?P<level>[L\d]+) +'
+                        r'(?P<protocol>[\w\-]+)$')
         #   Area Address(es): 49.0002
         p3 = re.compile(r'^Area +Address\(es\): +(?P<area_address>\S+)$')
         #   IP Address(es):  10.229.7.7*
@@ -573,25 +576,30 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                clns_dict = result_dict.setdefault('tag', {}).setdefault(group['tag'], {})
+                clns_dict = result_dict.setdefault('tag', {})\
+                                       .setdefault(group['tag'], {})
                 continue
             # System Id       Interface     SNPA                State  Holdtime  Type Protocol
             # R7              Gi4           5e00.c006.0007      Up     26        L2   M-ISIS
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                if 'tag' not in result_dict:
-                     clns_dict = result_dict.setdefault('tag', {}).setdefault("", {})
-                type_dict = clns_dict.setdefault('system_id', {}).\
-                                      setdefault(group['system_id'],{}).\
-                                      setdefault('type', {}).\
-                                      setdefault(int(group['type']), {})
+                type_1 = group['level']
 
+                if 'tag' not in result_dict:
+                    clns_dict = result_dict.setdefault('tag', {})\
+                                          .setdefault("", {})
+                type_dict = clns_dict.setdefault('system_id', {})\
+                                       .setdefault(group['system_id'],{})\
+                                       .setdefault('type', {})\
+                                       .setdefault(type_1, {})
                 type_dict.update({'holdtime': int(group['holdtime'])})
                 type_dict.update({'state': group['state'].lower()})
                 type_dict.update({'snpa': group['snpa']})
                 type_dict.update({'protocol': group['protocol']})
-                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict.update({'interface': Common\
+                         .convert_intf_name(group['interface'])})
+
                 continue
 
             #   Area Address(es): 49.0002
@@ -599,6 +607,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'area_address': group['area_address'].split()})
+
                 continue
 
             #   IP Address(es):  10.229.7.7*
@@ -606,6 +615,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'ip_address': group['ip_address'].split()})
+
                 continue
 
             #   IPv6 Address(es): FE80::5C00:C0FF:FE06:7
@@ -613,6 +623,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'ipv6_address': group['ipv6_address'].split()})
+
                 continue
 
             #   Uptime: 00:23:58
@@ -620,6 +631,7 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'uptime': group['uptime']})
+
                 continue
 
             #   NSF capable
@@ -627,20 +639,24 @@ class ShowClnsNeighborsDetail(ShowClnsNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 type_dict.update({'nsf': group['nsf']})
+
                 continue
 
             #   Topology: IPv4, IPv6
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                type_dict.update({'topology': group['topology'].lower().replace(" ","").split(',')})
+                type_dict.update({'topology': group['topology'].lower()\
+                         .replace(" ","").split(',')})
+
                 continue
 
             #   Interface name: GigabitEthernet4
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                type_dict.update({'interface': Common.convert_intf_name(group['interface'])})
+                type_dict.update({'interface': Common\
+                         .convert_intf_name(group['interface'])})
                 continue
         return result_dict
 
