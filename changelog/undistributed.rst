@@ -409,6 +409,19 @@
         * show l2route evpn mac all
     * Updated ShowL2routeEvpnMacIpAll for:
         * show l2route evpn mac-ip all
+* IOSXE:
+    * Updated ShowIpRoute for:
+        * show ip route vrf {vrf} {protocol}
+        * show ip route vrf {vrf}
+        * show ip route {protocol}
+        * show ip route {route}
+        * show ip route
+    * Updated ShowIpv6Route for:
+        * show ipv6 route vrf {vrf} {protocol}
+        * show ipv6 route vrf {vrf}
+        * show ipv6 route {protocol}
+        * show ipv6 route {route}
+        * show ipv6 route
 
 --------------------------------------------------------------------------------
                                 X-Connect
