@@ -175,34 +175,42 @@ class ShowIpRouteSchema(MetaParser):
 # ====================================================
 class ShowIpRoute(ShowIpRouteSchema):
     """Parser for :
-        show ip route
-        show ip route vrf <vrf>"""
+        'show ip route vrf {vrf} {protocol}',
+        'show ip route vrf {vrf}',
+        'show ip route {protocol}',
+        'show ip route {route}',
+        'show ip route'
+    """
     # not using name 'cli_command' because dont want find_parsers() to discover them
-    command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {protocol}',
-                   'show ip route', 'show ip route {protocol}']
+    command = ['show ip route vrf {vrf} {protocol}',
+                'show ip route vrf {vrf}',
+                'show ip route {protocol}',
+                'show ip route {route}',
+                'show ip route']
     exclude = ['updated']
     IP_VER='ipv4'
 
-    def cli(self, vrf="", protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, protocol=None, route=None, output=None):
         if output is None:
-            if vrf != 'default':
-                if protocol:
-                    cmd = self.command[1].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[0].format(vrf=vrf, protocol=protocol)
+            elif vrf:
+                cmd = self.command[1].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[2].format(protocol=protocol)
+            elif route:
+                cmd = self.command[3].format(route=route)
             else:
-                if protocol:
-                    cmd = self.command[3].format(protocol=protocol)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[0]
             out = self.device.execute(cmd)
         else:
             out = output
 
         af = self.IP_VER
         route = ""
+        if not vrf:
+            vrf = 'default'
+        
         source_protocol_dict = {}
         source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
         source_protocol_dict['odr'] = ['o']
@@ -616,27 +624,32 @@ class ShowIpRoute(ShowIpRouteSchema):
 
 class ShowIpv6Route(ShowIpRoute):
     """Parser for:
-        show ipv6 route
-        show ipv6 route vrf <vrf>"""
-    command = ['show ipv6 route vrf {vrf}', 'show ipv6 route vrf {vrf} {protocol}',
-               'show ipv6 route', 'show ipv6 route {protocol}']
+        'show ipv6 route vrf {vrf} {protocol}',
+        'show ipv6 route vrf {vrf}',
+        'show ipv6 route {protocol}',
+        'show ipv6 route {route}',
+        'show ipv6 route'
+    """
+    command = ['show ipv6 route vrf {vrf} {protocol}',
+                'show ipv6 route vrf {vrf}',
+                'show ipv6 route {protocol}',
+                'show ipv6 route {route}',
+                'show ipv6 route']
     exclude = ['uptime']
 
     IP_VER = 'ipv6'
-    def cli(self, vrf='', protocol='', output=None):
-        if not vrf:
-            vrf = 'default'
+    def cli(self, vrf=None, protocol=None, route=None, output=None):
         if output is None:
-            if vrf != 'default':
-                if protocol:
-                    cmd = self.command[1].format(vrf=vrf, protocol=protocol)
-                else:
-                    cmd = self.command[0].format(vrf=vrf)
+            if vrf and protocol:
+                cmd = self.command[0].format(vrf=vrf, protocol=protocol)
+            elif vrf:
+                cmd = self.command[1].format(vrf=vrf)
+            elif protocol:
+                cmd = self.command[2].format(protocol=protocol)
+            elif route:
+                cmd = self.command[3].format(route=route)
             else:
-                if protocol:
-                    cmd = self.command[3].format(protocol=protocol)
-                else:
-                    cmd = self.command[2]
+                cmd = self.command[0]
             out = self.device.execute(cmd)
         else:
             out = output
