@@ -225,7 +225,7 @@ class ShowBgpSuperParser(ShowBgpSchema):
 
         # For address family: IPv4 Unicast
         p1 = re.compile(r'^\s*For +address +family:'
-                        r' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)$')
+                        r' +(?P<address_family>[\S\s]+)$')
 
         # BGP table version is 25, Local Router ID is 10.186.101.1
         p2 = re.compile(r'^\s*BGP +table +version +is'
