@@ -156,7 +156,8 @@
         * show bgp instance all sessions
     * Added ShowBgpInstanceSessions for:
         * show bgp instance {instance} sessions
-    * Update ShowBgpL2vpnEvpn to parse more varied output
+    * Updated ShowBgpL2vpnEvpn to parse more varied output
+    * Updated ShowL2vpnBridgeDomainDetail to parse more varied output
 
 * IOS
     * Added ShowBgpSummary for:
@@ -276,6 +277,9 @@
         * Matching more routes
         * Optimized parser moving regex compilation out of for loop
         * Updated regex
+* NXOS
+    * Updated ShowRoutingVrfAll:
+        * To match non-best routes
 
 --------------------------------------------------------------------------------
                                 INVENTORY
@@ -544,8 +548,10 @@
         * show isis spf-log detail
     * Added parser ShowIsisProtocol for:
         * show isis protocol
+        * Updated schema with ispf_status optional key
     * Added ShowIsisStatistics for:
         * show isis statistics
+        * Updated schema with level optional key
     * Added parser ShowIsis for:
         * show isis
     * Added parser ShowIsisHostname for:

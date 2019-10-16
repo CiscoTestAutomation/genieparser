@@ -377,7 +377,7 @@ class ShowIsisSchema(MetaParser):
                                                 Optional('generate_style'): str,
                                                 Optional('accept_style'): str,
                                                 'metric': int,
-                                                'ispf_status': str,
+                                                Optional('ispf_status'): str,
                                             }
                                         },
                                         Optional('redistributing'): list,
@@ -902,7 +902,6 @@ class ShowIsisStatisticsSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
-                
                 'psnp_cache': {
                     'hits': int,
                     'tries': int,
@@ -987,7 +986,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                 },
                 'interface': {
                     Any(): {
-                        'level': {
+                        Optional('level'): {
                             Any(): {
                                 Optional('lsps_sourced'): {
                                     'sent': int,
