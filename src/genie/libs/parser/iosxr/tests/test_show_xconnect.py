@@ -253,7 +253,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                             'GigabitEthernet0/2/0/1.2': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '26.26.26.26     100': {
+                                    '10.154.26.26     100': {
                                         'status': 'UP',
                                     },
                                 },
@@ -266,7 +266,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                             'GigabitEthernet0/2/0/1.3': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '26.26.26.26     200': {
+                                    '10.154.26.26     200': {
                                         'status': 'UP',
                                     },
                                 },
@@ -289,11 +289,11 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     ------------------------   -----------------------------   ---------------------------
     L2TPV3_V4_XC_GRP
             L2TPV3_P2P_1
-                        UP   Gi0/2/0/1.2            UP       26.26.26.26     100    UP    
+                        UP   Gi0/2/0/1.2            UP       10.154.26.26     100    UP    
     --------------------------------------------------------------------------------------
     L2TPV3_V4_XC_GRP
             L2TPV3_P2P_2
-                        UP   Gi0/2/0/1.3            UP       26.26.26.26     200    UP    
+                        UP   Gi0/2/0/1.3            UP       10.154.26.26     200    UP    
     --------------------------------------------------------------------------------------
         '''}
 
@@ -305,7 +305,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                         'segment1': {
                             'TenGigabitEthernet0/0/0/3/1.200': {
                                 'segment2': {
-                                    'EVPN 12222,32222,1.1.1.1': {
+                                    'EVPN 12222,32222,10.4.1.1': {
                                         'status': 'UP'}
                                 },
                                 'status': 'UP'}
@@ -315,7 +315,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                         'segment1': {
                             'TenGigabitEthernet0/0/0/3/1.100': {
                                 'segment2': {
-                                    'EVPN 11111,31111,1.1.1.1': {
+                                    'EVPN 11111,31111,10.4.1.1': {
                                         'status': 'UP'}
                                 },
                                 'status': 'UP'}
@@ -338,12 +338,12 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     ------------------------   -----------------------------   -----------------------------
     pe1-to-pe2
                vpws_bl1_pe2
-                          UP   Te0/0/0/3/1.200        UP       EVPN 12222,32222,1.1.1.1 
+                          UP   Te0/0/0/3/1.200        UP       EVPN 12222,32222,10.4.1.1 
                                                                                       UP    
     ----------------------------------------------------------------------------------------
     pe1-to-pe2
                vpws_pe1_pe1
-                          UP   Te0/0/0/3/1.100        UP       EVPN 11111,31111,1.1.1.1 
+                          UP   Te0/0/0/3/1.100        UP       EVPN 11111,31111,10.4.1.1 
                                                                                       UP    
     ----------------------------------------------------------------------------------------
 
@@ -351,15 +351,15 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     
     golden_parsed_output4 = {
         'groups': {
-            'vpws': {
+            'genie_wqst': {
                 'name': {
-                    'vrp_vpws_tor1_bl1_10293': {
+                    'wsq_wqxt_ups2_cm2_21314': {
                         'status': 'UR',
                         'segment1': {
-                            'Bundle-Ether1.59': {
+                            'Bundle-Ether2.61': {
                                 'status': 'UR',
                                 'segment2': {
-                                    'EVPN 10293,20293,0.0.0.0': {
+                                    'EVPN 21314,31314,1.1.1.1': {
                                         'status': 'DN',
                                     },
                                 },
@@ -368,15 +368,15 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                     },
                 },
             },
-            'BL-PE-BG': {
+            'genie_CM-QF-CF': {
                 'name': {
-                    'G1-1-1-23-311': {
+                    'G2-2-2-34-422': {
                         'status': 'UP',
                         'segment1': {
-                            'GigabitEthernet1/1/1/23.311': {
+                            'GigabitEthernet2/2/2/34.422': {
                                 'status': 'UP',
                                 'segment2': {
-                                    'EVPN 2112,3001,67.70.219.82': {
+                                    'EVPN 3223,4112,21.265.321.93': {
                                         'status': 'UP',
                                     },
                                 },
@@ -385,15 +385,15 @@ class TestShowL2vpnXconnect(unittest.TestCase):
                     },
                 },
             },
-            'BL-2-DCPE': {
+            'genie_CM-3-EDQF': {
                 'name': {
-                    'G1-1-1-23-211': {
+                    'G2-2-2-34-322': {
                         'status': 'UP',
                         'segment1': {
-                            'GigabitEthernet1/1/1/23.211': {
+                            'GigabitEthernet2/2/2/34.322': {
                                 'status': 'UP',
                                 'segment2': {
-                                    '67.70.219.82    8482100': {
+                                    '10.154.219.82    9593211': {
                                         'status': 'UP',
                                     },
                                 },
@@ -415,16 +415,16 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     XConnect                   Segment 1                       Segment 2                
     Group      Name       ST   Description            ST       Description            ST    
     ------------------------   -----------------------------   -----------------------------
-    vpws       vrp_vpws_tor1_bl1_10293
-                        UR   BE1.59                 UR       EVPN 10293,20293,0.0.0.0 
+    genie_wqst       wsq_wqxt_ups2_cm2_21314
+                        UR   BE2.61                 UR       EVPN 21314,31314,1.1.1.1 
                                                                                     DN    
     ----------------------------------------------------------------------------------------
-    BL-PE-BG   G1-1-1-23-311
-                        UP   Gi1/1/1/23.311         UP       EVPN 2112,3001,67.70.219.82 
+    genie_CM-QF-CF   G2-2-2-34-422
+                        UP   Gi2/2/2/34.422         UP       EVPN 3223,4112,21.265.321.93 
                                                                                     UP    
     ----------------------------------------------------------------------------------------
-    BL-2-DCPE  G1-1-1-23-211
-                        UP   Gi1/1/1/23.211         UP       67.70.219.82    8482100
+    genie_CM-3-EDQF  G2-2-2-34-322
+                        UP   Gi2/2/2/34.322         UP       10.154.219.82    9593211
                                                                                     UP    
     ----------------------------------------------------------------------------------------
         '''}
@@ -504,7 +504,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                         },
                         'pw': {
                             'neighbor': {
-                                '21.2.2.2': {
+                                '10.19.2.2': {
                                     'id': {
                                         2: {
                                             'state': 'down ( local ready )',
@@ -576,7 +576,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                         },
                         'backup_pw': {
                             'neighbor': {
-                                '21.3.3.3': {
+                                '10.66.3.3': {
                                     'id': {
                                         3: {
                                             'state': 'up ( established )',
@@ -659,7 +659,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         Statistics:
         packet totals: send 100
         byte totals: send 20798
-    PW: neighbor 21.2.2.2, PW ID 2, state is down ( local ready )
+    PW: neighbor 10.19.2.2, PW ID 2, state is down ( local ready )
         PW class not set, XC ID 0x6111112
         Encapsulation MPLS, protocol LDP
         PW type Ethernet, control word enabled, interworking none
@@ -689,8 +689,8 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         byte totals: receive 0
 
     Backup PW:
-    PW: neighbor 21.3.3.3, PW ID 3, state is up ( established )
-        Backup for neighbor 21.2.2.2 PW ID 2 ( active )
+    PW: neighbor 10.66.3.3, PW ID 3, state is up ( established )
+        Backup for neighbor 10.19.2.2 PW ID 2 ( active )
         PW class not set, XC ID 1x1
         Encapsulation MPLS, protocol LDP
         PW type Ethernet, control word enabled, interworking none
@@ -710,7 +710,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                         (control word)                 (control word)                
                     (router alert label)           (router alert label)          
         ------------ ------------------------------ -----------------------------
-        Backup PW for neighbor 21.2.2.2 PW ID 2
+        Backup PW for neighbor 10.19.2.2 PW ID 2
         Create time: 21/11/2008 11:45:44 (00:32:54 ago)
         Last time status changed: 20/11/2008 21:45:48 (00:44:49 ago)
         Statistics:
@@ -1113,11 +1113,11 @@ class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
                             'BGP': {
                                 'state': 'Advertised',
                                 'event_name': 'Service Connected',
-                                'route_distinguisher': '(auto) 3.3.3.3:32770',
+                                'route_distinguisher': '(auto) 10.36.3.3:32770',
                             },
                         },
-                        'import_route_targets': ['2.2.2.2:100'],
-                        'export_route_targets': ['2.2.2.2:100'],
+                        'import_route_targets': ['10.16.2.2:100'],
+                        'export_route_targets': ['10.16.2.2:100'],
                         'signaling_protocol': {
                             'BGP': {
                                 'ce_range': 10,
@@ -1145,7 +1145,7 @@ class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
                         },
                         'pw': {
                             'neighbor': {
-                                '1.1.1.1': {
+                                '10.4.1.1': {
                                     'id': {
                                         65538: {
                                             'state': 'up ( established )',
@@ -1199,15 +1199,15 @@ class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
 
         Auto Discovery: BGP, state is Advertised (Service Connected)
 
-            Route Distinguisher: (auto) 3.3.3.3:32770
+            Route Distinguisher: (auto) 10.36.3.3:32770
 
         Import Route Targets:
 
-            2.2.2.2:100
+            10.16.2.2:100
 
         Export Route Targets:
 
-            2.2.2.2:100
+            10.16.2.2:100
 
         Signaling protocol:BGP
 
@@ -1225,7 +1225,7 @@ class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
 
         MTU 1500; XC ID 0x2000013; interworking none
 
-        PW: neighbor 1.1.1.1, PW ID 65538, state is up ( established )
+        PW: neighbor 10.4.1.1, PW ID 65538, state is up ( established )
 
         PW class not set, XC ID 0x2000013
 
