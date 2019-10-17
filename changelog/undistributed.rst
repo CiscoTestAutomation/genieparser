@@ -516,6 +516,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Update schema for ShowPlatformHardware to support more varied output
+* IOSXR
+    * Update ShowInventory to support optional key
 
 --------------------------------------------------------------------------------
                                 ACL
