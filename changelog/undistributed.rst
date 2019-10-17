@@ -466,6 +466,7 @@
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
     * Updated ShowEvpnEthernetSegmentDetail to support optional label key
     * Updated ShowEvpnEthernetSegmentPrivate to support different outputs
+    * Updated ShowEvpnEviMacPrivate to support different outputs
 
 --------------------------------------------------------------------------------
                                 Route
