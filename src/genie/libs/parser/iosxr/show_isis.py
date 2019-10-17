@@ -3119,6 +3119,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 group = result.groupdict()
                 level = int(group['level'])
                 instance = group['instance']
+                instance = instance if instance else ''
                 level_dict = parsed_output\
                     .setdefault('instance', {})\
                     .setdefault(instance, {})\

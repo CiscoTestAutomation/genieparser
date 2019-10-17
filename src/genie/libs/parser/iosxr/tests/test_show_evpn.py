@@ -1075,7 +1075,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             '0001.0000.aaab.0000.0003': {
                 'interface': {
                     'Bundle-Ether3': {
-                        'next_hops': ['67.70.219.84'],
+                        'next_hops': ['10.154.219.84'],
                         'es_to_bgp_gates': 'M',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1096,7 +1096,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -1122,7 +1122,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             '0001.0000.aaab.0000.0004': {
                 'interface': {
                     'Bundle-Ether4': {
-                        'next_hops': ['67.70.219.84'],
+                        'next_hops': ['10.154.219.84'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1143,7 +1143,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'configured': 'All-active (AApF) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 0,
@@ -1169,7 +1169,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             'N/A': {
                 'interface': {
                     'GigabitEthernet0/0/0/12': {
-                        'next_hops': ['67.70.219.84'],
+                        'next_hops': ['10.154.219.84'],
                         'es_to_bgp_gates': 'Ready',
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
@@ -1189,7 +1189,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                             'configured': 'Single-active (AApS) (default)',
                         },
                         'service_carving': 'Auto-selection',
-                        'peering_details': ['67.70.219.84[MOD:P:00]'],
+                        'peering_details': ['10.154.219.84[MOD:P:00]'],
                         'service_carving_results': {
                             'forwarders': 1,
                             'permanent': 1,
@@ -1237,7 +1237,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops            
         ------------------------ ---------------------------------- --------------------
-        0001.0000.aaab.0000.0003 BE3                                67.70.219.84
+        0001.0000.aaab.0000.0003 BE3                                10.154.219.84
         ES to BGP Gates   : M
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1254,7 +1254,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             Operational    : SH
             Configured     : All-active (AApF) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00]
+        Peering Details   : 10.154.219.84[MOD:P:00]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 0
@@ -1267,7 +1267,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Local SHG label   : 100564
         Remote SHG labels : 0
 
-        0001.0000.aaab.0000.0004 BE4                                67.70.219.84
+        0001.0000.aaab.0000.0004 BE4                                10.154.219.84
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1284,7 +1284,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             Operational    : SH
             Configured     : All-active (AApF) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00]
+        Peering Details   : 10.154.219.84[MOD:P:00]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 0
@@ -1297,7 +1297,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         Local SHG label   : 100565
         Remote SHG labels : 0
 
-        N/A                      Gi0/0/0/12                         67.70.219.84
+        N/A                      Gi0/0/0/12                         10.154.219.84
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
@@ -1313,7 +1313,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             Operational    : SH
         Configured     : Single-active (AApS) (default)
         Service Carving   : Auto-selection
-        Peering Details   : 67.70.219.84[MOD:P:00]
+        Peering Details   : 10.154.219.84[MOD:P:00]
         Service Carving Results:
             Forwarders     : 1
             Permanent      : 1

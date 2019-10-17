@@ -142,7 +142,7 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
                 'mac_address': {
                     '0001.0003.0004': {
                         'ip_address': {
-                            '100.69.0.250': {
+                            '10.1.0.250': {
                                 'next_hop': 'N/A',
                                 'producer': 'LOCAL'},
                             '2001:db8::250': {
@@ -150,12 +150,12 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
                                 'producer': 'LOCAL'}}},
                     '0aaa.0bbb.0000': {
                         'ip_address': {
-                            '100.69.0.3': {
+                            '10.1.0.3': {
                                 'next_hop': 'N/A',
                                 'producer': 'LOCAL'}}},
                     '0aaa.0bbb.0001': {
                         'ip_address': {
-                            '100.69.0.4': {
+                            '10.1.0.4': {
                                 'next_hop': 'N/A',
                                 'producer': 'LOCAL'}}},
                     'fc00.0001.0006': {
@@ -172,10 +172,10 @@ class TestShowL2routeEvpnMacIpAll(unittest.TestCase):
     device_output = {'execute.return_value': '''
         Topo ID  Mac Address    IP Address      Producer    Next Hop(s)
         -------- -------------- --------------- ----------- ----------------------------------------
-        0        0001.0003.0004 100.69.0.250    LOCAL       N/A
+        0        0001.0003.0004 10.1.0.250    LOCAL       N/A
         0        0001.0003.0004 2001:db8::250   LOCAL       N/A
-        0        0aaa.0bbb.0000 100.69.0.3      LOCAL       N/A
-        0        0aaa.0bbb.0001 100.69.0.4      LOCAL       N/A
+        0        0aaa.0bbb.0000 10.1.0.3      LOCAL       N/A
+        0        0aaa.0bbb.0001 10.1.0.4      LOCAL       N/A
         0        fc00.0001.0006 192.168.166.3   L2VPN  Bundle-Ether1.0
         0        fc00.0001.0008 192.168.49.3    L2VPN  68101/I/ME
     '''}

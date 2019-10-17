@@ -2456,7 +2456,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             "IPv4": {
                                 "state": "Enabled",
                                 "forwarding_address": ["0.0.0.0"],
-                                "global_prefix": ["3.3.3.0/24"],
+                                "global_prefix": ["10.36.3.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
@@ -3043,7 +3043,7 @@ class TestShowIsisInterface(unittest.TestCase):
           IPv4 Address Family:      Enabled
             Protocol State:         Up
             Forwarding Address(es): 0.0.0.0
-            Global Prefix(es):      3.3.3.0/24
+            Global Prefix(es):      10.36.3.0/24
           IPv6 Address Family:      Enabled
             Protocol State:         Up
             Forwarding Address(es): ::
@@ -3380,10 +3380,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "area_address": "49.0002",
                                 "nlpid": ["0xcc", "0x8e"],
-                                "ip_address": "3.3.3.3",
+                                "ip_address": "10.36.3.3",
                                 "extended_ipv4_reachability": {
-                                    "3.3.3.0/24": {
-                                        "ip_prefix": "3.3.3.0",
+                                    "10.36.3.0/24": {
+                                        "ip_prefix": "10.36.3.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
@@ -3481,10 +3481,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10},
                                 },
                                 "nlpid": ["0xcc", "0x8e"],
-                                "ip_address": "4.4.4.4",
+                                "ip_address": "10.64.4.4",
                                 "extended_ipv4_reachability": {
-                                    "4.4.4.4/32": {
-                                        "ip_prefix": "4.4.4.4",
+                                    "10.64.4.4/32": {
+                                        "ip_prefix": "10.64.4.4",
                                         "prefix_length": "32",
                                         "metric": 10,
                                     },
@@ -3579,10 +3579,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10, 
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
-                                "ip_address": "5.5.5.5",
+                                "ip_address": "10.100.5.5",
                                 "extended_ipv4_reachability": {
-                                    "5.5.5.5/32": {
-                                        "ip_prefix": "5.5.5.5",
+                                    "10.100.5.5/32": {
+                                        "ip_prefix": "10.100.5.5",
                                         "prefix_length": "32",
                                         "metric": 10,
                                     },
@@ -3655,8 +3655,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "area_address": "49.0002",
                                 "nlpid": ["0xcc", "0x8e"],
-                                "router_id": "6.6.6.6",
-                                "ip_address": "6.6.6.6",
+                                "router_id": "10.144.6.6",
+                                "ip_address": "10.144.6.6",
                                 "mt_entries": {
                                     "IPv6 Unicast": {
                                         "attach_bit": 0,
@@ -3681,8 +3681,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 40},
                                 },
                                 "extended_ipv4_reachability": {
-                                    "6.6.6.0/24": {
-                                        "ip_prefix": "6.6.6.0",
+                                    "10.144.6.0/24": {
+                                        "ip_prefix": "10.144.6.0",
                                         "prefix_length": "24",
                                         "metric": 1,
                                     },
@@ -3723,8 +3723,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "area_address": "49.0002",
                                 "nlpid": ["0xcc", "0x8e"],
-                                "router_id": "7.7.7.7",
-                                "ip_address": "7.7.7.7",
+                                "router_id": "10.196.7.7",
+                                "ip_address": "10.196.7.7",
                                 "mt_entries": {
                                     "IPv6 Unicast": {
                                         "attach_bit": 0,
@@ -3759,8 +3759,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                     }
                                 },
                                 "extended_ipv4_reachability": {
-                                    "7.7.7.7/32": {
-                                        "ip_prefix": "7.7.7.7",
+                                    "10.196.7.7/32": {
+                                        "ip_prefix": "10.196.7.7",
                                         "prefix_length": "32",
                                         "metric": 1,
                                     },
@@ -3830,10 +3830,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10, 
                                         "mt_id": "MT (IPv6 Unicast)"}
                                 },
-                                "ip_address": "2.2.2.2",
+                                "ip_address": "10.16.2.2",
                                 "extended_ipv4_reachability": {
-                                    "2.2.2.2/32": {
-                                        "ip_prefix": "2.2.2.2",
+                                    "10.16.2.2/32": {
+                                        "ip_prefix": "10.16.2.2",
                                         "prefix_length": "32",
                                         "metric": 10,
                                     },
@@ -3875,10 +3875,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10},
                                 },
                                 "nlpid": ["0xcc", "0x8e"],
-                                "ip_address": "3.3.3.3",
+                                "ip_address": "10.36.3.3",
                                 "extended_ipv4_reachability": {
-                                    "3.3.3.0/24": {
-                                        "ip_prefix": "3.3.3.0",
+                                    "10.36.3.0/24": {
+                                        "ip_prefix": "10.36.3.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
@@ -3972,10 +3972,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10, 
                                         "mt_id": "MT (IPv6 Unicast)"},
                                 },
-                                "ip_address": "5.5.5.5",
+                                "ip_address": "10.100.5.5",
                                 "extended_ipv4_reachability": {
-                                    "5.5.5.5/32": {
-                                        "ip_prefix": "5.5.5.5",
+                                    "10.100.5.5/32": {
+                                        "ip_prefix": "10.100.5.5",
                                         "prefix_length": "32",
                                         "metric": 10,
                                     },
@@ -4048,8 +4048,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 },
                                 "area_address": "49.0002",
                                 "nlpid": ["0xcc", "0x8e"],
-                                "router_id": "7.7.7.7",
-                                "ip_address": "7.7.7.7",
+                                "router_id": "10.196.7.7",
+                                "ip_address": "10.196.7.7",
                                 "mt_entries": {
                                     "IPv6 Unicast": {
                                         "attach_bit": 0,
@@ -4079,8 +4079,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "prefix_length": "24",
                                         "metric": 40,
                                     },
-                                    "7.7.7.7/32": {
-                                        "ip_prefix": "7.7.7.7",
+                                    "10.196.7.7/32": {
+                                        "ip_prefix": "10.196.7.7",
                                         "prefix_length": "32",
                                         "metric": 1,
                                     },
@@ -4128,10 +4128,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10, 
                                         "mt_id": "MT (IPv6 Unicast)"}
                                 },
-                                "ip_address": "8.8.8.8",
+                                "ip_address": "10.1.8.8",
                                 "extended_ipv4_reachability": {
-                                    "8.8.8.8/32": {
-                                        "ip_prefix": "8.8.8.8",
+                                    "10.1.8.8/32": {
+                                        "ip_prefix": "10.1.8.8",
                                         "prefix_length": "32",
                                         "metric": 10,
                                     },
@@ -4203,10 +4203,10 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                         "metric": 10, 
                                         "mt_id": "MT (IPv6 Unicast)"}
                                 },
-                                "ip_address": "9.9.9.9",
+                                "ip_address": "10.69.9.9",
                                 "extended_ipv4_reachability": {
-                                    "9.9.9.9/32": {
-                                        "ip_prefix": "9.9.9.9",
+                                    "10.69.9.9/32": {
+                                        "ip_prefix": "10.69.9.9",
                                         "prefix_length": "32",
                                         "metric": 10,
                                     },
@@ -4284,8 +4284,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Area Address:   49.0002
           NLPID:          0xcc
           NLPID:          0x8e
-          IP Address:     3.3.3.3
-          Metric: 10         IP-Extended 3.3.3.0/24
+          IP Address:     10.36.3.3
+          Metric: 10         IP-Extended 10.36.3.0/24
           Metric: 10         IP-Extended 10.2.3.0/24
           Hostname:       R3
           IPv6 Address:   2001:db8:3:3:3::3
@@ -4309,8 +4309,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         IS-Extended R4.01
           NLPID:          0xcc
           NLPID:          0x8e
-          IP Address:     4.4.4.4
-          Metric: 10         IP-Extended 4.4.4.4/32
+          IP Address:     10.64.4.4
+          Metric: 10         IP-Extended 10.64.4.4/32
           Metric: 10         IP-Extended 10.3.4.0/24          
           Hostname:       R4
           Metric: 10         MT (IPv6 Unicast) IS-Extended R3.03
@@ -4334,8 +4334,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         IS-Extended R4.01          
           Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
           Metric: 10         MT (IPv6 Unicast) IS-Extended R4.01          
-          IP Address:     5.5.5.5
-          Metric: 10         IP-Extended 5.5.5.5/32
+          IP Address:     10.100.5.5
+          Metric: 10         IP-Extended 10.100.5.5/32
           Metric: 10         IP-Extended 10.3.5.0/24          
           IPv6 Address:   2001:db8:5:5:5::5
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:5:5:5::5/128
@@ -4350,8 +4350,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Area Address:   49.0002
           NLPID:          0xcc
           NLPID:          0x8e
-          Router ID:      6.6.6.6
-          IP Address:     6.6.6.6
+          Router ID:      10.144.6.6
+          IP Address:     10.144.6.6
           MT:             IPv6 Unicast                                 0/0/0
           MT:             Standard (IPv4 Unicast)
           Hostname:       R6
@@ -4359,7 +4359,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 40         MT (IPv6 Unicast) IS-Extended R3.05
           Metric: 40         IS-Extended R7.02
           Metric: 40         IS-Extended R3.05
-          Metric: 1          IP-Extended 6.6.6.0/24
+          Metric: 1          IP-Extended 10.144.6.0/24
           Metric: 40         IP-Extended 10.6.7.0/24
           Metric: 40         IP-Extended 10.3.6.0/24
           Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:6:6:6::6/128
@@ -4368,8 +4368,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Area Address:   49.0002
           NLPID:          0xcc
           NLPID:          0x8e
-          Router ID:      7.7.7.7
-          IP Address:     7.7.7.7
+          Router ID:      10.196.7.7
+          IP Address:     10.196.7.7
           MT:             IPv6 Unicast                                 0/0/0
           MT:             Standard (IPv4 Unicast)
           Hostname:       R7
@@ -4378,7 +4378,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 40         IS-Extended R7.02
           Metric: 40         IS-Extended R5.03
           Metric: 40         IP-Extended-Interarea 10.7.8.0/24
-          Metric: 1          IP-Extended 7.7.7.7/32
+          Metric: 1          IP-Extended 10.196.7.7/32
           Metric: 40         IP-Extended 10.7.9.0/24          
           Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
           Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128          
@@ -4399,8 +4399,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Hostname:       R2
           Metric: 10         IS-Extended R3.07
           Metric: 10         MT (IPv6 Unicast) IS-Extended R3.07
-          IP Address:     2.2.2.2
-          Metric: 10         IP-Extended 2.2.2.2/32
+          IP Address:     10.16.2.2
+          Metric: 10         IP-Extended 10.16.2.2/32
           Metric: 10         IP-Extended 10.1.2.0/24
           IPv6 Address:   2001:db8:2:2:2::2
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:2:2:2::2/128
@@ -4411,8 +4411,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         IS-Extended R5.01
           NLPID:          0xcc
           NLPID:          0x8e
-          IP Address:     3.3.3.3
-          Metric: 10         IP-Extended 3.3.3.0/24
+          IP Address:     10.36.3.3
+          Metric: 10         IP-Extended 10.36.3.0/24
           Metric: 10         IP-Extended 10.2.3.0/24
           Hostname:       R3
           Metric: 10         MT (IPv6 Unicast) IS-Extended R3.07
@@ -4436,8 +4436,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 10         IS-Extended R5.03
           Metric: 10         MT (IPv6 Unicast) IS-Extended R5.01
           Metric: 10         MT (IPv6 Unicast) IS-Extended R5.03
-          IP Address:     5.5.5.5
-          Metric: 10         IP-Extended 5.5.5.5/32
+          IP Address:     10.100.5.5
+          Metric: 10         IP-Extended 10.100.5.5/32
           Metric: 10         IP-Extended 10.3.5.0/24          
           IPv6 Address:   2001:db8:5:5:5::5
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:5:5:5::5/128
@@ -4452,8 +4452,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Area Address:   49.0002
           NLPID:          0xcc
           NLPID:          0x8e
-          Router ID:      7.7.7.7
-          IP Address:     7.7.7.7
+          Router ID:      10.196.7.7
+          IP Address:     10.196.7.7
           MT:             IPv6 Unicast                                 0/0/0
           MT:             Standard (IPv4 Unicast)
           Hostname:       R7
@@ -4462,7 +4462,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Metric: 40         IS-Extended R9.01
           Metric: 40         IS-Extended R8.01          
           Metric: 40         IP-Extended 10.6.7.0/24
-          Metric: 1          IP-Extended 7.7.7.7/32          
+          Metric: 1          IP-Extended 10.196.7.7/32          
           Metric: 40         MT (IPv6 Unicast) IPv6 2001:db8:10:6::/64
           Metric: 1          MT (IPv6 Unicast) IPv6 2001:db8:7:7:7::7/128          
         R8.00-00              0x00000005   0x1309        453  /1198         0/0/0
@@ -4474,8 +4474,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Hostname:       R8
           Metric: 10         IS-Extended R8.01
           Metric: 10         MT (IPv6 Unicast) IS-Extended R8.01
-          IP Address:     8.8.8.8
-          Metric: 10         IP-Extended 8.8.8.8/32
+          IP Address:     10.1.8.8
+          Metric: 10         IP-Extended 10.1.8.8/32
           Metric: 10         IP-Extended 10.7.8.0/24
           IPv6 Address:   2001:db8:8:8:8::8
           Metric: 10         MT (IPv6 Unicast) IPv6 2001:db8:8:8:8::8/128
@@ -4492,8 +4492,8 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
           Hostname:       R9
           Metric: 10         IS-Extended R9.01
           Metric: 10         MT (IPv6 Unicast) IS-Extended R9.01
-          IP Address:     9.9.9.9
-          Metric: 10         IP-Extended 9.9.9.9/32
+          IP Address:     10.69.9.9
+          Metric: 10         IP-Extended 10.69.9.9/32
           Metric: 10         IP-Extended 10.7.9.0/24
           Metric: 10         IP-Extended 10.9.10.0/24
           Metric: 20         IP-Extended 10.10.10.10/32
@@ -4527,20 +4527,20 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "area_address": "49",
                                 "nlpid": ["0xcc"],
                                 "hostname": "router-5",
-                                "ip_address": "172.1.1.5",
+                                "ip_address": "172.16.186.5",
                                 "ip_neighbor": {
-                                    "172.3.55.0/24": {
-                                        "ip_prefix": "172.3.55.0",
+                                    "172.16.115.0/24": {
+                                        "ip_prefix": "172.16.115.0",
                                         "prefix_length": "24",
                                         "metric": 0,
                                     },
-                                    "172.6.1.0/24": {
-                                        "ip_prefix": "172.6.1.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
-                                    "172.7.0.0/24": {
-                                        "ip_prefix": "172.7.0.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
@@ -4565,20 +4565,20 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "area_address": "49",
                                 "nlpid": ["0xcc"],
                                 "hostname": "router-11",
-                                "ip_address": "172.1.11.11",
+                                "ip_address": "172.16.196.11",
                                 "ip_neighbor": {
-                                    "172.1.111.0/24": {
-                                        "ip_prefix": "172.1.111.0",
+                                    "172.16.76.0/24": {
+                                        "ip_prefix": "172.16.76.0",
                                         "prefix_length": "24",
                                         "metric": 0,
                                     },
-                                    "172.6.1.0/24": {
-                                        "ip_prefix": "172.6.1.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
-                                    "172.7.0.0/24": {
-                                        "ip_prefix": "172.7.0.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
@@ -4626,25 +4626,25 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "area_address": "49",
                                 "nlpid": ["0xcc"],
                                 "hostname": "router-5",
-                                "ip_address": "172.6.1.5",
+                                "ip_address": "172.16.166.5",
                                 "ip_neighbor": {
-                                    "172.3.55.0/24": {
-                                        "ip_prefix": "172.3.55.0",
+                                    "172.16.115.0/24": {
+                                        "ip_prefix": "172.16.115.0",
                                         "prefix_length": "24",
                                         "metric": 0,
                                     },
-                                    "172.6.1.0/24": {
-                                        "ip_prefix": "172.6.1.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
-                                    "172.1.0.0/24": {
-                                        "ip_prefix": "172.1.0.0",
+                                    "172.16.94.0/24": {
+                                        "ip_prefix": "172.16.94.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
-                                    "172.8.111.0/24": {
-                                        "ip_prefix": "172.8.111.0",
+                                    "172.16.21.0/24": {
+                                        "ip_prefix": "172.16.21.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
@@ -4671,23 +4671,23 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
                                 "hostname": "router-11",
                                 "ip_address": "172.28.111.111",
                                 "ip_neighbor": {
-                                    "172.8.111.0/24": {
-                                        "ip_prefix": "172.8.111.0",
+                                    "172.16.21.0/24": {
+                                        "ip_prefix": "172.16.21.0",
                                         "prefix_length": "24",
                                         "metric": 0,
                                     },
-                                    "172.6.1.0/24": {
-                                        "ip_prefix": "172.6.1.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
-                                    "172.7.0.0/24": {
-                                        "ip_prefix": "172.7.0.0",
+                                    "172.16.166.0/24": {
+                                        "ip_prefix": "172.16.166.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
-                                    "172.3.55.0/24": {
-                                        "ip_prefix": "172.3.55.0",
+                                    "172.16.115.0/24": {
+                                        "ip_prefix": "172.16.115.0",
                                         "prefix_length": "24",
                                         "metric": 10,
                                     },
@@ -4734,20 +4734,20 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
               Area Address: 49
               NLPID:       0xcc
               Hostname:    router-5
-              IP Address:  172.1.1.5
-              Metric: 0          IP 172.3.55.0/24
-              Metric: 10         IP 172.6.1.0/24
-              Metric: 10         IP 172.7.0.0/24
+              IP Address:  172.16.186.5
+              Metric: 0          IP 172.16.115.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.166.0/24
               Metric: 10         IS router-11.00
               Metric: 10         IS router-11.01
             router-11.00-00  * 0x0000000b   0x8074460        1161            0/0/0
               Area Address: 49
               NLPID:       0xcc
               Hostname:    router-11
-              IP Address:  172.1.11.11
-              Metric: 0          IP 172.1.111.0/24
-              Metric: 10         IP 172.6.1.0/24
-              Metric: 10         IP 172.7.0.0/24
+              IP Address:  172.16.196.11
+              Metric: 0          IP 172.16.76.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.166.0/24
               Metric: 10         IS router-11.01
               Metric: 10         IS router-5.00
             router-11.01-00  * 0x00000001   0x80770ec        457             0/0/0
@@ -4760,24 +4760,24 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
               Area Address: 49
               NLPID:       0xcc
               Hostname:    router-5
-              IP Address:  172.6.1.5
-              Metric: 0          IP 172.3.55.0/24
-              Metric: 10         IP 172.6.1.0/24
-              Metric: 10         IP 172.1.0.0/24
+              IP Address:  172.16.166.5
+              Metric: 0          IP 172.16.115.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.94.0/24
               Metric: 10         IS router-11.00
               Metric: 10         IS router-11.01
-              Metric: 10         IP 172.8.111.0/24
+              Metric: 10         IP 172.16.21.0/24
             router-11.00-00  * 0x0000000d   0x807997c        1184            0/0/0
               Area Address: 49
               NLPID:       0xcc
               Hostname:    router-11
               IP Address:  172.28.111.111
-              Metric: 0          IP 172.8.111.0/24
-              Metric: 10         IP 172.6.1.0/24
-              Metric: 10         IP 172.7.0.0/24
+              Metric: 0          IP 172.16.21.0/24
+              Metric: 10         IP 172.16.166.0/24
+              Metric: 10         IP 172.16.166.0/24
               Metric: 10         IS router-11.01
               Metric: 10         IS router-5.00
-              Metric: 10         IP 172.3.55.0/24
+              Metric: 10         IP 172.16.115.0/24
             router-gsr11.01-00  * 0x00000001   0x80770ec        457             0/0/0
               Metric: 0          IS router-11.00
               Metric: 0          IS router-5.00
@@ -4786,7 +4786,7 @@ class TestShowIsisDatabaseDetail(unittest.TestCase):
 
     golden_parsed_output_3 = {
         "instance": {
-            None: {
+            "": {
                 "level": {
                     1: {
                         "lspid": {
