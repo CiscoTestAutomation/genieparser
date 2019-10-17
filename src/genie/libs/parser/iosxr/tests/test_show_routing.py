@@ -225,12 +225,12 @@ class test_show_route_ipv4(unittest.TestCase):
 
         Gateway of last resort is not set
 
-        i L2 1.1.1.32/32 [115/100030] via 2.2.2.3, 1d06h, HundredGigE0/0/1/1 (!)
-                             [115/100020] via 2.2.2.1, 1d06h, Bundle-Ether1
-        i L2 1.1.1.33/32 [115/100030] via 2.2.2.3, 1d06h, HundredGigE0/0/1/1 (!)
-                             [115/100020] via 2.2.2.1, 1d06h, Bundle-Ether1
-        i L2 1.1.1.34/32 [115/100030] via 2.2.2.3, 1d06h, HundredGigE0/0/1/1 (!)
-                             [115/100020] via 2.2.2.1, 1d06h, Bundle-Ether1
+        i L2 10.4.1.32/32 [115/100030] via 10.16.2.3, 1d06h, HundredGigE0/0/1/1 (!)
+                             [115/100020] via 10.16.2.1, 1d06h, Bundle-Ether1
+        i L2 10.4.1.33/32 [115/100030] via 10.16.2.3, 1d06h, HundredGigE0/0/1/1 (!)
+                             [115/100020] via 10.16.2.1, 1d06h, Bundle-Ether1
+        i L2 10.4.1.34/32 [115/100030] via 10.16.2.3, 1d06h, HundredGigE0/0/1/1 (!)
+                             [115/100020] via 10.16.2.1, 1d06h, Bundle-Ether1
     '''
                        }
     golden_parsed_output_2 = {
@@ -239,8 +239,8 @@ class test_show_route_ipv4(unittest.TestCase):
                 "address_family": {
                     "ipv4": {
                         "routes": {
-                            "1.1.1.32/32": {
-                                "route": "1.1.1.32/32",
+                            "10.4.1.32/32": {
+                                "route": "10.4.1.32/32",
                                 "active": True,
                                 "metric": 100020,
                                 "route_preference": 115,
@@ -250,21 +250,21 @@ class test_show_route_ipv4(unittest.TestCase):
                                     "next_hop_list": {
                                         1: {
                                             "index": 1,
-                                            "next_hop": "2.2.2.3",
+                                            "next_hop": "10.16.2.3",
                                             "updated": "1d06h",
                                             "outgoing_interface": "HundredGigE0/0/1/1"
                                         },
                                         2: {
                                             "index": 2,
-                                            "next_hop": "2.2.2.1",
+                                            "next_hop": "10.16.2.1",
                                             "updated": "1d06h",
                                             "outgoing_interface": "Bundle-Ether1"
                                         }
                                     }
                                 }
                             },
-                            "1.1.1.33/32": {
-                                "route": "1.1.1.33/32",
+                            "10.4.1.33/32": {
+                                "route": "10.4.1.33/32",
                                 "active": True,
                                 "metric": 100020,
                                 "route_preference": 115,
@@ -274,21 +274,21 @@ class test_show_route_ipv4(unittest.TestCase):
                                     "next_hop_list": {
                                         1: {
                                             "index": 1,
-                                            "next_hop": "2.2.2.3",
+                                            "next_hop": "10.16.2.3",
                                             "updated": "1d06h",
                                             "outgoing_interface": "HundredGigE0/0/1/1"
                                         },
                                         2: {
                                             "index": 2,
-                                            "next_hop": "2.2.2.1",
+                                            "next_hop": "10.16.2.1",
                                             "updated": "1d06h",
                                             "outgoing_interface": "Bundle-Ether1"
                                         }
                                     }
                                 }
                             },
-                            "1.1.1.34/32": {
-                                "route": "1.1.1.34/32",
+                            "10.4.1.34/32": {
+                                "route": "10.4.1.34/32",
                                 "active": True,
                                 "metric": 100020,
                                 "route_preference": 115,
@@ -298,13 +298,13 @@ class test_show_route_ipv4(unittest.TestCase):
                                     "next_hop_list": {
                                         1: {
                                             "index": 1,
-                                            "next_hop": "2.2.2.3",
+                                            "next_hop": "10.16.2.3",
                                             "updated": "1d06h",
                                             "outgoing_interface": "HundredGigE0/0/1/1"
                                         },
                                         2: {
                                             "index": 2,
-                                            "next_hop": "2.2.2.1",
+                                            "next_hop": "10.16.2.1",
                                             "updated": "1d06h",
                                             "outgoing_interface": "Bundle-Ether1"
                                         }
@@ -689,7 +689,7 @@ Gateway of last resort is 172.16.0.88 to network 0.0.0.0
 
 O*E2 0.0.0.0/0 [110/1] via 172.16.0.88, 3d00h, Bundle-Ether1
                [110/1] via 172.16.0.96, 3d00h, Bundle-Ether2
-L    1.1.1.1/32 is directly connected, 5w6d, Loopback100
+L    10.4.1.1/32 is directly connected, 5w6d, Loopback100
 O    10.1.1.0/24 [110/66036] via 172.16.0.88, 2d23h, Bundle-Ether1
                  [110/66036] via 172.16.0.96, 2d23h, Bundle-Ether2
 O E2 10.10.10.21/32 [110/1] via 172.16.0.88, 3d04h, Bundle-Ether1
@@ -726,7 +726,7 @@ L    10.10.10.255/32 is directly connected, 5w6d, Loopback2112
                                 'source_protocol': 'ospf',
                                 'source_protocol_codes': 'O* E2',
                             },
-                            '1.1.1.1/32': {
+                            '10.4.1.1/32': {
                                 'active': True,
                                 'next_hop': {
                                     'outgoing_interface': {
@@ -736,7 +736,7 @@ L    10.10.10.255/32 is directly connected, 5w6d, Loopback2112
                                         },
                                     },
                                 },
-                                'route': '1.1.1.1/32',
+                                'route': '10.4.1.1/32',
                                 'source_protocol': 'local',
                                 'source_protocol_codes': 'L',
                             },

@@ -25,7 +25,7 @@ class TestShowProcesses(unittest.TestCase):
             "1011": {
                 "available": "1.892s",
                 "core": "COPY",
-                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis",
+                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis",
                 "instance": "1",
                 "last_started": "Wed Jan 30 20:43:04 2019",
                 "max_core": 0,
@@ -234,7 +234,7 @@ class TestShowProcesses(unittest.TestCase):
                 "respawn": "ON",
                 "respawn_count": 1,
                 "started_on_config": "cfg/gl/isis/instance/test/ord_A/running",
-                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup",
+                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup",
                 "version_id": "00.00.0000",
             }
         }
@@ -245,7 +245,7 @@ class TestShowProcesses(unittest.TestCase):
                           Job Id: 1011
                              PID: 22464
                     Process name: isis
-                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
                       Instance #: 1
                       Version ID: 00.00.0000
                          Respawn: ON
@@ -258,7 +258,7 @@ class TestShowProcesses(unittest.TestCase):
                             core: COPY
                        Max. core: 0
                        Placement: Placeable
-                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
                            Ready: 1.804s
                        Available: 1.892s
                 Process cpu time: 2.690 user, 0.640 kernel, 3.330 total
@@ -532,7 +532,7 @@ class TestShowProcesses(unittest.TestCase):
             "1011": {
                 "pid": 10711,
                 "process_name": "isis",
-                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis",
+                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis",
                 "instance": "1",
                 "version_id": "00.00.0000",
                 "respawn": "ON",
@@ -545,7 +545,7 @@ class TestShowProcesses(unittest.TestCase):
                 "core": "COPY",
                 "max_core": 0,
                 "placement": "Placeable",
-                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup",
+                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup",
                 "ready": "18.220s",
                 "available": "18.536s",
                 "process_cpu_time": {
@@ -747,7 +747,7 @@ class TestShowProcesses(unittest.TestCase):
             "1012": {
                 "pid": 10709,
                 "process_name": "isis",
-                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis",
+                "executable_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis",
                 "instance": "2",
                 "version_id": "00.00.0000",
                 "respawn": "ON",
@@ -760,7 +760,7 @@ class TestShowProcesses(unittest.TestCase):
                 "core": "COPY",
                 "max_core": 0,
                 "placement": "Placeable",
-                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup",
+                "startup_path": "/opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup",
                 "ready": "18.046s",
             },
         }
@@ -772,7 +772,7 @@ class TestShowProcesses(unittest.TestCase):
                           Job Id: 1011
                              PID: 10711
                     Process name: isis
-                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
                       Instance #: 1
                       Version ID: 00.00.0000
                          Respawn: ON
@@ -785,7 +785,7 @@ class TestShowProcesses(unittest.TestCase):
                             core: COPY
                        Max. core: 0
                        Placement: Placeable
-                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
                            Ready: 18.220s
                        Available: 18.536s
                 Process cpu time: 134.740 user, 40.880 kernel, 175.620 total
@@ -821,7 +821,7 @@ class TestShowProcesses(unittest.TestCase):
                           Job Id: 1012
                              PID: 10709
                     Process name: isis
-                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/bin/isis
+                 Executable path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/bin/isis
                       Instance #: 2
                       Version ID: 00.00.0000
                          Respawn: ON
@@ -834,7 +834,7 @@ class TestShowProcesses(unittest.TestCase):
                             core: COPY
                        Max. core: 0
                        Placement: Placeable
-                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-2.1.0.0-r651/rp/startup/isis.startup
+                    startup_path: /opt/cisco/XR/packages/xrv9k-isis-10.9.0.0-r651/rp/startup/isis.startup
                            Ready: 18.046s
     '''}
 

@@ -1028,7 +1028,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                             'num_vfi': 1,
                             '1': {
                                 'neighbor': {
-                                    '1.1.1.1': {
+                                    '10.4.1.1': {
                                         'pw_id': {
                                             '1': {
                                                 'state': 'up ( established )',
@@ -1154,7 +1154,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         List of Access PWs:
         List of VFIs:
             VFI 1
-            PW: neighbor 1.1.1.1, PW ID 1, state is up ( established )
+            PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
                 PW class mpls, XC ID 0xff000001
                 Encapsulation MPLS, protocol LDP
                 PW type Ethernet, control word disabled, interworking none
@@ -1221,7 +1221,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                             'num_vfi': 1,
                             'foo_vfi': {
                                 'neighbor': {
-                                    '1.1.1.1': {
+                                    '10.4.1.1': {
                                         'pw_id': {
                                             '1': {
                                                 'state': 'up ( established )',
@@ -1358,7 +1358,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                 byte totals: receive 0,send 0
         List of VFIs:
             VFI foo_vfi
-            PW: neighbor 1.1.1.1, PW ID 1, state is up ( established )
+            PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
                 PW class not set
                 Encapsulation MPLS, protocol LDP
                 PW type Ethernet, control word enabled, interworking none
@@ -1380,7 +1380,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
                 Create time: 25/06/2007 05:29:42 (2w0d ago)
                 Last time status changed: 27/06/2007 06:50:35 (1w5d ago)
             Static MAC addresses:
-            PW: neighbor 1.1.1.1, PW ID 2, state is up ( established )
+            PW: neighbor 10.4.1.1, PW ID 2, state is up ( established )
                 PW class not set
                 Encapsulation MPLS, protocol LDP
                 PW type Ethernet, control word enabled, interworking none

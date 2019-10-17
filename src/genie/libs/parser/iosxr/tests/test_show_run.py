@@ -124,7 +124,7 @@ class test_show_run_router_isis(unittest.TestCase):
                                         'level_2 '
                                         'metric '
                                         '10',
-                        'router_id': '2.3.5.6',
+                        'router_id': '10.25.5.6',
                         'segment_routing': {'mpls': 'sr-prefer'},
                         'spf': 'prefix_priority '
                                'medium '
@@ -278,7 +278,7 @@ class test_show_run_router_isis(unittest.TestCase):
                 'secondary_wait': '100'},
             'lsp_refresh_interval': '35000',
             'max_lsp_lifetime': '65535',
-            'net': '1.2.3.4.5.6',
+            'net': '10.9.3.4.5.6',
             'segment_routing': {},
             'set_overload_bit': 'on-startup 300'}
         }
@@ -291,7 +291,7 @@ class test_show_run_router_isis(unittest.TestCase):
         router isis test2
          set-overload-bit on-startup 300
          is-type level-2-only
-         net 1.2.3.4.5.6
+         net 10.9.3.4.5.6
          nsr
          log adjacency changes
          lsp-gen-interval maximum-wait 5000 initial-wait 20 secondary-wait 100
@@ -302,7 +302,7 @@ class test_show_run_router_isis(unittest.TestCase):
           metric 100000
           advertise passive-only
           spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 150
-          router-id 2.3.5.6
+          router-id 10.25.5.6
           redistribute static level-2 metric 10
           segment-routing mpls sr-prefer
           spf prefix-priority high ISIS-PREFIX-PRIORITY-HIGH

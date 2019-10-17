@@ -554,11 +554,12 @@
         * Updated schema with level optional key
     * Added parser ShowIsis for:
         * show isis
+    * Added parser ShowIsisDatabaseDetail for command:
+        * show isis database detail
     * Added parser ShowIsisHostname for:
         * show isis hostname
         * show isis instance {instance} hostname
     * Updated ShowIsis to support different outputs
-
 * IOSXE
     * Fixed parser ShowRunSectionIsis to support missing ISIS name outputs
 
