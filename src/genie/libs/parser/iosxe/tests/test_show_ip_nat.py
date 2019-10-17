@@ -1,15 +1,14 @@
 #!/bin/env python
 import unittest
 from unittest.mock import Mock
-
 # ATS
 from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
+from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
+                                              SchemaMissingKeyError)
 
-from genie.libs.parser.iosxe.show_ip_nat import ShowIpNatTranslations, \
-                                                ShowIpNatStatistics
+from genie.libs.parser.iosxe.show_ip_nat import (ShowIpNatTranslations,
+                                                ShowIpNatStatistics)
 
 
 ####################################################

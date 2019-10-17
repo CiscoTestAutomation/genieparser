@@ -257,3 +257,16 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Updated ShowRunningConfigNvOverlay for more varied output
+
+--------------------------------------------------------------------------------
+                                IP NAT
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpNatTranslations
+    * Added ShowIpNatTranslationsVerbose
+    * Added ShowIpNatStatistics
+
+* IOS
+    * Added ShowIpNatTranslations
+    * Added ShowIpNatTranslationsVerbose
+    * Added ShowIpNatStatistics

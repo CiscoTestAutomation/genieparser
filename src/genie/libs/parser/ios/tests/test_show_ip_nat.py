@@ -4,19 +4,16 @@ from unittest.mock import Mock
 # ATS
 from ats.topology import Device
 
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                       SchemaMissingKeyError
+from genie.metaparser.util.exceptions import (SchemaEmptyParserError,
+                                              SchemaMissingKeyError)
 
-from genie.libs.parser.ios.show_routing import ShowIpRouteDistributor, ShowIpv6RouteDistributor, ShowIpv6RouteUpdated, ShowIpRouteSummary
-
-from genie.libs.parser.ios.show_ip_nat import ShowIpNatTranslations, \
-                                              ShowIpNatStatistics
+from genie.libs.parser.ios.show_ip_nat import (ShowIpNatTranslations,
+                                               ShowIpNatStatistics)
 
 from genie.libs.parser.iosxe.tests.test_show_ip_nat import \
-                           TestShowIpNatTranslations as TestShowIpNatTranslationsIosxe, \
-                           TestShowIpNatStatistics as TestShowIpNatStatisticsIosxe
+    (TestShowIpNatTranslations as TestShowIpNatTranslationsIosxe,
+    TestShowIpNatStatistics as TestShowIpNatStatisticsIosxe)
 
-import genie.gre
 
 class TestShowIpNatTranslations(TestShowIpNatStatisticsIosxe):
     device = Device(name='c3850')
