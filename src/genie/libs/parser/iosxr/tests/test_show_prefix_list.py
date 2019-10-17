@@ -137,82 +137,65 @@ class test_show_rpl_prefix_set(unittest.TestCase):
     '''}
 
     device_output = {'execute.return_value': '''
-+++ bl1-tatooine: executing command 'show rpl prefix-set' +++
-show rpl prefix-set
-
-Mon Oct  7 16:22:51.776 EDT
-Listing for all Prefix Set objects
-
-prefix-set PFX-AS577-MGMT
-  1.1.1.0/24,
-  1.1.2.0/24,
-  1.1.3.0/24
-end-set
-!
-prefix-set VPNe-Loopbacks
-  12.12.12.12/20 eq 32,
-  6.6.6.6/24 eq 32,
-  8.8.8.8/24 eq 32,
-  9.9.9.0/24 eq 32,
-  6.3.5.0/24 eq 32,
-  6.8.6.0/24 eq 32
-end-set
-!
-RP/0/RSP0/CPU0:bl1-tatooine#
-
+        +++ genie-router: executing command 'show rpl prefix-set' +++
+        show rpl prefix-set
+        
+        Mon Oct  7 16:22:51.776 EDT
+        Listing for all Prefix Set objects
+        
+        prefix-set name1
+          192.168.131.0/24,
+        end-set
+        !
+        prefix-set name2
+          172.16.106.0/20 eq 32,
+          10.246.13.0/24 eq 32,
+        end-set
+        !
+        prefix-set name3
+          10.19.196.5
+        end-set
+        !
     '''}
     parsed_output = {
         'prefix_set_name': {
-            'PFX-AS577-MGMT': {
-                'prefix_set_name': 'PFX-AS577-MGMT',
+            'name1': {
+                'prefix_set_name': 'name1',
                 'prefixes': {
-                    '1.1.1.0/24 24..24': {
+                    '192.168.131.0/24 24..24': {
                         'masklength_range': '24..24',
-                        'prefix': '1.1.1.0/24',
-                    },
-                    '1.1.2.0/24 24..24': {
-                        'masklength_range': '24..24',
-                        'prefix': '1.1.2.0/24',
-                    },
-                    '1.1.3.0/24 24..24': {
-                        'masklength_range': '24..24',
-                        'prefix': '1.1.3.0/24',
+                        'prefix': '192.168.131.0/24',
                     },
                 },
                 'protocol': 'ipv4',
             },
-            'VPNe-Loopbacks': {
-                'prefix_set_name': 'VPNe-Loopbacks',
+            'name2': {
+                'prefix_set_name': 'name2',
                 'prefixes': {
-                    '12.12.12.12/20 32..32': {
+                    '10.246.13.0/24 32..32': {
                         'masklength_range': '32..32',
-                        'prefix': '12.12.12.12/20',
+                        'prefix': '10.246.13.0/24',
                     },
-                    '6.3.5.0/24 32..32': {
+                    '172.16.106.0/20 32..32': {
                         'masklength_range': '32..32',
-                        'prefix': '6.3.5.0/24',
+                        'prefix': '172.16.106.0/20',
                     },
-                    '6.6.6.6/24 32..32': {
+                },
+                'protocol': 'ipv4',
+            },
+            'name3': {
+                'prefix_set_name': 'name3',
+                'prefixes': {
+                    '10.19.196.5 32..32': {
                         'masklength_range': '32..32',
-                        'prefix': '6.6.6.6/24',
-                    },
-                    '6.8.6.0/24 32..32': {
-                        'masklength_range': '32..32',
-                        'prefix': '6.8.6.0/24',
-                    },
-                    '8.8.8.8/24 32..32': {
-                        'masklength_range': '32..32',
-                        'prefix': '8.8.8.8/24',
-                    },
-                    '9.9.9.0/24 32..32': {
-                        'masklength_range': '32..32',
-                        'prefix': '9.9.9.0/24',
+                        'prefix': '10.19.196.5',
                     },
                 },
                 'protocol': 'ipv4',
             },
         },
     }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRplPrefixSet(device=self.device)
