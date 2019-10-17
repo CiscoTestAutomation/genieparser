@@ -718,7 +718,7 @@ class ShowInventorySchema(MetaParser):
                 {'descr': str,
                  'pid': str,
                  'vid': str,
-                 'sn': str,
+                 Optional('sn'): str,
                 },
             },
         }
@@ -747,9 +747,10 @@ class ShowInventory(ShowInventorySchema):
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-        p2 = re.compile(r'^PID: +(?P<pid>[\S\s]*),'
-                         ' +VID: +(?P<vid>[\S\s]*),'
-                         ' +SN: +(?P<sn>[\S\s]*)$')
+        # PID: N/A, VID: N/A, SN: 
+        p2 = re.compile(r'^PID: *(?P<pid>[\S\s]*),'
+                         ' +VID: *(?P<vid>[\S\s]*),'
+                         ' SN: *(?P<sn>[\S\s]*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -780,7 +781,11 @@ class ShowInventory(ShowInventorySchema):
                 inventory_dict['module_name'][module_name]['sn'] = \
                     str(m.groupdict()['sn']).strip()
                 continue
-
+        from genie.libs.parser.utils.common import format_output
+        print(format_output(inventory_dict))
+        f = open("dict.txt","w")
+        f.write( str(format_output(inventory_dict)) )
+        f.close()
         return inventory_dict
             
 # ====================================
